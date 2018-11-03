@@ -1,11 +1,10 @@
 import React from 'react';
-import logo from '../logo.svg';
-import '../assets/scss/App.scss';
+import logo from '../images/logo.svg';
 
 const App = () => (
-  <div className="App">
-    <header className="App-header">
-      <img src={logo} className="App-logo" alt="logo" />
+  <div>
+    <header>
+      <img src={logo} alt="logo" />
       <p>Happy CustWeb</p>
     </header>
   </div>

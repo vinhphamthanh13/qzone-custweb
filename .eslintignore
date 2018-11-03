@@ -14,5 +14,5 @@ node_modules
 **/node_modules/*
 dist
 public
-config
 scripts
+**/serviceWorker.js
