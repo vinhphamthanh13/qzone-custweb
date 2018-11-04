@@ -1,17 +1,26 @@
 import React from 'react';
-import 'styles/_typography.scss';
-import './App.scss';
-import logo from '../images/logo.svg';
+import Alert from 'react-s-alert';
+import { Router, Route, Switch } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { createBrowserHistory } from 'history';
+import rootRoutes from 'config/routing/app';
+import store from 'config/store';
+import CssBaseline from '@material-ui/core/CssBaseline';
+
+const history = createBrowserHistory();
 
 const App = () => (
-  <div className="app">
-    <div className="card">
-      <header>
-        <img src={logo} alt="logo" />
-        <p className="card__title header1 bold">Happy CustWeb 1</p>
-      </header>
-    </div>
-  </div>
+  <React.Fragment>
+    <Provider store={store}>
+      <Router history={history}>
+        <Switch>
+          {rootRoutes.map(route => (<Route key={route.path} {...route} />))}
+        </Switch>
+      </Router>
+    </Provider>
+    <Alert stack effect="bouncyflip" position="top-right" />
+    <CssBaseline />
+  </React.Fragment>
 );
 
 export default App;
