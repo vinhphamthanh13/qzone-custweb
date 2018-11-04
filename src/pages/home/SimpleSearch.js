@@ -9,14 +9,14 @@ export default function SimpleSearch({ onSimpleSearch }) {
         autoFocus
         className="simple-search__input"
         type="search"
-        placeholder="Organisations, services or providers"
+        placeholder="Search organisations, services or providers"
       />
       <Button
         variant="contained"
         color="primary"
         onClick={onSimpleSearch}
       >
-        {'Search'}
+        {'Go'}
       </Button>
     </div>
   );
