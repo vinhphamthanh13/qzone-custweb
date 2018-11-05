@@ -1,9 +1,11 @@
-.select-services {
-  width: 50%;
+button.expand {
+  transform: rotate(0deg);
+  margin-left: auto;
+  margin-right: -8px;
 }
 
-li.select-services__sub-category {
-  padding-left: 28px;
+button.expandOpen {
+  transform: rotate(180deg);
 }
 
 li.select-services__service {

@@ -19,7 +19,10 @@ const categories = [{
   }, {
     id: 'sub-cat-1-2',
     name: 'Second sub category',
-    services: [],
+    services: [{
+      id: 'ser-111',
+      name: 'Service 111',
+    }],
   }],
 }, {
   id: 'cat-2',
@@ -36,30 +39,51 @@ const categories = [{
       name: 'Service 3',
     }],
   }],
+}, {
+  id: 'cat-3',
+  name: 'Second category',
+  subs: [{
+    id: 'sub-cat-3',
+    name: 'First sub category 3',
+    services: [{
+      id: 'ser-5',
+      name: 'Service 5',
+    }],
+  }],
+}, {
+  id: 'cat-4',
+  name: 'Second category',
+  subs: [{
+    id: 'sub-cat-4',
+    name: 'First sub category 4',
+    services: [{
+      id: 'ser-14',
+      name: 'Service 14',
+    }],
+  }],
 }];
+
 export default class AdvancedSearch extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      service: '',
-      date: '',
-      time: '',
       renderedDate: new Date(),
       renderedTime: new Date(),
       isSelectDateTimeRangeOpen: false,
+      expandedCategories: {},
     };
   }
 
-  onSelectService = (event) => {
-    this.setState({ service: event.target.value });
-  }
-
   onDateChange = (value) => {
-    this.setState({ date: getDate(value), renderedDate: value });
+    const { onChange } = this.props;
+    this.setState({ renderedDate: value });
+    onChange(getDate(value), 'date');
   }
 
   onTimeChange = (value) => {
-    this.setState({ time: getTime(value), renderedTime: value });
+    const { onChange } = this.props;
+    this.setState({ renderedTime: value });
+    onChange(getTime(value), 'time');
   }
 
   showSelectDateTimeRange = () => {
@@ -70,53 +94,54 @@ export default class AdvancedSearch extends PureComponent {
     this.setState({ isSelectDateTimeRangeOpen: false });
   }
 
-  onAdvancedSearch = () => {
-    console.log(this.state);
+  handleExpandClick = (categoryId) => {
+    this.setState(state => ({
+      expandedCategories: {
+        ...state.expandedCategories,
+        [categoryId]: !state.expandedCategories[categoryId],
+      },
+    }));
+  }
+
+  onSelectSubCategory = (value) => {
+    const { onChange } = this.props;
+    onChange(value, 'subCategory');
   }
 
   render() {
     const {
-      service, renderedDate, renderedTime,
-      isSelectDateTimeRangeOpen,
+      renderedDate, renderedTime,
+      isSelectDateTimeRangeOpen, expandedCategories,
     } = this.state;
 
     return (
-      <form>
-        <h2 className="advanced-search__title">Advanced search</h2>
-        <Grid container>
-          <Grid item md={12} className="advanced-search__service">
-            <SelectServices
-              categories={categories}
-              selectedService={service}
-              onSelectService={this.onSelectService}
-            />
-          </Grid>
-          <Grid item md={12} className="advanced-search__date-time">
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={this.showSelectDateTimeRange}
-            >
-              {'I  am  looking  for  specific  date/time'}
-            </Button>
-            <SelectDateTimeRange
-              selectedDate={renderedDate}
-              selectedTime={renderedTime}
-              onDateChange={this.onDateChange}
-              onTimeChange={this.onTimeChange}
-              isOpen={isSelectDateTimeRangeOpen}
-              onCloseSelectDateTimeRange={this.onCloseSelectDateTimeRange}
-            />
-          </Grid>
+      <Grid container>
+        <Grid item md={12} className="advanced-search__date-time">
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={this.showSelectDateTimeRange}
+          >
+            {'I  am  looking  for  specific  date/time'}
+          </Button>
+          <SelectDateTimeRange
+            selectedDate={renderedDate}
+            selectedTime={renderedTime}
+            onDateChange={this.onDateChange}
+            onTimeChange={this.onTimeChange}
+            isOpen={isSelectDateTimeRangeOpen}
+            onCloseSelectDateTimeRange={this.onCloseSelectDateTimeRange}
+          />
         </Grid>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={this.onAdvancedSearch}
-        >
-          {'Search'}
-        </Button>
-      </form>
+        <Grid item md={12} className="advanced-search__service">
+          <SelectServices
+            categories={categories}
+            onSelectSubCategory={this.onSelectSubCategory}
+            expandedCategories={expandedCategories}
+            handleExpandClick={this.handleExpandClick}
+          />
+        </Grid>
+      </Grid>
     );
   }
 }
