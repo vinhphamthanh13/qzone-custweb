@@ -1,12 +1,31 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
-import Paper from '@material-ui/core/Paper';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import Header from './Header';
 
-const Organisation = () => (
-  <Grid container>
-    <Paper>This is test Grid and Paper of Organisation And Now</Paper>
-  </Grid>
-);
+const styles = () => ({
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    borderRadius: 'unset',
+  },
+});
 
-export default Organisation;
+const Organisation = (props) => {
+  const { classes } = props;
+  return (
+    <div className={classes.root}>
+      <Grid container>
+        <Header />
+      </Grid>
+    </div>
+  );
+};
+
+Organisation.propTypes = {
+  classes: PropTypes.objectOf(PropTypes.object).isRequired,
+};
+
+export default withStyles(styles)(Organisation);
