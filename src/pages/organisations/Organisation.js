@@ -2,14 +2,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 import Header from './Header';
 
-const styles = () => ({
+const styles = theme => ({
   root: {
-    flexGrow: 1,
+    overflow: 'hidden',
+    padding: `0 ${theme.spacing.unit * 3}px`,
+    justifyContent: 'center',
+  },
+  wrapper: {
+    minWidth: '100%',
+    minHeight: '100%',
+    justifyContent: 'center',
   },
   paper: {
     borderRadius: 'unset',
+    color: `${theme.palette.primary.light}`,
   },
 });
 
@@ -17,9 +26,13 @@ const Organisation = (props) => {
   const { classes } = props;
   return (
     <div className={classes.root}>
-      <Grid container>
-        <Header />
-      </Grid>
+      <div className={classes.wrapper}>
+        <Paper className={classes.paper}>
+          <Grid container>
+            <Header />
+          </Grid>
+        </Paper>
+      </div>
     </div>
   );
 };
