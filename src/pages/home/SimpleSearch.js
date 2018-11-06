@@ -1,24 +1,20 @@
 import React from 'react';
-import { Input, Button } from '@material-ui/core';
+import { Input } from '@material-ui/core';
+import SearchIcon from '@material-ui/icons/Search';
 import './SimpleSearch.scss';
 
-export default function SimpleSearch({ onSubmit, onChange }) {
+export default function SimpleSearch({ onChange }) {
   return (
     <div className="simple-search">
+      <div className="simple-search__icon">
+        <SearchIcon />
+      </div>
       <Input
-        autoFocus
-        className="simple-search__input"
         type="search"
-        placeholder="Search organisations, services or providers"
+        placeholder="Services, organisations ..."
+        classes={{ input: 'simple-search__input', root: 'simple-search__input-root' }}
         onChange={(event) => { onChange(event.target.value, 'searchText'); }}
       />
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={onSubmit}
-      >
-        {'Go'}
-      </Button>
     </div>
   );
 }
