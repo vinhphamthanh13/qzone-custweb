@@ -8,15 +8,22 @@ import './SelectServices.scss';
 import serviceImg from 'images/service.jpg';
 import AdvancedSearch from './AdvancedSearch';
 import 'styles/_layout.scss';
+import SubCategoryTabs from './SubCategoryTabs';
 
 export default function SelectServices({
   services,
   onChange,
+  selectedSubCategory,
+  subCategories,
 }) {
   return (
     <React.Fragment>
       <Paper elevation={1} className="select-services__options">
-        <h2 className="select-services__title">Services</h2>
+        <SubCategoryTabs
+          selectedSubCategory={selectedSubCategory}
+          subCategories={subCategories}
+          onChange={onChange}
+        />
         <div className="grow" />
         <AdvancedSearch onChange={onChange} />
       </Paper>

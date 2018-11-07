@@ -1,9 +1,5 @@
 import React, { PureComponent } from 'react';
-
-// import { Grid } from '@material-ui/core';
 import './AdvancedSearch.scss';
-// import TimePicker from 'material-ui-pickers/TimePicker';
-// import DatePicker from 'material-ui-pickers/DatePicker';
 import DateTimePicker from 'material-ui-pickers/DateTimePicker';
 
 export default class AdvancedSearch extends PureComponent {

@@ -4,7 +4,6 @@ import {
 } from '@material-ui/core';
 import './Home.scss';
 import CategoryTabs from './home/CategoryTabs';
-import SubCategoryTabs from './home/SubCategoryTabs';
 import SelectServices from './home/SelectServices';
 
 const services = [{
@@ -63,13 +62,6 @@ export default class Home extends React.PureComponent {
         { id: 'sub-1', name: 'Sub Category One' },
         { id: 'sub-2', name: 'Sub Category Two' },
         { id: 'sub-3', name: 'Sub Category Three' },
-        { id: 'sub-4', name: 'Sub Category Four' },
-        { id: 'sub-5', name: 'Sub Category Five' },
-        { id: 'sub-11', name: 'Sub Category One' },
-        { id: 'sub-22', name: 'Sub Category Two' },
-        { id: 'sub-33', name: 'Sub Category Three' },
-        { id: 'sub-44', name: 'Sub Category Four' },
-        { id: 'sub-55', name: 'Sub Category Five' },
       ],
     }));
   }
@@ -86,16 +78,13 @@ export default class Home extends React.PureComponent {
             onChange={this.onChange}
             onSubmit={this.onSubmit}
           />
-          <SubCategoryTabs
-            selectedSubCategory={selectedSubCategory}
-            subCategories={subCategories}
-            onChange={this.onChange}
-          />
         </Grid>
         <Grid item md={12} className="home__select-service">
           <SelectServices
             services={services}
             onChange={this.onChange}
+            subCategories={subCategories}
+            selectedSubCategory={selectedSubCategory}
           />
         </Grid>
       </Grid>
