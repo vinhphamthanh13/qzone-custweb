@@ -5,26 +5,22 @@
 .organisation-page {
   &__header {
     position: relative;
-    //background: url('../../images/dogcare_org_2.jpg') no-repeat;
     background: url('../../images/dogcare_org_2.jpg') no-repeat;
     background-size: cover;
     width: 100%;
   }
   &__overlay {
-    top: 0;
+    //position: absolute;
+    top: auto;
     left: 0;
     background: rgba($mako, 0.4);
-    padding: .1em;
     height: 100%;
   }
-  &__avatar {
+  &__logo {
     float: right;
-    margin: 1em;
-    width: 50px;
-    height: 50px;
   }
   &__name {
-    padding-left: .3em;
+    padding-left: 1em;
   }
   &__brand {
     margin: 2em;

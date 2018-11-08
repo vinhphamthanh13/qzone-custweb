@@ -10,7 +10,6 @@ import classNames from 'classnames';
 import Button from '@material-ui/core/Button';
 import Avatar from '@material-ui/core/Avatar';
 import './Organisation.scss';
-import OrgAvatar from 'images/dogCare_logo.jpg';
 
 const styles = theme => ({
   root: {
@@ -20,7 +19,7 @@ const styles = theme => ({
     // background: 'rgba(254, 240, 245, 0.8)',
   },
   paragraph: {
-    color: `${theme.palette.primary.light}`,
+    color: `${theme.palette.primary.contrastText}`,
   },
 });
 
@@ -31,12 +30,7 @@ const Header = (props) => {
       <div className="organisation-page__overlay">
         <Grid container direction="row" className="organisation-page__brand">
           <Grid item xs={2}>
-            <Avatar
-              className="organisation-page__avatar"
-              alt="Quezone"
-              sizes="32"
-              src={OrgAvatar}
-            />
+            <Avatar className="organisation-page__logo">Q</Avatar>
           </Grid>
           <Grid item xs={4}>
             <p
