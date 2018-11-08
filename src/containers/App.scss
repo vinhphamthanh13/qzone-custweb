@@ -1,19 +1,7 @@
-@import "styles/_color.scss";
-
-.app {
-  display: grid;
-  grid-template-rows: 10% auto auto 30%;
-  grid-template-columns: 30% auto 30%;
-}
-
-.card {
-  grid-column: 2/3;
-  grid-row: 2/3 ;
-  background: rgba($mako, 0.8);
-  width: 100%;
-  border-radius: 5px;
-  &__title {
-    color: $we_peep;
-    text-align: center;
-  }
+h1,
+h2,
+h3,
+h4,
+p {
+  margin: 0;
 }

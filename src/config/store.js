@@ -2,8 +2,11 @@ import {
   createStore, applyMiddleware, compose, combineReducers,
 } from 'redux';
 import thunk from 'redux-thunk';
+import home from 'modules/home.reducer';
 
-const rootReducer = combineReducers({});
+const rootReducer = combineReducers({
+  home,
+});
 
 const store = createStore(
   rootReducer,
