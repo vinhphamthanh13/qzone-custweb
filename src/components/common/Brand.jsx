@@ -6,27 +6,27 @@ import Avatar from '@material-ui/core/Avatar';
 import OrgAvatar from 'images/dogCare_logo.jpg';
 import 'styles/_typography.scss';
 
-const styles = () => ({
+const styles = theme => ({
   root: {
-    width: 60,
-    height: 60,
-  },
-  brand: {
-    display: 'flex',
-    alignItems: 'center',
-    margin: '3em auto',
+    width: 35,
+    height: 35,
+    margin: 'auto 1em',
+    [theme.breakpoints.up('sm')]: {
+      width: 60,
+      height: 60,
+    },
   },
 });
 
 const Brand = (props) => {
-  const { classes, orgName } = props;
+  const { classes, organisationName } = props;
   return (
-    <Grid item xs={4} className={classes.brand} justify="center">
+    <Grid item xs={12} md={6} className="inline-flex">
       <Avatar classes={classes} alt="organization" src={OrgAvatar} />
       <span
-        className="header2 text-uppercase text-bold text-margin-left"
+        className="header2 text-uppercase text-bold"
       >
-        {orgName}
+        {organisationName}
       </span>
     </Grid>
   );
@@ -34,11 +34,11 @@ const Brand = (props) => {
 
 Brand.propTypes = {
   classes: PropTypes.objectOf(PropTypes.object).isRequired,
-  orgName: PropTypes.string,
+  organisationName: PropTypes.string,
 };
 
 Brand.defaultProps = {
-  orgName: 'quezone',
+  organisationName: 'quezone',
 };
 
 export default withStyles(styles)(Brand);

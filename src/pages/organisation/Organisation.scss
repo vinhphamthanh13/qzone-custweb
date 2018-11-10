@@ -1,35 +1,30 @@
 @import
 "styles/_color.scss",
-"styles/_typography.scss";
+"styles/_typography.scss",
+"styles/_mixins.scss";
 
 .organisation-page {
   &__header {
-    position: relative;
     background: url('../../images/dogcare_org_2.jpg') no-repeat;
     background-size: cover;
     width: 100%;
   }
   &__overlay {
-    top: 0;
-    left: 0;
-    background: rgba($mako, 0.4);
-    padding: .1em;
-    height: 100%;
-  }
-  &__avatar {
-    float: right;
-    margin: 1em;
-    width: 60px;
-    height: 60px;
-  }
-  &__name {
-    margin: auto .3em;
+    background: rgba($mako, 0.3);
   }
   &__brand {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
+    margin: 3em;
+  }
+  &__nav-bar-item {
+    display: inline-flex;
+  }
+}
+
+@include breakpoint(md, landscape) {
+  .organisation-page {
+    &__overlay {
+      background: rgba($we_peep, 0.7);
+    }
   }
 }
 
