@@ -1,6 +1,7 @@
 @import
 "styles/_color.scss",
 "styles/_typography.scss",
+"styles/_cta.scss",
 "styles/_mixins.scss";
 
 .organisation-page {
@@ -17,13 +18,32 @@
   }
   &__nav-bar-item {
     display: inline-flex;
+    margin: 1em;
+    text-transform: capitalize;
+    box-sizing: content-box;
+    &:hover {
+      border-bottom: 2px solid $mako;
+      transition: border-bottom-width 0.1s ease-out;
+    }
+  }
+  &__content-block {
+    padding-bottom: 2em;
+  }
+  &__content-wrapper {
+    margin: 3em;
   }
 }
 
-@include breakpoint(md, landscape) {
+@include breakpoint(md) {
   .organisation-page {
+    &__brand {
+      margin: 3em 3em 1em;
+    }
     &__overlay {
       background: rgba($we_peep, 0.7);
+    }
+    &__nav-bar-item {
+      margin: 1em;
     }
   }
 }

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
+import Typography from '@material-ui/core/Typography';
 import OrgAvatar from 'images/dogCare_logo.jpg';
 import 'styles/_typography.scss';
 
@@ -11,7 +12,7 @@ const styles = theme => ({
     width: 35,
     height: 35,
     margin: 'auto 1em',
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       width: 60,
       height: 60,
     },
@@ -26,7 +27,7 @@ const Brand = (props) => {
       <span
         className="header2 text-uppercase text-bold"
       >
-        {organisationName}
+        <Typography variant="headline">{organisationName}</Typography>
       </span>
     </Grid>
   );
