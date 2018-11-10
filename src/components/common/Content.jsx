@@ -1,4 +1,5 @@
 import React from 'react';
+import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
@@ -8,9 +9,15 @@ import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
   title: {
-    fontSize: '3rem',
+    fontSize: '1.8rem',
     fontWeight: 'bold',
-    width: '80%',
+    width: '100%',
+    margin: '1em',
+    [theme.breakpoints.up('md')]: {
+      fontSize: '3rem',
+      width: '70%',
+      margin: '0',
+    },
   },
   subTitle: {
     fontSize: '2.5rem',
@@ -18,11 +25,7 @@ const styles = theme => ({
     width: '90%',
   },
   paragraph: {
-    marginLeft: `${theme.spacing.unit * 4}px`,
-    marginBottom: `${theme.spacing.unit * 8}px`,
-    [theme.breakpoints.up('md')]: {
-      marginLeft: `${theme.spacing.unit * 2}px`,
-    },
+    paddingBottom: '2em',
   },
   button: {
     borderRadius: '3em',
@@ -31,19 +34,25 @@ const styles = theme => ({
 
 const Content = (props) => {
   const {
-    classes, title, subTitle, content, buttonLabel, buttonClass,
+    classes, title, subTitle, content, buttonLabel, buttonClass, contentClass,
   } = props;
   const pageTitle = title
-    ? <Typography gutterBottom className={classes.title}>{title}</Typography>
+    ? <Typography className={classes.title}>{Parser(title)}</Typography>
     : '';
   const pageContent = content
-    ? <Typography className="organisation-page__content-block">{content}</Typography>
+    ? <Typography gutterBottom className={classes.paragraph}>{content}</Typography>
     : '';
   const pageSubtitle = subTitle
-    ? <Typography gutterBottom className={classes.subTitle}>{subTitle}</Typography>
+    ? (
+      <Typography
+        gutterBottom
+        className={classes.subTitle}
+      >
+        {Parser(subTitle)}
+      </Typography>)
     : '';
   return (
-    <Grid item xs={12} md={4} className={classes.paragraph}>
+    <Grid item xs={12} md={4} className={contentClass}>
       {pageTitle}
       {pageSubtitle}
       {pageContent}
@@ -63,12 +72,14 @@ Content.propTypes = {
   content: PropTypes.string,
   buttonClass: PropTypes.string,
   buttonLabel: PropTypes.string.isRequired,
+  contentClass: PropTypes.string,
 };
 
 Content.defaultProps = {
   subTitle: '',
   content: '',
   buttonClass: '',
+  contentClass: '',
 };
 
 export default withStyles(styles)(Content);

@@ -13,28 +13,32 @@ const styles = () => ({
     overflow: 'hidden',
   },
   tile: {
-    margin: '0.1em',
-    textAlign: 'center',
-    background: 'rgba(0,0,0,0.3)',
+    margin: '0.3em',
+    height: 'auto',
+    background: 'rgba(0,0,0,0.2)',
+    boxShadow: '2px 2px 3px rgba(110, 110, 110, 0.9)',
   },
   image: {
-    maxWidth: '100%',
-    maxHeight: '100%',
+    height: '100%',
+    width: '100%',
   },
 });
 
 const ImageGridList = (props) => {
-  const { classes, pixList } = props;
-
-  return (
-    <Grid item xs={4}>
-      <GridList cols={2} classes={classes}>
+  const { classes, pixList, square } = props;
+  const [imageGrid, breakPoint] = pixList.length > 1
+    ? [(
+      <GridList cols={square} classes={classes}>
         {pixList.map(image => (
           <GridListTile classes={classes}>
             <img className={classes.image} src={image.src} alt={image.name} />
           </GridListTile>
         ))}
-      </GridList>
+      </GridList>), 4]
+    : [<img className={classes.image} src={pixList[0].src} alt={pixList[0].name} />, 6];
+  return (
+    <Grid item xs={breakPoint}>
+      {imageGrid}
     </Grid>
   );
 };
@@ -42,6 +46,7 @@ const ImageGridList = (props) => {
 ImageGridList.propTypes = {
   classes: PropTypes.objectOf(PropTypes.object).isRequired,
   pixList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  square: PropTypes.number.isRequired,
 };
 
 export default withStyles(styles)(ImageGridList);

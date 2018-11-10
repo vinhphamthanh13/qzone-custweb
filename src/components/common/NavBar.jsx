@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
@@ -11,7 +12,7 @@ const NavBar = (props) => {
         variant="subheading"
         className="organisation-page__nav-bar-item"
       >
-        {button.label}
+        <Link className="organisation-page__link" to={button.path}>{button.label}</Link>
       </Typography>
     </div>
   ));

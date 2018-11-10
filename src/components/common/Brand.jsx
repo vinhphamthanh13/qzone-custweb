@@ -17,18 +17,21 @@ const styles = theme => ({
       height: 60,
     },
   },
+  title: {
+    fontWeight: '600',
+    color: `${theme.palette.secondary.contrastText}`,
+    textTransform: 'uppercase',
+  },
 });
 
 const Brand = (props) => {
   const { classes, organisationName } = props;
   return (
     <Grid item xs={12} md={6} className="inline-flex">
-      <Avatar classes={classes} alt="organization" src={OrgAvatar} />
-      <span
-        className="header2 text-uppercase text-bold"
-      >
-        <Typography variant="headline">{organisationName}</Typography>
-      </span>
+      <Avatar className={classes.root} alt="organization" src={OrgAvatar} />
+      <Typography className={classes.title} variant="headline" color="textSecondary">
+        {organisationName}
+      </Typography>
     </Grid>
   );
 };
