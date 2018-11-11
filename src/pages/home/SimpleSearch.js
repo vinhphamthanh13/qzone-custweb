@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Input } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import './SimpleSearch.scss';
@@ -18,3 +19,7 @@ export default function SimpleSearch({ onChange }) {
     </div>
   );
 }
+
+SimpleSearch.propTypes = {
+  onChange: PropTypes.func.isRequired,
+};

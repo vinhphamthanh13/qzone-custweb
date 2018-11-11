@@ -10,8 +10,7 @@
     "linebreak-style": "off",
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "max-len": ["error", { "code": 89 }],
-    "quotes": ["error", "single"],
-    "react/prop-types": "off"
+    "quotes": ["error", "single"]
   },
   "settings": {
     "import/resolver": {

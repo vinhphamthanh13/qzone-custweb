@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Card, CardContent, CardMedia,
   Grid, Typography, CardActionArea,
@@ -8,7 +9,7 @@ import './SelectServices.scss';
 import serviceImg from 'images/service.jpg';
 import AdvancedSearch from './AdvancedSearch';
 import 'styles/_layout.scss';
-import SubCategoryTabs from './SubCategoryTabs';
+import SubCategoryTabs, { subCategoryType, subCategoriesType } from './SubCategoryTabs';
 
 export default function SelectServices({
   services,
@@ -49,3 +50,13 @@ export default function SelectServices({
     </React.Fragment>
   );
 }
+
+SelectServices.propTypes = {
+  services: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+  }).isRequired,
+  onChange: PropTypes.func.isRequired,
+  selectedSubCategory: subCategoryType.isRequired,
+  subCategories: subCategoriesType.isRequired,
+};
