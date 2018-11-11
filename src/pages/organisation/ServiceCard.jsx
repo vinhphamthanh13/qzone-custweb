@@ -10,9 +10,6 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
-  container: {
-    justifyContent: 'center',
-  },
   card: {
     display: 'flex',
   },
@@ -35,6 +32,7 @@ const styles = theme => ({
   button: {
     margin: '1em auto',
     borderRadius: '3em',
+    display: 'flex',
   },
   gridList: {
     overflow: 'unset',
@@ -46,7 +44,7 @@ const ServiceCard = (props) => {
   const { classes, cardList } = props;
   const cards = cardList.length > 1
     ? cardList.map(card => (
-      <GridListTile classes={classes}>
+      <GridListTile classes={classes} key={card.name}>
         <Card className={classes.card}>
           <div className={classes.image}>
             <img src={card.src} alt={card.name} width="100%" />
@@ -64,8 +62,8 @@ const ServiceCard = (props) => {
     ))
     : null;
   return (
-    <Grid container xs={8} className={classes.container}>
-      <Grid item>
+    <Grid container justify="center">
+      <Grid item xs={8}>
         <Typography
           align="center"
           component="h4"
@@ -79,8 +77,6 @@ const ServiceCard = (props) => {
         <GridList cellHeight="auto" className={classes.gridList}>
           {cards}
         </GridList>
-      </Grid>
-      <Grid item>
         <Button variant="contained" className={classes.button}>We care of it</Button>
       </Grid>
     </Grid>
@@ -88,7 +84,7 @@ const ServiceCard = (props) => {
 };
 
 ServiceCard.propTypes = {
-  classes: PropTypes.objectOf(PropTypes.object).isRequired,
+  classes: PropTypes.objectOf(PropTypes.string).isRequired,
   cardList: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 

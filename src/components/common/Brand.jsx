@@ -37,7 +37,7 @@ const Brand = (props) => {
 };
 
 Brand.propTypes = {
-  classes: PropTypes.objectOf(PropTypes.object).isRequired,
+  // classes: PropTypes.objectOf(PropTypes.object).isRequired,
   organisationName: PropTypes.string,
 };
 

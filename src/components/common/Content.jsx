@@ -67,7 +67,7 @@ const Content = (props) => {
 };
 
 Content.propTypes = {
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   subTitle: PropTypes.string,
   content: PropTypes.string,
   buttonClass: PropTypes.string,
@@ -76,6 +76,7 @@ Content.propTypes = {
 };
 
 Content.defaultProps = {
+  title: '',
   subTitle: '',
   content: '',
   buttonClass: '',

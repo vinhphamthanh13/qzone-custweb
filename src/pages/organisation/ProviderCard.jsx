@@ -11,10 +11,6 @@ import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 
 const styles = theme => ({
-  container: {
-    justifyContent: 'center',
-    margin: '3em auto',
-  },
   card: {
     display: 'flex',
     flexDirection: 'column',
@@ -56,7 +52,7 @@ const ProviderCard = (props) => {
     + '<br/> and publishing industries for previewing layouts and visual mockups.';
   const cards = cardList.length > 1
     ? cardList.map(card => (
-      <GridListTile className={classes.tile} key={card.title}>
+      <GridListTile className={classes.tile} key={card.id}>
         <Card className={classes.card}>
           <div className={classes.image}>
             <Avatar className={classes.avatar} src={card.src} />
@@ -74,8 +70,8 @@ const ProviderCard = (props) => {
     ))
     : null;
   return (
-    <Grid container xs={8} className={classes.container}>
-      <Grid>
+    <Grid container justify="center">
+      <Grid item xs={8}>
         <Typography
           align="center"
           component="h4"
@@ -102,7 +98,7 @@ const ProviderCard = (props) => {
 };
 
 ProviderCard.propTypes = {
-  classes: PropTypes.objectOf(PropTypes.object).isRequired,
+  classes: PropTypes.objectOf(PropTypes.string).isRequired,
   cardList: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 

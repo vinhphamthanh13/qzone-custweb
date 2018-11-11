@@ -11,6 +11,7 @@
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "max-len": ["error", { "code": 89 }],
     "quotes": ["error", "single"],
+    "react/jsx-one-expression-per-line": "off",
     "react/prop-types": "off"
   },
   "settings": {

@@ -98,6 +98,7 @@ const Header = (props) => {
   ];
   const providerList = [
     {
+      id: 0,
       name: 'dog0',
       src: Dog,
       title: 'Lorem Ipsum',
@@ -105,6 +106,7 @@ const Header = (props) => {
       + ' and publishing industries for previewing layouts and visual mockups.',
     },
     {
+      id: 1,
       name: 'dog1',
       src: Dog,
       title: 'Lorem Ipsum',
@@ -112,6 +114,7 @@ const Header = (props) => {
       + ' and publishing industries for previewing layouts and visual mockups.',
     },
     {
+      id: 2,
       name: 'dog2',
       src: Dog,
       title: 'Lorem Ipsum',
@@ -170,7 +173,7 @@ const Header = (props) => {
       <div className="organisation-page__content-block--secondary">
         <ServiceCard cardList={cardList} />
       </div>
-      <div className="organisation-page__content-block--primary">
+      <div className="organisation-page__content-block--primary block-padding">
         <ProviderCard cardList={providerList} />
       </div>
     </Grid>
