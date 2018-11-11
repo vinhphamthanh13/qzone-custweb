@@ -1,0 +1,94 @@
+@import "styles/_settings.scss";
+
+.organisation-page {
+  &__section1 {
+    background: url('../images/dog_bg.jpg') no-repeat;
+    background-size: cover;
+  }
+  &__logo {
+    width: 35px;
+    height: 35px;
+  }
+  &__brand {
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 1.5rem;
+    padding-left: 1em;
+  }
+  &__logo-wrapper {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+  &__navbar-wrapper {
+    padding: 3em;
+    width: 100%;
+  }
+  &__nav-bar-item {
+    display: inline-flex;
+    margin: 0.5em 0.2em;
+    text-transform: capitalize;
+    font-size: 1.2rem;
+    text-decoration: none;
+    &:hover {
+    }
+  }
+  &__title {
+    width: 65%;
+    margin-left: .25em;
+  }
+
+  &__button {
+    border-radius: 3em;
+    margin: .5em;
+  }
+
+
+
+  &__content-block--no-background {
+    margin: 3em auto;
+  }
+  &__content-block--secondary {
+    background: rgba($mako, 0.6);
+    justify-content: center;
+    display: flex;
+    width: 100%;
+    padding: 4em 0;
+  }
+  &__content-block--primary {
+    background: rgba($we_peep, 0.5);
+    display: flex;
+    justify-content: center;
+  }
+  &__content-block--paragraph {
+    margin: auto !important;
+  }
+  &__pet-and-human-tile {
+    height: auto;
+    width: 92%;
+    margin: 1em;
+  }
+  &__pet-and-human-grid-list {
+    overflow: unset;
+  }
+
+}
+
+@include breakpoint(md up) {
+  .organisation-page {
+    &__logo {
+      width: 62px;
+      height: 62px;
+    }
+    &__brand {
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    &__navbar-wrapper {
+      padding: 3em;
+    }
+    &__nav-bar-item {
+      margin: auto .5em;
+    }
+  }
+}

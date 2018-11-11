@@ -1,86 +1,52 @@
 import React from 'react';
 import Parser from 'html-react-parser';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 
-const styles = theme => ({
-  title: {
-    fontSize: '1.8rem',
-    fontWeight: 'bold',
-    width: '100%',
-    margin: '1em',
-    [theme.breakpoints.up('md')]: {
-      fontSize: '3rem',
-      width: '70%',
-      margin: '0',
-    },
-  },
-  subTitle: {
-    fontSize: '2.5rem',
-    fontWeight: 'bold',
-    width: '90%',
-  },
-  paragraph: {
-    paddingBottom: '2em',
-  },
-  button: {
-    borderRadius: '3em',
-  },
-});
-
 const Content = (props) => {
   const {
-    classes, title, subTitle, content, buttonLabel, buttonClass, contentClass,
+    title, titleClass, subTitle, subTitleClass, content, contentClass, buttonLabel, buttonClass,
   } = props;
   const pageTitle = title
-    ? <Typography className={classes.title}>{Parser(title)}</Typography>
-    : '';
-  const pageContent = content
-    ? <Typography gutterBottom className={classes.paragraph}>{content}</Typography>
+    ? <Typography classes={titleClass}>{Parser(title)}</Typography>
     : '';
   const pageSubtitle = subTitle
-    ? (
-      <Typography
-        gutterBottom
-        className={classes.subTitle}
-      >
-        {Parser(subTitle)}
-      </Typography>)
+    ? <Typography gutterBottom classes={subTitleClass}>{Parser(subTitle)}</Typography>
+    : '';
+  const pageContent = content
+    ? <Typography gutterBottom classes={contentClass}>{Parser(content)}</Typography>
     : '';
   return (
-    <Grid item xs={12} md={4} className={contentClass}>
+    <Grid item xs={12} md={4}>
       {pageTitle}
       {pageSubtitle}
       {pageContent}
-      <Button
-        variant="contained"
-        className={classNames(buttonClass, classes.button)}
-      >
-        {buttonLabel}
-      </Button>
+      <Button variant="contained" classes={buttonClass}>{buttonLabel}</Button>
     </Grid>
   );
 };
 
 Content.propTypes = {
   title: PropTypes.string,
+  titleClass: PropTypes.string,
   subTitle: PropTypes.string,
+  subTitleClass: PropTypes.string,
   content: PropTypes.string,
-  buttonClass: PropTypes.string,
-  buttonLabel: PropTypes.string.isRequired,
   contentClass: PropTypes.string,
+  buttonClass: PropTypes.objectOf(PropTypes.string),
+  buttonLabel: PropTypes.string.isRequired,
 };
 
 Content.defaultProps = {
   title: '',
+  titleClass: '',
   subTitle: '',
+  subTitleClass: '',
   content: '',
-  buttonClass: '',
   contentClass: '',
+  buttonClass: { root: '' },
 };
 
-export default withStyles(styles)(Content);
+export default Content;

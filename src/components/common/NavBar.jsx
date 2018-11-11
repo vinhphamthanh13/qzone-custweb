@@ -7,12 +7,9 @@ import Typography from '@material-ui/core/Typography';
 const NavBar = (props) => {
   const { buttons } = props;
   const navBar = buttons.map(button => (
-    <div key={button.label} className="organisation-page__nav-bar-item">
-      <Typography
-        variant="subheading"
-        className="organisation-page__nav-bar-item"
-      >
-        <Link className="organisation-page__link" to={button.path}>{button.label}</Link>
+    <div key={button.label}>
+      <Typography>
+        <Link className="organisation-page__nav-bar-item mako text-bold" to={button.path}>{button.label}</Link>
       </Typography>
     </div>
   ));

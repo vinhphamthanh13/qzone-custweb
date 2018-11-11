@@ -1,5 +1,5 @@
 import Home from 'pages/Home';
-import Organisation from 'pages/organisation/Organisation';
+import Organisation from 'pages/Organisation';
 
 
 const rootRoutes = [

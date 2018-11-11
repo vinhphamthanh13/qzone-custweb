@@ -10,9 +10,6 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
-  card: {
-    display: 'flex',
-  },
   header: {
     fontWeight: '500',
     color: `${theme.palette.primary.contrastText}`,
@@ -23,11 +20,6 @@ const styles = theme => ({
     justifyContent: 'center',
     alignItems: 'center',
     display: 'flex',
-  },
-  tile: {
-    height: 'auto',
-    width: '92%',
-    margin: '1em',
   },
   button: {
     margin: '1em auto',
@@ -41,11 +33,11 @@ const styles = theme => ({
 });
 
 const ServiceCard = (props) => {
-  const { classes, cardList } = props;
+  const { classes, cardList, serviceClass } = props;
   const cards = cardList.length > 1
     ? cardList.map(card => (
-      <GridListTile classes={classes} key={card.name}>
-        <Card className={classes.card}>
+      <GridListTile classes={serviceClass.gridListTile} key={card.name}>
+        <Card classes={serviceClass.card}>
           <div className={classes.image}>
             <img src={card.src} alt={card.name} width="100%" />
           </div>
@@ -66,15 +58,13 @@ const ServiceCard = (props) => {
       <Grid item xs={8}>
         <Typography
           align="center"
-          component="h4"
-          variant="h4"
-          className={classes.header}
+          classes={serviceClass.title}
           color="textPrimary"
           gutterBottom
         >
           Pets (and their humans) love us
         </Typography>
-        <GridList cellHeight="auto" className={classes.gridList}>
+        <GridList cellHeight="auto" classes={serviceClass.gridList}>
           {cards}
         </GridList>
         <Button variant="contained" className={classes.button}>We care of it</Button>
@@ -86,6 +76,7 @@ const ServiceCard = (props) => {
 ServiceCard.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
   cardList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  serviceClass: PropTypes.objectOf(PropTypes.object).isRequired,
 };
 
 export default withStyles(styles)(ServiceCard);

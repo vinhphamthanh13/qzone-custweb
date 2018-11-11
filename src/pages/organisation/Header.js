@@ -7,41 +7,13 @@ import Content from 'components/common/Content';
 import ImageGridList from 'components/common/ImageGridList';
 import Dog from 'images/dog.png';
 import PetCare from 'images/custweb-pet.png';
-import './Organisation.scss';
+import '../Organisation.scss';
 import ServiceCard from './ServiceCard';
 import ProviderCard from './ProviderCard';
-
-const navBar = (org) => {
-  const { url } = org;
-  const serviceUrl = `/${url}/service`;
-  return ([
-    {
-      label: 'Home',
-      path: '/',
-      children: [],
-    },
-    {
-      label: 'Services',
-      path: serviceUrl,
-      children: [
-        { label: 'Vaccinate', path: `${serviceUrl}/vaccinate` },
-        { label: 'Pet Care', path: `${serviceUrl}/pet-care` },
-      ],
-    },
-    {
-      label: 'Favorites',
-      path: `/${url}/favorites`,
-    },
-    {
-      label: 'Help',
-      path: `/${url}/help`,
-    },
-  ]);
-};
+import OrgPage from './styles';
 
 const Header = (props) => {
-  const { orgData } = props;
-  const menuBar = navBar(orgData);
+  const { menu } = props;
   const title1 = 'We care for your furry little loved ones<br/>while<br/>you\'re away';
   const title2 = 'Expert care for your furry, feathery, or scaley friend';
   const title3 = 'Services tailored<br/>to your needs';
@@ -130,7 +102,7 @@ const Header = (props) => {
           <Grid container>
             <Grid container justify="space-between" className="organisation-page__brand">
               <Brand />
-              <NavBar buttons={menuBar} />
+              <NavBar buttons={menu} />
             </Grid>
             <Grid container justify="flex-end">
               <Content
@@ -171,7 +143,7 @@ const Header = (props) => {
         </Grid>
       </div>
       <div className="organisation-page__content-block--secondary">
-        <ServiceCard cardList={cardList} />
+        <ServiceCard cardList={cardList} serviceClass={OrgPage.petAndHuman} />
       </div>
       <div className="organisation-page__content-block--primary block-padding">
         <ProviderCard cardList={providerList} />
@@ -181,13 +153,7 @@ const Header = (props) => {
 };
 
 Header.propTypes = {
-  orgData: PropTypes.objectOf(PropTypes.any),
-};
-
-Header.defaultProps = {
-  orgData: {
-    url: '/organisation',
-  },
+  menu: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 export default Header;

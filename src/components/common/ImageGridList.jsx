@@ -22,17 +22,17 @@ const styles = () => ({
 });
 
 const ImageGridList = (props) => {
-  const { classes, pixList, square } = props;
-  const [imageGrid, breakPoint] = pixList.length > 1
+  const { classes, imageList, square } = props;
+  const [imageGrid, breakPoint] = imageList.length > 1
     ? [(
       <GridList cols={square} className={classes.root}>
-        {pixList.map(image => (
+        {imageList.map(image => (
           <GridListTile classes={classes} key={image.name}>
             <img style={Styles.fullImage} src={image.src} alt={image.name} />
           </GridListTile>
         ))}
       </GridList>), 4]
-    : [<img style={Styles.fullImage} src={pixList[0].src} alt={pixList[0].name} />, 6];
+    : [<img style={Styles.fullImage} src={imageList[0].src} alt={imageList[0].name} />, 6];
   return (
     <Grid item xs={breakPoint}>
       {imageGrid}
@@ -42,7 +42,7 @@ const ImageGridList = (props) => {
 
 ImageGridList.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
-  pixList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  imageList: PropTypes.arrayOf(PropTypes.object).isRequired,
   square: PropTypes.number.isRequired,
 };
 
