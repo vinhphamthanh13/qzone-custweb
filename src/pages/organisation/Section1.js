@@ -9,22 +9,23 @@ import '../Organisation.scss';
 const sectionClasses = {
   brand: {
     logo: {
-      root: 'org-page__logo',
+      root: 'org-page__section-1__logo',
     },
     brand: {
-      root: 'org-page__brand header2 ghost-white',
+      root: 'org-page__section-1__brand header2 ghost-white',
     },
     wrapper: {
-      root: 'org-page__brand-wrapper',
+      root: 'org-page__section-1__brand-wrapper',
     },
   },
   title: {
-    root: 'org-page__title header1 text-bold',
+    root: 'org-page__section-1__title header1 text-bold',
   },
   button: {
-    root: 'org-page__button bg-we-peep mako',
+    root: 'org-page__section-1__button bg-we-peep mako',
   },
-  linkClass: 'org-page__nav-bar-item mako text-bold',
+  paragraph: 'org-page__section-1__paragraph',
+  linkClass: 'org-page__section-1__nav-bar-item mako text-bold',
 };
 
 const Section1 = (props) => {
@@ -40,6 +41,7 @@ const Section1 = (props) => {
           titleClass={sectionClasses.title}
           buttonLabel="Subscribe now"
           buttonClass={sectionClasses.button}
+          paragraphClass={sectionClasses.paragraph}
         />
       </Grid>
     </React.Fragment>

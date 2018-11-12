@@ -2,46 +2,62 @@
 
 .org-page {
   &__section-1 {
-    background: url('../images/dog_bg.jpg') no-repeat;
+    background: url('../images/xs/cat_xs.png') no-repeat;
     background-size: cover;
-    padding-bottom: 1.5em;
-  }
-  &__logo {
-    width: 35px;
-    height: 35px;
-  }
-  &__brand {
-    text-transform: uppercase;
-    font-weight: 700;
-    font-size: 1.5rem;
-    padding-left: 1em;
-  }
-  &__brand-wrapper {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-  }
-  &__navbar-wrapper {
-    padding: 3em;
-    width: 100%;
-  }
-  &__nav-bar-item {
-    display: inline-flex;
-    margin: 0.5em 0.2em;
-    text-transform: capitalize;
-    font-size: 1.2rem;
-    text-decoration: none;
-    &:hover {
+    &--overlay {
+      background: rgba($we_peep, 0.3);
     }
-  }
-  &__title {
-    width: 65%;
-    margin-left: .25em;
-  }
-
-  &__button {
-    border-radius: 3em;
-    margin: .5em;
+    &__logo {
+      width: 3em;
+      height: 3em;
+    }
+    &__brand {
+      text-transform: uppercase;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: $mako;
+      margin-left: .5em;
+    }
+    &__brand-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    &__navbar-wrapper {
+      padding: 3em;
+      width: 100%;
+    }
+    &__nav-bar-item {
+      display: inline-flex;
+      margin: 0.5em 0.2em;
+      text-transform: capitalize;
+      font-size: 1.2rem;
+      text-decoration: none;
+      position: relative;
+      &::after {
+        content: '';
+        width: 100%;
+        border-bottom: 1px solid $we_peep;
+        bottom: -5px;
+        background: transparent;
+        position: absolute;
+      }
+      &:hover {
+        &::after {
+          border-bottom: 4px solid $mako;
+          transition-property: border-bottom-width;
+          transition-timing-function: ease-in;
+          transition-delay: 0.5s;
+        }
+      }
+    }
+    &__paragraph {
+      text-align: center;
+    }
+    &__button {
+      border-radius: 3em;
+      margin: 1em auto;
+    }
   }
 
   &__section-2 {
@@ -69,7 +85,6 @@
     &__card-image {
       width: fit-content;
       height: fit-content;
-      //display: flex;
     }
   }
 
@@ -83,19 +98,35 @@
 
 @include breakpoint(md up) {
   .org-page {
-    &__logo {
-      width: 62px;
-      height: 62px;
-    }
-    &__brand {
-      text-transform: uppercase;
-      font-weight: 700;
-    }
-    &__navbar-wrapper {
-      padding: 3em;
-    }
-    &__nav-bar-item {
-      margin: auto .5em;
+    &__section-1 {
+      background: url('../images/dog_bg.jpg') no-repeat;
+      &__logo {
+        width: 62px;
+        height: 62px;
+      }
+      &__brand {
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+      &__brand-wrapper {
+        justify-content: flex-start;
+      }
+      &__navbar-wrapper {
+        padding: 3em;
+      }
+      &__nav-bar-item {
+        margin: auto .5em;
+      }
+      &__paragraph {
+        text-align: left;
+      }
+      &__title {
+        width: 65%;
+        margin-left: .25em;
+      }
+      &__button {
+        margin: 1em .5em;
+      }
     }
   }
 }
