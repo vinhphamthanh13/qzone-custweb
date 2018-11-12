@@ -14,7 +14,7 @@ export default function SubCategoryTabs({
           ? 'contained' : 'text'}
         color="primary"
         onClick={() => { onChange(subCategory, 'selectedSubCategory'); }}
-        className="subcategory-tabs__item"
+        classes={{ root: 'subcategory-tabs__item' }}
       >
         {subCategory.name}
       </Button>
@@ -32,5 +32,5 @@ export const subCategoriesType = PropTypes.arrayOf(subCategoryType);
 SubCategoryTabs.propTypes = {
   subCategories: subCategoriesType.isRequired,
   onChange: PropTypes.func.isRequired,
-  selectedSubCategory: subCategoryType.isRequired,
+  selectedSubCategory: subCategoryType,
 };

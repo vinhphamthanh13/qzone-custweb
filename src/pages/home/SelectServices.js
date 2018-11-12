@@ -52,11 +52,15 @@ export default function SelectServices({
 }
 
 SelectServices.propTypes = {
-  services: PropTypes.shape({
+  services: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-  }).isRequired,
+  })).isRequired,
   onChange: PropTypes.func.isRequired,
-  selectedSubCategory: subCategoryType.isRequired,
+  selectedSubCategory: subCategoryType,
   subCategories: subCategoriesType.isRequired,
+};
+
+SelectServices.defaultProps = {
+  selectedSubCategory: undefined,
 };
