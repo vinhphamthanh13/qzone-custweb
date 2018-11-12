@@ -47,7 +47,11 @@ export default class Home extends React.PureComponent {
   }
 
   onChange = (value, key) => {
+    const { history } = this.props;
     this.setState({ [key]: value });
+    if (value.id) {
+      history.push(`/organisation/${value.id}`);
+    }
   }
 
   onSubmit = () => {

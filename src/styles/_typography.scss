@@ -1,23 +1,18 @@
-@charset "utf-8";
-
-.title {
-  font-size: 3rem;
-  font-weight: bold;
-}
+/* Typography */
 
 .header1 {
-  font-size: 2rem;
+  font-size: 2.5rem;
 }
 
 .header2 {
-  font-size: 1.8rem;
+  font-size: 2rem;
 }
 
 .header3 {
   font-size: 1.5rem;
 }
 
-.text-upper {
+.text-uppercase {
   text-transform: uppercase;
 }
 
@@ -27,4 +22,12 @@
 
 .text-bold {
   font-weight: bold;
+}
+
+.text-margin-left {
+  margin-left: 1em;
+}
+
+.block-padding {
+  padding: 3em 0;
 }
