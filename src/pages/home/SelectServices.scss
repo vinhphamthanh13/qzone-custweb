@@ -1,10 +1,11 @@
-.select-services__options {
-  margin-bottom: 16px;
-  padding: 8px 16px;
-  display: flex;
-  align-items: center;
-}
-
-.select-services__item-image {
-  height: 200px;
+.select-services {
+  &__options {
+    margin-bottom: 16px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+  }
+  &__item-image {
+    height: 200px;
+  }
 }
