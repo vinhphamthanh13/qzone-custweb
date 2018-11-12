@@ -173,6 +173,11 @@ module.exports = {
   module: {
     strictExportPresence: true,
     rules: [
+      // Image
+      // {
+      //   test: /\.(jpe?g|gif|png|svg)$/i,
+      //   use: 'file-loader?name=/images/[name].[ext]',
+      // },
       // Disable require.ensure as it's not a standard language feature.
       { parser: { requireEnsure: false } },
 
@@ -186,7 +191,6 @@ module.exports = {
             options: {
               formatter: require.resolve('react-dev-utils/eslintFormatter'),
               eslintPath: require.resolve('eslint'),
-              
             },
             loader: require.resolve('eslint-loader'),
           },
@@ -219,7 +223,6 @@ module.exports = {
               customize: require.resolve(
                 'babel-preset-react-app/webpack-overrides'
               ),
-              
               plugins: [
                 [
                   require.resolve('babel-plugin-named-asset-import'),
@@ -259,7 +262,7 @@ module.exports = {
               cacheDirectory: true,
               // Don't waste time on Gzipping the cache
               cacheCompression: false,
-              
+
               // If an error happens in a package, it's possible to be
               // because it was compiled. Thus, we don't want the browser
               // debugger to show the original code. Instead, the code

@@ -6,7 +6,7 @@ import {
   Paper,
 } from '@material-ui/core';
 import './SelectServices.scss';
-import serviceImg from 'images/service.jpg';
+import serviceImg from 'images/service-provider.png';
 import AdvancedSearch from './AdvancedSearch';
 import 'styles/_layout.scss';
 import SubCategoryTabs, { subCategoryType, subCategoriesType } from './SubCategoryTabs';
