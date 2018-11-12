@@ -5,14 +5,11 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
 const NavBar = (props) => {
-  const { buttons } = props;
+  const { buttons, linkClass } = props;
   const navBar = buttons.map(button => (
-    <div key={button.label} className="organisation-page__nav-bar-item">
-      <Typography
-        variant="subheading"
-        className="organisation-page__nav-bar-item"
-      >
-        <Link className="organisation-page__link" to={button.path}>{button.label}</Link>
+    <div key={button.label}>
+      <Typography>
+        <Link className={linkClass} to={button.path}>{button.label}</Link>
       </Typography>
     </div>
   ));
@@ -25,6 +22,11 @@ const NavBar = (props) => {
 
 NavBar.propTypes = {
   buttons: PropTypes.arrayOf(PropTypes.object).isRequired,
+  linkClass: PropTypes.string,
+};
+
+NavBar.defaultProps = {
+  linkClass: '',
 };
 
 export default NavBar;

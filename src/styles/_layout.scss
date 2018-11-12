@@ -1,7 +1,6 @@
-@charset "utf-8";
+@import "color";
 
-/* Grid line is count from 1 NOT 0 */
-
+/* Layout */
 .container {
   display: grid;
 }
@@ -15,7 +14,50 @@
   align-items: center;
 }
 
-.image-holder {
-  max-width: 100%;
-  max-height: 100%;
+.flex {
+  display: flex;
+}
+
+.auto-margin-vertical {
+  margin: auto 0;
+}
+
+.item-center {
+  align-items: center;
+}
+
+/* Color Classes */
+.ghost-white {
+  color: ghostwhite;
+}
+
+.mako {
+  color: $mako;
+}
+
+.we-peep {
+  color: $we_peep;
+}
+
+/* Background */
+.bg-mako {
+  background: $mako;
+}
+
+.bg-mako:hover {
+  transition: color 0.2s, background 0.2s;
+  transition-timing-function: ease-in;
+  background: $we_peep;
+  color: $mako;
+}
+
+.bg-we-peep {
+  background: $we_peep;
+}
+
+.bg-we-peep:hover {
+  background: $mako;
+  transition: color 0.2s, background 0.2s;
+  transition-timing-function: ease-out;
+  color: $we_peep;
 }

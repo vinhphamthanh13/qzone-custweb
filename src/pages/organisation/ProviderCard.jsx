@@ -89,7 +89,7 @@ const ProviderCard = (props) => {
         >
           {Parser(content)}
         </Typography>
-        <GridList cellHeight="auto" cols={3} className={classes.gridList}>
+        <GridList cellHeight="auto" cols={3} className={classes.gridList} spacing={32}>
           {cards}
         </GridList>
       </Grid>
