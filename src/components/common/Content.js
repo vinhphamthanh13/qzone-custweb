@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 
 const Content = (props) => {
   const {
-    title, titleClass, subTitle, subTitleClass, content, contentClass, buttonLabel, buttonClass,
+    title, titleClass, subTitle, subTitleClass, content, contentClass, buttonLabel, buttonClass, paragraphClass,
   } = props;
   const pageTitle = title
     ? <Typography classes={titleClass}>{Parser(title)}</Typography>
@@ -19,11 +19,13 @@ const Content = (props) => {
     ? <Typography gutterBottom classes={contentClass}>{Parser(content)}</Typography>
     : '';
   return (
-    <Grid item xs={12} md={4}>
-      {pageTitle}
-      {pageSubtitle}
-      {pageContent}
-      <Button variant="contained" classes={buttonClass}>{buttonLabel}</Button>
+    <Grid item xs={12} md={4} className="auto-margin-vertical">
+      <div className={paragraphClass}>
+        {pageTitle}
+        {pageSubtitle}
+        {pageContent}
+        <Button variant="contained" classes={buttonClass}>{buttonLabel}</Button>
+      </div>
     </Grid>
   );
 };
@@ -37,6 +39,7 @@ Content.propTypes = {
   contentClass: PropTypes.string,
   buttonClass: PropTypes.objectOf(PropTypes.string),
   buttonLabel: PropTypes.string.isRequired,
+  paragraphClass: PropTypes.string,
 };
 
 Content.defaultProps = {
@@ -47,6 +50,7 @@ Content.defaultProps = {
   content: '',
   contentClass: '',
   buttonClass: { root: '' },
+  paragraphClass: '',
 };
 
 export default Content;

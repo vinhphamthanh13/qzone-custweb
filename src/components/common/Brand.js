@@ -8,7 +8,7 @@ const Brand = (props) => {
   const { organisationName, logo, brandClass } = props;
   return (
     <Grid item xs={6} md={2}>
-      <div className="organisation-page__logo-wrapper">
+      <div className={brandClass.wrapper.root}>
         <Avatar
           classes={brandClass.logo}
           alt={organisationName}
@@ -39,6 +39,9 @@ Brand.defaultProps = {
     },
     brand: {
       root: 'brand',
+    },
+    wrapper: {
+      root: 'brand-wrapper',
     },
   },
 };

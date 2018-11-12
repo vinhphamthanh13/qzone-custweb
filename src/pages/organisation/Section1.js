@@ -7,18 +7,24 @@ import Content from 'components/common/Content';
 import '../Organisation.scss';
 
 const sectionClasses = {
-  logo: {
-    root: 'organisation-page__logo',
-  },
   brand: {
-    root: 'organisation-page__brand header2 ghost-white',
+    logo: {
+      root: 'org-page__logo',
+    },
+    brand: {
+      root: 'org-page__brand header2 ghost-white',
+    },
+    wrapper: {
+      root: 'org-page__brand-wrapper',
+    },
   },
   title: {
-    root: 'organisation-page__title header1 text-bold',
+    root: 'org-page__title header1 text-bold',
   },
   button: {
-    root: 'organisation-page__button',
+    root: 'org-page__button bg-we-peep mako',
   },
+  linkClass: 'org-page__nav-bar-item mako text-bold',
 };
 
 const Section1 = (props) => {
@@ -26,8 +32,8 @@ const Section1 = (props) => {
   const title = 'We care for your furry little loved ones<br/> while<br/>you\'re away';
   return (
     <React.Fragment>
-      <Brand logo={logo} brandClass={sectionClasses} />
-      <NavBar buttons={menuButtons} />
+      <Brand logo={logo} brandClass={sectionClasses.brand} />
+      <NavBar buttons={menuButtons} linkClass={sectionClasses.linkClass} />
       <Grid container justify="flex-end">
         <Content
           title={title}
