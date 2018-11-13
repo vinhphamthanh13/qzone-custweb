@@ -19,7 +19,7 @@ const Content = (props) => {
     ? <Typography gutterBottom classes={contentClass}>{Parser(content)}</Typography>
     : '';
   return (
-    <Grid item xs={12} md={4} className="auto-margin-vertical">
+    <Grid item xs={10} md={4} className="auto-margin-vertical">
       <div className={paragraphClass}>
         {pageTitle}
         {pageSubtitle}
