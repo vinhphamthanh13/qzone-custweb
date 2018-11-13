@@ -1,6 +1,15 @@
 @import "styles/_settings.scss";
 
 .org-page {
+  &-wrapper {
+    display: block;
+    width: 100%;
+    max-width: unset;
+  }
+  &__button {
+    border-radius: 3em;
+    margin: 1em auto;
+  }
   &__section-1 {
     background: url('../images/xs/cat_xs.png') no-repeat;
     background-size: cover;
@@ -54,11 +63,8 @@
     &__paragraph {
       text-align: center;
     }
-    &__button {
-      border-radius: 3em;
-      margin: 1em auto;
-    }
   }
+
 
   &__section-2 {
     margin: 5em auto;
@@ -72,7 +78,7 @@
   &__section-3 {
     background: rgba($we_peep, 0.5);
     &__paragraph {
-      margin-left: 6em;
+      margin-left: 1.5em;
     }
   }
 
@@ -98,6 +104,13 @@
 
 @include breakpoint(md up) {
   .org-page {
+    &-wrapper {
+      max-width: 1440px;
+      margin: auto;
+    }
+    &__button {
+      margin: 1em .5em;
+    }
     &__section-1 {
       background: url('../images/dog_bg.jpg') no-repeat;
       &__logo {
@@ -124,8 +137,10 @@
         width: 65%;
         margin-left: .25em;
       }
-      &__button {
-        margin: 1em .5em;
+    }
+    &__section-3 {
+      &__paragraph {
+        margin-left: 6em;
       }
     }
   }

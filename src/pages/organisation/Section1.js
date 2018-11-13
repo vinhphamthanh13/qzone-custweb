@@ -22,7 +22,7 @@ const sectionClasses = {
     root: 'org-page__section-1__title header1 text-bold',
   },
   button: {
-    root: 'org-page__section-1__button bg-we-peep mako',
+    root: 'org-page__button bg-we-peep mako',
   },
   paragraph: 'org-page__section-1__paragraph',
   linkClass: 'org-page__section-1__nav-bar-item mako text-bold',

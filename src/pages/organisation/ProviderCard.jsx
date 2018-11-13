@@ -34,7 +34,7 @@ const styles = theme => ({
     paddingBottom: '2em',
   },
   gridList: {
-    marginLeft: '2em !important',
+    marginLeft: '2em',
     textAlign: 'center',
   },
   avatar: {
@@ -71,7 +71,7 @@ const ProviderCard = (props) => {
     : null;
   return (
     <Grid container justify="center">
-      <Grid item xs={8}>
+      <Grid item xs={10} md={8}>
         <Typography
           align="center"
           component="h4"

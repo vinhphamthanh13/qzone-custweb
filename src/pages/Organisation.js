@@ -42,27 +42,29 @@ const Organisation = (props) => {
   const navButtons = getNavButtons(orgData);
   return (
     <React.Fragment>
-      <div className="org-page__section-1">
-        <div className="org-page__section-1--overlay">
-          <Grid container justify="space-between" className="org-page__section-1__navbar-wrapper">
-            <Section1
-              menuButtons={navButtons}
-              logo={OrgLogo}
-            />
-          </Grid>
+      <div className="org-page-wrapper">
+        <div className="org-page__section-1">
+          <div className="org-page__section-1--overlay">
+            <Grid container justify="space-between" className="org-page__section-1__navbar-wrapper">
+              <Section1
+                menuButtons={navButtons}
+                logo={OrgLogo}
+              />
+            </Grid>
+          </div>
         </div>
-      </div>
-      <div className="org-page__section-2">
-        <Section2 />
-      </div>
-      <div className="org-page__section-3">
-        <Section3 />
-      </div>
-      <div className="org-page__section-service-card">
-        <ServiceCard cardList={serviceList} />
-      </div>
-      <div className="org-page__section-3 org-page__section-provider-card">
-        <ProviderCard cardList={providerList} />
+        <div className="org-page__section-2">
+          <Section2 />
+        </div>
+        <div className="org-page__section-3">
+          <Section3 />
+        </div>
+        <div className="org-page__section-service-card">
+          <ServiceCard cardList={serviceList} />
+        </div>
+        <div className="org-page__section-3 org-page__section-provider-card">
+          <ProviderCard cardList={providerList} />
+        </div>
       </div>
     </React.Fragment>
   );

@@ -50,7 +50,7 @@ const ServiceCard = (props) => {
     : null;
   return (
     <Grid container direction="column" alignItems="center">
-      <Grid item xs={8}>
+      <Grid item xs={10} md={8}>
         <Typography align="center" classes={serviceClass.title}>Pets (and their humans) love us</Typography>
         <GridList spacing={32}>
           {cards}
