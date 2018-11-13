@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 const Brand = (props) => {
   const { organisationName, logo, brandClass } = props;
   return (
-    <Grid item xs={12} md={2}>
+    <Grid item xs={12} sm={4} md={2}>
       <div className={brandClass.wrapper.root}>
         <Avatar classes={brandClass.logo} alt={organisationName} src={logo} />
         <Typography classes={brandClass.brand}>{organisationName}</Typography>

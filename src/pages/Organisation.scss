@@ -102,20 +102,16 @@
   }
 }
 
-@include breakpoint(md up) {
+@include breakpoint-up(sm) {
   .org-page {
-    &-wrapper {
-      max-width: 1440px;
-      margin: auto;
-    }
     &__button {
       margin: 1em .5em;
     }
     &__section-1 {
       background: url('../images/dog_bg.jpg') no-repeat;
       &__logo {
-        width: 62px;
-        height: 62px;
+        width: 3em;
+        height: 3em;
       }
       &__brand {
         text-transform: uppercase;
@@ -134,14 +130,24 @@
         text-align: left;
       }
       &__title {
-        width: 65%;
+        width: 80%;
         margin-left: .25em;
       }
     }
     &__section-3 {
       &__paragraph {
-        margin-left: 6em;
+        margin-left: auto;
       }
+    }
+  }
+}
+
+
+@include breakpoint-up(md) {
+  .org-page {
+    &-wrapper {
+      max-width: 1440px;
+      margin: auto;
     }
   }
 }

@@ -36,7 +36,7 @@ const ServiceCard = (props) => {
       <GridListTile key={card.id}>
         <Card classes={serviceClass.card.wrapper}>
           <div className={serviceClass.card.image}>
-            <img src={card.src} alt={card.name} width="100%" height="62%" />
+            <img src={card.src} alt={card.name} width="100%" height="65%" />
           </div>
           <div>
             <CardContent>
@@ -50,7 +50,7 @@ const ServiceCard = (props) => {
     : null;
   return (
     <Grid container direction="column" alignItems="center">
-      <Grid item xs={10} md={8}>
+      <Grid item xs={10}>
         <Typography align="center" classes={serviceClass.title}>Pets (and their humans) love us</Typography>
         <GridList spacing={32}>
           {cards}

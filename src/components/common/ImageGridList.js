@@ -14,11 +14,11 @@ const ImageGridList = (props) => {
             <img width="100%" height="100%" src={image.src} alt={image.name} />
           </GridListTile>
         ))}
-      </GridList>), 4]
+      </GridList>), 5]
     : [<img width="100%" height="100%" src={imageList[0].src} alt={imageList[0].name} />, 6];
   const xsBreakPoint = colx2 < 1 ? 12 : 10;
   return (
-    <Grid item xs={xsBreakPoint} md={breakPoint}>
+    <Grid item xs={xsBreakPoint} sm={breakPoint}>
       {imageGrid}
     </Grid>
   );
