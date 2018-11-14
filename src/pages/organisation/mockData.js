@@ -1,10 +1,11 @@
 import Dog from 'images/dog.png';
+import Dragon from 'images/dragon.jpeg';
 
 export const serviceList = [
   {
     id: 0,
     name: 'dog0',
-    src: Dog,
+    src: Dragon,
     title: 'Lorem Ipsum',
     content: 'Lorem ipsum is placeholder text commonly used in the graphic, print'
       + ' and publishing industries for previewing layouts and visual mockups.',
@@ -12,7 +13,7 @@ export const serviceList = [
   {
     id: 1,
     name: 'dog1',
-    src: Dog,
+    src: Dragon,
     title: 'Lorem Ipsum',
     content: 'Lorem ipsum is placeholder text commonly used in the graphic, print'
       + ' and publishing industries for previewing layouts and visual mockups.',
@@ -20,7 +21,7 @@ export const serviceList = [
   {
     id: 2,
     name: 'dog2',
-    src: Dog,
+    src: Dragon,
     title: 'Lorem Ipsum',
     content: 'Lorem ipsum is placeholder text commonly used in the graphic, print'
       + ' and publishing industries for previewing layouts and visual mockups.',
