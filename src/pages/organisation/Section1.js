@@ -33,8 +33,10 @@ const Section1 = (props) => {
   const title = 'We care for your furry little loved ones<br/> while<br/>you\'re away';
   return (
     <React.Fragment>
-      <Brand logo={logo} brandClass={sectionClasses.brand} />
-      <NavBar buttons={menuButtons} linkClass={sectionClasses.linkClass} />
+      <Grid container justify="space-between">
+        <Brand logo={logo} brandClass={sectionClasses.brand} />
+        <NavBar buttons={menuButtons} linkClass={sectionClasses.linkClass} />
+      </Grid>
       <Grid container justify="flex-end">
         <Content
           title={title}

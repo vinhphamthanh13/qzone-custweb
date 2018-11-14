@@ -71,7 +71,7 @@ const ProviderCard = (props) => {
     : null;
   return (
     <Grid container justify="center">
-      <Grid item xs={10} md={8}>
+      <Grid item xs={10}>
         <Typography
           align="center"
           component="h4"

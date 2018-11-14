@@ -29,7 +29,7 @@ export default function SelectServices({
       </Paper>
       <Grid container spacing={32}>
         {services.map(service => (
-          <Grid item md={3} key={service.id}>
+          <Grid item sm={3} key={service.id}>
             <Card>
               <CardActionArea onClick={() => onChange(service, 'selectedService')}>
                 <CardMedia

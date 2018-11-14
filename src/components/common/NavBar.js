@@ -14,7 +14,7 @@ const NavBar = (props) => {
     </div>
   ));
   return (
-    <Grid item xs={12} md={4} className="inline-flex">
+    <Grid item xs={12} sm={6} className="inline-flex">
       {navBar}
     </Grid>
   );

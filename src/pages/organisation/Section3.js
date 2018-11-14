@@ -15,7 +15,7 @@ const sectionClasses = {
   button: {
     root: 'org-page__button bg-mako ghost-white',
   },
-  paragraph: 'org-page__section-3__paragraph',
+  paragraph: 'org-page__paragraph',
 };
 
 const imageList = [

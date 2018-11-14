@@ -75,7 +75,7 @@ export default class Home extends React.PureComponent {
 
     return (
       <Grid container>
-        <Grid item md={12}>
+        <Grid item sm={12}>
           <CategoryTabs
             value={selectedCategory}
             onCategoryChange={this.onCategoryChange}
@@ -83,7 +83,7 @@ export default class Home extends React.PureComponent {
             onSubmit={this.onSubmit}
           />
         </Grid>
-        <Grid item md={12} className="home__select-service">
+        <Grid item sm={12} className="home__select-service">
           <SelectServices
             services={services}
             onChange={this.onChange}

@@ -1,5 +1,24 @@
 @charset "utf-8";
 
+/* Resolution */
+$min-width: 1024px;
+$max-width: 1440px;
+
+/* MUI breakpoints */
+$xs: 0;
+$sm: 600px;
+$md: 960px;
+$lg: 1280px;
+$xl: 1920px;
+
+/* Dimension */
+$global-radius: 3em;
+$global-padding: 2em;
+$global-margin: 2em;
+
+/* Transition */
+$global-transition-time: .5s;
+
 @import
 "mixins",
 "color";
@@ -7,4 +26,5 @@
 @import
 "styles/_brand.scss",
 "styles/_cta.scss",
+"styles/_layout.scss",
 "styles/_typography.scss";

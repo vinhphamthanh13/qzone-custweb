@@ -8,17 +8,17 @@ const ImageGridList = (props) => {
   const { imageList, colx2 } = props;
   const [imageGrid, breakPoint] = imageList.length > 1
     ? [(
-      <GridList cols={colx2 * 2} spacing={16}>
+      <GridList cellHeight="auto" cols={colx2 * 2} spacing={16}>
         {imageList.map(image => (
           <GridListTile key={image.id}>
-            <img width="100%" height="100%" src={image.src} alt={image.name} />
+            <img src={image.src} alt={image.name} />
           </GridListTile>
         ))}
-      </GridList>), 4]
+      </GridList>), 5]
     : [<img width="100%" height="100%" src={imageList[0].src} alt={imageList[0].name} />, 6];
   const xsBreakPoint = colx2 < 1 ? 12 : 10;
   return (
-    <Grid item xs={xsBreakPoint} md={breakPoint}>
+    <Grid item xs={xsBreakPoint} sm={breakPoint}>
       {imageGrid}
     </Grid>
   );
