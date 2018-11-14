@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   AppBar, Tabs, Tab, Toolbar,
 } from '@material-ui/core';
@@ -30,3 +31,10 @@ export default function CategoryTabs({
     </AppBar>
   );
 }
+
+CategoryTabs.propTypes = {
+  value: PropTypes.number.isRequired,
+  onChange: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  onCategoryChange: PropTypes.func.isRequired,
+};

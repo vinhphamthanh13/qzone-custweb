@@ -3,6 +3,7 @@ import {
   Grid,
 } from '@material-ui/core';
 import './Home.scss';
+import { historyType } from 'types/global';
 import CategoryTabs from './home/CategoryTabs';
 import SelectServices from './home/SelectServices';
 
@@ -33,6 +34,10 @@ const services = [{
 }];
 
 export default class Home extends React.PureComponent {
+  static propTypes = {
+    history: historyType.isRequired,
+  }
+
   constructor(props) {
     super(props);
     this.state = {

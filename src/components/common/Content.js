@@ -32,11 +32,11 @@ const Content = (props) => {
 
 Content.propTypes = {
   title: PropTypes.string,
-  titleClass: PropTypes.string,
+  titleClass: PropTypes.objectOf(PropTypes.string),
   subTitle: PropTypes.string,
-  subTitleClass: PropTypes.string,
+  subTitleClass: PropTypes.objectOf(PropTypes.string),
   content: PropTypes.string,
-  contentClass: PropTypes.string,
+  contentClass: PropTypes.objectOf(PropTypes.string),
   buttonClass: PropTypes.objectOf(PropTypes.string),
   buttonLabel: PropTypes.string.isRequired,
   paragraphClass: PropTypes.string,
@@ -44,11 +44,11 @@ Content.propTypes = {
 
 Content.defaultProps = {
   title: '',
-  titleClass: '',
+  titleClass: { root: '' },
   subTitle: '',
-  subTitleClass: '',
+  subTitleClass: { root: '' },
   content: '',
-  contentClass: '',
+  contentClass: { root: '' },
   buttonClass: { root: '' },
   paragraphClass: '',
 };
