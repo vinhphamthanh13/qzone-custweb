@@ -11,6 +11,7 @@ import DateFnsUtils from 'material-ui-pickers/utils/date-fns-utils';
 import JssProvider from 'react-jss/lib/JssProvider';
 import { create } from 'jss';
 import { createGenerateClassName, jssPreset } from '@material-ui/core/styles';
+import 'config/api';
 import './App.scss';
 
 const generateClassName = createGenerateClassName();

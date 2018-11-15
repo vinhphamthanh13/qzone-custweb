@@ -1,41 +1,21 @@
 import React from 'react';
-import {
-  Grid,
-} from '@material-ui/core';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Grid } from '@material-ui/core';
 import './Home.scss';
-import { historyType } from 'types/global';
-import CategoryTabs from './home/CategoryTabs';
-import SelectServices from './home/SelectServices';
+import { getServiceCategories, getServices } from 'utils/api/home';
+import { handleResponse } from 'utils/api/helpers';
+import { setServiceCategories, setServices } from 'modules/home.actions';
+import CategoryTabs, { serviceCategoriesType } from './home/CategoryTabs';
+import SelectServices from './home/Services';
+import { serviceType } from './home/services/ServiceCard';
 
-const services = [{
-  id: 'cat-1',
-  name: 'First category',
-}, {
-  id: 'cat-2',
-  name: 'Second category',
-}, {
-  id: 'cat-3',
-  name: 'Second category',
-}, {
-  id: 'cat-4',
-  name: 'Second category',
-}, {
-  id: 'cat-11',
-  name: 'First category',
-}, {
-  id: 'cat-22',
-  name: 'Second category',
-}, {
-  id: 'cat-33',
-  name: 'Second category',
-}, {
-  id: 'cat-44',
-  name: 'Second category',
-}];
-
-export default class Home extends React.PureComponent {
+class Home extends React.PureComponent {
   static propTypes = {
-    history: historyType.isRequired,
+    setServiceCategoriesAction: PropTypes.func.isRequired,
+    setServicesAction: PropTypes.func.isRequired,
+    services: PropTypes.arrayOf(serviceType).isRequired,
+    serviceCategories: serviceCategoriesType.isRequired,
   }
 
   constructor(props) {
@@ -46,43 +26,61 @@ export default class Home extends React.PureComponent {
       searchText: undefined,
       subCategory: undefined,
       subCategories: [],
-      selectedCategory: 0,
-      selectedSubCategory: undefined,
+      selectedCategoryId: false,
+      selectedSubCategoryId: undefined,
+      searchedServices: [],
     };
   }
 
+  async componentDidMount() {
+    const { setServiceCategoriesAction, setServicesAction } = this.props;
+
+    const [serviceCategories, services] = (await Promise.all([
+      getServiceCategories(),
+      getServices(),
+    ])).map(handleResponse);
+
+    setServiceCategoriesAction(serviceCategories);
+    setServicesAction(services);
+  }
+
   onChange = (value, key) => {
-    const { history } = this.props;
     this.setState({ [key]: value });
-    if (value.id) {
-      history.push(`/organisation/${value.id}`);
-    }
   }
 
   onSubmit = () => {
     console.log(this.state);
   }
 
-  onCategoryChange = (event, selectedCategory) => {
-    this.setState(oldState => ({
-      selectedCategory,
-      selectedSubCategory: undefined,
-      subCategories: oldState.subCategories.length ? [] : [
-        { id: 'sub-1', name: 'Sub Category One' },
-        { id: 'sub-2', name: 'Sub Category Two' },
-        { id: 'sub-3', name: 'Sub Category Three' },
-      ],
-    }));
+  onCategoryChange = (event, selectedCategoryId) => {
+    const { serviceCategories, services } = this.props;
+
+    const subCategories = serviceCategories.filter(
+      category => category.parentCategory && category.parentCategory.id === selectedCategoryId,
+    );
+
+    const searchedServices = services.filter(service => service.serviceCategoryId === selectedCategoryId);
+
+    this.setState({
+      selectedCategoryId,
+      selectedSubCategoryId: undefined,
+      subCategories,
+      searchedServices,
+    });
   }
 
   render() {
-    const { selectedCategory, subCategories, selectedSubCategory } = this.state;
+    const { serviceCategories } = this.props;
+    const {
+      selectedCategoryId, subCategories, selectedSubCategoryId, searchedServices,
+    } = this.state;
 
     return (
       <Grid container>
         <Grid item sm={12}>
           <CategoryTabs
-            value={selectedCategory}
+            serviceCategories={serviceCategories}
+            value={selectedCategoryId}
             onCategoryChange={this.onCategoryChange}
             onChange={this.onChange}
             onSubmit={this.onSubmit}
@@ -90,13 +88,22 @@ export default class Home extends React.PureComponent {
         </Grid>
         <Grid item sm={12} className="home__select-service">
           <SelectServices
-            services={services}
+            services={searchedServices}
             onChange={this.onChange}
             subCategories={subCategories}
-            selectedSubCategory={selectedSubCategory}
+            selectedSubCategoryId={selectedSubCategoryId}
           />
         </Grid>
       </Grid>
     );
   }
 }
+
+const mapStateToProps = state => ({
+  ...state.home,
+});
+
+export default connect(
+  mapStateToProps,
+  { setServiceCategoriesAction: setServiceCategories, setServicesAction: setServices },
+)(Home);

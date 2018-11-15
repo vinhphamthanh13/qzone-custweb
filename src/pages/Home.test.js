@@ -2,7 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import Home from './Home';
 import CategoryTabs from './home/CategoryTabs';
-import SelectServices from './home/SelectServices';
+import SelectServices from './home/Services';
 
 describe('Home', () => {
   let wrapper;

@@ -1,0 +1,14 @@
+.service-card {
+  &__header {
+    position: relative;
+  }
+  &__image {
+    height: 200px;
+    background-size: contain;
+  }
+  &__tab-root {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
+}

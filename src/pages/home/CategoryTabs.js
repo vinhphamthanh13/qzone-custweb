@@ -6,8 +6,16 @@ import {
 import SimpleSearch from './SimpleSearch';
 import 'styles/_layout.scss';
 
+const serviceCategoryType = PropTypes.shape({
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  parentCategory: PropTypes.object,
+});
+
+export const serviceCategoriesType = PropTypes.arrayOf(serviceCategoryType);
+
 export default function CategoryTabs({
-  value, onChange, onSubmit, onCategoryChange,
+  value, onChange, onSubmit, onCategoryChange, serviceCategories,
 }) {
   return (
     <AppBar position="static">
@@ -17,13 +25,11 @@ export default function CategoryTabs({
           onChange={onCategoryChange}
           scrollable
         >
-          <Tab label="Category One" />
-          <Tab label="Category Two" />
-          <Tab label="Category Three" />
-          <Tab label="Category Four" />
-          <Tab label="Category Five" />
-          <Tab label="Category Six" />
-          <Tab label="Category Seven" />
+          {serviceCategories.map(category => (category.parentCategory === null
+            ? (
+              <Tab key={category.id} label={category.name} value={category.id} />
+            )
+            : null))}
         </Tabs>
         <div className="grow" />
         <SimpleSearch onChange={onChange} onSubmit={onSubmit} />
@@ -33,8 +39,9 @@ export default function CategoryTabs({
 }
 
 CategoryTabs.propTypes = {
-  value: PropTypes.number.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onCategoryChange: PropTypes.func.isRequired,
+  serviceCategories: serviceCategoriesType.isRequired,
 };
