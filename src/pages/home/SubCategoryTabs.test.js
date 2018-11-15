@@ -12,8 +12,7 @@ describe('SubCategoryTabs', () => {
 
   it('should render 2 button and none of them is selected', () => {
     const subCategories = [{ id: '1', name: 'sub-1' }, { id: '2', name: 'sub-2' }];
-    const selectedSubCategory = { id: '-1', name: '' };
-    const props = { subCategories, selectedSubCategory, onChange };
+    const props = { subCategories, onChange };
 
     const wrapper = shallow(<SubCategoryTabs {...props} />);
 
@@ -29,9 +28,10 @@ describe('SubCategoryTabs', () => {
   });
 
   it('should render 2 button and one of them is selected', () => {
+    const selectedSubCategoryId = '1';
     const selectedSubCategory = { id: '1', name: 'sub-1' };
     const subCategories = [selectedSubCategory, { id: '2', name: 'sub-2' }];
-    const props = { subCategories, selectedSubCategory, onChange };
+    const props = { subCategories, selectedSubCategoryId, onChange };
 
     const wrapper = shallow(<SubCategoryTabs {...props} />);
 
@@ -49,13 +49,13 @@ describe('SubCategoryTabs', () => {
   it('should render 1 button with correct onChange prop', () => {
     const selectedSubCategory = { id: '1', name: 'sub-1' };
     const subCategories = [selectedSubCategory];
-    const props = { subCategories, selectedSubCategory, onChange };
+    const props = { subCategories, onChange };
 
     const wrapper = shallow(<SubCategoryTabs {...props} />);
     const btn = wrapper.find(Button).at(0);
     btn.simulate('click');
 
     expect(onChange).toHaveBeenCalledTimes(1);
-    expect(onChange).toHaveBeenCalledWith(selectedSubCategory, 'selectedSubCategory');
+    expect(onChange).toHaveBeenCalledWith(selectedSubCategory.id, 'selectedSubCategoryId');
   });
 });

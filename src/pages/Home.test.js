@@ -1,14 +1,20 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import Home from './Home';
+import { Home } from './Home';
 import CategoryTabs from './home/CategoryTabs';
 import SelectServices from './home/Services';
 
 describe('Home', () => {
   let wrapper;
+  const props = {
+    setServiceCategoriesAction: jest.fn(),
+    setServicesAction: jest.fn(),
+    services: [],
+    serviceCategories: [],
+  };
 
   beforeEach(() => {
-    wrapper = shallow(<Home />);
+    wrapper = shallow(<Home {...props} />);
   });
 
   it('should contain CategoryTabs and SelectServices', () => {
@@ -17,21 +23,21 @@ describe('Home', () => {
   });
 
   it('should pass props to CategoryTabs correctly', () => {
-    const selectedCategory = 'selectedCategory';
+    const selectedCategoryId = 'selectedCategoryId';
 
-    wrapper.setState({ selectedCategory });
+    wrapper.setState({ selectedCategoryId });
 
-    expect(wrapper.find(CategoryTabs).prop('value')).toBe(selectedCategory);
+    expect(wrapper.find(CategoryTabs).prop('value')).toBe(selectedCategoryId);
   });
 
   it('should pass props to SelectServices correctly', () => {
-    const subCategories = 'subCategories';
-    const selectedSubCategory = 'selectedSubCategory';
+    const subCategories = [];
+    const selectedSubCategoryId = 'selectedSubCategoryId';
 
-    wrapper.setState({ subCategories, selectedSubCategory });
+    wrapper.setState({ subCategories, selectedSubCategoryId });
 
     expect(wrapper.find(SelectServices).prop('subCategories')).toBe(subCategories);
-    expect(wrapper.find(SelectServices).prop('selectedSubCategory'))
-      .toBe(selectedSubCategory);
+    expect(wrapper.find(SelectServices).prop('selectedSubCategoryId'))
+      .toBe(selectedSubCategoryId);
   });
 });

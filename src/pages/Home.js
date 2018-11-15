@@ -10,7 +10,7 @@ import CategoryTabs, { serviceCategoriesType } from './home/CategoryTabs';
 import SelectServices from './home/Services';
 import { serviceType } from './home/services/ServiceCard';
 
-class Home extends React.PureComponent {
+export class Home extends React.PureComponent {
   static propTypes = {
     setServiceCategoriesAction: PropTypes.func.isRequired,
     setServicesAction: PropTypes.func.isRequired,

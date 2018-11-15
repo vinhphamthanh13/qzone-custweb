@@ -143,6 +143,7 @@
       "jsx",
       "node"
     ],
-    "setupTestFrameworkScriptFile": "<rootDir>/config/enzyme.config.js"
+    "setupTestFrameworkScriptFile": "<rootDir>/config/enzyme.config.js",
+    "clearMocks": true
   }
 }
