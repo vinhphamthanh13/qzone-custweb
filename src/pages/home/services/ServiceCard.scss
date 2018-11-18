@@ -1,3 +1,5 @@
+@import 'styles/_color.scss';
+
 .service-card {
   &__header {
     position: relative;
@@ -6,9 +8,38 @@
     height: 200px;
     background-size: contain;
   }
-  &__tab-root {
+  &__discount {
     position: absolute;
-    bottom: 0;
-    width: 100%;
+    top: 20px;
+    right: 0;
+    padding: 8px 24px 8px 8px;
+    background: $secondary;
+    color: white;
+    font-size: 20px;
+  }
+  &__service-detail {
+    margin-top: 16px;
+  }
+  &__service-detail-item {
+    margin-top: 8px;
+    &::first-child {
+      margin-top: 0;
+    }
+  }
+  &__selected-time {
+    margin-top: 8px;
+  }
+  &__org-link {
+    margin-left: 5px;
+  }
+  &__provider-time {
+    margin-top: 16px;
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+  &__footer {
+    justify-content: center;
+    border-top: 2px solid $we_peep;
   }
 }
