@@ -15,3 +15,14 @@ export const routesType = PropTypes.arrayOf(PropTypes.object);
 export const matchType = PropTypes.objectOf(PropTypes.oneOfType([
   PropTypes.object, PropTypes.string, PropTypes.bool,
 ]));
+
+export const serviceType = PropTypes.shape({
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+});
+
+export const providerType = PropTypes.shape({
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  availableSlots: PropTypes.arrayOf(PropTypes.string),
+});

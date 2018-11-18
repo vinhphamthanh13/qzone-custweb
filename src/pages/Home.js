@@ -6,9 +6,9 @@ import './Home.scss';
 import { getServiceCategories, getServices } from 'utils/api/home';
 import { handleResponse } from 'utils/api/helpers';
 import { setServiceCategories, setServices } from 'modules/home.actions';
+import { serviceType } from 'types/global';
 import CategoryTabs, { serviceCategoriesType } from './home/CategoryTabs';
 import SelectServices from './home/Services';
-import { serviceType } from './home/services/ServiceCard';
 
 export class Home extends React.PureComponent {
   static propTypes = {

@@ -17,20 +17,8 @@
     color: white;
     font-size: 20px;
   }
-  &__service-detail {
-    margin-top: 16px;
-  }
-  &__service-detail-item {
-    margin-top: 8px;
-    &::first-child {
-      margin-top: 0;
-    }
-  }
   &__selected-time {
     margin-top: 8px;
-  }
-  &__org-link {
-    margin-left: 5px;
   }
   &__provider-time {
     margin-top: 16px;

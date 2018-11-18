@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Paper } from '@material-ui/core';
+import { serviceType } from 'types/global';
 import './Services.scss';
 import AdvancedSearch from './AdvancedSearch';
 import 'styles/_layout.scss';
 import SubCategoryTabs, { subCategoriesType } from './SubCategoryTabs';
-import ServiceCard, { serviceType } from './services/ServiceCard';
+import ServiceCard from './services/ServiceCard';
 
 export default function Services({
   services,

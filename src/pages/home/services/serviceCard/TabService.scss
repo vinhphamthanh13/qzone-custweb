@@ -1,0 +1,11 @@
+.tab-service {
+  &__detail {
+    margin-top: 16px;
+  }
+  &__detail-item {
+    margin-top: 8px;
+    &::first-child {
+      margin-top: 0;
+    }
+  }
+}
