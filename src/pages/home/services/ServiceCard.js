@@ -2,13 +2,11 @@ import React, { PureComponent } from 'react';
 import serviceImg from 'images/service-provider.png';
 import {
   Card, CardContent, CardMedia, CardActions,
-  Tabs, Tab, Button, Paper,
+  Button, Paper,
 } from '@material-ui/core';
 import './ServiceCard.scss';
 import { serviceType } from 'types/global';
-import TabService from './serviceCard/TabService';
-import TabOrg from './serviceCard/TabOrg';
-import TabProviders from './serviceCard/TabProviders';
+import ServiceDetail from './serviceCard/ServiceDetail';
 
 const mockProviders = [
   {
@@ -36,14 +34,9 @@ export default class ServiceCard extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      selectedTab: 0,
       selectedTime: { providerId: '1', time: '06:00 PM' },
       selectedDate: new Date(),
     };
-  }
-
-  onTabChange = (event, selectedTab) => {
-    this.setState({ selectedTab });
   }
 
   onSelectTime = (providerId, time) => {
@@ -52,7 +45,7 @@ export default class ServiceCard extends PureComponent {
 
   render() {
     const { service } = this.props;
-    const { selectedTab, selectedTime, selectedDate } = this.state;
+    const { selectedTime, selectedDate } = this.state;
 
     return (
       <Card>
@@ -63,36 +56,14 @@ export default class ServiceCard extends PureComponent {
           />
           <Paper square classes={{ root: 'service-card__discount' }}>-30%</Paper>
         </div>
-        <Tabs
-          color="primary"
-          value={selectedTab}
-          onChange={this.onTabChange}
-        >
-          <Tab label="Service" />
-          <Tab label="Organisation" />
-          <Tab label="Providers" />
-        </Tabs>
         <CardContent>
-          {selectedTab === 0
-            && (
-              <TabService
-                providers={mockProviders}
-                service={service}
-                selectedDate={selectedDate}
-                selectedTime={selectedTime}
-              />)
-          }
-          {selectedTab === 1
-            && (<TabOrg />)
-          }
-          {selectedTab === 2
-            && (
-            <TabProviders
-              providers={mockProviders}
-              selectedTime={selectedTime}
-              onSelectTime={this.onSelectTime}
-            />)
-          }
+          <ServiceDetail
+            providers={mockProviders}
+            service={service}
+            selectedDate={selectedDate}
+            selectedTime={selectedTime}
+            onSelectTime={this.onSelectTime}
+          />
         </CardContent>
         <CardActions classes={{ root: 'service-card__footer' }}>
           <Button color="primary" variant="contained" onClick={() => { }}>

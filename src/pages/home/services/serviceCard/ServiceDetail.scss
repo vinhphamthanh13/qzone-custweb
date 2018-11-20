@@ -1,8 +1,6 @@
-.tab-service {
-  &__detail {
-    margin-top: 16px;
-  }
-  &__detail-item {
+.service-detail {
+  margin-top: 16px;  
+  &__item {
     margin-top: 8px;
     &::first-child {
       margin-top: 0;
