@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import serviceImg from 'images/service-provider.png';
 import {
   Card, CardContent, CardMedia, CardActions,
-  Button, Paper,
+  Button,
 } from '@material-ui/core';
 import './ServiceCard.scss';
 import { serviceType } from 'types/global';
@@ -49,13 +49,10 @@ export default class ServiceCard extends PureComponent {
 
     return (
       <Card>
-        <div className="service-card__header">
-          <CardMedia
-            className="service-card__image"
-            image={serviceImg}
-          />
-          <Paper square classes={{ root: 'service-card__discount' }}>-30%</Paper>
-        </div>
+        <CardMedia
+          className="service-card__image"
+          image={serviceImg}
+        />
         <CardContent>
           <ServiceDetail
             providers={mockProviders}
