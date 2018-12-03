@@ -1,3 +1,3 @@
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://35.189.61.189:8080/api/';
+axios.defaults.baseURL = 'http://13.238.116.171:8080/api';
