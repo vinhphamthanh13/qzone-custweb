@@ -56,7 +56,7 @@ export class Home extends React.PureComponent {
     const { serviceCategories, services } = this.props;
 
     const subCategories = serviceCategories.filter(
-      category => category.parentCategory && category.parentCategory.id === selectedCategoryId,
+      category => category.parentCategoryId && category.parentCategoryId === selectedCategoryId,
     );
 
     const searchedServices = services.filter(service => service.serviceCategoryId === selectedCategoryId);

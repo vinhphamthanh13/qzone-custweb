@@ -25,7 +25,7 @@ export default function CategoryTabs({
           onChange={onCategoryChange}
           scrollable={serviceCategories.length > 7}
         >
-          {serviceCategories.map(category => (category.parentCategory === null
+          {serviceCategories.map(category => (category.parentCategoryId === null
             ? (
               <Tab key={category.id} label={category.name} value={category.id} />
             )
