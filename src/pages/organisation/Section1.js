@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
-import Brand from 'components/common/Brand';
-import NavBar from 'components/common/NavBar';
-import Content from 'components/common/Content';
+import Brand from 'components/Brand';
+import NavBar from 'components/NavBar';
+import Content from 'components/Content';
 import '../Organisation.scss';
 
 const sectionClasses = {

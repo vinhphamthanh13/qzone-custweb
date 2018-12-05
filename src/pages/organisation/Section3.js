@@ -1,7 +1,7 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import Content from 'components/common/Content';
-import ImageGridList from 'components/common/ImageGridList';
+import Content from 'components/Content';
+import ImageGridList from 'components/ImageGridList';
 import PetCare from 'images/petcare.png';
 import '../Organisation.scss';
 
