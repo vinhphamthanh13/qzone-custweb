@@ -15,7 +15,7 @@ const serviceCategoryType = PropTypes.shape({
 export const serviceCategoriesType = PropTypes.arrayOf(serviceCategoryType);
 
 export default function CategoryTabs({
-  value, onChange, onSubmit, onCategoryChange, serviceCategories,
+  value, onSearch, onCategoryChange, serviceCategories,
 }) {
   return (
     <AppBar position="static">
@@ -32,7 +32,7 @@ export default function CategoryTabs({
             : null))}
         </Tabs>
         <div className="grow" />
-        <SimpleSearch onChange={onChange} onSubmit={onSubmit} />
+        <SimpleSearch onSearch={onSearch} />
       </Toolbar>
     </AppBar>
   );
@@ -40,8 +40,7 @@ export default function CategoryTabs({
 
 CategoryTabs.propTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
-  onChange: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
+  onSearch: PropTypes.func.isRequired,
   onCategoryChange: PropTypes.func.isRequired,
   serviceCategories: serviceCategoriesType.isRequired,
 };
