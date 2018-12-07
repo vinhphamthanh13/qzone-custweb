@@ -1,0 +1,9 @@
+@import 'styles/_color.scss';
+
+.custom-link {
+  color: $primary;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}

@@ -9,8 +9,12 @@
   "rules": {
     "linebreak-style": "off",
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-    "max-len": ["error", { "code": 89 }],
-    "quotes": ["error", "single"]
+    "max-len": ["error", { "code": 120 }],
+    "quotes": ["error", "single"],
+    "react/jsx-one-expression-per-line": "off",
+    "import/prefer-default-export": "off",
+    "import/no-named-as-default": "off",
+    "react/destructuring-assignment": "off",
   },
   "settings": {
     "import/resolver": {

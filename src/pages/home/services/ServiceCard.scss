@@ -1,0 +1,12 @@
+@import 'styles/_color.scss';
+
+.service-card {
+  &__image {
+    height: 200px;
+    background-size: contain;
+  }
+  &__footer {
+    justify-content: center;
+    border-top: 2px solid $we_peep;
+  }
+}
