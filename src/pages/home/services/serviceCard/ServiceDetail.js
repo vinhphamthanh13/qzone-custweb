@@ -14,11 +14,7 @@ export default function ServiceDetail({
     <React.Fragment>
       <Typography variant="title">{service.name}</Typography>
       <div className="service-detail">
-        <Grid container className="service-detail__item">
-          <Grid item sm={10}>
-            <Typography variant="subtitle2">{service.description}Read More</Typography>
-          </Grid>
-        </Grid>
+        <Typography variant="subtitle2">{service.description} Read more</Typography>
         <Grid container className="service-detail__item">
           <Grid item sm={6}>
             <Typography variant="caption">Duration:</Typography>
@@ -33,7 +29,7 @@ export default function ServiceDetail({
           </Grid>
           <Grid item sm={6}>
             <Typography variant="subtitle2">
-              <CustomLink text="Organisation 1" to="/organisation/1" />
+              <CustomLink text={service.organization.name} to={`/organisation/${service.organization.id}`} />
             </Typography>
           </Grid>
         </Grid>
