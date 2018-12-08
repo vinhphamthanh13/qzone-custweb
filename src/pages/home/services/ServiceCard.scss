@@ -3,6 +3,8 @@
 .service-card {
   &__image {
     height: 200px;
+    background-size: contain;
+
   }
   &__footer {
     justify-content: center;

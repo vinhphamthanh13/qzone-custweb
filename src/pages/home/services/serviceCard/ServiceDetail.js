@@ -52,7 +52,7 @@ export default class ServiceDetail extends React.PureComponent {
         <Typography variant="title">{service.name}</Typography>
         <div className="service-detail">
           <Typography variant="subtitle2">
-            {(service.description || '').substring(0, 100)}...&nbsp;
+            {(service.description || '').substring(0, 300)}...&nbsp;
             <CustomLink text="Read more" to="#" onClick={this.openDialog} />
           </Typography>
           <Grid container className="service-detail__item">
