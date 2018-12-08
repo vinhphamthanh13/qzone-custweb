@@ -8,6 +8,7 @@
   &__cards-wrapper {
     position: relative;
     min-height: calc(100vh - 150px);
+    padding-top: 16px;
   }
   &__loading {
     position: absolute;

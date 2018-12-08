@@ -48,7 +48,7 @@ export default class ServiceCard extends PureComponent {
     const { selectedTime, selectedDate } = this.state;
 
     return (
-      <Card>
+      <Card raised>
         <CardMedia
           className="service-card__image"
           image={serviceImg}
