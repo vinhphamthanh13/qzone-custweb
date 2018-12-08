@@ -60,7 +60,7 @@ export class Home extends React.PureComponent {
 
   getSearchedServices = (services, searchText, selectedCategoryId) => services.filter(
     (service) => {
-      const lowerSearchText = searchText.toLowerCase();
+      const lowerSearchText = searchText ? searchText.toLowerCase() : undefined;
       const isChosen = searchText
         ? service.name.toLowerCase().includes(lowerSearchText)
             || service.organization.name.toLowerCase().includes(lowerSearchText)

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import serviceImg from 'images/service-provider.png';
+import serviceImg from 'images/service-provider.jpeg';
 import {
   Card, CardContent, CardMedia, CardActions,
   Button,
@@ -12,17 +12,17 @@ const mockProviders = [
   {
     id: '1',
     name: 'Provider 1',
-    availableSlots: ['06:00 PM', '07:00 PM', '07:40 PM', '07:50 PM'],
+    availableSlots: [],
   },
   {
     id: '2',
     name: 'Provider 2',
-    availableSlots: ['06:10 PM', '06:30 PM', '07:40 PM', '07:50 PM'],
+    availableSlots: [],
   },
   {
     id: '3',
     name: 'Provider 3',
-    availableSlots: ['06:00 PM', '07:00 PM', '08:40 PM', '08:50 PM'],
+    availableSlots: [],
   },
 ];
 
@@ -64,7 +64,7 @@ export default class ServiceCard extends PureComponent {
         </CardContent>
         <CardActions classes={{ root: 'service-card__footer' }}>
           <Button color="primary" variant="contained" onClick={() => { }}>
-            Book now
+            Select
           </Button>
         </CardActions>
       </Card>

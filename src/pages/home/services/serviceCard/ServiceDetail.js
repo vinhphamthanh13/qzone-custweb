@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Grid, Button } from '@material-ui/core';
-import { format } from 'date-fns';
 import { serviceType, providerType } from 'types/global';
 import './ServiceDetail.scss';
 import CustomLink from 'components/CustomLink';
 
 export default function ServiceDetail({
-  providers, service, selectedDate, selectedTime, onSelectTime,
+  providers, service, selectedTime, onSelectTime,
 }) {
   const selectedProvider = providers.find(provider => provider.id === selectedTime.providerId);
 
@@ -16,11 +15,16 @@ export default function ServiceDetail({
       <Typography variant="title">{service.name}</Typography>
       <div className="service-detail">
         <Grid container className="service-detail__item">
+          <Grid item sm={10}>
+            <Typography variant="subtitle2">{service.description}Read More</Typography>
+          </Grid>
+        </Grid>
+        <Grid container className="service-detail__item">
           <Grid item sm={6}>
-            <Typography variant="caption">Date:</Typography>
+            <Typography variant="caption">Duration:</Typography>
           </Grid>
           <Grid item sm={6}>
-            <Typography variant="subtitle2">{format(selectedDate, 'dd MMM yyyy')}</Typography>
+            <Typography variant="subtitle2">{service.duration} minutes</Typography>
           </Grid>
         </Grid>
         <Grid container className="service-detail__item">
@@ -65,7 +69,7 @@ export default function ServiceDetail({
 ServiceDetail.propTypes = {
   providers: PropTypes.arrayOf(providerType).isRequired,
   service: serviceType.isRequired,
-  selectedDate: PropTypes.instanceOf(Date).isRequired,
+  // selectedDate: PropTypes.instanceOf(Date).isRequired,
   selectedTime: PropTypes.shape({
     providerId: PropTypes.string.isRequired,
     time: PropTypes.string.isRequired,
