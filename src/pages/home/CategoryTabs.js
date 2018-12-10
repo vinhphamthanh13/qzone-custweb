@@ -4,7 +4,6 @@ import {
   AppBar, Tabs, Tab, Toolbar,
 } from '@material-ui/core';
 import SimpleSearch from './SimpleSearch';
-import 'styles/_layout.scss';
 
 const serviceCategoryType = PropTypes.shape({
   id: PropTypes.string.isRequired,

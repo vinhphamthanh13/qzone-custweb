@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Grid } from '@material-ui/core';
+import {
+  Grid, Dialog, Slide, AppBar, Toolbar, IconButton, Button,
+} from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 import './Home.scss';
 import { getServiceCategories } from 'utils/api/home';
 import { handleResponse } from 'utils/api/helpers';
@@ -11,6 +14,10 @@ import {
 import { serviceType } from 'types/global';
 import CategoryTabs, { serviceCategoriesType } from './home/CategoryTabs';
 import Services from './home/Services';
+
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
 
 /* eslint react/no-unused-state: 0 */
 export class Home extends React.PureComponent {
@@ -33,6 +40,8 @@ export class Home extends React.PureComponent {
       subCategories: [],
       selectedCategoryId: false,
       selectedSubCategoryId: undefined,
+      selectedService: undefined,
+      bookingDetail: undefined,
     };
   }
 
@@ -63,7 +72,7 @@ export class Home extends React.PureComponent {
       const lowerSearchText = searchText ? searchText.toLowerCase() : undefined;
       const isChosen = searchText
         ? service.name.toLowerCase().includes(lowerSearchText)
-            || service.organization.name.toLowerCase().includes(lowerSearchText)
+        || service.organization.name.toLowerCase().includes(lowerSearchText)
         : true;
       return !selectedCategoryId || (isChosen && service.serviceCategoryId === selectedCategoryId);
     },
@@ -92,34 +101,63 @@ export class Home extends React.PureComponent {
     });
   }
 
+  handleCloseServiceDialog = () => {
+    this.setState({ selectedService: undefined });
+  }
+
+  onSaveBooking = () => {
+    console.log(this.state.bookingDetail);
+  }
+
   render() {
     const { serviceCategories, isLoading, services } = this.props;
     const {
       selectedCategoryId, subCategories, selectedSubCategoryId, searchText,
+      selectedService,
     } = this.state;
     const searchedServices = this.getSearchedServices(services, searchText, selectedCategoryId);
 
     return (
-      <Grid container>
-        <Grid item sm={12}>
-          <CategoryTabs
-            serviceCategories={serviceCategories}
-            value={selectedCategoryId}
-            onCategoryChange={this.onCategoryChange}
-            onSearch={this.onSearch}
-          />
+      <>
+        <Dialog
+          fullScreen
+          open={selectedService !== undefined}
+          onClose={this.handleCloseServiceDialog}
+          TransitionComponent={Transition}
+        >
+          <AppBar>
+            <Toolbar>
+              <IconButton color="inherit" onClick={this.handleCloseServiceDialog} aria-label="Close">
+                <CloseIcon />
+              </IconButton>
+              <div className="grow" />
+              <Button color="inherit" onClick={this.onSaveBooking}>
+                save
+              </Button>
+            </Toolbar>
+          </AppBar>
+        </Dialog>
+        <Grid container>
+          <Grid item sm={12}>
+            <CategoryTabs
+              serviceCategories={serviceCategories}
+              value={selectedCategoryId}
+              onCategoryChange={this.onCategoryChange}
+              onSearch={this.onSearch}
+            />
+          </Grid>
+          <Grid item sm={12} className="home__select-service">
+            <Services
+              services={searchedServices}
+              onChange={this.onChange}
+              subCategories={subCategories}
+              selectedSubCategoryId={selectedSubCategoryId}
+              isLoading={isLoading}
+              onLoadServices={this.onLoadServices}
+            />
+          </Grid>
         </Grid>
-        <Grid item sm={12} className="home__select-service">
-          <Services
-            services={searchedServices}
-            onChange={this.onChange}
-            subCategories={subCategories}
-            selectedSubCategoryId={selectedSubCategoryId}
-            isLoading={isLoading}
-            onLoadServices={this.onLoadServices}
-          />
-        </Grid>
-      </Grid>
+      </>
     );
   }
 }

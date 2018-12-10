@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import serviceImg from 'images/service-provider.jpeg';
 import {
   Card, CardContent, CardMedia, CardActions,
@@ -29,6 +30,7 @@ const mockProviders = [
 export default class ServiceCard extends PureComponent {
   static propTypes = {
     service: serviceType.isRequired,
+    onChange: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -41,6 +43,10 @@ export default class ServiceCard extends PureComponent {
 
   onSelectTime = (providerId, time) => {
     this.setState({ selectedTime: { providerId, time } });
+  }
+
+  onSelectService = () => {
+    this.props.onChange(this.props.service, 'selectedService');
   }
 
   render() {
@@ -63,7 +69,7 @@ export default class ServiceCard extends PureComponent {
           />
         </CardContent>
         <CardActions classes={{ root: 'service-card__footer' }}>
-          <Button color="primary" variant="contained" onClick={() => { }}>
+          <Button color="primary" variant="contained" onClick={this.onSelectService}>
             Select
           </Button>
         </CardActions>
