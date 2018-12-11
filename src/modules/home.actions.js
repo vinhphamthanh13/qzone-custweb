@@ -1,9 +1,9 @@
-import { searchServicesByName, searchServicesByCategory } from 'utils/api/home';
-import { handleResponse } from 'utils/api/helpers';
+import { searchServicesByName, searchServicesByCategory } from 'api/home';
+import { handleResponse } from 'api/helpers';
 
-export const SET_SERVICE_CATEGORIES = 'SET_SERVICE_CATEGORIES';
-export const SET_SERVICES = 'SET_SERVICES';
-export const SET_LOADING = 'SET_LOADING';
+export const SET_SERVICE_CATEGORIES = 'HOME.SET_SERVICE_CATEGORIES';
+export const SET_SERVICES = 'HOME.SET_SERVICES';
+export const SET_LOADING = 'HOME.SET_LOADING';
 
 export const setServiceCategories = payload => ({
   type: SET_SERVICE_CATEGORIES,
