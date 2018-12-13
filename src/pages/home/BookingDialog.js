@@ -6,7 +6,6 @@ import {
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { serviceType } from 'types/global';
-import SelectService from './bookingDialog/SelectService';
 import SelectProvider from './bookingDialog/SelectProvider';
 import SelectTime from './bookingDialog/SelectTime';
 import BookingDetail from './bookingDialog/BookingDetail';
@@ -20,15 +19,13 @@ export default class BookingDialog extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      step: 'service',
+      step: 'provider',
       bookingDetail: {
-        service: props.selectedService,
-        provider: 'Provider 1',
+        providerId: 'Provider 1',
       },
     };
-    this.bookingSteps = ['service', 'provider', 'time', 'detail'];
+    this.bookingSteps = ['provider', 'time', 'detail'];
     this.bookingStepsComponents = {
-      service: SelectService,
       provider: SelectProvider,
       time: SelectTime,
       detail: BookingDetail,

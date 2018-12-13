@@ -24,5 +24,4 @@ export const serviceType = PropTypes.shape({
 export const providerType = PropTypes.shape({
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  availableSlots: PropTypes.arrayOf(PropTypes.string),
 });
