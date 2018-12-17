@@ -10,7 +10,7 @@ const selectProvider = (state = initialState, action) => {
     case SET_PROVIDERS:
       return {
         ...state,
-        providers: state.providers.concat(
+        providers: action.payload.length === 0 ? [] : state.providers.concat(
           action.payload.filter(
             provider => state.providers.every(existedProvider => existedProvider.id !== provider.id),
           ),

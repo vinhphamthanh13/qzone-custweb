@@ -21,7 +21,7 @@ export default class BookingDialog extends PureComponent {
     this.state = {
       step: 'provider',
       bookingDetail: {
-        providerId: 'Provider 1',
+        providerId: '',
       },
     };
     this.bookingSteps = ['provider', 'time', 'detail'];
@@ -36,9 +36,13 @@ export default class BookingDialog extends PureComponent {
     this.setState({ step });
   }
 
+  onChangeBookingDetail = (value, key) => {
+    this.setState({ bookingDetail: { [key]: value } });
+  }
+
   render() {
     const { initService, handleClose } = this.props;
-    const { step } = this.state;
+    const { step, bookingDetail } = this.state;
     const StepComponent = this.bookingStepsComponents[step];
 
     return (
@@ -55,7 +59,7 @@ export default class BookingDialog extends PureComponent {
             </IconButton>
             <div className="grow" />
             <Button color="inherit" onClick={this.onSaveBooking}>
-                save
+              save
             </Button>
           </Toolbar>
         </AppBar>
@@ -72,7 +76,11 @@ export default class BookingDialog extends PureComponent {
             )}
           </Tabs>
         </Paper>
-        {<StepComponent {...this.props} />}
+        {<StepComponent
+          initService={initService}
+          onChange={this.onChangeBookingDetail}
+          bookingDetail={bookingDetail}
+        />}
       </Dialog>
     );
   }

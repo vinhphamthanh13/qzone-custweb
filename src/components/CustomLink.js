@@ -13,8 +13,10 @@ CustomLink.propTypes = {
   to: PropTypes.string.isRequired,
   className: PropTypes.string,
   text: PropTypes.string.isRequired,
+  target: PropTypes.string,
 };
 
 CustomLink.defaultProps = {
   className: '',
+  target: '_blank',
 };

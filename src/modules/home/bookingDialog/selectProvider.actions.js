@@ -1,5 +1,5 @@
 import { handleResponse } from 'api/helpers';
-import { searchProvidersByService } from 'api/home/bookingDialog/selectProvider';
+import { searchProvidersByService, searchProviderById } from 'api/home/bookingDialog/selectProvider';
 
 export const SET_LOADING = 'HOME.BOOKING_DIALOG.SELECT_SERVICE.SET_LOADING';
 export const SET_PROVIDERS = 'HOME.BOOKING_DIALOG.SELECT_SERVICE.SET_PROVIDERS';
@@ -14,9 +14,10 @@ export const setProviders = payload => ({
   payload,
 });
 
-export const getProvidersByService = orgId => async (dispatch) => {
+export const getProvidersByService = serviceId => async (dispatch) => {
   dispatch(setLoading(true));
-  const result = await searchProvidersByService(orgId);
+  const response = handleResponse(await searchProvidersByService(serviceId));
+  const result = await Promise.all(response.map(resp => searchProviderById(resp.providerId)));
   dispatch(setLoading(false));
-  dispatch(setProviders(handleResponse(result)));
+  dispatch(setProviders(result.map(handleResponse)));
 };

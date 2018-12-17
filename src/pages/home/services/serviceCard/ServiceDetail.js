@@ -49,7 +49,7 @@ export default class ServiceDetail extends React.PureComponent {
         <div className="service-detail">
           <Typography variant="subtitle2">
             {(service.description || '').substring(0, 300)}...&nbsp;
-            <CustomLink text="Read more" to="#" onClick={this.openDialog} />
+            {service.description.length > 300 && <CustomLink text="Read more" to="#" onClick={this.openDialog} />}
           </Typography>
         </div>
         <div className="service-detail">
