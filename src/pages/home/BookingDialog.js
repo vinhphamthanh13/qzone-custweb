@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Slide, Dialog, AppBar, Toolbar, IconButton, Button,
+  Slide, Dialog, AppBar, Toolbar, IconButton,
   Tabs, Tab, Paper,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
@@ -54,13 +54,10 @@ export default class BookingDialog extends PureComponent {
       >
         <AppBar position="relative">
           <Toolbar>
+            <div className="grow" />
             <IconButton color="inherit" onClick={handleClose} aria-label="Close">
               <CloseIcon />
             </IconButton>
-            <div className="grow" />
-            <Button color="inherit" onClick={this.onSaveBooking}>
-              save
-            </Button>
           </Toolbar>
         </AppBar>
         <Paper square>
