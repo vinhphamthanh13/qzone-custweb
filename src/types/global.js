@@ -28,4 +28,7 @@ export const providerType = PropTypes.shape({
     PropTypes.objectOf(PropTypes.string)]).isRequired,
 });
 
-export const bookingDetailType = PropTypes.objectOf(PropTypes.string);
+export const bookingDetailType = PropTypes.shape({
+  provider: PropTypes.object,
+  time: PropTypes.object,
+});

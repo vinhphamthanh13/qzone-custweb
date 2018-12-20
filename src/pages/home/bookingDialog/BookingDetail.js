@@ -3,6 +3,9 @@ import {
   Grid, TextField, Typography, Fab,
 } from '@material-ui/core';
 import './BookingDetail.scss';
+import { bookingDetailType, serviceType } from 'types/global';
+import { format } from 'date-fns';
+import formatName from 'utils/formatName';
 
 class BookingDetail extends React.PureComponent {
   constructor(props) {
@@ -20,7 +23,7 @@ class BookingDetail extends React.PureComponent {
 
   render() {
     const { name, email, phoneNumber } = this.state;
-
+    const { bookingDetail, initService } = this.props;
     return (
       <Grid container className="booking-detail__wrapper">
         <Grid item md={6} className="booking-detail__user-info">
@@ -53,19 +56,31 @@ class BookingDetail extends React.PureComponent {
           />
         </Grid>
         <Grid item md={5} className="booking-detail__service">
-          <Typography variant="h5">Art Class for Children(8-10 years)</Typography>
+          <Typography variant="h5">{initService.name}</Typography>
           <div className="booking-detail__service-items">
             <Grid container>
               <Grid item md={5}><Typography variant="body1">Date:</Typography></Grid>
-              <Grid item md={7}><Typography variant="subtitle1" color="secondary">18 December 2018</Typography></Grid>
+              <Grid item md={7}>
+                <Typography variant="subtitle1" color="secondary">
+                  {format(bookingDetail.time.start, 'dd MMMM yyyy')}
+                </Typography>
+              </Grid>
             </Grid>
             <Grid container>
               <Grid item md={5}><Typography variant="body1">Starts at:</Typography></Grid>
-              <Grid item md={7}><Typography variant="subtitle1" color="secondary">09:00 PM</Typography></Grid>
+              <Grid item md={7}>
+                <Typography variant="subtitle1" color="secondary">
+                  {format(bookingDetail.time.start, 'hh:mm a')}
+                </Typography>
+              </Grid>
             </Grid>
             <Grid container>
               <Grid item md={5}><Typography variant="body1">Service provider:</Typography></Grid>
-              <Grid item md={7}><Typography variant="subtitle1" color="secondary">Art School Group</Typography></Grid>
+              <Grid item md={7}>
+                <Typography variant="subtitle1" color="secondary">
+                  {formatName(bookingDetail.provider.name)}
+                </Typography>
+              </Grid>
             </Grid>
           </div>
           <div className="booking-detail__service-items">
@@ -78,5 +93,10 @@ class BookingDetail extends React.PureComponent {
     );
   }
 }
+
+BookingDetail.propTypes = {
+  bookingDetail: bookingDetailType.isRequired,
+  initService: serviceType.isRequired,
+};
 
 export default BookingDetail;

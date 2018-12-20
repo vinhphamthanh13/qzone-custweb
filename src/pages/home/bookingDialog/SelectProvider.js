@@ -8,6 +8,7 @@ import {
 import { providerType, serviceType, bookingDetailType } from 'types/global';
 import CustomLink from 'components/CustomLink';
 import { getProvidersByService } from 'modules/home/bookingDialog/selectProvider.actions';
+import formatName from 'utils/formatName';
 import EmptyState from '../services/EmptyState';
 import './SelectProvider.scss';
 
@@ -33,11 +34,15 @@ class SelectProvider extends React.PureComponent {
           }
           {providers.map(provider => (
             <Grid item md={4} key={provider.id}>
-              <Card classes={{ root: bookingDetail.providerId === provider.id ? 'select-provider__active-item' : '' }}>
-                <CardActionArea onClick={() => onChange(provider.id, 'providerId')}>
+              <Card classes={{
+                root: bookingDetail.provider && bookingDetail.provider.id === provider.id
+                  ? 'select-provider__active-item' : '',
+              }}
+              >
+                <CardActionArea onClick={() => onChange(provider, 'provider')}>
                   <CardContent>
                     <Typography variant="title">
-                      {`${provider.name.firstname} ${provider.name.middlename} ${provider.name.lastname}`}
+                      {formatName(provider.name)}
                     </Typography>
                     <div className="service-detail">
                       <Typography variant="subtitle2">

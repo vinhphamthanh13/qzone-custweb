@@ -1,5 +1,7 @@
 import { handleResponse } from 'api/helpers';
 import { searchProvidersByService, searchProviderById } from 'api/home/bookingDialog/selectProvider';
+import { searchOrganizationById } from 'api/home';
+import { setOrgs } from 'modules/home.actions';
 
 export const SET_LOADING = 'HOME.BOOKING_DIALOG.SELECT_SERVICE.SET_LOADING';
 export const SET_PROVIDERS = 'HOME.BOOKING_DIALOG.SELECT_SERVICE.SET_PROVIDERS';
@@ -14,10 +16,25 @@ export const setProviders = payload => ({
   payload,
 });
 
-export const getProvidersByService = serviceId => async (dispatch) => {
+export const getProvidersByService = serviceId => async (dispatch, getState) => {
   dispatch(setLoading(true));
-  const response = handleResponse(await searchProvidersByService(serviceId));
-  const result = await Promise.all(response.map(resp => searchProviderById(resp.providerId)));
+  const rawProvidersService = handleResponse(await searchProvidersByService(serviceId));
+  const response = await Promise.all(rawProvidersService.map(resp => searchProviderById(resp.providerId)));
+  const rawProviders = response.map(handleResponse);
+  const orgIds = [];
+  const { home } = getState();
+  rawProviders.forEach((provider) => {
+    if (!orgIds.includes(provider.organizationId) && !home.orgs.find(org => org.id === provider.organizationId)) {
+      orgIds.push(provider.organizationId);
+    }
+  });
+  const result = await Promise.all(orgIds.map(orgId => searchOrganizationById(orgId)));
+  const orgs = result.map(handleResponse).concat(home.orgs);
+  const providers = rawProviders.map(
+    provider => ({ ...provider, organization: orgs.find(org => org.id === provider.organizationId) }),
+  );
+
   dispatch(setLoading(false));
-  dispatch(setProviders(result.map(handleResponse)));
+  dispatch(setProviders(providers));
+  dispatch(setOrgs(orgs));
 };

@@ -21,14 +21,19 @@ export default class BookingDialog extends PureComponent {
     this.state = {
       step: 'provider',
       bookingDetail: {
-        providerId: '',
+        provider: undefined,
+        time: undefined,
       },
+      bookingSteps: [
+        { value: 'provider', disabled: false },
+        { value: 'time', disabled: true },
+        { value: 'booking detail', disabled: true },
+      ],
     };
-    this.bookingSteps = ['provider', 'time', 'detail'];
     this.bookingStepsComponents = {
       provider: SelectProvider,
       time: SelectTime,
-      detail: BookingDetail,
+      'booking detail': BookingDetail,
     };
   }
 
@@ -37,13 +42,47 @@ export default class BookingDialog extends PureComponent {
   }
 
   onChangeBookingDetail = (value, key) => {
-    this.setState({ bookingDetail: { [key]: value } });
+    const { bookingDetail } = this.state;
+
+    if (key === 'provider') {
+      if (bookingDetail.time) {
+        this.setState(oldState => ({
+          bookingDetail: { ...oldState.bookingDetail, [key]: value },
+          bookingSteps: [
+            { value: 'provider', disabled: false },
+            { value: 'time', disabled: false },
+            { value: 'booking detail', disabled: false },
+          ],
+        }));
+      } else {
+        this.setState(oldState => ({
+          bookingDetail: { ...oldState.bookingDetail, [key]: value },
+          bookingSteps: [
+            { value: 'provider', disabled: false },
+            { value: 'time', disabled: false },
+            { value: 'booking detail', disabled: true },
+          ],
+        }));
+      }
+    } else {
+      this.setState(oldState => ({
+        bookingDetail: { ...oldState.bookingDetail, [key]: value },
+        bookingSteps: [
+          { value: 'provider', disabled: false },
+          { value: 'time', disabled: false },
+          { value: 'booking detail', disabled: false },
+        ],
+      }));
+    }
   }
 
   render() {
     const { initService, handleClose } = this.props;
-    const { step, bookingDetail } = this.state;
+    const { step, bookingDetail, bookingSteps } = this.state;
     const StepComponent = this.bookingStepsComponents[step];
+    const stepCompProps = step === 'time'
+      ? { initService, onChange: this.onChangeBookingDetail }
+      : { initService, onChange: this.onChangeBookingDetail, bookingDetail };
 
     return (
       <Dialog
@@ -68,15 +107,19 @@ export default class BookingDialog extends PureComponent {
             value={step}
             onChange={this.onStepChange}
           >
-            {this.bookingSteps.map(
-              category => <Tab key={category} label={category} value={category} />,
+            {bookingSteps.map(
+              bookingStep => (
+                <Tab
+                  {...bookingStep}
+                  key={bookingStep.value}
+                  label={bookingStep.value}
+                />
+              ),
             )}
           </Tabs>
         </Paper>
         {<StepComponent
-          initService={initService}
-          onChange={this.onChangeBookingDetail}
-          bookingDetail={bookingDetail}
+          {...stepCompProps}
         />}
       </Dialog>
     );
