@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Typography, Grid, Button,
+  Typography, Grid, Button, Tooltip,
   Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions,
 } from '@material-ui/core';
 import { serviceType } from 'types/global';
@@ -17,17 +17,16 @@ export default class ServiceDetail extends React.PureComponent {
 
   handleClose = () => {
     this.setState({ isDialogDescOpen: false });
-  }
+  };
 
   openDialog = (event) => {
     event.preventDefault();
     this.setState({ isDialogDescOpen: true });
-  }
+  };
 
   render() {
     const { service } = this.props;
     const { isDialogDescOpen } = this.state;
-
     return (
       <React.Fragment>
         <Dialog
@@ -45,15 +44,17 @@ export default class ServiceDetail extends React.PureComponent {
             </Button>
           </DialogActions>
         </Dialog>
-        <Typography align="center" variant="title">{service.name}</Typography>
+        <Tooltip title={service.name} placement="top">
+          <Typography align="center" variant="title" noWrap>{service.name}</Typography>
+        </Tooltip>
         <div className="service-detail">
-          <Typography variant="subtitle2">
+          <Typography variant="body2">
             {(service.description || '').substring(0, 300)}...&nbsp;
             {service.description.length > 300 && <CustomLink text="Read more" to="#" onClick={this.openDialog} />}
           </Typography>
         </div>
-        <div className="service-detail">
-          <Grid container className="service-detail__item">
+        <div className="service-detail__block-item">
+          <Grid container>
             <Grid item sm={6}>
               <Typography variant="caption">Duration:</Typography>
             </Grid>
@@ -61,7 +62,7 @@ export default class ServiceDetail extends React.PureComponent {
               <Typography variant="subtitle2">{service.duration} minutes</Typography>
             </Grid>
           </Grid>
-          <Grid container className="service-detail__item">
+          <Grid container>
             <Grid item sm={6}>
               <Typography variant="caption">Organisation:</Typography>
             </Grid>
