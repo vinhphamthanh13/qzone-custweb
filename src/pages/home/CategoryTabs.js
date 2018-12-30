@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  AppBar, Tab, Tabs, Toolbar, Button, MenuItem, Menu,
+  AppBar, IconButton,
+  Menu, MenuItem, Tab, Tabs, Toolbar,
 } from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
 import SimpleSearch from './SimpleSearch';
 
 const serviceCategoryType = PropTypes.shape({
@@ -14,29 +16,30 @@ const serviceCategoryType = PropTypes.shape({
 export const serviceCategoriesType = PropTypes.arrayOf(serviceCategoryType);
 
 export default function CategoryTabs({
-  value, onSearch, onCategoryChange, serviceCategories,
+  value, onSearch, onCategoryChange, serviceCategories, flag, onHandleDisplayMenu,
 }) {
   const isSmallScreen = window.innerWidth < 660;
   return (
     <AppBar position="static">
       {isSmallScreen ? (
         <div>
-          <Button
-            aria-owns="simple-menu"
-            aria-haspopup="true"
-            onClick={() => { console.log(111); }}
-          >
-            Open Menu
-          </Button>
+          <IconButton color="inherit" aria-label="Menu">
+            <MenuIcon onClick={() => { onHandleDisplayMenu(true); }} />
+          </IconButton>
           <Menu
-            value={value}
-            onChange={onCategoryChange}
-            open={false}
-            id="simple-menu"
+            open={flag}
           >
             {serviceCategories.map(category => (category.parentCategoryId === null
               ? (
-                <MenuItem key={category.id}>{category.name}</MenuItem>
+                <MenuItem
+                  key={category.id}
+                  onClick={() => { onHandleDisplayMenu(false); }}
+                >
+                  <Tab
+                    label={category.name}
+                    value={category.id}
+                  />
+                </MenuItem>
               )
               : null))}
           </Menu>
@@ -67,4 +70,6 @@ CategoryTabs.propTypes = {
   onSearch: PropTypes.func.isRequired,
   onCategoryChange: PropTypes.func.isRequired,
   serviceCategories: serviceCategoriesType.isRequired,
+  flag: PropTypes.bool.isRequired,
+  onHandleDisplayMenu: PropTypes.func.isRequired,
 };
