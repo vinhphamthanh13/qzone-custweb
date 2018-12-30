@@ -38,7 +38,6 @@ export class Home extends React.PureComponent {
       bookingDetail: undefined,
       menuFlag: false,
     };
-    this.handleDisplayMenu = this.handleDisplayMenu.bind(this);
   }
 
   async componentDidMount() {
@@ -47,10 +46,10 @@ export class Home extends React.PureComponent {
     setServiceCategoriesAction(serviceCategories);
   }
 
-  handleDisplayMenu = (val) => {
-    this.setState({
-      menuFlag: val,
-    });
+  handleDisplayMenu = () => {
+    this.setState(state => ({
+      menuFlag: !state.menuFlag,
+    }));
   };
 
   onChange = (value, key) => {
@@ -127,7 +126,7 @@ export class Home extends React.PureComponent {
           onSaveBooking={this.onSaveBooking}
         />
         <Grid container>
-          <Grid item sm={12}>
+          <Grid item xs={12}>
             <CategoryTabs
               serviceCategories={serviceCategories}
               value={selectedCategoryId}
@@ -137,7 +136,7 @@ export class Home extends React.PureComponent {
               flag={menuFlag}
             />
           </Grid>
-          <Grid item sm={12} className="home__select-service">
+          <Grid item xs={12} className="home__select-service">
             <Services
               services={searchedServices}
               onChange={this.onChange}

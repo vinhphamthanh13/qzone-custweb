@@ -22,29 +22,36 @@ export default function CategoryTabs({
   const isSmallScreen = window.innerWidth < 660;
   return (
     <AppBar position="static">
-      {isSmallScreen ? (
-        <Toolbar>
-          <IconButton onClick={() => { onHandleDisplayMenu(true); }} color="inherit" aria-label="Menu">
-            <MenuIcon />
-          </IconButton>
-          <Menu
-            open={flag}
-          >
-            {serviceCategories.map(category => (category.parentCategoryId === null
-              ? (
-                <MenuItem
-                  value={category.id}
-                  key={category.id}
-                  onClick={($event) => { onHandleDisplayMenu(false); onCategoryChange($event, category.id); }}
-                >
-                  {category.name}
-                </MenuItem>
-              )
-              : null))}
-          </Menu>
-        </Toolbar>
-      ) : (
-        <Toolbar>
+      <Toolbar>
+        {isSmallScreen ? (
+          <>
+            <IconButton
+              onClick={onHandleDisplayMenu}
+              color="inherit"
+              aria-label="Menu"
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              open={flag}
+            >
+              { serviceCategories.map(category => (category.parentCategoryId === null
+                ? (
+                  <MenuItem
+                    value={category.id}
+                    key={category.id}
+                    onClick={($event) => {
+                      onHandleDisplayMenu();
+                      onCategoryChange($event, category.id);
+                    }}
+                  >
+                    {category.name}
+                  </MenuItem>
+                )
+                : null))}
+            </Menu>
+          </>
+        ) : (
           <Tabs
             value={value}
             onChange={onCategoryChange}
@@ -56,10 +63,10 @@ export default function CategoryTabs({
               )
               : null))}
           </Tabs>
-          <div className="grow" />
-          <SimpleSearch onSearch={onSearch} />
-        </Toolbar>
-      )}
+        )}
+        <div className="grow" />
+        <SimpleSearch onSearch={onSearch} />
+      </Toolbar>
     </AppBar>
   );
 }
