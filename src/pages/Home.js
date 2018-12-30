@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Grid } from '@material-ui/core';
+import { CircularProgress, Grid } from '@material-ui/core';
 import './Home.scss';
 import { getServiceCategories } from 'api/home';
 import { handleResponse } from 'api/helpers';
@@ -22,7 +22,7 @@ export class Home extends React.PureComponent {
     serviceCategories: serviceCategoriesType.isRequired,
     isLoading: PropTypes.bool.isRequired,
     getServicesByNameAction: PropTypes.func.isRequired,
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -37,13 +37,26 @@ export class Home extends React.PureComponent {
       selectedService: undefined,
       bookingDetail: undefined,
       menuFlag: false,
+      loading: true,
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.getCateGories().then(() => {
+      this.setState({
+        loading: false,
+      });
+    });
+  }
+
+  async getCateGories() {
     const { setServiceCategoriesAction } = this.props;
     const serviceCategories = handleResponse(await getServiceCategories());
+    this.setState({
+      selectedCategoryId: serviceCategories[0].id,
+    });
     setServiceCategoriesAction(serviceCategories);
+    this.onCategoryChange(null, serviceCategories[0].id);
   }
 
   handleDisplayMenu = () => {
@@ -54,11 +67,11 @@ export class Home extends React.PureComponent {
 
   onChange = (value, key) => {
     this.setState({ [key]: value });
-  }
+  };
 
   onLoadServices = () => {
     this.props.getServicesByNameAction(this.state.searchText);
-  }
+  };
 
   onSearch = (event) => {
     if (event.key === 'Enter') {
@@ -66,18 +79,20 @@ export class Home extends React.PureComponent {
     } else {
       this.setState({ searchText: event.target.value });
     }
-  }
+  };
 
   getSearchedServices = (services, searchText, selectedCategoryId) => services.filter(
     (service) => {
       const lowerSearchText = searchText ? searchText.toLowerCase() : undefined;
       const isChosen = searchText
-        ? service.name.toLowerCase().includes(lowerSearchText)
-        || service.organization.name.toLowerCase().includes(lowerSearchText)
+        ? service.name.toLowerCase()
+          .includes(lowerSearchText)
+        || service.organization.name.toLowerCase()
+          .includes(lowerSearchText)
         : true;
       return !selectedCategoryId || (isChosen && service.serviceCategoryId === selectedCategoryId);
     },
-  )
+  );
 
   onCategoryChange = async (event, selectedCategoryId) => {
     const {
@@ -100,25 +115,29 @@ export class Home extends React.PureComponent {
       selectedSubCategoryId: undefined,
       subCategories,
     });
-  }
+  };
 
   handleCloseBookingDialog = () => {
     this.setState({ selectedService: undefined });
-  }
+  };
 
   onSaveBooking = () => {
-    console.log(this.state.bookingDetail);
-  }
+  };
 
   render() {
-    const { serviceCategories, isLoading, services } = this.props;
+    const {
+      serviceCategories, isLoading, services,
+    } = this.props;
     const {
       selectedCategoryId, subCategories, selectedSubCategoryId, searchText,
-      selectedService, menuFlag,
+      selectedService, menuFlag, loading,
     } = this.state;
     const searchedServices = this.getSearchedServices(services, searchText, selectedCategoryId);
-
-    return (
+    return loading ? (
+      <>
+        <CircularProgress size={100} classes={{ root: 'services-loading' }} />
+      </>
+    ) : (
       <>
         <BookingDialog
           initService={selectedService}
