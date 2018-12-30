@@ -42,7 +42,7 @@ export class Home extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.getCateGories().then(() => {
+    this.getCateGories().finally(() => {
       this.setState({
         loading: false,
       });
