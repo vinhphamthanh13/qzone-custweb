@@ -42,7 +42,9 @@ export class Home extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.getCateGories().finally(() => {
+    this.getCateGories().catch((error) => {
+      console.error(error);
+    }).finally(() => {
       this.setState({
         loading: false,
       });
