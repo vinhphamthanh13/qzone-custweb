@@ -33,6 +33,7 @@ export default function CategoryTabs({
               <MenuIcon />
             </IconButton>
             <Menu
+              className="menu"
               open={flag}
             >
               { serviceCategories.map(category => (category.parentCategoryId === null
