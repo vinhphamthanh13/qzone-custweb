@@ -6,6 +6,7 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import SimpleSearch from './SimpleSearch';
+import './CategoryTabs.scss';
 
 const serviceCategoryType = PropTypes.shape({
   id: PropTypes.string.isRequired,
@@ -22,9 +23,9 @@ export default function CategoryTabs({
   return (
     <AppBar position="static">
       {isSmallScreen ? (
-        <div>
-          <IconButton color="inherit" aria-label="Menu">
-            <MenuIcon onClick={() => { onHandleDisplayMenu(true); }} />
+        <Toolbar>
+          <IconButton onClick={() => { onHandleDisplayMenu(true); }} color="inherit" aria-label="Menu">
+            <MenuIcon />
           </IconButton>
           <Menu
             open={flag}
@@ -32,18 +33,16 @@ export default function CategoryTabs({
             {serviceCategories.map(category => (category.parentCategoryId === null
               ? (
                 <MenuItem
+                  value={category.id}
                   key={category.id}
-                  onClick={() => { onHandleDisplayMenu(false); }}
+                  onClick={($event) => { onHandleDisplayMenu(false); onCategoryChange($event, category.id); }}
                 >
-                  <Tab
-                    label={category.name}
-                    value={category.id}
-                  />
+                  {category.name}
                 </MenuItem>
               )
               : null))}
           </Menu>
-        </div>
+        </Toolbar>
       ) : (
         <Toolbar>
           <Tabs
