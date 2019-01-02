@@ -36,7 +36,7 @@ export class Home extends React.PureComponent {
       selectedSubCategoryId: undefined,
       selectedService: undefined,
       bookingDetail: undefined,
-      menuFlag: false
+      menuFlag: false,
     };
   }
 
@@ -117,7 +117,7 @@ export class Home extends React.PureComponent {
     const { serviceCategories, isLoading, services } = this.props;
     const {
       selectedCategoryId, subCategories, selectedSubCategoryId, searchText,
-      selectedService, menuFlag
+      selectedService, menuFlag,
     } = this.state;
     const searchedServices = this.getSearchedServices(services, searchText, selectedCategoryId);
 
