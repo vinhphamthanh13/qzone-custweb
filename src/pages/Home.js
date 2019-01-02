@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { CircularProgress, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import './Home.scss';
 import { getServiceCategories } from 'api/home';
 import { handleResponse } from 'api/helpers';
@@ -36,22 +36,11 @@ export class Home extends React.PureComponent {
       selectedSubCategoryId: undefined,
       selectedService: undefined,
       bookingDetail: undefined,
-      menuFlag: false,
-      loading: true,
+      menuFlag: false
     };
   }
 
-  componentDidMount() {
-    this.getCateGories().catch((error) => {
-      console.error(error);
-    }).finally(() => {
-      this.setState({
-        loading: false,
-      });
-    });
-  }
-
-  async getCateGories() {
+  async componentDidMount() {
     const { setServiceCategoriesAction } = this.props;
     const serviceCategories = handleResponse(await getServiceCategories());
     this.setState({
@@ -87,10 +76,8 @@ export class Home extends React.PureComponent {
     (service) => {
       const lowerSearchText = searchText ? searchText.toLowerCase() : undefined;
       const isChosen = searchText
-        ? service.name.toLowerCase()
-          .includes(lowerSearchText)
-        || service.organization.name.toLowerCase()
-          .includes(lowerSearchText)
+        ? service.name.toLowerCase().includes(lowerSearchText)
+        || service.organization.name.toLowerCase().includes(lowerSearchText)
         : true;
       return !selectedCategoryId || (isChosen && service.serviceCategoryId === selectedCategoryId);
     },
@@ -127,19 +114,14 @@ export class Home extends React.PureComponent {
   };
 
   render() {
-    const {
-      serviceCategories, isLoading, services,
-    } = this.props;
+    const { serviceCategories, isLoading, services } = this.props;
     const {
       selectedCategoryId, subCategories, selectedSubCategoryId, searchText,
-      selectedService, menuFlag, loading,
+      selectedService, menuFlag
     } = this.state;
     const searchedServices = this.getSearchedServices(services, searchText, selectedCategoryId);
-    return loading ? (
-      <>
-        <CircularProgress size={100} classes={{ root: 'services-loading' }} />
-      </>
-    ) : (
+
+    return (
       <>
         <BookingDialog
           initService={selectedService}
