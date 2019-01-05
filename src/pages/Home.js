@@ -36,7 +36,6 @@ export class Home extends React.PureComponent {
       selectedSubCategoryId: undefined,
       selectedService: undefined,
       bookingDetail: undefined,
-      isMenuOpen: false,
       anchorEl: null,
     };
   }
