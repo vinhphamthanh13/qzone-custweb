@@ -3,7 +3,7 @@ import {
 } from './home.actions';
 
 const initialState = {
-  isLoading: false,
+  isLoading: true,
   serviceCategories: [],
   services: [],
   orgs: [],
