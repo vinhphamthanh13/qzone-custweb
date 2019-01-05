@@ -17,7 +17,7 @@ const serviceCategoryType = PropTypes.shape({
 export const serviceCategoriesType = PropTypes.arrayOf(serviceCategoryType);
 
 export default function CategoryTabs({
-  value, onSearch, onCategoryChange, serviceCategories, flag, onHandleDisplayMenu,
+  value, onSearch, onCategoryChange, serviceCategories, handleOpenMenu, handleCloseMenu, anchorEl,
 }) {
   const isSmallScreen = window.innerWidth < 660;
   return (
@@ -26,23 +26,27 @@ export default function CategoryTabs({
         {isSmallScreen ? (
           <>
             <IconButton
-              onClick={onHandleDisplayMenu}
+              onClick={handleOpenMenu}
               color="inherit"
               aria-label="Menu"
             >
               <MenuIcon />
             </IconButton>
             <Menu
-              className="menu"
-              open={flag}
+              classes={{ paper: 'category-tabs' }}
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleCloseMenu}
             >
               { serviceCategories.map(category => (category.parentCategoryId === null
                 ? (
                   <MenuItem
+                    classes={{ selected: 'category-tabs__active-menu-item' }}
                     value={category.id}
+                    selected={value === category.id}
                     key={category.id}
                     onClick={($event) => {
-                      onHandleDisplayMenu();
+                      handleCloseMenu();
                       onCategoryChange($event, category.id);
                     }}
                   >
@@ -77,6 +81,11 @@ CategoryTabs.propTypes = {
   onSearch: PropTypes.func.isRequired,
   onCategoryChange: PropTypes.func.isRequired,
   serviceCategories: serviceCategoriesType.isRequired,
-  flag: PropTypes.bool.isRequired,
-  onHandleDisplayMenu: PropTypes.func.isRequired,
+  anchorEl: PropTypes.objectOf(PropTypes.object),
+  handleOpenMenu: PropTypes.func.isRequired,
+  handleCloseMenu: PropTypes.func.isRequired,
+};
+
+CategoryTabs.defaultProps = {
+  anchorEl: null,
 };

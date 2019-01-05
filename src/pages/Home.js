@@ -36,24 +36,26 @@ export class Home extends React.PureComponent {
       selectedSubCategoryId: undefined,
       selectedService: undefined,
       bookingDetail: undefined,
-      menuFlag: false,
+      isMenuOpen: false,
+      anchorEl: null,
     };
   }
 
   async componentDidMount() {
     const { setServiceCategoriesAction } = this.props;
     const serviceCategories = handleResponse(await getServiceCategories());
-    this.setState({
-      selectedCategoryId: serviceCategories[0].id,
-    });
     setServiceCategoriesAction(serviceCategories);
-    this.onCategoryChange(null, serviceCategories[0].id);
+    if (serviceCategories.length > 0) {
+      this.onCategoryChange(null, serviceCategories[0].id);
+    }
   }
 
-  handleDisplayMenu = () => {
-    this.setState(state => ({
-      menuFlag: !state.menuFlag,
-    }));
+  handleOpenMenu = (event) => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleCloseMenu = () => {
+    this.setState({ anchorEl: null });
   };
 
   onChange = (value, key) => {
@@ -117,7 +119,7 @@ export class Home extends React.PureComponent {
     const { serviceCategories, isLoading, services } = this.props;
     const {
       selectedCategoryId, subCategories, selectedSubCategoryId, searchText,
-      selectedService, menuFlag,
+      selectedService, anchorEl,
     } = this.state;
     const searchedServices = this.getSearchedServices(services, searchText, selectedCategoryId);
 
@@ -135,8 +137,9 @@ export class Home extends React.PureComponent {
               value={selectedCategoryId}
               onCategoryChange={this.onCategoryChange}
               onSearch={this.onSearch}
-              onHandleDisplayMenu={this.handleDisplayMenu}
-              flag={menuFlag}
+              handleOpenMenu={this.handleOpenMenu}
+              handleCloseMenu={this.handleCloseMenu}
+              anchorEl={anchorEl}
             />
           </Grid>
           <Grid item xs={12} className="home__select-service">
