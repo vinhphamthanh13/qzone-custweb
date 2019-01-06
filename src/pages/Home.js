@@ -36,7 +36,7 @@ export class Home extends React.PureComponent {
       selectedSubCategoryId: undefined,
       selectedService: undefined,
       bookingDetail: undefined,
-      anchorEl: null,
+      menuIconButtonEl: null,
     };
   }
 
@@ -50,11 +50,11 @@ export class Home extends React.PureComponent {
   }
 
   handleOpenMenu = (event) => {
-    this.setState({ anchorEl: event.currentTarget });
+    this.setState({ menuIconButtonEl: event.currentTarget });
   };
 
   handleCloseMenu = () => {
-    this.setState({ anchorEl: null });
+    this.setState({ menuIconButtonEl: null });
   };
 
   onChange = (value, key) => {
@@ -118,7 +118,7 @@ export class Home extends React.PureComponent {
     const { serviceCategories, isLoading, services } = this.props;
     const {
       selectedCategoryId, subCategories, selectedSubCategoryId, searchText,
-      selectedService, anchorEl,
+      selectedService, menuIconButtonEl,
     } = this.state;
     const searchedServices = this.getSearchedServices(services, searchText, selectedCategoryId);
 
@@ -138,7 +138,7 @@ export class Home extends React.PureComponent {
               onSearch={this.onSearch}
               handleOpenMenu={this.handleOpenMenu}
               handleCloseMenu={this.handleCloseMenu}
-              anchorEl={anchorEl}
+              menuIconButtonEl={menuIconButtonEl}
             />
           </Grid>
           <Grid item xs={12} className="home__select-service">

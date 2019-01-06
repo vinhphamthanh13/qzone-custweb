@@ -17,7 +17,7 @@ const serviceCategoryType = PropTypes.shape({
 export const serviceCategoriesType = PropTypes.arrayOf(serviceCategoryType);
 
 export default function CategoryTabs({
-  value, onSearch, onCategoryChange, serviceCategories, handleOpenMenu, handleCloseMenu, anchorEl,
+  value, onSearch, onCategoryChange, serviceCategories, handleOpenMenu, handleCloseMenu, menuIconButtonEl,
 }) {
   const isSmallScreen = window.innerWidth < 660;
   return (
@@ -34,8 +34,8 @@ export default function CategoryTabs({
             </IconButton>
             <Menu
               classes={{ paper: 'category-tabs' }}
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
+              anchorEl={menuIconButtonEl}
+              open={Boolean(menuIconButtonEl)}
               onClose={handleCloseMenu}
             >
               { serviceCategories.map(category => (category.parentCategoryId === null
@@ -81,11 +81,11 @@ CategoryTabs.propTypes = {
   onSearch: PropTypes.func.isRequired,
   onCategoryChange: PropTypes.func.isRequired,
   serviceCategories: serviceCategoriesType.isRequired,
-  anchorEl: PropTypes.objectOf(PropTypes.object),
+  menuIconButtonEl: PropTypes.objectOf(PropTypes.object),
   handleOpenMenu: PropTypes.func.isRequired,
   handleCloseMenu: PropTypes.func.isRequired,
 };
 
 CategoryTabs.defaultProps = {
-  anchorEl: null,
+  menuIconButtonEl: null,
 };
