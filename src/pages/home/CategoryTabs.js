@@ -1,9 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  AppBar, Tabs, Tab, Toolbar,
+  AppBar, IconButton,
+  Menu, MenuItem, Tab, Tabs, Toolbar,
 } from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
 import SimpleSearch from './SimpleSearch';
+import './CategoryTabs.scss';
 
 const serviceCategoryType = PropTypes.shape({
   id: PropTypes.string.isRequired,
@@ -14,22 +17,58 @@ const serviceCategoryType = PropTypes.shape({
 export const serviceCategoriesType = PropTypes.arrayOf(serviceCategoryType);
 
 export default function CategoryTabs({
-  value, onSearch, onCategoryChange, serviceCategories,
+  value, onSearch, onCategoryChange, serviceCategories, handleOpenMenu, handleCloseMenu, menuIconButtonEl,
 }) {
+  const isSmallScreen = window.innerWidth < 660;
   return (
     <AppBar position="static">
       <Toolbar>
-        <Tabs
-          value={value}
-          onChange={onCategoryChange}
-          scrollable
-        >
-          {serviceCategories.map(category => (category.parentCategoryId === null
-            ? (
-              <Tab key={category.id} label={category.name} value={category.id} />
-            )
-            : null))}
-        </Tabs>
+        {isSmallScreen ? (
+          <>
+            <IconButton
+              onClick={handleOpenMenu}
+              color="inherit"
+              aria-label="Menu"
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              classes={{ paper: 'category-tabs' }}
+              anchorEl={menuIconButtonEl}
+              open={Boolean(menuIconButtonEl)}
+              onClose={handleCloseMenu}
+            >
+              { serviceCategories.map(category => (category.parentCategoryId === null
+                ? (
+                  <MenuItem
+                    classes={{ selected: 'category-tabs__active-menu-item' }}
+                    value={category.id}
+                    selected={value === category.id}
+                    key={category.id}
+                    onClick={($event) => {
+                      handleCloseMenu();
+                      onCategoryChange($event, category.id);
+                    }}
+                  >
+                    {category.name}
+                  </MenuItem>
+                )
+                : null))}
+            </Menu>
+          </>
+        ) : (
+          <Tabs
+            value={value}
+            onChange={onCategoryChange}
+            scrollable
+          >
+            {serviceCategories.map(category => (category.parentCategoryId === null
+              ? (
+                <Tab key={category.id} label={category.name} value={category.id} />
+              )
+              : null))}
+          </Tabs>
+        )}
         <div className="grow" />
         <SimpleSearch onSearch={onSearch} />
       </Toolbar>
@@ -42,4 +81,11 @@ CategoryTabs.propTypes = {
   onSearch: PropTypes.func.isRequired,
   onCategoryChange: PropTypes.func.isRequired,
   serviceCategories: serviceCategoriesType.isRequired,
+  menuIconButtonEl: PropTypes.objectOf(PropTypes.object),
+  handleOpenMenu: PropTypes.func.isRequired,
+  handleCloseMenu: PropTypes.func.isRequired,
+};
+
+CategoryTabs.defaultProps = {
+  menuIconButtonEl: null,
 };
