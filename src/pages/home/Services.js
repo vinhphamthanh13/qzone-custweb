@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Grid, Paper, CircularProgress } from '@material-ui/core';
 import { serviceType } from 'types/global';
 import './Services.scss';
-// import AdvancedSearch from './AdvancedSearch';
 import SubCategoryTabs, { subCategoriesType } from './SubCategoryTabs';
 import ServiceCard from './services/ServiceCard';
 import EmptyState from './services/EmptyState';
