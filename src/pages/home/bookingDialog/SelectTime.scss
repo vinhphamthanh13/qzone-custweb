@@ -2,14 +2,25 @@
 
 .select-time-wrapper {
   padding: 16px;
-  .select-time {
-    &__event {
-      background-color: $alto;
-      border: 1px solid $mercury;
-      color: black;
+  .select-date {
+    width: 60%;
+    margin: 0 auto;
+    padding-bottom: 2rem;
+
+    &_content {
+      text-align: center;
     }
-    &__selected-event {
-      background-color: $primary;
+
+    &__active-item {
+      background: $primary;
+      & * {
+        color: white;
+      }
     }
+  }
+
+  .select-hour {
+    width: 90%;
+    margin: 0 auto;
   }
 }
