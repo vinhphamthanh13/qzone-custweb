@@ -80,9 +80,7 @@ export default class BookingDialog extends PureComponent {
     const { initService, handleClose } = this.props;
     const { step, bookingDetail, bookingSteps } = this.state;
     const StepComponent = this.bookingStepsComponents[step];
-    const stepCompProps = step === 'time'
-      ? { initService, onChange: this.onChangeBookingDetail }
-      : { initService, onChange: this.onChangeBookingDetail, bookingDetail };
+    const stepCompProps = { initService, onChange: this.onChangeBookingDetail, bookingDetail };
 
     return (
       <Dialog

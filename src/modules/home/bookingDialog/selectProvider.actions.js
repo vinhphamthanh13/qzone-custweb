@@ -1,10 +1,15 @@
 import { handleResponse } from 'api/helpers';
-import { searchProvidersByService, searchProviderById } from 'api/home/bookingDialog/selectProvider';
+import {
+  searchProvidersByService,
+  searchProviderById,
+  findAvailabilitiesByDateSec,
+} from 'api/home/bookingDialog/selectProvider';
 import { searchOrganizationById } from 'api/home';
 import { setOrgs } from 'modules/home.actions';
 
 export const SET_LOADING = 'HOME.BOOKING_DIALOG.SELECT_SERVICE.SET_LOADING';
 export const SET_PROVIDERS = 'HOME.BOOKING_DIALOG.SELECT_SERVICE.SET_PROVIDERS';
+export const SET_PROVIDER_TIME_DETAIL = 'HOME.BOOKING_DIALOG.SELECT_SERVICE.SET_PROVIDER_TIME_DETAIL';
 
 export const setLoading = payload => ({
   type: SET_LOADING,
@@ -14,6 +19,11 @@ export const setLoading = payload => ({
 export const setProviders = payload => ({
   type: SET_PROVIDERS,
   payload,
+});
+
+export const setProviderTimeDetail = (providerId, providerTimeDetail) => ({
+  type: SET_PROVIDER_TIME_DETAIL,
+  payload: { providerId, providerTimeDetail },
 });
 
 export const getProvidersByService = serviceId => async (dispatch, getState) => {
@@ -37,4 +47,11 @@ export const getProvidersByService = serviceId => async (dispatch, getState) => 
   dispatch(setLoading(false));
   dispatch(setProviders(providers));
   dispatch(setOrgs(orgs));
+};
+
+export const getProviderTime = ({ serviceId, providerId, startSec }) => async (dispatch) => {
+  dispatch(setLoading(true));
+  const response = handleResponse(await findAvailabilitiesByDateSec({ serviceId, providerId, startSec }));
+  dispatch(setProviderTimeDetail(providerId, response));
+  dispatch(setLoading(false));
 };

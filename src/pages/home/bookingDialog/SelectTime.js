@@ -1,22 +1,34 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { bookingDetailType, serviceType } from 'types/global';
+import { getProviderTime } from 'modules/home/bookingDialog/selectProvider.actions';
 
 import SelectTimeView from './SelectTime.view';
 import './SelectTime.scss';
 
-export default class SelectTime extends React.PureComponent {
+export class SelectTime extends React.PureComponent {
   constructor(props) {
     super(props);
 
     const dateBoxes = this.getDateBoxes();
-    const hourBoxes = this.getHourBoxes(dateBoxes[1]);
+    const selectedDay = dateBoxes[0];
+    const hourBoxes = this.getHourBoxes(selectedDay);
+
     this.state = {
       dateBoxes,
       hourBoxes,
-      selectedDay: dateBoxes[1],
+      selectedDay,
       selectedHour: null,
     };
+  }
+
+  componentDidMount() {
+    this.props.getProviderTime({
+      serviceId: this.props.initService.id,
+      providerId: this.props.bookingDetail.provider.id,
+      startSec: (new Date()).getTime() / 1000,
+    });
   }
 
   onDateChange = (date) => {
@@ -35,9 +47,9 @@ export default class SelectTime extends React.PureComponent {
     const today = new Date();
     const aDayInMiliSec = 24 * 60 * 60 * 1000;
     return [
-      new Date(today.getTime() - aDayInMiliSec),
       today,
       new Date(today.getTime() + aDayInMiliSec),
+      new Date(today.getTime() + (2 * aDayInMiliSec)),
     ];
   }
 
@@ -69,5 +81,10 @@ export default class SelectTime extends React.PureComponent {
 }
 
 SelectTime.propTypes = {
+  bookingDetail: bookingDetailType.isRequired,
+  initService: serviceType.isRequired,
+  getProviderTime: PropTypes.func.isRequired,
   // onChange: PropTypes.func.isRequired,
 };
+
+export default connect(null, { getProviderTime })(SelectTime);
