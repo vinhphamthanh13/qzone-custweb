@@ -29,7 +29,7 @@ const App = () => (
         <Provider store={store}>
           <Router history={history}>
             <Switch>
-              {rootRoutes.map(route => (<Route key={route.path} {...route} />))}
+              {rootRoutes.map(route => (<Route key={route.path || route.name} {...route} />))}
             </Switch>
           </Router>
         </Provider>
