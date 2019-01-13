@@ -1,9 +1,10 @@
-import { searchServicesByName, searchServicesByCategory } from 'utils/api/home';
-import { handleResponse } from 'utils/api/helpers';
+import { searchServicesByName, searchServicesByCategory, searchOrganizationById } from 'api/home';
+import { handleResponse } from 'api/helpers';
 
-export const SET_SERVICE_CATEGORIES = 'SET_SERVICE_CATEGORIES';
-export const SET_SERVICES = 'SET_SERVICES';
-export const SET_LOADING = 'SET_LOADING';
+export const SET_SERVICE_CATEGORIES = 'HOME.SET_SERVICE_CATEGORIES';
+export const SET_SERVICES = 'HOME.SET_SERVICES';
+export const SET_LOADING = 'HOME.SET_LOADING';
+export const SET_ORGS = 'HOME.SET_ORGS';
 
 export const setServiceCategories = payload => ({
   type: SET_SERVICE_CATEGORIES,
@@ -20,6 +21,11 @@ export const setLoading = payload => ({
   payload,
 });
 
+export const setOrgs = payload => ({
+  type: SET_ORGS,
+  payload,
+});
+
 export const getServicesByName = name => async (dispatch) => {
   dispatch(setLoading(true));
   const result = await searchServicesByName(name);
@@ -29,7 +35,20 @@ export const getServicesByName = name => async (dispatch) => {
 
 export const getServicesByCategory = categoryId => async (dispatch) => {
   dispatch(setLoading(true));
-  const result = await searchServicesByCategory(categoryId);
+  const rawServices = handleResponse(await searchServicesByCategory(categoryId));
+  const orgIds = [];
+  rawServices.forEach((service) => {
+    if (!orgIds.includes(service.organizationId)) {
+      orgIds.push(service.organizationId);
+    }
+  });
+  const result = await Promise.all(orgIds.map(orgId => searchOrganizationById(orgId)));
+  const orgs = result.map(handleResponse);
+  const services = rawServices.map(
+    service => ({ ...service, organization: orgs.find(org => org.id === service.organizationId) }),
+  );
+
   dispatch(setLoading(false));
-  dispatch(setServices(handleResponse(result)));
+  dispatch(setServices(services));
+  dispatch(setOrgs(orgs));
 };

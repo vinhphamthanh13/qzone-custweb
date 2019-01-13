@@ -23,6 +23,12 @@ export const serviceType = PropTypes.shape({
 
 export const providerType = PropTypes.shape({
   id: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  availableSlots: PropTypes.arrayOf(PropTypes.string),
+  name: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.objectOf(PropTypes.string)]).isRequired,
+});
+
+export const bookingDetailType = PropTypes.shape({
+  provider: PropTypes.object,
+  time: PropTypes.object,
 });

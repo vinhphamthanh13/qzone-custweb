@@ -1,0 +1,11 @@
+@import "styles/_color.scss";
+
+.category-tabs {
+  >ul {
+    padding: 0;
+  }
+  &__active-menu-item {
+    background-color: $secondary!important;
+    color: white;
+  }
+}

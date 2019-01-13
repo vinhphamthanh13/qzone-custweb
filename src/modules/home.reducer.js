@@ -1,9 +1,12 @@
-import { SET_SERVICE_CATEGORIES, SET_SERVICES, SET_LOADING } from './home.actions';
+import {
+  SET_SERVICE_CATEGORIES, SET_SERVICES, SET_LOADING, SET_ORGS,
+} from './home.actions';
 
 const initialState = {
-  isLoading: false,
+  isLoading: true,
   serviceCategories: [],
   services: [],
+  orgs: [],
 };
 
 const home = (state = initialState, action) => {
@@ -19,6 +22,8 @@ const home = (state = initialState, action) => {
       };
     case SET_LOADING:
       return { ...state, isLoading: action.payload };
+    case SET_ORGS:
+      return { ...state, orgs: action.payload };
     default:
       return state;
   }

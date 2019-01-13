@@ -3,9 +3,15 @@ import {
 } from 'redux';
 import thunk from 'redux-thunk';
 import home from 'modules/home.reducer';
+import selectProvider from 'modules/home/bookingDialog/selectProvider.reducer';
 
 const rootReducer = combineReducers({
   home,
+  homeModules: combineReducers({
+    bookingDialog: combineReducers({
+      selectProvider,
+    }),
+  }),
 });
 
 const store = createStore(

@@ -1,0 +1,11 @@
+@import '../../../styles/_color.scss';
+
+.select-provider {
+  padding: 16px;
+  &__active-item {
+    background: $primary;
+    & * {
+      color: white;
+    }
+  }
+}
