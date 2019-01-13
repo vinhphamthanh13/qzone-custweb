@@ -1,9 +1,13 @@
 .service-detail {
-  margin-top: 16px;  
-  &__item {
-    margin-top: 8px;
-    &::first-child {
-      margin-top: 0;
-    }
+  margin-top: 16px;
+  margin-bottom: 16px;
+  height: 100px;
+  overflow-y: auto;
+  border: 1px solid #e6e6e6;
+  padding: 5px;
+  &__block-item {
+    margin-top: 16px;
+    margin-bottom: 10px;
+    flex-direction: column;
   }
 }

@@ -1,0 +1,15 @@
+@import '../../../styles/color';
+
+.select-time-wrapper {
+  padding: 16px;
+  .select-time {
+    &__event {
+      background-color: $alto;
+      border: 1px solid $mercury;
+      color: black;
+    }
+    &__selected-event {
+      background-color: $primary;
+    }
+  }
+}
