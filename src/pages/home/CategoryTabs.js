@@ -60,7 +60,7 @@ export default function CategoryTabs({
           <Tabs
             value={value}
             onChange={onCategoryChange}
-            scrollable
+            variant="scrollable"
           >
             {serviceCategories.map(category => (category.parentCategoryId === null
               ? (
