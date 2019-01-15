@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import moment from 'moment-timezone';
 import PropTypes from 'prop-types';
 import { bookingDetailType, serviceType } from 'types/global';
 import { getProviderTime } from 'modules/home/bookingDialog/selectProvider.actions';
@@ -11,70 +12,86 @@ export class SelectTime extends React.PureComponent {
   constructor(props) {
     super(props);
 
+    this.timeZone = this.props.bookingDetail.provider.timeZoneId;
+
     const dateBoxes = this.getDateBoxes();
     const selectedDay = dateBoxes[0];
-    const hourBoxes = this.getHourBoxes(selectedDay);
 
     this.state = {
       dateBoxes,
-      hourBoxes,
       selectedDay,
       selectedHour: null,
     };
   }
 
   componentDidMount() {
+    if (this.props.bookingDetail.time) {
+      const selectedDay = moment(this.props.bookingDetail.time.start).tz(this.timeZone);
+      this.setState({
+        selectedDay,
+        selectedHour: selectedDay,
+      });
+
+      const today = moment().tz(this.timeZone);
+      this.fetchTimeFromDate(
+        today.diff(selectedDay, 'd') === 0 ? today : selectedDay.clone().startOf('d'),
+      );
+    } else {
+      this.fetchTimeFromDate();
+    }
+  }
+
+  fetchTimeFromDate = (date) => {
     this.props.getProviderTime({
       serviceId: this.props.initService.id,
       providerId: this.props.bookingDetail.provider.id,
-      startSec: (new Date()).getTime() / 1000,
+      startSec: moment(date).tz(this.timeZone).unix(),
     });
   }
 
   onDateChange = (date) => {
+    this.fetchTimeFromDate(date);
     this.setState({
       selectedDay: date,
-      hourBoxes: this.getHourBoxes(date),
       selectedHour: null,
     });
   }
 
-  onHourChange = (date) => {
-    this.setState({ selectedHour: date });
+  onHourChange = ({ start, duration }) => {
+    this.props.onChange({
+      start: start.valueOf(),
+      end: start.valueOf() + (duration * 1000),
+    }, 'time');
+    this.setState({ selectedHour: start });
   }
 
   getDateBoxes = () => {
-    const today = new Date();
-    const aDayInMiliSec = 24 * 60 * 60 * 1000;
+    const today = moment().tz(this.timeZone);
     return [
       today,
-      new Date(today.getTime() + aDayInMiliSec),
-      new Date(today.getTime() + (2 * aDayInMiliSec)),
+      today.clone().add(1, 'd').startOf('d'),
+      today.clone().add(2, 'd').startOf('d'),
     ];
   }
 
-  getHourBoxes = (date) => {
-    const dayHours = 24;
-    const hourBoxes = [];
-    for (let i = 0; i < dayHours; i += 1) {
-      hourBoxes.push(new Date(date.setHours(i)));
-    }
-    return hourBoxes;
-  }
+  getHourBoxes = timeDetails => timeDetails.map(d => ({
+    startHour: moment(d.startSec * 1000).tz(this.timeZone).add(this.state.selectedDay),
+    durationSec: d.durationSec,
+    isAvailable: d.spotsOpen > 0,
+  }))
 
   render() {
-    // const { onChange } = this.props;
-    const {
-      dateBoxes, hourBoxes, selectedDay, selectedHour,
-    } = this.state;
+    const { timeDetails, isLoading } = this.props;
+    const { dateBoxes, selectedDay, selectedHour } = this.state;
     return (
       <SelectTimeView
         dateBoxes={dateBoxes}
-        hourBoxes={hourBoxes}
+        hourBoxes={this.getHourBoxes(timeDetails)}
         selectedDay={selectedDay}
         selectedHour={selectedHour}
         onDateChange={this.onDateChange}
         onHourChange={this.onHourChange}
+        isLoading={isLoading}
       />
     );
   }
@@ -84,7 +101,24 @@ SelectTime.propTypes = {
   bookingDetail: bookingDetailType.isRequired,
   initService: serviceType.isRequired,
   getProviderTime: PropTypes.func.isRequired,
-  // onChange: PropTypes.func.isRequired,
+  timeDetails: PropTypes.arrayOf(
+    PropTypes.shape({
+      startSec: PropTypes.number,
+      durationSec: PropTypes.number,
+      spotsOpen: PropTypes.number,
+    }),
+  ),
+  onChange: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
 };
 
-export default connect(null, { getProviderTime })(SelectTime);
+SelectTime.defaultProps = {
+  timeDetails: [],
+};
+
+const mapStateToProps = (states, ownProps) => ({
+  timeDetails: states.homeModules.bookingDialog.selectProvider.providerDetails[ownProps.bookingDetail.provider.id],
+  isLoading: states.homeModules.bookingDialog.selectProvider.isLoading,
+});
+
+export default connect(mapStateToProps, { getProviderTime })(SelectTime);

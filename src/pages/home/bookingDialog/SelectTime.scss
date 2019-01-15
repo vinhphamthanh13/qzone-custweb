@@ -10,17 +10,32 @@
     &_content {
       text-align: center;
     }
-
-    &__active-item {
-      background: $primary;
-      & * {
-        color: white;
-      }
-    }
   }
 
   .select-hour {
     width: 90%;
     margin: 0 auto;
+    text-align: center;
+
+    &__content {
+      padding-top: 1rem;
+
+      &__available {
+        padding-top: 0.2rem;
+        border-bottom: 1.5px solid green;
+      }
+
+      &__unavailable {
+        padding-top: 0.2rem;
+        border-bottom: 1.5px solid red;
+      }
+    }
+  }
+}
+
+.select-time__active-item {
+  background: $primary;
+  & * {
+    color: white;
   }
 }
