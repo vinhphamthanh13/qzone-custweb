@@ -6,7 +6,7 @@ import { createBrowserHistory } from 'history';
 import rootRoutes from 'config/routing/app';
 import store from 'config/store';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider';
+import { MuiPickersUtilsProvider } from 'material-ui-pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import JssProvider from 'react-jss/lib/JssProvider';
 import { create } from 'jss';

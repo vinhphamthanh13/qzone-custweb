@@ -13,13 +13,8 @@ export class SelectTime extends React.PureComponent {
     super(props);
 
     this.timeZone = this.props.bookingDetail.provider.timeZoneId;
-
-    const dateBoxes = this.getDateBoxes();
-    const selectedDay = dateBoxes[0];
-
     this.state = {
-      dateBoxes,
-      selectedDay,
+      selectedDay: moment().tz(this.timeZone),
       selectedHour: null,
     };
   }
@@ -49,7 +44,11 @@ export class SelectTime extends React.PureComponent {
     });
   }
 
-  onDateChange = (date) => {
+  onDateChange = (value) => {
+    if (this.state.selectedDay.isSame(value, 'day')) {
+      return;
+    }
+    const date = moment(value).tz(this.timeZone);
     this.fetchTimeFromDate(date);
     this.setState({
       selectedDay: date,
@@ -65,27 +64,17 @@ export class SelectTime extends React.PureComponent {
     this.setState({ selectedHour: start });
   }
 
-  getDateBoxes = () => {
-    const today = moment().tz(this.timeZone);
-    return [
-      today,
-      today.clone().add(1, 'd').startOf('d'),
-      today.clone().add(2, 'd').startOf('d'),
-    ];
-  }
-
   getHourBoxes = timeDetails => timeDetails.map(d => ({
-    startHour: moment(d.startSec * 1000).tz(this.timeZone).add(this.state.selectedDay),
+    startHour: moment(d.startSec * 1000).tz(this.timeZone),
     durationSec: d.durationSec,
     isAvailable: d.spotsOpen > 0,
   }))
 
   render() {
     const { timeDetails, isLoading } = this.props;
-    const { dateBoxes, selectedDay, selectedHour } = this.state;
+    const { selectedDay, selectedHour } = this.state;
     return (
       <SelectTimeView
-        dateBoxes={dateBoxes}
         hourBoxes={this.getHourBoxes(timeDetails)}
         selectedDay={selectedDay}
         selectedHour={selectedHour}

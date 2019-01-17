@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import './AdvancedSearch.scss';
-import DateTimePicker from 'material-ui-pickers/DateTimePicker';
+import { DateTimePicker } from 'material-ui-pickers';
 
 export default class AdvancedSearch extends PureComponent {
   static propTypes = {

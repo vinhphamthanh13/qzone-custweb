@@ -5,13 +5,12 @@ import DateSelectBox from './selectTime/DateSelectBox';
 import HourSelectBox from './selectTime/HourSelectBox';
 
 export default function SelectTime({
-  onDateChange, dateBoxes, hourBoxes, selectedDay, onHourChange, selectedHour,
-  isLoading,
+  onDateChange, hourBoxes, selectedDay,
+  onHourChange, selectedHour, isLoading,
 }) {
   return (
     <div className="select-time-wrapper">
       <DateSelectBox
-        dateBoxes={dateBoxes}
         selectedDay={selectedDay}
         onChange={onDateChange}
       />
@@ -28,9 +27,6 @@ export default function SelectTime({
 
 
 SelectTime.propTypes = {
-  dateBoxes: PropTypes.arrayOf(
-    PropTypes.any,
-  ).isRequired,
   hourBoxes: PropTypes.arrayOf(
     PropTypes.any,
   ).isRequired,
