@@ -1,6 +1,7 @@
 import Home from 'pages/Home';
 import Organisation from 'pages/Organisation';
 import PageNotFound from 'pages/PageNotFound';
+import AccessDenied from 'pages/AccessDenied';
 
 const rootRoutes = [
   {
@@ -16,6 +17,13 @@ const rootRoutes = [
     path: '/organisation/:id',
     name: 'Organisation',
     component: Organisation,
+  },
+  {
+    exact: true,
+    strict: true,
+    path: '/access-denied',
+    name: 'AccessDenied',
+    component: AccessDenied,
   },
   {
     exact: true,
