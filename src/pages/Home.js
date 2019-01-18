@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Grid } from '@material-ui/core';
 import './Home.scss';
 import { getServiceCategories } from 'api/home';
-import { handleResponse } from 'api/helpers';
+import { handleResponse, handleRequest } from 'api/helpers';
 import {
   setServiceCategories, getServicesByCategory, getServicesByName,
 } from 'modules/home.actions';
@@ -42,7 +42,7 @@ export class Home extends React.PureComponent {
 
   async componentDidMount() {
     const { setServiceCategoriesAction } = this.props;
-    const serviceCategories = handleResponse(await getServiceCategories());
+    const serviceCategories = handleResponse(await handleRequest(getServiceCategories), []);
     setServiceCategoriesAction(serviceCategories);
     if (serviceCategories.length > 0) {
       this.onCategoryChange(null, serviceCategories[0].id);
