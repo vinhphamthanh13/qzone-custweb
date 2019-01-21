@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { CircularProgress } from '@material-ui/core';
 import DateSelectBox from './selectTime/DateSelectBox';
 import HourSelectBox from './selectTime/HourSelectBox';
+import EmptyState from '../services/EmptyState';
 
 export default function SelectTime({
   onDateChange, hourBoxes, selectedDay,
@@ -14,13 +16,21 @@ export default function SelectTime({
         selectedDay={selectedDay}
         onChange={onDateChange}
       />
-      {!isLoading && (
-        <HourSelectBox
-          hourBoxes={hourBoxes}
-          selectedHour={selectedHour}
-          onChange={onHourChange}
-        />
-      )}
+      {
+        isLoading
+        && <CircularProgress size={50} classes={{ root: 'select-services__loading' }} />
+      }
+      {
+        !isLoading && hourBoxes.length === 0
+        && <EmptyState message="No available slot" />
+      }
+      (
+      <HourSelectBox
+        hourBoxes={hourBoxes}
+        selectedHour={selectedHour}
+        onChange={onHourChange}
+      />
+      )
     </div>
   );
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Grid, TextField, Typography, Fab,
 } from '@material-ui/core';
-import moment from 'moment-timezone';
+import mtz from 'moment-timezone';
 import './BookingDetail.scss';
 import { bookingDetailType, serviceType } from 'types/global';
 import formatName from 'utils/formatName';
@@ -63,7 +63,7 @@ class BookingDetail extends React.PureComponent {
               <Grid item md={5}><Typography variant="body1">Date:</Typography></Grid>
               <Grid item md={7}>
                 <Typography variant="subtitle1" color="secondary">
-                  {moment(bookingDetail.time.start).tz(this.timeZone).format('DD MMMM YYYY')}
+                  {mtz(bookingDetail.time.start).tz(this.timeZone).format('DD MMMM YYYY')}
                 </Typography>
               </Grid>
             </Grid>
@@ -71,7 +71,7 @@ class BookingDetail extends React.PureComponent {
               <Grid item md={5}><Typography variant="body1">Starts at:</Typography></Grid>
               <Grid item md={7}>
                 <Typography variant="subtitle1" color="secondary">
-                  {moment(bookingDetail.time.start).tz(this.timeZone).format('hh:mm A')}
+                  {mtz(bookingDetail.time.start).tz(this.timeZone).format('hh:mm A')}
                 </Typography>
               </Grid>
             </Grid>

@@ -88,7 +88,7 @@ export class SelectTime extends React.PureComponent {
 
 SelectTime.propTypes = {
   bookingDetail: bookingDetailType.isRequired,
-  initService: serviceType.isRequired,
+  initService: serviceType,
   getProviderTime: PropTypes.func.isRequired,
   timeDetails: PropTypes.arrayOf(
     PropTypes.shape({
@@ -98,11 +98,13 @@ SelectTime.propTypes = {
     }),
   ),
   onChange: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool.isRequired,
+  isLoading: PropTypes.bool,
 };
 
 SelectTime.defaultProps = {
   timeDetails: [],
+  isLoading: true,
+  initService: null,
 };
 
 const mapStateToProps = (states, ownProps) => ({
