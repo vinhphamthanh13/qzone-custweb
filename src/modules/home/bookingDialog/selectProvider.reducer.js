@@ -23,8 +23,8 @@ const selectProvider = (state = initialState, action) => {
       };
     case SET_PROVIDER_TIME_DETAIL:
       return {
+        ...state,
         providerDetails: {
-          ...state.providerDetails,
           [action.payload.providerId]: action.payload.providerTimeDetail,
         },
       };
