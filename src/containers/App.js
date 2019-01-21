@@ -20,7 +20,7 @@ const jss = create({
   insertionPoint: document.getElementById('jss-insertion-point'),
 });
 
-const history = createBrowserHistory();
+export const history = createBrowserHistory();
 
 const App = () => (
   <JssProvider jss={jss} generateClassName={generateClassName}>
