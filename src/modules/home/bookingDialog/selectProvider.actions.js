@@ -54,7 +54,8 @@ export const getProvidersByService = serviceId => async (dispatch, getState) => 
 
 export const getProviderTime = ({ serviceId, providerId, startSec }) => async (dispatch) => {
   dispatch(setLoading(true));
-  const response = handleResponse(await findAvailabilitiesByDateSec({ serviceId, providerId, startSec }));
+  const response = handleResponse(await handleRequest(findAvailabilitiesByDateSec,
+    { serviceId, providerId, startSec }), []);
   dispatch(setProviderTimeDetail(providerId, response));
   dispatch(setLoading(false));
 };
