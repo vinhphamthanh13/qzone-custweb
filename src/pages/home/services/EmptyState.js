@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Button } from '@material-ui/core';
-import './EmptyState.scss';
+import styles from './EmptyState.module.scss';
 
 export default function EmptyState({ onLoadServices, message }) {
   return (
-    <div className="empty-state__wrapper">
-      <Typography variant="display2" className="empty-state__message">{message}</Typography>
+    <div className={styles.wrapper}>
+      <Typography variant="display2" className={styles.message}>{message}</Typography>
       {onLoadServices && <Button onClick={onLoadServices} variant="outlined" color="primary">Try to get again</Button>}
     </div>
   );

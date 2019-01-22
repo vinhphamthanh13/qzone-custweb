@@ -5,8 +5,8 @@ import {
   Card, CardContent, CardMedia, CardActions,
   Button,
 } from '@material-ui/core';
-import './ServiceCard.scss';
 import { serviceType } from 'types/global';
+import styles from './ServiceCard.module.scss';
 import ServiceDetail from './serviceCard/ServiceDetail';
 
 export default class ServiceCard extends PureComponent {
@@ -22,15 +22,15 @@ export default class ServiceCard extends PureComponent {
   render() {
     const { service } = this.props;
     return (
-      <Card raised classes={{ root: 'service-card' }}>
+      <Card raised classes={{ root: styles.serviceCard }}>
         <CardMedia
-          className="service-card__image"
+          className={styles.image}
           image={serviceImg}
         />
-        <CardContent className="service-card__service-content">
+        <CardContent className={styles.serviceContent}>
           <ServiceDetail service={service} />
         </CardContent>
-        <CardActions classes={{ root: 'service-card__footer' }}>
+        <CardActions classes={{ root: styles.footer }}>
           <Button
             color="primary"
             variant="contained"

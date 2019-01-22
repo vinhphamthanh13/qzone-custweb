@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Grid } from '@material-ui/core';
-import './Home.scss';
 import { getServiceCategories } from 'api/home';
-import { handleResponse } from 'api/helpers';
+import { handleResponse, handleRequest } from 'api/helpers';
 import {
   setServiceCategories, getServicesByCategory, getServicesByName,
 } from 'modules/home.actions';
 import { serviceType } from 'types/global';
+import styles from './Home.module.scss';
 import CategoryTabs, { serviceCategoriesType } from './home/CategoryTabs';
 import Services from './home/Services';
 import BookingDialog from './home/BookingDialog';
@@ -42,7 +42,7 @@ export class Home extends React.PureComponent {
 
   async componentDidMount() {
     const { setServiceCategoriesAction } = this.props;
-    const serviceCategories = handleResponse(await getServiceCategories());
+    const serviceCategories = handleResponse(await handleRequest(getServiceCategories), []);
     setServiceCategoriesAction(serviceCategories);
     if (serviceCategories.length > 0) {
       this.onCategoryChange(null, serviceCategories[0].id);
@@ -141,7 +141,7 @@ export class Home extends React.PureComponent {
               menuIconButtonEl={menuIconButtonEl}
             />
           </Grid>
-          <Grid item xs={12} className="home__select-service">
+          <Grid item xs={12} className={styles.selectService}>
             <Services
               services={searchedServices}
               onChange={this.onChange}

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Calendar from 'react-big-calendar';
 import globalize from 'globalize';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import './SelectTime.scss';
+import styles from './SelectTime.module.scss';
 
 const localizer = Calendar.globalizeLocalizer(globalize);
 
@@ -12,7 +12,7 @@ export default class SelectTime extends React.PureComponent {
     const { onChange } = this.props;
     return (
       <Calendar
-        className="select-time-wrapper"
+        className={styles.selectTimeWrapper}
         events={[
           {
             start: new Date('2018-12-20T18:00'),
@@ -28,7 +28,7 @@ export default class SelectTime extends React.PureComponent {
         onSelectEvent={event => onChange(event, 'time')}
         eventPropGetter={(
           event, start, end, isSelected,
-        ) => ({ className: isSelected ? 'select-time__selected-event' : 'select-time__event' })}
+        ) => ({ className: isSelected ? styles.selectedEvent : styles.event })}
       />
     );
   }

@@ -4,28 +4,28 @@ import Grid from '@material-ui/core/Grid';
 import Brand from 'components/Brand';
 import NavBar from 'components/NavBar';
 import Content from 'components/Content';
-import '../Organisation.scss';
+import styles from '../Organisation.module.scss';
 
 const sectionClasses = {
   brand: {
     logo: {
-      root: 'org-page__section-1__logo',
+      root: styles.logo,
     },
     brand: {
-      root: 'org-page__section-1__brand header2 ghost-white',
+      root: [styles.brand, 'header2', 'ghost-white'].join(' '),
     },
     wrapper: {
-      root: 'org-page__section-1__brand-wrapper',
+      root: styles.brandWrapper,
     },
   },
   title: {
-    root: 'org-page__section-1__title header1 text-bold',
+    root: [styles.title, 'header1', 'text-bold'].join(' '),
   },
   button: {
-    root: 'org-page__button bg-we-peep mako',
+    root: [styles.button, 'bg-we-peep', 'mako'].join(' '),
   },
-  paragraph: 'org-page__section-1__paragraph',
-  linkClass: 'org-page__section-1__nav-bar-item mako text-bold',
+  paragraph: styles.paragraph,
+  linkClass: [styles.navBarItem, 'text-bold', 'mako'].join(' '),
 };
 
 const Section1 = (props) => {
