@@ -1,14 +1,14 @@
 import React from 'react';
-import './PageNotFound.scss';
 import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
+import styles from './PageNotFound.module.scss';
 
 
 function PageNotFound() {
   return (
-    <div className="notfound__wrapper">
-      <div className="notfound__inner">
-        <div className="notfound__content">
+    <div className={styles.wrapper}>
+      <div className={styles.inner}>
+        <div className={styles.content}>
           <Typography variant="h1">Oops!</Typography>
           <Typography variant="h2">
                       404 - The Page can not be found
@@ -18,24 +18,24 @@ function PageNotFound() {
             Go To Homepage
         </Link>
       </div>
-      <div className="notfound__effect">
-        <div className="cloud">
-          <div className="cloud_left" />
-          <div className="cloud_right" />
+      <div className={styles.effect}>
+        <div className={styles.cloud}>
+          <div className={styles.cloudLeft} />
+          <div className={styles.cloudRight} />
         </div>
-        <div className="rain">
-          <div className="drop" />
-          <div className="drop" />
-          <div className="drop" />
-          <div className="drop" />
-          <div className="drop" />
+        <div className={styles.rain}>
+          <div className={styles.drop} />
+          <div className={styles.drop} />
+          <div className={styles.drop} />
+          <div className={styles.drop} />
+          <div className={styles.drop} />
         </div>
-        <div className="surface">
-          <div className="hit" />
-          <div className="hit" />
-          <div className="hit" />
-          <div className="hit" />
-          <div className="hit" />
+        <div className={styles.surface}>
+          <div className={styles.hit} />
+          <div className={styles.hit} />
+          <div className={styles.hit} />
+          <div className={styles.hit} />
+          <div className={styles.hit} />
         </div>
       </div>
     </div>

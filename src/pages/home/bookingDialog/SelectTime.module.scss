@@ -1,0 +1,15 @@
+@import "styles/_color.scss";
+
+.selectTimeWrapper {
+  padding: 16px;
+}
+
+.event {
+  background-color: $alto;
+  border: 1px solid $mercury;
+  color: black;
+}
+
+.selectedEvent {
+  background-color: $primary;
+}
