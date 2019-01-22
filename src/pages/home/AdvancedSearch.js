@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import './AdvancedSearch.scss';
 import DateTimePicker from 'material-ui-pickers/DateTimePicker';
+import styles from './AdvancedSearch.module.scss';
 
 export default class AdvancedSearch extends PureComponent {
   static propTypes = {
@@ -52,7 +52,7 @@ export default class AdvancedSearch extends PureComponent {
         <DateTimePicker
           keyboard
           label="From date"
-          className="advanced-search__from-date"
+          className={styles.fromDate}
           value={renderedFromDate}
           onChange={this.onFromDateChange}
         />

@@ -1,23 +1,22 @@
 import React from 'react';
-import './AccessDenied.scss';
 import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
 import ButtonLink from '@material-ui/core/Link';
+import styles from './AccessDenied.module.scss';
 
 function AccessDenied() {
   return (
-    <div className="access-denied">
-      <div className="access-denied__wrapper">
-        <div className="animation">
+    <div className={styles.accessDenied}>
+      <div className={styles.wrapper}>
+        <div className={styles.animation}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="120px"
             height="120px"
             viewBox="0 0 100 100"
             preserveAspectRatio="xMidYMid"
-            className="uil-gears"
           >
-            <rect x="0" y="0" width="100" height="100" fill="none" className="bk" />
+            <rect x="0" y="0" width="100" height="100" fill="none" />
             <g transform="translate(-20,-20)">
               <path
                 d={'M79.9,52.6C80,51.8,80,50.9,80,50s0-1.8-0.1-2.6l-5.1-0.4c-0.3-2.4-0.9-4'
@@ -75,7 +74,7 @@ function AccessDenied() {
             </g>
           </svg>
         </div>
-        <div className="access-denied__content">
+        <div className={styles.content}>
           <Typography variant="h1">Oops!</Typography>
           <Typography variant="h2">
             There is an error to access this page

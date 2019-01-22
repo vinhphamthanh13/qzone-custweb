@@ -4,8 +4,8 @@ import {
   Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions,
 } from '@material-ui/core';
 import { serviceType } from 'types/global';
-import './ServiceDetail.scss';
 import CustomLink from 'components/CustomLink';
+import styles from './ServiceDetail.module.scss';
 
 export default class ServiceDetail extends React.PureComponent {
   constructor(props) {
@@ -47,13 +47,13 @@ export default class ServiceDetail extends React.PureComponent {
         <Tooltip title={service.name} placement="top">
           <Typography align="center" variant="title" noWrap>{service.name}</Typography>
         </Tooltip>
-        <div className="service-detail">
+        <div className={styles.serviceDetail}>
           <Typography variant="body2">
             {(service.description || '').substring(0, 300)}...&nbsp;
             {service.description.length > 300 && <CustomLink text="Read more" to="#" onClick={this.openDialog} />}
           </Typography>
         </div>
-        <div className="service-detail__block-item">
+        <div className={styles.blockItem}>
           <Grid container>
             <Grid item sm={6}>
               <Typography variant="caption">Duration:</Typography>

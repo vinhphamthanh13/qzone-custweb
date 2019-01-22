@@ -6,7 +6,7 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import SimpleSearch from './SimpleSearch';
-import './CategoryTabs.scss';
+import styles from './CategoryTabs.module.scss';
 
 const serviceCategoryType = PropTypes.shape({
   id: PropTypes.string.isRequired,
@@ -33,7 +33,7 @@ export default function CategoryTabs({
               <MenuIcon />
             </IconButton>
             <Menu
-              classes={{ paper: 'category-tabs' }}
+              classes={{ paper: styles.categoryTabs }}
               anchorEl={menuIconButtonEl}
               open={Boolean(menuIconButtonEl)}
               onClose={handleCloseMenu}
@@ -41,7 +41,7 @@ export default function CategoryTabs({
               { serviceCategories.map(category => (category.parentCategoryId === null
                 ? (
                   <MenuItem
-                    classes={{ selected: 'category-tabs__active-menu-item' }}
+                    classes={{ selected: styles.activeMenuItem }}
                     value={category.id}
                     selected={value === category.id}
                     key={category.id}

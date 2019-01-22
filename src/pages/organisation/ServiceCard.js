@@ -9,20 +9,21 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import styles from '../Organisation.module.scss';
 
 const serviceClass = {
   title: {
-    root: 'org-page__section-service-card__title header2 we-peep text-bold',
+    root: [styles.title, 'header2', 'text-bold', 'we-peep'].join(' '),
   },
   button: {
-    root: 'org-page__button bg-we-peep mako margin-top',
+    root: [styles.button, 'mako', 'margin-top', 'bg-we-peep'].join(' '),
   },
   card: {
     action: {
       root: 'flex',
     },
     image: {
-      root: 'org-page__section-service-card__card-image',
+      root: styles.cardImage,
     },
     title: {
       root: 'text-bold',
