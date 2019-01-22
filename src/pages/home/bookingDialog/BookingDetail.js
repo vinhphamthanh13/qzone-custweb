@@ -2,10 +2,10 @@ import React from 'react';
 import {
   Grid, TextField, Typography, Fab,
 } from '@material-ui/core';
-import './BookingDetail.scss';
 import { bookingDetailType, serviceType } from 'types/global';
 import { format } from 'date-fns';
 import formatName from 'utils/formatName';
+import styles from './BookingDetail.module.scss';
 
 class BookingDetail extends React.PureComponent {
   constructor(props) {
@@ -25,8 +25,8 @@ class BookingDetail extends React.PureComponent {
     const { name, email, phoneNumber } = this.state;
     const { bookingDetail, initService } = this.props;
     return (
-      <Grid container className="booking-detail__wrapper">
-        <Grid item md={6} className="booking-detail__user-info">
+      <Grid container className={styles.wrapper}>
+        <Grid item md={6} className={styles.userInfo}>
           <TextField
             required
             fullWidth
@@ -55,9 +55,9 @@ class BookingDetail extends React.PureComponent {
             variant="outlined"
           />
         </Grid>
-        <Grid item md={5} className="booking-detail__service">
+        <Grid item md={5} className={styles.service}>
           <Typography variant="h5">{initService.name}</Typography>
-          <div className="booking-detail__service-items">
+          <div className={styles.serviceItems}>
             <Grid container>
               <Grid item md={5}><Typography variant="body1">Date:</Typography></Grid>
               <Grid item md={7}>
@@ -83,7 +83,7 @@ class BookingDetail extends React.PureComponent {
               </Grid>
             </Grid>
           </div>
-          <div className="booking-detail__service-items">
+          <div className={styles.serviceItems}>
             <Fab color="primary" variant="extended" onClick={this.onSaveBooking}>
               Book now
             </Fab>

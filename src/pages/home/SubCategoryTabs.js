@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button } from '@material-ui/core';
-import './SubCategoryTabs.scss';
+import styles from './SubCategoryTabs.module.scss';
 
 export default function SubCategoryTabs({
   subCategories, onChange, selectedSubCategoryId,
@@ -14,7 +14,7 @@ export default function SubCategoryTabs({
           ? 'contained' : 'text'}
         color="primary"
         onClick={() => { onChange(subCategory.id, 'selectedSubCategoryId'); }}
-        classes={{ root: 'subcategory-tabs__item' }}
+        classes={{ root: styles.item }}
       >
         {subCategory.name}
       </Button>

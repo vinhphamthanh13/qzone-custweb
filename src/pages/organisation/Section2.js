@@ -3,17 +3,17 @@ import Grid from '@material-ui/core/Grid';
 import Content from 'components/Content';
 import ImageGridList from 'components/ImageGridList';
 import Dragon from 'images/dragon.jpeg';
-import '../Organisation.scss';
+import styles from '../Organisation.module.scss';
 
 const sectionClasses = {
   title: {
-    root: 'org-page__title header2 text-bold',
+    root: [styles.title, 'header2', 'text-bold'].join(' '),
   },
   content: {
-    root: 'org-page__section-2__content',
+    root: styles.content,
   },
   button: {
-    root: 'org-page__button bg-mako ghost-white',
+    root: [styles.button, 'bg-mako', 'ghost-white'].join(' '),
   },
   imageGrid: {
     root: '',

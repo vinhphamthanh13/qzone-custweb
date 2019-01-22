@@ -8,6 +8,7 @@ import Section3 from './organisation/Section3';
 import ServiceCard from './organisation/ServiceCard';
 import ProviderCard from './organisation/ProviderCard';
 import { serviceList, providerList } from './organisation/mockData';
+import styles from './Organisation.module.scss';
 
 const getNavButtons = (org) => {
   const { url } = org;
@@ -42,10 +43,10 @@ const Organisation = (props) => {
   const navButtons = getNavButtons(orgData);
   return (
     <React.Fragment>
-      <div className="org-page-wrapper">
-        <div className="org-page__section-1">
-          <div className="org-page__section-1--overlay">
-            <Grid container justify="space-between" className="org-page__section-1__navbar-wrapper">
+      <div className={styles.wrapper}>
+        <div className={styles.section1}>
+          <div className={styles.overlay}>
+            <Grid container justify="space-between" className={styles.navBarWrapper}>
               <Section1
                 menuButtons={navButtons}
                 logo={OrgLogo}
@@ -53,16 +54,16 @@ const Organisation = (props) => {
             </Grid>
           </div>
         </div>
-        <div className="org-page__section-2">
+        <div className={styles.section2}>
           <Section2 />
         </div>
-        <div className="org-page__section-3">
+        <div className={styles.section3}>
           <Section3 />
         </div>
-        <div className="org-page__section-service-card">
+        <div className={styles.sectionServiceCard}>
           <ServiceCard cardList={serviceList} />
         </div>
-        <div className="org-page__section-3 org-page__section-provider-card">
+        <div className={[styles.section3, styles.sectionProviderCard].join(' ')}>
           <ProviderCard cardList={providerList} />
         </div>
       </div>

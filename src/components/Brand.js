@@ -33,7 +33,7 @@ Brand.defaultProps = {
       root: 'brand',
     },
     wrapper: {
-      root: 'brand-wrapper',
+      root: 'brandWrapper',
     },
   },
 };

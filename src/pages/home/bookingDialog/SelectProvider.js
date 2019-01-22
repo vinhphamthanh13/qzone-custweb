@@ -10,7 +10,7 @@ import CustomLink from 'components/CustomLink';
 import { getProvidersByService } from 'modules/home/bookingDialog/selectProvider.actions';
 import formatName from 'utils/formatName';
 import EmptyState from '../services/EmptyState';
-import './SelectProvider.scss';
+import styles from './SelectProvider.module.scss';
 
 class SelectProvider extends React.PureComponent {
   componentDidMount = () => {
@@ -22,11 +22,11 @@ class SelectProvider extends React.PureComponent {
       isLoading, providers, onChange, bookingDetail,
     } = this.props;
     return (
-      <div className="select-provider">
-        <Grid container spacing={32} className="select-services__cards-wrapper">
+      <div className={styles.selectProvider}>
+        <Grid container spacing={32} className={styles.cardsWrapper}>
           {
             isLoading && providers.length === 0
-            && <CircularProgress size={50} classes={{ root: 'select-services__loading' }} />
+            && <CircularProgress size={50} classes={{ root: styles.loading }} />
           }
           {
             !isLoading && providers.length === 0
@@ -36,7 +36,7 @@ class SelectProvider extends React.PureComponent {
             <Grid item md={4} key={provider.id}>
               <Card classes={{
                 root: bookingDetail.provider && bookingDetail.provider.id === provider.id
-                  ? 'select-provider__active-item' : '',
+                  ? styles.activeItem : '',
               }}
               >
                 <CardActionArea onClick={() => onChange(provider, 'provider')}>
@@ -44,13 +44,13 @@ class SelectProvider extends React.PureComponent {
                     <Typography variant="title">
                       {formatName(provider.name)}
                     </Typography>
-                    <div className="service-detail">
+                    <div className={styles.serviceDetail}>
                       <Typography variant="subtitle2">
                         {(provider.description || '').substring(0, 300)}...&nbsp;
                         {provider.description.length > 300
                           && <CustomLink text="Read more" to="#" onClick={this.openDialog} />}
                       </Typography>
-                      <Grid container className="service-detail__item">
+                      <Grid container>
                         <Grid item sm={6}>
                           <Typography variant="caption">Qualifications:</Typography>
                         </Grid>
@@ -60,7 +60,7 @@ class SelectProvider extends React.PureComponent {
                           </Typography>
                         </Grid>
                       </Grid>
-                      <Grid container className="service-detail__item">
+                      <Grid container>
                         <Grid item sm={6}>
                           <Typography variant="caption">Mobile phone:</Typography>
                         </Grid>
@@ -70,7 +70,7 @@ class SelectProvider extends React.PureComponent {
                           </Typography>
                         </Grid>
                       </Grid>
-                      <Grid container className="service-detail__item">
+                      <Grid container>
                         <Grid item sm={6}>
                           <Typography variant="caption">Organisation:</Typography>
                         </Grid>
