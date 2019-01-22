@@ -12,7 +12,8 @@ import JssProvider from 'react-jss/lib/JssProvider';
 import { create } from 'jss';
 import { createGenerateClassName, jssPreset } from '@material-ui/core/styles';
 import 'config/api';
-import './App.scss';
+import './App.module.scss';
+import '../styles/_settings.scss';
 
 const generateClassName = createGenerateClassName();
 const jss = create({

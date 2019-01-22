@@ -1,0 +1,14 @@
+@import "styles/_color.scss";
+@import '../Services.module';
+@import '../services/serviceCard/ServiceDetail.module';
+
+.selectProvider {
+  padding: 16px;
+}
+
+.activeItem {
+  background: $primary;
+  & * {
+    color: white;
+  }
+}

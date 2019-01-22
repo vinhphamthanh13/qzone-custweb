@@ -7,6 +7,7 @@ import { getProviderTime } from 'modules/home/bookingDialog/selectProvider.actio
 
 import SelectTimeView from './SelectTime.view';
 import './SelectTime.scss';
+import styles from './SelectTime.module.scss';
 
 export class SelectTime extends React.PureComponent {
   constructor(props) {
