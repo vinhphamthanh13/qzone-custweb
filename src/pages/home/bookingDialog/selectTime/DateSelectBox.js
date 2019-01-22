@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, CardContent } from '@material-ui/core';
 import { InlineDatePicker } from 'material-ui-pickers';
+import styles from '../SelectTime.module.scss';
 
-export default function DateSelectBox({ onChange, selectedDay }) {
+export default function DateSelectBox({ onChange, selectedDay, providerTimeZone }) {
   return (
-    <div className="select-date">
+    <div className={styles.selectDate}>
       <Card>
-        <CardContent className="select-date_content">
+        <CardContent className={styles.content}>
           <InlineDatePicker
             variant="outlined"
             label="Choose a day"
@@ -17,6 +18,9 @@ export default function DateSelectBox({ onChange, selectedDay }) {
             disablePast
             keyboard
           />
+          <div className={styles.timeZone}>
+            Time zone: {providerTimeZone}
+          </div>
         </CardContent>
       </Card>
 
@@ -29,4 +33,5 @@ DateSelectBox.propTypes = {
   selectedDay: PropTypes.objectOf(
     Date,
   ).isRequired,
+  providerTimeZone: PropTypes.string.isRequired,
 };

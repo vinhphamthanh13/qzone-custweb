@@ -6,8 +6,6 @@ import { bookingDetailType, serviceType } from 'types/global';
 import { getProviderTime } from 'modules/home/bookingDialog/selectProvider.actions';
 
 import SelectTimeView from './SelectTime.view';
-import './SelectTime.scss';
-import styles from './SelectTime.module.scss';
 
 export class SelectTime extends React.PureComponent {
   constructor(props) {
@@ -72,8 +70,9 @@ export class SelectTime extends React.PureComponent {
   }))
 
   render() {
-    const { timeDetails, isLoading } = this.props;
+    const { timeDetails, isLoading, bookingDetail } = this.props;
     const { selectedDay, selectedHour } = this.state;
+    const providerTimeZone = bookingDetail.provider.timeZoneId;
     return (
       <SelectTimeView
         hourBoxes={this.getHourBoxes(timeDetails)}
@@ -82,6 +81,7 @@ export class SelectTime extends React.PureComponent {
         onDateChange={this.onDateChange}
         onHourChange={this.onHourChange}
         isLoading={isLoading}
+        providerTimeZone={providerTimeZone}
       />
     );
   }

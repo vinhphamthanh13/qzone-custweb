@@ -5,32 +5,35 @@ import { CircularProgress } from '@material-ui/core';
 import DateSelectBox from './selectTime/DateSelectBox';
 import HourSelectBox from './selectTime/HourSelectBox';
 import EmptyState from '../services/EmptyState';
+import styles from './SelectTime.module.scss';
 
 export default function SelectTime({
   onDateChange, hourBoxes, selectedDay,
   onHourChange, selectedHour, isLoading,
+  providerTimeZone,
 }) {
   return (
-    <div className="select-time-wrapper">
+    <div className={styles.selectTimeWrapper}>
       <DateSelectBox
         selectedDay={selectedDay}
         onChange={onDateChange}
+        providerTimeZone={providerTimeZone}
       />
       {
         isLoading
-        && <CircularProgress size={50} classes={{ root: 'select-services__loading' }} />
+        && <CircularProgress size={50} classes={{ root: styles.loading }} />
       }
       {
         !isLoading && hourBoxes.length === 0
         && <EmptyState message="No available slot" />
       }
-      (
+
       <HourSelectBox
         hourBoxes={hourBoxes}
         selectedHour={selectedHour}
         onChange={onHourChange}
       />
-      )
+
     </div>
   );
 }
@@ -49,6 +52,7 @@ SelectTime.propTypes = {
   ),
   onHourChange: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
+  providerTimeZone: PropTypes.string.isRequired,
 };
 
 SelectTime.defaultProps = {

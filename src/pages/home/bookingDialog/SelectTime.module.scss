@@ -1,15 +1,50 @@
 @import "styles/_color.scss";
+@import "../Services.module";
 
 .selectTimeWrapper {
   padding: 16px;
 }
 
-.event {
-  background-color: $alto;
-  border: 1px solid $mercury;
-  color: black;
+.selectHour {
+  width: 90%;
+  margin: 0 auto;
+  text-align: center;
 }
 
-.selectedEvent {
-  background-color: $primary;
+.content {
+  padding-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.availableSlotTitle {
+  font-size: 33px;
+  margin-bottom: 32px;
+}
+
+.timeZone {
+  padding: 15px;
+  opacity: 0.6;
+}
+
+.available {
+  padding-top: 0.2rem;
+  border-bottom: 1.5px solid green;
+}
+
+.unavailable {
+  padding-top: 0.2rem;
+  border-bottom: 1.5px solid red;
+}
+
+.selectDate {
+  margin: 0 auto;
+  padding-bottom: 2rem;
+}
+
+.activeItem {
+  background: $primary;
+  & * {
+    color: white;
+  }
 }

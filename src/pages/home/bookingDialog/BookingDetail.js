@@ -3,7 +3,6 @@ import {
   Grid, TextField, Typography, Fab,
 } from '@material-ui/core';
 import mtz from 'moment-timezone';
-import './BookingDetail.scss';
 import { bookingDetailType, serviceType } from 'types/global';
 import formatName from 'utils/formatName';
 import styles from './BookingDetail.module.scss';

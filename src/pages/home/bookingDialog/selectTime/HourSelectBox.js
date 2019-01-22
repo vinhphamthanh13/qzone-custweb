@@ -4,22 +4,24 @@ import {
   Grid, Typography,
   Card, CardActionArea, CardContent,
 } from '@material-ui/core';
+import styles from '../SelectTime.module.scss';
 
 export default function HourSelectBox({ hourBoxes = [], onChange, selectedHour }) {
   return (
-    <div className="select-hour">
+    <div className={styles.selectHour}>
+      <Typography variant="title" className={styles.availableSlotTitle}>Available Slots</Typography>
       <Grid container spacing={8}>
         {hourBoxes.map(({ startHour, durationSec, isAvailable }) => (
           <Grid item sm={3} key={startHour.toISOString()}>
             <Card classes={{
               root: selectedHour && selectedHour.format('LT') === startHour.format('LT')
-                ? 'select-time__active-item' : '',
+                ? styles.activeItem : '',
             }}
             >
               <CardActionArea onClick={() => onChange({ start: startHour, duration: durationSec })}>
                 <CardContent>
                   <Typography variant="subtitle1">{startHour.format('LT')}</Typography>
-                  <Grid container className="select-hour__content">
+                  <Grid container className={styles.content}>
                     <Grid item sm={6}>
                       <Typography variant="caption">Duration:</Typography>
                     </Grid>
@@ -28,7 +30,7 @@ export default function HourSelectBox({ hourBoxes = [], onChange, selectedHour }
                     </Grid>
                     <Grid
                       container
-                      className={`select-hour__content${isAvailable ? '__available' : '__unavailable'}`}
+                      className={`${isAvailable ? styles.available : styles.unavailable}`}
                     >
                       <Grid item sm={12}>
                         <Typography variant="caption">

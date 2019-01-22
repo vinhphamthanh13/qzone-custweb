@@ -25,6 +25,7 @@ const selectProvider = (state = initialState, action) => {
       return {
         ...state,
         providerDetails: {
+          ...state.providerDetails,
           [action.payload.providerId]: action.payload.providerTimeDetail,
         },
       };
