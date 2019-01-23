@@ -9,7 +9,6 @@ import styles from '../SelectTime.module.scss';
 export default function HourSelectBox({ hourBoxes = [], onChange, selectedHour }) {
   return (
     <div className={styles.selectHour}>
-      <Typography variant="title" className={styles.availableSlotTitle}>Available Slots</Typography>
       <Grid container spacing={8}>
         {hourBoxes.map(({ startHour, durationSec, isAvailable }) => (
           <Grid item sm={3} key={startHour.toISOString()}>
@@ -21,7 +20,7 @@ export default function HourSelectBox({ hourBoxes = [], onChange, selectedHour }
               <CardActionArea onClick={() => onChange({ start: startHour, duration: durationSec })}>
                 <CardContent>
                   <Typography variant="subtitle1">{startHour.format('LT')}</Typography>
-                  <Grid container className={styles.content}>
+                  <Grid container className={styles.selectHourContent}>
                     <Grid item sm={6}>
                       <Typography variant="caption">Duration:</Typography>
                     </Grid>

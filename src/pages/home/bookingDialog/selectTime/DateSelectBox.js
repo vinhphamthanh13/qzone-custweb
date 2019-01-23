@@ -8,7 +8,7 @@ export default function DateSelectBox({ onChange, selectedDay, providerTimeZone 
   return (
     <div className={styles.selectDate}>
       <Card>
-        <CardContent className={styles.content}>
+        <CardContent className={styles.selectDateContent}>
           <InlineDatePicker
             variant="outlined"
             label="Choose a day"

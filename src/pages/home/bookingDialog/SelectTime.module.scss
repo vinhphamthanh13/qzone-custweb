@@ -1,5 +1,6 @@
 @import "styles/_color.scss";
 @import "../Services.module";
+@import "styles/_settings.scss";
 
 .selectTimeWrapper {
   padding: 16px;
@@ -11,10 +12,27 @@
   text-align: center;
 }
 
-.content {
+.selectDateContent {
+  display: flex;
+  justify-content: center;
+  >div {
+    width: 14rem;
+  }
+}
+.selectHourContent {
   padding-top: 1rem;
   display: flex;
   justify-content: center;
+}
+
+@media (max-width: $sm) {
+  .selectDateContent {
+    text-align: center;
+    display: -webkit-flex; /* Safari */
+    -webkit-flex-flow: row-reverse wrap; /* Safari 6.1+ */
+    display: flex;
+    flex-flow: wrap-reverse;
+  }
 }
 
 .availableSlotTitle {
@@ -23,11 +41,12 @@
 }
 
 .timeZone {
-  padding: 15px;
+  padding: 13px;
   opacity: 0.6;
 }
 
 .available {
+  justify-content: center;
   padding-top: 0.2rem;
   border-bottom: 1.5px solid green;
 }
