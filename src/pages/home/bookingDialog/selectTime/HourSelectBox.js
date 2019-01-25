@@ -32,7 +32,7 @@ export default function HourSelectBox({ hourBoxes = [], onChange, selectedHour }
                       className={`${isAvailable ? styles.available : styles.unavailable}`}
                     >
                       <Grid item sm={12}>
-                        <Typography variant="caption">
+                        <Typography>
                           {isAvailable ? 'Slot available' : 'Slot unavailable'}
                         </Typography>
                       </Grid>

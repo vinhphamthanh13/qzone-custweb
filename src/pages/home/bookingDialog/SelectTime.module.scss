@@ -1,6 +1,5 @@
 @import "styles/_color.scss";
 @import "../Services.module";
-@import "styles/_settings.scss";
 
 .selectTimeWrapper {
   padding: 16px;
@@ -25,7 +24,7 @@
   justify-content: center;
 }
 
-@media (max-width: $sm) {
+@media (max-width: 600px) {
   .selectDateContent {
     text-align: center;
     display: -webkit-flex; /* Safari */
