@@ -70,7 +70,7 @@ export class SelectTime extends React.PureComponent {
   }))
 
   render() {
-    const { timeDetails, isLoading} = this.props;
+    const { timeDetails, isLoading } = this.props;
     const { selectedDay, selectedHour } = this.state;
     return (
       <SelectTimeView
