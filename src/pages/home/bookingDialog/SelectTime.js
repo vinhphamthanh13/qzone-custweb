@@ -80,6 +80,7 @@ export class SelectTime extends React.PureComponent {
         onDateChange={this.onDateChange}
         onHourChange={this.onHourChange}
         isLoading={isLoading}
+        providerTimeZone={this.timeZone}
       />
     );
   }
