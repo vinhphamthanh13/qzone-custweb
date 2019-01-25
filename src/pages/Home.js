@@ -8,6 +8,7 @@ import {
   setServiceCategories, getServicesByCategory, getServicesByName,
 } from 'modules/home.actions';
 import { serviceType } from 'types/global';
+import getLocation from 'utils/getLocation';
 import styles from './Home.module.scss';
 import CategoryTabs, { serviceCategoriesType } from './home/CategoryTabs';
 import Services from './home/Services';
@@ -37,6 +38,7 @@ export class Home extends React.PureComponent {
       selectedService: undefined,
       bookingDetail: undefined,
       menuIconButtonEl: null,
+      userPosition: { latitude: 0, longitude: 0 },
     };
   }
 
@@ -47,7 +49,15 @@ export class Home extends React.PureComponent {
     if (serviceCategories.length > 0) {
       this.onCategoryChange(null, serviceCategories[0].id);
     }
+    await getLocation(this.showLocation);
   }
+
+  showLocation = (position) => {
+    if (!Object.is(position, null) || !Object.is(position, undefined)) {
+      const { coords: { latitude, longitude } } = position;
+      this.setState({ userPosition: { latitude, longitude } });
+    }
+  };
 
   handleOpenMenu = (event) => {
     this.setState({ menuIconButtonEl: event.currentTarget });
@@ -121,7 +131,6 @@ export class Home extends React.PureComponent {
       selectedService, menuIconButtonEl,
     } = this.state;
     const searchedServices = this.getSearchedServices(services, searchText, selectedCategoryId);
-
     return (
       <>
         <BookingDialog
