@@ -1,0 +1,29 @@
+.selectDate {
+  margin: 0 auto;
+  padding-bottom: 2rem;
+}
+
+.selectDateContent {
+  display: flex;
+  justify-content: center;
+  >div {
+    width: 14rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .selectDateContent {
+    text-align: center;
+    display: -webkit-flex; /* Safari */
+    -webkit-flex-flow: row-reverse wrap; /* Safari 6.1+ */
+    display: flex;
+    flex-flow: wrap-reverse;
+  }
+}
+
+.timeZone {
+  padding: 13px;
+  opacity: 0.6;
+  top: 5px;
+  position: relative;
+}

@@ -64,9 +64,10 @@ export class SelectTime extends React.PureComponent {
   }
 
   getHourBoxes = timeDetails => timeDetails.map(d => ({
+    spotsOpen: d.spotsOpen,
+    spotsTotal: d.spotsTotal,
     startHour: moment(d.startSec * 1000).tz(this.timeZone),
     durationSec: d.durationSec,
-    isAvailable: d.spotsOpen > 0,
   }))
 
   render() {

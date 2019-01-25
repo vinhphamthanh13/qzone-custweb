@@ -57,7 +57,7 @@ class BookingDetail extends React.PureComponent {
           />
         </Grid>
         <Grid item md={5} className={styles.service}>
-          <Typography variant="h5">{initService.name}</Typography>
+          <Typography variant="h5">{initService ? initService.name : ''}</Typography>
           <div className={styles.serviceItems}>
             <Grid container>
               <Grid item md={5}><Typography variant="body1">Date:</Typography></Grid>
@@ -97,7 +97,11 @@ class BookingDetail extends React.PureComponent {
 
 BookingDetail.propTypes = {
   bookingDetail: bookingDetailType.isRequired,
-  initService: serviceType.isRequired,
+  initService: serviceType,
+};
+
+BookingDetail.defaultProps = {
+  initService: undefined,
 };
 
 export default BookingDetail;

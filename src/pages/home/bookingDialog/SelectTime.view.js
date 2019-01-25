@@ -5,7 +5,7 @@ import { CircularProgress } from '@material-ui/core';
 import DateSelectBox from './selectTime/DateSelectBox';
 import HourSelectBox from './selectTime/HourSelectBox';
 import EmptyState from '../services/EmptyState';
-import styles from './SelectTime.module.scss';
+import styles from './SelectTime.view.module.scss';
 
 export default function SelectTime({
   onDateChange, hourBoxes, selectedDay,

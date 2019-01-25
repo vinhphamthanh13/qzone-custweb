@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, CardContent } from '@material-ui/core';
 import { InlineDatePicker } from 'material-ui-pickers';
-import styles from '../SelectTime.module.scss';
+import styles from './DateSelectBox.module.scss';
 
 export default function DateSelectBox({ onChange, selectedDay, providerTimeZone }) {
   return (
