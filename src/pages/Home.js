@@ -10,9 +10,10 @@ import {
 import { serviceType } from 'types/global';
 import getLocation from 'utils/getLocation';
 import styles from './Home.module.scss';
-import CategoryTabs, { serviceCategoriesType } from './home/CategoryTabs';
+import Header, { serviceCategoriesType } from './home/Header';
 import Services from './home/Services';
 import BookingDialog from './home/BookingDialog';
+import Auth from './Auth';
 
 /* eslint react/no-unused-state: 0 */
 export class Home extends React.PureComponent {
@@ -35,6 +36,8 @@ export class Home extends React.PureComponent {
       subCategories: [],
       selectedCategoryId: false,
       selectedSubCategoryId: undefined,
+      isRegisterOpen: false,
+      isLoginOpen: false,
       selectedService: undefined,
       bookingDetail: undefined,
       menuIconButtonEl: null,
@@ -124,15 +127,25 @@ export class Home extends React.PureComponent {
   onSaveBooking = () => {
   };
 
+  openDialog = (key) => {
+    this.setState({ [key]: true });
+  }
+
+  closeDialog = (key) => {
+    this.setState({ [key]: false });
+  }
+
   render() {
     const { serviceCategories, isLoading, services } = this.props;
     const {
       selectedCategoryId, subCategories, selectedSubCategoryId, searchText,
+      isRegisterOpen, isLoginOpen,
       selectedService, menuIconButtonEl,
     } = this.state;
     const searchedServices = this.getSearchedServices(services, searchText, selectedCategoryId);
     return (
       <>
+        <Auth isRegisterOpen={isRegisterOpen} isLoginOpen={isLoginOpen} closeDialog={this.closeDialog} />
         <BookingDialog
           initService={selectedService}
           handleClose={this.handleCloseBookingDialog}
@@ -140,11 +153,13 @@ export class Home extends React.PureComponent {
         />
         <Grid container>
           <Grid item xs={12}>
-            <CategoryTabs
+            <Header
               serviceCategories={serviceCategories}
               value={selectedCategoryId}
               onCategoryChange={this.onCategoryChange}
               onSearch={this.onSearch}
+              openLogin={() => this.openDialog('isLoginOpen')}
+              openSignup={() => this.openDialog('isRegisterOpen')}
               handleOpenMenu={this.handleOpenMenu}
               handleCloseMenu={this.handleCloseMenu}
               menuIconButtonEl={menuIconButtonEl}
