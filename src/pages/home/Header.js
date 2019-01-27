@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  AppBar, IconButton,
+  AppBar, IconButton, Button,
   Menu, MenuItem, Tab, Tabs, Toolbar,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import SimpleSearch from './SimpleSearch';
-import styles from './CategoryTabs.module.scss';
+import styles from './Header.module.scss';
 
 const serviceCategoryType = PropTypes.shape({
   id: PropTypes.string.isRequired,
@@ -16,8 +16,9 @@ const serviceCategoryType = PropTypes.shape({
 
 export const serviceCategoriesType = PropTypes.arrayOf(serviceCategoryType);
 
-export default function CategoryTabs({
+export default function Header({
   value, onSearch, onCategoryChange, serviceCategories, handleOpenMenu, handleCloseMenu, menuIconButtonEl,
+  openLogin, openSignup,
 }) {
   const isSmallScreen = window.innerWidth < 660;
   return (
@@ -33,7 +34,7 @@ export default function CategoryTabs({
               <MenuIcon />
             </IconButton>
             <Menu
-              classes={{ paper: styles.categoryTabs }}
+              classes={{ paper: styles.header }}
               anchorEl={menuIconButtonEl}
               open={Boolean(menuIconButtonEl)}
               onClose={handleCloseMenu}
@@ -71,21 +72,25 @@ export default function CategoryTabs({
         )}
         <div className="grow" />
         <SimpleSearch onSearch={onSearch} />
+        <Button color="inherit" onClick={openLogin}>Log in</Button>
+        <Button color="inherit" onClick={openSignup}>Register</Button>
       </Toolbar>
     </AppBar>
   );
 }
 
-CategoryTabs.propTypes = {
+Header.propTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
   onSearch: PropTypes.func.isRequired,
   onCategoryChange: PropTypes.func.isRequired,
   serviceCategories: serviceCategoriesType.isRequired,
+  openLogin: PropTypes.func.isRequired,
+  openSignup: PropTypes.func.isRequired,
   menuIconButtonEl: PropTypes.objectOf(PropTypes.object),
   handleOpenMenu: PropTypes.func.isRequired,
   handleCloseMenu: PropTypes.func.isRequired,
 };
 
-CategoryTabs.defaultProps = {
+Header.defaultProps = {
   menuIconButtonEl: null,
 };
