@@ -14,7 +14,7 @@
     "react/jsx-one-expression-per-line": "off",
     "import/prefer-default-export": "off",
     "import/no-named-as-default": "off",
-    "react/destructuring-assignment": "off",
+    "react/destructuring-assignment": "off"
   },
   "settings": {
     "import/resolver": {
