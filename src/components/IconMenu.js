@@ -14,8 +14,8 @@ const IconMenu = (props) => {
 };
 
 IconMenu.propTypes = {
-  iconSuite: PropTypes.oneOfType(PropTypes.any).isRequired,
-  children: PropTypes.oneOfType(PropTypes.any),
+  iconSuite: PropTypes.objectOf(PropTypes.any).isRequired,
+  children: PropTypes.oneOfType([PropTypes.any]),
 };
 
 IconMenu.defaultProps = {

@@ -35,7 +35,7 @@ export class Home extends React.PureComponent {
       searchText: undefined,
       subCategory: undefined,
       subCategories: [],
-      selectedCategoryId: false,
+      selectedCategoryId: '',
       selectedSubCategoryId: undefined,
       isRegisterOpen: false,
       isLoginOpen: false,
@@ -142,7 +142,7 @@ export class Home extends React.PureComponent {
     } = this.props;
     const {
       selectedCategoryId, subCategories, selectedSubCategoryId, searchText,
-      isRegisterOpen, isLoginOpen,
+      isRegisterOpen, isLoginOpen, userPosition,
       selectedService,
     } = this.state;
     const searchedServices = this.getSearchedServices(services, searchText, selectedCategoryId);
@@ -162,6 +162,7 @@ export class Home extends React.PureComponent {
             categories={serviceCategories}
             handleChangeCategory={this.onCategoryChange}
             activeCategoryId={selectedCategoryId}
+            userPosition={userPosition}
           />
           <Grid item xs={12} className={styles.selectService}>
             <Services

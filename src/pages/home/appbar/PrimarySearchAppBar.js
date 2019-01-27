@@ -12,10 +12,14 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import Avatar from '@material-ui/core/Avatar';
+import Tooltip from '@material-ui/core/Tooltip';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import HowToReg from '@material-ui/icons/HowToReg';
 import { Book as BookIcon } from '@material-ui/icons';
+import NearMe from '@material-ui/icons/NearMe';
 import AssignmentInd from '@material-ui/icons/AssignmentInd';
+import PersonAdd from '@material-ui/icons/PersonAdd';
 import ExitToApp from '@material-ui/icons/ExitToApp';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
@@ -178,8 +182,9 @@ class PrimarySearchAppBar extends React.Component {
     } = this.state;
     const {
       classes, loggedIn, onSearch, categories,
-      activeCategoryId,
+      activeCategoryId, userPosition,
     } = this.props;
+    const searchNearByTitle = userPosition.latitude ? 'Search Services Near You' : 'Your Location Not Allowed';
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
     const menuCategory = categories.length ? categories.filter(
@@ -231,8 +236,26 @@ class PrimarySearchAppBar extends React.Component {
       ]
     ) : (
       [
-        <MenuItem key="app-log-in" onClick={() => this.handleAuthenticateUser('isLoginOpen')}>Login</MenuItem>,
-        <MenuItem key="app-register" onClick={() => this.handleAuthenticateUser('isRegisterOpen')}>Register</MenuItem>,
+        <IconMenu
+          key="app-log-in"
+          iconSuite={{
+            handleMethod: () => this.handleAuthenticateUser('isLoginOpen'),
+            component: HowToReg,
+            classes: classes.menuIcon,
+          }}
+        >
+          Login
+        </IconMenu>,
+        <IconMenu
+          key="app-register"
+          iconSuite={{
+            handleMethod: () => this.handleAuthenticateUser('isRegisterOpen'),
+            component: PersonAdd,
+            classes: classes.menuIcon,
+          }}
+        >
+          Register
+        </IconMenu>,
       ]
     );
     const renderMenu = (
@@ -359,6 +382,14 @@ class PrimarySearchAppBar extends React.Component {
                 onChange={onSearch}
               />
             </div>
+            <IconButton
+              className={classes.menuListDesktop}
+              disabled={!userPosition.latitude}
+            >
+              <Tooltip title={searchNearByTitle}>
+                <NearMe />
+              </Tooltip>
+            </IconButton>
             <Button
               onClick={this.handleServiceMenuOpen}
               className={classes.menuListDesktop}
@@ -384,13 +415,14 @@ class PrimarySearchAppBar extends React.Component {
 }
 
 PrimarySearchAppBar.propTypes = {
-  classes: PropTypes.oneOf([PropTypes.object]).isRequired,
+  classes: PropTypes.objectOf(PropTypes.any).isRequired,
   loggedIn: PropTypes.bool.isRequired,
   handleAuthenticate: PropTypes.func.isRequired,
   onSearch: PropTypes.func.isRequired,
   categories: PropTypes.arrayOf(PropTypes.object).isRequired,
   handleChangeCategory: PropTypes.func.isRequired,
   activeCategoryId: PropTypes.string.isRequired,
+  userPosition: PropTypes.objectOf(PropTypes.number).isRequired,
 };
 
 export default withStyles(styles)(PrimarySearchAppBar);
