@@ -10,7 +10,7 @@ import {
 import { serviceType } from 'types/global';
 import getLocation from 'utils/getLocation';
 import styles from './Home.module.scss';
-import Header, { serviceCategoriesType } from './home/Header';
+import { serviceCategoriesType } from './home/Header';
 import Services from './home/Services';
 import BookingDialog from './home/BookingDialog';
 import Auth from './Auth';
@@ -143,7 +143,7 @@ export class Home extends React.PureComponent {
     const {
       selectedCategoryId, subCategories, selectedSubCategoryId, searchText,
       isRegisterOpen, isLoginOpen,
-      selectedService, menuIconButtonEl,
+      selectedService,
     } = this.state;
     const searchedServices = this.getSearchedServices(services, searchText, selectedCategoryId);
     return (
@@ -159,20 +159,10 @@ export class Home extends React.PureComponent {
             loggedIn
             handleAuthenticate={this.openDialog}
             onSearch={this.onSearch}
+            categories={serviceCategories}
+            handleChangeCategory={this.onCategoryChange}
+            activeCategoryId={selectedCategoryId}
           />
-          <Grid item xs={12}>
-            <Header
-              serviceCategories={serviceCategories}
-              value={selectedCategoryId}
-              onCategoryChange={this.onCategoryChange}
-              onSearch={this.onSearch}
-              openLogin={() => this.openDialog('isLoginOpen')}
-              openSignup={() => this.openDialog('isRegisterOpen')}
-              handleOpenMenu={this.handleOpenMenu}
-              handleCloseMenu={this.handleCloseMenu}
-              menuIconButtonEl={menuIconButtonEl}
-            />
-          </Grid>
           <Grid item xs={12} className={styles.selectService}>
             <Services
               services={searchedServices}

@@ -166,44 +166,73 @@ class PrimarySearchAppBar extends React.Component {
     this.handleMenuClose();
   };
 
+  handleChangeCategory = (event, categoryId) => {
+    const { handleChangeCategory } = this.props;
+    this.handleServiceMenuClose();
+    handleChangeCategory(event, categoryId);
+  };
+
   render() {
     const {
       anchorEl, mobileMoreAnchorEl, serviceAnchorEl,
     } = this.state;
-    const { classes, loggedIn, onSearch } = this.props;
+    const {
+      classes, loggedIn, onSearch, categories,
+      activeCategoryId,
+    } = this.props;
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+    const menuCategory = categories.length ? categories.filter(
+      category => !category.parentCategoryId,
+    ) : [];
+    const menuCategories = menuCategory.length ? menuCategory.map(
+      category => (
+        <MenuItem
+          key={category.id}
+          onClick={evt => this.handleChangeCategory(evt, category.id)}
+          selected={activeCategoryId === category.id}
+        >
+          {category.name}
+        </MenuItem>
+      ),
+    ) : null;
     const authorization = loggedIn ? (
       [
-        <IconMenu iconSuite={{
-          handleMethod: this.handleMenuClose,
-          component: BookIcon,
-          classes: classes.menuIcon,
-        }}
+        <IconMenu
+          key="app-bar-booking"
+          iconSuite={{
+            handleMethod: this.handleMenuClose,
+            component: BookIcon,
+            classes: classes.menuIcon,
+          }}
         >
           Booking
         </IconMenu>,
-        <IconMenu iconSuite={{
-          handleMethod: this.handleMenuClose,
-          component: AssignmentInd,
-          classes: classes.menuIcon,
-        }}
+        <IconMenu
+          key="app-bar-profile"
+          iconSuite={{
+            handleMethod: this.handleMenuClose,
+            component: AssignmentInd,
+            classes: classes.menuIcon,
+          }}
         >
           Profile
         </IconMenu>,
-        <IconMenu iconSuite={{
-          handleMethod: this.handleLogout,
-          component: ExitToApp,
-          classes: classes.menuIcon,
-        }}
+        <IconMenu
+          key="app-bar-log-out"
+          iconSuite={{
+            handleMethod: this.handleLogout,
+            component: ExitToApp,
+            classes: classes.menuIcon,
+          }}
         >
           Logout
         </IconMenu>,
       ]
     ) : (
       [
-        <MenuItem onClick={() => this.handleAuthenticateUser('isLoginOpen')}>Login</MenuItem>,
-        <MenuItem onClick={() => this.handleAuthenticateUser('isRegisterOpen')}>Register</MenuItem>,
+        <MenuItem key="app-log-in" onClick={() => this.handleAuthenticateUser('isLoginOpen')}>Login</MenuItem>,
+        <MenuItem key="app-register" onClick={() => this.handleAuthenticateUser('isRegisterOpen')}>Register</MenuItem>,
       ]
     );
     const renderMenu = (
@@ -322,7 +351,7 @@ class PrimarySearchAppBar extends React.Component {
                 <SearchIcon />
               </div>
               <InputBase
-                placeholder="Search…"
+                placeholder="Services, organisations …"
                 classes={{
                   root: classes.inputRoot,
                   input: classes.inputInput,
@@ -341,18 +370,7 @@ class PrimarySearchAppBar extends React.Component {
               open={Boolean(serviceAnchorEl)}
               onClose={this.handleServiceMenuClose}
             >
-              <MenuItem onClick={this.handleServiceMenuClose}>
-                <IconButton color="inherit">
-                  <AccountCircle />
-                </IconButton>
-                <p>Profile</p>
-              </MenuItem>
-              <MenuItem>
-                Services
-              </MenuItem>
-              <MenuItem>
-                SDFAjkdfj
-              </MenuItem>
+              { menuCategories }
             </Menu>
             <div className={classes.grow} />
             { customUser }
@@ -366,10 +384,13 @@ class PrimarySearchAppBar extends React.Component {
 }
 
 PrimarySearchAppBar.propTypes = {
-  classes: PropTypes.oneOfType(PropTypes.object).isRequired,
+  classes: PropTypes.oneOf([PropTypes.object]).isRequired,
   loggedIn: PropTypes.bool.isRequired,
   handleAuthenticate: PropTypes.func.isRequired,
   onSearch: PropTypes.func.isRequired,
+  categories: PropTypes.arrayOf(PropTypes.object).isRequired,
+  handleChangeCategory: PropTypes.func.isRequired,
+  activeCategoryId: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(PrimarySearchAppBar);
