@@ -117,9 +117,15 @@ class PrimarySearchAppBar extends React.Component {
     this.setState({ mobileMoreAnchorEl: null });
   };
 
+  handleAuthenticateUser = (authenticateType) => {
+    const { handleAuthenticate } = this.props;
+    handleAuthenticate(authenticateType);
+    this.handleMenuClose();
+  };
+
   render() {
     const { anchorEl, mobileMoreAnchorEl } = this.state;
-    const { classes, loggedIn, handleAuthenticate } = this.props;
+    const { classes, loggedIn } = this.props;
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
     const authorization = loggedIn ? (
@@ -130,8 +136,8 @@ class PrimarySearchAppBar extends React.Component {
       ]
     ) : (
       [
-        <MenuItem onClick={() => handleAuthenticate('isLoginOpen')}>Login</MenuItem>,
-        <MenuItem onClick={() => handleAuthenticate('isRegisterOpen')}>Register</MenuItem>,
+        <MenuItem onClick={() => this.handleAuthenticateUser('isLoginOpen')}>Login</MenuItem>,
+        <MenuItem onClick={() => this.handleAuthenticateUser('isRegisterOpen')}>Register</MenuItem>,
       ]
     );
     const renderMenu = (
