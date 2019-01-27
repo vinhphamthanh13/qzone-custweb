@@ -14,6 +14,7 @@ import Header, { serviceCategoriesType } from './home/Header';
 import Services from './home/Services';
 import BookingDialog from './home/BookingDialog';
 import Auth from './Auth';
+import PrimarySearchAppBar from './home/appbar/PrimarySearchAppBar';
 
 /* eslint react/no-unused-state: 0 */
 export class Home extends React.PureComponent {
@@ -129,11 +130,11 @@ export class Home extends React.PureComponent {
 
   openDialog = (key) => {
     this.setState({ [key]: true });
-  }
+  };
 
   closeDialog = (key) => {
     this.setState({ [key]: false });
-  }
+  };
 
   render() {
     const { serviceCategories, isLoading, services } = this.props;
@@ -152,6 +153,10 @@ export class Home extends React.PureComponent {
           onSaveBooking={this.onSaveBooking}
         />
         <Grid container>
+          <PrimarySearchAppBar
+            loggedIn={false}
+            handleAuthenticate={this.openDialog}
+          />
           <Grid item xs={12}>
             <Header
               serviceCategories={serviceCategories}
