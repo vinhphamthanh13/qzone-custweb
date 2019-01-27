@@ -11,6 +11,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import JssProvider from 'react-jss/lib/JssProvider';
 import { create } from 'jss';
 import { createGenerateClassName, jssPreset } from '@material-ui/core/styles';
+import Amplify from 'aws-amplify';
 import 'config/api';
 import './App.module.scss';
 import '../styles/_settings.scss';
@@ -22,6 +23,26 @@ const jss = create({
 });
 
 export const history = createBrowserHistory();
+
+Amplify.configure({
+  Auth: {
+    identityPoolId: 'ap-southeast-2:adab2657-684c-4222-a17a-9a82b6a5ee84',
+
+    // REQUIRED - Amazon Cognito Region
+    region: 'ap-southeast-2',
+
+    identityPoolRegion: 'ap-southeast-2',
+
+    // OPTIONAL - Amazon Cognito User Pool ID
+    userPoolId: 'ap-southeast-2_0sAegznUX',
+
+    // OPTIONAL - Amazon Cognito Web Client ID (26-char alphanumeric string)
+    userPoolWebClientId: '3ov1blo2eji4acnqfcv88tcidn',
+
+    // OPTIONAL - Enforce user authentication prior to accessing AWS resources or not
+    mandatorySignIn: true,
+  },
+});
 
 const App = () => (
   <JssProvider jss={jss} generateClassName={generateClassName}>

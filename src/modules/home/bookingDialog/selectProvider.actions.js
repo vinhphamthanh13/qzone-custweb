@@ -1,4 +1,4 @@
-import { handleResponse } from 'api/helpers';
+import { handleResponse, handleRequest } from 'api/helpers';
 import {
   searchProvidersByService,
   searchProviderById,
@@ -6,7 +6,6 @@ import {
 } from 'api/home/bookingDialog/selectProvider';
 import { searchOrganizationById } from 'api/home';
 import { setOrgs } from 'modules/home.actions';
-import { handleRequest } from '../../../api/helpers';
 
 export const SET_LOADING = 'HOME.BOOKING_DIALOG.SELECT_SERVICE.SET_LOADING';
 export const SET_PROVIDERS = 'HOME.BOOKING_DIALOG.SELECT_SERVICE.SET_PROVIDERS';
