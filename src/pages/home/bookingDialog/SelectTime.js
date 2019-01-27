@@ -19,19 +19,21 @@ export class SelectTime extends React.PureComponent {
   }
 
   componentDidMount() {
+    const today = moment();
+
     if (this.props.bookingDetail.time) {
-      const selectedDay = moment(this.props.bookingDetail.time.start).tz(this.timeZone);
+      const selectedDay = moment(this.props.bookingDetail.time.start);
+
       this.setState({
         selectedDay,
         selectedHour: selectedDay,
       });
 
-      const today = moment().tz(this.timeZone);
       this.fetchTimeFromDate(
-        today.diff(selectedDay, 'd') === 0 ? today : selectedDay.clone().startOf('d'),
+        today.diff(selectedDay, 'd') === 0 ? today : selectedDay,
       );
     } else {
-      this.fetchTimeFromDate();
+      this.fetchTimeFromDate(today);
     }
   }
 
@@ -39,7 +41,7 @@ export class SelectTime extends React.PureComponent {
     this.props.getProviderTime({
       serviceId: this.props.initService.id,
       providerId: this.props.bookingDetail.provider.id,
-      startSec: moment(date).tz(this.timeZone).unix(),
+      startSec: date.clone().tz(this.timeZone, true).unix(),
     });
   }
 
@@ -47,7 +49,7 @@ export class SelectTime extends React.PureComponent {
     if (this.state.selectedDay.isSame(value, 'day')) {
       return;
     }
-    const date = moment(value).tz(this.timeZone);
+    const date = moment(value);
     this.fetchTimeFromDate(date);
     this.setState({
       selectedDay: date,

@@ -4,6 +4,7 @@ import {
   Grid, Typography,
   Card, CardActionArea, CardContent, LinearProgress,
 } from '@material-ui/core';
+import { defaultDateFormat } from 'utils/constants';
 import styles from './HourSelectBox.module.scss';
 
 export default function HourSelectBox({ hourBoxes = [], onChange, selectedHour }) {
@@ -24,7 +25,7 @@ export default function HourSelectBox({ hourBoxes = [], onChange, selectedHour }
               })}
               >
                 <CardContent>
-                  <Typography variant="subtitle1">{startHour.format('LL')}</Typography>
+                  <Typography variant="subtitle1">{startHour.format(defaultDateFormat)}</Typography>
                   <Grid container className={styles.selectHourContent}>
                     <Typography variant="caption" classes={{ caption: styles.contentDesc }}>From:</Typography>
                     <Typography variant="subtitle2">{startHour.format('LT')}</Typography>

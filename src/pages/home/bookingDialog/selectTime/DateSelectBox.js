@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, CardContent } from '@material-ui/core';
 import { InlineDatePicker } from 'material-ui-pickers';
+import { defaultDateFormat } from 'utils/constants';
 import styles from './DateSelectBox.module.scss';
 
 export default function DateSelectBox({ onChange, selectedDay, providerTimeZone }) {
@@ -14,7 +15,7 @@ export default function DateSelectBox({ onChange, selectedDay, providerTimeZone 
             label="Choose a day"
             value={selectedDay.toDate()}
             onChange={onChange}
-            format="MM/dd/yyyy"
+            format={defaultDateFormat}
             disablePast
             keyboard
           />

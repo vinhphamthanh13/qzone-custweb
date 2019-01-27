@@ -5,6 +5,7 @@ import {
 import mtz from 'moment-timezone';
 import { bookingDetailType, serviceType } from 'types/global';
 import formatName from 'utils/formatName';
+import { defaultDateFormat } from 'utils/constants';
 import styles from './BookingDetail.module.scss';
 
 class BookingDetail extends React.PureComponent {
@@ -63,7 +64,7 @@ class BookingDetail extends React.PureComponent {
               <Grid item md={5}><Typography variant="body1">Date:</Typography></Grid>
               <Grid item md={7}>
                 <Typography variant="subtitle1" color="secondary">
-                  {mtz(bookingDetail.time.start).tz(this.timeZone).format('DD MMMM YYYY')}
+                  {mtz(bookingDetail.time.start).tz(this.timeZone).format(defaultDateFormat)}
                 </Typography>
               </Grid>
             </Grid>
