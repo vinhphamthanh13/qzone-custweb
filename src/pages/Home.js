@@ -154,8 +154,9 @@ export class Home extends React.PureComponent {
         />
         <Grid container>
           <PrimarySearchAppBar
-            loggedIn={false}
+            loggedIn
             handleAuthenticate={this.openDialog}
+            onSearch={this.onSearch}
           />
           <Grid item xs={12}>
             <Header

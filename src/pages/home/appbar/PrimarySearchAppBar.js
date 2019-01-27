@@ -39,6 +39,7 @@ const styles = theme => ({
     display: 'none',
     [theme.breakpoints.up('md')]: {
       display: 'flex',
+      background: 'white',
     },
   },
   search: {
@@ -125,7 +126,7 @@ class PrimarySearchAppBar extends React.Component {
 
   render() {
     const { anchorEl, mobileMoreAnchorEl } = this.state;
-    const { classes, loggedIn } = this.props;
+    const { classes, loggedIn, onSearch } = this.props;
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
     const authorization = loggedIn ? (
@@ -258,6 +259,7 @@ class PrimarySearchAppBar extends React.Component {
                   root: classes.inputRoot,
                   input: classes.inputInput,
                 }}
+                onChange={onSearch}
               />
             </div>
             <div className={classes.grow} />
@@ -275,6 +277,7 @@ PrimarySearchAppBar.propTypes = {
   classes: PropTypes.oneOfType(PropTypes.object).isRequired,
   loggedIn: PropTypes.bool.isRequired,
   handleAuthenticate: PropTypes.func.isRequired,
+  onSearch: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(PrimarySearchAppBar);
