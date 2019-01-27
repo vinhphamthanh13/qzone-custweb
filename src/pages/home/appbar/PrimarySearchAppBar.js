@@ -7,99 +7,127 @@ import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import Button from '@material-ui/core/Button';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import { withStyles } from '@material-ui/core/styles';
-// import MenuIcon from '@material-ui/icons/Menu';
+import MenuIcon from '@material-ui/icons/Menu';
 import Avatar from '@material-ui/core/Avatar';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import { Book as BookIcon } from '@material-ui/icons';
+import AssignmentInd from '@material-ui/icons/AssignmentInd';
+import ExitToApp from '@material-ui/icons/ExitToApp';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import IconMenu from 'components/IconMenu';
 import logo from '../../../images/logo.png';
 import { history } from '../../../containers/App';
 
-const styles = theme => ({
-  root: {
-    width: '100%',
-  },
-  grow: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
-  },
-  title: {
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
+const styles = (theme) => {
+  console.log('theme', theme);
+  return ({
+    root: {
+      width: '100%',
     },
-  },
-  avatar: {
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
+    grow: {
+      flexGrow: 1,
+    },
+    menuButton: {
+      marginLeft: -12,
+      marginRight: 20,
+    },
+    menuIcon: {
+      color: theme.palette.primary.main,
+      paddingRight: '10px',
+    },
+    menuListMobile: {
+      color: theme.palette.primary.contrastText,
       display: 'flex',
-      background: 'white',
+      padding: `0 ${theme.spacing.unit + 2}px`,
+      [theme.breakpoints.up('sm')]: {
+        display: 'none',
+      },
     },
-  },
-  search: {
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing.unit * 2,
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing.unit * 3,
-      width: 'auto',
-    },
-  },
-  searchIcon: {
-    width: theme.spacing.unit * 9,
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inputRoot: {
-    color: 'inherit',
-    width: '100%',
-  },
-  inputInput: {
-    paddingTop: theme.spacing.unit,
-    paddingRight: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 10,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: 200,
-    },
-  },
-  sectionDesktop: {
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
-    },
-  },
-  sectionMobile: {
-    display: 'flex',
-    [theme.breakpoints.up('md')]: {
+    menuListDesktop: {
+      color: theme.palette.primary.contrastText,
       display: 'none',
+      [theme.breakpoints.up('sm')]: {
+        display: 'flex',
+      },
     },
-  },
-});
+    title: {
+      display: 'none',
+      [theme.breakpoints.up('sm')]: {
+        display: 'block',
+      },
+    },
+    avatar: {
+      display: 'none',
+      [theme.breakpoints.up('sm')]: {
+        display: 'flex',
+        background: theme.palette.common.white,
+      },
+    },
+    search: {
+      position: 'relative',
+      borderRadius: theme.shape.borderRadius,
+      backgroundColor: fade(theme.palette.common.white, 0.15),
+      '&:hover': {
+        backgroundColor: fade(theme.palette.common.white, 0.25),
+      },
+      marginRight: theme.spacing.unit * 2,
+      marginLeft: 0,
+      width: '100%',
+      [theme.breakpoints.up('sm')]: {
+        marginLeft: theme.spacing.unit * 3,
+        width: 'auto',
+      },
+    },
+    searchIcon: {
+      width: theme.spacing.unit * 9,
+      height: '100%',
+      position: 'absolute',
+      pointerEvents: 'none',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    inputRoot: {
+      color: 'inherit',
+      width: '100%',
+    },
+    inputInput: {
+      paddingTop: theme.spacing.unit,
+      paddingRight: theme.spacing.unit,
+      paddingBottom: theme.spacing.unit,
+      paddingLeft: theme.spacing.unit * 10,
+      transition: theme.transitions.create('width'),
+      width: '100%',
+      [theme.breakpoints.up('md')]: {
+        width: 200,
+      },
+    },
+    sectionDesktop: {
+      display: 'none',
+      [theme.breakpoints.up('md')]: {
+        display: 'flex',
+      },
+    },
+    sectionMobile: {
+      display: 'flex',
+      [theme.breakpoints.up('md')]: {
+        display: 'none',
+      },
+    },
+  });
+};
 
 class PrimarySearchAppBar extends React.Component {
   state = {
     anchorEl: null,
     mobileMoreAnchorEl: null,
+    serviceAnchorEl: null,
   };
 
   handleProfileMenuOpen = (event) => {
@@ -119,6 +147,14 @@ class PrimarySearchAppBar extends React.Component {
     this.setState({ mobileMoreAnchorEl: null });
   };
 
+  handleServiceMenuOpen = (event) => {
+    this.setState({ serviceAnchorEl: event.currentTarget });
+  };
+
+  handleServiceMenuClose = () => {
+    this.setState({ serviceAnchorEl: null });
+  };
+
   handleAuthenticateUser = (authenticateType) => {
     const { handleAuthenticate } = this.props;
     handleAuthenticate(authenticateType);
@@ -131,15 +167,38 @@ class PrimarySearchAppBar extends React.Component {
   };
 
   render() {
-    const { anchorEl, mobileMoreAnchorEl } = this.state;
+    const {
+      anchorEl, mobileMoreAnchorEl, serviceAnchorEl,
+    } = this.state;
     const { classes, loggedIn, onSearch } = this.props;
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
     const authorization = loggedIn ? (
       [
-        <MenuItem onClick={this.handleMenuClose}>Booking</MenuItem>,
-        <MenuItem onClick={this.handleMenuClose}>Profile</MenuItem>,
-        <MenuItem onClick={this.handleLogout}>Log out</MenuItem>,
+        <IconMenu iconSuite={{
+          handleMethod: this.handleMenuClose,
+          component: BookIcon,
+          classes: classes.menuIcon,
+        }}
+        >
+          Booking
+        </IconMenu>,
+        <IconMenu iconSuite={{
+          handleMethod: this.handleMenuClose,
+          component: AssignmentInd,
+          classes: classes.menuIcon,
+        }}
+        >
+          Profile
+        </IconMenu>,
+        <IconMenu iconSuite={{
+          handleMethod: this.handleLogout,
+          component: ExitToApp,
+          classes: classes.menuIcon,
+        }}
+        >
+          Logout
+        </IconMenu>,
       ]
     ) : (
       [
@@ -203,7 +262,7 @@ class PrimarySearchAppBar extends React.Component {
         </MenuItem>
       </Menu>
     );
-    const customUser = loggedIn ? loggedIn && (
+    const customUser = loggedIn ? (
       <>
         <div className={classes.sectionDesktop}>
           <IconButton color="inherit">
@@ -255,6 +314,9 @@ class PrimarySearchAppBar extends React.Component {
         <AppBar position="sticky">
           <Toolbar>
             <Avatar className={classes.avatar} alt="Quezone Logo" src={logo} />
+            <div className={classes.menuListMobile}>
+              <MenuIcon onClick={this.handleServiceMenuOpen} />
+            </div>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
@@ -268,6 +330,30 @@ class PrimarySearchAppBar extends React.Component {
                 onChange={onSearch}
               />
             </div>
+            <Button
+              onClick={this.handleServiceMenuOpen}
+              className={classes.menuListDesktop}
+            >
+              Services
+            </Button>
+            <Menu
+              anchorEl={serviceAnchorEl}
+              open={Boolean(serviceAnchorEl)}
+              onClose={this.handleServiceMenuClose}
+            >
+              <MenuItem onClick={this.handleServiceMenuClose}>
+                <IconButton color="inherit">
+                  <AccountCircle />
+                </IconButton>
+                <p>Profile</p>
+              </MenuItem>
+              <MenuItem>
+                Services
+              </MenuItem>
+              <MenuItem>
+                SDFAjkdfj
+              </MenuItem>
+            </Menu>
             <div className={classes.grow} />
             { customUser }
           </Toolbar>
