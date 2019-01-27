@@ -32,7 +32,7 @@ export default function HourSelectBox({ hourBoxes = [], onChange, selectedHour }
                   </Grid>
                   <Grid container className={styles.selectHourContent}>
                     <Typography variant="caption" classes={{ caption: styles.contentDesc }}>To:</Typography>
-                    <Typography variant="subtitle2">{startHour.add(durationSec, 's').format('LT')}</Typography>
+                    <Typography variant="subtitle2">{startHour.clone().add(durationSec, 's').format('LT')}</Typography>
                   </Grid>
                   <Grid container className={styles.availableSlots}>
                     <Typography>{spotsOpen} slots</Typography>
