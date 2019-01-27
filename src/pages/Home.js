@@ -137,7 +137,9 @@ export class Home extends React.PureComponent {
   };
 
   render() {
-    const { serviceCategories, isLoading, services } = this.props;
+    const {
+      serviceCategories, isLoading, services,
+    } = this.props;
     const {
       selectedCategoryId, subCategories, selectedSubCategoryId, searchText,
       isRegisterOpen, isLoginOpen,

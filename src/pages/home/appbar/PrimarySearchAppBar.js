@@ -17,6 +17,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import logo from '../../../images/logo.png';
+import { history } from '../../../containers/App';
 
 const styles = theme => ({
   root: {
@@ -124,6 +125,11 @@ class PrimarySearchAppBar extends React.Component {
     this.handleMenuClose();
   };
 
+  handleLogout = () => {
+    history.push('/access-deny');
+    this.handleMenuClose();
+  };
+
   render() {
     const { anchorEl, mobileMoreAnchorEl } = this.state;
     const { classes, loggedIn, onSearch } = this.props;
@@ -133,7 +139,7 @@ class PrimarySearchAppBar extends React.Component {
       [
         <MenuItem onClick={this.handleMenuClose}>Booking</MenuItem>,
         <MenuItem onClick={this.handleMenuClose}>Profile</MenuItem>,
-        <MenuItem onClick={this.handleMenuClose}>Log out</MenuItem>,
+        <MenuItem onClick={this.handleLogout}>Log out</MenuItem>,
       ]
     ) : (
       [
