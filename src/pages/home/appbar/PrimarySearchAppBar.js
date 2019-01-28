@@ -33,6 +33,7 @@ const styles = (theme) => {
   return ({
     root: {
       width: '100%',
+      zIndex: 30,
     },
     grow: {
       flexGrow: 1,

@@ -63,14 +63,6 @@ export class Home extends React.PureComponent {
     }
   };
 
-  handleOpenMenu = (event) => {
-    this.setState({ menuIconButtonEl: event.currentTarget });
-  };
-
-  handleCloseMenu = () => {
-    this.setState({ menuIconButtonEl: null });
-  };
-
   onChange = (value, key) => {
     this.setState({ [key]: value });
   };
@@ -148,13 +140,13 @@ export class Home extends React.PureComponent {
     const searchedServices = this.getSearchedServices(services, searchText, selectedCategoryId);
     return (
       <>
-        <Auth isRegisterOpen={isRegisterOpen} isLoginOpen={isLoginOpen} closeDialog={this.closeDialog} />
-        <BookingDialog
-          initService={selectedService}
-          handleClose={this.handleCloseBookingDialog}
-          onSaveBooking={this.onSaveBooking}
-        />
         <Grid container>
+          <Auth isRegisterOpen={isRegisterOpen} isLoginOpen={isLoginOpen} closeDialog={this.closeDialog} />
+          <BookingDialog
+            initService={selectedService}
+            handleClose={this.handleCloseBookingDialog}
+            onSaveBooking={this.onSaveBooking}
+          />
           <PrimarySearchAppBar
             // loggedIn
             handleAuthenticate={this.openDialog}
