@@ -10,10 +10,11 @@ import {
 import { serviceType } from 'types/global';
 import getLocation from 'utils/getLocation';
 import styles from './Home.module.scss';
-import Header, { serviceCategoriesType } from './home/Header';
+import { serviceCategoriesType } from './home/Header';
 import Services from './home/Services';
 import BookingDialog from './home/BookingDialog';
 import Auth from './Auth';
+import PrimarySearchAppBar from './home/appbar/PrimarySearchAppBar';
 
 /* eslint react/no-unused-state: 0 */
 export class Home extends React.PureComponent {
@@ -34,7 +35,7 @@ export class Home extends React.PureComponent {
       searchText: undefined,
       subCategory: undefined,
       subCategories: [],
-      selectedCategoryId: false,
+      selectedCategoryId: '',
       selectedSubCategoryId: undefined,
       isRegisterOpen: false,
       isLoginOpen: false,
@@ -129,18 +130,20 @@ export class Home extends React.PureComponent {
 
   openDialog = (key) => {
     this.setState({ [key]: true });
-  }
+  };
 
   closeDialog = (key) => {
     this.setState({ [key]: false });
-  }
+  };
 
   render() {
-    const { serviceCategories, isLoading, services } = this.props;
+    const {
+      serviceCategories, isLoading, services,
+    } = this.props;
     const {
       selectedCategoryId, subCategories, selectedSubCategoryId, searchText,
-      isRegisterOpen, isLoginOpen,
-      selectedService, menuIconButtonEl,
+      isRegisterOpen, isLoginOpen, userPosition,
+      selectedService,
     } = this.state;
     const searchedServices = this.getSearchedServices(services, searchText, selectedCategoryId);
     return (
@@ -152,19 +155,15 @@ export class Home extends React.PureComponent {
           onSaveBooking={this.onSaveBooking}
         />
         <Grid container>
-          <Grid item xs={12}>
-            <Header
-              serviceCategories={serviceCategories}
-              value={selectedCategoryId}
-              onCategoryChange={this.onCategoryChange}
-              onSearch={this.onSearch}
-              openLogin={() => this.openDialog('isLoginOpen')}
-              openSignup={() => this.openDialog('isRegisterOpen')}
-              handleOpenMenu={this.handleOpenMenu}
-              handleCloseMenu={this.handleCloseMenu}
-              menuIconButtonEl={menuIconButtonEl}
-            />
-          </Grid>
+          <PrimarySearchAppBar
+            // loggedIn
+            handleAuthenticate={this.openDialog}
+            onSearch={this.onSearch}
+            categories={serviceCategories}
+            handleChangeCategory={this.onCategoryChange}
+            activeCategoryId={selectedCategoryId}
+            userPosition={userPosition}
+          />
           <Grid item xs={12} className={styles.selectService}>
             <Services
               services={searchedServices}

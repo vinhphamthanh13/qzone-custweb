@@ -4,7 +4,6 @@ import {
 } from '@material-ui/core';
 import mtz from 'moment-timezone';
 import { bookingDetailType, serviceType } from 'types/global';
-import formatName from 'utils/formatName';
 import { defaultDateFormat } from 'utils/constants';
 import styles from './BookingDetail.module.scss';
 
@@ -80,7 +79,7 @@ class BookingDetail extends React.PureComponent {
               <Grid item md={5}><Typography variant="body1">Service provider:</Typography></Grid>
               <Grid item md={7}>
                 <Typography variant="subtitle1" color="secondary">
-                  {formatName(bookingDetail.provider.name)}
+                  {bookingDetail.provider.givenName} {bookingDetail.provider.familyName}
                 </Typography>
               </Grid>
             </Grid>
