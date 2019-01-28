@@ -8,7 +8,6 @@ import {
 import { providerType, serviceType, bookingDetailType } from 'types/global';
 import CustomLink from 'components/CustomLink';
 import { getProvidersByService } from 'modules/home/bookingDialog/selectProvider.actions';
-import formatName from 'utils/formatName';
 import EmptyState from '../services/EmptyState';
 import styles from './SelectProvider.module.scss';
 
@@ -42,7 +41,7 @@ class SelectProvider extends React.PureComponent {
                 <CardActionArea onClick={() => onChange(provider, 'provider')}>
                   <CardContent>
                     <Typography variant="title">
-                      {formatName(provider.name)}
+                      {provider.givenName} {provider.familyName}
                     </Typography>
                     <div className={styles.serviceDetail}>
                       <Typography variant="subtitle2">
@@ -66,7 +65,7 @@ class SelectProvider extends React.PureComponent {
                         </Grid>
                         <Grid item sm={6}>
                           <Typography variant="subtitle2">
-                            {`${provider.mobile.countryCode}-${provider.mobile.number}`}
+                            {provider.telephone}
                           </Typography>
                         </Grid>
                       </Grid>
