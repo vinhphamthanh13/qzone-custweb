@@ -14,7 +14,11 @@ import styles from './SelectProvider.module.scss';
 
 class SelectProvider extends React.PureComponent {
   componentDidMount = () => {
-    this.props.getProvidersByServiceAction(this.props.initService.id);
+    const { providers, getProvidersByServiceAction, initService } = this.props;
+
+    if (providers.length === 0) {
+      getProvidersByServiceAction(initService.id);
+    }
   }
 
   render() {

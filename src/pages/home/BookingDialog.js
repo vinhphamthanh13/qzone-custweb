@@ -1,11 +1,13 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import {
   Slide, Dialog, AppBar, Toolbar, IconButton,
   Tabs, Tab, Paper,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import { serviceType } from 'types/global';
+import { setProviders } from 'modules/home/bookingDialog/selectProvider.actions';
 import SelectProvider from './bookingDialog/SelectProvider';
 import SelectTime from './bookingDialog/SelectTime';
 import BookingDetail from './bookingDialog/BookingDetail';
@@ -15,10 +17,15 @@ function Transition(props) {
 }
 
 /* eslint-disable react/no-unused-state */
-export default class BookingDialog extends PureComponent {
+export class BookingDialog extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
+    this.bookingStepsComponents = {
+      provider: SelectProvider,
+      time: SelectTime,
+      'booking detail': BookingDetail,
+    };
+    this.defaultState = {
       step: 'provider',
       bookingDetail: {
         provider: undefined,
@@ -30,11 +37,7 @@ export default class BookingDialog extends PureComponent {
         { value: 'booking detail', disabled: true },
       ],
     };
-    this.bookingStepsComponents = {
-      provider: SelectProvider,
-      time: SelectTime,
-      'booking detail': BookingDetail,
-    };
+    this.state = { ...this.defaultState };
   }
 
   onStepChange = (event, step) => {
@@ -76,8 +79,14 @@ export default class BookingDialog extends PureComponent {
     }
   }
 
+  handleClose = () => {
+    this.props.setProvidersAction([]);
+    this.setState(this.defaultState);
+    this.props.handleClose();
+  }
+
   render() {
-    const { initService, handleClose } = this.props;
+    const { initService } = this.props;
     const { step, bookingDetail, bookingSteps } = this.state;
     const StepComponent = this.bookingStepsComponents[step];
 
@@ -85,13 +94,13 @@ export default class BookingDialog extends PureComponent {
       <Dialog
         fullScreen
         open={initService !== undefined}
-        onClose={handleClose}
+        onClose={this.handleClose}
         TransitionComponent={Transition}
       >
         <AppBar position="relative">
           <Toolbar>
             <div className="grow" />
-            <IconButton color="inherit" onClick={handleClose} aria-label="Close">
+            <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
               <CloseIcon />
             </IconButton>
           </Toolbar>
@@ -115,11 +124,13 @@ export default class BookingDialog extends PureComponent {
             )}
           </Tabs>
         </Paper>
-        {<StepComponent
-          initService={initService}
-          onChange={this.onChangeBookingDetail}
-          bookingDetail={bookingDetail}
-        />}
+        {initService && (
+          <StepComponent
+            initService={initService}
+            onChange={this.onChangeBookingDetail}
+            bookingDetail={bookingDetail}
+          />
+        )}
       </Dialog>
     );
   }
@@ -128,8 +139,11 @@ export default class BookingDialog extends PureComponent {
 BookingDialog.propTypes = {
   initService: serviceType,
   handleClose: PropTypes.func.isRequired,
+  setProvidersAction: PropTypes.func.isRequired,
 };
 
 BookingDialog.defaultProps = {
   initService: undefined,
 };
+
+export default connect(null, { setProvidersAction: setProviders })(BookingDialog);

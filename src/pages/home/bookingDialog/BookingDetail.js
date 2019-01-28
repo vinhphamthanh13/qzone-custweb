@@ -58,7 +58,7 @@ class BookingDetail extends React.PureComponent {
           />
         </Grid>
         <Grid item md={5} className={styles.service}>
-          <Typography variant="h5">{initService ? initService.name : ''}</Typography>
+          <Typography variant="h5">{initService.name}</Typography>
           <div className={styles.serviceItems}>
             <Grid container>
               <Grid item md={5}><Typography variant="body1">Date:</Typography></Grid>
