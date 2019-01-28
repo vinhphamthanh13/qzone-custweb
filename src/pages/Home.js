@@ -156,7 +156,7 @@ export class Home extends React.PureComponent {
         />
         <Grid container>
           <PrimarySearchAppBar
-            loggedIn
+            // loggedIn
             handleAuthenticate={this.openDialog}
             onSearch={this.onSearch}
             categories={serviceCategories}

@@ -382,14 +382,16 @@ class PrimarySearchAppBar extends React.Component {
                 onChange={onSearch}
               />
             </div>
-            <IconButton
-              className={classes.menuListDesktop}
-              disabled={!userPosition.latitude}
-            >
-              <Tooltip title={searchNearByTitle}>
-                <NearMe />
-              </Tooltip>
-            </IconButton>
+            <Tooltip title={searchNearByTitle}>
+              <div>
+                <IconButton
+                  className={classes.menuListDesktop}
+                  disabled={!userPosition.latitude}
+                >
+                  <NearMe />
+                </IconButton>
+              </div>
+            </Tooltip>
             <Button
               onClick={this.handleServiceMenuOpen}
               className={classes.menuListDesktop}
