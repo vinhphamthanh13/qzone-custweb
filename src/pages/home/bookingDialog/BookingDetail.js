@@ -15,7 +15,6 @@ class BookingDetail extends React.PureComponent {
       email: '',
       phoneNumber: '',
     };
-    this.timeZone = props.bookingDetail.provider.timeZoneId;
   }
 
   handleChange = key => (event) => {
@@ -63,7 +62,7 @@ class BookingDetail extends React.PureComponent {
               <Grid item md={5}><Typography variant="body1">Date:</Typography></Grid>
               <Grid item md={7}>
                 <Typography variant="subtitle1" color="secondary">
-                  {mtz(bookingDetail.time.start).tz(this.timeZone).format(defaultDateFormat)}
+                  {mtz(bookingDetail.time.start).tz(bookingDetail.provider.timeZoneId).format(defaultDateFormat)}
                 </Typography>
               </Grid>
             </Grid>
@@ -71,7 +70,7 @@ class BookingDetail extends React.PureComponent {
               <Grid item md={5}><Typography variant="body1">Starts at:</Typography></Grid>
               <Grid item md={7}>
                 <Typography variant="subtitle1" color="secondary">
-                  {mtz(bookingDetail.time.start).tz(this.timeZone).format('hh:mm A')}
+                  {mtz(bookingDetail.time.start).tz(bookingDetail.provider.timeZoneId).format('hh:mm A')}
                 </Typography>
               </Grid>
             </Grid>

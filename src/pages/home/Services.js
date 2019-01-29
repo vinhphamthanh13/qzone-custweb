@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Paper, CircularProgress } from '@material-ui/core';
+import { Grid, Paper } from '@material-ui/core';
 import { serviceType } from 'types/global';
+import CustomLoading from 'components/CustomLoading';
 import styles from './Services.module.scss';
 import SubCategoryTabs, { subCategoriesType } from './SubCategoryTabs';
 import ServiceCard from './services/ServiceCard';
@@ -27,7 +28,7 @@ export default function Services({
       <Grid container spacing={32} className={styles.cardsWrapper}>
         {
           isLoading && services.length === 0
-          && <CircularProgress size={50} classes={{ root: styles.loading }} />
+          && <CustomLoading />
         }
         {
           !isLoading && services.length === 0

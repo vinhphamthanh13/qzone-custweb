@@ -4,16 +4,17 @@ import moment from 'moment-timezone';
 import PropTypes from 'prop-types';
 import { bookingDetailType, serviceType } from 'types/global';
 import { getProviderTime } from 'modules/home/bookingDialog/selectProvider.actions';
-
-import SelectTimeView from './SelectTime.view';
+import CustomLoading from 'components/CustomLoading';
+import DateSelect from './selectTime/DateSelect';
+import HourSelectBox from './selectTime/HourSelectBox';
+import EmptyState from '../services/EmptyState';
+import styles from './SelectTime.module.scss';
 
 export class SelectTime extends React.PureComponent {
   constructor(props) {
     super(props);
-
-    this.timeZone = this.props.bookingDetail.provider.timeZoneId;
     this.state = {
-      selectedDay: moment().tz(this.timeZone),
+      selectedDay: moment().tz(this.props.bookingDetail.provider.timeZoneId),
       selectedHour: null,
     };
   }
@@ -38,10 +39,12 @@ export class SelectTime extends React.PureComponent {
   }
 
   fetchTimeFromDate = (date) => {
-    this.props.getProviderTime({
-      serviceId: this.props.initService.id,
-      providerId: this.props.bookingDetail.provider.id,
-      startSec: date.clone().tz(this.timeZone, true).unix(),
+    const { bookingDetail: { provider }, initService, getProviderTimeAction } = this.props;
+    getProviderTimeAction({
+      serviceId: initService.id,
+      providerId: provider.id,
+      startSec: date.clone().tz(provider.timeZoneId, true).unix(),
+      toSec: date.clone().tz(provider.timeZoneId, true).unix(),
     });
   }
 
@@ -68,23 +71,31 @@ export class SelectTime extends React.PureComponent {
   getHourBoxes = timeDetails => timeDetails.map(d => ({
     spotsOpen: d.spotsOpen,
     spotsTotal: d.spotsTotal,
-    startHour: moment(d.startSec * 1000).tz(this.timeZone),
+    startHour: moment(d.startSec * 1000).tz(this.props.bookingDetail.provider.timeZoneId),
     durationSec: d.durationSec,
   }))
 
   render() {
-    const { timeDetails, isLoading } = this.props;
+    const { timeDetails, isLoading, bookingDetail } = this.props;
     const { selectedDay, selectedHour } = this.state;
+    const hourBoxes = this.getHourBoxes(timeDetails);
     return (
-      <SelectTimeView
-        hourBoxes={this.getHourBoxes(timeDetails)}
-        selectedDay={selectedDay}
-        selectedHour={selectedHour}
-        onDateChange={this.onDateChange}
-        onHourChange={this.onHourChange}
-        isLoading={isLoading}
-        providerTimeZone={this.timeZone}
-      />
+      <div className={styles.selectTimeWrapper}>
+        {isLoading
+          && <CustomLoading />}
+        {!isLoading && hourBoxes.length === 0
+          && <EmptyState message="No available slot" />}
+        <DateSelect
+          selectedDay={selectedDay}
+          onChange={this.onDateChange}
+          providerTimeZone={bookingDetail.provider.timeZoneId}
+        />
+        <HourSelectBox
+          hourBoxes={hourBoxes}
+          selectedHour={selectedHour}
+          onChange={this.onHourChange}
+        />
+      </div>
     );
   }
 }
@@ -92,7 +103,7 @@ export class SelectTime extends React.PureComponent {
 SelectTime.propTypes = {
   bookingDetail: bookingDetailType.isRequired,
   initService: serviceType,
-  getProviderTime: PropTypes.func.isRequired,
+  getProviderTimeAction: PropTypes.func.isRequired,
   timeDetails: PropTypes.arrayOf(
     PropTypes.shape({
       startSec: PropTypes.number,
@@ -115,4 +126,4 @@ const mapStateToProps = (states, ownProps) => ({
   isLoading: states.homeModules.bookingDialog.selectProvider.isLoading,
 });
 
-export default connect(mapStateToProps, { getProviderTime })(SelectTime);
+export default connect(mapStateToProps, { getProviderTimeAction: getProviderTime })(SelectTime);

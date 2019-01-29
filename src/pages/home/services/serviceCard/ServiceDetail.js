@@ -49,24 +49,25 @@ export default class ServiceDetail extends React.PureComponent {
         </Tooltip>
         <div className={styles.serviceDetail}>
           <Typography variant="body2">
-            {(service.description || '').substring(0, 300)}...&nbsp;
-            {service.description.length > 300 && <CustomLink text="Read more" to="#" onClick={this.openDialog} />}
+            {(service.description || '').substring(0, 300)}
+            {service.description.length > 300
+              && <>...&nbsp;<CustomLink text="Read more" to="#" onClick={this.openDialog} /></>}
           </Typography>
         </div>
         <div className={styles.blockItem}>
           <Grid container>
-            <Grid item sm={6}>
+            <Grid item sm={4}>
               <Typography variant="caption">Duration:</Typography>
             </Grid>
-            <Grid item sm={6}>
+            <Grid item sm={8}>
               <Typography variant="subtitle2">{service.duration} minutes</Typography>
             </Grid>
           </Grid>
           <Grid container>
-            <Grid item sm={6}>
+            <Grid item sm={4}>
               <Typography variant="caption">Organisation:</Typography>
             </Grid>
-            <Grid item sm={6}>
+            <Grid item sm={8}>
               <Typography variant="subtitle2">
                 <CustomLink text={service.organization.name} to={`/organisation/${service.organization.id}`} />
               </Typography>

@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { Card, CardContent } from '@material-ui/core';
 import { InlineDatePicker } from 'material-ui-pickers';
 import { defaultDateFormat } from 'utils/constants';
-import styles from './DateSelectBox.module.scss';
+import styles from './DateSelect.module.scss';
 
-export default function DateSelectBox({ onChange, selectedDay, providerTimeZone }) {
+export default function DateSelect({ onChange, selectedDay, providerTimeZone }) {
   return (
     <div className={styles.selectDate}>
       <Card>
@@ -29,7 +29,7 @@ export default function DateSelectBox({ onChange, selectedDay, providerTimeZone 
   );
 }
 
-DateSelectBox.propTypes = {
+DateSelect.propTypes = {
   onChange: PropTypes.func.isRequired,
   selectedDay: PropTypes.objectOf(
     Date,

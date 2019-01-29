@@ -2,7 +2,7 @@ import { handleResponse, handleRequest } from 'api/helpers';
 import {
   searchProvidersByService,
   searchProviderById,
-  findAvailabilitiesByDateSec,
+  findAvailabilitiesByDateRange,
 } from 'api/home/bookingDialog/selectProvider';
 import { searchOrganizationById } from 'api/home';
 import { setOrgs } from 'modules/home.actions';
@@ -51,10 +51,12 @@ export const getProvidersByService = serviceId => async (dispatch, getState) => 
   dispatch(setOrgs(orgs));
 };
 
-export const getProviderTime = ({ serviceId, providerId, startSec }) => async (dispatch) => {
+export const getProviderTime = payload => async (dispatch) => {
   dispatch(setLoading(true));
-  const response = handleResponse(await handleRequest(findAvailabilitiesByDateSec,
-    { serviceId, providerId, startSec }), []);
-  dispatch(setProviderTimeDetail(providerId, response));
+  const response = handleResponse(
+    await handleRequest(findAvailabilitiesByDateRange, payload),
+    [],
+  );
+  dispatch(setProviderTimeDetail(payload.providerId, response));
   dispatch(setLoading(false));
 };

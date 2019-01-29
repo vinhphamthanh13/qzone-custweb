@@ -4,4 +4,4 @@ export const searchProvidersByService = serviceId => axios.get(`/providers-servi
 
 export const searchProviderById = providerId => axios.get(`/providers/${providerId}`);
 
-export const findAvailabilitiesByDateSec = body => axios.post('/find-availabilities-by-date-sec', body);
+export const findAvailabilitiesByDateRange = body => axios.post('/find-availabilities-by-date-range', body);
