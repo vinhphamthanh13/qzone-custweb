@@ -53,7 +53,7 @@ class SelectProvider extends React.PureComponent {
                       {provider.description.length > 300
                         && <>...&nbsp;<CustomLink text="Read more" to="#" onClick={this.openDialog} /></>}
                     </Typography>
-                    <div className={styles.serviceDetail}>
+                    <div className={styles.providerDetail}>
                       <Grid container>
                         <Grid item sm={4}>
                           <Typography variant="caption">Qualifications:</Typography>

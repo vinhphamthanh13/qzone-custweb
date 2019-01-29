@@ -18,13 +18,15 @@ export default function Services({
 }) {
   return (
     <React.Fragment>
-      <Paper elevation={1} className={styles.options}>
-        <SubCategoryTabs
-          selectedSubCategoryId={selectedSubCategoryId}
-          subCategories={subCategories}
-          onChange={onChange}
-        />
-      </Paper>
+      {subCategories.length > 0 && (
+        <Paper elevation={1} className={styles.options}>
+          <SubCategoryTabs
+            selectedSubCategoryId={selectedSubCategoryId}
+            subCategories={subCategories}
+            onChange={onChange}
+          />
+        </Paper>
+      )}
       <Grid container spacing={32} className={styles.cardsWrapper}>
         {
           isLoading && services.length === 0
