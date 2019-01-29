@@ -1,7 +1,8 @@
 import {
-  primaryColor,
   dangerColor,
   successColor,
+  grayColor,
+  mainColor,
   defaultFont,
 } from '../material-dashboard-pro-react';
 
@@ -13,11 +14,11 @@ const customInputStyle = {
   },
   underline: {
     '&:hover:not($disabled):before,&:before': {
-      borderColor: '#D2D2D2 !important',
+      borderColor: `${grayColor} !important`,
       borderWidth: '1px !important',
     },
     '&:after': {
-      borderColor: primaryColor,
+      borderColor: mainColor,
     },
   },
   underlineError: {

@@ -6,20 +6,20 @@ import styles from './SubCategoryTabs.module.scss';
 export default function SubCategoryTabs({
   subCategories, onChange, selectedSubCategoryId,
 }) {
-  return (
-    subCategories.map(subCategory => (
+  const displaySubCategory = subCategories.length
+    ? subCategories.map(subCategory => (
       <Button
         key={subCategory.id}
         variant={selectedSubCategoryId && selectedSubCategoryId === subCategory.id
           ? 'contained' : 'text'}
-        color="primary"
-        onClick={() => { onChange(subCategory.id, 'selectedSubCategoryId'); }}
+        color="main"
+        onClick={() => onChange(subCategory.id, 'selectedSubCategoryId')}
         classes={{ root: styles.item }}
       >
         {subCategory.name}
       </Button>
-    ))
-  );
+    )) : <Button disabled>Services for you</Button>;
+  return displaySubCategory;
 }
 
 export const subCategoryType = PropTypes.shape({
