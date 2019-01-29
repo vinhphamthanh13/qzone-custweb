@@ -1,52 +1,32 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
-import {
-  Checkbox, FormControlLabel,
-} from '@material-ui/core';
-// import { Formik, Form, Field } from 'formik';
-// import * as yup from 'yup';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import {
-  Email, Lock as LockOutline, Check, InsertEmoticon, Call,
-} from '@material-ui/icons';
+// import { Formik } from 'formik';
+// import * as Yup from 'yup';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import GridContainer from 'components/Grid/GridContainer';
 import GridItem from 'components/Grid/GridItem';
-import Card from 'components/Card/Card';
-import CardHeader from 'components/Card/CardHeader';
-import CardBody from 'components/Card/CardBody';
-import CustomInput from 'components/CustomInput';
+
 import { validatePassword } from 'utils/validation';
 import { classesType } from 'types/global';
 import { register } from 'modules/auth.actions';
 import { regExPattern } from 'utils/constants';
+import UserForm from './register/UserForm';
 import registerStyle from './Register.style';
-
-// const registerUser = yup.object().shape({
-//   givenName: yup.string().required(),
-//   familyName: yup.string().required(),
-//   telephone: yup.string().required(),
-//   email: yup.string().email('Email is not valid').required('Email is required'),
-//   password: yup
+//
+// const registerUser = Yup.object().shape({
+//   givenName: Yup.string().required(),
+//   phoneNumber: Yup.string().required(),
+//   email: Yup.string().email('Email is not valid').required('Email is required'),
+//   password: Yup
 //     .string()
 //     .min(8)
 //     .required('Password is required'),
-//   confirmPassword: yup
+//   confirmPassword: Yup
 //     .string()
 //     .min(8)
 //     .required('Confirm password is required'),
-//   address: yup.object().shape({
-//     streetAddress: yup.string(),
-//     state: yup.string(),
-//     district: yup.string(),
-//     city: yup.string(),
-//     postCode: yup.string(),
-//     country: yup.string(),
-//   }),
 // });
 
 class RegisterPage extends React.Component {
@@ -156,181 +136,32 @@ class RegisterPage extends React.Component {
 
   render() {
     const { classes, isOpen } = this.props;
-    // const {
+    // const registerInit = {
+    //   givenName: '',
+    //   phoneNumber: '',
+    //   email: '',
+    //   password: '',
+    //   confirmPassword: '',
+    // };
+    const {
     //   // userName, email, pwd, confirmPwd,
-    // } = this.state;
+      registerCheckboxState,
+    } = this.state;
     const adornmentClass = classes.inputAdornmentIconDefault;
-    const validateSubmittedData = false;
+    const isFormValid = false;
     return (
       <div style={isOpen ? {} : { display: 'none' }} className={classes.content}>
         <GridContainer justify="center" alignItems="center">
           <GridItem xs={12} sm={6} md={4} className={classes.register}>
-            <form>
-              <Card className={classes.registerCard}>
-                <CardHeader
-                  className={`${classes.cardHeader} ${classes.textCenter}`}
-                  color="main"
-                >
-                  <Typography variant="h5" color="inherit">Register</Typography>
-                </CardHeader>
-                <CardBody>
-                  <CustomInput
-                    labelText="Given name"
-                    success={this.state.emailState === 'success'}
-                    error={this.state.emailState === 'error'}
-                    id="givename"
-                    formControlProps={{
-                      fullWidth: true,
-                      className: classes.marginDense,
-                    }}
-                    inputProps={{
-                      autoFocus: true,
-                      type: 'text',
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <InsertEmoticon className={adornmentClass} />
-                        </InputAdornment>
-                      ),
-                    }}
-                    onChange={event => this.change(event, 'giveName', 'name')}
-                  />
-                  <CustomInput
-                    labelText="Phone number"
-                    success={this.state.emailState === 'success'}
-                    error={this.state.emailState === 'error'}
-                    id="phonenumber"
-                    formControlProps={{
-                      fullWidth: true,
-                      className: classes.marginDense,
-                    }}
-                    inputProps={{
-                      type: 'text',
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <Call className={adornmentClass} />
-                        </InputAdornment>
-                      ),
-                    }}
-                    onChange={event => this.change(event, 'giveName', 'name')}
-                  />
-                  <CustomInput
-                    labelText="Email"
-                    success={this.state.emailState === 'success'}
-                    error={this.state.emailState === 'error'}
-                    id="email"
-                    formControlProps={{
-                      fullWidth: true,
-                      className: classes.marginDense,
-                    }}
-                    inputProps={{
-
-                      type: 'email',
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <Email className={adornmentClass} />
-                        </InputAdornment>
-                      ),
-                    }}
-                    onChange={event => this.change(event, 'email', 'email')}
-                  />
-                  <CustomInput
-                    labelText="Password"
-                    success={this.state.pwd === 'success'}
-                    error={this.state.pwd === 'error'}
-                    id="registerPassword"
-                    formControlProps={{
-                      fullWidth: true,
-                      className: classes.marginDense,
-                    }}
-                    inputProps={{
-
-                      type: 'password',
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <LockOutline
-                            className={adornmentClass}
-                          />
-                        </InputAdornment>
-                      ),
-                    }}
-                    onChange={event => this.change(
-                      event, 'registerPassword', 'password', 'registerConfirmPassword',
-                    )}
-                  />
-                  <CustomInput
-                    labelText="Confirm password"
-                    success={this.state.confirmPwd === 'success'}
-                    error={this.state.confirmPwd === 'error'}
-                    id="registerConfirmPassword"
-                    formControlProps={{
-                      fullWidth: true,
-                      className: classes.marginDense,
-                    }}
-                    inputProps={{
-
-                      type: 'password',
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <LockOutline
-                            className={adornmentClass}
-                          />
-                        </InputAdornment>
-                      ),
-                    }}
-                    onChange={event => this.change(event, 'registerConfirmPassword', 'equalTo', 'registerPassword')}
-                  />
-                  <FormControlLabel
-                    control={(
-                      <Checkbox
-                        tabIndex={-1}
-                        onClick={event => this.change(
-                          event, 'registerCheckbox', 'checkbox',
-                        )}
-                        checkedIcon={<Check className={classes.checkedIcon} />}
-                        icon={<Check className={classes.uncheckedIcon} />}
-                        classes={{
-                          checked: classes.checked,
-                          root: classes.agreement,
-                        }}
-                      />
-                    )}
-                    classes={{
-                      label:
-                        classes.label
-                        + (this.state.registerCheckboxState === 'error'
-                          ? ` ${classes.labelError}`
-                          : ''),
-                    }}
-                    label={(
-                      <span>
-                        I agree to the terms and conditions
-                      </span>
-                    )}
-                  />
-                  <div className={classes.center}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      fullWidth
-                      onClick={() => this.registerClick()}
-                      disabled={!validateSubmittedData}
-                    >
-                      Submit
-                    </Button>
-                    <Button
-                      variant="text"
-                      // fullWidth
-                      disableRipple
-                      block
-                      className={classes.simpleButton}
-                      onClick={this.onClose}
-                    >
-                      Discard
-                    </Button>
-                  </div>
-                </CardBody>
-              </Card>
-            </form>
+            <UserForm
+              classes={classes}
+              iconClassName={adornmentClass}
+              onSubmitHandler={this.registerClick}
+              onChange={this.change}
+              isFormValid={isFormValid}
+              onClose={this.onClose}
+              policyAgreement={registerCheckboxState}
+            />
           </GridItem>
         </GridContainer>
       </div>

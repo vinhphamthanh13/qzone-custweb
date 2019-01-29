@@ -1,9 +1,11 @@
 import {
   container,
   textCenter,
+  mainColor,
+  grayColor,
+  dangerColor,
 } from 'components/material-dashboard-pro-react';
 import customCheckboxRadioSwitch from 'components/material-dashboard-pro-react/customCheckboxRadioSwitch';
-import { dangerColor, mainColor, successColor } from '../../components/material-dashboard-pro-react';
 
 const registerPageStyle = theme => ({
   ...customCheckboxRadioSwitch,
@@ -51,10 +53,10 @@ const registerPageStyle = theme => ({
     position: 'relative',
   },
   inputAdornmentIconDefault: {
-    color: `${mainColor} !important`,
+    color: `${grayColor} !important`,
   },
   inputAdornmentIconSuccess: {
-    color: successColor,
+    color: mainColor,
   },
   inputAdornmentIconError: {
     color: dangerColor,
