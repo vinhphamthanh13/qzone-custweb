@@ -62,8 +62,6 @@ export default class ServiceDetail extends React.PureComponent {
             <Grid item sm={8}>
               <Typography variant="subtitle2">{service.duration} minutes</Typography>
             </Grid>
-          </Grid>
-          <Grid container>
             <Grid item sm={4}>
               <Typography variant="caption">Organisation:</Typography>
             </Grid>
