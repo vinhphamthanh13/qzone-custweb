@@ -6,8 +6,14 @@ import Login from './auth/Login';
 export default function Auth({ isLoginOpen, closeDialog, isRegisterOpen }) {
   return (
     <>
-      <Register isOpen={isRegisterOpen} onClose={() => closeDialog('isRegisterOpen')} />
-      <Login isOpen={isLoginOpen} onClose={() => closeDialog('isLoginOpen')} />
+      <Register
+        isOpen={isRegisterOpen}
+        onClose={() => closeDialog('isRegisterOpen')}
+      />
+      <Login
+        isOpen={isLoginOpen}
+        onClose={() => closeDialog('isLoginOpen')}
+      />
     </>
   );
 }

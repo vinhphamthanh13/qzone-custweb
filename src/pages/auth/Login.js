@@ -1,21 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
-import { Typography } from '@material-ui/core';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-
 import GridContainer from 'components/Grid/GridContainer';
-import CustomButton from 'components/CustomButton';
-import CustomInput from 'components/CustomInput';
 import GridItem from 'components/Grid/GridItem';
-import Card from 'components/Card/Card';
-import CardHeader from 'components/Card/CardHeader';
-import CardBody from 'components/Card/CardBody';
 import { validatePassword } from 'utils/validation';
 import { classesType } from 'types/global';
 import { googleSignIn, facebookSignIn } from 'modules/auth.actions';
-import loginStyle from './Login.style';
+import UserForm from './login/UserForm';
+import registerStyles from './Register.style';
 
 class LoginPage extends React.Component {
   constructor(props) {
@@ -47,7 +41,7 @@ class LoginPage extends React.Component {
     } else {
       this.setState(newState);
     }
-  }
+  };
 
   change = (event, stateName, type) => {
     switch (type) {
@@ -66,104 +60,42 @@ class LoginPage extends React.Component {
       default:
         break;
     }
-  }
+  };
 
   onClose = () => {
     this.setState(this.defaultState);
     this.props.onClose();
-  }
+  };
 
   render() {
     const {
       classes, isOpen, facebookSignInAction, googleSignInAction,
     } = this.props;
-    const {
-      userName, pwd, userNameState, pwdState,
-    } = this.state;
+    // const {
+      // userName, pwd, userNameState, pwdState,
+    // } = this.state;
+    const socialActions = {
+      facebook: facebookSignInAction,
+      google: googleSignInAction,
+    };
+    const adornmentClass = classes.inputAdornmentIconDefault;
+    const isFormValid = false;
+
     return (
       <div style={isOpen ? {} : { display: 'none' }} className={classes.content}>
-        <div className={classes.container}>
-          <GridContainer justify="center">
-            <GridItem xs={12} sm={6} md={4}>
-              <form>
-                <Card>
-                  <CardHeader
-                    className={`${classes.cardHeader} ${classes.textCenter}`}
-                  >
-                    <Typography variant="h5" color="inherit">Login</Typography>
-                    <div className={classes.socialLine}>
-                      <CustomButton
-                        justIcon
-                        href="https://www.twitter.com"
-                        target="_blank"
-                        color="transparent"
-                      >
-                        <i className="fab fa-twitter" />
-                      </CustomButton>
-                      <CustomButton
-                        justIcon
-                        onClick={facebookSignInAction}
-                        target="_blank"
-                        color="transparent"
-                      >
-                        <i className="fab fa-facebook" />
-                      </CustomButton>
-                      <CustomButton
-                        justIcon
-                        onClick={googleSignInAction}
-                        target="_blank"
-                        color="transparent"
-                      >
-                        <i className="fab fa-google-plus-g" />
-                      </CustomButton>
-                    </div>
-                  </CardHeader>
-                  <CardBody>
-                    <CustomInput
-                      labelText="User name"
-                      success={userNameState === 'success'}
-                      error={userNameState === 'error'}
-                      id="login-userName"
-                      formControlProps={{ fullWidth: true }}
-                      inputProps={{
-                        onChange: event => this.change(event, 'userName'),
-                        value: userName,
-                      }}
-                    />
-                    <CustomInput
-                      labelText="Password"
-                      success={pwdState === 'success'}
-                      error={pwdState === 'error'}
-                      id="login-pwd"
-                      formControlProps={{ fullWidth: true }}
-                      inputProps={{
-                        onChange: event => this.change(
-                          event, 'pwd', 'password',
-                        ),
-                        type: 'password',
-                        value: pwd,
-                      }}
-                    />
-                    <div className={classes.center}>
-                      <CustomButton
-                        color="rose"
-                        onClick={this.onLoginClick}
-                      >
-                        Login
-                      </CustomButton>
-                      <CustomButton
-                        color="transparent"
-                        onClick={this.onClose}
-                      >
-                        Close
-                      </CustomButton>
-                    </div>
-                  </CardBody>
-                </Card>
-              </form>
-            </GridItem>
-          </GridContainer>
-        </div>
+        <GridContainer justify="center" alignItems="center">
+          <GridItem xs={12} sm={6} md={4} className={classes.register}>
+            <UserForm
+              classes={classes}
+              iconClassName={adornmentClass}
+              isFormValid={isFormValid}
+              onSubmitHandler={this.onLoginClick}
+              onChange={this.change}
+              onClose={this.onClose}
+              socialActions={socialActions}
+            />
+          </GridItem>
+        </GridContainer>
       </div>
     );
   }
@@ -182,6 +114,6 @@ LoginPage.propTypes = {
 // });
 
 export default compose(
-  withStyles(loginStyle),
+  withStyles(registerStyles),
   connect(null, { googleSignInAction: googleSignIn, facebookSignInAction: facebookSignIn }),
 )(LoginPage);

@@ -70,6 +70,24 @@ const registerPageStyle = theme => ({
       background: 'transparent',
     },
   },
+  resetPassword: {
+    color: mainColor,
+    fontWeight: 'bold',
+    margin: `${theme.spacing.unit}px 0 ${theme.spacing.unit * 3}px`,
+    textAlign: 'right',
+  },
+  loginPanel: {
+    padding: `${theme.spacing.unit * 2}px 0 ${theme.spacing.unit * 8}px !important`,
+  },
+  socialButtons: {
+    margin: `${theme.spacing.unit * 2}px auto`,
+  },
+  socialButton: {
+    margin: `auto ${theme.spacing.unit}px`,
+  },
+  socialIcon: {
+    fontSize: `${theme.spacing.unit * 3}px !important`,
+  },
 });
 
 export const styles = theme => ({
