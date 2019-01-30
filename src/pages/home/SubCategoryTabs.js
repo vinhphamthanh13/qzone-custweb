@@ -8,10 +8,19 @@ const SubCategoryTabs = (props) => {
   const {
     subCategories, onChange, selectedSubCategoryId, classes,
   } = props;
+  const subCategoryLabel = (
+    <Button
+      variant="text"
+      disableRipple
+      className={
+        `${classes.hoverTransparent} ${classes.textCapitalized} ${classes.mainColor} ${classes.unsetPointer}`}
+    >
+      { subCategories.length ? 'More services for you in' : 'Services for you' }
+    </Button>);
   return subCategories.length
     ? (
       <>
-        <Button variant="text" color="textPrimary">More services for you in </Button>
+        {subCategoryLabel}
         { subCategories.map((subCategory) => {
           const tabClass = selectedSubCategoryId && selectedSubCategoryId === subCategory.id
             ? classes.activeItem : classes.item;
@@ -19,26 +28,17 @@ const SubCategoryTabs = (props) => {
             <Button
               key={subCategory.id}
               variant="text"
-              color="primary"
               disableRipple
               onClick={() => onChange(subCategory.id, 'selectedSubCategoryId')}
-              className={`${tabClass} ${classes.textCapitalized}`}
+              className={
+                `${tabClass} ${classes.textCapitalized} ${classes.unsetPointer}`}
             >
               {subCategory.name}
             </Button>);
         })
         }
       </>
-    ) : (
-      <Button
-        variant="text"
-        color="textPrimary"
-        disableRipple
-        className={classes.item}
-      >
-        Services for you
-      </Button>
-    );
+    ) : subCategoryLabel;
 };
 
 export const subCategoryType = PropTypes.shape({

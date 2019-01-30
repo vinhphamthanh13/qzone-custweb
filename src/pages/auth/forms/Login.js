@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { noop } from 'utils/constants';
 import Typography from '@material-ui/core/Typography';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -13,6 +14,7 @@ import CardHeader from 'components/Card/CardHeader';
 import CardBody from 'components/Card/CardBody';
 import CustomInput from 'components/CustomInput';
 import CustomButton from 'components/CustomButton';
+import { login } from 'modules/auth.actions';
 
 const Login = (props) => {
   const {
@@ -60,7 +62,7 @@ const Login = (props) => {
         <CardBody>
           <CustomInput
             labelText="Email"
-            id="email"
+            id="loginemail"
             formControlProps={{
               fullWidth: true,
             }}
@@ -76,7 +78,7 @@ const Login = (props) => {
           />
           <CustomInput
             labelText="Password"
-            id="registerPassword"
+            id="loginPassword"
             formControlProps={{
               fullWidth: true,
               className: classes.marginDense,
@@ -92,7 +94,7 @@ const Login = (props) => {
               ),
             }}
             onChange={event => onChange(
-              event, 'registerPassword', 'password', 'registerConfirmPassword',
+              event, 'loginPassword', 'password',
             )}
           />
           <div className={classes.resetPassword}>
@@ -112,14 +114,13 @@ const Login = (props) => {
               color="primary"
               fullWidth
               disabled={!isFormValid}
-              type="submit"
             >
               Submit
             </Button>
             <Button
               variant="text"
+              color="primary"
               disableRipple
-              block
               className={classes.simpleButton}
               onClick={onClose}
             >
@@ -146,4 +147,8 @@ Login.defaultProps = {
   socialActions: { facebook: noop, google: noop, twitter: noop },
 };
 
-export default Login;
+const mapDispatchToProps = dispatch => ({
+  loginAction: () => dispatch(login),
+});
+
+export default connect(null, mapDispatchToProps)(Login);

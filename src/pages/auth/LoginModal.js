@@ -7,11 +7,11 @@ import GridContainer from 'components/Grid/GridContainer';
 import GridItem from 'components/Grid/GridItem';
 import { validatePassword } from 'utils/validation';
 import { classesType } from 'types/global';
-import { googleSignIn, facebookSignIn } from 'modules/auth.actions';
+import { googleSignIn, facebookSignIn, login } from 'modules/auth.actions';
 import UserForm from './forms/Login';
 import registerStyles from './Auth.style';
 
-class LoginPage extends React.Component {
+class LoginModal extends React.Component {
   constructor(props) {
     super(props);
     this.defaultState = {
@@ -24,6 +24,7 @@ class LoginPage extends React.Component {
   }
 
   onLoginClick = () => {
+    const { loginAction } = this.props;
     let newState = {};
 
     if (!this.state.pwdState) {
@@ -37,7 +38,7 @@ class LoginPage extends React.Component {
     if (Object.keys(newState).length === 0
       && this.state.pwdState === 'success'
       && this.state.userNameState === 'success') {
-      this.props.loginAction(this.state);
+      loginAction(this.state);
     } else {
       this.setState(newState);
     }
@@ -101,7 +102,7 @@ class LoginPage extends React.Component {
   }
 }
 
-LoginPage.propTypes = {
+LoginModal.propTypes = {
   classes: classesType.isRequired,
   googleSignInAction: PropTypes.func.isRequired,
   loginAction: PropTypes.func.isRequired,
@@ -115,5 +116,9 @@ LoginPage.propTypes = {
 
 export default compose(
   withStyles(registerStyles),
-  connect(null, { googleSignInAction: googleSignIn, facebookSignInAction: facebookSignIn }),
-)(LoginPage);
+  connect(null, {
+    googleSignInAction: googleSignIn,
+    facebookSignInAction: facebookSignIn,
+    loginAction: login,
+  }),
+)(LoginModal);

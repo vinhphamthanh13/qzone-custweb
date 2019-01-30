@@ -65,7 +65,7 @@ const registerPageStyle = theme => ({
     margin: `${theme.spacing.unit * 3}px 0`,
   },
   simpleButton: {
-    color: mainColor,
+    // color: mainColor,
     '&:hover': {
       background: 'transparent',
     },

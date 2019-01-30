@@ -149,19 +149,17 @@ const Register = (props) => {
           />
           <div className={classes.center}>
             <Button
-              variant="contained"
               color="primary"
+              variant="contained"
               fullWidth
-              // onClick={() => this.registerClick()}
               disabled={!isFormValid}
-              type="submit"
             >
               Submit
             </Button>
             <Button
+              color="primary"
               variant="text"
               disableRipple
-              block
               className={classes.simpleButton}
               onClick={onClose}
             >

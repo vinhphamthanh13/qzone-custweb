@@ -25,6 +25,7 @@ export class Home extends React.PureComponent {
     serviceCategories: serviceCategoriesType.isRequired,
     isLoading: PropTypes.bool.isRequired,
     getServicesByNameAction: PropTypes.func.isRequired,
+    userAuthorized: PropTypes.bool.isRequired,
   };
 
   constructor(props) {
@@ -130,12 +131,12 @@ export class Home extends React.PureComponent {
 
   render() {
     const {
-      serviceCategories, isLoading, services,
+      serviceCategories, isLoading, services, userAuthorized,
     } = this.props;
     const {
       selectedCategoryId, subCategories, selectedSubCategoryId, searchText,
       isRegisterOpen, isLoginOpen, userPosition,
-      selectedService, userAuthorized,
+      selectedService,
     } = this.state;
     const searchedServices = this.getSearchedServices(services, searchText, selectedCategoryId);
     return (
@@ -176,10 +177,13 @@ export class Home extends React.PureComponent {
   }
 }
 
-const mapStateToProps = state => ({
-  ...state.home,
-  userAuthorized: state.auth.userAuthorized,
-});
+const mapStateToProps = (state) => {
+  console.log('state', state);
+  return ({
+    ...state.home,
+    userAuthorized: state.auth.userAuthorized,
+  });
+};
 
 export default connect(
   mapStateToProps,

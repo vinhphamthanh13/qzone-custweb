@@ -29,7 +29,7 @@ import registerStyle from './Auth.style';
 //     .required('Confirm password is required'),
 // });
 
-class RegisterPage extends React.Component {
+class RegisterModal extends React.Component {
   constructor(props) {
     super(props);
     this.defaultState = {
@@ -169,7 +169,7 @@ class RegisterPage extends React.Component {
   }
 }
 
-RegisterPage.propTypes = {
+RegisterModal.propTypes = {
   classes: classesType.isRequired,
   registerAction: PropTypes.func.isRequired,
   isOpen: PropTypes.bool.isRequired,
@@ -182,4 +182,4 @@ RegisterPage.propTypes = {
 export default compose(
   withStyles(registerStyle),
   connect(null, { registerAction: register }),
-)(RegisterPage);
+)(RegisterModal);
