@@ -12,7 +12,7 @@ import CardHeader from 'components/Card/CardHeader';
 import CardBody from 'components/Card/CardBody';
 import CustomInput from 'components/CustomInput';
 
-const UserForm = (props) => {
+const Register = (props) => {
   const {
     classes, iconClassName, onSubmitHandler, onChange,
     policyAgreement, isFormValid, onClose,
@@ -174,7 +174,7 @@ const UserForm = (props) => {
   );
 };
 
-UserForm.propTypes = {
+Register.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
   iconClassName: PropTypes.string.isRequired,
   policyAgreement: PropTypes.string.isRequired,
@@ -184,4 +184,4 @@ UserForm.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
 
-export default UserForm;
+export default Register;

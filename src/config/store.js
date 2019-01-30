@@ -3,9 +3,11 @@ import {
 } from 'redux';
 import thunk from 'redux-thunk';
 import home from 'modules/home.reducer';
+import auth from 'modules/auth.reducer';
 import selectProvider from 'modules/home/bookingDialog/selectProvider.reducer';
 
 const rootReducer = combineReducers({
+  auth,
   home,
   homeModules: combineReducers({
     bookingDialog: combineReducers({

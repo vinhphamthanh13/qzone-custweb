@@ -14,7 +14,7 @@ import CardBody from 'components/Card/CardBody';
 import CustomInput from 'components/CustomInput';
 import CustomButton from 'components/CustomButton';
 
-const UserForm = (props) => {
+const Login = (props) => {
   const {
     classes, iconClassName, onSubmitHandler, onChange,
     isFormValid, onClose, socialActions,
@@ -132,7 +132,7 @@ const UserForm = (props) => {
   );
 };
 
-UserForm.propTypes = {
+Login.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
   iconClassName: PropTypes.string.isRequired,
   isFormValid: PropTypes.bool.isRequired,
@@ -142,8 +142,8 @@ UserForm.propTypes = {
   socialActions: PropTypes.objectOf(PropTypes.any),
 };
 
-UserForm.defaultProps = {
+Login.defaultProps = {
   socialActions: { facebook: noop, google: noop, twitter: noop },
 };
 
-export default UserForm;
+export default Login;

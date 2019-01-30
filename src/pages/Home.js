@@ -135,20 +135,24 @@ export class Home extends React.PureComponent {
     const {
       selectedCategoryId, subCategories, selectedSubCategoryId, searchText,
       isRegisterOpen, isLoginOpen, userPosition,
-      selectedService,
+      selectedService, userAuthorized,
     } = this.state;
     const searchedServices = this.getSearchedServices(services, searchText, selectedCategoryId);
     return (
       <>
         <Grid container>
-          <Auth isRegisterOpen={isRegisterOpen} isLoginOpen={isLoginOpen} closeDialog={this.closeDialog} />
+          <Auth
+            isRegisterOpen={isRegisterOpen}
+            isLoginOpen={isLoginOpen}
+            closeDialog={this.closeDialog}
+          />
           <BookingDialog
             initService={selectedService}
             handleClose={this.handleCloseBookingDialog}
             onSaveBooking={this.onSaveBooking}
           />
           <PrimarySearchAppBar
-            // loggedIn
+            loggedIn={userAuthorized}
             handleAuthenticate={this.openDialog}
             onSearch={this.onSearch}
             categories={serviceCategories}
@@ -174,6 +178,7 @@ export class Home extends React.PureComponent {
 
 const mapStateToProps = state => ({
   ...state.home,
+  userAuthorized: state.auth.userAuthorized,
 });
 
 export default connect(

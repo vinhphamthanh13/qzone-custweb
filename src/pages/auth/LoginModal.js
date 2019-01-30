@@ -8,8 +8,8 @@ import GridItem from 'components/Grid/GridItem';
 import { validatePassword } from 'utils/validation';
 import { classesType } from 'types/global';
 import { googleSignIn, facebookSignIn } from 'modules/auth.actions';
-import UserForm from './login/UserForm';
-import registerStyles from './Register.style';
+import UserForm from './forms/Login';
+import registerStyles from './Auth.style';
 
 class LoginPage extends React.Component {
   constructor(props) {
@@ -79,7 +79,7 @@ class LoginPage extends React.Component {
       google: googleSignInAction,
     };
     const adornmentClass = classes.inputAdornmentIconDefault;
-    const isFormValid = false;
+    const isFormValid = true;
 
     return (
       <div style={isOpen ? {} : { display: 'none' }} className={classes.content}>

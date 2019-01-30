@@ -12,8 +12,8 @@ import { validatePassword } from 'utils/validation';
 import { classesType } from 'types/global';
 import { register } from 'modules/auth.actions';
 import { regExPattern } from 'utils/constants';
-import UserForm from './register/UserForm';
-import registerStyle from './Register.style';
+import UserForm from './forms/Register';
+import registerStyle from './Auth.style';
 //
 // const registerUser = Yup.object().shape({
 //   givenName: Yup.string().required(),
