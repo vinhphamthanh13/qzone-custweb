@@ -10,176 +10,193 @@ import { Checkbox, FormControlLabel } from '@material-ui/core';
 import Card from 'components/Card/Card';
 import CardHeader from 'components/Card/CardHeader';
 import CardBody from 'components/Card/CardBody';
-import CustomInput from 'components/CustomInput';
+import TextField from '@material-ui/core/TextField';
 
-const Register = (props) => {
-  const {
-    classes, iconClassName, onSubmitHandler, onChange,
-    policyAgreement, isFormValid, onClose,
-  } = props;
-  return (
-    <form onSubmit={onSubmitHandler}>
-      <Card className={classes.registerCard}>
-        <CardHeader
-          className={`${classes.cardHeader} ${classes.textCenter}`}
-          color="main"
-        >
-          <Typography variant="h5" color="inherit">Register</Typography>
-        </CardHeader>
-        <CardBody>
-          <CustomInput
-            labelText="Given name"
-            id="givename"
-            formControlProps={{
-              fullWidth: true,
-              className: classes.marginDense,
-            }}
-            inputProps={{
-              autoFocus: true,
-              type: 'text',
-              endAdornment: (
-                <InputAdornment position="end">
-                  <InsertEmoticon className={iconClassName} />
-                </InputAdornment>
-              ),
-            }}
-            onChange={event => onChange(event, 'giveName', 'name')}
-          />
-          <CustomInput
-            labelText="Phone number"
-            id="phonenumber"
-            formControlProps={{
-              fullWidth: true,
-              className: classes.marginDense,
-            }}
-            inputProps={{
-              type: 'text',
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Call className={iconClassName} />
-                </InputAdornment>
-              ),
-            }}
-            onChange={event => onChange(event, 'giveName', 'name')}
-          />
-          <CustomInput
-            labelText="Email"
-            id="email"
-            formControlProps={{
-              fullWidth: true,
-              className: classes.marginDense,
-            }}
-            inputProps={{
-              type: 'email',
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Email className={iconClassName} />
-                </InputAdornment>
-              ),
-            }}
-            onChange={event => onChange(event, 'email', 'email')}
-          />
-          <CustomInput
-            labelText="Password"
-            id="registerPassword"
-            formControlProps={{
-              fullWidth: true,
-              className: classes.marginDense,
-            }}
-            inputProps={{
-              type: 'password',
-              endAdornment: (
-                <InputAdornment position="end">
-                  <LockOutline
-                    className={iconClassName}
-                  />
-                </InputAdornment>
-              ),
-            }}
-            onChange={event => onChange(
-              event, 'registerPassword', 'password', 'registerConfirmPassword',
-            )}
-          />
-          <CustomInput
-            labelText="Confirm password"
-            id="registerConfirmPassword"
-            formControlProps={{
-              fullWidth: true,
-              className: classes.marginDense,
-            }}
-            inputProps={{
-              type: 'password',
-              endAdornment: (
-                <InputAdornment position="end">
-                  <LockOutline
-                    className={iconClassName}
-                  />
-                </InputAdornment>
-              ),
-            }}
-            onChange={event => onChange(event, 'registerConfirmPassword', 'equalTo', 'registerPassword')}
-          />
-          <FormControlLabel
-            control={(
-              <Checkbox
-                tabIndex={-1}
-                onClick={event => onChange(
-                  event, 'registerCheckbox', 'checkbox',
-                )}
-                checkedIcon={<Check className={classes.checkedIcon} />}
-                icon={<Check className={classes.uncheckedIcon} />}
-                classes={{
-                  checked: classes.checked,
-                  root: classes.agreement,
-                }}
-              />
-            )}
-            classes={{
-              label:
-                classes.label
-                + (policyAgreement === 'error'
-                  ? ` ${classes.labelError}`
-                  : ''),
-            }}
-            label={(
-              <span>
-                I agree to the terms and conditions
-              </span>
-            )}
-          />
-          <div className={classes.center}>
-            <Button
-              color="primary"
-              variant="contained"
+class Register extends React.Component {
+  onChange = (event) => {
+    event.persist();
+    const { handleChange } = this.props;
+    handleChange(event);
+  };
+
+  render() {
+    const {
+      classes, iconClassName, onSubmitHandler,
+      policyAgreement, onClose,
+      values: {
+        givenName,
+        phoneNumber,
+        email,
+        password,
+        confirmPassword,
+      },
+      errors,
+      touched,
+      // handleSubmit,
+      // handleChange,
+      isValid,
+      // setFieldTouched
+    } = this.props;
+    return (
+      <form onSubmit={onSubmitHandler}>
+        <Card className={classes.registerCard}>
+          <CardHeader
+            className={`${classes.cardHeader} ${classes.textCenter}`}
+            color="main"
+          >
+            <Typography variant="h5" color="inherit">Register</Typography>
+          </CardHeader>
+          <CardBody>
+            <TextField
+              id="given-name"
+              name="givenName"
+              type="text"
+              autoFocus
               fullWidth
-              disabled={!isFormValid}
-            >
-              Submit
-            </Button>
-            <Button
-              color="primary"
-              variant="text"
-              disableRipple
-              className={classes.simpleButton}
-              onClick={onClose}
-            >
-              Discard
-            </Button>
-          </div>
-        </CardBody>
-      </Card>
-    </form>
-  );
-};
+              helperText={touched.givenName ? errors.givenName : ''}
+              label="Given name"
+              value={givenName}
+              InputProps={{
+                className: classes.marginDense,
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <InsertEmoticon className={iconClassName} />
+                  </InputAdornment>
+                ),
+              }}
+              onChange={this.onChange}
+            />
+            <TextField
+              id="phone-number"
+              name="phoneNumber"
+              type="tel"
+              fullWidth
+              label="Phone number"
+              value={phoneNumber}
+              InputProps={{
+                className: classes.marginDense,
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Call className={iconClassName} />
+                  </InputAdornment>
+                ),
+              }}
+              onChange={this.onChange}
+            />
+            <TextField
+              id="email"
+              name="email"
+              type="email"
+              fullWidth
+              label="Email"
+              value={email}
+              InputProps={{
+                className: classes.marginDense,
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Email className={iconClassName} />
+                  </InputAdornment>
+                ),
+              }}
+              onChange={this.onChange}
+            />
+            <TextField
+              id="password"
+              name="password"
+              type="password"
+              fullWidth
+              label="Password"
+              value={password}
+              InputProps={{
+                className: classes.marginDense,
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <LockOutline className={iconClassName} />
+                  </InputAdornment>
+                ),
+              }}
+              onChange={this.onChange}
+            />
+            <TextField
+              id="confirm-password"
+              name="confirmPassword"
+              type="password"
+              fullWidth
+              label="Confirm password"
+              value={confirmPassword}
+              InputProps={{
+                className: classes.marginDense,
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <LockOutline className={iconClassName} />
+                  </InputAdornment>
+                ),
+              }}
+              onChange={this.onChange}
+            />
+            <FormControlLabel
+              control={(
+                <Checkbox
+                  tabIndex={-1}
+                  onClick={this.onChange}
+                  checkedIcon={<Check className={classes.checkedIcon} />}
+                  icon={<Check className={classes.uncheckedIcon} />}
+                  classes={{
+                    checked: classes.checked,
+                    root: classes.agreement,
+                  }}
+                />
+              )}
+              classes={{
+                label:
+                  classes.label
+                  + (policyAgreement === 'error'
+                    ? ` ${classes.labelError}`
+                    : ''),
+              }}
+              label={(
+                <span>
+                  I agree to the terms and conditions
+                </span>
+              )}
+            />
+            <div className={classes.center}>
+              <Button
+                color="primary"
+                variant="contained"
+                fullWidth
+                disabled={!isValid}
+              >
+                Submit
+              </Button>
+              <Button
+                color="primary"
+                variant="text"
+                disableRipple
+                className={classes.simpleButton}
+                onClick={onClose}
+              >
+                Discard
+              </Button>
+            </div>
+          </CardBody>
+        </Card>
+      </form>
+    );
+  }
+}
 
 Register.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
   iconClassName: PropTypes.string.isRequired,
   policyAgreement: PropTypes.string.isRequired,
-  isFormValid: PropTypes.bool.isRequired,
+  isValid: PropTypes.bool.isRequired,
   onSubmitHandler: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  errors: PropTypes.objectOf(PropTypes.any).isRequired,
+  touched: PropTypes.objectOf(PropTypes.any).isRequired,
+  values: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 export default Register;
