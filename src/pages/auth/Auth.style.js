@@ -29,7 +29,7 @@ const registerPageStyle = theme => ({
     maxWidth: `${theme.spacing.unit * 50}px`,
   },
   marginDense: {
-    margin: `${theme.spacing.unit * 1.5}px auto`,
+    margin: `${theme.spacing.unit * 2}px auto 0px`,
   },
   container: {
     ...container,

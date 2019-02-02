@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Button from '@material-ui/core/Button';
@@ -11,17 +12,38 @@ import Card from 'components/Card/Card';
 import CardHeader from 'components/Card/CardHeader';
 import CardBody from 'components/Card/CardBody';
 import TextField from '@material-ui/core/TextField';
+import { register } from 'modules/auth.actions';
 
 class Register extends React.Component {
-  onChange = (event) => {
+  state = {
+    // nameState: '',
+    // phoneState: '',
+    // emailState: '',
+    // passwordState: '',
+    // confirmState: '',
+  };
+
+  onChange = (name, event) => {
     event.persist();
-    const { handleChange } = this.props;
+    const { handleChange, setFieldTouched } = this.props;
     handleChange(event);
+    setFieldTouched(name, true, false);
+  };
+
+  submitHandler = (event) => {
+    const {
+      // handleSubmit,
+      values,
+    } = this.props;
+    event.preventDefault();
+    alert('You are register a new account. It coming soon');
+    console.log('your form data', values);
+    // handleSubmit(values);
   };
 
   render() {
     const {
-      classes, iconClassName, onSubmitHandler,
+      classes,
       policyAgreement, onClose,
       values: {
         givenName,
@@ -32,13 +54,11 @@ class Register extends React.Component {
       },
       errors,
       touched,
-      // handleSubmit,
-      // handleChange,
       isValid,
-      // setFieldTouched
     } = this.props;
+    const iconClassName = classes.inputAdornmentIconDefault;
     return (
-      <form onSubmit={onSubmitHandler}>
+      <form onSubmit={this.submitHandler}>
         <Card className={classes.registerCard}>
           <CardHeader
             className={`${classes.cardHeader} ${classes.textCenter}`}
@@ -50,26 +70,28 @@ class Register extends React.Component {
             <TextField
               id="given-name"
               name="givenName"
-              type="text"
               autoFocus
               fullWidth
-              helperText={touched.givenName ? errors.givenName : ''}
+              error={touched.givenName ? errors.givenName : ''}
               label="Given name"
               value={givenName}
-              InputProps={{
+              formControlProps={{
                 className: classes.marginDense,
+              }}
+              InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
                     <InsertEmoticon className={iconClassName} />
                   </InputAdornment>
                 ),
               }}
-              onChange={this.onChange}
+              onChange={event => this.onChange('givenName', event)}
             />
             <TextField
               id="phone-number"
               name="phoneNumber"
               type="tel"
+              error={touched.phoneNumber ? errors.phoneNumber : ''}
               fullWidth
               label="Phone number"
               value={phoneNumber}
@@ -81,12 +103,13 @@ class Register extends React.Component {
                   </InputAdornment>
                 ),
               }}
-              onChange={this.onChange}
+              onChange={event => this.onChange('phoneNumber', event)}
             />
             <TextField
               id="email"
               name="email"
               type="email"
+              error={touched.email ? errors.email : ''}
               fullWidth
               label="Email"
               value={email}
@@ -98,12 +121,13 @@ class Register extends React.Component {
                   </InputAdornment>
                 ),
               }}
-              onChange={this.onChange}
+              onChange={event => this.onChange('email', event)}
             />
             <TextField
               id="password"
               name="password"
               type="password"
+              error={touched.password ? errors.password : ''}
               fullWidth
               label="Password"
               value={password}
@@ -115,12 +139,13 @@ class Register extends React.Component {
                   </InputAdornment>
                 ),
               }}
-              onChange={this.onChange}
+              onChange={event => this.onChange('password', event)}
             />
             <TextField
               id="confirm-password"
               name="confirmPassword"
               type="password"
+              error={touched.confirmPassword ? errors.confirmPassword : ''}
               fullWidth
               label="Confirm password"
               value={confirmPassword}
@@ -132,13 +157,14 @@ class Register extends React.Component {
                   </InputAdornment>
                 ),
               }}
-              onChange={this.onChange}
+              onChange={event => this.onChange('confirmPassword', event)}
             />
             <FormControlLabel
               control={(
                 <Checkbox
                   tabIndex={-1}
-                  onClick={this.onChange}
+                  name="policy"
+                  onClick={event => this.onChange('policy', event)}
                   checkedIcon={<Check className={classes.checkedIcon} />}
                   icon={<Check className={classes.uncheckedIcon} />}
                   classes={{
@@ -166,6 +192,7 @@ class Register extends React.Component {
                 variant="contained"
                 fullWidth
                 disabled={!isValid}
+                type="submit"
               >
                 Submit
               </Button>
@@ -188,15 +215,17 @@ class Register extends React.Component {
 
 Register.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
-  iconClassName: PropTypes.string.isRequired,
   policyAgreement: PropTypes.string.isRequired,
   isValid: PropTypes.bool.isRequired,
-  onSubmitHandler: PropTypes.func.isRequired,
+  // handleSubmit: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
   errors: PropTypes.objectOf(PropTypes.any).isRequired,
   touched: PropTypes.objectOf(PropTypes.any).isRequired,
+  setFieldTouched: PropTypes.func.isRequired,
   values: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
-export default Register;
+export default connect(null, {
+  registerAction: register,
+})(Register);

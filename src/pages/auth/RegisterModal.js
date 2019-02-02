@@ -14,16 +14,24 @@ import UserForm from './forms/Register';
 import authStyles from './Auth.style';
 
 const registerSchema = Yup.object().shape({
-  givenName: Yup.string().required('Given name is Required'),
-  phoneNumber: Yup.string().min(10).max(11).required(),
-  email: Yup.string().email('Email is not valid').required('Email is required'),
+  givenName: Yup.string()
+    .min(3, 'Given name must have at least 3 characters')
+    .required('Given name is Required'),
+  phoneNumber: Yup.string()
+    .min(10, 'Phone number must have at least 10 numbers')
+    .max(11, 'Phone number must have maximum 11 numbers')
+    .required('Phone number is required'),
+  email: Yup.string()
+    .email('Email is not valid')
+    .matches(regExPattern.email, 'Email format is not correct')
+    .required('Email is required'),
   password: Yup
     .string()
     .min(8, 'Password must contain at least 8 characters')
     .required('Password is required'),
   confirmPassword: Yup
     .string()
-    .min(8)
+    .oneOf([Yup.ref('password')], 'Confirm password is not matched')
     .required('Confirm password is required'),
 });
 
@@ -65,7 +73,6 @@ class RegisterModal extends React.Component {
     const {
       registerCheckboxState,
     } = this.state;
-    const adornmentClass = classes.inputAdornmentIconDefault;
     return (
       <div style={isOpen ? {} : { display: 'none' }} className={classes.content}>
         <GridContainer justify="center" alignItems="center">
@@ -77,7 +84,6 @@ class RegisterModal extends React.Component {
                 <UserForm
                   {...props}
                   classes={classes}
-                  iconClassName={adornmentClass}
                   onSubmitHandler={this.registerClick}
                   onClose={this.onClose}
                   policyAgreement={registerCheckboxState}

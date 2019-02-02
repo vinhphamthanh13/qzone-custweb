@@ -9,7 +9,7 @@ import { validatePassword } from 'utils/validation';
 import { classesType } from 'types/global';
 import { googleSignIn, facebookSignIn, login } from 'modules/auth.actions';
 import UserForm from './forms/Login';
-import registerStyles from './Auth.style';
+import authStyles from './Auth.style';
 
 class LoginModal extends React.Component {
   constructor(props) {
@@ -23,8 +23,10 @@ class LoginModal extends React.Component {
     this.state = { ...this.defaultState };
   }
 
-  onLoginClick = () => {
-    const { loginAction } = this.props;
+  onLoginClick = (e) => {
+    e.preventDefault();
+    const { normalLogin } = this.props;
+    console.log('test login');
     let newState = {};
 
     if (!this.state.pwdState) {
@@ -38,10 +40,11 @@ class LoginModal extends React.Component {
     if (Object.keys(newState).length === 0
       && this.state.pwdState === 'success'
       && this.state.userNameState === 'success') {
-      loginAction(this.state);
+      // loginAction(this.state);
     } else {
       this.setState(newState);
     }
+    normalLogin(this.state);
   };
 
   change = (event, stateName, type) => {
@@ -105,7 +108,7 @@ class LoginModal extends React.Component {
 LoginModal.propTypes = {
   classes: classesType.isRequired,
   googleSignInAction: PropTypes.func.isRequired,
-  loginAction: PropTypes.func.isRequired,
+  normalLogin: PropTypes.func.isRequired,
   facebookSignInAction: PropTypes.func.isRequired,
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
@@ -115,10 +118,10 @@ LoginModal.propTypes = {
 // });
 
 export default compose(
-  withStyles(registerStyles),
+  withStyles(authStyles),
   connect(null, {
     googleSignInAction: googleSignIn,
     facebookSignInAction: facebookSignIn,
-    loginAction: login,
+    normalLogin: login,
   }),
 )(LoginModal);

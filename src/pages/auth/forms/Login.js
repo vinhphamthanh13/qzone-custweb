@@ -22,44 +22,44 @@ const Login = (props) => {
     isFormValid, onClose, socialActions,
   } = props;
   return (
-    <form onSubmit={onSubmitHandler}>
-      <Card className={classes.registerCard}>
-        <CardHeader
-          className={`${classes.cardHeader} ${classes.textCenter} ${classes.loginPanel}`}
-          color="main"
-        >
-          <Typography variant="h5" color="inherit">Login</Typography>
-          <div className={classes.socialButtons}>
-            <CustomButton
-              justIcon
-              onClick={socialActions.twitter}
-              target="_blank"
-              className={classes.socialButton}
-              color="transparent"
-            >
-              <i className={`fab fa-twitter ${classes.socialIcon}`} />
-            </CustomButton>
-            <CustomButton
-              justIcon
-              onClick={socialActions.facebook}
-              target="_blank"
-              className={classes.socialButton}
-              color="transparent"
-            >
-              <i className={`fab fa-facebook ${classes.socialIcon}`} />
-            </CustomButton>
-            <CustomButton
-              justIcon
-              onClick={socialActions.google}
-              target="_blank"
-              className={classes.socialButton}
-              color="transparent"
-            >
-              <i className={`fab fa-google-plus-g ${classes.socialIcon}`} />
-            </CustomButton>
-          </div>
-        </CardHeader>
-        <CardBody>
+    <Card className={classes.registerCard}>
+      <CardHeader
+        className={`${classes.cardHeader} ${classes.textCenter} ${classes.loginPanel}`}
+        color="main"
+      >
+        <Typography variant="h5" color="inherit">Login</Typography>
+        <div className={classes.socialButtons}>
+          <CustomButton
+            justIcon
+            onClick={socialActions.twitter}
+            target="_blank"
+            className={classes.socialButton}
+            color="transparent"
+          >
+            <i className={`fab fa-twitter ${classes.socialIcon}`} />
+          </CustomButton>
+          <CustomButton
+            justIcon
+            onClick={socialActions.facebook}
+            target="_blank"
+            className={classes.socialButton}
+            color="transparent"
+          >
+            <i className={`fab fa-facebook ${classes.socialIcon}`} />
+          </CustomButton>
+          <CustomButton
+            justIcon
+            onClick={socialActions.google}
+            target="_blank"
+            className={classes.socialButton}
+            color="transparent"
+          >
+            <i className={`fab fa-google-plus-g ${classes.socialIcon}`} />
+          </CustomButton>
+        </div>
+      </CardHeader>
+      <CardBody>
+        <form onSubmit={onSubmitHandler}>
           <CustomInput
             labelText="Email"
             id="loginemail"
@@ -114,6 +114,7 @@ const Login = (props) => {
               color="primary"
               fullWidth
               disabled={!isFormValid}
+              type="submit"
             >
               Submit
             </Button>
@@ -127,9 +128,9 @@ const Login = (props) => {
               Close
             </Button>
           </div>
-        </CardBody>
-      </Card>
-    </form>
+        </form>
+      </CardBody>
+    </Card>
   );
 };
 

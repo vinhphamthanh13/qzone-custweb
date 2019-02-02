@@ -65,6 +65,7 @@ export function googleSignIn() {
 
 
 function registerUserSuccess(payload) {
+  console.log('reg success', payload);
   return {
     type: REGISTER_USER_SUCCESS,
     payload,
@@ -72,6 +73,7 @@ function registerUserSuccess(payload) {
 }
 
 function registerUserFailure(payload) {
+  console.log('reg failed', payload);
   return {
     type: REGISTER_USER_FAILURE,
     payload,
@@ -82,7 +84,7 @@ export function register(values) {
   return (dispatch) => {
     Auth.signUp({
       username: values.email,
-      password: values.pwd,
+      password: values.password,
       attributes: {
         email: values.email,
       },
