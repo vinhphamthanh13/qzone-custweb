@@ -14,50 +14,42 @@ import UserForm from './forms/Register';
 import authStyles from './Auth.style';
 
 const registerSchema = Yup.object().shape({
-  givenName: Yup.string()
+  givenName: Yup
+    .string()
     .min(3, 'Given name must have at least 3 characters')
     .required('Given name is Required'),
-  phoneNumber: Yup.string()
-    .min(10, 'Phone number must have at least 10 numbers')
-    .max(11, 'Phone number must have maximum 11 numbers')
+  cellPhone: Yup
+    .string()
+    .matches(regExPattern.cellPhone, 'Phone number format is not correct')
+    // .min(10, 'Phone number must have at least 10 numbers')
+    // .max(13, 'Phone number must have maximum 12 numbers')
     .required('Phone number is required'),
-  email: Yup.string()
+  email: Yup
+    .string()
     .email('Email is not valid')
     .matches(regExPattern.email, 'Email format is not correct')
     .required('Email is required'),
   password: Yup
     .string()
+    .matches(regExPattern.password, 'Password format is not correct')
     .min(8, 'Password must contain at least 8 characters')
     .required('Password is required'),
   confirmPassword: Yup
     .string()
     .oneOf([Yup.ref('password')], 'Confirm password is not matched')
     .required('Confirm password is required'),
+  policyAgreement: Yup
+    .bool()
+    .oneOf([true], 'You have to agree our policy to register a new account')
+    .required(),
 });
 
 class RegisterModal extends React.Component {
-  constructor(props) {
-    super(props);
-    this.defaultState = {
-      registerCheckbox: false,
-      registerCheckboxState: '',
-      // openVerificationModal: false,
-      // code: '',
-    };
-    this.state = { ...this.defaultState };
-  }
-
-  // eslint-disable-next-line max-len
-  verifyEmail = value => regExPattern.email.test(value);
-
-  compare = (string1, string2) => string1 === string2;
-
   registerClick = () => {
     this.props.registerAction(this.state);
   };
 
   onClose = () => {
-    this.setState(this.defaultState);
     this.props.onClose();
   };
 
@@ -65,14 +57,12 @@ class RegisterModal extends React.Component {
     const { classes, isOpen } = this.props;
     const registerInit = {
       givenName: '',
-      phoneNumber: '',
+      cellPhone: '',
       email: '',
       password: '',
       confirmPassword: '',
+      policyAgreement: false,
     };
-    const {
-      registerCheckboxState,
-    } = this.state;
     return (
       <div style={isOpen ? {} : { display: 'none' }} className={classes.content}>
         <GridContainer justify="center" alignItems="center">
@@ -86,7 +76,6 @@ class RegisterModal extends React.Component {
                   classes={classes}
                   onSubmitHandler={this.registerClick}
                   onClose={this.onClose}
-                  policyAgreement={registerCheckboxState}
                 />
               )}
             />
@@ -103,9 +92,6 @@ RegisterModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
 };
-
-// const mapStateToProps = state => ({
-// });
 
 export default compose(
   withStyles(authStyles),

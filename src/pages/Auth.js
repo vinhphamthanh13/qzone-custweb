@@ -7,7 +7,7 @@ export default function Auth({ isRegisterOpen, isLoginOpen, closeDialog }) {
   return (
     <>
       <Register
-        isOpen={isRegisterOpen}
+        isOpen={true || isRegisterOpen}
         onClose={() => closeDialog('isRegisterOpen')}
       />
       <Login

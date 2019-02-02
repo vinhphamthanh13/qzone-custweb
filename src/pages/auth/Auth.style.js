@@ -62,7 +62,7 @@ const registerPageStyle = theme => ({
   inputAdornmentIconError: {
     color: dangerColor,
   },
-  agreement: {
+  policyAgreement: {
     margin: `${theme.spacing.unit * 1.5}px 0`,
   },
   simpleButton: {
@@ -88,13 +88,6 @@ const registerPageStyle = theme => ({
   },
   socialIcon: {
     fontSize: `${theme.spacing.unit * 3}px !important`,
-  },
-});
-
-export const styles = theme => ({
-  register: {
-    maxWidth: theme.spacing.unit * 30,
-    minWidth: theme.spacing.unit * 20,
   },
 });
 

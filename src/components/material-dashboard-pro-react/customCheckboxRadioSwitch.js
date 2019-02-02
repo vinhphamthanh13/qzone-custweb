@@ -25,9 +25,6 @@ const customCheckboxRadioSwitch = {
     marginTop: '0',
     marginBottom: '0',
   },
-  checked: {
-    color: `${mainColor} !important`,
-  },
   checkedIcon: {
     width: '20px',
     height: '20px',
