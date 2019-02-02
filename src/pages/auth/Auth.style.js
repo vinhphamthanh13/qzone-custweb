@@ -28,8 +28,9 @@ const registerPageStyle = theme => ({
   registerCard: {
     maxWidth: `${theme.spacing.unit * 50}px`,
   },
-  marginDense: {
-    margin: `${theme.spacing.unit * 2}px auto 0px`,
+  marginLoose: {
+    margin: `${theme.spacing.unit * 1.25}px auto 0px`,
+    color: 'red',
   },
   container: {
     ...container,
@@ -62,7 +63,7 @@ const registerPageStyle = theme => ({
     color: dangerColor,
   },
   agreement: {
-    margin: `${theme.spacing.unit * 3}px 0`,
+    margin: `${theme.spacing.unit * 1.5}px 0`,
   },
   simpleButton: {
     // color: mainColor,

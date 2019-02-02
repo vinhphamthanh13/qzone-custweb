@@ -71,6 +71,7 @@ class Register extends React.Component {
               id="given-name"
               name="givenName"
               autoFocus
+              classes={{ root: classes.marginLoose }}
               fullWidth
               error={touched.givenName ? errors.givenName : ''}
               label="Given name"
@@ -92,6 +93,7 @@ class Register extends React.Component {
               name="phoneNumber"
               type="tel"
               error={touched.phoneNumber ? errors.phoneNumber : ''}
+              classes={{ root: classes.marginLoose }}
               fullWidth
               label="Phone number"
               value={phoneNumber}
@@ -110,6 +112,7 @@ class Register extends React.Component {
               name="email"
               type="email"
               error={touched.email ? errors.email : ''}
+              classes={{ root: classes.marginLoose }}
               fullWidth
               label="Email"
               value={email}
@@ -128,6 +131,7 @@ class Register extends React.Component {
               name="password"
               type="password"
               error={touched.password ? errors.password : ''}
+              classes={{ root: classes.marginLoose }}
               fullWidth
               label="Password"
               value={password}
@@ -146,6 +150,7 @@ class Register extends React.Component {
               name="confirmPassword"
               type="password"
               error={touched.confirmPassword ? errors.confirmPassword : ''}
+              classes={{ root: classes.marginLoose }}
               fullWidth
               label="Confirm password"
               value={confirmPassword}
