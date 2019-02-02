@@ -21,8 +21,6 @@ const registerSchema = Yup.object().shape({
   cellPhone: Yup
     .string()
     .matches(regExPattern.cellPhone, 'Phone number format is not correct')
-    // .min(10, 'Phone number must have at least 10 numbers')
-    // .max(13, 'Phone number must have maximum 12 numbers')
     .required('Phone number is required'),
   email: Yup
     .string()
@@ -45,7 +43,7 @@ const registerSchema = Yup.object().shape({
 });
 
 class RegisterModal extends React.Component {
-  registerClick = () => {
+  registerHandle = () => {
     this.props.registerAction(this.state);
   };
 
@@ -63,18 +61,19 @@ class RegisterModal extends React.Component {
       confirmPassword: '',
       policyAgreement: false,
     };
+
     return (
       <div style={isOpen ? {} : { display: 'none' }} className={classes.content}>
         <GridContainer justify="center" alignItems="center">
           <GridItem xs={12} sm={6} md={4} className={classes.register}>
             <Formik
-              validationSchema={registerSchema}
               initialValues={registerInit}
+              validationSchema={registerSchema}
+              onSubmit={this.registerHandle}
               render={props => (
                 <UserForm
                   {...props}
                   classes={classes}
-                  onSubmitHandler={this.registerClick}
                   onClose={this.onClose}
                 />
               )}

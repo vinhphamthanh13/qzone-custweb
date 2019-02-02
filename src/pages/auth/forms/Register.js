@@ -15,7 +15,7 @@ import CardBody from 'components/Card/CardBody';
 import TextField from '@material-ui/core/TextField';
 import { register } from 'modules/auth.actions';
 
-const resolveIconClassName = (name, value, errors, touched, classes) => {
+export const resolveIconClassName = (name, value, errors, touched, classes) => {
   switch (value) {
     case '':
       return touched[name] ? classes.inputAdornmentIconError : classes.inputAdornmentIconDefault;
@@ -32,17 +32,6 @@ class Register extends React.Component {
     if (!/^\S+$/.test(value) && value.length) return;
     handleChange(event);
     setFieldTouched(name, true, false);
-  };
-
-  submitHandler = (event) => {
-    const {
-      // handleSubmit,
-      values,
-    } = this.props;
-    event.preventDefault();
-    alert('You are register a new account. It coming soon');
-    console.log('your form data', values);
-    // handleSubmit(values);
   };
 
   render() {
@@ -108,7 +97,7 @@ class Register extends React.Component {
               onChange={event => this.onChange('cellPhone', event)}
             />
             <TextField
-              id="email"
+              id="registeremail"
               name="email"
               type="email"
               error={touched.email ? errors.email : ''}
@@ -127,7 +116,7 @@ class Register extends React.Component {
               onChange={event => this.onChange('email', event)}
             />
             <TextField
-              id="password"
+              id="registerpassword"
               name="password"
               type="password"
               error={touched.password ? errors.password : ''}

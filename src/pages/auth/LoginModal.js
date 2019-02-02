@@ -5,69 +5,35 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import GridContainer from 'components/Grid/GridContainer';
 import GridItem from 'components/Grid/GridItem';
-import { validatePassword } from 'utils/validation';
 import { classesType } from 'types/global';
 import { googleSignIn, facebookSignIn, login } from 'modules/auth.actions';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import { regExPattern, noop } from 'utils/constants';
 import UserForm from './forms/Login';
 import authStyles from './Auth.style';
 
-class LoginModal extends React.Component {
-  constructor(props) {
-    super(props);
-    this.defaultState = {
-      userName: '',
-      userNameState: '',
-      pwd: '',
-      pwdState: '',
-    };
-    this.state = { ...this.defaultState };
-  }
+const loginSchema = Yup.object().shape({
+  email: Yup
+    .string()
+    .email('Email is not valid')
+    .matches(regExPattern.email, 'Email format is not correct')
+    .required('Email is required'),
+  password: Yup
+    .string()
+    .matches(regExPattern.password, 'Password format is not correct')
+    .min(8, 'Password must contain at least 8 characters')
+    .required('Password is required'),
+});
 
+class LoginModal extends React.Component {
   onLoginClick = (e) => {
     e.preventDefault();
     const { normalLogin } = this.props;
-    console.log('test login');
-    let newState = {};
-
-    if (!this.state.pwdState) {
-      newState = { ...newState, pwdState: 'error' };
-    }
-
-    if (!this.state.userName) {
-      newState = { ...newState, userNameState: 'error' };
-    }
-
-    if (Object.keys(newState).length === 0
-      && this.state.pwdState === 'success'
-      && this.state.userNameState === 'success') {
-      // loginAction(this.state);
-    } else {
-      this.setState(newState);
-    }
     normalLogin(this.state);
   };
 
-  change = (event, stateName, type) => {
-    switch (type) {
-      case 'email':
-        this.setState({
-          [stateName]: event.target.value,
-          [`${stateName}State`]: this.verifyEmail(event.target.value) ? 'success' : 'error',
-        });
-        break;
-      case 'password':
-        this.setState({
-          [stateName]: event.target.value,
-          [`${stateName}State`]: validatePassword(event.target.value) ? 'success' : 'error',
-        });
-        break;
-      default:
-        break;
-    }
-  };
-
   onClose = () => {
-    this.setState(this.defaultState);
     this.props.onClose();
   };
 
@@ -75,28 +41,31 @@ class LoginModal extends React.Component {
     const {
       classes, isOpen, facebookSignInAction, googleSignInAction,
     } = this.props;
-    // const {
-      // userName, pwd, userNameState, pwdState,
-    // } = this.state;
     const socialActions = {
       facebook: facebookSignInAction,
       google: googleSignInAction,
     };
-    const adornmentClass = classes.inputAdornmentIconDefault;
-    const isFormValid = true;
+    const loginInit = {
+      email: '',
+      password: '',
+    };
 
     return (
       <div style={isOpen ? {} : { display: 'none' }} className={classes.content}>
         <GridContainer justify="center" alignItems="center">
           <GridItem xs={12} sm={6} md={4} className={classes.register}>
-            <UserForm
-              classes={classes}
-              iconClassName={adornmentClass}
-              isFormValid={isFormValid}
-              onSubmitHandler={this.onLoginClick}
-              onChange={this.change}
-              onClose={this.onClose}
-              socialActions={socialActions}
+            <Formik
+              initialValues={loginInit}
+              validationSchema={loginSchema}
+              onSubmit={noop}
+              render={props => (
+                <UserForm
+                  {...props}
+                  classes={classes}
+                  onClose={this.onClose}
+                  socialActions={socialActions}
+                />
+              )}
             />
           </GridItem>
         </GridContainer>

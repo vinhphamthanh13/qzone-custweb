@@ -7,7 +7,7 @@ import {
 } from 'components/material-dashboard-pro-react';
 import customCheckboxRadioSwitch from 'components/material-dashboard-pro-react/customCheckboxRadioSwitch';
 
-const registerPageStyle = theme => ({
+const authPageStyle = theme => ({
   ...customCheckboxRadioSwitch,
   textCenter,
   content: {
@@ -91,4 +91,4 @@ const registerPageStyle = theme => ({
   },
 });
 
-export default registerPageStyle;
+export default authPageStyle;
