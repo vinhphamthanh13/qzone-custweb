@@ -2,8 +2,18 @@ import { Auth } from 'aws-amplify';
 import { handleRequest } from 'api/helpers';
 import { getCustomerByEmail } from 'api/auth';
 
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGOUT = 'LOGOUT';
 export const REGISTER_USER_SUCCESS = 'REGISTER_USER_SUCCESS';
 export const REGISTER_USER_FAILURE = 'REGISTER_USER_FAILURE';
+
+export function login(payload) {
+  return { type: LOGIN_SUCCESS, payload };
+}
+
+export function logout() {
+  return { type: LOGOUT };
+}
 
 export function facebookSignIn() {
   return () => {
@@ -47,7 +57,7 @@ export function googleSignIn() {
         console.log('get aws credentials', awsCredentials);
         console.log('get customer', customer);
       } catch (error) {
-        console.log('googleSignIn error', error);
+        // console.log('googleSignIn error', error);
       }
     });
   };
@@ -55,6 +65,7 @@ export function googleSignIn() {
 
 
 function registerUserSuccess(payload) {
+  console.log('reg success', payload);
   return {
     type: REGISTER_USER_SUCCESS,
     payload,
@@ -62,6 +73,7 @@ function registerUserSuccess(payload) {
 }
 
 function registerUserFailure(payload) {
+  console.log('reg failed', payload);
   return {
     type: REGISTER_USER_FAILURE,
     payload,
@@ -72,7 +84,7 @@ export function register(values) {
   return (dispatch) => {
     Auth.signUp({
       username: values.email,
-      password: values.pwd,
+      password: values.password,
       attributes: {
         email: values.email,
       },

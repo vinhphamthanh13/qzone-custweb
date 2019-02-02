@@ -25,6 +25,7 @@ export class Home extends React.PureComponent {
     serviceCategories: serviceCategoriesType.isRequired,
     isLoading: PropTypes.bool.isRequired,
     getServicesByNameAction: PropTypes.func.isRequired,
+    userAuthorized: PropTypes.bool.isRequired,
   };
 
   constructor(props) {
@@ -130,7 +131,7 @@ export class Home extends React.PureComponent {
 
   render() {
     const {
-      serviceCategories, isLoading, services,
+      serviceCategories, isLoading, services, userAuthorized,
     } = this.props;
     const {
       selectedCategoryId, subCategories, selectedSubCategoryId, searchText,
@@ -141,14 +142,18 @@ export class Home extends React.PureComponent {
     return (
       <>
         <Grid container>
-          <Auth isRegisterOpen={isRegisterOpen} isLoginOpen={isLoginOpen} closeDialog={this.closeDialog} />
+          <Auth
+            isRegisterOpen={isRegisterOpen}
+            isLoginOpen={isLoginOpen}
+            closeDialog={this.closeDialog}
+          />
           <BookingDialog
             initService={selectedService}
             handleClose={this.handleCloseBookingDialog}
             onSaveBooking={this.onSaveBooking}
           />
           <PrimarySearchAppBar
-            // loggedIn
+            loggedIn={userAuthorized}
             handleAuthenticate={this.openDialog}
             onSearch={this.onSearch}
             categories={serviceCategories}
@@ -172,9 +177,13 @@ export class Home extends React.PureComponent {
   }
 }
 
-const mapStateToProps = state => ({
-  ...state.home,
-});
+const mapStateToProps = (state) => {
+  console.log('state', state);
+  return ({
+    ...state.home,
+    userAuthorized: state.auth.userAuthorized,
+  });
+};
 
 export default connect(
   mapStateToProps,

@@ -29,7 +29,7 @@ const registerPageStyle = theme => ({
     maxWidth: `${theme.spacing.unit * 50}px`,
   },
   marginDense: {
-    margin: 0,
+    margin: `${theme.spacing.unit * 2}px auto 0px`,
   },
   container: {
     ...container,
@@ -65,10 +65,28 @@ const registerPageStyle = theme => ({
     margin: `${theme.spacing.unit * 3}px 0`,
   },
   simpleButton: {
-    color: mainColor,
+    // color: mainColor,
     '&:hover': {
       background: 'transparent',
     },
+  },
+  resetPassword: {
+    color: mainColor,
+    fontWeight: 'bold',
+    margin: `${theme.spacing.unit}px 0 ${theme.spacing.unit * 3}px`,
+    textAlign: 'right',
+  },
+  loginPanel: {
+    padding: `${theme.spacing.unit * 2}px 0 ${theme.spacing.unit * 8}px !important`,
+  },
+  socialButtons: {
+    margin: `${theme.spacing.unit * 2}px auto`,
+  },
+  socialButton: {
+    margin: `auto ${theme.spacing.unit}px`,
+  },
+  socialIcon: {
+    fontSize: `${theme.spacing.unit * 3}px !important`,
   },
 });
 
