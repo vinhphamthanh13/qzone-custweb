@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Button from '@material-ui/core/Button';
@@ -13,7 +12,6 @@ import Card from 'components/Card/Card';
 import CardHeader from 'components/Card/CardHeader';
 import CardBody from 'components/Card/CardBody';
 import TextField from '@material-ui/core/TextField';
-import { register } from 'modules/auth.actions';
 
 export const resolveIconClassName = (name, value, errors, touched, classes) => {
   switch (value) {
@@ -38,15 +36,16 @@ class Register extends React.Component {
     const {
       classes, onClose, values: {
         givenName,
-        cellPhone,
+        telephone,
         email,
         password,
         confirmPassword,
       },
+      handleSubmit,
       errors, touched, isValid,
     } = this.props;
     return (
-      <form onSubmit={this.submitHandler}>
+      <form onSubmit={handleSubmit}>
         <Card className={classes.registerCard}>
           <CardHeader
             className={`${classes.cardHeader} ${classes.textCenter}`}
@@ -80,21 +79,21 @@ class Register extends React.Component {
             />
             <TextField
               id="phone-number"
-              name="cellPhone"
-              error={touched.cellPhone ? errors.cellPhone : ''}
+              name="telephone"
+              error={touched.telephone ? errors.telephone : ''}
               classes={{ root: classes.marginLoose }}
               fullWidth
               label="Phone number"
-              value={cellPhone}
+              value={telephone}
               InputProps={{
                 className: classes.marginDense,
                 endAdornment: (
                   <InputAdornment position="end">
-                    <Call className={resolveIconClassName('cellPhone', cellPhone, errors, touched, classes)} />
+                    <Call className={resolveIconClassName('telephone', telephone, errors, touched, classes)} />
                   </InputAdornment>
                 ),
               }}
-              onChange={event => this.onChange('cellPhone', event)}
+              onChange={event => this.onChange('telephone', event)}
             />
             <TextField
               id="registeremail"
@@ -205,7 +204,7 @@ class Register extends React.Component {
 Register.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
   isValid: PropTypes.bool.isRequired,
-  // handleSubmit: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
   errors: PropTypes.objectOf(PropTypes.any).isRequired,
@@ -214,6 +213,4 @@ Register.propTypes = {
   values: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
-export default connect(null, {
-  registerAction: register,
-})(Register);
+export default Register;

@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
+import Modal from '@material-ui/core/Modal';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { compose } from 'redux';
@@ -8,7 +11,7 @@ import { connect } from 'react-redux';
 import GridContainer from 'components/Grid/GridContainer';
 import GridItem from 'components/Grid/GridItem';
 import { classesType } from 'types/global';
-import { register } from 'modules/auth.actions';
+import { register, resetErrorMessage } from 'modules/auth.actions';
 import { regExPattern } from 'utils/constants';
 import UserForm from './forms/Register';
 import authStyles from './Auth.style';
@@ -18,9 +21,10 @@ const registerSchema = Yup.object().shape({
     .string()
     .min(3, 'Given name must have at least 3 characters')
     .required('Given name is Required'),
-  cellPhone: Yup
+  telephone: Yup
     .string()
-    .matches(regExPattern.cellPhone, 'Phone number format is not correct')
+    .min(10, 'Phone number must have at least 10 numbers')
+    .matches(regExPattern.phoneNumber, 'Phone number format is not correct')
     .required('Phone number is required'),
   email: Yup
     .string()
@@ -43,29 +47,80 @@ const registerSchema = Yup.object().shape({
 });
 
 class RegisterModal extends React.Component {
-  registerHandle = () => {
-    this.props.registerAction(this.state);
+  state = {
+    error: {},
+  };
+
+  componentWillReceiveProps(nextProps) {
+    const { errorMessage } = nextProps;
+    let error = {};
+    if (errorMessage) {
+      error = { open: true, errorMessage };
+    } else {
+      error = { open: false, errorMessage };
+    }
+    this.setState({ error });
+  }
+
+  registerHandle = (values) => {
+    const { registerAction } = this.props;
+    registerAction(values);
+    this.onClose();
   };
 
   onClose = () => {
     this.props.onClose();
   };
 
+  closeErrorModal = () => {
+    const { resetErrorMessageAction } = this.props;
+    resetErrorMessageAction();
+  };
+
   render() {
-    const { classes, isOpen } = this.props;
+    const {
+      classes, isOpen,
+    } = this.props;
     const registerInit = {
       givenName: '',
-      cellPhone: '',
+      telephone: '',
       email: '',
       password: '',
       confirmPassword: '',
       policyAgreement: false,
+      address: {
+        city: '',
+        country: '',
+        district: '',
+        postCode: '',
+        state: '',
+        streetAddress: '',
+      },
+      cognitoToken: '',
+      familyName: '',
+      userStatus: 'UNKNOWN',
+      userSub: '',
     };
-
+    const { error: { open, errorMessage } } = this.state;
+    const errorModal = open
+      ? (
+        <Modal
+          open
+          onClose={this.closeErrorModal}
+          className={classes.root}
+        >
+          <Paper className={classes.errorModal}>
+            <Typography variant="h5" component="h3">
+              Register failed
+            </Typography>
+            <div>{errorMessage}</div>
+          </Paper>
+        </Modal>) : null;
     return (
       <div style={isOpen ? {} : { display: 'none' }} className={classes.content}>
         <GridContainer justify="center" alignItems="center">
           <GridItem xs={12} sm={6} md={4} className={classes.register}>
+            {errorModal}
             <Formik
               initialValues={registerInit}
               validationSchema={registerSchema}
@@ -90,9 +145,22 @@ RegisterModal.propTypes = {
   registerAction: PropTypes.func.isRequired,
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
+  errorMessage: PropTypes.string,
+  resetErrorMessageAction: PropTypes.func.isRequired,
 };
+
+RegisterModal.defaultProps = {
+  errorMessage: '',
+};
+
+const mapStateToProps = state => ({
+  errorMessage: state.auth.errorMessage,
+});
 
 export default compose(
   withStyles(authStyles),
-  connect(null, { registerAction: register }),
+  connect(mapStateToProps, {
+    registerAction: register,
+    resetErrorMessageAction: resetErrorMessage,
+  }),
 )(RegisterModal);

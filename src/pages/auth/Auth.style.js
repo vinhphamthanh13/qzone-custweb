@@ -89,6 +89,15 @@ const authPageStyle = theme => ({
   socialIcon: {
     fontSize: `${theme.spacing.unit * 3}px !important`,
   },
+  errorModal: {
+    position: 'relative',
+    margin: 'auto',
+    width: 'auto',
+    padding: `${theme.spacing.unit * 2}px`,
+  },
+  root: {
+    display: 'flex',
+  },
 });
 
 export default authPageStyle;

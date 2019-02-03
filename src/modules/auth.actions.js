@@ -3,9 +3,11 @@ import { handleRequest } from 'api/helpers';
 import { getCustomerByEmail } from 'api/auth';
 
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 export const LOGOUT = 'LOGOUT';
-export const REGISTER_USER_SUCCESS = 'REGISTER_USER_SUCCESS';
-export const REGISTER_USER_FAILURE = 'REGISTER_USER_FAILURE';
+export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
+export const REGISTER_FAILURE = 'REGISTER_FAILURE';
+export const RESET_ERROR_MESSAGE = 'RESET_ERROR_MESSAGE';
 
 export function login(payload) {
   return { type: LOGIN_SUCCESS, payload };
@@ -63,19 +65,17 @@ export function googleSignIn() {
   };
 }
 
-
 function registerUserSuccess(payload) {
-  console.log('reg success', payload);
   return {
-    type: REGISTER_USER_SUCCESS,
+    type: REGISTER_SUCCESS,
     payload,
   };
 }
 
 function registerUserFailure(payload) {
-  console.log('reg failed', payload);
+  console.log('payload reg failure', payload);
   return {
-    type: REGISTER_USER_FAILURE,
+    type: REGISTER_FAILURE,
     payload,
   };
 }
@@ -98,6 +98,10 @@ export function register(values) {
         }
         return json;
       })
-      .catch(err => dispatch(registerUserFailure(err)));
+      .catch(error => dispatch(registerUserFailure(error)));
   };
 }
+
+export const resetErrorMessage = () => ({
+  type: RESET_ERROR_MESSAGE,
+});

@@ -33,7 +33,6 @@ class Login extends React.Component {
       values: { email, password },
       touched, errors, handleSubmit, isValid,
     } = this.props;
-    console.log('this.props', this.props);
     return (
       <Card className={classes.registerCard}>
         <CardHeader
