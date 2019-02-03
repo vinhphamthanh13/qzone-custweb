@@ -16,6 +16,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Tooltip from '@material-ui/core/Tooltip';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import InsertEmoticon from '@material-ui/icons/InsertEmoticon';
 import HowToReg from '@material-ui/icons/HowToReg';
 import { Book as BookIcon } from '@material-ui/icons';
 import NearMe from '@material-ui/icons/NearMe';
@@ -36,6 +37,20 @@ class PrimarySearchAppBar extends React.Component {
     anchorEl: null,
     mobileMoreAnchorEl: null,
     serviceAnchorEl: null,
+  };
+
+  componentDidMount() {
+    window.addEventListener('resize', this.closeAllMenu);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize');
+  }
+
+  closeAllMenu = () => {
+    this.handleMenuClose();
+    this.handleMobileMenuClose();
+    this.handleServiceMenuClose();
   };
 
   handleProfileMenuOpen = (event) => {
@@ -87,7 +102,7 @@ class PrimarySearchAppBar extends React.Component {
       anchorEl, mobileMoreAnchorEl, serviceAnchorEl,
     } = this.state;
     const {
-      classes, loggedIn, onSearch, categories,
+      classes, isAuthenticated, onSearch, categories,
       activeCategoryId, userPosition,
     } = this.props;
     const searchNearByTitle = userPosition.latitude ? 'Search Services Near You' : 'Your Location Not Allowed';
@@ -107,7 +122,7 @@ class PrimarySearchAppBar extends React.Component {
         </MenuItem>
       ),
     ) : null;
-    const authorization = loggedIn ? (
+    const authorization = isAuthenticated ? (
       [
         <IconMenu
           key="app-bar-booking"
@@ -196,31 +211,37 @@ class PrimarySearchAppBar extends React.Component {
         open={isMobileMenuOpen}
         onClose={this.handleMobileMenuClose}
       >
-        <MenuItem>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <MailIcon />
-            </Badge>
-          </IconButton>
-          <p>Messages</p>
-        </MenuItem>
-        <MenuItem>
-          <IconButton color="inherit">
-            <Badge badgeContent={11} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          <p>Notifications</p>
-        </MenuItem>
+        { isAuthenticated
+          && (
+            [
+              <MenuItem>
+                <IconButton color="inherit">
+                  <Badge badgeContent={4} color="secondary">
+                    <MailIcon />
+                  </Badge>
+                </IconButton>
+                <p>Messages</p>
+              </MenuItem>,
+              <MenuItem>
+                <IconButton color="inherit">
+                  <Badge badgeContent={11} color="secondary">
+                    <NotificationsIcon />
+                  </Badge>
+                </IconButton>
+                <p>Notifications</p>
+              </MenuItem>,
+            ]
+          )
+        }
         <MenuItem onClick={this.handleProfileMenuOpen}>
           <IconButton color="inherit">
-            <AccountCircle />
+            { isAuthenticated ? <InsertEmoticon /> : <AccountCircle /> }
           </IconButton>
           <p>Profile</p>
         </MenuItem>
       </Menu>
     );
-    const customUser = loggedIn ? (
+    const customUser = isAuthenticated ? (
       <>
         <div className={classes.sectionDesktop}>
           <IconButton color="inherit">
@@ -239,7 +260,7 @@ class PrimarySearchAppBar extends React.Component {
             onClick={this.handleProfileMenuOpen}
             color="inherit"
           >
-            <AccountCircle />
+            <InsertEmoticon />
           </IconButton>
         </div>
         <div className={classes.sectionMobile}>
@@ -324,7 +345,7 @@ class PrimarySearchAppBar extends React.Component {
 
 PrimarySearchAppBar.propTypes = {
   classes: PropTypes.objectOf(PropTypes.any).isRequired,
-  loggedIn: PropTypes.bool.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
   handleAuthenticate: PropTypes.func.isRequired,
   onSearch: PropTypes.func.isRequired,
   categories: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -334,8 +355,13 @@ PrimarySearchAppBar.propTypes = {
   logoutAction: PropTypes.func.isRequired,
 };
 
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.userAuthorized,
+  accountName: state.auth.accountName,
+});
+
 export default compose(
-  connect(null, {
+  connect(mapStateToProps, {
     logoutAction: logout,
   }),
   withStyles(styles),

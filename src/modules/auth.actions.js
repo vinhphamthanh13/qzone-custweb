@@ -17,26 +17,21 @@ const loginError = error => ({
 
 const loginSuccess = (payload, name) => {
   switch (name) {
-    case loginType.GB: {
+    case loginType.GP: {
       const {
         data: {
-          accessKeyId,
-          isAuthenticated,
-          Expiration,
-          SessionToken,
+          accessKeyId, isAuthenticated, Expiration, SessionToken,
         },
         config: { data },
       } = payload;
       return {
         type: LOGIN_SUCCESS,
         payload: {
-          google: {
-            accessKeyId,
-            isAuthenticated,
-            Expiration,
-            SessionToken,
-            email: JSON.parse(data),
-          },
+          userAuthorized: isAuthenticated,
+          accountName: JSON.parse(data).email,
+          accessKeyId,
+          Expiration,
+          SessionToken,
         },
       };
     }

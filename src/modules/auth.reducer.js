@@ -13,7 +13,6 @@ const authInitialize = {
   email: '',
   password: '',
   confirmPassword: '',
-  policyAgreement: false,
   address: {
     city: '',
     country: '',
@@ -32,13 +31,17 @@ const authInitialize = {
 };
 
 const auth = (state = authInitialize, action) => {
+  console.log('action.payload', action.payload);
   switch (action.type) {
-    case LOGIN_SUCCESS:
+    case LOGIN_SUCCESS: {
+      const { userAuthorized, accountName } = action.payload;
       return {
         ...state,
-        userAuthorized: action.payload,
+        userAuthorized,
+        accountName,
         loginErrorMessage: '',
       };
+    }
     case REGISTER_SUCCESS:
       return {
         ...authInitialize,
