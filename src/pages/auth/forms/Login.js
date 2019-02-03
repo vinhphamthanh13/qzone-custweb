@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Button from '@material-ui/core/Button';
@@ -13,7 +12,6 @@ import CardHeader from 'components/Card/CardHeader';
 import CardBody from 'components/Card/CardBody';
 import TextField from '@material-ui/core/TextField';
 import CustomButton from 'components/CustomButton';
-import { login } from 'modules/auth.actions';
 import { noop } from 'utils/constants';
 import { resolveIconClassName } from './Register';
 
@@ -73,7 +71,7 @@ class Login extends React.Component {
         <CardBody>
           <form onSubmit={handleSubmit}>
             <TextField
-              id="loginemail"
+              id="login-email"
               name="email"
               type="email"
               error={touched.email ? errors.email : ''}
@@ -165,8 +163,4 @@ Login.defaultProps = {
   socialActions: { facebook: noop, google: noop, twitter: noop },
 };
 
-const mapDispatchToProps = dispatch => ({
-  loginAction: () => dispatch(login),
-});
-
-export default connect(null, mapDispatchToProps)(Login);
+export default Login;

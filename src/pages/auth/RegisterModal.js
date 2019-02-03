@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import GridContainer from 'components/Grid/GridContainer';
 import GridItem from 'components/Grid/GridItem';
 import { classesType } from 'types/global';
-import { register, resetErrorMessage } from 'modules/auth.actions';
+import { registerAWS, resetErrorMessage } from 'modules/auth.actions';
 import { regExPattern } from 'utils/constants';
 import UserForm from './forms/Register';
 import authStyles from './Auth.style';
@@ -48,7 +48,7 @@ const registerSchema = Yup.object().shape({
 
 class RegisterModal extends React.Component {
   state = {
-    error: {},
+    error: { open: false, errorMessage: '' },
   };
 
   componentWillReceiveProps(nextProps) {
@@ -143,24 +143,28 @@ class RegisterModal extends React.Component {
 RegisterModal.propTypes = {
   classes: classesType.isRequired,
   registerAction: PropTypes.func.isRequired,
-  isOpen: PropTypes.bool.isRequired,
+  isOpen: PropTypes.bool,
   onClose: PropTypes.func.isRequired,
   errorMessage: PropTypes.string,
+  registerPayload: PropTypes.objectOf(PropTypes.any),
   resetErrorMessageAction: PropTypes.func.isRequired,
 };
 
 RegisterModal.defaultProps = {
   errorMessage: '',
+  registerPayload: {},
+  isOpen: false,
 };
 
 const mapStateToProps = state => ({
-  errorMessage: state.auth.errorMessage,
+  errorMessage: state.auth.registerErrorMessage,
+  registerPayload: state.auth.registerPayload,
 });
 
 export default compose(
   withStyles(authStyles),
   connect(mapStateToProps, {
-    registerAction: register,
+    registerAction: registerAWS,
     resetErrorMessageAction: resetErrorMessage,
   }),
 )(RegisterModal);

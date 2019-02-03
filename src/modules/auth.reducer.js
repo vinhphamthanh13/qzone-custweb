@@ -27,7 +27,8 @@ const authInitialize = {
   userStatus: 'UNKNOWN',
   userSub: '',
   userAuthorized: false,
-  errorMessage: '',
+  registerErrorMessage: '',
+  loginErrorMessage: '',
 };
 
 const auth = (state = authInitialize, action) => {
@@ -36,21 +37,22 @@ const auth = (state = authInitialize, action) => {
       return {
         ...state,
         userAuthorized: action.payload,
-        errorMessage: '',
+        loginErrorMessage: '',
       };
     case REGISTER_SUCCESS:
       return {
         ...authInitialize,
         userStatus: 'CONFIRMED',
         userAuthorized: true,
-        payload: action.payload,
-        errorMessage: '',
+        registerPayload: action.payload,
+        registerErrorMessage: '',
       };
     case REGISTER_FAILURE:
-      return { ...authInitialize, errorMessage: action.payload.message };
+      return { ...authInitialize, registerErrorMessage: action.payload.message };
     case RESET_ERROR_MESSAGE:
-      return { ...state, errorMessage: '' };
+      return { ...state, registerErrorMessage: '', loginErrorMessage: '' };
     case LOGIN_FAILURE:
+      return { ...state, loginErrorMessage: action.payload };
     case LOGOUT:
     default:
       return authInitialize;

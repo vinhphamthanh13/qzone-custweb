@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -23,6 +25,7 @@ import ExitToApp from '@material-ui/icons/ExitToApp';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import { logout } from 'modules/auth.actions';
 import IconMenu from 'components/IconMenu';
 import logo from '../../../images/logo.png';
 import { history } from '../../../containers/App';
@@ -67,7 +70,9 @@ class PrimarySearchAppBar extends React.Component {
   };
 
   handleLogout = () => {
-    history.push('/access-deny');
+    history.push('/');
+    const { logoutAction } = this.props;
+    logoutAction();
     this.handleMenuClose();
   };
 
@@ -326,6 +331,12 @@ PrimarySearchAppBar.propTypes = {
   handleChangeCategory: PropTypes.func.isRequired,
   activeCategoryId: PropTypes.string.isRequired,
   userPosition: PropTypes.objectOf(PropTypes.number).isRequired,
+  logoutAction: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(PrimarySearchAppBar);
+export default compose(
+  connect(null, {
+    logoutAction: logout,
+  }),
+  withStyles(styles),
+)(PrimarySearchAppBar);

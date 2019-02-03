@@ -6,4 +6,9 @@ export const regExPattern = {
   password: /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})/g,
 };
 
+export const loginType = {
+  FB: 'FaceBook',
+  GP: 'Google',
+};
+
 export const noop = () => {};
