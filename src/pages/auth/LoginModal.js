@@ -107,6 +107,7 @@ class LoginModal extends React.Component {
             <Formik
               initialValues={loginInit}
               validationSchema={loginSchema}
+              enableReinitialize
               onSubmit={this.onLogin}
               render={props => (
                 <UserForm

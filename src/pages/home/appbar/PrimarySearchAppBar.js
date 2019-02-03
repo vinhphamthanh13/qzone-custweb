@@ -214,7 +214,7 @@ class PrimarySearchAppBar extends React.Component {
         { isAuthenticated
           && (
             [
-              <MenuItem>
+              <MenuItem key="app-bar-mail-icon-notification">
                 <IconButton color="inherit">
                   <Badge badgeContent={4} color="secondary">
                     <MailIcon />
@@ -222,7 +222,7 @@ class PrimarySearchAppBar extends React.Component {
                 </IconButton>
                 <p>Messages</p>
               </MenuItem>,
-              <MenuItem>
+              <MenuItem key="app-bar-notification-icon">
                 <IconButton color="inherit">
                   <Badge badgeContent={11} color="secondary">
                     <NotificationsIcon />

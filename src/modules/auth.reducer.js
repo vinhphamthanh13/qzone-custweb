@@ -31,7 +31,6 @@ const authInitialize = {
 };
 
 const auth = (state = authInitialize, action) => {
-  console.log('action.payload', action.payload);
   switch (action.type) {
     case LOGIN_SUCCESS: {
       const { userAuthorized, accountName } = action.payload;
@@ -42,14 +41,15 @@ const auth = (state = authInitialize, action) => {
         loginErrorMessage: '',
       };
     }
-    case REGISTER_SUCCESS:
+    case REGISTER_SUCCESS: {
+      const { status, data: { object, isAuthenticated } } = action.payload;
       return {
         ...authInitialize,
-        userStatus: 'CONFIRMED',
-        userAuthorized: true,
-        registerPayload: action.payload,
+        userAuthorized: isAuthenticated && status === 200,
+        registerPayload: object,
         registerErrorMessage: '',
       };
+    }
     case REGISTER_FAILURE:
       return { ...authInitialize, registerErrorMessage: action.payload.message };
     case RESET_ERROR_MESSAGE:

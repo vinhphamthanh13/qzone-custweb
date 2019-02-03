@@ -74,7 +74,7 @@ class Login extends React.Component {
               id="login-email"
               name="email"
               type="email"
-              error={touched.email ? errors.email : ''}
+              error={touched.email ? !!errors.email : false}
               classes={{ root: classes.marginLoose }}
               fullWidth
               label="Email"
@@ -90,10 +90,10 @@ class Login extends React.Component {
               onChange={event => this.onChange('email', event)}
             />
             <TextField
-              id="loginpassword"
+              id="login-password"
               name="password"
               type="password"
-              error={touched.password ? errors.password : ''}
+              error={touched.password ? !!errors.password : false}
               classes={{ root: classes.marginLoose }}
               fullWidth
               label="Password"

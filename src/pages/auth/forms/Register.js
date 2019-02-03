@@ -60,13 +60,11 @@ class Register extends React.Component {
               autoFocus
               classes={{ root: classes.marginLoose }}
               fullWidth
-              error={touched.givenName ? errors.givenName : ''}
+              error={touched.givenName ? !!errors.givenName : false}
               label="Given name"
               value={givenName}
-              formControlProps={{
-                className: classes.marginDense,
-              }}
               InputProps={{
+                className: classes.marginDense,
                 endAdornment: (
                   <InputAdornment position="end">
                     <InsertEmoticon
@@ -80,7 +78,7 @@ class Register extends React.Component {
             <TextField
               id="phone-number"
               name="telephone"
-              error={touched.telephone ? errors.telephone : ''}
+              error={touched.telephone ? !!errors.telephone : false}
               classes={{ root: classes.marginLoose }}
               fullWidth
               label="Phone number"
@@ -99,7 +97,7 @@ class Register extends React.Component {
               id="registeremail"
               name="email"
               type="email"
-              error={touched.email ? errors.email : ''}
+              error={touched.email ? !!errors.email : false}
               classes={{ root: classes.marginLoose }}
               fullWidth
               label="Email"
@@ -118,7 +116,7 @@ class Register extends React.Component {
               id="registerpassword"
               name="password"
               type="password"
-              error={touched.password ? errors.password : ''}
+              error={touched.password ? !!errors.password : false}
               classes={{ root: classes.marginLoose }}
               fullWidth
               label="Password"
@@ -137,7 +135,7 @@ class Register extends React.Component {
               id="confirm-password"
               name="confirmPassword"
               type="password"
-              error={touched.confirmPassword ? errors.confirmPassword : ''}
+              error={touched.confirmPassword ? !!errors.confirmPassword : false}
               classes={{ root: classes.marginLoose }}
               fullWidth
               label="Confirm password"

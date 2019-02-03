@@ -107,53 +107,37 @@ export function googleSignIn() {
   };
 }
 
-const registerUserSuccess = (payload, dispatch) => {
-  const {
-    givenName, telephone, email, address, userSub,
-  } = payload;
-  const registerUserData = {
-    address,
-    email,
-    givenName,
-    telephone,
-    userSub,
-    familyName: '',
-    userStatus: 'CONFIRMED',
-  };
-  dispatch(
-    () => registerCustomer(registerUserData)
-      .then(response => ({
-        type: REGISTER_SUCCESS,
-        payload: { ...payload, ...response },
-      }))
-      .catch(error => console.log('error from custweb register', error)),
-  );
-};
+const registerUserSuccess = payload => ({
+  type: REGISTER_SUCCESS,
+  payload,
+});
+
 
 const registerUserFailure = payload => ({
   type: REGISTER_FAILURE,
   payload,
 });
 
-export const registerAWS = values => (dispatch) => {
-  Auth.signUp({
-    username: values.email,
-    password: values.password,
-    attributes: {
-      email: values.email,
-    },
-    validationData: [],
-  })
-    .then((json) => {
-      if (json) {
-        registerUserSuccess({ ...values, ...json }, dispatch);
-      } else {
-        dispatch(registerUserFailure('Topology Error'));
-      }
-      return json;
+export function registerAWS(values) {
+  return (dispatch) => {
+    Auth.signUp({
+      username: values.email,
+      password: values.password,
+      attributes: {
+        email: values.email,
+      },
+      validationData: [],
     })
-    .catch(error => dispatch(registerUserFailure(error)));
-};
+      .then(async (json) => {
+        if (json) {
+          dispatch(await registerCustomer({ ...values, ...json }, registerUserSuccess));
+        } else {
+          dispatch(registerUserFailure('Topology Error'));
+        }
+      })
+      .catch(error => dispatch(registerUserFailure(error)));
+  };
+}
 
 export const resetErrorMessage = () => ({
   type: RESET_ERROR_MESSAGE,

@@ -124,6 +124,7 @@ class RegisterModal extends React.Component {
             <Formik
               initialValues={registerInit}
               validationSchema={registerSchema}
+              enableReinitialize
               onSubmit={this.registerHandle}
               render={props => (
                 <UserForm
