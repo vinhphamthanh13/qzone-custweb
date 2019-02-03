@@ -177,13 +177,10 @@ export class Home extends React.PureComponent {
   }
 }
 
-const mapStateToProps = (state) => {
-  console.log('state', state);
-  return ({
-    ...state.home,
-    userAuthorized: state.auth.userAuthorized,
-  });
-};
+const mapStateToProps = state => ({
+  ...state.home,
+  userAuthorized: state.auth.userAuthorized,
+});
 
 export default connect(
   mapStateToProps,

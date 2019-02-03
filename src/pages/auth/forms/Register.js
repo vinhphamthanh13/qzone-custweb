@@ -1,64 +1,51 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Button from '@material-ui/core/Button';
 import {
-  Call, Check, Email, InsertEmoticon, Lock as LockOutline,
+  Call,
+  Check, Email, InsertEmoticon, Lock as LockOutline,
 } from '@material-ui/icons';
 import { Checkbox, FormControlLabel } from '@material-ui/core';
 import Card from 'components/Card/Card';
 import CardHeader from 'components/Card/CardHeader';
 import CardBody from 'components/Card/CardBody';
 import TextField from '@material-ui/core/TextField';
-import { register } from 'modules/auth.actions';
+
+export const resolveIconClassName = (name, value, errors, touched, classes) => {
+  switch (value) {
+    case '':
+      return touched[name] ? classes.inputAdornmentIconError : classes.inputAdornmentIconDefault;
+    default:
+      return errors[name] ? classes.inputAdornmentIconError : classes.inputAdornmentIconSuccess;
+  }
+};
 
 class Register extends React.Component {
-  state = {
-    // nameState: '',
-    // phoneState: '',
-    // emailState: '',
-    // passwordState: '',
-    // confirmState: '',
-  };
-
   onChange = (name, event) => {
     event.persist();
     const { handleChange, setFieldTouched } = this.props;
+    const { target: { value } } = event;
+    if (!/^\S+$/.test(value) && value.length) return;
     handleChange(event);
     setFieldTouched(name, true, false);
   };
 
-  submitHandler = (event) => {
-    const {
-      // handleSubmit,
-      values,
-    } = this.props;
-    event.preventDefault();
-    alert('You are register a new account. It coming soon');
-    console.log('your form data', values);
-    // handleSubmit(values);
-  };
-
   render() {
     const {
-      classes,
-      policyAgreement, onClose,
-      values: {
+      classes, onClose, values: {
         givenName,
-        phoneNumber,
+        telephone,
         email,
         password,
         confirmPassword,
       },
-      errors,
-      touched,
-      isValid,
+      handleSubmit,
+      errors, touched, isValid,
     } = this.props;
-    const iconClassName = classes.inputAdornmentIconDefault;
     return (
-      <form onSubmit={this.submitHandler}>
+      <form onSubmit={handleSubmit}>
         <Card className={classes.registerCard}>
           <CardHeader
             className={`${classes.cardHeader} ${classes.textCenter}`}
@@ -71,17 +58,18 @@ class Register extends React.Component {
               id="given-name"
               name="givenName"
               autoFocus
+              classes={{ root: classes.marginLoose }}
               fullWidth
-              error={touched.givenName ? errors.givenName : ''}
+              error={touched.givenName ? !!errors.givenName : false}
               label="Given name"
               value={givenName}
-              formControlProps={{
-                className: classes.marginDense,
-              }}
               InputProps={{
+                className: classes.marginDense,
                 endAdornment: (
                   <InputAdornment position="end">
-                    <InsertEmoticon className={iconClassName} />
+                    <InsertEmoticon
+                      className={resolveIconClassName('givenName', givenName, errors, touched, classes)}
+                    />
                   </InputAdornment>
                 ),
               }}
@@ -89,27 +77,28 @@ class Register extends React.Component {
             />
             <TextField
               id="phone-number"
-              name="phoneNumber"
-              type="tel"
-              error={touched.phoneNumber ? errors.phoneNumber : ''}
+              name="telephone"
+              error={touched.telephone ? !!errors.telephone : false}
+              classes={{ root: classes.marginLoose }}
               fullWidth
               label="Phone number"
-              value={phoneNumber}
+              value={telephone}
               InputProps={{
                 className: classes.marginDense,
                 endAdornment: (
                   <InputAdornment position="end">
-                    <Call className={iconClassName} />
+                    <Call className={resolveIconClassName('telephone', telephone, errors, touched, classes)} />
                   </InputAdornment>
                 ),
               }}
-              onChange={event => this.onChange('phoneNumber', event)}
+              onChange={event => this.onChange('telephone', event)}
             />
             <TextField
-              id="email"
+              id="registeremail"
               name="email"
               type="email"
-              error={touched.email ? errors.email : ''}
+              error={touched.email ? !!errors.email : false}
+              classes={{ root: classes.marginLoose }}
               fullWidth
               label="Email"
               value={email}
@@ -117,17 +106,18 @@ class Register extends React.Component {
                 className: classes.marginDense,
                 endAdornment: (
                   <InputAdornment position="end">
-                    <Email className={iconClassName} />
+                    <Email className={resolveIconClassName('email', email, errors, touched, classes)} />
                   </InputAdornment>
                 ),
               }}
               onChange={event => this.onChange('email', event)}
             />
             <TextField
-              id="password"
+              id="registerpassword"
               name="password"
               type="password"
-              error={touched.password ? errors.password : ''}
+              error={touched.password ? !!errors.password : false}
+              classes={{ root: classes.marginLoose }}
               fullWidth
               label="Password"
               value={password}
@@ -135,7 +125,7 @@ class Register extends React.Component {
                 className: classes.marginDense,
                 endAdornment: (
                   <InputAdornment position="end">
-                    <LockOutline className={iconClassName} />
+                    <LockOutline className={resolveIconClassName('password', password, errors, touched, classes)} />
                   </InputAdornment>
                 ),
               }}
@@ -145,7 +135,8 @@ class Register extends React.Component {
               id="confirm-password"
               name="confirmPassword"
               type="password"
-              error={touched.confirmPassword ? errors.confirmPassword : ''}
+              error={touched.confirmPassword ? !!errors.confirmPassword : false}
+              classes={{ root: classes.marginLoose }}
               fullWidth
               label="Confirm password"
               value={confirmPassword}
@@ -153,7 +144,9 @@ class Register extends React.Component {
                 className: classes.marginDense,
                 endAdornment: (
                   <InputAdornment position="end">
-                    <LockOutline className={iconClassName} />
+                    <LockOutline
+                      className={resolveIconClassName('confirmPassword', confirmPassword, errors, touched, classes)}
+                    />
                   </InputAdornment>
                 ),
               }}
@@ -163,23 +156,16 @@ class Register extends React.Component {
               control={(
                 <Checkbox
                   tabIndex={-1}
-                  name="policy"
-                  onClick={event => this.onChange('policy', event)}
+                  name="policyAgreement"
+                  onClick={event => this.onChange('policyAgreement', event)}
                   checkedIcon={<Check className={classes.checkedIcon} />}
                   icon={<Check className={classes.uncheckedIcon} />}
+                  color="primary"
                   classes={{
-                    checked: classes.checked,
-                    root: classes.agreement,
+                    root: classes.policyAgreement,
                   }}
                 />
               )}
-              classes={{
-                label:
-                  classes.label
-                  + (policyAgreement === 'error'
-                    ? ` ${classes.labelError}`
-                    : ''),
-              }}
               label={(
                 <span>
                   I agree to the terms and conditions
@@ -215,9 +201,8 @@ class Register extends React.Component {
 
 Register.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
-  policyAgreement: PropTypes.string.isRequired,
   isValid: PropTypes.bool.isRequired,
-  // handleSubmit: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
   errors: PropTypes.objectOf(PropTypes.any).isRequired,
@@ -226,6 +211,4 @@ Register.propTypes = {
   values: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
-export default connect(null, {
-  registerAction: register,
-})(Register);
+export default Register;

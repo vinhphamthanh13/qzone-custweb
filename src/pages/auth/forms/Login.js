@@ -1,7 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { noop } from 'utils/constants';
 import Typography from '@material-ui/core/Typography';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Button from '@material-ui/core/Button';
@@ -12,135 +10,152 @@ import {
 import Card from 'components/Card/Card';
 import CardHeader from 'components/Card/CardHeader';
 import CardBody from 'components/Card/CardBody';
-import CustomInput from 'components/CustomInput';
+import TextField from '@material-ui/core/TextField';
 import CustomButton from 'components/CustomButton';
-import { login } from 'modules/auth.actions';
+import { noop } from 'utils/constants';
+import { resolveIconClassName } from './Register';
 
-const Login = (props) => {
-  const {
-    classes, iconClassName, onSubmitHandler, onChange,
-    isFormValid, onClose, socialActions,
-  } = props;
-  return (
-    <Card className={classes.registerCard}>
-      <CardHeader
-        className={`${classes.cardHeader} ${classes.textCenter} ${classes.loginPanel}`}
-        color="main"
-      >
-        <Typography variant="h5" color="inherit">Login</Typography>
-        <div className={classes.socialButtons}>
-          <CustomButton
-            justIcon
-            onClick={socialActions.twitter}
-            target="_blank"
-            className={classes.socialButton}
-            color="transparent"
-          >
-            <i className={`fab fa-twitter ${classes.socialIcon}`} />
-          </CustomButton>
-          <CustomButton
-            justIcon
-            onClick={socialActions.facebook}
-            target="_blank"
-            className={classes.socialButton}
-            color="transparent"
-          >
-            <i className={`fab fa-facebook ${classes.socialIcon}`} />
-          </CustomButton>
-          <CustomButton
-            justIcon
-            onClick={socialActions.google}
-            target="_blank"
-            className={classes.socialButton}
-            color="transparent"
-          >
-            <i className={`fab fa-google-plus-g ${classes.socialIcon}`} />
-          </CustomButton>
-        </div>
-      </CardHeader>
-      <CardBody>
-        <form onSubmit={onSubmitHandler}>
-          <CustomInput
-            labelText="Email"
-            id="loginemail"
-            formControlProps={{
-              fullWidth: true,
-            }}
-            inputProps={{
-              type: 'text',
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Email className={iconClassName} />
-                </InputAdornment>
-              ),
-            }}
-            onChange={event => onChange(event, 'giveName', 'name')}
-          />
-          <CustomInput
-            labelText="Password"
-            id="loginPassword"
-            formControlProps={{
-              fullWidth: true,
-              className: classes.marginDense,
-            }}
-            inputProps={{
-              type: 'password',
-              endAdornment: (
-                <InputAdornment position="end">
-                  <LockOutline
-                    className={iconClassName}
-                  />
-                </InputAdornment>
-              ),
-            }}
-            onChange={event => onChange(
-              event, 'loginPassword', 'password',
-            )}
-          />
-          <div className={classes.resetPassword}>
-            { /* eslint-disable-next-line */ }
-            <Link
-              component="button"
-              variant="body1"
-              rel="noopener"
-              onClick={noop}
+class Login extends React.Component {
+  onChange = (name, event) => {
+    event.persist();
+    const { handleChange, setFieldTouched } = this.props;
+    const { target: { value } } = event;
+    if (!/^\S+$/.test(value) && value.length) return;
+    handleChange(event);
+    setFieldTouched(name, true, false);
+  };
+
+  render() {
+    const {
+      classes, onClose, socialActions,
+      values: { email, password },
+      touched, errors, handleSubmit, isValid,
+    } = this.props;
+    return (
+      <Card className={classes.registerCard}>
+        <CardHeader
+          className={`${classes.cardHeader} ${classes.textCenter} ${classes.loginPanel}`}
+          color="main"
+        >
+          <Typography variant="h5" color="inherit">Login</Typography>
+          <div className={classes.socialButtons}>
+            <CustomButton
+              justIcon
+              onClick={socialActions.twitter}
+              target="_blank"
+              className={classes.socialButton}
+              color="transparent"
             >
-              Reset password?
-            </Link>
+              <i className={`fab fa-twitter ${classes.socialIcon}`} />
+            </CustomButton>
+            <CustomButton
+              justIcon
+              onClick={socialActions.facebook}
+              target="_blank"
+              className={classes.socialButton}
+              color="transparent"
+            >
+              <i className={`fab fa-facebook ${classes.socialIcon}`} />
+            </CustomButton>
+            <CustomButton
+              justIcon
+              onClick={socialActions.google}
+              target="_blank"
+              className={classes.socialButton}
+              color="transparent"
+            >
+              <i className={`fab fa-google-plus-g ${classes.socialIcon}`} />
+            </CustomButton>
           </div>
-          <div className={classes.center}>
-            <Button
-              variant="contained"
-              color="primary"
+        </CardHeader>
+        <CardBody>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              id="login-email"
+              name="email"
+              type="email"
+              error={touched.email ? !!errors.email : false}
+              classes={{ root: classes.marginLoose }}
               fullWidth
-              disabled={!isFormValid}
-              type="submit"
-            >
-              Submit
-            </Button>
-            <Button
-              variant="text"
-              color="primary"
-              disableRipple
-              className={classes.simpleButton}
-              onClick={onClose}
-            >
-              Close
-            </Button>
-          </div>
-        </form>
-      </CardBody>
-    </Card>
-  );
-};
+              label="Email"
+              value={email}
+              InputProps={{
+                className: classes.marginDense,
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Email className={resolveIconClassName('email', email, errors, touched, classes)} />
+                  </InputAdornment>
+                ),
+              }}
+              onChange={event => this.onChange('email', event)}
+            />
+            <TextField
+              id="login-password"
+              name="password"
+              type="password"
+              error={touched.password ? !!errors.password : false}
+              classes={{ root: classes.marginLoose }}
+              fullWidth
+              label="Password"
+              value={password}
+              InputProps={{
+                className: classes.marginDense,
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <LockOutline className={resolveIconClassName('password', password, errors, touched, classes)} />
+                  </InputAdornment>
+                ),
+              }}
+              onChange={event => this.onChange('password', event)}
+            />
+            <div className={classes.resetPassword}>
+              { /* eslint-disable-next-line */ }
+              <Link
+                component="button"
+                variant="body1"
+                rel="noopener"
+                onClick={noop}
+              >
+                Reset password?
+              </Link>
+            </div>
+            <div className={classes.center}>
+              <Button
+                variant="contained"
+                color="primary"
+                fullWidth
+                disabled={!isValid}
+                type="submit"
+              >
+                Submit
+              </Button>
+              <Button
+                variant="text"
+                color="primary"
+                disableRipple
+                className={classes.simpleButton}
+                onClick={onClose}
+              >
+                Close
+              </Button>
+            </div>
+          </form>
+        </CardBody>
+      </Card>
+    );
+  }
+}
 
 Login.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
-  iconClassName: PropTypes.string.isRequired,
-  isFormValid: PropTypes.bool.isRequired,
-  onSubmitHandler: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
+  values: PropTypes.objectOf(PropTypes.any).isRequired,
+  handleChange: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  setFieldTouched: PropTypes.func.isRequired,
+  errors: PropTypes.objectOf(PropTypes.any).isRequired,
+  touched: PropTypes.objectOf(PropTypes.any).isRequired,
   onClose: PropTypes.func.isRequired,
+  isValid: PropTypes.bool.isRequired,
   socialActions: PropTypes.objectOf(PropTypes.any),
 };
 
@@ -148,8 +163,4 @@ Login.defaultProps = {
   socialActions: { facebook: noop, google: noop, twitter: noop },
 };
 
-const mapDispatchToProps = dispatch => ({
-  loginAction: () => dispatch(login),
-});
-
-export default connect(null, mapDispatchToProps)(Login);
+export default Login;

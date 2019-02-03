@@ -7,7 +7,7 @@ import {
 } from 'components/material-dashboard-pro-react';
 import customCheckboxRadioSwitch from 'components/material-dashboard-pro-react/customCheckboxRadioSwitch';
 
-const registerPageStyle = theme => ({
+const authPageStyle = theme => ({
   ...customCheckboxRadioSwitch,
   textCenter,
   content: {
@@ -28,8 +28,9 @@ const registerPageStyle = theme => ({
   registerCard: {
     maxWidth: `${theme.spacing.unit * 50}px`,
   },
-  marginDense: {
-    margin: `${theme.spacing.unit * 2}px auto 0px`,
+  marginLoose: {
+    margin: `${theme.spacing.unit * 1.25}px auto 0px`,
+    color: 'red',
   },
   container: {
     ...container,
@@ -61,8 +62,8 @@ const registerPageStyle = theme => ({
   inputAdornmentIconError: {
     color: dangerColor,
   },
-  agreement: {
-    margin: `${theme.spacing.unit * 3}px 0`,
+  policyAgreement: {
+    margin: `${theme.spacing.unit * 1.5}px 0`,
   },
   simpleButton: {
     // color: mainColor,
@@ -88,13 +89,15 @@ const registerPageStyle = theme => ({
   socialIcon: {
     fontSize: `${theme.spacing.unit * 3}px !important`,
   },
-});
-
-export const styles = theme => ({
-  register: {
-    maxWidth: theme.spacing.unit * 30,
-    minWidth: theme.spacing.unit * 20,
+  errorModal: {
+    position: 'relative',
+    margin: 'auto',
+    width: 'auto',
+    padding: `${theme.spacing.unit * 2}px`,
+  },
+  root: {
+    display: 'flex',
   },
 });
 
-export default registerPageStyle;
+export default authPageStyle;
