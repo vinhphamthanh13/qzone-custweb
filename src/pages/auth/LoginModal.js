@@ -2,12 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import Modal from '@material-ui/core/Modal';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import GridContainer from 'components/Grid/GridContainer';
 import GridItem from 'components/Grid/GridItem';
+import ErrorModal from 'components/Modal/Error';
 import { classesType } from 'types/global';
 import {
   googleSignIn, facebookSignIn, standardSignIn, resetErrorMessage,
@@ -86,18 +84,12 @@ class LoginModal extends React.Component {
     const { error: { open, errorMessage } } = this.state;
     const errorModal = open
       ? (
-        <Modal
-          open
+        <ErrorModal
+          errorTitle="Login failed!"
+          errorMessage={errorMessage}
+          isOpen={!!errorMessage}
           onClose={this.closeErrorModal}
-          className={classes.root}
-        >
-          <Paper className={classes.errorModal}>
-            <Typography variant="h5" component="h3">
-              Register failed
-            </Typography>
-            <div>{errorMessage}</div>
-          </Paper>
-        </Modal>) : null;
+        />) : null;
 
     return (
       <div style={isOpen ? {} : { display: 'none' }} className={classes.content}>
