@@ -13,6 +13,7 @@ const style = theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 1000,
   },
   errorPaperRoot: {
     maxWidth: `${theme.spacing.unit * 5}%`,
@@ -25,6 +26,17 @@ const style = theme => ({
     paddingLeft: `${theme.spacing.unit * 2}px`,
   },
   // Loading
+  cover: {
+    position: 'fixed',
+    top: 0,
+    background: 'rgba(0,0,0, 0.7)',
+    width: '100%',
+    height: '100vh',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 3000,
+  },
 });
 
 export default style;
