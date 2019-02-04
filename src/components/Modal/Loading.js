@@ -20,12 +20,23 @@ Loading.propTypes = {
   loading: PropTypes.bool.isRequired,
   classes: PropTypes.objectOf(PropTypes.any).isRequired,
 };
+//
+// const mapStateToProps = state => ({
+//   loading: !!Object.keys(state).reduce(
+//     (acc, cur) => (acc || state[cur].isLoading), false,
+//   ),
+// });
 
-const mapStateToProps = state => ({
-  loading: !!Object.keys(state).reduce(
+const mapStateToProps = (state) => {
+  console.log(!!Object.keys(state).reduce(
     (acc, cur) => (acc || state[cur].isLoading), false,
-  ),
-});
+  ));
+  return ({
+    loading: !!Object.keys(state).reduce(
+      (acc, cur) => (acc || state[cur].isLoading), false,
+    ),
+  });
+};
 
 export default compose(
   connect(mapStateToProps),
