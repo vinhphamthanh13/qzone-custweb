@@ -23,7 +23,6 @@ export class Home extends React.PureComponent {
     getServicesByCategoryAction: PropTypes.func.isRequired,
     services: PropTypes.arrayOf(serviceType).isRequired,
     serviceCategories: serviceCategoriesType.isRequired,
-    isLoading: PropTypes.bool.isRequired,
     getServicesByNameAction: PropTypes.func.isRequired,
     userAuthorized: PropTypes.bool.isRequired,
   };
@@ -131,7 +130,7 @@ export class Home extends React.PureComponent {
 
   render() {
     const {
-      serviceCategories, isLoading, services, userAuthorized,
+      serviceCategories, services, userAuthorized,
     } = this.props;
     const {
       selectedCategoryId, subCategories, selectedSubCategoryId, searchText,
@@ -167,7 +166,6 @@ export class Home extends React.PureComponent {
               onChange={this.onChange}
               subCategories={subCategories}
               selectedSubCategoryId={selectedSubCategoryId}
-              isLoading={isLoading}
               onLoadServices={this.onLoadServices}
             />
           </Grid>

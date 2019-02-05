@@ -1,15 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import withStyles from '@material-ui/core/styles/withStyles';
-import Modal from '@material-ui/core/Modal';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
+import withStyles from '@material-ui/core/styles/withStyles';
 import GridContainer from 'components/Grid/GridContainer';
 import GridItem from 'components/Grid/GridItem';
+import ErrorModal from 'components/Modal/Error';
 import { classesType } from 'types/global';
 import { registerAWS, resetErrorMessage } from 'modules/auth.actions';
 import { regExPattern } from 'utils/constants';
@@ -104,18 +102,12 @@ class RegisterModal extends React.Component {
     const { error: { open, errorMessage } } = this.state;
     const errorModal = open
       ? (
-        <Modal
-          open
+        <ErrorModal
+          errorTitle="Register failed!"
+          errorMessage={errorMessage}
+          isOpen={!!errorMessage}
           onClose={this.closeErrorModal}
-          className={classes.root}
-        >
-          <Paper className={classes.errorModal}>
-            <Typography variant="h5" component="h3">
-              Register failed
-            </Typography>
-            <div>{errorMessage}</div>
-          </Paper>
-        </Modal>) : null;
+        />) : null;
     return (
       <div style={isOpen ? {} : { display: 'none' }} className={classes.content}>
         <GridContainer justify="center" alignItems="center">

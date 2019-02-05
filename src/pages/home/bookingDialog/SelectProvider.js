@@ -2,19 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  Grid, CircularProgress, Card, CardContent,
+  Grid, Card, CardContent,
   Typography, CardActionArea,
 } from '@material-ui/core';
 import { providerType, serviceType, bookingDetailType } from 'types/global';
 import CustomLink from 'components/CustomLink';
 import { getProvidersByService } from 'modules/home/bookingDialog/selectProvider.actions';
-import EmptyState from '../services/EmptyState';
+import EmptyItem from '../services/EmptyItem';
 import styles from './SelectProvider.module.scss';
 
 class SelectProvider extends React.PureComponent {
   componentDidMount = () => {
     this.props.getProvidersByServiceAction(this.props.initService.id);
-  }
+  };
 
   render() {
     const {
@@ -24,12 +24,8 @@ class SelectProvider extends React.PureComponent {
       <div className={styles.selectProvider}>
         <Grid container spacing={32} className={styles.cardsWrapper}>
           {
-            isLoading && providers.length === 0
-            && <CircularProgress size={50} classes={{ root: styles.loading }} />
-          }
-          {
             !isLoading && providers.length === 0
-            && <EmptyState message="No available providers" />
+            && <EmptyItem message="No available providers" />
           }
           {providers.map(provider => (
             <Grid item md={4} key={provider.id}>
