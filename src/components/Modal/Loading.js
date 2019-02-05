@@ -4,8 +4,10 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { PropagateLoader } from 'react-spinners';
+import findValueByKey from 'utils/findValueByKey';
 import { mainColor } from '../material-dashboard-pro-react';
 import ModalStyle from './ModalStyle';
+
 
 const Loading = (props) => {
   const { classes, loading } = props;
@@ -28,13 +30,17 @@ Loading.propTypes = {
 // });
 
 const mapStateToProps = (state) => {
-  console.log(!!Object.keys(state).reduce(
-    (acc, cur) => (acc || state[cur].isLoading), false,
-  ));
+  const loading = [];
+  console.log('this is state you finding', state);
+  findValueByKey(state, 'isLoading', loading);
+  console.log('loading', loading);
+  console.log('reducer', loading.reduce((final, current) => {
+    console.log('final', final);
+    console.log('current', current);
+    return (final || current);
+  }, false));
   return ({
-    loading: !!Object.keys(state).reduce(
-      (acc, cur) => (acc || state[cur].isLoading), false,
-    ),
+    loading: loading.reduce((final, current) => (final || current), false),
   });
 };
 

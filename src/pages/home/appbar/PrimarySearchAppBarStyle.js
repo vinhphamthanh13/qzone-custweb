@@ -1,6 +1,6 @@
 import { fade } from '@material-ui/core/styles/colorManipulator';
 
-export const styles = theme => ({
+const styles = theme => ({
   root: {
     width: '100%',
     zIndex: 30,
@@ -45,6 +45,7 @@ export const styles = theme => ({
     },
   },
   search: {
+    display: 'flex',
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.common.white, 0.15),
@@ -60,9 +61,8 @@ export const styles = theme => ({
     },
   },
   searchIcon: {
-    width: theme.spacing.unit * 9,
-    height: '100%',
-    position: 'absolute',
+    width: theme.spacing.unit * 7,
+    position: 'relative',
     pointerEvents: 'none',
     display: 'flex',
     alignItems: 'center',
@@ -73,12 +73,9 @@ export const styles = theme => ({
     width: '100%',
   },
   inputInput: {
-    paddingTop: theme.spacing.unit,
-    paddingRight: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 10,
-    transition: theme.transitions.create('width'),
     width: '100%',
+    padding: `${theme.spacing.unit}px ${theme.spacing.unit}px ${theme.spacing.unit}px 0px`,
+    transition: theme.transitions.create('width'),
     [theme.breakpoints.up('md')]: {
       width: 200,
     },
@@ -96,3 +93,5 @@ export const styles = theme => ({
     },
   },
 });
+
+export default styles;

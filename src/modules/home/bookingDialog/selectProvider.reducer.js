@@ -1,7 +1,7 @@
 import { SET_LOADING, SET_PROVIDERS } from './selectProvider.actions';
 
 const initialState = {
-  isLoading: true,
+  isLoading: false,
   providers: [],
 };
 

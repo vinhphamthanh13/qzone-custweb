@@ -25,6 +25,7 @@ export class Home extends React.PureComponent {
     serviceCategories: serviceCategoriesType.isRequired,
     getServicesByNameAction: PropTypes.func.isRequired,
     userAuthorized: PropTypes.bool.isRequired,
+    isLoading: PropTypes.bool.isRequired,
   };
 
   constructor(props) {
@@ -130,7 +131,7 @@ export class Home extends React.PureComponent {
 
   render() {
     const {
-      serviceCategories, services, userAuthorized,
+      serviceCategories, services, userAuthorized, isLoading,
     } = this.props;
     const {
       selectedCategoryId, subCategories, selectedSubCategoryId, searchText,
@@ -167,6 +168,7 @@ export class Home extends React.PureComponent {
               subCategories={subCategories}
               selectedSubCategoryId={selectedSubCategoryId}
               onLoadServices={this.onLoadServices}
+              isLoading={isLoading}
             />
           </Grid>
         </Grid>
@@ -178,6 +180,7 @@ export class Home extends React.PureComponent {
 const mapStateToProps = state => ({
   ...state.home,
   userAuthorized: state.auth.userAuthorized,
+  isLoading: state.home.isLoading,
 });
 
 export default connect(

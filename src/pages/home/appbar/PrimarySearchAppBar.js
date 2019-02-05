@@ -2,35 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
-import Avatar from '@material-ui/core/Avatar';
-import Tooltip from '@material-ui/core/Tooltip';
-import SearchIcon from '@material-ui/icons/Search';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import InsertEmoticon from '@material-ui/icons/InsertEmoticon';
-import HowToReg from '@material-ui/icons/HowToReg';
-import { Book as BookIcon } from '@material-ui/icons';
-import NearMe from '@material-ui/icons/NearMe';
-import AssignmentInd from '@material-ui/icons/AssignmentInd';
-import PersonAdd from '@material-ui/icons/PersonAdd';
-import ExitToApp from '@material-ui/icons/ExitToApp';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
+import {
+  AppBar, Toolbar, IconButton, InputBase, Badge, MenuItem, Menu, Button, Avatar, Tooltip,
+} from '@material-ui/core';
+import {
+  Menu as MenuIcon, Search as SearchIcon, AccountCircle, InsertEmoticon, HowToReg, Book as BookIcon,
+  NearMe, AssignmentInd, PersonAdd, ExitToApp, Mail as MailIcon, Notifications as NotificationsIcon,
+  MoreVert as MoreIcon, Details,
+} from '@material-ui/icons';
 import { logout } from 'modules/auth.actions';
 import IconMenu from 'components/IconMenu';
 import logo from '../../../images/logo.png';
 import { history } from '../../../containers/App';
-import { styles } from './PrimarySearchAppBar.styles';
+import styles from './PrimarySearchAppBarStyle';
 
 class PrimarySearchAppBar extends React.Component {
   state = {
@@ -44,7 +29,7 @@ class PrimarySearchAppBar extends React.Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize');
+    window.removeEventListener('resize', this.closeAllMenu);
   }
 
   closeAllMenu = () => {
@@ -118,7 +103,7 @@ class PrimarySearchAppBar extends React.Component {
           onClick={evt => this.handleChangeCategory(evt, category.id)}
           selected={activeCategoryId === category.id}
         >
-          {category.name}
+          <Details className={classes.menuIcon} /> {category.name}
         </MenuItem>
       ),
     ) : null;
