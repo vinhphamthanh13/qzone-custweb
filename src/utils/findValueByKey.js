@@ -2,7 +2,6 @@ export default function findValueByKey(object, key, result) {
   if (object) {
     // eslint-disable-next-line
     if (object.hasOwnProperty(key)) {
-      console.log('FOUND==== ', key);
       result.push(object[key]);
     }
     for (let i = 0; i < Object.keys(object).length; i += 1) {
