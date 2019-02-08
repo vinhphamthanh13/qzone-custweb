@@ -69,7 +69,9 @@ export class Home extends React.PureComponent {
   };
 
   onLoadServices = () => {
-    this.props.getServicesByNameAction(this.state.searchText);
+    const { getServicesByNameAction } = this.props;
+    const { searchText } = this.state;
+    getServicesByNameAction(searchText);
   };
 
   onSearch = (event) => {
