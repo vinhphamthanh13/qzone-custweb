@@ -94,6 +94,7 @@ class BookingDialog extends PureComponent {
         open={initService !== undefined}
         onClose={handleClose}
         TransitionComponent={Transition}
+        className={classes.diagRoot}
       >
         <AppBar position="relative">
           <Toolbar>

@@ -10,6 +10,9 @@ const style = (theme) => {
       background: theme.palette.primary.light,
       margin: theme.spacing.unit * 2,
     },
+    diagRoot: {
+      padding: '0px !important',
+    },
   });
 };
 
