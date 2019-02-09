@@ -5,19 +5,19 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Avatar from '@material-ui/core/Avatar';
+import { noop } from 'utils/constants';
 import logo from 'images/logo.png';
 import errorStyle from './ModalStyle';
 
 const Error = (props) => {
   const {
-    classes, errorMessage, errorTitle, isOpen,
+    classes, errorMessage, errorTitle, isOpen, onClose,
   } = props;
   return (
     <Modal
       open={isOpen}
-      onClose={() => !isOpen}
+      onClose={onClose}
       className={classes.errorRoot}
-      {...props}
     >
       <Paper className={classes.errorPaperRoot}>
         <div className={classes.logo}>
@@ -38,6 +38,11 @@ Error.propTypes = {
   errorTitle: PropTypes.string.isRequired,
   classes: PropTypes.objectOf(PropTypes.any).isRequired,
   isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func,
+};
+
+Error.defaultProps = {
+  onClose: noop,
 };
 
 export default withStyles(errorStyle)(Error);

@@ -93,7 +93,7 @@ export const successColor = '#4caf50';
 export const infoColor = '#00acc1';
 export const roseColor = '#e91e63';
 export const grayColor = '#999999';
-export const lightGrayColor = '#ccc';
+export const lightGrayColor = '#cccccc';
 export const mainColor = '#3f51b5';
 
 export const primaryBoxShadow = {

@@ -9,6 +9,12 @@ export const LOGOUT = 'LOGOUT';
 export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 export const REGISTER_FAILURE = 'REGISTER_FAILURE';
 export const RESET_ERROR_MESSAGE = 'RESET_ERROR_MESSAGE';
+export const SET_LOADING = 'AUTH.SET_LOADING';
+
+const setLoading = payload => ({
+  type: SET_LOADING,
+  payload,
+});
 
 const loginError = error => ({
   type: LOGIN_FAILURE,
@@ -46,12 +52,15 @@ const loginSuccess = (payload, name) => {
 export const standardSignIn = (values) => {
   const { email, password } = values;
   return (dispatch) => {
+    dispatch(setLoading(true));
     loginCustomer({ email, password })
       .then((response) => {
         dispatch(loginSuccess(response, ''));
+        dispatch(setLoading(false));
       })
       .catch((error) => {
         dispatch(loginError(error));
+        dispatch(setLoading(false));
       });
   };
 };
@@ -76,6 +85,7 @@ export function facebookSignIn() {
 
 export function googleSignIn() {
   return (dispatch) => {
+    dispatch(setLoading(true));
     window.gapi.load('auth2', async () => {
       try {
         await window.gapi.auth2.init({
@@ -100,8 +110,10 @@ export function googleSignIn() {
           handleRequest(getCustomerByEmail, { email: user.email }),
         ]);
         dispatch(loginSuccess({ ...awsCredentials, ...customer }, loginType.GP));
+        dispatch(setLoading(false));
       } catch (error) {
         dispatch(loginError(error));
+        dispatch(setLoading(false));
       }
     });
   };
@@ -120,6 +132,7 @@ const registerUserFailure = payload => ({
 
 export function registerAWS(values) {
   return (dispatch) => {
+    dispatch(setLoading(true));
     Auth.signUp({
       username: values.email,
       password: values.password,
@@ -131,11 +144,16 @@ export function registerAWS(values) {
       .then(async (json) => {
         if (json) {
           dispatch(await registerCustomer({ ...values, ...json }, registerUserSuccess));
+          dispatch(setLoading(false));
         } else {
           dispatch(registerUserFailure('Topology Error'));
+          dispatch(setLoading(false));
         }
       })
-      .catch(error => dispatch(registerUserFailure(error)));
+      .catch((error) => {
+        dispatch(registerUserFailure(error));
+        dispatch(setLoading(false));
+      });
   };
 }
 

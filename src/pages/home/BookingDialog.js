@@ -2,20 +2,23 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import {
   Slide, Dialog, AppBar, Toolbar, IconButton,
-  Tabs, Tab, Paper,
+  Tabs, Tab, Paper, Avatar, Typography,
 } from '@material-ui/core';
+import withStyles from '@material-ui/core/styles/withStyles';
 import CloseIcon from '@material-ui/icons/Close';
+import logo from 'images/logo.png';
 import { serviceType } from 'types/global';
 import SelectProvider from './bookingDialog/SelectProvider';
 import SelectTime from './bookingDialog/SelectTime';
 import BookingDetail from './bookingDialog/BookingDetail';
+import BookingStyle from './BookingDialogStyle';
 
 function Transition(props) {
-  return <Slide direction="up" {...props} />;
+  return <Slide direction="down" {...props} />;
 }
 
 /* eslint-disable react/no-unused-state */
-export default class BookingDialog extends PureComponent {
+class BookingDialog extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -39,7 +42,7 @@ export default class BookingDialog extends PureComponent {
 
   onStepChange = (event, step) => {
     this.setState({ step });
-  }
+  };
 
   onChangeBookingDetail = (value, key) => {
     const { bookingDetail } = this.state;
@@ -74,10 +77,11 @@ export default class BookingDialog extends PureComponent {
         ],
       }));
     }
-  }
+  };
 
   render() {
-    const { initService, handleClose } = this.props;
+    const { initService, handleClose, classes } = this.props;
+    console.log('initService', initService);
     const { step, bookingDetail, bookingSteps } = this.state;
     const StepComponent = this.bookingStepsComponents[step];
     const stepCompProps = step === 'time'
@@ -90,9 +94,12 @@ export default class BookingDialog extends PureComponent {
         open={initService !== undefined}
         onClose={handleClose}
         TransitionComponent={Transition}
+        className={classes.diagRoot}
       >
         <AppBar position="relative">
           <Toolbar>
+            <Avatar src={logo} alt="Quezone Logo" className={classes.avatar} />
+            {initService && <Typography variant="subtitle1" color="inherit">{initService.name}</Typography>}
             <div className="grow" />
             <IconButton color="inherit" onClick={handleClose} aria-label="Close">
               <CloseIcon />
@@ -129,8 +136,11 @@ export default class BookingDialog extends PureComponent {
 BookingDialog.propTypes = {
   initService: serviceType,
   handleClose: PropTypes.func.isRequired,
+  classes: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 BookingDialog.defaultProps = {
   initService: undefined,
 };
+
+export default withStyles(BookingStyle)(BookingDialog);

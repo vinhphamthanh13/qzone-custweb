@@ -35,7 +35,7 @@ const style = theme => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 1000,
+    zIndex: 100000,
   },
 });
 

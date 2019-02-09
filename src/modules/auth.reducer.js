@@ -5,6 +5,7 @@ import {
   REGISTER_FAILURE,
   LOGOUT,
   RESET_ERROR_MESSAGE,
+  SET_LOADING,
 } from './auth.actions';
 
 const authInitialize = {
@@ -28,6 +29,7 @@ const authInitialize = {
   userAuthorized: false,
   registerErrorMessage: '',
   loginErrorMessage: '',
+  isLoading: false,
 };
 
 const auth = (state = authInitialize, action) => {
@@ -56,6 +58,9 @@ const auth = (state = authInitialize, action) => {
       return { ...state, registerErrorMessage: '', loginErrorMessage: '' };
     case LOGIN_FAILURE:
       return { ...state, loginErrorMessage: action.payload };
+    case SET_LOADING: {
+      return { ...state, isLoading: action.payload };
+    }
     case LOGOUT:
     default:
       return authInitialize;

@@ -16,7 +16,8 @@ export default class ServiceCard extends PureComponent {
   };
 
   onSelectService = () => {
-    this.props.onChange(this.props.service, 'selectedService');
+    const { onChange, service } = this.props;
+    onChange(service, 'selectedService');
   };
 
   render() {

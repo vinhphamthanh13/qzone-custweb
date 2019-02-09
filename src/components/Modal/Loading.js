@@ -4,14 +4,16 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { PropagateLoader } from 'react-spinners';
-import { mainColor } from '../material-dashboard-pro-react';
+import findValueByKey from 'utils/findValueByKey';
+import { lightGrayColor } from '../material-dashboard-pro-react';
 import ModalStyle from './ModalStyle';
+
 
 const Loading = (props) => {
   const { classes, loading } = props;
   return loading ? (
     <div className={classes.cover}>
-      <PropagateLoader color={mainColor} size={40} />
+      <PropagateLoader color={lightGrayColor} size={38} />
     </div>
   ) : null;
 };
@@ -20,21 +22,12 @@ Loading.propTypes = {
   loading: PropTypes.bool.isRequired,
   classes: PropTypes.objectOf(PropTypes.any).isRequired,
 };
-//
-// const mapStateToProps = state => ({
-//   loading: !!Object.keys(state).reduce(
-//     (acc, cur) => (acc || state[cur].isLoading), false,
-//   ),
-// });
 
 const mapStateToProps = (state) => {
-  console.log(!!Object.keys(state).reduce(
-    (acc, cur) => (acc || state[cur].isLoading), false,
-  ));
+  const loading = [];
+  findValueByKey(state, 'isLoading', loading);
   return ({
-    loading: !!Object.keys(state).reduce(
-      (acc, cur) => (acc || state[cur].isLoading), false,
-    ),
+    loading: loading.reduce((final, current) => (final || current), false),
   });
 };
 
