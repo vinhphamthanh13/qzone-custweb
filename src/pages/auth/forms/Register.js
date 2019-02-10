@@ -9,7 +9,7 @@ import {
 import Card from 'components/Card/Card';
 import CardHeader from 'components/Card/CardHeader';
 import CardBody from 'components/Card/CardBody';
-import { registerPopoverPosition } from 'utils/constants';
+// import { registerPopoverPosition } from 'utils/constants';
 
 export const resolveIconClassName = (name, value, errors, touched, classes) => {
   switch (value) {
@@ -141,19 +141,18 @@ class Register extends React.Component {
                     { errors.password
                       && (
                         <>
-                          <ContactSupportRounded
+                          <Button
                             className={classes.passwordHint}
                             aria-owns={openPopover ? 'mouse-over-password-hint' : undefined}
                             aria-haspopup="true"
-                            onMouseEnter={this.handlePopoverOpen}
-                            onMouseLeave={this.handlePopoverClose}
-                          />
+                            onClick={this.handlePopoverOpen}
+                          >
+                            <ContactSupportRounded />
+                          </Button>
                           <Popover
                             id="mouse-over-password-hint"
                             open={openPopover}
                             anchorEl={anchorEl}
-                            anchorOrigin={registerPopoverPosition.anchorOrigin}
-                            transformOrigin={registerPopoverPosition.transformOrigin}
                             onClose={this.handlePopoverClose}
                             disableAutoFocus
                           >

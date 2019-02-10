@@ -108,7 +108,7 @@ class RegisterModal extends React.Component {
           onClose={this.closeErrorModal}
         />) : null;
     return (
-      <Modal open={isOpen} className={classes.content}>
+      <Modal open={true || isOpen} className={classes.content}>
         <>
           {errorModal}
           <Formik

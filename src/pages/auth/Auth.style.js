@@ -18,10 +18,6 @@ const authPageStyle = (theme) => {
       alignItems: 'center',
       justifyContent: 'center',
     },
-    register: {
-      display: 'flex',
-      justifyContent: 'center',
-    },
     registerCard: {
       maxWidth: theme.spacing.unit * 50,
       minWidth: theme.spacing.unit * 41,
@@ -42,10 +38,6 @@ const authPageStyle = (theme) => {
     },
     checkboxLabelControl: {
       margin: '0',
-    },
-    checkboxLabel: {
-      marginLeft: '6px',
-      color: 'rgba(0, 0, 0, 0.26)',
     },
     inputAdornment: {
       marginRight: '18px',
@@ -98,6 +90,7 @@ const authPageStyle = (theme) => {
     },
     passwordHint: {
       color: infoColor,
+      minWidth: 'unset',
       // pointerEvents: 'none',
     },
     passwordHintPopover: {
