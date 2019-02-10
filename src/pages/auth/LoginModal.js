@@ -92,25 +92,27 @@ class LoginModal extends React.Component {
         />) : null;
 
     return (
-      <Modal open={isOpen} className={classes.content}>
-        <>
-          {errorModal}
-          <Formik
-            initialValues={loginInit}
-            validationSchema={loginSchema}
-            enableReinitialize
-            onSubmit={this.onLogin}
-            render={props => (
-              <UserForm
-                {...props}
-                classes={classes}
-                onClose={this.onClose}
-                socialActions={socialActions}
-              />
-            )}
-          />
-        </>
-      </Modal>
+      <>
+        {errorModal}
+        <Modal open={isOpen} className={classes.content}>
+          <>
+            <Formik
+              initialValues={loginInit}
+              validationSchema={loginSchema}
+              enableReinitialize
+              onSubmit={this.onLogin}
+              render={props => (
+                <UserForm
+                  {...props}
+                  classes={classes}
+                  onClose={this.onClose}
+                  socialActions={socialActions}
+                />
+              )}
+            />
+          </>
+        </Modal>
+      </>
     );
   }
 }

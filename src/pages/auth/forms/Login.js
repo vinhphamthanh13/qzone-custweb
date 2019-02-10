@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Typography, InputAdornment, Button, Link, TextField,
+  Typography, InputAdornment, Button, TextField,
 } from '@material-ui/core';
 import {
   Email, Lock as LockOutline, LockOpen,
@@ -118,15 +118,15 @@ class Login extends React.Component {
               onChange={event => this.onChange('password', event)}
             />
             <div className={classes.resetPassword}>
-              { /* eslint-disable-next-line */ }
-              <Link
-                component="button"
-                variant="body1"
-                rel="noopener"
+              <Button
+                variant="text"
+                color="primary"
+                disableRipple
+                className={classes.simpleButton}
                 onClick={noop}
               >
                 Reset password?
-              </Link>
+              </Button>
             </div>
             <div className={classes.center}>
               <Button

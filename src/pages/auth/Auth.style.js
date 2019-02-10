@@ -56,16 +56,13 @@ const authPageStyle = (theme) => {
       margin: `${theme.spacing.unit * 1.5}px 0`,
     },
     simpleButton: {
-      // color: mainColor,
       '&:hover': {
         background: 'transparent',
       },
     },
     resetPassword: {
-      color: mainColor,
-      fontWeight: 'bold',
-      margin: `${theme.spacing.unit}px 0 ${theme.spacing.unit * 3}px`,
       textAlign: 'right',
+      paddingBottom: theme.spacing.unit * 2,
     },
     loginPanel: {
       padding: `${theme.spacing.unit * 2}px 0 ${theme.spacing.unit * 8}px !important`,

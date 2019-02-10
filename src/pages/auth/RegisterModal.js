@@ -108,24 +108,26 @@ class RegisterModal extends React.Component {
           onClose={this.closeErrorModal}
         />) : null;
     return (
-      <Modal open={isOpen} className={classes.content}>
-        <>
-          {errorModal}
-          <Formik
-            initialValues={registerInit}
-            validationSchema={registerSchema}
-            enableReinitialize
-            onSubmit={this.registerHandle}
-            render={props => (
-              <UserForm
-                {...props}
-                classes={classes}
-                onClose={this.onClose}
-              />
-            )}
-          />
-        </>
-      </Modal>
+      <>
+        {errorModal}
+        <Modal open={isOpen} className={classes.content}>
+          <>
+            <Formik
+              initialValues={registerInit}
+              validationSchema={registerSchema}
+              enableReinitialize
+              onSubmit={this.registerHandle}
+              render={props => (
+                <UserForm
+                  {...props}
+                  classes={classes}
+                  onClose={this.onClose}
+                />
+              )}
+            />
+          </>
+        </Modal>
+      </>
     );
   }
 }
