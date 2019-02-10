@@ -4,6 +4,7 @@ import {
   mainColor,
   grayColor,
   dangerColor,
+  infoColor,
 } from 'components/material-dashboard-pro-react';
 import customCheckboxRadioSwitch from 'components/material-dashboard-pro-react/customCheckboxRadioSwitch';
 
@@ -13,22 +14,17 @@ const authPageStyle = (theme) => {
     ...customCheckboxRadioSwitch,
     textCenter,
     content: {
-      position: 'fixed',
-      bottom: 0,
-      top: 0,
-      left: 0,
-      right: 0,
       display: 'flex',
       alignItems: 'center',
-      background: 'rgba(0, 0, 0, 0.8)',
-      zIndex: theme.zIndex.tooltip,
+      justifyContent: 'center',
     },
     register: {
       display: 'flex',
       justifyContent: 'center',
     },
     registerCard: {
-      maxWidth: `${theme.spacing.unit * 50}px`,
+      maxWidth: theme.spacing.unit * 50,
+      minWidth: theme.spacing.unit * 41,
     },
     marginLoose: {
       margin: `${theme.spacing.unit * 1.25}px auto 0px`,
@@ -99,6 +95,13 @@ const authPageStyle = (theme) => {
     },
     root: {
       display: 'flex',
+    },
+    passwordHint: {
+      color: infoColor,
+      // pointerEvents: 'none',
+    },
+    passwordHintPopover: {
+      zIndex: 1600,
     },
   });
 };

@@ -12,3 +12,14 @@ export const loginType = {
 };
 
 export const noop = () => {};
+
+export const registerPopoverPosition = {
+  anchorOrigin: {
+    vertical: 'bottom',
+    horizontal: 'left',
+  },
+  transformOrigin: {
+    vertical: 'top',
+    horizontal: 'left',
+  },
+};

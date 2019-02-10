@@ -2,9 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { Modal } from '@material-ui/core';
 import withStyles from '@material-ui/core/styles/withStyles';
-import GridContainer from 'components/Grid/GridContainer';
-import GridItem from 'components/Grid/GridItem';
 import ErrorModal from 'components/Modal/Error';
 import { classesType } from 'types/global';
 import {
@@ -92,27 +91,25 @@ class LoginModal extends React.Component {
         />) : null;
 
     return (
-      <div style={isOpen ? {} : { display: 'none' }} className={classes.content}>
-        <GridContainer justify="center" alignItems="center">
-          <GridItem xs={12} sm={6} md={4} className={classes.register}>
-            {errorModal}
-            <Formik
-              initialValues={loginInit}
-              validationSchema={loginSchema}
-              enableReinitialize
-              onSubmit={this.onLogin}
-              render={props => (
-                <UserForm
-                  {...props}
-                  classes={classes}
-                  onClose={this.onClose}
-                  socialActions={socialActions}
-                />
-              )}
-            />
-          </GridItem>
-        </GridContainer>
-      </div>
+      <Modal open={isOpen} className={classes.content}>
+        <>
+          {errorModal}
+          <Formik
+            initialValues={loginInit}
+            validationSchema={loginSchema}
+            enableReinitialize
+            onSubmit={this.onLogin}
+            render={props => (
+              <UserForm
+                {...props}
+                classes={classes}
+                onClose={this.onClose}
+                socialActions={socialActions}
+              />
+            )}
+          />
+        </>
+      </Modal>
     );
   }
 }

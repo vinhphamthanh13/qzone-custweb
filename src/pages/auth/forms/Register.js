@@ -1,17 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Typography from '@material-ui/core/Typography';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Button from '@material-ui/core/Button';
 import {
-  Call,
-  Check, Email, InsertEmoticon, Lock as LockOutline,
+  Typography, InputAdornment, Button, Checkbox, FormControlLabel, TextField, Popover,
+} from '@material-ui/core';
+import {
+  Call, Check, Email, InsertEmoticon, Lock as LockOutline, ContactSupportRounded,
 } from '@material-ui/icons';
-import { Checkbox, FormControlLabel } from '@material-ui/core';
 import Card from 'components/Card/Card';
 import CardHeader from 'components/Card/CardHeader';
 import CardBody from 'components/Card/CardBody';
-import TextField from '@material-ui/core/TextField';
+import { registerPopoverPosition } from 'utils/constants';
 
 export const resolveIconClassName = (name, value, errors, touched, classes) => {
   switch (value) {
@@ -23,6 +21,18 @@ export const resolveIconClassName = (name, value, errors, touched, classes) => {
 };
 
 class Register extends React.Component {
+  state = {
+    anchorEl: null,
+  };
+
+  handlePopoverOpen = (event) => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handlePopoverClose = () => {
+    this.setState({ anchorEl: null });
+  };
+
   onChange = (name, event) => {
     event.persist();
     const { handleChange, setFieldTouched } = this.props;
@@ -44,6 +54,9 @@ class Register extends React.Component {
       handleSubmit,
       errors, touched, isValid,
     } = this.props;
+    const { anchorEl } = this.state;
+    const openPopover = !!anchorEl;
+
     return (
       <form onSubmit={handleSubmit}>
         <Card className={classes.registerCard}>
@@ -94,7 +107,7 @@ class Register extends React.Component {
               onChange={event => this.onChange('telephone', event)}
             />
             <TextField
-              id="registeremail"
+              id="register-email"
               name="email"
               type="email"
               error={touched.email ? !!errors.email : false}
@@ -113,7 +126,7 @@ class Register extends React.Component {
               onChange={event => this.onChange('email', event)}
             />
             <TextField
-              id="registerpassword"
+              id="register-password"
               name="password"
               type="password"
               error={touched.password ? !!errors.password : false}
@@ -125,6 +138,29 @@ class Register extends React.Component {
                 className: classes.marginDense,
                 endAdornment: (
                   <InputAdornment position="end">
+                    { errors.password
+                      && (
+                        <>
+                          <ContactSupportRounded
+                            className={classes.passwordHint}
+                            aria-owns={openPopover ? 'mouse-over-password-hint' : undefined}
+                            aria-haspopup="true"
+                            onMouseEnter={this.handlePopoverOpen}
+                            onMouseLeave={this.handlePopoverClose}
+                          />
+                          <Popover
+                            id="mouse-over-password-hint"
+                            open={openPopover}
+                            anchorEl={anchorEl}
+                            anchorOrigin={registerPopoverPosition.anchorOrigin}
+                            transformOrigin={registerPopoverPosition.transformOrigin}
+                            onClose={this.handlePopoverClose}
+                            disableAutoFocus
+                          >
+                            rule for register
+                          </Popover>
+                        </>
+                      )}
                     <LockOutline className={resolveIconClassName('password', password, errors, touched, classes)} />
                   </InputAdornment>
                 ),

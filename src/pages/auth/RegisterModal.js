@@ -4,9 +4,8 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { Modal } from '@material-ui/core';
 import withStyles from '@material-ui/core/styles/withStyles';
-import GridContainer from 'components/Grid/GridContainer';
-import GridItem from 'components/Grid/GridItem';
 import ErrorModal from 'components/Modal/Error';
 import { classesType } from 'types/global';
 import { registerAWS, resetErrorMessage } from 'modules/auth.actions';
@@ -109,26 +108,24 @@ class RegisterModal extends React.Component {
           onClose={this.closeErrorModal}
         />) : null;
     return (
-      <div style={isOpen ? {} : { display: 'none' }} className={classes.content}>
-        <GridContainer justify="center" alignItems="center">
-          <GridItem xs={12} sm={6} md={4} className={classes.register}>
-            {errorModal}
-            <Formik
-              initialValues={registerInit}
-              validationSchema={registerSchema}
-              enableReinitialize
-              onSubmit={this.registerHandle}
-              render={props => (
-                <UserForm
-                  {...props}
-                  classes={classes}
-                  onClose={this.onClose}
-                />
-              )}
-            />
-          </GridItem>
-        </GridContainer>
-      </div>
+      <Modal open={isOpen} className={classes.content}>
+        <>
+          {errorModal}
+          <Formik
+            initialValues={registerInit}
+            validationSchema={registerSchema}
+            enableReinitialize
+            onSubmit={this.registerHandle}
+            render={props => (
+              <UserForm
+                {...props}
+                classes={classes}
+                onClose={this.onClose}
+              />
+            )}
+          />
+        </>
+      </Modal>
     );
   }
 }
