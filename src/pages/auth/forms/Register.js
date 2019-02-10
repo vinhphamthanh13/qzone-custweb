@@ -4,12 +4,12 @@ import {
   Typography, InputAdornment, Button, Checkbox, FormControlLabel, TextField, Popover,
 } from '@material-ui/core';
 import {
-  Call, Check, Email, InsertEmoticon, Lock as LockOutline, ContactSupportRounded,
+  Call, Check, Email, InsertEmoticon, Lock as LockOutline, ContactSupportRounded, LockOpen,
 } from '@material-ui/icons';
 import Card from 'components/Card/Card';
 import CardHeader from 'components/Card/CardHeader';
 import CardBody from 'components/Card/CardBody';
-// import { registerPopoverPosition } from 'utils/constants';
+import { registerPopoverPosition, registerPasswordConvention } from 'utils/constants';
 
 export const resolveIconClassName = (name, value, errors, touched, classes) => {
   switch (value) {
@@ -54,6 +54,14 @@ class Register extends React.Component {
       handleSubmit,
       errors, touched, isValid,
     } = this.props;
+    const passwordMatched = errors.confirmPassword && touched.confirmPassword
+      ? (
+        <LockOpen
+          className={resolveIconClassName('confirmPassword', confirmPassword, errors, touched, classes)}
+        />) : (
+          <LockOutline
+            className={resolveIconClassName('confirmPassword', confirmPassword, errors, touched, classes)}
+          />);
     const { anchorEl } = this.state;
     const openPopover = !!anchorEl;
 
@@ -138,7 +146,7 @@ class Register extends React.Component {
                 className: classes.marginDense,
                 endAdornment: (
                   <InputAdornment position="end">
-                    { errors.password
+                    { errors.password && touched.password
                       && (
                         <>
                           <Button
@@ -154,9 +162,20 @@ class Register extends React.Component {
                             open={openPopover}
                             anchorEl={anchorEl}
                             onClose={this.handlePopoverClose}
+                            anchorOrigin={registerPopoverPosition.anchorOrigin}
+                            transformOrigin={registerPopoverPosition.transformOrigin}
                             disableAutoFocus
                           >
-                            rule for register
+                            <ul className={classes.passwordHintConventions}>
+                              <Typography>Password must include at least:</Typography>
+                              <ul>
+                                {registerPasswordConvention.map(rule => (
+                                  <li key={rule}>
+                                    <Typography>{rule}</Typography>
+                                  </li>
+                                ))}
+                              </ul>
+                            </ul>
                           </Popover>
                         </>
                       )}
@@ -179,9 +198,7 @@ class Register extends React.Component {
                 className: classes.marginDense,
                 endAdornment: (
                   <InputAdornment position="end">
-                    <LockOutline
-                      className={resolveIconClassName('confirmPassword', confirmPassword, errors, touched, classes)}
-                    />
+                    {passwordMatched}
                   </InputAdornment>
                 ),
               }}

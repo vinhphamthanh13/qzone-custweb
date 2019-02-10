@@ -91,10 +91,9 @@ const authPageStyle = (theme) => {
     passwordHint: {
       color: infoColor,
       minWidth: 'unset',
-      // pointerEvents: 'none',
     },
-    passwordHintPopover: {
-      zIndex: 1600,
+    passwordHintConventions: {
+      padding: `0px ${theme.spacing.unit * 2}px`,
     },
   });
 };

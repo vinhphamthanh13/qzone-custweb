@@ -16,10 +16,18 @@ export const noop = () => {};
 export const registerPopoverPosition = {
   anchorOrigin: {
     vertical: 'bottom',
-    horizontal: 'left',
+    horizontal: 'center',
   },
   transformOrigin: {
     vertical: 'top',
-    horizontal: 'left',
+    horizontal: 'center',
   },
 };
+
+export const registerPasswordConvention = [
+  '8 to 60 characters',
+  '1 lowercase character(s)',
+  '1 uppercase character(s)',
+  '1 digit(s)',
+  '1 special character(s) such as #?!@$%^&*-',
+];

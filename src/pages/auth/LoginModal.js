@@ -25,6 +25,7 @@ const loginSchema = Yup.object().shape({
     .string()
     .matches(regExPattern.password, 'Password format is not correct')
     .min(8, 'Password must contain at least 8 characters')
+    .max(60, 'Password must not be over 60 characters')
     .required('Password is required'),
 });
 

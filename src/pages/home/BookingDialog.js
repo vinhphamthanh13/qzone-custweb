@@ -81,7 +81,6 @@ class BookingDialog extends PureComponent {
 
   render() {
     const { initService, handleClose, classes } = this.props;
-    console.log('initService', initService);
     const { step, bookingDetail, bookingSteps } = this.state;
     const StepComponent = this.bookingStepsComponents[step];
     const stepCompProps = step === 'time'
