@@ -24,7 +24,6 @@ export default function DateSelect({ onChange, selectedDay, providerTimeZone }) 
           </div>
         </CardContent>
       </Card>
-
     </div>
   );
 }
