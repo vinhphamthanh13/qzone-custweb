@@ -1,16 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Typography from '@material-ui/core/Typography';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Button from '@material-ui/core/Button';
-import Link from '@material-ui/core/Link';
 import {
-  Email, Lock as LockOutline,
+  Typography, InputAdornment, Button, TextField,
+} from '@material-ui/core';
+import {
+  Email, Lock as LockOutline, LockOpen,
 } from '@material-ui/icons';
 import Card from 'components/Card/Card';
 import CardHeader from 'components/Card/CardHeader';
 import CardBody from 'components/Card/CardBody';
-import TextField from '@material-ui/core/TextField';
 import CustomButton from 'components/CustomButton';
 import { noop } from 'utils/constants';
 import { resolveIconClassName } from './Register';
@@ -31,6 +29,17 @@ class Login extends React.Component {
       values: { email, password },
       touched, errors, handleSubmit, isValid,
     } = this.props;
+    const passwordMatched = errors.password && touched.password
+      ? (
+        <LockOpen
+          className={resolveIconClassName('password', password, errors, touched, classes)}
+        />
+      ) : (
+        <LockOutline
+          className={resolveIconClassName('password', password, errors, touched, classes)}
+        />
+      );
+
     return (
       <Card className={classes.registerCard}>
         <CardHeader
@@ -102,22 +111,22 @@ class Login extends React.Component {
                 className: classes.marginDense,
                 endAdornment: (
                   <InputAdornment position="end">
-                    <LockOutline className={resolveIconClassName('password', password, errors, touched, classes)} />
+                    {passwordMatched}
                   </InputAdornment>
                 ),
               }}
               onChange={event => this.onChange('password', event)}
             />
             <div className={classes.resetPassword}>
-              { /* eslint-disable-next-line */ }
-              <Link
-                component="button"
-                variant="body1"
-                rel="noopener"
+              <Button
+                variant="text"
+                color="primary"
+                disableRipple
+                className={classes.simpleButton}
                 onClick={noop}
               >
                 Reset password?
-              </Link>
+              </Button>
             </div>
             <div className={classes.center}>
               <Button

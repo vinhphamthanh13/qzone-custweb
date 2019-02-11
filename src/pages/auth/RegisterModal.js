@@ -4,9 +4,8 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { Modal } from '@material-ui/core';
 import withStyles from '@material-ui/core/styles/withStyles';
-import GridContainer from 'components/Grid/GridContainer';
-import GridItem from 'components/Grid/GridItem';
 import ErrorModal from 'components/Modal/Error';
 import { classesType } from 'types/global';
 import { registerAWS, resetErrorMessage } from 'modules/auth.actions';
@@ -21,7 +20,6 @@ const registerSchema = Yup.object().shape({
     .required('Given name is Required'),
   telephone: Yup
     .string()
-    .min(10, 'Phone number must have at least 10 numbers')
     .matches(regExPattern.phoneNumber, 'Phone number format is not correct')
     .required('Phone number is required'),
   email: Yup
@@ -33,6 +31,7 @@ const registerSchema = Yup.object().shape({
     .string()
     .matches(regExPattern.password, 'Password format is not correct')
     .min(8, 'Password must contain at least 8 characters')
+    .max(60, 'Password must not be over 60 characters')
     .required('Password is required'),
   confirmPassword: Yup
     .string()
@@ -109,10 +108,10 @@ class RegisterModal extends React.Component {
           onClose={this.closeErrorModal}
         />) : null;
     return (
-      <div style={isOpen ? {} : { display: 'none' }} className={classes.content}>
-        <GridContainer justify="center" alignItems="center">
-          <GridItem xs={12} sm={6} md={4} className={classes.register}>
-            {errorModal}
+      <>
+        {errorModal}
+        <Modal open={isOpen} className={classes.content}>
+          <>
             <Formik
               initialValues={registerInit}
               validationSchema={registerSchema}
@@ -126,9 +125,9 @@ class RegisterModal extends React.Component {
                 />
               )}
             />
-          </GridItem>
-        </GridContainer>
-      </div>
+          </>
+        </Modal>
+      </>
     );
   }
 }

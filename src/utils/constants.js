@@ -12,3 +12,22 @@ export const loginType = {
 };
 
 export const noop = () => {};
+
+export const registerPopoverPosition = {
+  anchorOrigin: {
+    vertical: 'bottom',
+    horizontal: 'center',
+  },
+  transformOrigin: {
+    vertical: 'top',
+    horizontal: 'center',
+  },
+};
+
+export const registerPasswordConvention = [
+  '8 to 60 characters',
+  '1 lowercase character(s)',
+  '1 uppercase character(s)',
+  '1 digit(s)',
+  '1 special character(s) such as #?!@$%^&*-',
+];
