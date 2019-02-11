@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core';
 import withStyles from '@material-ui/core/styles/withStyles';
 import CloseIcon from '@material-ui/icons/Close';
+import mtz from 'moment-timezone';
 import logo from 'images/logo.png';
 import { serviceType } from 'types/global';
 import { setProviders } from 'modules/home/bookingDialog/selectProvider.actions';
@@ -34,6 +35,7 @@ class BookingDialog extends PureComponent {
       bookingDetail: {
         provider: undefined,
         time: undefined,
+        hourToLocalOffset: 0,
       },
       bookingSteps: [
         { value: 'provider', disabled: false },
@@ -49,38 +51,26 @@ class BookingDialog extends PureComponent {
   };
 
   onChangeBookingDetail = (value, key) => {
-    const { bookingDetail } = this.state;
-
+    let hourToLocalOffset;
     if (key === 'provider') {
-      if (bookingDetail.time) {
-        this.setState(oldState => ({
-          bookingDetail: { ...oldState.bookingDetail, [key]: value },
-          bookingSteps: [
-            { value: 'provider', disabled: false },
-            { value: 'time', disabled: false },
-            { value: 'booking detail', disabled: false },
-          ],
-        }));
-      } else {
-        this.setState(oldState => ({
-          bookingDetail: { ...oldState.bookingDetail, [key]: value },
-          bookingSteps: [
-            { value: 'provider', disabled: false },
-            { value: 'time', disabled: false },
-            { value: 'booking detail', disabled: true },
-          ],
-        }));
-      }
-    } else {
-      this.setState(oldState => ({
-        bookingDetail: { ...oldState.bookingDetail, [key]: value },
-        bookingSteps: [
-          { value: 'provider', disabled: false },
-          { value: 'time', disabled: false },
-          { value: 'booking detail', disabled: false },
-        ],
-      }));
+      const today = mtz();
+      const localOffset = today.clone().utcOffset();
+      const providerOffset = today.clone().tz(value.timeZoneId).utcOffset();
+      hourToLocalOffset = (localOffset - providerOffset) / 60;
     }
+    console.log(hourToLocalOffset);
+    this.setState(oldState => ({
+      bookingDetail: {
+        ...oldState.bookingDetail,
+        [key]: value,
+        hourToLocalOffset: hourToLocalOffset || oldState.bookingDetail.hourToLocalOffset,
+      },
+      bookingSteps: [
+        { value: 'provider', disabled: false },
+        { value: 'time', disabled: false },
+        { value: 'booking detail', disabled: key === 'provider' },
+      ],
+    }));
   };
 
   handleClose = () => {

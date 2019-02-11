@@ -12,7 +12,7 @@ export default function HourSelectBox({ hourBoxes = [], onChange, selectedHour }
     <div className={styles.selectHour}>
       <Grid container spacing={8}>
         {hourBoxes.map(({
-          startHour, durationSec, spotsTotal, spotsOpen,
+          startHour, displayedStartHour, durationSec, spotsTotal, spotsOpen,
         }) => (
           <Grid item sm={3} key={startHour.toISOString()}>
             <Card classes={{
@@ -25,14 +25,16 @@ export default function HourSelectBox({ hourBoxes = [], onChange, selectedHour }
               })}
               >
                 <CardContent>
-                  <Typography variant="subtitle1">{startHour.format(defaultDateFormat)}</Typography>
+                  <Typography variant="subtitle1">{displayedStartHour.format(defaultDateFormat)}</Typography>
                   <Grid container className={styles.selectHourContent}>
                     <Typography variant="caption" classes={{ caption: styles.contentDesc }}>From:</Typography>
-                    <Typography variant="subtitle2">{startHour.format('LT')}</Typography>
+                    <Typography variant="subtitle2">{displayedStartHour.format('LT')}</Typography>
                   </Grid>
                   <Grid container className={styles.selectHourContent}>
                     <Typography variant="caption" classes={{ caption: styles.contentDesc }}>To:</Typography>
-                    <Typography variant="subtitle2">{startHour.clone().add(durationSec, 's').format('LT')}</Typography>
+                    <Typography variant="subtitle2">
+                      {displayedStartHour.clone().add(durationSec, 's').format('LT')}
+                    </Typography>
                   </Grid>
                   <Grid container className={styles.availableSlots}>
                     <Typography>{spotsOpen} slots</Typography>

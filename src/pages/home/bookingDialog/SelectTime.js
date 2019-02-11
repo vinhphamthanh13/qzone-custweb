@@ -68,18 +68,13 @@ export class SelectTime extends React.PureComponent {
     this.setState({ selectedHour: start });
   }
 
-  getHourBoxes = (timeDetails) => {
-    const today = mtz();
-    const localOffset = today.clone().utcOffset();
-    const providerOffset = today.clone().tz(this.props.bookingDetail.provider.timeZoneId).utcOffset();
-    const hourToLocalOffset = (localOffset - providerOffset) / 60;
-    return timeDetails.map(d => ({
-      spotsOpen: d.spotsOpen,
-      spotsTotal: d.spotsTotal,
-      startHour: mtz(d.startSec * 1000).add(hourToLocalOffset, 'h'),
-      durationSec: d.durationSec,
-    }));
-  }
+  getHourBoxes = timeDetails => timeDetails.map(d => ({
+    spotsOpen: d.spotsOpen,
+    spotsTotal: d.spotsTotal,
+    startHour: mtz(d.startSec * 1000),
+    displayedStartHour: mtz(d.startSec * 1000).add(this.props.bookingDetail.hourToLocalOffset, 'h'),
+    durationSec: d.durationSec,
+  }))
 
   render() {
     const { timeDetails, isLoading } = this.props;

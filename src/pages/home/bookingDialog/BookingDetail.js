@@ -24,6 +24,7 @@ class BookingDetail extends React.PureComponent {
   render() {
     const { name, email, phoneNumber } = this.state;
     const { bookingDetail, initService } = this.props;
+    const localBookingStartTime = mtz(bookingDetail.time.start).add(bookingDetail.hourToLocalOffset, 'h');
     return (
       <Grid container className={styles.wrapper}>
         <Grid item md={6} className={styles.userInfo}>
@@ -62,7 +63,7 @@ class BookingDetail extends React.PureComponent {
               <Grid item md={5}><Typography variant="body1">Date:</Typography></Grid>
               <Grid item md={7}>
                 <Typography variant="subtitle1" color="secondary">
-                  {mtz(bookingDetail.time.start).tz(bookingDetail.provider.timeZoneId).format(defaultDateFormat)}
+                  {localBookingStartTime.format(defaultDateFormat)}
                 </Typography>
               </Grid>
             </Grid>
@@ -70,7 +71,7 @@ class BookingDetail extends React.PureComponent {
               <Grid item md={5}><Typography variant="body1">Starts at:</Typography></Grid>
               <Grid item md={7}>
                 <Typography variant="subtitle1" color="secondary">
-                  {mtz(bookingDetail.time.start).tz(bookingDetail.provider.timeZoneId).format('hh:mm A')}
+                  {localBookingStartTime.format('hh:mm A')}
                 </Typography>
               </Grid>
             </Grid>
