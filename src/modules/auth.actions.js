@@ -1,9 +1,73 @@
 import { Auth } from 'aws-amplify';
 import { handleRequest } from 'api/helpers';
-import { getCustomerByEmail } from 'api/auth';
+import { getCustomerByEmail, registerCustomer, loginCustomer } from 'api/auth';
+import { loginType } from 'utils/constants';
 
-export const REGISTER_USER_SUCCESS = 'REGISTER_USER_SUCCESS';
-export const REGISTER_USER_FAILURE = 'REGISTER_USER_FAILURE';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGIN_FAILURE = 'LOGIN_FAILURE';
+export const LOGOUT = 'LOGOUT';
+export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
+export const REGISTER_FAILURE = 'REGISTER_FAILURE';
+export const RESET_ERROR_MESSAGE = 'RESET_ERROR_MESSAGE';
+export const SET_LOADING = 'AUTH.SET_LOADING';
+
+const setLoading = payload => ({
+  type: SET_LOADING,
+  payload,
+});
+
+const loginError = error => ({
+  type: LOGIN_FAILURE,
+  payload: error ? error.message : 'Typology Error',
+});
+
+const loginSuccess = (payload, name) => {
+  switch (name) {
+    case loginType.GP: {
+      const {
+        data: {
+          accessKeyId, isAuthenticated, Expiration, SessionToken,
+        },
+        config: { data },
+      } = payload;
+      return {
+        type: LOGIN_SUCCESS,
+        payload: {
+          userAuthorized: isAuthenticated,
+          accountName: JSON.parse(data).email,
+          accessKeyId,
+          Expiration,
+          SessionToken,
+        },
+      };
+    }
+    default:
+      return {
+        type: LOGIN_SUCCESS,
+        payload,
+      };
+  }
+};
+
+export const standardSignIn = (values) => {
+  const { email, password } = values;
+  return (dispatch) => {
+    dispatch(setLoading(true));
+    loginCustomer({ email, password })
+      .then((response) => {
+        dispatch(loginSuccess(response, ''));
+        dispatch(setLoading(false));
+      })
+      .catch((error) => {
+        dispatch(loginError(error));
+        dispatch(setLoading(false));
+      });
+  };
+};
+
+export function logout() {
+  return { type: LOGOUT };
+}
 
 export function facebookSignIn() {
   return () => {
@@ -20,7 +84,8 @@ export function facebookSignIn() {
 }
 
 export function googleSignIn() {
-  return () => {
+  return (dispatch) => {
+    dispatch(setLoading(true));
     window.gapi.load('auth2', async () => {
       try {
         await window.gapi.auth2.init({
@@ -44,48 +109,54 @@ export function googleSignIn() {
           ),
           handleRequest(getCustomerByEmail, { email: user.email }),
         ]);
-        console.log('get aws credentials', awsCredentials);
-        console.log('get customer', customer);
+        dispatch(loginSuccess({ ...awsCredentials, ...customer }, loginType.GP));
+        dispatch(setLoading(false));
       } catch (error) {
-        console.log('googleSignIn error', error);
+        dispatch(loginError(error));
+        dispatch(setLoading(false));
       }
     });
   };
 }
 
+const registerUserSuccess = payload => ({
+  type: REGISTER_SUCCESS,
+  payload,
+});
 
-function registerUserSuccess(payload) {
-  return {
-    type: REGISTER_USER_SUCCESS,
-    payload,
-  };
-}
 
-function registerUserFailure(payload) {
-  return {
-    type: REGISTER_USER_FAILURE,
-    payload,
-  };
-}
+const registerUserFailure = payload => ({
+  type: REGISTER_FAILURE,
+  payload,
+});
 
-export function register(values) {
+export function registerAWS(values) {
   return (dispatch) => {
+    dispatch(setLoading(true));
     Auth.signUp({
       username: values.email,
-      password: values.pwd,
+      password: values.password,
       attributes: {
         email: values.email,
       },
       validationData: [],
     })
-      .then((json) => {
+      .then(async (json) => {
         if (json) {
-          dispatch(registerUserSuccess(json));
+          dispatch(await registerCustomer({ ...values, ...json }, registerUserSuccess));
+          dispatch(setLoading(false));
         } else {
           dispatch(registerUserFailure('Topology Error'));
+          dispatch(setLoading(false));
         }
-        return json;
       })
-      .catch(err => dispatch(registerUserFailure(err)));
+      .catch((error) => {
+        dispatch(registerUserFailure(error));
+        dispatch(setLoading(false));
+      });
   };
 }
+
+export const resetErrorMessage = () => ({
+  type: RESET_ERROR_MESSAGE,
+});

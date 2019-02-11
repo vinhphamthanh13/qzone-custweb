@@ -10,8 +10,7 @@ export const handleResponse = (response, defaultResponse) => {
 
 export const handleRequest = async (requestFunc, ...args) => {
   try {
-    const request = await requestFunc(...args);
-    return request;
+    return await requestFunc(...args);
   } catch (e) {
     history.push('/access-denied');
     return null;

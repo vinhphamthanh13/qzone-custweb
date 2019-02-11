@@ -1,23 +1,27 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { compose } from 'redux';
 import {
   Slide, Dialog, AppBar, Toolbar, IconButton,
-  Tabs, Tab, Paper,
+  Tabs, Tab, Paper, Avatar, Typography,
 } from '@material-ui/core';
+import withStyles from '@material-ui/core/styles/withStyles';
 import CloseIcon from '@material-ui/icons/Close';
+import logo from 'images/logo.png';
 import { serviceType } from 'types/global';
 import { setProviders } from 'modules/home/bookingDialog/selectProvider.actions';
 import SelectProvider from './bookingDialog/SelectProvider';
 import SelectTime from './bookingDialog/SelectTime';
 import BookingDetail from './bookingDialog/BookingDetail';
+import BookingStyle from './BookingDialogStyle';
 
 function Transition(props) {
-  return <Slide direction="up" {...props} />;
+  return <Slide direction="down" {...props} />;
 }
 
 /* eslint-disable react/no-unused-state */
-export class BookingDialog extends PureComponent {
+class BookingDialog extends PureComponent {
   constructor(props) {
     super(props);
     this.bookingStepsComponents = {
@@ -42,7 +46,7 @@ export class BookingDialog extends PureComponent {
 
   onStepChange = (event, step) => {
     this.setState({ step });
-  }
+  };
 
   onChangeBookingDetail = (value, key) => {
     const { bookingDetail } = this.state;
@@ -77,7 +81,7 @@ export class BookingDialog extends PureComponent {
         ],
       }));
     }
-  }
+  };
 
   handleClose = () => {
     this.props.setProvidersAction([]);
@@ -86,7 +90,7 @@ export class BookingDialog extends PureComponent {
   }
 
   render() {
-    const { initService } = this.props;
+    const { initService, classes } = this.props;
     const { step, bookingDetail, bookingSteps } = this.state;
     const StepComponent = this.bookingStepsComponents[step];
 
@@ -96,9 +100,12 @@ export class BookingDialog extends PureComponent {
         open={initService !== undefined}
         onClose={this.handleClose}
         TransitionComponent={Transition}
+        className={classes.diagRoot}
       >
         <AppBar position="relative">
           <Toolbar>
+            <Avatar src={logo} alt="Quezone Logo" className={classes.avatar} />
+            {initService && <Typography variant="subtitle1" color="inherit">{initService.name}</Typography>}
             <div className="grow" />
             <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
               <CloseIcon />
@@ -140,10 +147,14 @@ BookingDialog.propTypes = {
   initService: serviceType,
   handleClose: PropTypes.func.isRequired,
   setProvidersAction: PropTypes.func.isRequired,
+  classes: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 BookingDialog.defaultProps = {
   initService: undefined,
 };
 
-export default connect(null, { setProvidersAction: setProviders })(BookingDialog);
+export default compose(
+  withStyles(BookingStyle),
+  connect(null, { setProvidersAction: setProviders }),
+)(BookingDialog);

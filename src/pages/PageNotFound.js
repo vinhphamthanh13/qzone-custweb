@@ -3,7 +3,6 @@ import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
 import styles from './PageNotFound.module.scss';
 
-
 function PageNotFound() {
   return (
     <div className={styles.wrapper}>

@@ -1,137 +1,41 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import Button from '@material-ui/core/Button';
-import { fade } from '@material-ui/core/styles/colorManipulator';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 import { withStyles } from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
-import Avatar from '@material-ui/core/Avatar';
-import Tooltip from '@material-ui/core/Tooltip';
-import SearchIcon from '@material-ui/icons/Search';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import HowToReg from '@material-ui/icons/HowToReg';
-import { Book as BookIcon } from '@material-ui/icons';
-import NearMe from '@material-ui/icons/NearMe';
-import AssignmentInd from '@material-ui/icons/AssignmentInd';
-import PersonAdd from '@material-ui/icons/PersonAdd';
-import ExitToApp from '@material-ui/icons/ExitToApp';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
+import {
+  AppBar, Toolbar, IconButton, InputBase, Badge, MenuItem, Menu, Button, Avatar, Tooltip,
+} from '@material-ui/core';
+import {
+  Menu as MenuIcon, Search as SearchIcon, AccountCircle, InsertEmoticon, HowToReg, Book as BookIcon,
+  NearMe, AssignmentInd, PersonAdd, ExitToApp, Mail as MailIcon, Notifications as NotificationsIcon,
+  MoreVert as MoreIcon, Details,
+} from '@material-ui/icons';
+import { logout } from 'modules/auth.actions';
 import IconMenu from 'components/IconMenu';
 import logo from '../../../images/logo.png';
 import { history } from '../../../containers/App';
-
-const styles = (theme) => {
-  console.log('theme', theme);
-  return ({
-    root: {
-      width: '100%',
-    },
-    grow: {
-      flexGrow: 1,
-    },
-    menuButton: {
-      marginLeft: -12,
-      marginRight: 20,
-    },
-    menuIcon: {
-      color: theme.palette.primary.main,
-      paddingRight: '10px',
-    },
-    menuListMobile: {
-      color: theme.palette.primary.contrastText,
-      display: 'flex',
-      padding: `0 ${theme.spacing.unit + 2}px`,
-      [theme.breakpoints.up('sm')]: {
-        display: 'none',
-      },
-    },
-    menuListDesktop: {
-      color: theme.palette.primary.contrastText,
-      display: 'none',
-      [theme.breakpoints.up('sm')]: {
-        display: 'flex',
-      },
-    },
-    title: {
-      display: 'none',
-      [theme.breakpoints.up('sm')]: {
-        display: 'block',
-      },
-    },
-    avatar: {
-      display: 'none',
-      [theme.breakpoints.up('sm')]: {
-        display: 'flex',
-        background: theme.palette.common.white,
-      },
-    },
-    search: {
-      position: 'relative',
-      borderRadius: theme.shape.borderRadius,
-      backgroundColor: fade(theme.palette.common.white, 0.15),
-      '&:hover': {
-        backgroundColor: fade(theme.palette.common.white, 0.25),
-      },
-      marginRight: theme.spacing.unit * 2,
-      marginLeft: 0,
-      width: '100%',
-      [theme.breakpoints.up('sm')]: {
-        marginLeft: theme.spacing.unit * 3,
-        width: 'auto',
-      },
-    },
-    searchIcon: {
-      width: theme.spacing.unit * 9,
-      height: '100%',
-      position: 'absolute',
-      pointerEvents: 'none',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    inputRoot: {
-      color: 'inherit',
-      width: '100%',
-    },
-    inputInput: {
-      paddingTop: theme.spacing.unit,
-      paddingRight: theme.spacing.unit,
-      paddingBottom: theme.spacing.unit,
-      paddingLeft: theme.spacing.unit * 10,
-      transition: theme.transitions.create('width'),
-      width: '100%',
-      [theme.breakpoints.up('md')]: {
-        width: 200,
-      },
-    },
-    sectionDesktop: {
-      display: 'none',
-      [theme.breakpoints.up('md')]: {
-        display: 'flex',
-      },
-    },
-    sectionMobile: {
-      display: 'flex',
-      [theme.breakpoints.up('md')]: {
-        display: 'none',
-      },
-    },
-  });
-};
+import styles from './PrimarySearchAppBarStyle';
 
 class PrimarySearchAppBar extends React.Component {
   state = {
     anchorEl: null,
     mobileMoreAnchorEl: null,
     serviceAnchorEl: null,
+  };
+
+  componentDidMount() {
+    window.addEventListener('resize', this.closeAllMenu);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.closeAllMenu);
+  }
+
+  closeAllMenu = () => {
+    this.handleMenuClose();
+    this.handleMobileMenuClose();
+    this.handleServiceMenuClose();
   };
 
   handleProfileMenuOpen = (event) => {
@@ -166,7 +70,9 @@ class PrimarySearchAppBar extends React.Component {
   };
 
   handleLogout = () => {
-    history.push('/access-deny');
+    history.push('/');
+    const { logoutAction } = this.props;
+    logoutAction();
     this.handleMenuClose();
   };
 
@@ -181,7 +87,7 @@ class PrimarySearchAppBar extends React.Component {
       anchorEl, mobileMoreAnchorEl, serviceAnchorEl,
     } = this.state;
     const {
-      classes, loggedIn, onSearch, categories,
+      classes, isAuthenticated, onSearch, categories,
       activeCategoryId, userPosition,
     } = this.props;
     const searchNearByTitle = userPosition.latitude ? 'Search Services Near You' : 'Your Location Not Allowed';
@@ -197,11 +103,11 @@ class PrimarySearchAppBar extends React.Component {
           onClick={evt => this.handleChangeCategory(evt, category.id)}
           selected={activeCategoryId === category.id}
         >
-          {category.name}
+          <Details className={classes.menuIcon} /> {category.name}
         </MenuItem>
       ),
     ) : null;
-    const authorization = loggedIn ? (
+    const authorization = isAuthenticated ? (
       [
         <IconMenu
           key="app-bar-booking"
@@ -290,31 +196,37 @@ class PrimarySearchAppBar extends React.Component {
         open={isMobileMenuOpen}
         onClose={this.handleMobileMenuClose}
       >
-        <MenuItem>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <MailIcon />
-            </Badge>
-          </IconButton>
-          <p>Messages</p>
-        </MenuItem>
-        <MenuItem>
-          <IconButton color="inherit">
-            <Badge badgeContent={11} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          <p>Notifications</p>
-        </MenuItem>
+        { isAuthenticated
+          && (
+            [
+              <MenuItem key="app-bar-mail-icon-notification">
+                <IconButton color="inherit">
+                  <Badge badgeContent={4} color="secondary">
+                    <MailIcon />
+                  </Badge>
+                </IconButton>
+                <p>Messages</p>
+              </MenuItem>,
+              <MenuItem key="app-bar-notification-icon">
+                <IconButton color="inherit">
+                  <Badge badgeContent={11} color="secondary">
+                    <NotificationsIcon />
+                  </Badge>
+                </IconButton>
+                <p>Notifications</p>
+              </MenuItem>,
+            ]
+          )
+        }
         <MenuItem onClick={this.handleProfileMenuOpen}>
           <IconButton color="inherit">
-            <AccountCircle />
+            { isAuthenticated ? <InsertEmoticon /> : <AccountCircle /> }
           </IconButton>
           <p>Profile</p>
         </MenuItem>
       </Menu>
     );
-    const customUser = loggedIn ? (
+    const customUser = isAuthenticated ? (
       <>
         <div className={classes.sectionDesktop}>
           <IconButton color="inherit">
@@ -333,7 +245,7 @@ class PrimarySearchAppBar extends React.Component {
             onClick={this.handleProfileMenuOpen}
             color="inherit"
           >
-            <AccountCircle />
+            <InsertEmoticon />
           </IconButton>
         </div>
         <div className={classes.sectionMobile}>
@@ -418,13 +330,24 @@ class PrimarySearchAppBar extends React.Component {
 
 PrimarySearchAppBar.propTypes = {
   classes: PropTypes.objectOf(PropTypes.any).isRequired,
-  loggedIn: PropTypes.bool.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
   handleAuthenticate: PropTypes.func.isRequired,
   onSearch: PropTypes.func.isRequired,
   categories: PropTypes.arrayOf(PropTypes.object).isRequired,
   handleChangeCategory: PropTypes.func.isRequired,
   activeCategoryId: PropTypes.string.isRequired,
   userPosition: PropTypes.objectOf(PropTypes.number).isRequired,
+  logoutAction: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(PrimarySearchAppBar);
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.userAuthorized,
+  accountName: state.auth.accountName,
+});
+
+export default compose(
+  connect(mapStateToProps, {
+    logoutAction: logout,
+  }),
+  withStyles(styles),
+)(PrimarySearchAppBar);

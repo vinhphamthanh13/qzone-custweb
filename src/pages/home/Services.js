@@ -2,11 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Paper } from '@material-ui/core';
 import { serviceType } from 'types/global';
-import CustomLoading from 'components/CustomLoading';
 import styles from './Services.module.scss';
 import SubCategoryTabs, { subCategoriesType } from './SubCategoryTabs';
 import ServiceCard from './services/ServiceCard';
-import EmptyState from './services/EmptyState';
+import EmptyItem from './services/EmptyItem';
 
 export default function Services({
   services,
@@ -29,12 +28,8 @@ export default function Services({
       )}
       <Grid container spacing={32} className={styles.cardsWrapper}>
         {
-          isLoading && services.length === 0
-          && <CustomLoading />
-        }
-        {
           !isLoading && services.length === 0
-          && <EmptyState onLoadServices={onLoadServices} />
+          && <EmptyItem onLoadServices={onLoadServices} />
         }
         {services.map(service => (
           <Grid item md={4} key={service.id}>

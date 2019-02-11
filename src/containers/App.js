@@ -13,6 +13,7 @@ import { create } from 'jss';
 import { createGenerateClassName, jssPreset } from '@material-ui/core/styles';
 import Amplify from 'aws-amplify';
 import 'config/api';
+import Loading from 'components/Modal/Loading';
 import './App.module.scss';
 import '../styles/_settings.scss';
 
@@ -43,7 +44,6 @@ Amplify.configure({
     mandatorySignIn: true,
   },
 });
-
 const App = () => (
   <JssProvider jss={jss} generateClassName={generateClassName}>
     <React.Fragment>
@@ -54,6 +54,7 @@ const App = () => (
               {rootRoutes.map(route => (<Route key={route.path || route.name} {...route} />))}
             </Switch>
           </Router>
+          <Loading />
         </Provider>
       </MuiPickersUtilsProvider>
       <Alert stack effect="bouncyflip" position="top-right" />

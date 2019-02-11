@@ -1,8 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { FormControl, InputLabel, Input } from '@material-ui/core';
 import { Check, Clear } from '@material-ui/icons';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { classesType } from 'types/global';
 import customInputStyle from './material-dashboard-pro-react/customInputStyle';

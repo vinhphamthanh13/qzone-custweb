@@ -8,8 +8,7 @@ import {
 import { providerType, serviceType, bookingDetailType } from 'types/global';
 import CustomLink from 'components/CustomLink';
 import { getProvidersByService } from 'modules/home/bookingDialog/selectProvider.actions';
-import CustomLoading from 'components/CustomLoading';
-import EmptyState from '../services/EmptyState';
+import EmptyItem from '../services/EmptyItem';
 import styles from './SelectProvider.module.scss';
 
 class SelectProvider extends React.PureComponent {
@@ -29,12 +28,8 @@ class SelectProvider extends React.PureComponent {
       <div className={styles.selectProvider}>
         <Grid container spacing={32} className={styles.cardsWrapper}>
           {
-            isLoading && providers.length === 0
-            && <CustomLoading />
-          }
-          {
             !isLoading && providers.length === 0
-            && <EmptyState message="No available providers" />
+            && <EmptyItem message="No available providers" />
           }
           {providers.map(provider => (
             <Grid item md={4} key={provider.id}>

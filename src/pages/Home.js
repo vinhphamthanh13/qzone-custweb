@@ -23,8 +23,9 @@ export class Home extends React.PureComponent {
     getServicesByCategoryAction: PropTypes.func.isRequired,
     services: PropTypes.arrayOf(serviceType).isRequired,
     serviceCategories: serviceCategoriesType.isRequired,
-    isLoading: PropTypes.bool.isRequired,
     getServicesByNameAction: PropTypes.func.isRequired,
+    userAuthorized: PropTypes.bool.isRequired,
+    isLoading: PropTypes.bool.isRequired,
   };
 
   constructor(props) {
@@ -63,20 +64,14 @@ export class Home extends React.PureComponent {
     }
   };
 
-  handleOpenMenu = (event) => {
-    this.setState({ menuIconButtonEl: event.currentTarget });
-  };
-
-  handleCloseMenu = () => {
-    this.setState({ menuIconButtonEl: null });
-  };
-
   onChange = (value, key) => {
     this.setState({ [key]: value });
   };
 
   onLoadServices = () => {
-    this.props.getServicesByNameAction(this.state.searchText);
+    const { getServicesByNameAction } = this.props;
+    const { searchText } = this.state;
+    getServicesByNameAction(searchText);
   };
 
   onSearch = (event) => {
@@ -138,7 +133,7 @@ export class Home extends React.PureComponent {
 
   render() {
     const {
-      serviceCategories, isLoading, services,
+      serviceCategories, services, userAuthorized, isLoading,
     } = this.props;
     const {
       selectedCategoryId, subCategories, selectedSubCategoryId, searchText,
@@ -148,15 +143,19 @@ export class Home extends React.PureComponent {
     const searchedServices = this.getSearchedServices(services, searchText, selectedCategoryId);
     return (
       <>
-        <Auth isRegisterOpen={isRegisterOpen} isLoginOpen={isLoginOpen} closeDialog={this.closeDialog} />
-        <BookingDialog
-          initService={selectedService}
-          handleClose={this.handleCloseBookingDialog}
-          onSaveBooking={this.onSaveBooking}
-        />
         <Grid container>
+          <Auth
+            isRegisterOpen={isRegisterOpen}
+            isLoginOpen={isLoginOpen}
+            closeDialog={this.closeDialog}
+          />
+          <BookingDialog
+            initService={selectedService}
+            handleClose={this.handleCloseBookingDialog}
+            onSaveBooking={this.onSaveBooking}
+          />
           <PrimarySearchAppBar
-            // loggedIn
+            loggedIn={userAuthorized}
             handleAuthenticate={this.openDialog}
             onSearch={this.onSearch}
             categories={serviceCategories}
@@ -170,8 +169,8 @@ export class Home extends React.PureComponent {
               onChange={this.onChange}
               subCategories={subCategories}
               selectedSubCategoryId={selectedSubCategoryId}
-              isLoading={isLoading}
               onLoadServices={this.onLoadServices}
+              isLoading={isLoading}
             />
           </Grid>
         </Grid>
@@ -182,6 +181,8 @@ export class Home extends React.PureComponent {
 
 const mapStateToProps = state => ({
   ...state.home,
+  userAuthorized: state.auth.userAuthorized,
+  isLoading: state.home.isLoading,
 });
 
 export default connect(
