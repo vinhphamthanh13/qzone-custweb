@@ -58,7 +58,7 @@ class BookingDialog extends PureComponent {
       const providerOffset = today.clone().tz(value.timeZoneId).utcOffset();
       hourToLocalOffset = (localOffset - providerOffset) / 60;
     }
-    console.log(hourToLocalOffset);
+
     this.setState(oldState => ({
       bookingDetail: {
         ...oldState.bookingDetail,
