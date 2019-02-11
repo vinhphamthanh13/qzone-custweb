@@ -5,7 +5,7 @@ import { InlineDatePicker } from 'material-ui-pickers';
 import { defaultDateFormat } from 'utils/constants';
 import styles from './DateSelect.module.scss';
 
-export default function DateSelect({ onChange, selectedDay, providerTimeZone }) {
+export default function DateSelect({ onChange, selectedDay }) {
   return (
     <div className={styles.selectDate}>
       <Card>
@@ -19,9 +19,6 @@ export default function DateSelect({ onChange, selectedDay, providerTimeZone }) 
             disablePast
             keyboard
           />
-          <div className={styles.timeZone}>
-            Time zone: {providerTimeZone}
-          </div>
         </CardContent>
       </Card>
     </div>
@@ -33,5 +30,4 @@ DateSelect.propTypes = {
   selectedDay: PropTypes.objectOf(
     Date,
   ).isRequired,
-  providerTimeZone: PropTypes.string.isRequired,
 };
