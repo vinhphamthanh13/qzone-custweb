@@ -13,9 +13,12 @@ import styles from './SelectProvider.module.scss';
 
 class SelectProvider extends React.PureComponent {
   componentDidMount = () => {
-    const { getProvidersByServiceAction, initService: { id } } = this.props;
-    getProvidersByServiceAction(id);
-  };
+    const { providers, getProvidersByServiceAction, initService } = this.props;
+
+    if (providers.length === 0) {
+      getProvidersByServiceAction(initService.id);
+    }
+  }
 
   render() {
     const {
@@ -31,8 +34,8 @@ class SelectProvider extends React.PureComponent {
           {providers.map(provider => (
             <Grid item md={4} key={provider.id}>
               <Card classes={{
-                root: bookingDetail.provider && bookingDetail.provider.id === provider.id
-                  ? styles.activeItem : '',
+                root: bookingDetail.provider
+                  && bookingDetail.provider.id === provider.id ? styles.activeItem : '',
               }}
               >
                 <CardActionArea onClick={() => onChange(provider, 'provider')}>
@@ -40,37 +43,41 @@ class SelectProvider extends React.PureComponent {
                     <Typography variant="title">
                       {provider.givenName} {provider.familyName}
                     </Typography>
-                    <div className={styles.serviceDetail}>
-                      <Typography variant="subtitle2">
-                        {(provider.description || '').substring(0, 300)}...&nbsp;
-                        {provider.description.length > 300
-                          && <CustomLink text="Read more" to="#" onClick={this.openDialog} />}
-                      </Typography>
+                    <Typography variant="body2">
+                      {(provider.description || '').substring(0, 300)}
+                      {provider.description.length > 300
+                        && <>...&nbsp;<CustomLink text="Read more" to="#" onClick={this.openDialog} /></>}
+                    </Typography>
+                    <div className={styles.providerDetail}>
                       <Grid container>
-                        <Grid item sm={6}>
+                        <Grid item sm={4}>
                           <Typography variant="caption">Qualifications:</Typography>
                         </Grid>
-                        <Grid item sm={6}>
+                        <Grid item sm={8}>
                           <Typography variant="subtitle2">
                             {provider.qualifications.join(', ')}
                           </Typography>
                         </Grid>
-                      </Grid>
-                      <Grid container>
-                        <Grid item sm={6}>
+                        <Grid item sm={4}>
                           <Typography variant="caption">Mobile phone:</Typography>
                         </Grid>
-                        <Grid item sm={6}>
+                        <Grid item sm={8}>
                           <Typography variant="subtitle2">
                             {provider.telephone}
                           </Typography>
                         </Grid>
-                      </Grid>
-                      <Grid container>
-                        <Grid item sm={6}>
+                        <Grid item sm={4}>
+                          <Typography variant="caption">Email:</Typography>
+                        </Grid>
+                        <Grid item sm={8}>
+                          <Typography variant="subtitle2">
+                            {provider.email}
+                          </Typography>
+                        </Grid>
+                        <Grid item sm={4}>
                           <Typography variant="caption">Organisation:</Typography>
                         </Grid>
-                        <Grid item sm={6}>
+                        <Grid item sm={8}>
                           <Typography variant="subtitle2">
                             <CustomLink
                               text={provider.organization.name}

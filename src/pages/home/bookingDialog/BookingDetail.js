@@ -2,8 +2,9 @@ import React from 'react';
 import {
   Grid, TextField, Typography, Fab,
 } from '@material-ui/core';
+import mtz from 'moment-timezone';
 import { bookingDetailType, serviceType } from 'types/global';
-import { format } from 'date-fns';
+import { defaultDateFormat } from 'utils/constants';
 import styles from './BookingDetail.module.scss';
 
 class BookingDetail extends React.PureComponent {
@@ -23,6 +24,7 @@ class BookingDetail extends React.PureComponent {
   render() {
     const { name, email, phoneNumber } = this.state;
     const { bookingDetail, initService } = this.props;
+    const localBookingStartTime = mtz(bookingDetail.time.start).add(bookingDetail.hourToLocalOffset, 'h');
     return (
       <Grid container className={styles.wrapper}>
         <Grid item md={6} className={styles.userInfo}>
@@ -61,7 +63,7 @@ class BookingDetail extends React.PureComponent {
               <Grid item md={5}><Typography variant="body1">Date:</Typography></Grid>
               <Grid item md={7}>
                 <Typography variant="subtitle1" color="secondary">
-                  {format(bookingDetail.time.start, 'dd MMMM yyyy')}
+                  {localBookingStartTime.format(defaultDateFormat)}
                 </Typography>
               </Grid>
             </Grid>
@@ -69,7 +71,7 @@ class BookingDetail extends React.PureComponent {
               <Grid item md={5}><Typography variant="body1">Starts at:</Typography></Grid>
               <Grid item md={7}>
                 <Typography variant="subtitle1" color="secondary">
-                  {format(bookingDetail.time.start, 'hh:mm a')}
+                  {localBookingStartTime.format('hh:mm A')}
                 </Typography>
               </Grid>
             </Grid>
@@ -95,7 +97,11 @@ class BookingDetail extends React.PureComponent {
 
 BookingDetail.propTypes = {
   bookingDetail: bookingDetailType.isRequired,
-  initService: serviceType.isRequired,
+  initService: serviceType,
+};
+
+BookingDetail.defaultProps = {
+  initService: undefined,
 };
 
 export default BookingDetail;

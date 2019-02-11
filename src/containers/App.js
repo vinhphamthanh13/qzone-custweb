@@ -6,8 +6,8 @@ import { createBrowserHistory } from 'history';
 import rootRoutes from 'config/routing/app';
 import store from 'config/store';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import MuiPickersUtilsProvider from 'material-ui-pickers/MuiPickersUtilsProvider';
-import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider } from 'material-ui-pickers';
+import MomentUtils from '@date-io/moment';
 import JssProvider from 'react-jss/lib/JssProvider';
 import { create } from 'jss';
 import { createGenerateClassName, jssPreset } from '@material-ui/core/styles';
@@ -47,7 +47,7 @@ Amplify.configure({
 const App = () => (
   <JssProvider jss={jss} generateClassName={generateClassName}>
     <React.Fragment>
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <MuiPickersUtilsProvider utils={MomentUtils}>
         <Provider store={store}>
           <Router history={history}>
             <Switch>

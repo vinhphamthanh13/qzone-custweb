@@ -48,12 +48,10 @@
           xfbml: true,
           version: 'v2.11'
         });
-
         // Broadcast an event when FB object is ready
         var fbInitEvent = new Event('FBObjectReady');
         document.dispatchEvent(fbInitEvent);
       };
-
       (function (d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];
         if (d.getElementById(id)) { return; }
