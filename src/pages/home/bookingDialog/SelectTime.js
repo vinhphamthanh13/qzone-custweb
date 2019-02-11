@@ -4,10 +4,9 @@ import moment from 'moment-timezone';
 import PropTypes from 'prop-types';
 import { bookingDetailType, serviceType } from 'types/global';
 import { getProviderTime } from 'modules/home/bookingDialog/selectProvider.actions';
-import CustomLoading from 'components/CustomLoading';
 import DateSelect from './selectTime/DateSelect';
 import HourSelectBox from './selectTime/HourSelectBox';
-import EmptyState from '../services/EmptyState';
+import EmptyItem from '../services/EmptyItem';
 import styles from './SelectTime.module.scss';
 
 export class SelectTime extends React.PureComponent {
@@ -81,10 +80,8 @@ export class SelectTime extends React.PureComponent {
     const hourBoxes = this.getHourBoxes(timeDetails);
     return (
       <div className={styles.selectTimeWrapper}>
-        {isLoading
-          && <CustomLoading />}
         {!isLoading && hourBoxes.length === 0
-          && <EmptyState message="No available slot" />}
+          && <EmptyItem message="No available slot" />}
         <DateSelect
           selectedDay={selectedDay}
           onChange={this.onDateChange}
