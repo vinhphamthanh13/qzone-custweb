@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import moment from 'moment-timezone';
+import mtz from 'moment-timezone';
 import PropTypes from 'prop-types';
 import { bookingDetailType, serviceType } from 'types/global';
 import { getProviderTime } from 'modules/home/bookingDialog/selectProvider.actions';
@@ -13,16 +13,16 @@ export class SelectTime extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      selectedDay: moment().tz(this.props.bookingDetail.provider.timeZoneId),
+      selectedDay: mtz(),
       selectedHour: null,
     };
   }
 
   componentDidMount() {
-    const today = moment();
+    const today = mtz();
 
     if (this.props.bookingDetail.time) {
-      const selectedDay = moment(this.props.bookingDetail.time.start);
+      const selectedDay = mtz(this.props.bookingDetail.time.start);
 
       this.setState({
         selectedDay,
@@ -39,11 +39,12 @@ export class SelectTime extends React.PureComponent {
 
   fetchTimeFromDate = (date) => {
     const { bookingDetail: { provider }, initService, getProviderTimeAction } = this.props;
+    const providerDateBySec = date.clone().tz(provider.timeZoneId).unix();
     getProviderTimeAction({
       serviceId: initService.id,
       providerId: provider.id,
-      startSec: date.clone().tz(provider.timeZoneId, true).unix(),
-      toSec: date.clone().tz(provider.timeZoneId, true).unix(),
+      startSec: providerDateBySec,
+      toSec: providerDateBySec,
     });
   }
 
@@ -51,7 +52,7 @@ export class SelectTime extends React.PureComponent {
     if (this.state.selectedDay.isSame(value, 'day')) {
       return;
     }
-    const date = moment(value);
+    const date = mtz(value);
     this.fetchTimeFromDate(date);
     this.setState({
       selectedDay: date,
@@ -67,31 +68,39 @@ export class SelectTime extends React.PureComponent {
     this.setState({ selectedHour: start });
   }
 
-  getHourBoxes = timeDetails => timeDetails.map(d => ({
-    spotsOpen: d.spotsOpen,
-    spotsTotal: d.spotsTotal,
-    startHour: moment(d.startSec * 1000).tz(this.props.bookingDetail.provider.timeZoneId),
-    durationSec: d.durationSec,
-  }))
+  getHourBoxes = (timeDetails) => {
+    const today = mtz();
+    const localOffset = today.clone().utcOffset();
+    const providerOffset = today.clone().tz(this.props.bookingDetail.provider.timeZoneId).utcOffset();
+    const hourToLocalOffset = (localOffset - providerOffset) / 60;
+    return timeDetails.map(d => ({
+      spotsOpen: d.spotsOpen,
+      spotsTotal: d.spotsTotal,
+      startHour: mtz(d.startSec * 1000).add(hourToLocalOffset, 'h'),
+      durationSec: d.durationSec,
+    }));
+  }
 
   render() {
-    const { timeDetails, isLoading, bookingDetail } = this.props;
+    const { timeDetails, isLoading } = this.props;
     const { selectedDay, selectedHour } = this.state;
     const hourBoxes = this.getHourBoxes(timeDetails);
     return (
       <div className={styles.selectTimeWrapper}>
         {!isLoading && hourBoxes.length === 0
           && <EmptyItem message="No available slot" />}
-        <DateSelect
-          selectedDay={selectedDay}
-          onChange={this.onDateChange}
-          providerTimeZone={bookingDetail.provider.timeZoneId}
-        />
-        <HourSelectBox
-          hourBoxes={hourBoxes}
-          selectedHour={selectedHour}
-          onChange={this.onHourChange}
-        />
+        {hourBoxes.length > 0
+          && <>
+            <DateSelect
+              selectedDay={selectedDay}
+              onChange={this.onDateChange}
+            />
+            <HourSelectBox
+              hourBoxes={hourBoxes}
+              selectedHour={selectedHour}
+              onChange={this.onHourChange}
+            />
+          </>}
       </div>
     );
   }
