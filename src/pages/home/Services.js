@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Paper, CircularProgress } from '@material-ui/core';
+import { Grid, Paper } from '@material-ui/core';
 import { serviceType } from 'types/global';
 import styles from './Services.module.scss';
 import SubCategoryTabs, { subCategoriesType } from './SubCategoryTabs';
 import ServiceCard from './services/ServiceCard';
-import EmptyState from './services/EmptyState';
+import EmptyItem from './services/EmptyItem';
 
 export default function Services({
   services,
@@ -17,21 +17,19 @@ export default function Services({
 }) {
   return (
     <React.Fragment>
-      <Paper elevation={1} className={styles.options}>
-        <SubCategoryTabs
-          selectedSubCategoryId={selectedSubCategoryId}
-          subCategories={subCategories}
-          onChange={onChange}
-        />
-      </Paper>
+      {subCategories.length > 0 && (
+        <Paper elevation={1} className={styles.options}>
+          <SubCategoryTabs
+            selectedSubCategoryId={selectedSubCategoryId}
+            subCategories={subCategories}
+            onChange={onChange}
+          />
+        </Paper>
+      )}
       <Grid container spacing={32} className={styles.cardsWrapper}>
         {
-          isLoading && services.length === 0
-          && <CircularProgress size={50} classes={{ root: styles.loading }} />
-        }
-        {
           !isLoading && services.length === 0
-          && <EmptyState onLoadServices={onLoadServices} />
+          && <EmptyItem onLoadServices={onLoadServices} />
         }
         {services.map(service => (
           <Grid item md={4} key={service.id}>

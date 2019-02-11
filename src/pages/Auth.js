@@ -1,13 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Register from './auth/Register';
-import Login from './auth/Login';
+import Register from './auth/RegisterModal';
+import Login from './auth/LoginModal';
 
 export default function Auth({ isRegisterOpen, isLoginOpen, closeDialog }) {
   return (
     <>
-      <Register isOpen={isRegisterOpen} onClose={() => closeDialog('isRegisterOpen')} />
-      <Login isOpen={isLoginOpen} onClose={() => closeDialog('isLoginOpen')} />
+      <Register
+        isOpen={isRegisterOpen}
+        onClose={() => closeDialog('isRegisterOpen')}
+      />
+      <Login
+        isOpen={isLoginOpen}
+        onClose={() => closeDialog('isLoginOpen')}
+      />
     </>
   );
 }

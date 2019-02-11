@@ -10,10 +10,11 @@ import {
 import { serviceType } from 'types/global';
 import getLocation from 'utils/getLocation';
 import styles from './Home.module.scss';
-import Header, { serviceCategoriesType } from './home/Header';
+import { serviceCategoriesType } from './home/Header';
 import Services from './home/Services';
 import BookingDialog from './home/BookingDialog';
 import Auth from './Auth';
+import PrimarySearchAppBar from './home/appbar/PrimarySearchAppBar';
 
 /* eslint react/no-unused-state: 0 */
 export class Home extends React.PureComponent {
@@ -22,8 +23,9 @@ export class Home extends React.PureComponent {
     getServicesByCategoryAction: PropTypes.func.isRequired,
     services: PropTypes.arrayOf(serviceType).isRequired,
     serviceCategories: serviceCategoriesType.isRequired,
-    isLoading: PropTypes.bool.isRequired,
     getServicesByNameAction: PropTypes.func.isRequired,
+    userAuthorized: PropTypes.bool.isRequired,
+    isLoading: PropTypes.bool.isRequired,
   };
 
   constructor(props) {
@@ -34,7 +36,7 @@ export class Home extends React.PureComponent {
       searchText: undefined,
       subCategory: undefined,
       subCategories: [],
-      selectedCategoryId: false,
+      selectedCategoryId: '',
       selectedSubCategoryId: undefined,
       isRegisterOpen: false,
       isLoginOpen: false,
@@ -62,20 +64,14 @@ export class Home extends React.PureComponent {
     }
   };
 
-  handleOpenMenu = (event) => {
-    this.setState({ menuIconButtonEl: event.currentTarget });
-  };
-
-  handleCloseMenu = () => {
-    this.setState({ menuIconButtonEl: null });
-  };
-
   onChange = (value, key) => {
     this.setState({ [key]: value });
   };
 
   onLoadServices = () => {
-    this.props.getServicesByNameAction(this.state.searchText);
+    const { getServicesByNameAction } = this.props;
+    const { searchText } = this.state;
+    getServicesByNameAction(searchText);
   };
 
   onSearch = (event) => {
@@ -129,50 +125,52 @@ export class Home extends React.PureComponent {
 
   openDialog = (key) => {
     this.setState({ [key]: true });
-  }
+  };
 
   closeDialog = (key) => {
     this.setState({ [key]: false });
-  }
+  };
 
   render() {
-    const { serviceCategories, isLoading, services } = this.props;
+    const {
+      serviceCategories, services, userAuthorized, isLoading,
+    } = this.props;
     const {
       selectedCategoryId, subCategories, selectedSubCategoryId, searchText,
-      isRegisterOpen, isLoginOpen,
-      selectedService, menuIconButtonEl,
+      isRegisterOpen, isLoginOpen, userPosition,
+      selectedService,
     } = this.state;
     const searchedServices = this.getSearchedServices(services, searchText, selectedCategoryId);
     return (
       <>
-        <Auth isRegisterOpen={isRegisterOpen} isLoginOpen={isLoginOpen} closeDialog={this.closeDialog} />
-        <BookingDialog
-          initService={selectedService}
-          handleClose={this.handleCloseBookingDialog}
-          onSaveBooking={this.onSaveBooking}
-        />
         <Grid container>
-          <Grid item xs={12}>
-            <Header
-              serviceCategories={serviceCategories}
-              value={selectedCategoryId}
-              onCategoryChange={this.onCategoryChange}
-              onSearch={this.onSearch}
-              openLogin={() => this.openDialog('isLoginOpen')}
-              openSignup={() => this.openDialog('isRegisterOpen')}
-              handleOpenMenu={this.handleOpenMenu}
-              handleCloseMenu={this.handleCloseMenu}
-              menuIconButtonEl={menuIconButtonEl}
-            />
-          </Grid>
+          <Auth
+            isRegisterOpen={isRegisterOpen}
+            isLoginOpen={isLoginOpen}
+            closeDialog={this.closeDialog}
+          />
+          <BookingDialog
+            initService={selectedService}
+            handleClose={this.handleCloseBookingDialog}
+            onSaveBooking={this.onSaveBooking}
+          />
+          <PrimarySearchAppBar
+            loggedIn={userAuthorized}
+            handleAuthenticate={this.openDialog}
+            onSearch={this.onSearch}
+            categories={serviceCategories}
+            handleChangeCategory={this.onCategoryChange}
+            activeCategoryId={selectedCategoryId}
+            userPosition={userPosition}
+          />
           <Grid item xs={12} className={styles.selectService}>
             <Services
               services={searchedServices}
               onChange={this.onChange}
               subCategories={subCategories}
               selectedSubCategoryId={selectedSubCategoryId}
-              isLoading={isLoading}
               onLoadServices={this.onLoadServices}
+              isLoading={isLoading}
             />
           </Grid>
         </Grid>
@@ -183,6 +181,8 @@ export class Home extends React.PureComponent {
 
 const mapStateToProps = state => ({
   ...state.home,
+  userAuthorized: state.auth.userAuthorized,
+  isLoading: state.home.isLoading,
 });
 
 export default connect(

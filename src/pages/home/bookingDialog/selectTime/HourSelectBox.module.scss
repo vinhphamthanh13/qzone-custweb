@@ -1,0 +1,36 @@
+@import "styles/_color.scss";
+
+.selectHour {
+  width: 90%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.activeItem {
+  background: $primary;
+  & * {
+    color: white;
+  }
+}
+
+.selectHourContent {
+  padding-top: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.contentDesc{
+  margin-right: 1rem;
+}
+
+.availableSlots {
+  padding-top: 1rem;
+}
+
+.availableSlotsColor {
+  background-color: #b2dfdb;
+}
+
+.totalSlotsColor {
+  background-color: #00695c;
+}

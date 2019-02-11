@@ -3,6 +3,7 @@ import {
   dangerColor,
   roseColor,
   grayColor,
+  mainColor,
 } from '../material-dashboard-pro-react';
 
 const customCheckboxRadioSwitch = {
@@ -23,9 +24,6 @@ const customCheckboxRadioSwitch = {
     },
     marginTop: '0',
     marginBottom: '0',
-  },
-  checked: {
-    color: `${primaryColor}!important`,
   },
   checkedIcon: {
     width: '20px',
@@ -139,7 +137,7 @@ const customCheckboxRadioSwitch = {
     lineHeight: '111px',
   },
   switchBase: {
-    color: `${primaryColor}!important`,
+    color: `${mainColor} !important`,
   },
   switchIcon: {
     boxShadow: '0 1px 3px 1px rgba(0, 0, 0, 0.4)',
@@ -148,7 +146,7 @@ const customCheckboxRadioSwitch = {
     transform: 'translateX(-4px)!important',
   },
   switchIconChecked: {
-    borderColor: '#9c27b0',
+    borderColor: mainColor,
     transform: 'translateX(0px)!important',
   },
   switchBar: {

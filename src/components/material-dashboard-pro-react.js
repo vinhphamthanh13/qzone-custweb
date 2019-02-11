@@ -19,15 +19,15 @@
 // // // Variables - Styles that are used on more than one component
 // #############################
 
-const drawerWidth = 260;
+export const drawerWidth = 260;
 
-const drawerMiniWidth = 80;
+export const drawerMiniWidth = 80;
 
-const transition = {
+export const transition = {
   transition: 'all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1)',
 };
 
-const containerFluid = {
+export const containerFluid = {
   paddingRight: '15px',
   paddingLeft: '15px',
   marginRight: 'auto',
@@ -41,7 +41,7 @@ const containerFluid = {
   },
 };
 
-const container = {
+export const container = {
   paddingRight: '15px',
   paddingLeft: '15px',
   marginRight: 'auto',
@@ -64,12 +64,12 @@ const container = {
   },
 };
 
-const boxShadow = {
+export const boxShadow = {
   boxShadow:
     '0 10px 30px -12px rgba(0, 0, 0, 0.42), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2)',
 };
 
-const card = {
+export const card = {
   display: 'inline-block',
   position: 'relative',
   width: '100%',
@@ -80,98 +80,107 @@ const card = {
   background: '#fff',
 };
 
-const defaultFont = {
+export const defaultFont = {
   fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
   fontWeight: '300',
   lineHeight: '1.5em',
 };
 
-const primaryColor = '#9c27b0';
-const warningColor = '#ff9800';
-const dangerColor = '#f44336';
-const successColor = '#4caf50';
-const infoColor = '#00acc1';
-const roseColor = '#e91e63';
-const grayColor = '#999999';
+export const primaryColor = '#9c27b0';
+export const warningColor = '#ff9800';
+export const dangerColor = '#f44336';
+export const successColor = '#4caf50';
+export const infoColor = '#00acc1';
+export const roseColor = '#e91e63';
+export const grayColor = '#999999';
+export const lightGrayColor = '#cccccc';
+export const mainColor = '#3f51b5';
 
-const primaryBoxShadow = {
+export const primaryBoxShadow = {
   boxShadow:
     '0 12px 20px -10px rgba(156, 39, 176, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), '
     + '0 7px 8px -5px rgba(156, 39, 176, 0.2)',
 };
-const infoBoxShadow = {
+export const infoBoxShadow = {
   boxShadow:
     '0 12px 20px -10px rgba(0, 188, 212, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), '
     + '0 7px 8px -5px rgba(0, 188, 212, 0.2)',
 };
-const successBoxShadow = {
+export const successBoxShadow = {
   boxShadow:
     '0 12px 20px -10px rgba(76, 175, 80, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), '
     + '0 7px 8px -5px rgba(76, 175, 80, 0.2)',
 };
-const warningBoxShadow = {
+export const warningBoxShadow = {
   boxShadow:
     '0 12px 20px -10px rgba(255, 152, 0, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), '
     + '0 7px 8px -5px rgba(255, 152, 0, 0.2)',
 };
-const dangerBoxShadow = {
+export const dangerBoxShadow = {
   boxShadow:
     '0 12px 20px -10px rgba(244, 67, 54, 0.28), 0 4px 20px 0px rgba(0, 0, 0, 0.12), '
     + '0 7px 8px -5px rgba(244, 67, 54, 0.2)',
 };
-const roseBoxShadow = {
+export const roseBoxShadow = {
   boxShadow:
     '0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(233, 30, 99, 0.4)',
 };
-
+export const mainBoxShadow = {
+  boxShadow:
+    '0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(00, 0, 0, 0.4)',
+};
 // old card headers
-const orangeCardHeader = {
+export const orangeCardHeader = {
   background: 'linear-gradient(60deg, #ffa726, #fb8c00)',
   ...warningBoxShadow,
 };
-const greenCardHeader = {
+export const greenCardHeader = {
   background: 'linear-gradient(60deg, #66bb6a, #43a047)',
   ...successBoxShadow,
 };
-const redCardHeader = {
+export const redCardHeader = {
   background: 'linear-gradient(60deg, #ef5350, #e53935)',
   ...dangerBoxShadow,
 };
-const blueCardHeader = {
+export const blueCardHeader = {
   background: 'linear-gradient(60deg, #26c6da, #00acc1)',
   ...infoBoxShadow,
 };
-const purpleCardHeader = {
+export const purpleCardHeader = {
   background: 'linear-gradient(60deg, #ab47bc, #8e24aa)',
   ...primaryBoxShadow,
 };
 // new card headers
-const warningCardHeader = {
+export const warningCardHeader = {
   background: 'linear-gradient(60deg, #ffa726, #fb8c00)',
   ...warningBoxShadow,
 };
-const successCardHeader = {
+export const successCardHeader = {
   background: 'linear-gradient(60deg, #66bb6a, #43a047)',
   ...successBoxShadow,
 };
-const dangerCardHeader = {
+export const dangerCardHeader = {
   background: 'linear-gradient(60deg, #ef5350, #e53935)',
   ...dangerBoxShadow,
 };
-const infoCardHeader = {
+export const infoCardHeader = {
   background: 'linear-gradient(60deg, #26c6da, #00acc1)',
   ...infoBoxShadow,
 };
-const primaryCardHeader = {
+export const primaryCardHeader = {
   background: 'linear-gradient(60deg, #ab47bc, #8e24aa)',
   ...primaryBoxShadow,
 };
-const roseCardHeader = {
+export const mainCardHeader = {
+  background: 'linear-gradient(60deg, #3f51b5, #3f51b5)',
+  ...mainBoxShadow,
+};
+export const roseCardHeader = {
   background: 'linear-gradient(60deg, #ec407a, #d81b60)',
   ...roseBoxShadow,
 };
 
-const cardActions = {
+export const cardActions = {
   margin: '0 20px 10px',
   paddingTop: '10px',
   borderTop: '1px solid #eeeeee',
@@ -179,13 +188,12 @@ const cardActions = {
   ...defaultFont,
 };
 
-const cardHeader = {
+export const cardHeader = {
   margin: '-20px 15px 0',
-  borderRadius: '3px',
   padding: '15px',
 };
 
-const defaultBoxShadow = {
+export const defaultBoxShadow = {
   border: '0',
   borderRadius: '3px',
   boxShadow:
@@ -194,7 +202,7 @@ const defaultBoxShadow = {
   transition: 'all 150ms ease 0s',
 };
 
-const tooltip = {
+export const tooltip = {
   padding: '10px 15px',
   minWidth: '130px',
   color: '#FFFFFF',
@@ -221,7 +229,7 @@ const tooltip = {
   lineBreak: 'auto',
 };
 
-const title = {
+export const title = {
   color: '#3C4858',
   textDecoration: 'none',
   fontWeight: '300',
@@ -237,7 +245,7 @@ const title = {
   },
 };
 
-const cardTitle = {
+export const cardTitle = {
   ...title,
   marginTop: '0',
   marginBottom: '3px',
@@ -250,58 +258,16 @@ const cardTitle = {
   },
 };
 
-const cardSubtitle = {
+export const cardSubtitle = {
   marginTop: '-.375rem',
 };
 
-const cardLink = {
+export const cardLink = {
   '& + $cardLink': {
     marginLeft: '1.25rem',
   },
 };
 
-export {
-  // variables
-  drawerWidth,
-  drawerMiniWidth,
-  transition,
-  container,
-  containerFluid,
-  boxShadow,
-  card,
-  defaultFont,
-  primaryColor,
-  warningColor,
-  dangerColor,
-  successColor,
-  infoColor,
-  roseColor,
-  grayColor,
-  primaryBoxShadow,
-  infoBoxShadow,
-  successBoxShadow,
-  warningBoxShadow,
-  dangerBoxShadow,
-  roseBoxShadow,
-  // old card header colors
-  orangeCardHeader,
-  greenCardHeader,
-  redCardHeader,
-  blueCardHeader,
-  purpleCardHeader,
-  roseCardHeader,
-  // new card header colors
-  warningCardHeader,
-  successCardHeader,
-  dangerCardHeader,
-  infoCardHeader,
-  primaryCardHeader,
-  cardActions,
-  cardHeader,
-  defaultBoxShadow,
-  tooltip,
-  title,
-  cardTitle,
-  cardSubtitle,
-  cardLink,
+export const textCenter = {
+  textAlign: 'center',
 };

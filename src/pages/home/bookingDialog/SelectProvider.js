@@ -2,19 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  Grid, CircularProgress, Card, CardContent,
+  Grid, Card, CardContent,
   Typography, CardActionArea,
 } from '@material-ui/core';
 import { providerType, serviceType, bookingDetailType } from 'types/global';
 import CustomLink from 'components/CustomLink';
 import { getProvidersByService } from 'modules/home/bookingDialog/selectProvider.actions';
-import formatName from 'utils/formatName';
-import EmptyState from '../services/EmptyState';
+import EmptyItem from '../services/EmptyItem';
 import styles from './SelectProvider.module.scss';
 
 class SelectProvider extends React.PureComponent {
   componentDidMount = () => {
-    this.props.getProvidersByServiceAction(this.props.initService.id);
+    const { providers, getProvidersByServiceAction, initService } = this.props;
+
+    if (providers.length === 0) {
+      getProvidersByServiceAction(initService.id);
+    }
   }
 
   render() {
@@ -25,56 +28,56 @@ class SelectProvider extends React.PureComponent {
       <div className={styles.selectProvider}>
         <Grid container spacing={32} className={styles.cardsWrapper}>
           {
-            isLoading && providers.length === 0
-            && <CircularProgress size={50} classes={{ root: styles.loading }} />
-          }
-          {
             !isLoading && providers.length === 0
-            && <EmptyState message="No available providers" />
+            && <EmptyItem message="No available providers" />
           }
           {providers.map(provider => (
             <Grid item md={4} key={provider.id}>
               <Card classes={{
-                root: bookingDetail.provider && bookingDetail.provider.id === provider.id
-                  ? styles.activeItem : '',
+                root: bookingDetail.provider
+                  && bookingDetail.provider.id === provider.id ? styles.activeItem : '',
               }}
               >
                 <CardActionArea onClick={() => onChange(provider, 'provider')}>
                   <CardContent>
                     <Typography variant="title">
-                      {formatName(provider.name)}
+                      {provider.givenName} {provider.familyName}
                     </Typography>
-                    <div className={styles.serviceDetail}>
-                      <Typography variant="subtitle2">
-                        {(provider.description || '').substring(0, 300)}...&nbsp;
-                        {provider.description.length > 300
-                          && <CustomLink text="Read more" to="#" onClick={this.openDialog} />}
-                      </Typography>
+                    <Typography variant="body2">
+                      {(provider.description || '').substring(0, 300)}
+                      {provider.description.length > 300
+                        && <>...&nbsp;<CustomLink text="Read more" to="#" onClick={this.openDialog} /></>}
+                    </Typography>
+                    <div className={styles.providerDetail}>
                       <Grid container>
-                        <Grid item sm={6}>
+                        <Grid item sm={4}>
                           <Typography variant="caption">Qualifications:</Typography>
                         </Grid>
-                        <Grid item sm={6}>
+                        <Grid item sm={8}>
                           <Typography variant="subtitle2">
                             {provider.qualifications.join(', ')}
                           </Typography>
                         </Grid>
-                      </Grid>
-                      <Grid container>
-                        <Grid item sm={6}>
+                        <Grid item sm={4}>
                           <Typography variant="caption">Mobile phone:</Typography>
                         </Grid>
-                        <Grid item sm={6}>
+                        <Grid item sm={8}>
                           <Typography variant="subtitle2">
-                            {`${provider.mobile.countryCode}-${provider.mobile.number}`}
+                            {provider.telephone}
                           </Typography>
                         </Grid>
-                      </Grid>
-                      <Grid container>
-                        <Grid item sm={6}>
+                        <Grid item sm={4}>
+                          <Typography variant="caption">Email:</Typography>
+                        </Grid>
+                        <Grid item sm={8}>
+                          <Typography variant="subtitle2">
+                            {provider.email}
+                          </Typography>
+                        </Grid>
+                        <Grid item sm={4}>
                           <Typography variant="caption">Organisation:</Typography>
                         </Grid>
-                        <Grid item sm={6}>
+                        <Grid item sm={8}>
                           <Typography variant="subtitle2">
                             <CustomLink
                               text={provider.organization.name}

@@ -1,8 +1,13 @@
-import { SET_LOADING, SET_PROVIDERS } from './selectProvider.actions';
+import {
+  SET_LOADING,
+  SET_PROVIDERS,
+  SET_PROVIDER_TIME_DETAIL,
+} from './selectProvider.actions';
 
 const initialState = {
   isLoading: false,
   providers: [],
+  providerDetails: {},
 };
 
 const selectProvider = (state = initialState, action) => {
@@ -15,6 +20,14 @@ const selectProvider = (state = initialState, action) => {
             provider => state.providers.every(existedProvider => existedProvider.id !== provider.id),
           ),
         ),
+      };
+    case SET_PROVIDER_TIME_DETAIL:
+      return {
+        ...state,
+        providerDetails: {
+          ...state.providerDetails,
+          [action.payload.providerId]: action.payload.providerTimeDetail,
+        },
       };
     case SET_LOADING:
       return { ...state, isLoading: action.payload };
