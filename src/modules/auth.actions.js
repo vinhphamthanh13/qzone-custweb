@@ -138,6 +138,8 @@ export function registerAWS(values) {
       password: values.password,
       attributes: {
         email: values.email,
+        given_name: values.givenName,
+        phone_number: (values.telephone != null ? values.telephone : ''),
       },
       validationData: [],
     })
