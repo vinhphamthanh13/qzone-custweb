@@ -1,7 +1,7 @@
 import {
   SET_LOADING,
   SET_PROVIDERS,
-  SET_PROVIDER_TIME_DETAIL,
+  SET_PROVIDER_TIMES_DETAIL,
 } from './selectProvider.actions';
 
 const initialState = {
@@ -21,12 +21,12 @@ const selectProvider = (state = initialState, action) => {
           ),
         ),
       };
-    case SET_PROVIDER_TIME_DETAIL:
+    case SET_PROVIDER_TIMES_DETAIL:
       return {
         ...state,
         providerDetails: {
           ...state.providerDetails,
-          [action.payload.providerId]: action.payload.providerTimeDetail,
+          ...action.payload,
         },
       };
     case SET_LOADING:

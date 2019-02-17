@@ -1,5 +1,4 @@
 import React from 'react';
-import Alert from 'react-s-alert';
 import { Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
@@ -57,7 +56,6 @@ const App = () => (
           <Loading />
         </Provider>
       </MuiPickersUtilsProvider>
-      <Alert stack effect="bouncyflip" position="top-right" />
       <CssBaseline />
     </React.Fragment>
   </JssProvider>

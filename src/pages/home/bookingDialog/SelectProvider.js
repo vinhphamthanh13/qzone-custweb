@@ -1,15 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Grid, Card, CardContent } from '@material-ui/core';
 import {
-  Grid, Card, CardContent,
-  Typography, CardActionArea,
-} from '@material-ui/core';
-import { providerType, serviceType, bookingDetailType } from 'types/global';
-import CustomLink from 'components/CustomLink';
+  providerType, serviceType, bookingDetailType, providerDetailsType,
+} from 'types/global';
 import { getProvidersByService } from 'modules/home/bookingDialog/selectProvider.actions';
-import EmptyItem from '../services/EmptyItem';
+import EmptyItem from 'components/EmptyItem';
+import ProviderContent from './selectProvider/ProviderContent';
 import styles from './SelectProvider.module.scss';
+import DateSelect from './selectProvider/DateSelect';
 
 class SelectProvider extends React.PureComponent {
   componentDidMount = () => {
@@ -20,80 +20,47 @@ class SelectProvider extends React.PureComponent {
     }
   }
 
+  onSelectBooking = (provider, time) => {
+    this.props.onChange(provider, 'provider');
+    this.props.onChange(time, 'time');
+  }
+
   render() {
     const {
-      isLoading, providers, onChange, bookingDetail,
+      isLoading, providers, bookingDetail, initService, providerDetails,
+      onChange,
     } = this.props;
     return (
-      <div className={styles.selectProvider}>
-        <Grid container spacing={32} className={styles.cardsWrapper}>
-          {
-            !isLoading && providers.length === 0
-            && <EmptyItem message="No available providers" />
-          }
-          {providers.map(provider => (
-            <Grid item md={4} key={provider.id}>
-              <Card classes={{
-                root: bookingDetail.provider
-                  && bookingDetail.provider.id === provider.id ? styles.activeItem : '',
-              }}
-              >
-                <CardActionArea onClick={() => onChange(provider, 'provider')}>
+      <>
+        {!isLoading && providers.length === 0
+          && <EmptyItem message="No available providers" />}
+        <div className={styles.selectProvider}>
+          {providers.length > 0 && (
+            <DateSelect
+              bookingDetail={bookingDetail}
+              onChange={onChange}
+              providers={providers}
+              initServiceId={initService ? initService.id : -1}
+            />)}
+          <Grid container spacing={16} classes={{ container: styles.providerCardsWrapper }}>
+            {providers.map(provider => (
+              <Grid item xs={12} md={6} key={provider.id}>
+                <Card>
                   <CardContent>
-                    <Typography variant="title">
-                      {provider.givenName} {provider.familyName}
-                    </Typography>
-                    <Typography variant="body2">
-                      {(provider.description || '').substring(0, 300)}
-                      {provider.description.length > 300
-                        && <>...&nbsp;<CustomLink text="Read more" to="#" onClick={this.openDialog} /></>}
-                    </Typography>
-                    <div className={styles.providerDetail}>
-                      <Grid container>
-                        <Grid item sm={4}>
-                          <Typography variant="caption">Qualifications:</Typography>
-                        </Grid>
-                        <Grid item sm={8}>
-                          <Typography variant="subtitle2">
-                            {provider.qualifications.join(', ')}
-                          </Typography>
-                        </Grid>
-                        <Grid item sm={4}>
-                          <Typography variant="caption">Mobile phone:</Typography>
-                        </Grid>
-                        <Grid item sm={8}>
-                          <Typography variant="subtitle2">
-                            {provider.telephone}
-                          </Typography>
-                        </Grid>
-                        <Grid item sm={4}>
-                          <Typography variant="caption">Email:</Typography>
-                        </Grid>
-                        <Grid item sm={8}>
-                          <Typography variant="subtitle2">
-                            {provider.email}
-                          </Typography>
-                        </Grid>
-                        <Grid item sm={4}>
-                          <Typography variant="caption">Organisation:</Typography>
-                        </Grid>
-                        <Grid item sm={8}>
-                          <Typography variant="subtitle2">
-                            <CustomLink
-                              text={provider.organization.name}
-                              to={`/organisation/${provider.organization.id}`}
-                            />
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </div>
+                    <ProviderContent
+                      initService={initService}
+                      provider={provider}
+                      bookingDetail={bookingDetail}
+                      duration={providerDetails[provider.id] ? providerDetails[provider.id][0].durationSec : 0}
+                      onTimeSelect={(time) => { this.onSelectBooking(provider, time); }}
+                    />
                   </CardContent>
-                </CardActionArea>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </div>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </div>
+      </>
     );
   }
 }
@@ -101,6 +68,9 @@ class SelectProvider extends React.PureComponent {
 SelectProvider.propTypes = {
   initService: serviceType,
   providers: PropTypes.arrayOf(providerType).isRequired,
+  providerDetails: PropTypes.shape({
+    [PropTypes.string]: providerDetailsType,
+  }).isRequired,
   isLoading: PropTypes.bool.isRequired,
   getProvidersByServiceAction: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
@@ -111,6 +81,8 @@ SelectProvider.defaultProps = {
   initService: undefined,
 };
 
-const mapStateToProps = state => ({ ...state.homeModules.bookingDialog.selectProvider });
+const mapStateToProps = state => ({
+  ...state.homeModules.bookingDialog.selectProvider,
+});
 
 export default connect(mapStateToProps, { getProvidersByServiceAction: getProvidersByService })(SelectProvider);

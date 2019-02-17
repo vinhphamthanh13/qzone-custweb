@@ -1,0 +1,21 @@
+@import 'styles/_color.scss';
+
+.title {
+  border-bottom: $alto 1px solid;
+  padding: 16px;
+  display: flex;
+}
+
+.leftTitle {
+  flex-grow: 1;
+}
+
+.content {
+  padding: 16px;
+}
+
+.footer {
+  border-top: $alto 1px solid;
+  padding: 16px;
+  margin: 0;
+}
