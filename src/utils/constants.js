@@ -26,7 +26,7 @@ export const registerPopoverPosition = {
   },
 };
 
-export const registerPasswordConvention = [
+export const passwordPolicyTerms = [
   '8 to 60 characters',
   '1 lowercase character(s)',
   '1 uppercase character(s)',

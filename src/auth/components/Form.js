@@ -1,0 +1,268 @@
+import React, { Component } from 'react';
+import {
+  func, string, bool, objectOf, any,
+} from 'prop-types';
+import { classesType, socialLoginType } from 'types/global';
+import {
+  Typography, InputAdornment, Button, Checkbox, FormControlLabel, TextField,
+} from '@material-ui/core';
+import withStyles from '@material-ui/core/styles/withStyles';
+import {
+  Call, Check, Email, InsertEmoticon, Lock as LockOutline, LockOpen,
+} from '@material-ui/icons';
+import Card from 'components/Card/Card';
+import CardHeader from 'components/Card/CardHeader';
+import CardBody from 'components/Card/CardBody';
+import SocialAccountsLogin from './SocialAccountsLogin';
+import PasswordPolicy from './PasswordPolicy';
+import ResetPassword from './ResetPassword';
+import s from './Form.style';
+
+const resolveIconClassName = (name, value, errors, touched, classes) => {
+  switch (value) {
+    case '':
+      return touched[name] ? classes.inputAdornmentIconError : classes.inputAdornmentIconDefault;
+    default:
+      return errors[name] ? classes.inputAdornmentIconError : classes.inputAdornmentIconSuccess;
+  }
+};
+
+const LOGIN = 'login';
+const REGISTER = 'register';
+const FIELD_IDS = {
+  NAME: 'given-name',
+  TEL: 'telephone',
+  EMAIL: 'email',
+  PASSWORD: 'password',
+  CONFIRM_PASSWORD: 'confirm-password',
+};
+
+const regIdRegEx = /given-name|telephone|confirm-password/i;
+
+class Form extends Component {
+  onChange = (name, event) => {
+    event.persist();
+    const { handleChange, setFieldTouched } = this.props;
+    const { target: { value } } = event;
+    if (!/^\S+$/.test(value) && value.length) return;
+    handleChange(event);
+    setFieldTouched(name, true, false);
+  };
+
+  render() {
+    const {
+      formType, socialActions, classes, onClose, values: {
+        givenName,
+        telephone,
+        email,
+        password,
+        confirmPassword,
+      },
+      handleSubmit,
+      errors, touched, isValid,
+    } = this.props;
+    const resolvedPassword = formType === REGISTER
+      ? { name: 'confirmPassword', value: confirmPassword }
+      : { name: 'password', value: password };
+    const passwordMatched = (errors.confirmPassword && touched.confirmPassword) || (errors.password && touched.password)
+      ? (
+        <LockOpen
+          className={resolveIconClassName(resolvedPassword.name, resolvedPassword.value, errors, touched, classes)}
+        />) : (
+          <LockOutline
+            className={
+              resolveIconClassName(resolvedPassword.name, resolvedPassword.value, errors, touched, classes)
+            }
+          />);
+    const fields = [
+      {
+        id: FIELD_IDS.NAME,
+        type: 'text',
+        name: 'givenName',
+        label: 'Given name',
+        value: givenName || '',
+        icon: InsertEmoticon,
+      },
+      {
+        id: FIELD_IDS.TEL,
+        type: 'tel',
+        name: 'telephone',
+        label: 'Phone number',
+        value: telephone || '',
+        icon: Call,
+      },
+      {
+        id: FIELD_IDS.EMAIL,
+        type: 'email',
+        name: 'email',
+        label: 'Email',
+        value: email,
+        icon: Email,
+      },
+      {
+        id: FIELD_IDS.PASSWORD,
+        type: 'password',
+        name: 'password',
+        label: 'Password',
+        value: password,
+        icon: LockOutline,
+      },
+      {
+        id: FIELD_IDS.CONFIRM_PASSWORD,
+        type: 'password',
+        name: 'confirmPassword',
+        label: 'Confirm password',
+        value: confirmPassword || '',
+      },
+    ];
+    const renderedForm = fields.map((field) => {
+      let displayField = null;
+      if (regIdRegEx.test(field.id)) {
+        displayField = formType === REGISTER ? (
+          <TextField
+            key={field.id}
+            id={field.id}
+            type={field.type}
+            name={field.name}
+            label={field.label}
+            value={field.value}
+            fullWidth
+            autoFocus={formType === REGISTER && field.id === FIELD_IDS.NAME}
+            classes={{ root: classes.marginLoose }}
+            error={touched[field.name] ? !!errors[field.name] : false}
+            InputProps={{
+              className: classes.marginDense,
+              endAdornment: (
+                <InputAdornment position="end">
+                  {field.id === FIELD_IDS.CONFIRM_PASSWORD ? passwordMatched : (
+                    <field.icon
+                      className={resolveIconClassName(field.name, field.value, errors, touched, classes)}
+                    />
+                  )
+                  }
+                </InputAdornment>
+              ),
+            }}
+            onChange={event => this.onChange(field.name, event)}
+          />
+        ) : null;
+      } else {
+        displayField = (
+          <TextField
+            key={field.id}
+            id={field.id}
+            type={field.type}
+            name={field.name}
+            label={field.label}
+            value={field.value}
+            fullWidth
+            autoFocus={formType === LOGIN && field.id === FIELD_IDS.EMAIL}
+            classes={{ root: classes.marginLoose }}
+            error={touched[field.name] ? !!errors[field.name] : false}
+            InputProps={{
+              className: classes.marginDense,
+              endAdornment: (
+                <InputAdornment position="end">
+                  {field.id === FIELD_IDS.PASSWORD
+                  && errors[FIELD_IDS.PASSWORD] && touched[FIELD_IDS.PASSWORD] && <PasswordPolicy />}
+                  <field.icon
+                    className={resolveIconClassName(field.name, field.value, errors, touched, classes)}
+                  />
+                </InputAdornment>
+              ),
+            }}
+            onChange={event => this.onChange(field.name, event)}
+          />
+        );
+      }
+      return displayField;
+    });
+
+    return (
+      <form onSubmit={handleSubmit}>
+        <Card className={classes.registerCard}>
+          <CardHeader
+            className={
+              `${classes.cardHeader} ${classes.center}
+               ${formType === LOGIN ? classes.loginPanel : ''}`}
+            color="main"
+          >
+            <Typography variant="h5" color="inherit">{formType === REGISTER ? 'Register' : 'Login'}</Typography>
+            { formType === LOGIN && <SocialAccountsLogin actions={socialActions} />}
+          </CardHeader>
+          <CardBody>
+            { renderedForm }
+            { formType === LOGIN && <ResetPassword /> }
+            { formType === REGISTER && (
+              <FormControlLabel
+                control={(
+                  <Checkbox
+                    tabIndex={-1}
+                    name="policyAgreement"
+                    onClick={event => this.onChange('policyAgreement', event)}
+                    checkedIcon={<Check className={classes.checkedIcon} />}
+                    icon={<Check className={classes.uncheckedIcon} />}
+                    color="primary"
+                    classes={{
+                      root: classes.policyAgreement,
+                    }}
+                  />
+                )}
+                label={(
+                  <span>
+                    I agree to the terms and conditions
+                  </span>
+                )}
+              />
+            )}
+            <div className={classes.center}>
+              <Button
+                color="primary"
+                variant="contained"
+                fullWidth
+                disabled={!isValid}
+                type="submit"
+              >
+                Submit
+              </Button>
+              <Button
+                color="primary"
+                variant="text"
+                disableRipple
+                className={classes.simpleButton}
+                onClick={onClose}
+              >
+                {formType === REGISTER ? 'Discard' : 'Close'}
+              </Button>
+            </div>
+          </CardBody>
+        </Card>
+      </form>
+    );
+  }
+}
+
+Form.propTypes = {
+  classes: classesType.isRequired,
+  isValid: bool.isRequired,
+  handleSubmit: func.isRequired,
+  onClose: func.isRequired,
+  handleChange: func.isRequired,
+  errors: objectOf(any).isRequired,
+  touched: objectOf(any).isRequired,
+  setFieldTouched: func.isRequired,
+  values: objectOf(any).isRequired,
+  formType: string,
+  socialActions: socialLoginType,
+};
+
+Form.defaultProps = {
+  formType: LOGIN,
+  socialActions: {
+    twitter: () => {},
+    facebook: () => {},
+    'google-plus-g': () => {},
+  },
+};
+
+export default withStyles(s)(Form);
