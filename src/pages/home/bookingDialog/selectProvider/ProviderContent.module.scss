@@ -1,0 +1,18 @@
+.providerLeftHeader {
+  flex-grow: 1;
+  margin-right: 16px;
+  &__description {
+    color: #3f51b5;
+  }
+}
+
+.providerRightHeader {
+  text-align: right;
+  &__duration {
+    margin-top: 8px;
+  }
+}
+
+.providerDetail {
+  margin-top: 16px;
+}

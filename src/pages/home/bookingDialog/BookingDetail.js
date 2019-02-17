@@ -24,7 +24,7 @@ class BookingDetail extends React.PureComponent {
   render() {
     const { name, email, phoneNumber } = this.state;
     const { bookingDetail, initService } = this.props;
-    const localBookingStartTime = mtz(bookingDetail.time.start).add(bookingDetail.hourToLocalOffset, 'h');
+    const localBookingStartTime = mtz(bookingDetail.time.start);
     return (
       <Grid container className={styles.wrapper}>
         <Grid item md={6} className={styles.userInfo}>

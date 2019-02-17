@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Paper } from '@material-ui/core';
 import { serviceType } from 'types/global';
+import EmptyItem from 'components/EmptyItem';
 import styles from './Services.module.scss';
 import SubCategoryTabs, { subCategoriesType } from './SubCategoryTabs';
 import ServiceCard from './services/ServiceCard';
-import EmptyItem from './services/EmptyItem';
 
 export default function Services({
   services,

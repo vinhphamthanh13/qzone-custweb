@@ -1,13 +1,21 @@
 @import "styles/_color.scss";
 
 .wrapper {
-  padding: 32px;
+  padding: 0 32px;
 }
 
 .userInfo {
   border-right: 2px solid $we_peep;
   margin-right: 7%;
   padding: 32px 7% 32px 0;
+}
+
+@media(max-width: 960px) {
+  .userInfo {
+    border-right: none;
+    margin-right: 0;
+    padding-right: 0;
+  }
 }
 
 .service {

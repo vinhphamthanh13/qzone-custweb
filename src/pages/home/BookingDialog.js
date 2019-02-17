@@ -4,16 +4,15 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import {
   Slide, Dialog, AppBar, Toolbar, IconButton,
-  Tabs, Tab, Paper, Avatar, Typography,
+  Avatar, Typography, Button,
+  Stepper, Step, StepLabel,
 } from '@material-ui/core';
 import withStyles from '@material-ui/core/styles/withStyles';
 import CloseIcon from '@material-ui/icons/Close';
-import mtz from 'moment-timezone';
 import logo from 'images/logo.png';
 import { serviceType } from 'types/global';
 import { setProviders } from 'modules/home/bookingDialog/selectProvider.actions';
 import SelectProvider from './bookingDialog/SelectProvider';
-import SelectTime from './bookingDialog/SelectTime';
 import BookingDetail from './bookingDialog/BookingDetail';
 import BookingStyle from './BookingDialogStyle';
 
@@ -25,53 +24,49 @@ function Transition(props) {
 class BookingDialog extends PureComponent {
   constructor(props) {
     super(props);
-    this.bookingStepsComponents = {
-      provider: SelectProvider,
-      time: SelectTime,
-      'booking detail': BookingDetail,
-    };
+    this.bookingStepsComponents = [SelectProvider, BookingDetail];
+    this.bookingSteps = ['Select provider', 'Booking detail'];
     this.defaultState = {
-      step: 'provider',
+      step: 0,
       bookingDetail: {
         provider: undefined,
         time: undefined,
-        hourToLocalOffset: 0,
+        day: undefined,
       },
-      bookingSteps: [
-        { value: 'provider', disabled: false },
-        { value: 'time', disabled: true },
-        { value: 'booking detail', disabled: true },
-      ],
     };
     this.state = { ...this.defaultState };
   }
 
-  onStepChange = (event, step) => {
-    this.setState({ step });
-  };
+  onStepChange = idx => () => {
+    this.setState({ step: idx });
+  }
+
+  handleBack = () => {
+    this.setState(oldState => ({ step: oldState.step - 1 }));
+  }
+
+  handleNext = () => {
+    this.setState(oldState => ({ step: oldState.step + 1 }));
+  }
+
+  isStepCompleted = () => {
+    const { step, bookingDetail } = this.state;
+    switch (step) {
+      case 0:
+        return !!bookingDetail.provider && !!bookingDetail.time;
+      default:
+        return false;
+    }
+  }
 
   onChangeBookingDetail = (value, key) => {
-    let hourToLocalOffset;
-    if (key === 'provider') {
-      const today = mtz();
-      const localOffset = today.clone().utcOffset();
-      const providerOffset = today.clone().tz(value.timeZoneId).utcOffset();
-      hourToLocalOffset = (localOffset - providerOffset) / 60;
-    }
-
     this.setState(oldState => ({
       bookingDetail: {
         ...oldState.bookingDetail,
         [key]: value,
-        hourToLocalOffset: hourToLocalOffset || oldState.bookingDetail.hourToLocalOffset,
       },
-      bookingSteps: [
-        { value: 'provider', disabled: false },
-        { value: 'time', disabled: false },
-        { value: 'booking detail', disabled: key === 'provider' },
-      ],
     }));
-  };
+  }
 
   handleClose = () => {
     this.props.setProvidersAction([]);
@@ -81,7 +76,7 @@ class BookingDialog extends PureComponent {
 
   render() {
     const { initService, classes } = this.props;
-    const { step, bookingDetail, bookingSteps } = this.state;
+    const { step, bookingDetail } = this.state;
     const StepComponent = this.bookingStepsComponents[step];
 
     return (
@@ -90,7 +85,7 @@ class BookingDialog extends PureComponent {
         open={initService !== undefined}
         onClose={this.handleClose}
         TransitionComponent={Transition}
-        className={classes.diagRoot}
+        classes={{ root: classes.diagRoot }}
       >
         <AppBar position="relative">
           <Toolbar>
@@ -102,25 +97,30 @@ class BookingDialog extends PureComponent {
             </IconButton>
           </Toolbar>
         </AppBar>
-        <Paper square>
-          <Tabs
-            centered
-            indicatorColor="primary"
-            textColor="primary"
-            value={step}
-            onChange={this.onStepChange}
+        <div className={classes.bookingStepsWrapper}>
+          <Button
+            disabled={step === 0}
+            onClick={this.handleBack}
           >
-            {bookingSteps.map(
-              bookingStep => (
-                <Tab
-                  {...bookingStep}
-                  key={bookingStep.value}
-                  label={bookingStep.value}
-                />
-              ),
-            )}
-          </Tabs>
-        </Paper>
+          Back
+          </Button>
+          <Stepper classes={{ root: classes.bookingStepper }} elevation={1} activeStep={step}>
+            {this.bookingSteps.map(bookingStep => (
+              <Step key={bookingStep}>
+                <StepLabel>
+                  {bookingStep}
+                </StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+          <Button
+            color="primary"
+            disabled={step === this.bookingSteps.length - 1 || !this.isStepCompleted()}
+            onClick={this.handleNext}
+          >
+          Next
+          </Button>
+        </div>
         {initService && (
           <StepComponent
             initService={initService}

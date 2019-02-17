@@ -11,6 +11,15 @@ const style = theme => ({
   diagRoot: {
     padding: '0px !important',
   },
+  bookingStepsWrapper: {
+    display: 'flex',
+    margin: '16px auto 32px',
+    width: '70%',
+  },
+  bookingStepper: {
+    flexGrow: 1,
+    margin: '0 32px',
+  },
 });
 
 export default style;

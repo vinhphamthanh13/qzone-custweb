@@ -9,7 +9,7 @@ import { setOrgs } from 'modules/home.actions';
 
 export const SET_LOADING = 'HOME.BOOKING_DIALOG.SELECT_SERVICE.SET_LOADING';
 export const SET_PROVIDERS = 'HOME.BOOKING_DIALOG.SELECT_SERVICE.SET_PROVIDERS';
-export const SET_PROVIDER_TIME_DETAIL = 'HOME.BOOKING_DIALOG.SELECT_SERVICE.SET_PROVIDER_TIME_DETAIL';
+export const SET_PROVIDER_TIMES_DETAIL = 'HOME.BOOKING_DIALOG.SELECT_SERVICE.SET_PROVIDER_TIMES_DETAIL';
 
 export const setLoading = payload => ({
   type: SET_LOADING,
@@ -21,13 +21,14 @@ export const setProviders = payload => ({
   payload,
 });
 
-export const setProviderTimeDetail = (providerId, providerTimeDetail) => ({
-  type: SET_PROVIDER_TIME_DETAIL,
-  payload: { providerId, providerTimeDetail },
+export const setProviderTimesDetail = payload => ({
+  type: SET_PROVIDER_TIMES_DETAIL,
+  payload,
 });
 
 export const getProvidersByService = serviceId => async (dispatch, getState) => {
   dispatch(setLoading(true));
+
   const rawProvidersService = handleResponse(await handleRequest(searchProvidersByService, serviceId), []);
   const response = await Promise.all(rawProvidersService.map(
     resp => handleRequest(searchProviderById, resp.providerId),
@@ -51,12 +52,18 @@ export const getProvidersByService = serviceId => async (dispatch, getState) => 
   dispatch(setOrgs(orgs));
 };
 
-export const getProviderTime = payload => async (dispatch) => {
+export const getProviderTimes = data => async (dispatch) => {
   dispatch(setLoading(true));
-  const response = handleResponse(
-    await handleRequest(findAvailabilitiesByDateRange, payload),
-    [],
-  );
-  dispatch(setProviderTimeDetail(payload.providerId, response));
+
+  const response = (await Promise.all(data.providers.map(provider => handleRequest(findAvailabilitiesByDateRange, {
+    serviceId: data.serviceId, providerId: provider.id, startSec: data.startSec, toSec: data.toSec,
+  })))).map(handleResponse);
+
+  const providerTimes = {};
+  response.forEach((providerTime) => {
+    providerTimes[providerTime[0].providerId] = [...providerTime];
+  });
+
+  dispatch(setProviderTimesDetail(providerTimes));
   dispatch(setLoading(false));
 };

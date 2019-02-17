@@ -19,16 +19,24 @@ export const matchType = PropTypes.objectOf(PropTypes.oneOfType([
 export const serviceType = PropTypes.shape({
   id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
+  allowProviderSelection: PropTypes.bool.isRequired,
+  description: PropTypes.string.isRequired,
+  serviceCategoryId: PropTypes.string.isRequired,
 });
 
 export const providerType = PropTypes.shape({
   id: PropTypes.string.isRequired,
-  name: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.objectOf(PropTypes.string)]).isRequired,
+  familyName: PropTypes.string,
+  givenName: PropTypes.string,
 });
 
 export const bookingDetailType = PropTypes.shape({
   provider: PropTypes.object,
   time: PropTypes.object,
+});
+
+export const providerDetailsType = PropTypes.shape({
+  startHour: PropTypes.number,
+  displayedStartHour: PropTypes.number,
+  durationSec: PropTypes.number,
 });
