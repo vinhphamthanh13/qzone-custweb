@@ -1,19 +1,22 @@
-import PropTypes from 'prop-types';
+import {
+  objectOf, oneOfType, arrayOf, shape,
+  string, number, bool, func, object,
+} from 'prop-types';
 
-export const historyType = PropTypes.objectOf(PropTypes.oneOfType([
-  PropTypes.object, PropTypes.number, PropTypes.string, PropTypes.func,
+export const historyType = objectOf(oneOfType([
+  object, number, string, func,
 ]));
 
-export const locationType = PropTypes.objectOf(PropTypes.oneOfType([
-  PropTypes.object, PropTypes.string,
+export const locationType = objectOf(oneOfType([
+  object, string,
 ]));
 
-export const classesType = PropTypes.objectOf(PropTypes.string);
+export const classesType = objectOf(string);
 
-export const routesType = PropTypes.arrayOf(PropTypes.object);
+export const routesType = arrayOf(object);
 
-export const matchType = PropTypes.objectOf(PropTypes.oneOfType([
-  PropTypes.object, PropTypes.string, PropTypes.bool,
+export const matchType = objectOf(oneOfType([
+  object, string, bool,
 ]));
 
 export const serviceType = PropTypes.shape({
@@ -39,4 +42,10 @@ export const providerDetailsType = PropTypes.shape({
   startHour: PropTypes.number,
   displayedStartHour: PropTypes.number,
   durationSec: PropTypes.number,
+});
+
+export const socialLoginType = shape({
+  twitter: func,
+  facebook: func,
+  google: func,
 });

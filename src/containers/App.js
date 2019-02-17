@@ -12,6 +12,7 @@ import { create } from 'jss';
 import { createGenerateClassName, jssPreset } from '@material-ui/core/styles';
 import Amplify from 'aws-amplify';
 import 'config/api';
+import { AWS_CONFIG } from 'config/auth';
 import Loading from 'components/Modal/Loading';
 import './App.module.scss';
 import '../styles/_settings.scss';
@@ -24,25 +25,8 @@ const jss = create({
 
 export const history = createBrowserHistory();
 
-Amplify.configure({
-  Auth: {
-    identityPoolId: 'ap-southeast-2:fae931b0-0397-4d09-99fe-5db825fad329',
+Amplify.configure(AWS_CONFIG);
 
-    // REQUIRED - Amazon Cognito Region
-    region: 'ap-southeast-2',
-
-    identityPoolRegion: 'ap-southeast-2',
-
-    // OPTIONAL - Amazon Cognito User Pool ID
-    userPoolId: 'ap-southeast-2_k3Ly7reYV',
-
-    // OPTIONAL - Amazon Cognito Web Client ID (26-char alphanumeric string)
-    userPoolWebClientId: '5bip0lat6r7tf023qs5a9qd04p',
-
-    // OPTIONAL - Enforce user authentication prior to accessing AWS resources or not
-    mandatorySignIn: true,
-  },
-});
 const App = () => (
   <JssProvider jss={jss} generateClassName={generateClassName}>
     <React.Fragment>
