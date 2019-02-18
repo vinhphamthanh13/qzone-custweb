@@ -2,7 +2,7 @@ import React from 'react';
 import { string, bool, func } from 'prop-types';
 import { connect } from 'react-redux';
 import { Modal } from '@material-ui/core';
-import ErrorModal from 'components/Modal/Error';
+import CustomModal from 'components/Modal/CustomModal';
 import { Formik } from 'formik';
 import { resetErrorMessage } from 'actions/common';
 import { loginType } from 'utils/constants';
@@ -56,7 +56,7 @@ class Login extends React.Component {
     this.props.onClose();
   };
 
-  closeErrorModal = () => {
+  closeCustomModal = () => {
     const { resetErrorMessageAction } = this.props;
     resetErrorMessageAction();
   };
@@ -74,11 +74,12 @@ class Login extends React.Component {
     const { error: { open, errorMessage } } = this.state;
     const errorModal = open
       ? (
-        <ErrorModal
-          errorTitle="Login failed!"
-          errorMessage={errorMessage}
+        <CustomModal
+          type="error"
+          title="Login failed!"
+          message={errorMessage}
           isOpen={!!errorMessage}
-          onClose={this.closeErrorModal}
+          onClose={this.closeCustomModal}
         />) : null;
 
     return (

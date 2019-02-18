@@ -1,10 +1,7 @@
 import { Auth } from 'aws-amplify';
 import { GOOGLE_ID, AUTH_METHOD } from 'config/auth';
 import BASE_URL from 'config/url';
-import {
-  setLoading,
-  // resetErrorMessage,
-} from 'actions/common';
+import { setLoading } from 'actions/common';
 import {
   LOGIN, STORE_EMAIL, STORE_USER_SUCCESS, STORE_USER_ERROR,
 } from './constants';

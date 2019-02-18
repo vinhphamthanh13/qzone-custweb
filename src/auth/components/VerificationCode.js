@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { bool } from 'prop-types';
+import {
+  func, objectOf, any,
+} from 'prop-types';
 import { classesType } from 'types/global';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-// import PropTypes from 'prop-types';
-// import { compose } from 'redux';
 import {
   Modal, Paper, Button, Typography, Avatar, TextField, InputAdornment,
 } from '@material-ui/core';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { regExPattern } from 'utils/constants';
 import logo from 'images/logo.png';
-// import { verifyUser } from '../actions/register';
+import { confirmSignUp } from '../actions/register';
 import s from './VerificationCode.style';
 
 class VerificationCode extends Component {
@@ -62,80 +62,93 @@ class VerificationCode extends Component {
     });
   };
 
-  resendCode = () => {
-    this.startTick();
-    this.setState({ ...this.initState });
+  handleResendCode = () => {
+    this.setState({ ...this.initState }, this.startTick);
   };
-  //
-  // handleCloseModal = () => {
-  //   const { }
-  // }
+
+  handleSubmitCode = () => {
+    const { verificationCode } = this.state;
+    const { confirmSignUpAction, userDetails: { email } } = this.props;
+    confirmSignUpAction({ email, code: verificationCode });
+  };
 
   render() {
     const { countDown, verificationCode, verificationCodeError } = this.state;
-    const { classes, isVerificationCode } = this.props;
-    console.log('error', isVerificationCode);
+    const { classes } = this.props;
+
     return (
-      <Modal
-        open={true || isVerificationCode}
-        onClose={this.onCloseModal}
-        className="modal-wrapper"
-        disableAutoFocus
-        disableBackdropClick
-        disableEscapeKeyDown
-      >
-        <Paper className={classes.verification}>
-          <div className={classes.logo}>
-            <Avatar className={classes.avatarRoot} src={logo} />
-          </div>
-          <div className={classes.content}>
-            <Typography variant="h6" color="primary">Enter verification code</Typography>
-            <Typography variant="subheading" color="textSecondary">(code was sent to your email)</Typography>
-            <TextField
-              disabled={!countDown}
-              fullWidth
-              value={verificationCode}
-              onChange={this.handleOnChange}
-              InputProps={{
-                className: classes.header,
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Typography
-                      variant="subheading"
-                      color="primary"
-                      className={classes.countDown}
-                    >
-                      {countDown}(sec)
-                    </Typography>
-                  </InputAdornment>
-                ),
-              }}
-            />
-            <div className={classes.footerActions}>
-              <Button disabled={countDown} onClick={this.resendCode}>Resend code</Button>
-              <Button disabled={verificationCodeError || !countDown}>Submit</Button>
+      <>
+        <Modal
+          open
+          className="modal-wrapper"
+          disableAutoFocus
+          disableBackdropClick
+          disableEscapeKeyDown
+        >
+          <Paper className={classes.verification}>
+            <div className={classes.logo}>
+              <Avatar className={classes.avatarRoot} src={logo} />
             </div>
-          </div>
-        </Paper>
-      </Modal>
+            <div className={classes.content}>
+              <Typography variant="h6" color="primary">Enter verification code</Typography>
+              <Typography variant="subheading" color="textSecondary">(code was sent to your email)</Typography>
+              <TextField
+                disabled={!countDown}
+                fullWidth
+                value={verificationCode}
+                onChange={this.handleOnChange}
+                InputProps={{
+                  className: classes.header,
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Typography
+                        variant="subheading"
+                        color="primary"
+                        className={classes.countDown}
+                      >
+                        {countDown} sec
+                      </Typography>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <div className={classes.footerActions}>
+                <Button
+                  disabled={!!countDown}
+                  onClick={this.handleResendCode}
+                  className="simple-button"
+                >Resend code
+                </Button>
+                <Button
+                  disabled={verificationCodeError || !countDown}
+                  onClick={this.handleSubmitCode}
+                >Submit
+                </Button>
+              </div>
+            </div>
+          </Paper>
+        </Modal>
+      </>
     );
   }
 }
 
 VerificationCode.propTypes = {
-  isVerificationCode: bool,
   classes: classesType.isRequired,
+  confirmSignUpAction: func.isRequired,
+  userDetails: objectOf(any).isRequired,
 };
 
-VerificationCode.defaultProps = {
-  isVerificationCode: false,
+const mapStateToProps = (state) => {
+  console.log('sate', state);
+  return ({
+    userDetails: state.auth.userDetails,
+  });
 };
-
-const mapStateToProps = state => ({
-  isVerificationCode: state.auth.isVerificationCode,
-});
 
 export default compose(
   withStyles(s),
-  connect(mapStateToProps, null),
+  connect(mapStateToProps, {
+    confirmSignUpAction: confirmSignUp,
+  }),
 )(VerificationCode);

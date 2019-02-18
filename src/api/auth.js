@@ -1,5 +1,16 @@
 import axios from 'axios';
 
+const handleSuccessResponse = callback => response => callback(response);
+const handleErrorResponse = callback => (error) => { callback(error.response); };
+
+export const verifyResendCode = (values, callback) => {
+  axios.post('/customers/code/verification', values)
+    .then(handleSuccessResponse(callback))
+    .catch(handleErrorResponse(callback));
+
+  return { type: 'VERIFY_USER' };
+};
+
 export const registerCustomer = async (body, callback) => {
   const {
     address, email, givenName, telephone, userSub, userConfirmed,
