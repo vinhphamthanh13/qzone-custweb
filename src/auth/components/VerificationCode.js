@@ -16,7 +16,7 @@ import s from './VerificationCode.style';
 
 class VerificationCode extends Component {
   initState = {
-    countDown: 10,
+    countDown: 60,
     verificationCode: '',
     verificationCodeError: true,
   };
@@ -69,6 +69,7 @@ class VerificationCode extends Component {
   handleSubmitCode = () => {
     const { verificationCode } = this.state;
     const { confirmSignUpAction, userDetails: { email } } = this.props;
+    this.stopTick();
     confirmSignUpAction({ email, code: verificationCode });
   };
 
@@ -77,58 +78,56 @@ class VerificationCode extends Component {
     const { classes } = this.props;
 
     return (
-      <>
-        <Modal
-          open
-          className="modal-wrapper"
-          disableAutoFocus
-          disableBackdropClick
-          disableEscapeKeyDown
-        >
-          <Paper className={classes.verification}>
-            <div className={classes.logo}>
-              <Avatar className={classes.avatarRoot} src={logo} />
+      <Modal
+        open
+        className="modal-wrapper"
+        disableAutoFocus
+        disableBackdropClick
+        disableEscapeKeyDown
+      >
+        <Paper className={classes.verification}>
+          <div className={classes.logo}>
+            <Avatar className={classes.avatarRoot} src={logo} />
+          </div>
+          <div className={classes.content}>
+            <Typography variant="h6" color="primary">Enter verification code</Typography>
+            <Typography variant="subheading" color="textSecondary">(code was sent to your email)</Typography>
+            <TextField
+              disabled={!countDown}
+              fullWidth
+              value={verificationCode}
+              onChange={this.handleOnChange}
+              InputProps={{
+                className: classes.header,
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <Typography
+                      variant="subheading"
+                      color="primary"
+                      className={classes.countDown}
+                    >
+                      {countDown} sec
+                    </Typography>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <div className={classes.footerActions}>
+              <Button
+                disabled={!!countDown}
+                onClick={this.handleResendCode}
+                className="simple-button"
+              >Resend code
+              </Button>
+              <Button
+                disabled={verificationCodeError || !countDown}
+                onClick={this.handleSubmitCode}
+              >Submit
+              </Button>
             </div>
-            <div className={classes.content}>
-              <Typography variant="h6" color="primary">Enter verification code</Typography>
-              <Typography variant="subheading" color="textSecondary">(code was sent to your email)</Typography>
-              <TextField
-                disabled={!countDown}
-                fullWidth
-                value={verificationCode}
-                onChange={this.handleOnChange}
-                InputProps={{
-                  className: classes.header,
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <Typography
-                        variant="subheading"
-                        color="primary"
-                        className={classes.countDown}
-                      >
-                        {countDown} sec
-                      </Typography>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-              <div className={classes.footerActions}>
-                <Button
-                  disabled={!!countDown}
-                  onClick={this.handleResendCode}
-                  className="simple-button"
-                >Resend code
-                </Button>
-                <Button
-                  disabled={verificationCodeError || !countDown}
-                  onClick={this.handleSubmitCode}
-                >Submit
-                </Button>
-              </div>
-            </div>
-          </Paper>
-        </Modal>
-      </>
+          </div>
+        </Paper>
+      </Modal>
     );
   }
 }

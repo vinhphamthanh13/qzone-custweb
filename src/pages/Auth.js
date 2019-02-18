@@ -7,12 +7,17 @@ import Register from 'auth/Register';
 import Login from 'auth/Login';
 import VerificationCode from 'auth/components/VerificationCode';
 import CustomModal from 'components/Modal/CustomModal';
-import { reEnterVerificationCode } from 'auth/actions/register';
+import { reEnterVerificationCode, closeRegisterSuccessModal } from 'auth/actions/register';
 
 class Auth extends Component {
   handleReEnterVerificationCode = () => {
     const { reEnterVerificationCodeAction } = this.props;
     reEnterVerificationCodeAction();
+  };
+
+  handleCloseRegisterSuccessModal = () => {
+    const { closeRegisterSuccessModalAction } = this.props;
+    closeRegisterSuccessModalAction();
   };
 
   render() {
@@ -26,7 +31,7 @@ class Auth extends Component {
         type="error"
         isOpen
         title="Verification Error"
-        message="Verification code is not valid! Please try again"
+        message="Verification code is not valid! Try again"
         onClose={this.handleReEnterVerificationCode}
       />
     ) : null;
@@ -36,6 +41,8 @@ class Auth extends Component {
         isOpen
         title="Register Success"
         message={`New user is created ${email}`}
+        okButton
+        okCallBack={this.handleCloseRegisterSuccessModal}
       />
     ) : null;
 
@@ -63,6 +70,7 @@ Auth.propTypes = {
   closeDialog: func.isRequired,
   isVerificationCode: bool,
   reEnterVerificationCodeAction: func.isRequired,
+  closeRegisterSuccessModalAction: func.isRequired,
   iSignUpSuccessModal: bool,
   verificationErrorMessage: string,
   userDetails: objectOf(any).isRequired,
@@ -83,5 +91,8 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { reEnterVerificationCodeAction: reEnterVerificationCode },
+  {
+    reEnterVerificationCodeAction: reEnterVerificationCode,
+    closeRegisterSuccessModalAction: closeRegisterSuccessModal,
+  },
 )(Auth);

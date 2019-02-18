@@ -15,14 +15,17 @@ const style = theme => ({
     zIndex: 1000,
   },
   paperRoot: {
-    maxWidth: `${theme.spacing.unit * 5}%`,
-    minWidth: theme.spacing.unit * 40,
+    maxWidth: theme.spacing.unit * 56,
+    minWidth: theme.spacing.unit * 45,
     display: 'flex',
     padding: `${theme.spacing.unit * 3}px ${theme.spacing.unit * 2}px`,
   },
   message: {
     borderLeft: `4px solid ${mainColor}`,
     paddingLeft: theme.spacing.unit * 2,
+  },
+  okButton: {
+    margin: theme.spacing.unit,
   },
   // Loading
   cover: {

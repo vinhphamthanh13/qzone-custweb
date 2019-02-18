@@ -11,6 +11,7 @@ import {
   CONFIRM_SIGNUP_ERROR,
   HANDLE_VERIFICATION_MODAL,
   CONFIRM_SIGNUP_SUCCESS,
+  CLOSE_REGISTER_SUCCESS_MODAL,
 } from './constants';
 
 const authInitialize = {
@@ -73,7 +74,11 @@ const auth = (state = authInitialize, action) => {
         isVerificationCode: action.payload,
         verificationErrorMessage: '',
       };
-    case 'RESEND_VERIFICATION_CODE':
+    case CLOSE_REGISTER_SUCCESS_MODAL:
+      return {
+        ...state,
+        iSignUpSuccessModal: false,
+      };
     case 'USER_AUTHENTICATED':
       return {
         ...state,

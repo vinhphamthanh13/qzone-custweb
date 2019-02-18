@@ -3,7 +3,7 @@ import { setLoading } from 'actions/common';
 import {
   REGISTER_AWS_SUCCESS, REGISTER_AWS_ERROR,
   CONFIRM_SIGNUP_SUCCESS, CONFIRM_SIGNUP_ERROR,
-  HANDLE_VERIFICATION_MODAL,
+  HANDLE_VERIFICATION_MODAL, CLOSE_REGISTER_SUCCESS_MODAL,
 } from './constants';
 
 const registerAwsSuccess = payload => ({
@@ -58,6 +58,14 @@ const handleVerificationCodeModal = payload => ({
   type: HANDLE_VERIFICATION_MODAL,
   payload,
 });
+
+const handleCloseRegisterSuccessModal = () => ({
+  type: CLOSE_REGISTER_SUCCESS_MODAL,
+});
+
+export const closeRegisterSuccessModal = () => (dispatch) => {
+  dispatch(handleCloseRegisterSuccessModal());
+};
 
 export const reEnterVerificationCode = () => (dispatch) => {
   dispatch(handleVerificationCodeModal(true));

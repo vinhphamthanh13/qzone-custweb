@@ -20,7 +20,6 @@ class Login extends React.Component {
   componentDidMount() {
     const ga = window.gapi && window.gapi.auth2
       ? window.gapi.auth2.getAuthInstance() : null;
-    console.log('login', ga);
     if (!ga) {
       createGoogleScript();
     }
