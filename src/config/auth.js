@@ -5,14 +5,14 @@ export const GOOGLE_ID = '1075505092107-j8821j05r48pco773m0mqb16g1po5gtj.apps.go
 export const AWS_CONFIG = {
   Auth: {
     // REQUIRED - Amazon Cognito Identity Pool ID
-    identityPoolId: 'ap-southeast-2:adab2657-684c-4222-a17a-9a82b6a5ee84',
+    identityPoolId: 'ap-southeast-2:fae931b0-0397-4d09-99fe-5db825fad329',
     // REQUIRED - Amazon Cognito Region
     region: 'ap-southeast-2',
     identityPoolRegion: 'ap-southeast-2',
     // OPTIONAL - Amazon Cognito User Pool ID
-    userPoolId: 'ap-southeast-2_0sAegznUX',
+    userPoolId: 'ap-southeast-2_k3Ly7reYV',
     // OPTIONAL - Amazon Cognito Web Client ID (26-char alphanumeric string)
-    userPoolWebClientId: '3ov1blo2eji4acnqfcv88tcidn',
+    userPoolWebClientId: '5bip0lat6r7tf023qs5a9qd04p',
     // OPTIONAL - Enforce user authentication prior to accessing AWS resources or not
     mandatorySignIn: true,
   },
