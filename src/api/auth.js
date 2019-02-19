@@ -7,8 +7,6 @@ export const verifyResendCode = (values, callback) => {
   axios.post('/customers/code/verification', values)
     .then(handleSuccessResponse(callback))
     .catch(handleErrorResponse(callback));
-
-  return { type: 'VERIFY_USER' };
 };
 
 export const registerCustomer = async (body, callback) => {

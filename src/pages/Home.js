@@ -1,5 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import {
+  arrayOf, bool, func,
+} from 'prop-types';
 import { connect } from 'react-redux';
 import { Grid } from '@material-ui/core';
 import { getServiceCategories } from 'api/home';
@@ -18,16 +20,6 @@ import PrimarySearchAppBar from './home/appbar/PrimarySearchAppBar';
 
 /* eslint react/no-unused-state: 0 */
 export class Home extends React.PureComponent {
-  static propTypes = {
-    setServiceCategoriesAction: PropTypes.func.isRequired,
-    getServicesByCategoryAction: PropTypes.func.isRequired,
-    services: PropTypes.arrayOf(serviceType).isRequired,
-    serviceCategories: serviceCategoriesType.isRequired,
-    getServicesByNameAction: PropTypes.func.isRequired,
-    userAuthorized: PropTypes.bool.isRequired,
-    isLoading: PropTypes.bool.isRequired,
-  };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -133,7 +125,7 @@ export class Home extends React.PureComponent {
 
   render() {
     const {
-      serviceCategories, services, userAuthorized, isLoading,
+      serviceCategories, services, isLoading,
     } = this.props;
     const {
       selectedCategoryId, subCategories, selectedSubCategoryId, searchText,
@@ -155,7 +147,7 @@ export class Home extends React.PureComponent {
             onSaveBooking={this.onSaveBooking}
           />
           <PrimarySearchAppBar
-            loggedIn={userAuthorized}
+            // loggedIn={userAuthorized}
             handleAuthenticate={this.openDialog}
             onSearch={this.onSearch}
             categories={serviceCategories}
@@ -179,9 +171,19 @@ export class Home extends React.PureComponent {
   }
 }
 
+Home.propTypes = {
+  // loginSession: objectOf(any),
+  setServiceCategoriesAction: func.isRequired,
+  getServicesByCategoryAction: func.isRequired,
+  services: arrayOf(serviceType).isRequired,
+  serviceCategories: serviceCategoriesType.isRequired,
+  getServicesByNameAction: func.isRequired,
+  isLoading: bool.isRequired,
+};
+
 const mapStateToProps = state => ({
   ...state.home,
-  userAuthorized: state.auth.userAuthorized,
+  loginSession: state.auth.loginSession,
   isLoading: state.home.isLoading,
 });
 

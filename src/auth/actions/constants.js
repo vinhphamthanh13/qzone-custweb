@@ -1,6 +1,5 @@
-export const LOGIN = 'business-admins-by-usersub';
-export const STORE_EMAIL = 'AUTH.STORE_EMAIL';
-export const STORE_USER_SUCCESS = 'AUTH.STORE_USER_SUCCESS';
+export const LOGIN = 'customers-by-email/{email}';
+export const STORE_USER_LOGIN = 'AUTH.STORE_USER_LOGIN';
 export const STORE_USER_ERROR = 'AUTH.STORE_USER_ERROR';
 export const REGISTER_AWS_SUCCESS = 'REGISTER_AWS_SUCCESS';
 export const REGISTER_AWS_ERROR = 'REGISTER_AWS_ERROR';

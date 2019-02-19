@@ -1,10 +1,21 @@
 import { Auth } from 'aws-amplify';
 import { GOOGLE_ID, AUTH_METHOD } from 'config/auth';
-import BASE_URL from 'config/url';
+// import BASE_URL from 'config/url';
 import { setLoading } from 'actions/common';
+import { getCustomerByEmail as loginApi } from 'api/auth';
 import {
-  LOGIN, STORE_EMAIL, STORE_USER_SUCCESS, STORE_USER_ERROR,
+  STORE_USER_LOGIN, STORE_USER_ERROR,
 } from './constants';
+
+export const storeUserLogin = payload => ({
+  type: STORE_USER_LOGIN,
+  payload,
+});
+
+export const storeUserError = payload => ({
+  type: STORE_USER_ERROR,
+  payload,
+});
 
 // Google User
 
@@ -29,7 +40,7 @@ export const createGoogleScript = () => {
   document.body.appendChild(script);
 };
 
-const getAWSCredentials = async (googleUser) => {
+const getAWSCredentials = async (googleUser, dispatch) => {
   // eslint-disable-next-line
   const { id_token, expires_at } = googleUser.getAuthResponse();
   console.log('get AWS credentials token', id_token);
@@ -46,9 +57,19 @@ const getAWSCredentials = async (googleUser) => {
   );
   console.log('credentials', credentials);
   if (credentials) {
+    dispatch(storeUserLogin({
+      email: user.email,
+      token: id_token,
+      expiration: expires_at,
+      isAuthenticated: credentials.authenticated,
+      userName: user.name,
+    }));
     console.log('Login G++ successful');
+    dispatch(setLoading(false));
   } else {
     console.log('Cannot login Google+++');
+    dispatch(storeUserError({ message: 'Cannot login with Gmail' }));
+    dispatch(setLoading(false));
   }
 };
 
@@ -60,7 +81,7 @@ export const googleLogIn = () => {
     ga.signIn().then(
       async (googleUser) => {
         console.log('google user---', googleUser);
-        await getAWSCredentials(googleUser);
+        await getAWSCredentials(googleUser, dispatch);
         dispatch(setLoading(false));
       },
       (error) => {
@@ -73,64 +94,45 @@ export const googleLogIn = () => {
 
 // Login Actions
 
-export const storeEmail = email => ({
-  type: STORE_EMAIL,
-  payload: { email },
-});
-
-export const storeUserSuccess = user => ({
-  type: STORE_USER_SUCCESS,
-  payload: { user },
-});
-
-export const storeUserError = error => ({
-  type: STORE_USER_ERROR,
-  payload: { error },
-});
-
 export const login = (value) => {
+  const { email, password } = value;
   console.log('value----', value);
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch(setLoading(true));
-    dispatch(storeEmail(value.email));
-    Auth.signIn(value.email, value.password)
+    Auth.signIn(email, password)
       .then((json) => {
         console.log('signIn json----', json);
         if (json) {
-          localStorage.setItem('username', json.username);
-          fetch(`${BASE_URL}/${LOGIN}/${json.username}`, {
-            method: 'GET',
-            headers: {
-              Accept: '*/*',
-              'Content-Type': 'application/json',
-            },
-          })
-            .then(async (response) => {
-              console.log('what is going on here!');
-              const loginAuth = await response.json();
-              console.log('loginAuth', loginAuth);
-            })
-            .then((data) => {
-              dispatch(storeUserSuccess(data));
-              localStorage.setItem('user', JSON.stringify(data));
-              if (data.success === true) {
-                console.log('User exists. Fetch the user details ans store in localStorage');
-              } else {
-                console.log('User logins for the first time. Navigate');
-              }
-              dispatch(setLoading(false));
-            })
-            .catch((error) => {
-              dispatch(storeUserError(error));
-              dispatch(setLoading(false));
-              console.log('errror when login normal', error);
-            });
+          const { idToken: { jwtToken, payload } } = json.signInUserSession;
+          const { exp, sub } = payload;
+          localStorage.setItem('jwtToken', jwtToken);
+          localStorage.setItem('username', sub);
+          localStorage.setItem('expiration', exp);
+          if (payload.email_verified) {
+            loginApi({ email })
+              .then((response) => {
+                dispatch(storeUserLogin({
+                  token: jwtToken,
+                  userName: sub,
+                  expiration: exp,
+                  isAuthenticated: response.data.isAuthenticated,
+                }));
+                console.log('normal login success', response);
+                dispatch(setLoading(false));
+              })
+              .catch((error) => {
+                console.log('normal login error', error);
+                dispatch(storeUserError(error));
+                dispatch(setLoading(false));
+              });
+          }
         } else {
           dispatch(storeUserError('Topology Error'));
           dispatch(setLoading(false));
         }
       })
       .catch((error) => {
+        console.log('before AWS error', error);
         dispatch(storeUserError(error));
         dispatch(setLoading(false));
       });

@@ -25,7 +25,7 @@ const style = theme => ({
     paddingLeft: theme.spacing.unit * 2,
   },
   okButton: {
-    margin: theme.spacing.unit,
+    margin: `${theme.spacing.unit}px auto`,
   },
   // Loading
   cover: {

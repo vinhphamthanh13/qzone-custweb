@@ -3,9 +3,8 @@ import {
   RESET_ERROR_MESSAGE,
 } from 'actions/common';
 import {
-  STORE_EMAIL,
+  STORE_USER_LOGIN,
   STORE_USER_ERROR,
-  STORE_USER_SUCCESS,
   REGISTER_AWS_ERROR,
   REGISTER_AWS_SUCCESS,
   CONFIRM_SIGNUP_ERROR,
@@ -33,12 +32,14 @@ const authInitialize = {
     userStatus: 'UNKNOWN',
   },
   cognitoToken: '',
-  userAuthorized: false,
   registerErrorMessage: '',
   loginErrorMessage: '',
   isLoading: false,
   isVerificationCode: false,
   iSignUpSuccess: false,
+  loginSession: {
+    isAuthenticated: false,
+  },
 };
 
 const auth = (state = authInitialize, action) => {
@@ -79,35 +80,28 @@ const auth = (state = authInitialize, action) => {
         ...state,
         iSignUpSuccessModal: false,
       };
-    case 'USER_AUTHENTICATED':
+    case STORE_USER_LOGIN: {
       return {
         ...state,
-        isVerificationCode: false,
-      };
-    case STORE_EMAIL: {
-      return {
-        ...state,
-        email: action.payload.email,
+        loginSession: {
+          token: action.payload.token,
+          expiration: action.payload.expiration,
+          userName: action.payload.userName,
+          isAuthenticated: action.payload.isAuthenticated,
+        },
         loginErrorMessage: '',
       };
     }
-    case STORE_USER_SUCCESS: {
+    case STORE_USER_ERROR: {
+      console.log('storeuser error', state);
       return {
         ...state,
-        userDetails: {
-          ...state.userDetails,
-          ...action.payload.user,
+        loginSession: {
+          isAuthenticated: false,
         },
-        registerErrorMessage: '',
-        isVerificationCode: false,
+        loginErrorMessage: action.payload.message,
       };
     }
-    case STORE_USER_ERROR:
-      return {
-        ...authInitialize,
-        registerErrorMessage: action.payload.message,
-        isVerificationCode: false,
-      };
     case RESET_ERROR_MESSAGE:
       return {
         ...state,
@@ -116,7 +110,6 @@ const auth = (state = authInitialize, action) => {
         verificationErrorMessage: '',
       };
     case SET_LOADING: {
-      console.log('isLoading', action.payload);
       return { ...state, isLoading: action.payload };
     }
     // case LOGOUT:
