@@ -17,18 +17,17 @@ const registerAwsError = payload => ({
 });
 
 export const register = (user) => {
-  const {
-    password, email,
-  } = user;
   console.log('user when register', user);
   return (dispatch) => {
     dispatch(setLoading(true));
     Auth.signUp({
-      username: email,
-      password,
+      username: user.email,
+      password: user.password,
       attributes: {
-        email,
-        // phone_number: telephone,
+        email: user.email,
+        'custom:user_type': 'CUSTOMER',
+        phone_number: user.telephone,
+        given_name: user.givenName,
       },
       validationData: [],
     })
