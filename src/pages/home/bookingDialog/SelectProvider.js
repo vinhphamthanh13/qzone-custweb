@@ -20,9 +20,9 @@ class SelectProvider extends React.PureComponent {
     }
   }
 
-  onSelectBooking = (provider, time) => {
+  onSelectBooking = provider => (time) => {
     this.props.onChange(provider, 'provider');
-    this.props.onChange(time, 'time');
+    this.props.onChange(time, 'time', this.props.handleNext);
   }
 
   render() {
@@ -52,7 +52,7 @@ class SelectProvider extends React.PureComponent {
                       provider={provider}
                       bookingDetail={bookingDetail}
                       duration={providerDetails[provider.id] ? providerDetails[provider.id][0].durationSec : 0}
-                      onTimeSelect={(time) => { this.onSelectBooking(provider, time); }}
+                      onTimeSelect={this.onSelectBooking(provider)}
                     />
                   </CardContent>
                 </Card>
@@ -75,6 +75,7 @@ SelectProvider.propTypes = {
   getProvidersByServiceAction: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   bookingDetail: bookingDetailType.isRequired,
+  handleNext: PropTypes.func.isRequired,
 };
 
 SelectProvider.defaultProps = {

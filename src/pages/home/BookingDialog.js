@@ -59,13 +59,13 @@ class BookingDialog extends PureComponent {
     }
   }
 
-  onChangeBookingDetail = (value, key) => {
+  onChangeBookingDetail = (value, key, cb) => {
     this.setState(oldState => ({
       bookingDetail: {
         ...oldState.bookingDetail,
         [key]: value,
       },
-    }));
+    }), cb);
   }
 
   handleClose = () => {
@@ -125,6 +125,7 @@ class BookingDialog extends PureComponent {
           <StepComponent
             initService={initService}
             onChange={this.onChangeBookingDetail}
+            handleNext={this.handleNext}
             bookingDetail={bookingDetail}
           />
         )}
