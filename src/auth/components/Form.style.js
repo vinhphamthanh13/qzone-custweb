@@ -1,35 +1,16 @@
 import {
-  container,
-  textCenter,
-  mainColor,
-  grayColor,
-  dangerColor,
-  infoColor,
+  dangerColor, grayColor, mainColor,
 } from 'components/material-dashboard-pro-react';
-import customCheckboxRadioSwitch from 'components/material-dashboard-pro-react/customCheckboxRadioSwitch';
+import checkBox from 'components/material-dashboard-pro-react/customCheckboxRadioSwitch';
 
-const authPageStyle = theme => ({
-  ...customCheckboxRadioSwitch,
-  textCenter,
-  content: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+const style = theme => ({
+  ...checkBox,
   registerCard: {
     maxWidth: theme.spacing.unit * 50,
     minWidth: theme.spacing.unit * 41,
   },
   marginLoose: {
     margin: `${theme.spacing.unit * 1.25}px auto 0px`,
-    color: 'red',
-  },
-  container: {
-    ...container,
-    position: 'relative',
-    zIndex: '3',
-    minHeight: 'calc(100vh - 80px)',
-    paddingTop: '5%',
   },
   center: {
     textAlign: 'center',
@@ -65,15 +46,7 @@ const authPageStyle = theme => ({
   loginPanel: {
     padding: `${theme.spacing.unit * 2}px 0 ${theme.spacing.unit * 8}px !important`,
   },
-  socialButtons: {
-    margin: `${theme.spacing.unit * 2}px auto`,
-  },
-  socialButton: {
-    margin: `auto ${theme.spacing.unit}px`,
-  },
-  socialIcon: {
-    fontSize: `${theme.spacing.unit * 3}px !important`,
-  },
+
   errorModal: {
     position: 'relative',
     margin: 'auto',
@@ -83,13 +56,6 @@ const authPageStyle = theme => ({
   root: {
     display: 'flex',
   },
-  passwordHint: {
-    color: infoColor,
-    minWidth: 'unset',
-  },
-  passwordHintConventions: {
-    padding: `0px ${theme.spacing.unit * 2}px`,
-  },
 });
 
-export default authPageStyle;
+export default style;

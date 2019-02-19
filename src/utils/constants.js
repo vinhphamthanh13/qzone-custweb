@@ -6,6 +6,7 @@ export const regExPattern = {
   /* eslint-disable-next-line */
   phoneNumber: /^\s*(?:\+?(\d{1,3}))?[- (]*(\d{3})[- )]*(\d{3})[- ]*(\d{4})(?: *[x/#]{1}(\d+))?\s*$/,
   password: /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})/g,
+  registerVerificationCode: /^\d{6}$/,
 };
 
 export const loginType = {
@@ -26,7 +27,7 @@ export const registerPopoverPosition = {
   },
 };
 
-export const registerPasswordConvention = [
+export const passwordPolicyTerms = [
   '8 to 60 characters',
   '1 lowercase character(s)',
   '1 uppercase character(s)',

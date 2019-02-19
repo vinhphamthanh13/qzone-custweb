@@ -1,3 +1,4 @@
 import axios from 'axios';
+import BASE_URL from './url';
 
-axios.defaults.baseURL = 'http://13.238.116.171:8080/api';
+axios.defaults.baseURL = `${BASE_URL}/api`;

@@ -1,5 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import {
+  objectOf, any, string, func, arrayOf, object, number,
+} from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withStyles } from '@material-ui/core/styles';
@@ -87,7 +89,7 @@ class PrimarySearchAppBar extends React.Component {
       anchorEl, mobileMoreAnchorEl, serviceAnchorEl,
     } = this.state;
     const {
-      classes, isAuthenticated, onSearch, categories,
+      classes, loginSession, onSearch, categories,
       activeCategoryId, userPosition,
     } = this.props;
     const searchNearByTitle = userPosition.latitude ? 'Search Services Near You' : 'Your Location Not Allowed';
@@ -107,6 +109,7 @@ class PrimarySearchAppBar extends React.Component {
         </MenuItem>
       ),
     ) : null;
+    const isAuthenticated = loginSession ? loginSession.isAuthenticated : false;
     const authorization = isAuthenticated ? (
       [
         <IconMenu
@@ -329,20 +332,19 @@ class PrimarySearchAppBar extends React.Component {
 }
 
 PrimarySearchAppBar.propTypes = {
-  classes: PropTypes.objectOf(PropTypes.any).isRequired,
-  isAuthenticated: PropTypes.bool.isRequired,
-  handleAuthenticate: PropTypes.func.isRequired,
-  onSearch: PropTypes.func.isRequired,
-  categories: PropTypes.arrayOf(PropTypes.object).isRequired,
-  handleChangeCategory: PropTypes.func.isRequired,
-  activeCategoryId: PropTypes.string.isRequired,
-  userPosition: PropTypes.objectOf(PropTypes.number).isRequired,
-  logoutAction: PropTypes.func.isRequired,
+  classes: objectOf(any).isRequired,
+  handleAuthenticate: func.isRequired,
+  onSearch: func.isRequired,
+  categories: arrayOf(object).isRequired,
+  handleChangeCategory: func.isRequired,
+  activeCategoryId: string.isRequired,
+  userPosition: objectOf(number).isRequired,
+  logoutAction: func.isRequired,
+  loginSession: objectOf(any).isRequired,
 };
 
 const mapStateToProps = state => ({
-  isAuthenticated: state.auth.userAuthorized,
-  accountName: state.auth.accountName,
+  loginSession: state.auth.loginSession,
 });
 
 export default compose(

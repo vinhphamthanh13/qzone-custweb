@@ -24,6 +24,7 @@
 
 .item-center {
   align-items: center;
+  justify-content: center;
 }
 
 /* Color Classes */
@@ -60,4 +61,10 @@
   transition: color 0.2s, background 0.2s;
   transition-timing-function: ease-out;
   color: $we_peep;
+}
+
+.modal-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
