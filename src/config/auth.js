@@ -1,6 +1,6 @@
 export const AUTH_METHOD = 'auth2';
 
-export const GOOGLE_ID = '1075505092107-j8821j05r48pco773m0mqb16g1po5gtj.apps.googleusercontent.com';
+export const GOOGLE_ID = '166981643559-r54fbu1evv6cpfpphqjtlo4j950vdmvn.apps.googleusercontent.com';
 
 export const AWS_CONFIG = {
   Auth: {

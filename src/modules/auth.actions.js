@@ -22,6 +22,7 @@ const loginError = error => ({
 });
 
 const loginSuccess = (payload, name) => {
+  console.log('loginSuccess');
   switch (name) {
     case loginType.GP: {
       const {
@@ -89,7 +90,7 @@ export function googleSignIn() {
     window.gapi.load('auth2', async () => {
       try {
         await window.gapi.auth2.init({
-          client_id: '1075505092107-j8821j05r48pco773m0mqb16g1po5gtj.apps.googleusercontent.com',
+          client_id: '166981643559-r54fbu1evv6cpfpphqjtlo4j950vdmvn.apps.googleusercontent.com',
         });
         const ga = window.gapi.auth2.getAuthInstance();
         const googleUser = await ga.signIn();
