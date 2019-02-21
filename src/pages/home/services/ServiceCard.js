@@ -15,18 +15,32 @@ export default class ServiceCard extends PureComponent {
     onChange: PropTypes.func.isRequired,
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      imgSrc: props.service.image && props.service.image.fileUrl
+        ? props.service.image.fileUrl : serviceImg,
+    };
+  }
+
   onSelectService = () => {
     const { onChange, service } = this.props;
     onChange(service, 'selectedService');
   };
 
+  onError = () => {
+    this.setState({ imgSrc: serviceImg });
+  }
+
   render() {
     const { service } = this.props;
+    const { imgSrc } = this.state;
     return (
       <Card raised classes={{ root: styles.serviceCard }}>
         <CardMedia
           className={styles.image}
-          image={serviceImg}
+          image={imgSrc}
+          onError={this.onError}
         />
         <CardContent className={styles.serviceContent}>
           <ServiceDetail service={service} />

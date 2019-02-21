@@ -25,6 +25,9 @@ export const serviceType = shape({
   allowProviderSelection: bool.isRequired,
   description: string.isRequired,
   serviceCategoryId: string.isRequired,
+  image: shape({
+    fileUrl: string,
+  }),
 });
 
 export const providerType = shape({
