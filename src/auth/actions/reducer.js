@@ -11,6 +11,8 @@ import {
   HANDLE_VERIFICATION_MODAL,
   CONFIRM_SIGNUP_SUCCESS,
   CLOSE_REGISTER_SUCCESS_MODAL,
+  RESEND_VERIFICATION_CODE_STATUS,
+  LOGOUT_SUCCESS,
 } from './constants';
 
 const authInitialize = {
@@ -36,6 +38,7 @@ const authInitialize = {
   loginErrorMessage: '',
   isLoading: false,
   isVerificationCode: false,
+  resendVerificationCodeStatus: 'none', // success, error, none
   iSignUpSuccess: false,
   loginSession: {
     isAuthenticated: false,
@@ -80,6 +83,14 @@ const auth = (state = authInitialize, action) => {
         ...state,
         iSignUpSuccessModal: false,
       };
+    case RESEND_VERIFICATION_CODE_STATUS: {
+      const isVerificationCode = action.payload === 'none';
+      return {
+        ...state,
+        resendVerificationCodeStatus: action.payload,
+        isVerificationCode,
+      };
+    }
     case STORE_USER_LOGIN: {
       return {
         ...state,
@@ -93,7 +104,6 @@ const auth = (state = authInitialize, action) => {
       };
     }
     case STORE_USER_ERROR: {
-      console.log('storeuser error', state);
       return {
         ...state,
         loginSession: {
@@ -112,7 +122,7 @@ const auth = (state = authInitialize, action) => {
     case SET_LOADING: {
       return { ...state, isLoading: action.payload };
     }
-    // case LOGOUT:
+    case LOGOUT_SUCCESS:
     default:
       return authInitialize;
   }

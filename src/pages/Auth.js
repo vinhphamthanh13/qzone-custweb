@@ -7,7 +7,9 @@ import Register from 'auth/Register';
 import Login from 'auth/Login';
 import VerificationCode from 'auth/components/VerificationCode';
 import CustomModal from 'components/Modal/CustomModal';
-import { reEnterVerificationCode, closeRegisterSuccessModal } from 'auth/actions/register';
+import {
+  reEnterVerificationCode, closeRegisterSuccessModal, resetResendVerificationCodeModal,
+} from 'auth/actions/register';
 
 class Auth extends Component {
   handleReEnterVerificationCode = () => {
@@ -20,10 +22,16 @@ class Auth extends Component {
     closeRegisterSuccessModalAction();
   };
 
+  handleCloseResendStatusModal = () => {
+    const { closeResendStatusModal } = this.props;
+    closeResendStatusModal();
+  };
+
   render() {
     const {
       isRegisterOpen, isLoginOpen, closeDialog, isVerificationCode,
       verificationErrorMessage, iSignUpSuccessModal, userDetails: { email },
+      resendVerificationCodeStatus,
     } = this.props;
     const verificationCodeModal = isVerificationCode ? <VerificationCode /> : null;
     const errorModal = verificationErrorMessage ? (
@@ -45,12 +53,37 @@ class Auth extends Component {
         okCallBack={this.handleCloseRegisterSuccessModal}
       />
     ) : null;
+    let resendModal;
+    if (resendVerificationCodeStatus === 'success') {
+      resendModal = (
+        <CustomModal
+          type="info"
+          isOpen
+          title="Resending Code Success"
+          message="Verification code is resent to your email!"
+          onClose={this.handleCloseResendStatusModal}
+        />
+      );
+    } else if (resendVerificationCodeStatus === 'error') {
+      resendModal = (
+        <CustomModal
+          type="error"
+          isOpen
+          title="Resending Code Error"
+          message="Cannot get contact the server to get new verification code"
+          onClose={this.handleCloseResendStatusModal}
+        />
+      );
+    } else {
+      resendModal = null;
+    }
 
     return (
       <>
         {verificationCodeModal}
         {errorModal}
         {successModal}
+        {resendModal}
         <Register
           isOpen={isRegisterOpen}
           onClose={() => closeDialog('isRegisterOpen')}
@@ -74,12 +107,15 @@ Auth.propTypes = {
   iSignUpSuccessModal: bool,
   verificationErrorMessage: string,
   userDetails: objectOf(any).isRequired,
+  resendVerificationCodeStatus: string,
+  closeResendStatusModal: func.isRequired,
 };
 
 Auth.defaultProps = {
   isVerificationCode: false,
   iSignUpSuccessModal: false,
   verificationErrorMessage: '',
+  resendVerificationCodeStatus: 'none',
 };
 
 const mapStateToProps = state => ({
@@ -87,6 +123,7 @@ const mapStateToProps = state => ({
   iSignUpSuccessModal: state.auth.iSignUpSuccessModal,
   userDetails: state.auth.userDetails,
   verificationErrorMessage: state.auth.verificationErrorMessage,
+  resendVerificationCodeStatus: state.auth.resendVerificationCodeStatus,
 });
 
 export default connect(
@@ -94,5 +131,6 @@ export default connect(
   {
     reEnterVerificationCodeAction: reEnterVerificationCode,
     closeRegisterSuccessModalAction: closeRegisterSuccessModal,
+    closeResendStatusModal: resetResendVerificationCodeModal,
   },
 )(Auth);

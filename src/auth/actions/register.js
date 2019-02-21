@@ -4,6 +4,7 @@ import {
   REGISTER_AWS_SUCCESS, REGISTER_AWS_ERROR,
   CONFIRM_SIGNUP_SUCCESS, CONFIRM_SIGNUP_ERROR,
   HANDLE_VERIFICATION_MODAL, CLOSE_REGISTER_SUCCESS_MODAL,
+  RESEND_VERIFICATION_CODE_STATUS,
 } from './constants';
 
 const registerAwsSuccess = payload => ({
@@ -88,3 +89,23 @@ export const confirmSignUp = ({ email, code }) => {
       });
   };
 };
+
+const resendCodeStatus = payload => ({
+  type: RESEND_VERIFICATION_CODE_STATUS,
+  payload,
+});
+
+export const resendCode = email => (dispatch) => {
+  dispatch(setLoading(true));
+  Auth.resendSignUp(email)
+    .then(() => {
+      dispatch(resendCodeStatus('success'));
+      dispatch(setLoading(false));
+    })
+    .catch(() => {
+      dispatch(resendCodeStatus('error'));
+      dispatch(setLoading(false));
+    });
+};
+
+export const resetResendVerificationCodeModal = () => dispatch => dispatch(resendCodeStatus('none'));

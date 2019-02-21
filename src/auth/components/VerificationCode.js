@@ -11,7 +11,8 @@ import {
 import withStyles from '@material-ui/core/styles/withStyles';
 import { regExPattern } from 'utils/constants';
 import logo from 'images/logo.png';
-import { confirmSignUp } from '../actions/register';
+import { confirmSignUp, resendCode } from '../actions/register';
+import ResendVerificationCode from './ResendVerificationCode';
 import s from './VerificationCode.style';
 
 class VerificationCode extends Component {
@@ -63,6 +64,8 @@ class VerificationCode extends Component {
   };
 
   handleResendCode = () => {
+    const { resendCodeAction, userDetails: { email } } = this.props;
+    resendCodeAction(email);
     this.setState({ ...this.initState }, this.startTick);
   };
 
@@ -113,12 +116,10 @@ class VerificationCode extends Component {
               }}
             />
             <div className={classes.footerActions}>
-              <Button
-                disabled={!!countDown}
-                onClick={this.handleResendCode}
-                className="simple-button"
-              >Resend code
-              </Button>
+              <ResendVerificationCode
+                isDisabledResend={!!countDown}
+                resendCodeAction={this.handleResendCode}
+              />
               <Button
                 disabled={verificationCodeError || !countDown}
                 onClick={this.handleSubmitCode}
@@ -136,18 +137,17 @@ VerificationCode.propTypes = {
   classes: classesType.isRequired,
   confirmSignUpAction: func.isRequired,
   userDetails: objectOf(any).isRequired,
+  resendCodeAction: func.isRequired,
 };
 
-const mapStateToProps = (state) => {
-  console.log('sate', state);
-  return ({
-    userDetails: state.auth.userDetails,
-  });
-};
+const mapStateToProps = state => ({
+  userDetails: state.auth.userDetails,
+});
 
 export default compose(
   withStyles(s),
   connect(mapStateToProps, {
     confirmSignUpAction: confirmSignUp,
+    resendCodeAction: resendCode,
   }),
 )(VerificationCode);
