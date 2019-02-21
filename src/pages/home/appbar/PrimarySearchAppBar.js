@@ -13,10 +13,9 @@ import {
   NearMe, AssignmentInd, PersonAdd, ExitToApp, Mail as MailIcon, Notifications as NotificationsIcon,
   MoreVert as MoreIcon, Details,
 } from '@material-ui/icons';
-import { logout } from 'modules/auth.actions';
+import { logout } from 'auth/actions/login';
 import IconMenu from 'components/IconMenu';
 import logo from '../../../images/logo.png';
-import { history } from '../../../containers/App';
 import styles from './PrimarySearchAppBarStyle';
 
 class PrimarySearchAppBar extends React.Component {
@@ -72,7 +71,6 @@ class PrimarySearchAppBar extends React.Component {
   };
 
   handleLogout = () => {
-    history.push('/');
     const { logoutAction } = this.props;
     logoutAction();
     this.handleMenuClose();
