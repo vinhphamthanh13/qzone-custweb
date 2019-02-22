@@ -25,13 +25,13 @@ export default function Services({
           onChange={onChange}
         />
       </Paper>
-      <Grid container spacing={32} className={styles.cardsWrapper}>
+      <Grid container className={styles.cardsWrapper}>
         {
           !isLoading && services.length === 0
           && <EmptyItem onLoadServices={onLoadServices} />
         }
         {services.map(service => (
-          <Grid item md={4} key={service.id}>
+          <Grid item xs={4} sm={3} key={service.id}>
             <ServiceCard onChange={onChange} service={service} />
           </Grid>
         ))}
