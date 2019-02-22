@@ -17,6 +17,7 @@ const SubCategoryTabs = (props) => {
     >
       { subCategories.length ? 'More services for you in' : 'Services for you' }
     </Button>);
+  console.log('whre this the sub tab label');
   return subCategories.length
     ? (
       <>

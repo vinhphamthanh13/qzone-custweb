@@ -19,6 +19,8 @@
 // // // Variables - Styles that are used on more than one component
 // #############################
 
+export const appBarHeight = 100;
+
 export const drawerWidth = 260;
 
 export const drawerMiniWidth = 80;
