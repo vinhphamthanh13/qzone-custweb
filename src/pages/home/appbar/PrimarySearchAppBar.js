@@ -15,7 +15,7 @@ import {
 } from '@material-ui/icons';
 import { logout } from 'auth/actions/login';
 import IconMenu from 'components/IconMenu';
-import logo from '../../../images/logo.png';
+import logo from '../../../images/quezone-logo.png';
 import styles from './PrimarySearchAppBarStyle';
 
 class PrimarySearchAppBar extends React.Component {
@@ -276,9 +276,16 @@ class PrimarySearchAppBar extends React.Component {
     );
     return (
       <div className={classes.root}>
-        <AppBar position="sticky">
-          <Toolbar>
-            <Avatar className={classes.avatar} alt="Quezone Logo" src={logo} />
+        <AppBar position="fixed">
+          <Toolbar className={`${classes.toolbar} ${classes.primaryBoxShadow}`}>
+            <Avatar
+              className={classes.avatar}
+              imgProps={{
+                className: classes.img,
+              }}
+              alt="Quezone Logo"
+              src={logo}
+            />
             <div className={classes.menuListMobile}>
               <MenuIcon onClick={this.handleServiceMenuOpen} />
             </div>

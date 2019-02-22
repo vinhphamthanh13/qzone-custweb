@@ -135,26 +135,25 @@ export class Home extends React.PureComponent {
     const searchedServices = this.getSearchedServices(services, searchText, selectedCategoryId);
     return (
       <>
+        <Auth
+          isRegisterOpen={isRegisterOpen}
+          isLoginOpen={isLoginOpen}
+          closeDialog={this.closeDialog}
+        />
+        <BookingDialog
+          initService={selectedService}
+          handleClose={this.handleCloseBookingDialog}
+          onSaveBooking={this.onSaveBooking}
+        />
+        <PrimarySearchAppBar
+          handleAuthenticate={this.openDialog}
+          onSearch={this.onSearch}
+          categories={serviceCategories}
+          handleChangeCategory={this.onCategoryChange}
+          activeCategoryId={selectedCategoryId}
+          userPosition={userPosition}
+        />
         <Grid container>
-          <Auth
-            isRegisterOpen={isRegisterOpen}
-            isLoginOpen={isLoginOpen}
-            closeDialog={this.closeDialog}
-          />
-          <BookingDialog
-            initService={selectedService}
-            handleClose={this.handleCloseBookingDialog}
-            onSaveBooking={this.onSaveBooking}
-          />
-          <PrimarySearchAppBar
-            // loggedIn={userAuthorized}
-            handleAuthenticate={this.openDialog}
-            onSearch={this.onSearch}
-            categories={serviceCategories}
-            handleChangeCategory={this.onCategoryChange}
-            activeCategoryId={selectedCategoryId}
-            userPosition={userPosition}
-          />
           <Grid item xs={12} className={styles.selectService}>
             <Services
               services={searchedServices}

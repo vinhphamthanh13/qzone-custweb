@@ -93,6 +93,7 @@ export const successColor = '#4caf50';
 export const infoColor = '#00acc1';
 export const roseColor = '#e91e63';
 export const grayColor = '#999999';
+export const makoColor = '#3c4149';
 export const lightGrayColor = '#cccccc';
 export const mainColor = '#3f51b5';
 
