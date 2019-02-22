@@ -31,7 +31,7 @@ export default function Services({
           && <EmptyItem onLoadServices={onLoadServices} />
         }
         {services.map(service => (
-          <Grid item xs={4} sm={3} key={service.id}>
+          <Grid item xs={6} md={3} key={service.id}>
             <ServiceCard onChange={onChange} service={service} />
           </Grid>
         ))}

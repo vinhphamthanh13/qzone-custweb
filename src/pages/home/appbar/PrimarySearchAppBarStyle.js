@@ -1,8 +1,8 @@
 import { fade } from '@material-ui/core/styles/colorManipulator';
-import { makoColor, mainColor, primaryBoxShadow } from 'components/material-dashboard-pro-react';
+import { makoColor, mainColor, mainLinear } from 'components/material-dashboard-pro-react';
 
 const styles = theme => ({
-  primaryBoxShadow,
+  mainLinear,
   root: {
     width: '100%',
     zIndex: 30,
@@ -38,9 +38,6 @@ const styles = theme => ({
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
-  },
-  toolbar: {
-    background: 'linear-gradient(#3f51b5, #5795f9)',
   },
   avatar: {
     display: 'none',

@@ -277,7 +277,7 @@ class PrimarySearchAppBar extends React.Component {
     return (
       <div className={classes.root}>
         <AppBar position="fixed">
-          <Toolbar className={`${classes.toolbar} ${classes.primaryBoxShadow}`}>
+          <Toolbar className={`${classes.mainLinear}`}>
             <Avatar
               className={classes.avatar}
               imgProps={{

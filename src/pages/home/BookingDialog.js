@@ -39,15 +39,15 @@ class BookingDialog extends PureComponent {
 
   onStepChange = idx => () => {
     this.setState({ step: idx });
-  }
+  };
 
   handleBack = () => {
     this.setState(oldState => ({ step: oldState.step - 1 }));
-  }
+  };
 
   handleNext = () => {
     this.setState(oldState => ({ step: oldState.step + 1 }));
-  }
+  };
 
   isStepCompleted = () => {
     const { step, bookingDetail } = this.state;
@@ -57,7 +57,7 @@ class BookingDialog extends PureComponent {
       default:
         return false;
     }
-  }
+  };
 
   onChangeBookingDetail = (value, key, cb) => {
     this.setState(oldState => ({
@@ -66,13 +66,13 @@ class BookingDialog extends PureComponent {
         [key]: value,
       },
     }), cb);
-  }
+  };
 
   handleClose = () => {
     this.props.setProvidersAction([]);
     this.setState(this.defaultState);
     this.props.handleClose();
-  }
+  };
 
   render() {
     const { initService, classes } = this.props;
@@ -88,7 +88,7 @@ class BookingDialog extends PureComponent {
         classes={{ root: classes.diagRoot }}
       >
         <AppBar position="relative">
-          <Toolbar>
+          <Toolbar className={classes.mainLinear}>
             <Avatar src={logo} alt="Quezone Logo" className={classes.avatar} />
             {initService && <Typography variant="subtitle1" color="inherit">{initService.name}</Typography>}
             <div className="grow" />

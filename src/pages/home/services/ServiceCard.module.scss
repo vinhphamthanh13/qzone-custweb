@@ -1,7 +1,9 @@
-@import "styles/_color.scss";
+@import "styles/_settings.scss";
 
 .image {
-  height: 300px;
+  height: 195px;
+  margin: 10px;
+  border-radius: 5px;
 }
 
 .serviceCard {
@@ -10,6 +12,10 @@
 
 .serviceContent {
   padding: 20px 20px 0 20px
+}
+
+.serviceAction {
+  background: linear-gradient($fruitSalad, $celadon);
 }
 
 .footer {

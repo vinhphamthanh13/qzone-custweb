@@ -98,6 +98,7 @@ export const grayColor = '#999999';
 export const makoColor = '#3c4149';
 export const lightGrayColor = '#cccccc';
 export const mainColor = '#3f51b5';
+export const malibuColor = '#57c9f9';
 
 export const primaryBoxShadow = {
   boxShadow:
@@ -181,6 +182,13 @@ export const mainCardHeader = {
 export const roseCardHeader = {
   background: 'linear-gradient(60deg, #ec407a, #d81b60)',
   ...roseBoxShadow,
+};
+
+export const mainLinear = {
+  background: `linear-gradient(${mainColor}, ${malibuColor})`,
+};
+export const successLinear = {
+  background: `linear-gradient(${successColor}, ${malibuColor})`,
 };
 
 export const cardActions = {

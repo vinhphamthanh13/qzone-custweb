@@ -30,7 +30,7 @@ export default class ServiceCard extends PureComponent {
 
   onError = () => {
     this.setState({ imgSrc: serviceImg });
-  }
+  };
 
   render() {
     const { service } = this.props;
@@ -51,8 +51,9 @@ export default class ServiceCard extends PureComponent {
             variant="contained"
             onClick={this.onSelectService}
             fullWidth
+            className={styles.serviceAction}
           >
-            Select
+            Continue
           </Button>
         </CardActions>
       </Card>
