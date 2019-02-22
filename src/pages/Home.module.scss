@@ -1,3 +1,7 @@
+@import "styles/_settings.scss";
+
 .selectService {
-  padding: 16px;
+  margin: $app-bar-height auto;
+  max-width: $max-width;
+  min-width: $min-width;
 }
