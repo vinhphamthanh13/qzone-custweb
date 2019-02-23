@@ -1,22 +1,16 @@
-@import "styles/_settings.scss";
+@import "styles/_color.scss";
 
-.serviceDetail {
-  margin-top: 16px;
-  height: 100px;
-  text-overflow: ellipsis;
-  overflow: hidden;
+.readMorePaper {
+  width: 310px;
+}
+
+.readMoreTitle {
+  font-size: 1.5rem;
 }
 
 .blockItem {
   margin-top: 16px;
   flex-direction: column;
-}
-
-.title {
-  font-size: 20px;
-}
-
-.description {
 }
 
 .iconInfo {
@@ -29,4 +23,3 @@
   font-size: 22px;
   margin-right: 10px;
 }
-
