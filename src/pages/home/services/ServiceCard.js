@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
+import { func } from 'prop-types';
 import serviceImg from 'images/service-provider.jpeg';
 import {
   Card, CardContent, CardMedia, CardActions,
@@ -12,7 +12,7 @@ import ServiceDetail from './serviceCard/ServiceDetail';
 export default class ServiceCard extends PureComponent {
   static propTypes = {
     service: serviceType.isRequired,
-    onChange: PropTypes.func.isRequired,
+    onChange: func.isRequired,
   };
 
   constructor(props) {
@@ -45,7 +45,7 @@ export default class ServiceCard extends PureComponent {
         <CardContent className={styles.serviceContent}>
           <ServiceDetail service={service} />
         </CardContent>
-        <CardActions classes={{ root: styles.footer }}>
+        <CardActions>
           <Button
             color="primary"
             variant="contained"
@@ -53,7 +53,7 @@ export default class ServiceCard extends PureComponent {
             fullWidth
             className={styles.serviceAction}
           >
-            Continue
+            Learn more
           </Button>
         </CardActions>
       </Card>

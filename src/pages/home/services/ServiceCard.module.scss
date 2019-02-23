@@ -11,14 +11,16 @@
 }
 
 .serviceContent {
-  padding: 20px 20px 0 20px
+  padding-top: 0;
 }
 
 .serviceAction {
-  background: linear-gradient($fruitSalad, $celadon);
-}
-
-.footer {
-  justify-content: center;
-  border-top: 2px solid $we_peep;
+  margin: auto ($global-margin * 2);
+  color: $primary;
+  background: transparent;
+  transition: color 500ms;
+  &:hover {
+    background: linear-gradient($malibu, $primary);
+    color: $white;
+  }
 }

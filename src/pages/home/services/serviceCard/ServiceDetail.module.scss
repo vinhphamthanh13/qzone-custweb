@@ -1,9 +1,36 @@
+@import "styles/_settings.scss";
+
 .serviceDetail {
   margin-top: 16px;
+  height: 100px;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .blockItem {
   margin-top: 16px;
-  margin-bottom: 16px;
   flex-direction: column;
+}
+
+.title {
+  font-size: 20px;
+}
+
+.description {
+}
+
+.iconInfo {
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  color: $primary;
+  font-size: 22px;
+  margin-right: 10px;
+}
+
+.iconStar {
+  color: $galliano;
+  font-size: 16px;
 }
