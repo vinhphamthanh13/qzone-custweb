@@ -3,12 +3,11 @@ import {
   Typography, Button,
   Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions,
 } from '@material-ui/core';
-import {
-  AccessTime, LocationOn, Star, StarHalf,
-} from '@material-ui/icons';
+import { AccessTime, LocationOn } from '@material-ui/icons';
 import { serviceType } from 'types/global';
 import CustomLink from 'components/CustomLink';
 import styles from './ServiceDetail.module.scss';
+import RateStar from '../rating/RateStar';
 
 export default class ServiceDetail extends React.PureComponent {
   constructor(props) {
@@ -42,13 +41,7 @@ export default class ServiceDetail extends React.PureComponent {
             <Typography variant="subheading" classes={{ subheading: styles.readMoreTitle }} color="primary">
               {service.name}
             </Typography>
-            <div className={styles.iconInfo}>
-              <Star className={styles.iconStar} />
-              <Star className={styles.iconStar} />
-              <Star className={styles.iconStar} />
-              <Star className={styles.iconStar} />
-              <StarHalf className={styles.iconStar} />
-            </div>
+            <RateStar rating={5} reviews={4000} />
             <div className={styles.blockItem}>
               <div className={styles.iconInfo}>
                 <AccessTime className={styles.icon} />
@@ -83,13 +76,7 @@ export default class ServiceDetail extends React.PureComponent {
         >
           {service.name}
         </Typography>
-        <div className={styles.iconInfo}>
-          <Star className={styles.iconStar} />
-          <Star className={styles.iconStar} />
-          <Star className={styles.iconStar} />
-          <Star className={styles.iconStar} />
-          <StarHalf className={styles.iconStar} />
-        </div>
+        <RateStar rating={5} reviews={4000} />
         <div className={styles.serviceDetail}>
           <Typography variant="body1" color="textSecondary">
             {(service.description || '').split('').length > 180
