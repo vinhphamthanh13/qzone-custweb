@@ -23,9 +23,7 @@ const ReadMore = (props) => {
       classes={{ paper: styles.readMorePaper }}
     >
       <DialogTitle id="description-dialog">
-        <Typography variant="subheading" classes={{ subheading: styles.readMoreTitle }} color="primary">
-          {serviceName}
-        </Typography>
+        <div className={styles.readMoreTitle}>{serviceName}</div>
         <RateStar rating={5} reviews={4000} />
         <div className={styles.blockItem}>
           <div className={styles.iconInfo}>
@@ -41,11 +39,7 @@ const ReadMore = (props) => {
         </div>
       </DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          <div className={styles.description}>
-            {orgDescription || ''}
-          </div>
-        </DialogContentText>
+        <DialogContentText>{orgDescription}</DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary" variant="outlined">

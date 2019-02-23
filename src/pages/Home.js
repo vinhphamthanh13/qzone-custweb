@@ -17,6 +17,7 @@ import Services from './home/Services';
 import BookingDialog from './home/BookingDialog';
 import Auth from './Auth';
 import PrimarySearchAppBar from './home/appbar/PrimarySearchAppBar';
+import Categorize from './home/Categorize';
 
 /* eslint react/no-unused-state: 0 */
 export class Home extends React.PureComponent {
@@ -127,6 +128,7 @@ export class Home extends React.PureComponent {
     const {
       serviceCategories, services, isLoading,
     } = this.props;
+    console.log('serviceCategories', serviceCategories);
     const {
       selectedCategoryId, subCategories, selectedSubCategoryId, searchText,
       isRegisterOpen, isLoginOpen, userPosition,
@@ -155,14 +157,16 @@ export class Home extends React.PureComponent {
         />
         <Grid container>
           <Grid item xs={12} className={styles.selectService}>
-            <Services
-              services={searchedServices}
-              onChange={this.onChange}
-              subCategories={subCategories}
-              selectedSubCategoryId={selectedSubCategoryId}
-              onLoadServices={this.onLoadServices}
-              isLoading={isLoading}
-            />
+            <Categorize categories={{ name: 'TEST' }}>
+              <Services
+                services={searchedServices}
+                onChange={this.onChange}
+                subCategories={subCategories}
+                selectedSubCategoryId={selectedSubCategoryId}
+                onLoadServices={this.onLoadServices}
+                isLoading={isLoading}
+              />
+            </Categorize>
           </Grid>
         </Grid>
       </>

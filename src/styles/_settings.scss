@@ -1,10 +1,15 @@
 @charset "utf-8";
 
-$app-bar-height: 80px;
+body {
+  overflow: hidden;
+}
+
+$app-bar-height: 65px;
 
 /* Resolution */
 $min-width: 768px;
 $max-width: 1440px;
+$max-height: $max-width;
 
 /* MUI breakpoints */
 $xs: 0;

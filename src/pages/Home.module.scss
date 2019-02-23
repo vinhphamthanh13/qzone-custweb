@@ -4,4 +4,6 @@
   margin: $app-bar-height auto;
   max-width: $max-width;
   min-width: $min-width;
+  height: $max-height;
+  overflow: scroll;
 }

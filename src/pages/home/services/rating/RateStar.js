@@ -18,7 +18,7 @@ const RateStar = (props) => {
       </div>
       <div className={`flex vertical-center ${style.reviews}`}>
         <Typography variant="body1" color="textSecondary">
-          { Number(rating + reviews).toLocaleString() }
+          { parseInt(Math.random() * (rating + reviews), 0).toLocaleString() }
         </Typography>
       </div>
     </div>
