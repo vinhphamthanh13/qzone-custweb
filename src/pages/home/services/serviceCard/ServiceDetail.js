@@ -36,8 +36,32 @@ export default class ServiceDetail extends React.PureComponent {
           open={isDialogDescOpen}
           onClose={this.handleClose}
           aria-labelledby="description-dialog"
+          classes={{ paper: styles.readMorePaper }}
         >
-          <DialogTitle id="description-dialog">{service.name}</DialogTitle>
+          <DialogTitle id="description-dialog">
+            <Typography variant="subheading" classes={{ subheading: styles.readMoreTitle }} color="primary">
+              {service.name}
+            </Typography>
+            <div className={styles.iconInfo}>
+              <Star className={styles.iconStar} />
+              <Star className={styles.iconStar} />
+              <Star className={styles.iconStar} />
+              <Star className={styles.iconStar} />
+              <StarHalf className={styles.iconStar} />
+            </div>
+            <div className={styles.blockItem}>
+              <div className={styles.iconInfo}>
+                <AccessTime className={styles.icon} />
+                <Typography variant="body1" color="primary">{service.duration} minutes</Typography>
+              </div>
+              <div className={styles.iconInfo}>
+                <LocationOn className={styles.icon} />
+                <Typography variant="body1">
+                  <CustomLink text={service.organization.name} to={`/organisation/${service.organization.id}`} />
+                </Typography>
+              </div>
+            </div>
+          </DialogTitle>
           <DialogContent>
             <DialogContentText>
               <div className={styles.description}>
