@@ -24,7 +24,6 @@
   cursor: pointer;
   transition: color 500ms;
   &:hover {
-    color: $primary;
     text-shadow: 1px 1px $grayNickel;
   }
 }

@@ -4,9 +4,10 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: calc(100vh - 50%);
 }
 
 .cta {
-  margin: 16px auto 0px;
+  margin: 16px auto 0;
 }
 
