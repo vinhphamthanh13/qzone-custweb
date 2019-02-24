@@ -1,7 +1,48 @@
 @import "styles/_settings.scss";
 
 .footer {
+  padding: $global-padding 0 0.5em;
   width: 100%;
-  background: rgba(0,0,0, 0.4);
-  height: 100px;
+  background: $gallery;
+  margin: $global-margin auto 0;
+}
+
+.info {
+  display: flex;
+  padding: 0 200px;
+  justify-content: space-evenly;
+}
+
+.infoDetail {
+  display: flex;
+  flex-direction: column;
+}
+
+.items {
+  margin: 8px 0;
+  text-transform: capitalize;
+  cursor: pointer;;
+}
+
+.copyright {
+  margin: $global-margin auto 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.copyText {
+  padding-top: 2px;
+  padding-right: 5px;
+}
+
+.footerAvatar {
+  border-radius: 0;
+  width: $logo-copyright;
+  height: unset;
+}
+
+.smallAvatar {
+  height: 100%;
+  width: 100%;
 }

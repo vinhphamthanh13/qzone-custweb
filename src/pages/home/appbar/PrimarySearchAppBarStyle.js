@@ -44,7 +44,7 @@ const styles = theme => ({
     [theme.breakpoints.up('sm')]: {
       display: 'flex',
       background: 'transparent',
-      width: theme.spacing.unit * 25,
+      width: theme.spacing.unit * 22,
       borderRadius: 0,
     },
   },
