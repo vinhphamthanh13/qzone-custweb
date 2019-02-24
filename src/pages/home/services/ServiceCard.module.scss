@@ -18,7 +18,7 @@
   margin: auto ($global-margin * 2);
   color: $primary;
   background: transparent;
-  transition: color 500ms;
+  transition: all 400ms;
   &:hover {
     background: linear-gradient($malibu, $primary);
     color: $white;

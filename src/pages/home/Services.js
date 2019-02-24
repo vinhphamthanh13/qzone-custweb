@@ -1,10 +1,6 @@
 import React from 'react';
-import {
-  func, string, bool, arrayOf,
-} from 'prop-types';
-import {
-  Grid,
-} from '@material-ui/core';
+import { func, bool, arrayOf } from 'prop-types';
+import { Grid } from '@material-ui/core';
 import { serviceType } from 'types/global';
 import EmptyItem from 'components/EmptyItem';
 import styles from './Services.module.scss';
@@ -36,11 +32,6 @@ export default function Services({
 Services.propTypes = {
   services: arrayOf(serviceType).isRequired,
   onChange: func.isRequired,
-  selectedSubCategoryId: string,
   isLoading: bool.isRequired,
   onLoadServices: func.isRequired,
-};
-
-Services.defaultProps = {
-  selectedSubCategoryId: undefined,
 };

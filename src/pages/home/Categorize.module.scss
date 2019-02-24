@@ -1,0 +1,11 @@
+@import "styles/_settings.scss";
+
+.category {
+  margin-top: $global-margin;
+  padding-bottom: $global-padding;
+  border-bottom: 2px solid $gallery;
+}
+
+.headline {
+  padding-left: 0.5rem;
+}

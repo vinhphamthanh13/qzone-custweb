@@ -1,13 +1,15 @@
 import React from 'react';
 import {
-  arrayOf, bool, func,
+  arrayOf, bool, func, any,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { Grid } from '@material-ui/core';
 import { getServiceCategories } from 'api/home';
 import { handleResponse, handleRequest } from 'api/helpers';
 import {
-  setServiceCategories, getServicesByCategory, getServicesByName,
+  setServiceCategories,
+  getServicesByName,
+  setServicesGlobal,
 } from 'modules/home.actions';
 import { serviceType } from 'types/global';
 import getLocation from 'utils/getLocation';
@@ -42,13 +44,11 @@ export class Home extends React.PureComponent {
   }
 
   async componentDidMount() {
-    const { setServiceCategoriesAction } = this.props;
+    const { setServiceCategoriesAction, getAllServicesAction } = this.props;
     const serviceCategories = handleResponse(await handleRequest(getServiceCategories), []);
     setServiceCategoriesAction(serviceCategories);
-    if (serviceCategories.length > 0) {
-      this.onCategoryChange(null, serviceCategories[0].id);
-    }
     await getLocation(this.showLocation);
+    getAllServicesAction();
   }
 
   showLocation = (position) => {
@@ -127,15 +127,18 @@ export class Home extends React.PureComponent {
 
   render() {
     const {
-      serviceCategories, services, isLoading,
+      serviceCategories, isLoading, allServices,
     } = this.props;
-    console.log('serviceCategories', serviceCategories);
+    const catWithServices = serviceCategories.map(cat => ({
+      name: cat.name,
+      list: allServices.filter(ser => ser.serviceCategoryId === cat.id),
+    }));
     const {
-      selectedCategoryId, subCategories, selectedSubCategoryId, searchText,
-      isRegisterOpen, isLoginOpen, userPosition,
+      selectedCategoryId, searchText, isRegisterOpen, isLoginOpen, userPosition,
       selectedService,
     } = this.state;
-    const searchedServices = this.getSearchedServices(services, searchText, selectedCategoryId);
+    const searchedServices = this.getSearchedServices(allServices, searchText, selectedCategoryId);
+    console.log('searched services', searchedServices);
     return (
       <>
         <Auth
@@ -158,16 +161,19 @@ export class Home extends React.PureComponent {
         />
         <Grid container>
           <Grid item xs={12} className={styles.selectService}>
-            <Categorize categories={{ name: 'TEST' }}>
-              <Services
-                services={searchedServices}
-                onChange={this.onChange}
-                subCategories={subCategories}
-                selectedSubCategoryId={selectedSubCategoryId}
-                onLoadServices={this.onLoadServices}
-                isLoading={isLoading}
-              />
-            </Categorize>
+            {catWithServices.length && catWithServices.map(category => (
+              <Categorize
+                key={category.name}
+                categories={{ name: category.name }}
+              >
+                <Services
+                  services={category.list}
+                  onChange={this.onChange}
+                  onLoadServices={this.onLoadServices}
+                  isLoading={isLoading}
+                />
+              </Categorize>
+            ))}
             <Footer loading={isLoading} />
           </Grid>
         </Grid>
@@ -180,10 +186,12 @@ Home.propTypes = {
   // loginSession: objectOf(any),
   setServiceCategoriesAction: func.isRequired,
   getServicesByCategoryAction: func.isRequired,
+  getAllServicesAction: func.isRequired,
   services: arrayOf(serviceType).isRequired,
   serviceCategories: serviceCategoriesType.isRequired,
   getServicesByNameAction: func.isRequired,
   isLoading: bool.isRequired,
+  allServices: arrayOf(any).isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -196,7 +204,8 @@ export default connect(
   mapStateToProps,
   {
     setServiceCategoriesAction: setServiceCategories,
-    getServicesByCategoryAction: getServicesByCategory,
     getServicesByNameAction: getServicesByName,
+    getServicesByCategoryAction: setServicesGlobal,
+    getAllServicesAction: setServicesGlobal,
   },
 )(Home);
