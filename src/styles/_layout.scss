@@ -73,3 +73,11 @@
   justify-content: center;
   align-items: center;
 }
+
+.icon-main {
+  margin: 5px;
+  color: $primary;
+  &:hover {
+    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+  }
+}

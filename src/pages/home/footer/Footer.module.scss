@@ -9,19 +9,24 @@
 
 .info {
   display: flex;
-  padding: 0 200px;
-  justify-content: space-evenly;
+  justify-content: center;
 }
 
 .infoDetail {
   display: flex;
   flex-direction: column;
+  margin: 0 $global-margin;
 }
 
 .items {
   margin: 8px 0;
   text-transform: capitalize;
-  cursor: pointer;;
+  cursor: pointer;
+  transition: color 500ms;
+  &:hover {
+    color: $primary;
+    text-shadow: 1px 1px $grayNickel;
+  }
 }
 
 .copyright {
@@ -45,4 +50,8 @@
 .smallAvatar {
   height: 100%;
   width: 100%;
+}
+
+.iconSuite {
+  display: flex;
 }

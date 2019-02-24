@@ -1,5 +1,6 @@
 import React from 'react';
-import { Typography } from '@material-ui/core';
+import { bool } from 'prop-types';
+import { Typography, Icon } from '@material-ui/core';
 import Avatar from '@material-ui/core/es/Avatar/Avatar';
 import logo from 'images/quezone-logo.png';
 import style from './Footer.module.scss';
@@ -17,10 +18,12 @@ const about = [
 ];
 
 const following = [
-  'twitter', 'facebook', 'instagram',
+  { name: 'twitter', icon: 'twitter' },
+  { name: 'facebook', icon: 'facebook' },
+  { name: 'instagram', icon: 'instagram' },
 ];
 
-const Footer = () => (
+const Footer = props => !props.loading && (
   <div className={style.footer}>
     <div className={style.info}>
       <div className={style.infoDetail}>
@@ -28,7 +31,7 @@ const Footer = () => (
           NEED HELP
         </Typography>
         {needHelp.map(item => (
-          <Typography variant="body1" color="textSecondary" classes={{ body1: style.items }}>
+          <Typography key={item} variant="body1" color="textSecondary" classes={{ body1: style.items }}>
             {item}
           </Typography>
         ))}
@@ -38,7 +41,7 @@ const Footer = () => (
           YOUR QUEUING
         </Typography>
         {yourQueuing.map(item => (
-          <Typography variant="body1" color="textSecondary" classes={{ body1: style.items }}>
+          <Typography key={item} variant="body1" color="textSecondary" classes={{ body1: style.items }}>
             {item}
           </Typography>
         ))}
@@ -48,7 +51,7 @@ const Footer = () => (
           ABOUT
         </Typography>
         {about.map(item => (
-          <Typography variant="body1" color="textSecondary" classes={{ body1: style.items }}>
+          <Typography key={item} variant="body1" color="textSecondary" classes={{ body1: style.items }}>
             {item}
           </Typography>
         ))}
@@ -58,9 +61,12 @@ const Footer = () => (
           FOLLOW US
         </Typography>
         {following.map(item => (
-          <Typography variant="body1" color="textSecondary" classes={{ body1: style.items }}>
-            {item}
-          </Typography>
+          <div className="flex vertical-center">
+            <Icon className={`fab fa-${item.icon} icon-main`} />
+            <Typography key={item.name} variant="body1" color="textSecondary" classes={{ body1: style.items }}>
+              {item.name}
+            </Typography>
+          </div>
         ))}
       </div>
     </div>
@@ -70,5 +76,9 @@ const Footer = () => (
     </div>
   </div>
 );
+
+Footer.propTypes = {
+  loading: bool.isRequired,
+};
 
 export default Footer;

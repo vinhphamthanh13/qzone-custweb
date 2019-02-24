@@ -168,7 +168,7 @@ export class Home extends React.PureComponent {
                 isLoading={isLoading}
               />
             </Categorize>
-            <Footer />
+            <Footer loading={isLoading} />
           </Grid>
         </Grid>
       </>
