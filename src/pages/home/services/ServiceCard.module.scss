@@ -1,14 +1,26 @@
-@import "styles/_color.scss";
+@import "styles/_settings.scss";
 
 .image {
-  height: 300px;
+  height: 195px;
+  margin: 10px;
+  border-radius: 5px;
+}
+
+.serviceCard {
+  margin: 10px;
 }
 
 .serviceContent {
-  padding: 20px 20px 0 20px
+  padding-top: 0;
 }
 
-.footer {
-  justify-content: center;
-  border-top: 2px solid $we_peep;
+.serviceAction {
+  margin: auto ($global-margin * 2);
+  color: $primary;
+  background: transparent;
+  transition: all 400ms;
+  &:hover {
+    background: linear-gradient($malibu, $primary);
+    color: $white;
+  }
 }

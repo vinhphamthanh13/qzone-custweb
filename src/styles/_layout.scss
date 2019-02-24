@@ -1,6 +1,7 @@
 @import "color";
 
 /* Layout */
+
 .container {
   display: grid;
 }
@@ -16,6 +17,10 @@
 
 .flex {
   display: flex;
+}
+
+.vertical-center {
+  align-items: center;
 }
 
 .auto-margin-vertical {
@@ -67,4 +72,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.icon-main {
+  margin: 5px;
+  color: $primary;
+  &:hover {
+    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+  }
 }

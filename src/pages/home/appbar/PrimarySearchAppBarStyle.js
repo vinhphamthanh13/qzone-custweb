@@ -1,6 +1,8 @@
 import { fade } from '@material-ui/core/styles/colorManipulator';
+import { makoColor, mainColor, mainLinear } from 'components/material-dashboard-pro-react';
 
 const styles = theme => ({
+  mainLinear,
   root: {
     width: '100%',
     zIndex: 30,
@@ -41,20 +43,27 @@ const styles = theme => ({
     display: 'none',
     [theme.breakpoints.up('sm')]: {
       display: 'flex',
-      background: theme.palette.common.white,
+      background: 'transparent',
+      width: theme.spacing.unit * 22,
+      borderRadius: 0,
     },
+  },
+  img: {
+    width: 'auto',
+    height: '100%',
   },
   search: {
     display: 'flex',
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
+    color: makoColor,
     '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
+      color: fade(mainColor, 0.9),
     },
     marginRight: theme.spacing.unit * 2,
     marginLeft: 0,
     width: '100%',
+    background: theme.palette.common.white,
     [theme.breakpoints.up('sm')]: {
       marginLeft: theme.spacing.unit * 3,
       width: 'auto',

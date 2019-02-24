@@ -1,15 +1,16 @@
 import React from 'react';
 import {
-  arrayOf, bool, func,
+  arrayOf, bool, func, any,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { Grid } from '@material-ui/core';
 import { getServiceCategories } from 'api/home';
 import { handleResponse, handleRequest } from 'api/helpers';
 import {
-  setServiceCategories, getServicesByCategory, getServicesByName,
+  setServiceCategories,
+  getServicesByName,
+  setServicesGlobal,
 } from 'modules/home.actions';
-import { serviceType } from 'types/global';
 import getLocation from 'utils/getLocation';
 import styles from './Home.module.scss';
 import { serviceCategoriesType } from './home/Header';
@@ -17,6 +18,8 @@ import Services from './home/Services';
 import BookingDialog from './home/BookingDialog';
 import Auth from './Auth';
 import PrimarySearchAppBar from './home/appbar/PrimarySearchAppBar';
+import Categorize from './home/Categorize';
+import Footer from './home/footer/Footer';
 
 /* eslint react/no-unused-state: 0 */
 export class Home extends React.PureComponent {
@@ -25,7 +28,7 @@ export class Home extends React.PureComponent {
     this.state = {
       fromDate: undefined,
       toDate: undefined,
-      searchText: undefined,
+      searchText: '',
       subCategory: undefined,
       subCategories: [],
       selectedCategoryId: '',
@@ -40,13 +43,11 @@ export class Home extends React.PureComponent {
   }
 
   async componentDidMount() {
-    const { setServiceCategoriesAction } = this.props;
+    const { setServiceCategoriesAction, getAllServicesAction } = this.props;
     const serviceCategories = handleResponse(await handleRequest(getServiceCategories), []);
     setServiceCategoriesAction(serviceCategories);
-    if (serviceCategories.length > 0) {
-      this.onCategoryChange(null, serviceCategories[0].id);
-    }
     await getLocation(this.showLocation);
+    getAllServicesAction();
   }
 
   showLocation = (position) => {
@@ -74,14 +75,13 @@ export class Home extends React.PureComponent {
     }
   };
 
-  getSearchedServices = (services, searchText, selectedCategoryId) => services.filter(
+  getSearchedServices = (services, searchText) => services.filter(
     (service) => {
       const lowerSearchText = searchText ? searchText.toLowerCase() : undefined;
-      const isChosen = searchText
+      return searchText
         ? service.name.toLowerCase().includes(lowerSearchText)
         || service.organization.name.toLowerCase().includes(lowerSearchText)
         : true;
-      return !selectedCategoryId || (isChosen && service.serviceCategoryId === selectedCategoryId);
     },
   );
 
@@ -125,45 +125,62 @@ export class Home extends React.PureComponent {
 
   render() {
     const {
-      serviceCategories, services, isLoading,
+      serviceCategories, isLoading, allServices,
     } = this.props;
+    const catWithServices = serviceCategories.map(cat => ({
+      name: cat.name,
+      list: allServices.filter(ser => ser.serviceCategoryId === cat.id),
+    }));
     const {
-      selectedCategoryId, subCategories, selectedSubCategoryId, searchText,
-      isRegisterOpen, isLoginOpen, userPosition,
+      searchText, isRegisterOpen, isLoginOpen, userPosition,
       selectedService,
     } = this.state;
-    const searchedServices = this.getSearchedServices(services, searchText, selectedCategoryId);
+    const searchedServices = this.getSearchedServices(allServices, searchText);
     return (
       <>
+        <Auth
+          isRegisterOpen={isRegisterOpen}
+          isLoginOpen={isLoginOpen}
+          closeDialog={this.closeDialog}
+        />
+        <BookingDialog
+          initService={selectedService}
+          handleClose={this.handleCloseBookingDialog}
+          onSaveBooking={this.onSaveBooking}
+        />
+        <PrimarySearchAppBar
+          handleAuthenticate={this.openDialog}
+          onSearch={this.onSearch}
+          handleChangeCategory={this.onCategoryChange}
+          userPosition={userPosition}
+        />
         <Grid container>
-          <Auth
-            isRegisterOpen={isRegisterOpen}
-            isLoginOpen={isLoginOpen}
-            closeDialog={this.closeDialog}
-          />
-          <BookingDialog
-            initService={selectedService}
-            handleClose={this.handleCloseBookingDialog}
-            onSaveBooking={this.onSaveBooking}
-          />
-          <PrimarySearchAppBar
-            // loggedIn={userAuthorized}
-            handleAuthenticate={this.openDialog}
-            onSearch={this.onSearch}
-            categories={serviceCategories}
-            handleChangeCategory={this.onCategoryChange}
-            activeCategoryId={selectedCategoryId}
-            userPosition={userPosition}
-          />
           <Grid item xs={12} className={styles.selectService}>
-            <Services
-              services={searchedServices}
-              onChange={this.onChange}
-              subCategories={subCategories}
-              selectedSubCategoryId={selectedSubCategoryId}
-              onLoadServices={this.onLoadServices}
-              isLoading={isLoading}
-            />
+            {searchText.length > 2 && (
+              <Categorize categories={{ name: 'Search results' }}>
+                <Services
+                  services={searchedServices}
+                  onChange={this.onChange}
+                  onLoadServices={this.onLoadServices}
+                  isLoading={isLoading}
+                />
+              </Categorize>
+            )
+            }
+            {catWithServices.length && catWithServices.map(category => (
+              <Categorize
+                key={category.name}
+                categories={{ name: category.name }}
+              >
+                <Services
+                  services={category.list}
+                  onChange={this.onChange}
+                  onLoadServices={this.onLoadServices}
+                  isLoading={isLoading}
+                />
+              </Categorize>
+            ))}
+            <Footer loading={isLoading} />
           </Grid>
         </Grid>
       </>
@@ -175,10 +192,11 @@ Home.propTypes = {
   // loginSession: objectOf(any),
   setServiceCategoriesAction: func.isRequired,
   getServicesByCategoryAction: func.isRequired,
-  services: arrayOf(serviceType).isRequired,
+  getAllServicesAction: func.isRequired,
   serviceCategories: serviceCategoriesType.isRequired,
   getServicesByNameAction: func.isRequired,
   isLoading: bool.isRequired,
+  allServices: arrayOf(any).isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -191,7 +209,8 @@ export default connect(
   mapStateToProps,
   {
     setServiceCategoriesAction: setServiceCategories,
-    getServicesByCategoryAction: getServicesByCategory,
     getServicesByNameAction: getServicesByName,
+    getServicesByCategoryAction: setServicesGlobal,
+    getAllServicesAction: setServicesGlobal,
   },
 )(Home);

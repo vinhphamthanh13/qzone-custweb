@@ -1,5 +1,5 @@
 import {
-  SET_SERVICE_CATEGORIES, SET_SERVICES, SET_LOADING, SET_ORGS,
+  SET_SERVICE_CATEGORIES, SET_SERVICES, SET_LOADING, SET_ORGS, SET_ALL_SERVICES,
 } from './home.actions';
 
 const initialState = {
@@ -7,6 +7,7 @@ const initialState = {
   serviceCategories: [],
   services: [],
   orgs: [],
+  allServices: [],
 };
 
 const home = (state = initialState, action) => {
@@ -19,6 +20,11 @@ const home = (state = initialState, action) => {
         services: state.services.concat(
           action.payload.filter(service => state.services.every(existedService => existedService.id !== service.id)),
         ),
+      };
+    case SET_ALL_SERVICES:
+      return {
+        ...state,
+        allServices: action.payload,
       };
     case SET_LOADING:
       return { ...state, isLoading: action.payload };

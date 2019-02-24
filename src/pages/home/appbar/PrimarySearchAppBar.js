@@ -1,28 +1,27 @@
 import React from 'react';
 import {
-  objectOf, any, string, func, arrayOf, object, number,
+  objectOf, any, func, number,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  AppBar, Toolbar, IconButton, InputBase, Badge, MenuItem, Menu, Button, Avatar, Tooltip,
+  AppBar, Toolbar, IconButton, InputBase, Badge, MenuItem, Menu, Avatar, Tooltip,
 } from '@material-ui/core';
 import {
   Menu as MenuIcon, Search as SearchIcon, AccountCircle, InsertEmoticon, HowToReg, Book as BookIcon,
   NearMe, AssignmentInd, PersonAdd, ExitToApp, Mail as MailIcon, Notifications as NotificationsIcon,
-  MoreVert as MoreIcon, Details,
+  MoreVert as MoreIcon,
 } from '@material-ui/icons';
 import { logout } from 'auth/actions/login';
 import IconMenu from 'components/IconMenu';
-import logo from '../../../images/logo.png';
+import logo from '../../../images/quezone-logo.png';
 import styles from './PrimarySearchAppBarStyle';
 
 class PrimarySearchAppBar extends React.Component {
   state = {
     anchorEl: null,
     mobileMoreAnchorEl: null,
-    serviceAnchorEl: null,
   };
 
   componentDidMount() {
@@ -36,7 +35,6 @@ class PrimarySearchAppBar extends React.Component {
   closeAllMenu = () => {
     this.handleMenuClose();
     this.handleMobileMenuClose();
-    this.handleServiceMenuClose();
   };
 
   handleProfileMenuOpen = (event) => {
@@ -56,14 +54,6 @@ class PrimarySearchAppBar extends React.Component {
     this.setState({ mobileMoreAnchorEl: null });
   };
 
-  handleServiceMenuOpen = (event) => {
-    this.setState({ serviceAnchorEl: event.currentTarget });
-  };
-
-  handleServiceMenuClose = () => {
-    this.setState({ serviceAnchorEl: null });
-  };
-
   handleAuthenticateUser = (authenticateType) => {
     const { handleAuthenticate } = this.props;
     handleAuthenticate(authenticateType);
@@ -76,37 +66,14 @@ class PrimarySearchAppBar extends React.Component {
     this.handleMenuClose();
   };
 
-  handleChangeCategory = (event, categoryId) => {
-    const { handleChangeCategory } = this.props;
-    this.handleServiceMenuClose();
-    handleChangeCategory(event, categoryId);
-  };
-
   render() {
+    const { anchorEl, mobileMoreAnchorEl } = this.state;
     const {
-      anchorEl, mobileMoreAnchorEl, serviceAnchorEl,
-    } = this.state;
-    const {
-      classes, loginSession, onSearch, categories,
-      activeCategoryId, userPosition,
+      classes, loginSession, onSearch, userPosition,
     } = this.props;
     const searchNearByTitle = userPosition.latitude ? 'Search Services Near You' : 'Your Location Not Allowed';
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-    const menuCategory = categories.length ? categories.filter(
-      category => !category.parentCategoryId,
-    ) : [];
-    const menuCategories = menuCategory.length ? menuCategory.map(
-      category => (
-        <MenuItem
-          key={category.id}
-          onClick={evt => this.handleChangeCategory(evt, category.id)}
-          selected={activeCategoryId === category.id}
-        >
-          <Details className={classes.menuIcon} /> {category.name}
-        </MenuItem>
-      ),
-    ) : null;
     const isAuthenticated = loginSession ? loginSession.isAuthenticated : false;
     const authorization = isAuthenticated ? (
       [
@@ -276,9 +243,16 @@ class PrimarySearchAppBar extends React.Component {
     );
     return (
       <div className={classes.root}>
-        <AppBar position="sticky">
-          <Toolbar>
-            <Avatar className={classes.avatar} alt="Quezone Logo" src={logo} />
+        <AppBar position="fixed">
+          <Toolbar className={`${classes.mainLinear}`}>
+            <Avatar
+              className={classes.avatar}
+              imgProps={{
+                className: classes.img,
+              }}
+              alt="Quezone Logo"
+              src={logo}
+            />
             <div className={classes.menuListMobile}>
               <MenuIcon onClick={this.handleServiceMenuOpen} />
             </div>
@@ -305,19 +279,6 @@ class PrimarySearchAppBar extends React.Component {
                 </IconButton>
               </div>
             </Tooltip>
-            <Button
-              onClick={this.handleServiceMenuOpen}
-              className={classes.menuListDesktop}
-            >
-              Services
-            </Button>
-            <Menu
-              anchorEl={serviceAnchorEl}
-              open={Boolean(serviceAnchorEl)}
-              onClose={this.handleServiceMenuClose}
-            >
-              { menuCategories }
-            </Menu>
             <div className={classes.grow} />
             { customUser }
           </Toolbar>
@@ -333,9 +294,6 @@ PrimarySearchAppBar.propTypes = {
   classes: objectOf(any).isRequired,
   handleAuthenticate: func.isRequired,
   onSearch: func.isRequired,
-  categories: arrayOf(object).isRequired,
-  handleChangeCategory: func.isRequired,
-  activeCategoryId: string.isRequired,
   userPosition: objectOf(number).isRequired,
   logoutAction: func.isRequired,
   loginSession: objectOf(any).isRequired,

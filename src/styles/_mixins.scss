@@ -5,6 +5,10 @@
     @media (min-width: $sm) {
       @content;
     }
+  } @else if $breakpoint == lmd {
+    @media (min-width: $lmd) {
+      @content;
+    }
   } @else if $breakpoint == md {
     @media (min-width: $md) {
       @content;

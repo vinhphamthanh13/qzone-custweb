@@ -1,22 +1,27 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { string, bool } from 'prop-types';
 import { Link } from 'react-router-dom';
 import styles from './CustomLink.module.scss';
 
-export default function CustomLink({ text, className, ...linkProps }) {
+export default function CustomLink({
+  text, className, small, ...linkProps
+}) {
+  const mixedStyle = small ? `${styles.customLink} ${styles.small} ${className}` : `${styles.customLink} ${className}`;
   return (
-    <Link className={`${styles.customLink} ${className}`} {...linkProps}>{text}</Link>
+    <Link className={mixedStyle} {...linkProps}>{text}</Link>
   );
 }
 
 CustomLink.propTypes = {
-  to: PropTypes.string.isRequired,
-  className: PropTypes.string,
-  text: PropTypes.string.isRequired,
-  target: PropTypes.string,
+  to: string.isRequired,
+  className: string,
+  text: string.isRequired,
+  target: string,
+  small: bool,
 };
 
 CustomLink.defaultProps = {
   className: '',
   target: '_blank',
+  small: false,
 };

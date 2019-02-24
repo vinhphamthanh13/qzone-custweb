@@ -1,4 +1,7 @@
+import { mainLinear } from 'components/material-dashboard-pro-react';
+
 const style = theme => ({
+  mainLinear,
   root: {
     width: '100%',
   },
