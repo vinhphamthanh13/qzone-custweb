@@ -11,7 +11,6 @@ import {
   getServicesByName,
   setServicesGlobal,
 } from 'modules/home.actions';
-import { serviceType } from 'types/global';
 import getLocation from 'utils/getLocation';
 import styles from './Home.module.scss';
 import { serviceCategoriesType } from './home/Header';
@@ -29,7 +28,7 @@ export class Home extends React.PureComponent {
     this.state = {
       fromDate: undefined,
       toDate: undefined,
-      searchText: undefined,
+      searchText: '',
       subCategory: undefined,
       subCategories: [],
       selectedCategoryId: '',
@@ -76,14 +75,13 @@ export class Home extends React.PureComponent {
     }
   };
 
-  getSearchedServices = (services, searchText, selectedCategoryId) => services.filter(
+  getSearchedServices = (services, searchText) => services.filter(
     (service) => {
       const lowerSearchText = searchText ? searchText.toLowerCase() : undefined;
-      const isChosen = searchText
+      return searchText
         ? service.name.toLowerCase().includes(lowerSearchText)
         || service.organization.name.toLowerCase().includes(lowerSearchText)
         : true;
-      return !selectedCategoryId || (isChosen && service.serviceCategoryId === selectedCategoryId);
     },
   );
 
@@ -134,11 +132,10 @@ export class Home extends React.PureComponent {
       list: allServices.filter(ser => ser.serviceCategoryId === cat.id),
     }));
     const {
-      selectedCategoryId, searchText, isRegisterOpen, isLoginOpen, userPosition,
+      searchText, isRegisterOpen, isLoginOpen, userPosition,
       selectedService,
     } = this.state;
-    const searchedServices = this.getSearchedServices(allServices, searchText, selectedCategoryId);
-    console.log('searched services', searchedServices);
+    const searchedServices = this.getSearchedServices(allServices, searchText);
     return (
       <>
         <Auth
@@ -154,13 +151,22 @@ export class Home extends React.PureComponent {
         <PrimarySearchAppBar
           handleAuthenticate={this.openDialog}
           onSearch={this.onSearch}
-          categories={serviceCategories}
           handleChangeCategory={this.onCategoryChange}
-          activeCategoryId={selectedCategoryId}
           userPosition={userPosition}
         />
         <Grid container>
           <Grid item xs={12} className={styles.selectService}>
+            {searchText.length > 2 && (
+              <Categorize categories={{ name: 'Search results' }}>
+                <Services
+                  services={searchedServices}
+                  onChange={this.onChange}
+                  onLoadServices={this.onLoadServices}
+                  isLoading={isLoading}
+                />
+              </Categorize>
+            )
+            }
             {catWithServices.length && catWithServices.map(category => (
               <Categorize
                 key={category.name}
@@ -187,7 +193,6 @@ Home.propTypes = {
   setServiceCategoriesAction: func.isRequired,
   getServicesByCategoryAction: func.isRequired,
   getAllServicesAction: func.isRequired,
-  services: arrayOf(serviceType).isRequired,
   serviceCategories: serviceCategoriesType.isRequired,
   getServicesByNameAction: func.isRequired,
   isLoading: bool.isRequired,
