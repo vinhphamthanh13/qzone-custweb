@@ -18,6 +18,7 @@ import BookingDialog from './home/BookingDialog';
 import Auth from './Auth';
 import PrimarySearchAppBar from './home/appbar/PrimarySearchAppBar';
 import Categorize from './home/Categorize';
+import Footer from './home/footer/Footer';
 
 /* eslint react/no-unused-state: 0 */
 export class Home extends React.PureComponent {
@@ -167,6 +168,7 @@ export class Home extends React.PureComponent {
                 isLoading={isLoading}
               />
             </Categorize>
+            <Footer />
           </Grid>
         </Grid>
       </>
