@@ -10,7 +10,7 @@ import {
   setServiceCategories,
   getServicesByName,
   setServicesGlobal,
-} from 'modules/home.actions';
+} from 'reduxModules/home.actions';
 import getLocation from 'utils/getLocation';
 import styles from './Home.module.scss';
 import { serviceCategoriesType } from './home/Header';

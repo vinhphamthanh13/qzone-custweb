@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { InlineDatePicker } from 'material-ui-pickers';
 import mtz from 'moment-timezone';
 import { defaultDateFormat } from 'utils/constants';
-import { getProviderTimes } from 'modules/home/bookingDialog/selectProvider.actions';
+import { getProviderTimes } from 'reduxModules/home/bookingDialog/selectProvider.actions';
 import { bookingDetailType, providerType } from 'types/global';
 import styles from './DateSelect.module.scss';
 

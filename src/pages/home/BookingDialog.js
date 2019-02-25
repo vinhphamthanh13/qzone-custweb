@@ -11,7 +11,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import CloseIcon from '@material-ui/icons/Close';
 import logo from 'images/logo.png';
 import { serviceType } from 'types/global';
-import { setProviders } from 'modules/home/bookingDialog/selectProvider.actions';
+import { setProviders } from 'reduxModules/home/bookingDialog/selectProvider.actions';
 import SelectProvider from './bookingDialog/SelectProvider';
 import BookingDetail from './bookingDialog/BookingDetail';
 import BookingStyle from './BookingDialogStyle';

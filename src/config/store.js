@@ -2,9 +2,9 @@ import {
   createStore, applyMiddleware, compose, combineReducers,
 } from 'redux';
 import thunk from 'redux-thunk';
-import home from 'modules/home.reducer';
+import home from 'reduxModules/home.reducer';
 import auth from 'auth/actions/reducer';
-import selectProvider from 'modules/home/bookingDialog/selectProvider.reducer';
+import selectProvider from 'reduxModules/home/bookingDialog/selectProvider.reducer';
 
 const rootReducer = combineReducers({
   auth,

@@ -5,7 +5,7 @@ import { Grid, Card, CardContent } from '@material-ui/core';
 import {
   providerType, serviceType, bookingDetailType, providerDetailsType,
 } from 'types/global';
-import { getProvidersByService } from 'modules/home/bookingDialog/selectProvider.actions';
+import { getProvidersByService } from 'reduxModules/home/bookingDialog/selectProvider.actions';
 import EmptyItem from 'components/EmptyItem';
 import ProviderContent from './selectProvider/ProviderContent';
 import styles from './SelectProvider.module.scss';
