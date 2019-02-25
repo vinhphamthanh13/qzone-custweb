@@ -157,7 +157,7 @@ export class Home extends React.PureComponent {
         <Grid container>
           <Grid item xs={12} className={styles.selectService}>
             {searchText.length > 2 && (
-              <Categorize categories={{ name: 'Search results' }}>
+              <Categorize name="Search results">
                 <Services
                   services={searchedServices}
                   onChange={this.onChange}
@@ -167,10 +167,10 @@ export class Home extends React.PureComponent {
               </Categorize>
             )
             }
-            {catWithServices.length && catWithServices.map(category => (
+            {catWithServices && catWithServices.map(category => (
               <Categorize
                 key={category.name}
-                categories={{ name: category.name }}
+                name={category.name}
               >
                 <Services
                   services={category.list}
