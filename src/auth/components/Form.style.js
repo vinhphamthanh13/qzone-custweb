@@ -1,12 +1,13 @@
 import {
-  dangerColor, grayColor, mainColor,
+  dangerColor, grayColor, mainColor, mainLinear,
 } from 'components/material-dashboard-pro-react';
 import checkBox from 'components/material-dashboard-pro-react/customCheckboxRadioSwitch';
 
 const style = theme => ({
   ...checkBox,
-  registerCard: {
-    maxWidth: theme.spacing.unit * 50,
+  mainLinear,
+  authCard: {
+    maxWidth: theme.spacing.unit * 46,
     minWidth: theme.spacing.unit * 41,
   },
   marginLoose: {

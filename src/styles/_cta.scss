@@ -1,3 +1,5 @@
+@import "_color.scss";
+
 .simple-button {
   &:hover {
     background: transparent;
@@ -8,4 +10,18 @@
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   border-radius: 50%;
+}
+
+.main-button {
+  background: transparent;
+  color: $primary;
+  transition: all 0.4s;
+  &-active {
+    background: linear-gradient($malibu, $primary);
+    color: $we_peep;
+  }
+  &-disabled {
+    background: $grayNickel;
+    color: $we_peep;
+  }
 }

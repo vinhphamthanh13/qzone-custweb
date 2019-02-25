@@ -180,10 +180,10 @@ class Form extends Component {
 
     return (
       <form onSubmit={handleSubmit}>
-        <Card className={classes.registerCard}>
+        <Card className={classes.authCard}>
           <CardHeader
             className={
-              `${classes.cardHeader} ${classes.center}
+              `text-center
                ${formType === LOGIN ? classes.loginPanel : ''}`}
             color="main"
           >
@@ -217,8 +217,8 @@ class Form extends Component {
             )}
             <div className={classes.center}>
               <Button
-                color="primary"
                 variant="contained"
+                className={!isValid ? '' : 'main-button-active'}
                 fullWidth
                 disabled={!isValid}
                 type="submit"
