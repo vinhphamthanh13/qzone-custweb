@@ -37,14 +37,18 @@ export const getProvidersByService = serviceId => async (dispatch, getState) => 
   const orgIds = [];
   const { home } = getState();
   rawProviders.forEach((provider) => {
-    if (!orgIds.includes(provider.organizationId) && !home.orgs.find(org => org.id === provider.organizationId)) {
-      orgIds.push(provider.organizationId);
+    if (!orgIds.includes(provider.providerInformation.organizationId)
+      && !home.orgs.find(org => org.id === provider.providerInformation.organizationId)) {
+      orgIds.push(provider.providerInformation.organizationId);
     }
   });
   const result = await Promise.all(orgIds.map(orgId => handleRequest(searchOrganizationById, orgId)));
   const orgs = result.map(handleResponse).concat(home.orgs);
   const providers = rawProviders.map(
-    provider => ({ ...provider, organization: orgs.find(org => org.id === provider.organizationId) }),
+    provider => ({
+      ...provider,
+      organization: orgs.find(org => org.id === provider.providerInformation.organizationId),
+    }),
   );
 
   dispatch(setLoading(false));

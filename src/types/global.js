@@ -34,6 +34,12 @@ export const providerType = shape({
   id: string.isRequired,
   familyName: string,
   givenName: string,
+  providerInformation: shape({
+    organizationId: string,
+    timeZoneId: string,
+    description: string,
+    businessId: string,
+  }),
 });
 
 export const bookingDetailType = shape({
