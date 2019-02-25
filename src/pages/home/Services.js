@@ -14,13 +14,13 @@ export default function Services({
 }) {
   return (
     <>
-      <Grid container className={styles.cardsWrapper}>
+      <Grid container className={styles.cardsWrapper} justify="center">
         {
           !isLoading && services.length === 0
           && <EmptyItem onLoadServices={onLoadServices} />
         }
         {services.map(service => (
-          <Grid item xs={6} md={3} key={service.id}>
+          <Grid item xs={10} sm={6} md={3} key={service.id}>
             <ServiceCard onChange={onChange} service={service} />
           </Grid>
         ))}

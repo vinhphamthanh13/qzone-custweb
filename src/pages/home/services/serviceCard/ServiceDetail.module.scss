@@ -1,10 +1,17 @@
 @import "styles/_settings.scss";
 
 .serviceDetail {
-  margin-top: 16px;
-  height: 100px;
-  text-overflow: ellipsis;
-  overflow: hidden;
+  margin: 16px 0;
+  height: 120px;
+  @include breakpoint-up(sm) {
+    height: 80px;
+  }
+  @include breakpoint-up(md) {
+    height: 140px;
+  }
+  @include breakpoint-up(lg) {
+    height: 100px;
+  }
 }
 
 .blockItem {

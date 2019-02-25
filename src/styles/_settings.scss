@@ -8,18 +8,18 @@ $app-bar-height: 65px;
 $logo-width: 176px;
 $logo-copyright: 100px;
 
-/* Resolution */
-$min-width: 768px;
-$max-width: 1440px;
-$max-height: $max-width;
-
 /* MUI breakpoints */
-$xs: 0;
+$xs: 374px;
 $sm: 600px;
 $md: 960px;
 $lmd: 1024px;
 $lg: 1280px;
 $xl: 1920px;
+
+/* Resolution */
+$min-width: $xs;
+$max-width: 1440px;
+$max-height: $max-width;
 
 /* Dimension */
 $global-radius: 3em;
