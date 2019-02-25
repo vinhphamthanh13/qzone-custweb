@@ -53,7 +53,7 @@ export default class ServiceCard extends PureComponent {
             fullWidth
             className={styles.serviceAction}
           >
-            Learn more
+            Booking
           </Button>
         </CardActions>
       </Card>
