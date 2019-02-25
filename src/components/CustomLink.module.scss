@@ -5,7 +5,7 @@
   color: $primary;
   text-decoration: none;
   &:hover {
-    text-decoration: underline;
+    text-shadow: 1px 1px $grayNickel;
   }
 }
 
