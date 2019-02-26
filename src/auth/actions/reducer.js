@@ -13,6 +13,7 @@ import {
   CLOSE_REGISTER_SUCCESS_MODAL,
   RESEND_VERIFICATION_CODE_STATUS,
   LOGOUT_SUCCESS,
+  TOGGLE_RESET_PASSWORD_DIALOG,
 } from './constants';
 
 const authInitialize = {
@@ -43,6 +44,7 @@ const authInitialize = {
   loginSession: {
     isAuthenticated: false,
   },
+  isForgotPassword: false,
 };
 
 const auth = (state = authInitialize, action) => {
@@ -122,6 +124,11 @@ const auth = (state = authInitialize, action) => {
     case SET_LOADING: {
       return { ...state, isLoading: action.payload };
     }
+    case TOGGLE_RESET_PASSWORD_DIALOG:
+      return {
+        ...state,
+        isForgotPassword: action.payload,
+      };
     case LOGOUT_SUCCESS:
     default:
       return authInitialize;

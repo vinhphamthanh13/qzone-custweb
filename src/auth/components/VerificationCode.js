@@ -57,6 +57,7 @@ class VerificationCode extends Component {
   handleOnChange = (event) => {
     event.preventDefault();
     const { target: { value } } = event;
+    if (!/^\S+$/.test(value) && value.length) return;
     this.setState({
       verificationCode: value,
       verificationCodeError: !regExPattern.registerVerificationCode.test(value),
@@ -88,11 +89,11 @@ class VerificationCode extends Component {
         disableBackdropClick
         disableEscapeKeyDown
       >
-        <Paper className={classes.verification}>
-          <div className={classes.logo}>
-            <Avatar className={classes.avatarRoot} src={logo} />
+        <Paper className="verification-modal">
+          <div className="verification-modal-logo">
+            <Avatar className="verification-modal-avatar" src={logo} />
           </div>
-          <div className={classes.content}>
+          <div className="verification-modal-content">
             <Typography variant="h6" color="primary">Enter verification code</Typography>
             <Typography variant="subheading" color="textSecondary">(code was sent to your email)</Typography>
             <TextField

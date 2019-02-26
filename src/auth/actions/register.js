@@ -4,7 +4,7 @@ import {
   REGISTER_AWS_SUCCESS, REGISTER_AWS_ERROR,
   CONFIRM_SIGNUP_SUCCESS, CONFIRM_SIGNUP_ERROR,
   HANDLE_VERIFICATION_MODAL, CLOSE_REGISTER_SUCCESS_MODAL,
-  RESEND_VERIFICATION_CODE_STATUS,
+  RESEND_VERIFICATION_CODE_STATUS, TOGGLE_RESET_PASSWORD_DIALOG,
 } from './constants';
 
 const registerAwsSuccess = payload => ({
@@ -109,3 +109,37 @@ export const resendCode = email => (dispatch) => {
 };
 
 export const resetResendVerificationCodeModal = () => dispatch => dispatch(resendCodeStatus('none'));
+
+const toggleResetPassword = payload => ({
+  type: TOGGLE_RESET_PASSWORD_DIALOG,
+  payload,
+});
+
+export const forgotPassword = email => (dispatch) => {
+  dispatch(setLoading(true));
+  Auth.forgotPassword(email)
+    .then((data) => {
+      dispatch(toggleResetPassword(true));
+      console.log('data after send forgot', data);
+      dispatch(setLoading(false));
+    })
+    .catch((error) => {
+      console.log('error after send forgot', error);
+      dispatch(setLoading(false));
+    });
+};
+
+export const forgotPasswordSubmit = values => (dispatch) => {
+  dispatch(setLoading(true));
+  // eslint-disable-next-line
+  const { email, code, new_password } = values;
+  Auth.forgotPasswordSubmit(email, code, new_password)
+    .then((data) => {
+      console.log('data after send reset password in forgot', data);
+      dispatch(setLoading(false));
+    })
+    .catch((error) => {
+      console.log('error after send reset password in forgot', error);
+      dispatch(setLoading(false));
+    });
+};

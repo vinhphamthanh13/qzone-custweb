@@ -15,15 +15,15 @@ import CardHeader from 'components/Card/CardHeader';
 import CardBody from 'components/Card/CardBody';
 import SocialAccountsLogin from './SocialAccountsLogin';
 import PasswordPolicy from './PasswordPolicy';
-import ResetPassword from './ResetPassword';
+import ForgotPassword from './ForgotPassword';
 import s from './Form.style';
 
-const resolveIconClassName = (name, value, errors, touched, classes) => {
+export const resolveIconClassName = (name, value, errors, touched) => {
   switch (value) {
     case '':
-      return touched[name] ? classes.inputAdornmentIconError : classes.inputAdornmentIconDefault;
+      return touched[name] ? 'danger-color' : 'default-color';
     default:
-      return errors[name] ? classes.inputAdornmentIconError : classes.inputAdornmentIconSuccess;
+      return errors[name] ? 'danger-color' : 'success-color';
   }
 };
 
@@ -203,7 +203,7 @@ class Form extends Component {
           </CardHeader>
           <CardBody>
             { renderedForm }
-            { formType === LOGIN && <ResetPassword /> }
+            { formType === LOGIN && <ForgotPassword email={email} /> }
             { formType === REGISTER && (
               <FormControlLabel
                 control={(
@@ -284,10 +284,10 @@ class Form extends Component {
 
 Form.propTypes = {
   classes: classesType.isRequired,
-  isValid: bool.isRequired,
   handleSubmit: func.isRequired,
   onClose: func.isRequired,
   handleChange: func.isRequired,
+  isValid: bool.isRequired,
   errors: objectOf(any).isRequired,
   touched: objectOf(any).isRequired,
   setFieldTouched: func.isRequired,

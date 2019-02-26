@@ -23,7 +23,7 @@ export const registerSchema = Yup.object().shape({
     .required('Password is required'),
   confirmPassword: Yup
     .string()
-    .oneOf([Yup.ref('password')], 'Confirm password is not matched')
+    .oneOf([Yup.ref('password')], 'Confirmed password is not matched')
     .required('Confirm password is required'),
   policyAgreement: Yup
     .bool()
@@ -43,4 +43,21 @@ export const loginSchema = Yup.object().shape({
     .min(8, 'Password must contain at least 8 characters')
     .max(60, 'Password must not be over 60 characters')
     .required('Password is required'),
+});
+
+export const forgotPasswordSchema = Yup.object().shape({
+  code: Yup
+    .string()
+    .matches(regExPattern.registerVerificationCode, 'Code is must be 6 digits')
+    .required('Verification code is required'),
+  password: Yup
+    .string()
+    .matches(regExPattern.password, 'Password format is not correct')
+    .min(8, 'Password must contain at least 8 characters')
+    .max(60, 'Password must not be over 60 characters')
+    .required('Password is required'),
+  confirmPassword: Yup
+    .string()
+    .oneOf([Yup.ref('password')], 'Confirmed password is not matched')
+    .required('Confirm password is required'),
 });
