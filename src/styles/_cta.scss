@@ -1,4 +1,4 @@
-@import "_color.scss";
+@import "color";
 
 .simple-button {
   &:hover {
@@ -10,6 +10,10 @@
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   border-radius: 50%;
+}
+
+.button-lg {
+  margin-top: 1rem;
 }
 
 .main-button {
