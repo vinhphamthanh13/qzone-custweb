@@ -14,6 +14,7 @@ import {
   RESEND_VERIFICATION_CODE_STATUS,
   LOGOUT_SUCCESS,
   TOGGLE_RESET_PASSWORD_DIALOG,
+  RESET_PASSWORD_STATUS,
 } from './constants';
 
 const authInitialize = {
@@ -45,6 +46,7 @@ const authInitialize = {
     isAuthenticated: false,
   },
   isForgotPassword: false,
+  isResetPasswordStatus: 'none', // success, error, none
 };
 
 const auth = (state = authInitialize, action) => {
@@ -128,6 +130,12 @@ const auth = (state = authInitialize, action) => {
       return {
         ...state,
         isForgotPassword: action.payload,
+      };
+    case RESET_PASSWORD_STATUS:
+      return {
+        ...state,
+        isResetPasswordStatus: action.payload.status,
+        resetPasswordMessage: action.payload.message,
       };
     case LOGOUT_SUCCESS:
     default:

@@ -41,16 +41,20 @@ class ForgotPassword extends Component {
     };
     return (
       <>
-        <Typography
-          onClick={this.handleReqVerificationCode}
-          variant="subtitle2"
-          color="primary"
-        >
-          Forgot Password?
-        </Typography>
+        <div className="flex h-end">
+          <div>
+            <Typography
+              onClick={this.handleReqVerificationCode}
+              variant="subtitle2"
+              color="textSecondary"
+              className="button-lg hover-pointer text-right hover-main-color"
+            >
+              Forgot Password?
+            </Typography>
+          </div>
+        </div>
         <Modal
-          // open={isForgotPassword}
-          open
+          open={isForgotPassword}
           className="modal-wrapper"
           disableAutoFocus
           disableBackdropClick

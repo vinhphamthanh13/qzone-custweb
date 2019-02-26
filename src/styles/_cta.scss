@@ -13,7 +13,7 @@
 }
 
 .button-lg {
-  margin-top: 1rem;
+  margin: 1rem auto;
 }
 
 .main-button {
@@ -31,16 +31,25 @@
 }
 
 .hover-pointer {
-  padding: 0 1rem;
   &:hover {
     cursor: pointer;
     text-shadow: 1px 1px 1px $grayNickel;
   }
 }
 
+.button-text-center {
+  padding: 0 1rem;
+}
+
 .hover-bright {
   &:hover {
     text-shadow: 0 5px 10px $we_peep_rgba;
+  }
+}
+
+.hover-main-color {
+  &:hover {
+    color: $main;
   }
 }
 

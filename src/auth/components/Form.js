@@ -255,7 +255,7 @@ class Form extends Component {
                   onClick={() => this.handleAuth('isRegisterOpen')}
                   variant="subheading"
                   color="primary"
-                  className="hover-pointer fit-button"
+                  className="hover-pointer fit-button button-text-center"
                 >
                   Register
                 </Typography>
@@ -269,7 +269,7 @@ class Form extends Component {
                   onClick={() => this.handleAuth('isLoginOpen')}
                   variant="subheading"
                   color="primary"
-                  className="hover-pointer fit-button"
+                  className="hover-pointer fit-button button-text-center"
                 >
                   Login
                 </Typography>

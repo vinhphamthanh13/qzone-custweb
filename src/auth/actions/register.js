@@ -1,10 +1,9 @@
 import { Auth } from 'aws-amplify';
 import { setLoading } from 'actions/common';
 import {
-  REGISTER_AWS_SUCCESS, REGISTER_AWS_ERROR,
-  CONFIRM_SIGNUP_SUCCESS, CONFIRM_SIGNUP_ERROR,
+  REGISTER_AWS_SUCCESS, REGISTER_AWS_ERROR, CONFIRM_SIGNUP_SUCCESS, CONFIRM_SIGNUP_ERROR,
   HANDLE_VERIFICATION_MODAL, CLOSE_REGISTER_SUCCESS_MODAL,
-  RESEND_VERIFICATION_CODE_STATUS, TOGGLE_RESET_PASSWORD_DIALOG,
+  RESEND_VERIFICATION_CODE_STATUS, TOGGLE_RESET_PASSWORD_DIALOG, RESET_PASSWORD_STATUS,
 } from './constants';
 
 const registerAwsSuccess = payload => ({
@@ -115,12 +114,17 @@ const toggleResetPassword = payload => ({
   payload,
 });
 
+const handleResetPasswordStatus = payload => ({
+  type: RESET_PASSWORD_STATUS,
+  payload,
+});
+
 export const forgotPassword = email => (dispatch) => {
   dispatch(setLoading(true));
   Auth.forgotPassword(email)
-    .then((data) => {
+    .then(() => {
+      /* @return {object} - CodeDeliveryDetails {} */
       dispatch(toggleResetPassword(true));
-      console.log('data after send forgot', data);
       dispatch(setLoading(false));
     })
     .catch((error) => {
@@ -131,15 +135,21 @@ export const forgotPassword = email => (dispatch) => {
 
 export const forgotPasswordSubmit = values => (dispatch) => {
   dispatch(setLoading(true));
+  dispatch(toggleResetPassword(false));
   // eslint-disable-next-line
   const { email, code, new_password } = values;
   Auth.forgotPasswordSubmit(email, code, new_password)
-    .then((data) => {
-      console.log('data after send reset password in forgot', data);
+    .then(() => {
       dispatch(setLoading(false));
+      dispatch(handleResetPasswordStatus({
+        status: 'success', message: 'Password is reset successfully',
+      }));
     })
-    .catch((error) => {
-      console.log('error after send reset password in forgot', error);
+    .catch(() => {
       dispatch(setLoading(false));
+      dispatch(handleResetPasswordStatus({
+        status: 'error',
+        message: 'Cannot reset your password! Please try again',
+      }));
     });
 };
