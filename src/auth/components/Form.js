@@ -29,6 +29,11 @@ const resolveIconClassName = (name, value, errors, touched, classes) => {
 
 const LOGIN = 'login';
 const REGISTER = 'register';
+const CLOSE_AUTH = {
+  isLoginOpen: 'isRegisterOpen',
+  isRegisterOpen: 'isLoginOpen',
+};
+
 const FIELD_IDS = {
   NAME: 'given-name',
   TEL: 'telephone',
@@ -47,6 +52,12 @@ class Form extends Component {
     if (!/^\S+$/.test(value) && value.length) return;
     handleChange(event);
     setFieldTouched(name, true, false);
+  };
+
+  handleAuth = (authType) => {
+    const { handleAuthenticate, onClose } = this.props;
+    onClose(CLOSE_AUTH[authType]);
+    handleAuthenticate(authType);
   };
 
   render() {
@@ -215,7 +226,7 @@ class Form extends Component {
                 )}
               />
             )}
-            <div className={classes.center}>
+            <div className={`text-center ${classes.authAction}`}>
               <Button
                 variant="contained"
                 className={!isValid ? '' : 'main-button-active'}
@@ -223,18 +234,47 @@ class Form extends Component {
                 disabled={!isValid}
                 type="submit"
               >
-                Submit
+                {formType === REGISTER ? 'Submit' : 'Let Go'}
               </Button>
               <Button
                 color="primary"
                 variant="text"
                 disableRipple
-                className={classes.simpleButton}
+                className="simple-button"
                 onClick={onClose}
               >
                 {formType === REGISTER ? 'Discard' : 'Close'}
               </Button>
             </div>
+            { formType === LOGIN ? (
+              <div className="text-center flex h-center">
+                <Typography variant="body2" color="secondary">
+                  Do not have an account yet?
+                </Typography>
+                <Typography
+                  onClick={() => this.handleAuth('isRegisterOpen')}
+                  variant="subheading"
+                  color="primary"
+                  className="hover-pointer fit-button"
+                >
+                  Register
+                </Typography>
+              </div>
+            ) : (
+              <div className="text-center flex h-center">
+                <Typography variant="body2" color="secondary">
+                  Already have an account!
+                </Typography>
+                <Typography
+                  onClick={() => this.handleAuth('isLoginOpen')}
+                  variant="subheading"
+                  color="primary"
+                  className="hover-pointer fit-button"
+                >
+                  Login
+                </Typography>
+              </div>
+            )}
           </CardBody>
         </Card>
       </form>
@@ -254,6 +294,7 @@ Form.propTypes = {
   values: objectOf(any).isRequired,
   formType: string,
   socialActions: socialLoginType,
+  handleAuthenticate: func,
 };
 
 Form.defaultProps = {
@@ -263,6 +304,7 @@ Form.defaultProps = {
     facebook: () => {},
     'google-plus-g': () => {},
   },
+  handleAuthenticate: () => {},
 };
 
 export default withStyles(s)(Form);

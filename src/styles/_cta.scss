@@ -25,3 +25,21 @@
     color: $we_peep;
   }
 }
+
+.hover-pointer {
+  padding: 0 1rem;
+  &:hover {
+    cursor: pointer;
+    text-shadow: 1px 1px 1px $grayNickel;
+  }
+}
+
+.hover-bright {
+  &:hover {
+    text-shadow: 0 5px 10px $we_peep_rgba;
+  }
+}
+
+.fit-button {
+  width: fit-content;
+}

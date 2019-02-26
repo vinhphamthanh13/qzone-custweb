@@ -13,8 +13,8 @@ const style = theme => ({
   marginLoose: {
     margin: `${theme.spacing.unit * 1.25}px auto 0px`,
   },
-  center: {
-    textAlign: 'center',
+  authAction: {
+    marginBottom: theme.spacing.unit * 2,
   },
   checkboxLabelControl: {
     margin: '0',
@@ -34,11 +34,6 @@ const style = theme => ({
   },
   policyAgreement: {
     margin: `${theme.spacing.unit * 1.5}px 0`,
-  },
-  simpleButton: {
-    '&:hover': {
-      background: 'transparent',
-    },
   },
   resetPassword: {
     textAlign: 'right',

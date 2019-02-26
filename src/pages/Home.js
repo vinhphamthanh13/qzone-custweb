@@ -142,6 +142,7 @@ export class Home extends React.PureComponent {
           isRegisterOpen={isRegisterOpen}
           isLoginOpen={isLoginOpen}
           closeDialog={this.closeDialog}
+          handleAuthenticate={this.openDialog}
         />
         <BookingDialog
           initService={selectedService}

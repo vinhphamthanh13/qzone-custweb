@@ -19,8 +19,12 @@
   display: flex;
 }
 
-.vertical-center {
+.v-center {
   align-items: center;
+}
+
+.h-center {
+  justify-content: center;
 }
 
 .auto-margin-vertical {

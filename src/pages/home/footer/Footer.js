@@ -61,7 +61,7 @@ const Footer = props => !props.loading && (
           FOLLOW US
         </Typography>
         {following.map(item => (
-          <div key={item.name} className="flex vertical-center">
+          <div key={item.name} className="flex v-center">
             <Icon className={`fab fa-${item.icon} icon-main`} />
             <Typography variant="body1" color="textSecondary" classes={{ body1: style.items }}>
               {item.name}

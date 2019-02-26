@@ -7,11 +7,12 @@ import { compose } from 'redux';
 import { withStyles } from '@material-ui/core/styles';
 import {
   AppBar, Toolbar, IconButton, InputBase, Badge, MenuItem, Menu, Avatar, Tooltip,
+  Typography,
 } from '@material-ui/core';
 import {
-  Menu as MenuIcon, Search as SearchIcon, AccountCircle, InsertEmoticon, HowToReg, Book as BookIcon,
-  NearMe, AssignmentInd, PersonAdd, ExitToApp, Mail as MailIcon, Notifications as NotificationsIcon,
-  MoreVert as MoreIcon,
+  Search as SearchIcon, AccountCircle, InsertEmoticon, HowToReg, Book as BookIcon,
+  NearMe, AssignmentInd, ExitToApp, Mail as MailIcon, Notifications as NotificationsIcon,
+  MoreVert as MoreIcon, Fingerprint,
 } from '@material-ui/icons';
 import { logout } from 'auth/actions/login';
 import IconMenu from 'components/IconMenu';
@@ -105,32 +106,20 @@ class PrimarySearchAppBar extends React.Component {
             classes: classes.menuIcon,
           }}
         >
-          Logout
+          Sign out
         </IconMenu>,
       ]
     ) : (
-      [
-        <IconMenu
-          key="app-log-in"
-          iconSuite={{
-            handleMethod: () => this.handleAuthenticateUser('isLoginOpen'),
-            component: HowToReg,
-            classes: classes.menuIcon,
-          }}
-        >
-          Login
-        </IconMenu>,
-        <IconMenu
-          key="app-register"
-          iconSuite={{
-            handleMethod: () => this.handleAuthenticateUser('isRegisterOpen'),
-            component: PersonAdd,
-            classes: classes.menuIcon,
-          }}
-        >
-          Register
-        </IconMenu>,
-      ]
+      <IconMenu
+        key="app-log-in"
+        iconSuite={{
+          handleMethod: () => this.handleAuthenticateUser('isLoginOpen'),
+          component: HowToReg,
+          classes: classes.menuIcon,
+        }}
+      >
+        Login
+      </IconMenu>
     );
     const renderMenu = (
       <Menu
@@ -224,19 +213,22 @@ class PrimarySearchAppBar extends React.Component {
       </>
     ) : (
       <>
-        <div className={classes.sectionDesktop}>
-          <IconButton
-            aria-owns={isMenuOpen ? 'material-appbar' : undefined}
-            aria-haspopup="true"
-            onClick={this.handleProfileMenuOpen}
+        { /* eslint-disable-next-line */ }
+        <div
+          className={`${classes.sectionDesktop} hover-bright`}
+          onClick={() => this.handleAuthenticateUser('isLoginOpen')}
+        >
+          <Typography
             color="inherit"
+            variant="subtitle1"
           >
-            <AccountCircle />
-          </IconButton>
+            Sign in
+          </Typography>
+          <Fingerprint />
         </div>
         <div className={classes.sectionMobile}>
-          <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
-            <MoreIcon />
+          <IconButton aria-haspopup="true" onClick={() => this.handleAuthenticateUser('isLoginOpen')} color="inherit">
+            <Fingerprint />
           </IconButton>
         </div>
       </>
@@ -253,9 +245,6 @@ class PrimarySearchAppBar extends React.Component {
               alt="Quezone Logo"
               src={logo}
             />
-            <div className={classes.menuListMobile}>
-              <MenuIcon onClick={this.handleServiceMenuOpen} />
-            </div>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />

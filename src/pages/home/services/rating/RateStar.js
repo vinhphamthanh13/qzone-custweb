@@ -9,14 +9,14 @@ const RateStar = (props) => {
   const { rating, reviews } = props;
   return (
     <div className="flex">
-      <div className="flex vertical-center">
+      <div className="flex v-center">
         <Star className={style.iconStar} />
         <Star className={style.iconStar} />
         <Star className={style.iconStar} />
         <Star className={style.iconStar} />
         <StarHalf className={style.iconStar} />
       </div>
-      <div className={`flex vertical-center ${style.reviews}`}>
+      <div className={`flex v-center ${style.reviews}`}>
         <Typography variant="body1" color="textSecondary">
           { parseInt(Math.random() * (rating + reviews), 0).toLocaleString() }
         </Typography>

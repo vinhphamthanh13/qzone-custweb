@@ -31,7 +31,7 @@ class Auth extends Component {
     const {
       isRegisterOpen, isLoginOpen, closeDialog, isVerificationCode,
       verificationErrorMessage, iSignUpSuccessModal, userDetails: { email },
-      resendVerificationCodeStatus,
+      resendVerificationCodeStatus, handleAuthenticate,
     } = this.props;
     const verificationCodeModal = isVerificationCode ? <VerificationCode /> : null;
     const errorModal = verificationErrorMessage ? (
@@ -87,10 +87,12 @@ class Auth extends Component {
         <Register
           isOpen={isRegisterOpen}
           onClose={() => closeDialog('isRegisterOpen')}
+          handleAuthenticate={handleAuthenticate}
         />
         <Login
           isOpen={isLoginOpen}
           onClose={() => closeDialog('isLoginOpen')}
+          handleAuthenticate={handleAuthenticate}
         />
       </>
     );
@@ -109,6 +111,7 @@ Auth.propTypes = {
   userDetails: objectOf(any).isRequired,
   resendVerificationCodeStatus: string,
   closeResendStatusModal: func.isRequired,
+  handleAuthenticate: func.isRequired,
 };
 
 Auth.defaultProps = {
