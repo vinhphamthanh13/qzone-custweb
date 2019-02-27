@@ -60,7 +60,7 @@ export default class ProviderContent extends React.PureComponent {
           </Grid>
           <Grid item classes={{ item: styles.providerRightHeader }}>
             <Typography variant="title">
-              $2000.00
+              $20.00
             </Typography>
             <Typography variant="body1" classes={{ root: styles.providerRightHeader__duration }}>
               {duration} min
