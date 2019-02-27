@@ -6,7 +6,7 @@ import {
   Typography, Modal, Paper, Avatar, Tooltip,
 } from '@material-ui/core';
 import logo from 'images/logo.png';
-import { regExPattern } from 'utils/constants';
+import { regExPattern, noop } from 'utils/constants';
 import { forgotPassword, forgotPasswordSubmit, toggleResetPassword } from 'auth/actions/register';
 import FormPassword from './FormPassword';
 import { forgotPasswordSchema } from './schemas';
@@ -45,15 +45,16 @@ class ForgotPassword extends Component {
       confirmPassword: '',
     };
     const [forgotPasswordTitle, forgotClass] = !regExPattern.email.test(email)
-      ? ['Enter your email above to reset password!', 'button-pad-bot text-right']
+      ? ['Enter your email above to reset password!', 'button-pad-bot text-right hover-pointer']
       : ['', 'button-pad-bot hover-pointer text-right hover-main-color'];
+    const cta = !regExPattern.email.test(email) ? noop : this.handleReqVerificationCode;
     return (
       <>
         <div className="flex h-end">
           <div>
-            <Tooltip title={forgotPasswordTitle} placement="top-end">
+            <Tooltip title={forgotPasswordTitle} placement="top-end" classes={{ tooltip: 'tooltip-lg' }}>
               <Typography
-                onClick={this.handleReqVerificationCode}
+                onClick={cta}
                 variant="subtitle2"
                 color="textSecondary"
                 className={forgotClass}

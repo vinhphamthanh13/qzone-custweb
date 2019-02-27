@@ -26,8 +26,8 @@ const CustomModal = (props) => {
           <Avatar className="verification-modal-avatar" src={logo} />
         </div>
         <div className="verification-modal-content">
-          <Typography variant="h5" color={headingColor} component="h5">
-            {title.toUpperCase()}
+          <Typography variant="h5" color={headingColor}>
+            {title}
           </Typography>
           <Typography variant="subheading" color="textSecondary">{message}</Typography>
           {okButton && (
