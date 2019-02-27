@@ -23,6 +23,11 @@ class ForgotPassword extends Component {
     setFieldTouched(name, true, false);
   };
 
+  handleCancelResetPassword = () => {
+    const { handleCloseModal } = this.props;
+    handleCloseModal();
+  };
+
   render() {
     const {
       values: {
@@ -39,7 +44,6 @@ class ForgotPassword extends Component {
       <form onSubmit={handleSubmit}>
         <TextField
           fullWidth
-          autoFocus
           label="Code"
           name={FORGOT.CODE}
           onChange={this.onChange}
@@ -54,6 +58,7 @@ class ForgotPassword extends Component {
           }}
         />
         <TextField
+          type="password"
           fullWidth
           label="New password"
           name={FORGOT.PASSWORD}
@@ -70,6 +75,7 @@ class ForgotPassword extends Component {
           }}
         />
         <TextField
+          type="password"
           fullWidth
           label="Confirm password"
           name={FORGOT.CONFIRM_PASSWORD}
@@ -86,15 +92,17 @@ class ForgotPassword extends Component {
             ),
           }}
         />
-        <Button
-          disabled={!isValid}
-          type="submit"
-          variant="text"
-          fullWidth
-          className={isValid ? 'main-button-active button-lg' : 'button-lg'}
-        >
-          Submit
-        </Button>
+        <div className="cta-buttons">
+          <Button variant="outlined" onClick={this.handleCancelResetPassword}>Cancel</Button>
+          <Button
+            disabled={!isValid}
+            type="submit"
+            variant="outlined"
+            className={isValid ? 'main-button-active' : ''}
+          >
+            Submit
+          </Button>
+        </div>
       </form>
     );
   }
@@ -108,6 +116,7 @@ ForgotPassword.propTypes = {
   isValid: bool.isRequired,
   errors: objectOf(any).isRequired,
   touched: objectOf(any).isRequired,
+  handleCloseModal: func.isRequired,
 };
 
 export default ForgotPassword;

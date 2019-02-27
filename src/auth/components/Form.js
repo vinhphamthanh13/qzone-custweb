@@ -234,7 +234,7 @@ class Form extends Component {
                 disabled={!isValid}
                 type="submit"
               >
-                {formType === REGISTER ? 'Submit' : 'Let Go'}
+                {formType === REGISTER ? 'Submit' : 'Let\'s Go'}
               </Button>
               <Button
                 color="primary"

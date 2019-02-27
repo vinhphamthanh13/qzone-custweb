@@ -3,10 +3,11 @@ import { func, bool, string } from 'prop-types';
 import { connect } from 'react-redux';
 import { Formik } from 'formik';
 import {
-  Typography, Modal, Paper, Avatar,
+  Typography, Modal, Paper, Avatar, Tooltip,
 } from '@material-ui/core';
 import logo from 'images/logo.png';
-import { forgotPassword, forgotPasswordSubmit } from 'auth/actions/register';
+import { regExPattern } from 'utils/constants';
+import { forgotPassword, forgotPasswordSubmit, toggleResetPassword } from 'auth/actions/register';
 import FormPassword from './FormPassword';
 import { forgotPasswordSchema } from './schemas';
 
@@ -29,28 +30,37 @@ class ForgotPassword extends Component {
     forgotPasswordSubmitAction({ email, code, new_password: password });
   };
 
+  handleCloseResetPassword = () => {
+    const { closeResetPasswordAction } = this.props;
+    closeResetPasswordAction(false);
+  };
+
   render() {
     const {
-      isForgotPassword,
+      isForgotPassword, email,
     } = this.props;
-    console.log('isForgotPassword', isForgotPassword);
     const forgotInit = {
       code: '',
       password: '',
       confirmPassword: '',
     };
+    const [forgotPasswordTitle, forgotClass] = !regExPattern.email.test(email)
+      ? ['Enter your email above to reset password!', 'button-pad-bot text-right']
+      : ['', 'button-pad-bot hover-pointer text-right hover-main-color'];
     return (
       <>
         <div className="flex h-end">
           <div>
-            <Typography
-              onClick={this.handleReqVerificationCode}
-              variant="subtitle2"
-              color="textSecondary"
-              className="button-lg hover-pointer text-right hover-main-color"
-            >
-              Forgot Password?
-            </Typography>
+            <Tooltip title={forgotPasswordTitle} placement="top-end">
+              <Typography
+                onClick={this.handleReqVerificationCode}
+                variant="subtitle2"
+                color="textSecondary"
+                className={forgotClass}
+              >
+                Forgot Password?
+              </Typography>
+            </Tooltip>
           </div>
         </div>
         <Modal
@@ -66,14 +76,17 @@ class ForgotPassword extends Component {
             </div>
             <div className="verification-modal-content">
               <Typography variant="h6" color="primary">Resetting Password</Typography>
-              <Typography variant="body2" color="textSecondary">(Code was sent to your email)</Typography>
+              <Typography variant="caption" color="textSecondary">(Code was sent to your email {email})</Typography>
               <Formik
                 initialValues={forgotInit}
                 validationSchema={forgotPasswordSchema}
                 enableReinitialize
                 onSubmit={this.handleSubmitNewPassword}
                 render={props => (
-                  <FormPassword {...props} />
+                  <FormPassword
+                    {...props}
+                    handleCloseModal={this.handleCloseResetPassword}
+                  />
                 )}
               />
             </div>
@@ -89,6 +102,7 @@ ForgotPassword.propTypes = {
   forgotPasswordSubmitAction: func.isRequired,
   isForgotPassword: bool.isRequired,
   email: string.isRequired,
+  closeResetPasswordAction: func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -98,4 +112,5 @@ const mapStateToProps = state => ({
 export default connect(mapStateToProps, {
   forgotPasswordAction: forgotPassword,
   forgotPasswordSubmitAction: forgotPasswordSubmit,
+  closeResetPasswordAction: toggleResetPassword,
 })(ForgotPassword);

@@ -46,7 +46,8 @@ const authInitialize = {
     isAuthenticated: false,
   },
   isForgotPassword: false,
-  isResetPasswordStatus: 'none', // success, error, none
+  resetPasswordStatus: 'none', // success, error, none
+  resetPasswordMessage: '',
 };
 
 const auth = (state = authInitialize, action) => {
@@ -134,7 +135,7 @@ const auth = (state = authInitialize, action) => {
     case RESET_PASSWORD_STATUS:
       return {
         ...state,
-        isResetPasswordStatus: action.payload.status,
+        resetPasswordStatus: action.payload.status,
         resetPasswordMessage: action.payload.message,
       };
     case LOGOUT_SUCCESS:

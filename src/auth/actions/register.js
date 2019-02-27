@@ -109,12 +109,12 @@ export const resendCode = email => (dispatch) => {
 
 export const resetResendVerificationCodeModal = () => dispatch => dispatch(resendCodeStatus('none'));
 
-const toggleResetPassword = payload => ({
+export const toggleResetPassword = payload => ({
   type: TOGGLE_RESET_PASSWORD_DIALOG,
   payload,
 });
 
-const handleResetPasswordStatus = payload => ({
+export const handleResetPasswordStatus = payload => ({
   type: RESET_PASSWORD_STATUS,
   payload,
 });
@@ -129,7 +129,12 @@ export const forgotPassword = email => (dispatch) => {
     })
     .catch((error) => {
       console.log('error after send forgot', error);
+      dispatch(toggleResetPassword(false));
       dispatch(setLoading(false));
+      dispatch(handleResetPasswordStatus({
+        status: 'error',
+        message: error.message || 'Cannot request reset password at the moment!',
+      }));
     });
 };
 
@@ -142,14 +147,26 @@ export const forgotPasswordSubmit = values => (dispatch) => {
     .then(() => {
       dispatch(setLoading(false));
       dispatch(handleResetPasswordStatus({
-        status: 'success', message: 'Password is reset successfully',
+        status: 'success',
+        message: 'Password is reset successfully',
       }));
+      dispatch(toggleResetPassword(false));
     })
-    .catch(() => {
+    .catch((error) => {
+      console.log('error', error);
       dispatch(setLoading(false));
+      dispatch(toggleResetPassword(false));
       dispatch(handleResetPasswordStatus({
         status: 'error',
         message: 'Cannot reset your password! Please try again',
       }));
     });
 };
+
+export const clearResetPasswordStatus = () => ({
+  type: RESET_PASSWORD_STATUS,
+  payload: {
+    status: 'none',
+    message: '',
+  },
+});

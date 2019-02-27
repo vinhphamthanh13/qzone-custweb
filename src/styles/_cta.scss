@@ -16,6 +16,10 @@
   margin: 1rem auto;
 }
 
+.button-pad-bot {
+  margin: 0.5rem auto 1rem;
+}
+
 .main-button {
   background: transparent;
   color: $primary;
@@ -55,4 +59,10 @@
 
 .fit-button {
   width: fit-content;
+}
+
+.cta-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem auto;
 }

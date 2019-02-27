@@ -9,6 +9,7 @@ import VerificationCode from 'auth/components/VerificationCode';
 import CustomModal from 'components/Modal/CustomModal';
 import {
   reEnterVerificationCode, closeRegisterSuccessModal, resetResendVerificationCodeModal,
+  clearResetPasswordStatus,
 } from 'auth/actions/register';
 
 class Auth extends Component {
@@ -27,11 +28,17 @@ class Auth extends Component {
     closeResendStatusModal();
   };
 
+  handleCloseResetPasswordModal = () => {
+    const { clearResetPasswordStatusAction } = this.props;
+    clearResetPasswordStatusAction();
+  };
+
   render() {
     const {
       isRegisterOpen, isLoginOpen, closeDialog, isVerificationCode,
       verificationErrorMessage, iSignUpSuccessModal, userDetails: { email },
-      resendVerificationCodeStatus, handleAuthenticate,
+      resendVerificationCodeStatus, handleAuthenticate, resetPasswordStatus,
+      resetPasswordMessage,
     } = this.props;
     const verificationCodeModal = isVerificationCode ? <VerificationCode /> : null;
     const errorModal = verificationErrorMessage ? (
@@ -77,6 +84,30 @@ class Auth extends Component {
     } else {
       resendModal = null;
     }
+    let resetPasswordModal;
+    if (resetPasswordStatus === 'success') {
+      resetPasswordModal = (
+        <CustomModal
+          type="info"
+          isOpen
+          title="Password Reset Success"
+          message={resetPasswordMessage}
+          onClose={this.handleCloseResetPasswordModal}
+        />
+      );
+    } else if (resetPasswordStatus === 'error') {
+      resetPasswordModal = (
+        <CustomModal
+          type="error"
+          isOpen
+          title="Password Reset Error"
+          message={resetPasswordMessage}
+          onClose={this.handleCloseResetPasswordModal}
+        />
+      );
+    } else {
+      resetPasswordModal = null;
+    }
 
     return (
       <>
@@ -84,6 +115,7 @@ class Auth extends Component {
         {errorModal}
         {successModal}
         {resendModal}
+        {resetPasswordModal}
         <Register
           isOpen={isRegisterOpen}
           onClose={() => closeDialog('isRegisterOpen')}
@@ -112,6 +144,9 @@ Auth.propTypes = {
   resendVerificationCodeStatus: string,
   closeResendStatusModal: func.isRequired,
   handleAuthenticate: func.isRequired,
+  resetPasswordStatus: string.isRequired,
+  resetPasswordMessage: string.isRequired,
+  clearResetPasswordStatusAction: func.isRequired,
 };
 
 Auth.defaultProps = {
@@ -127,6 +162,8 @@ const mapStateToProps = state => ({
   userDetails: state.auth.userDetails,
   verificationErrorMessage: state.auth.verificationErrorMessage,
   resendVerificationCodeStatus: state.auth.resendVerificationCodeStatus,
+  resetPasswordStatus: state.auth.resetPasswordStatus,
+  resetPasswordMessage: state.auth.resetPasswordMessage,
 });
 
 export default connect(
@@ -135,5 +172,6 @@ export default connect(
     reEnterVerificationCodeAction: reEnterVerificationCode,
     closeRegisterSuccessModalAction: closeRegisterSuccessModal,
     closeResendStatusModal: resetResendVerificationCodeModal,
+    clearResetPasswordStatusAction: clearResetPasswordStatus,
   },
 )(Auth);
