@@ -1,14 +1,14 @@
 import React from 'react';
-import { objectOf, any, node } from 'prop-types';
+import { string, node } from 'prop-types';
 import { Typography } from '@material-ui/core';
 import style from './Categorize.module.scss';
 
 const Categorize = (props) => {
-  const { categories } = props;
+  const { name } = props;
   return (
     <div className={style.category}>
       <Typography classes={{ headline: style.headline }} variant="headline" color="textSecondary">
-        {categories.name}
+        {name}
       </Typography>
       {props.children}
     </div>
@@ -16,7 +16,7 @@ const Categorize = (props) => {
 };
 
 Categorize.propTypes = {
-  categories: objectOf(any).isRequired,
+  name: string.isRequired,
   children: node.isRequired,
 };
 

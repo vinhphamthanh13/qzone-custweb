@@ -19,8 +19,16 @@
   display: flex;
 }
 
-.vertical-center {
+.v-center {
   align-items: center;
+}
+
+.h-center {
+  justify-content: center;
+}
+
+.h-end {
+  justify-content: flex-end;
 }
 
 .auto-margin-vertical {
@@ -80,4 +88,49 @@
   &:hover {
     animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
   }
+}
+
+.verification-modal {
+  max-width: 1rem * 24;
+  min-width: 1rem * 23;
+  display: flex;
+  padding: (1rem * 1.5) 1rem;
+  &-logo {
+    margin: auto 1rem auto 0;
+  }
+  &-avatar {
+    width: 1rem * 4;
+    height: 1rem * 4;
+  }
+  &-content {
+    padding-left: 1rem;
+    border-left-width: 4px;
+    border-left-style: solid;
+    border-image:
+      linear-gradient(
+          to bottom,
+          $primary,
+          rgba(0, 0, 0, 0)
+      ) 1 100%;
+  }
+}
+
+.form-control-holder {
+  margin-top: 0.3rem;
+}
+
+.main-color {
+  color: $main;
+}
+
+.danger-color {
+  color: $danger;
+}
+
+.success-color {
+  color: $main;
+}
+
+.default-color {
+  color: $gray !important;
 }

@@ -1,10 +1,9 @@
 import { Auth } from 'aws-amplify';
 import { setLoading } from 'actions/common';
 import {
-  REGISTER_AWS_SUCCESS, REGISTER_AWS_ERROR,
-  CONFIRM_SIGNUP_SUCCESS, CONFIRM_SIGNUP_ERROR,
+  REGISTER_AWS_SUCCESS, REGISTER_AWS_ERROR, CONFIRM_SIGNUP_SUCCESS, CONFIRM_SIGNUP_ERROR,
   HANDLE_VERIFICATION_MODAL, CLOSE_REGISTER_SUCCESS_MODAL,
-  RESEND_VERIFICATION_CODE_STATUS,
+  RESEND_VERIFICATION_CODE_STATUS, TOGGLE_RESET_PASSWORD_DIALOG, RESET_PASSWORD_STATUS,
 } from './constants';
 
 const registerAwsSuccess = payload => ({
@@ -109,3 +108,65 @@ export const resendCode = email => (dispatch) => {
 };
 
 export const resetResendVerificationCodeModal = () => dispatch => dispatch(resendCodeStatus('none'));
+
+export const toggleResetPassword = payload => ({
+  type: TOGGLE_RESET_PASSWORD_DIALOG,
+  payload,
+});
+
+export const handleResetPasswordStatus = payload => ({
+  type: RESET_PASSWORD_STATUS,
+  payload,
+});
+
+export const forgotPassword = email => (dispatch) => {
+  dispatch(setLoading(true));
+  Auth.forgotPassword(email)
+    .then(() => {
+      /* @return {object} - CodeDeliveryDetails {} */
+      dispatch(toggleResetPassword(true));
+      dispatch(setLoading(false));
+    })
+    .catch((error) => {
+      console.log('error after send forgot', error);
+      dispatch(toggleResetPassword(false));
+      dispatch(setLoading(false));
+      dispatch(handleResetPasswordStatus({
+        status: 'error',
+        message: error.message || 'Cannot request reset password at the moment!',
+      }));
+    });
+};
+
+export const forgotPasswordSubmit = values => (dispatch) => {
+  dispatch(setLoading(true));
+  dispatch(toggleResetPassword(false));
+  // eslint-disable-next-line
+  const { email, code, new_password } = values;
+  Auth.forgotPasswordSubmit(email, code, new_password)
+    .then(() => {
+      dispatch(setLoading(false));
+      dispatch(handleResetPasswordStatus({
+        status: 'success',
+        message: 'Password is reset successfully',
+      }));
+      dispatch(toggleResetPassword(false));
+    })
+    .catch((error) => {
+      console.log('error', error);
+      dispatch(setLoading(false));
+      dispatch(toggleResetPassword(false));
+      dispatch(handleResetPasswordStatus({
+        status: 'error',
+        message: 'Cannot reset your password! Please try again',
+      }));
+    });
+};
+
+export const clearResetPasswordStatus = () => ({
+  type: RESET_PASSWORD_STATUS,
+  payload: {
+    status: 'none',
+    message: '',
+  },
+});

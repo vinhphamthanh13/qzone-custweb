@@ -15,20 +15,25 @@ import CardHeader from 'components/Card/CardHeader';
 import CardBody from 'components/Card/CardBody';
 import SocialAccountsLogin from './SocialAccountsLogin';
 import PasswordPolicy from './PasswordPolicy';
-import ResetPassword from './ResetPassword';
+import ForgotPassword from './ForgotPassword';
 import s from './Form.style';
 
-const resolveIconClassName = (name, value, errors, touched, classes) => {
+export const resolveIconClassName = (name, value, errors, touched) => {
   switch (value) {
     case '':
-      return touched[name] ? classes.inputAdornmentIconError : classes.inputAdornmentIconDefault;
+      return touched[name] ? 'danger-color' : 'default-color';
     default:
-      return errors[name] ? classes.inputAdornmentIconError : classes.inputAdornmentIconSuccess;
+      return errors[name] ? 'danger-color' : 'success-color';
   }
 };
 
 const LOGIN = 'login';
 const REGISTER = 'register';
+const CLOSE_AUTH = {
+  isLoginOpen: 'isRegisterOpen',
+  isRegisterOpen: 'isLoginOpen',
+};
+
 const FIELD_IDS = {
   NAME: 'given-name',
   TEL: 'telephone',
@@ -47,6 +52,12 @@ class Form extends Component {
     if (!/^\S+$/.test(value) && value.length) return;
     handleChange(event);
     setFieldTouched(name, true, false);
+  };
+
+  handleAuth = (authType) => {
+    const { handleAuthenticate, onClose } = this.props;
+    onClose(CLOSE_AUTH[authType]);
+    handleAuthenticate(authType);
   };
 
   render() {
@@ -180,10 +191,10 @@ class Form extends Component {
 
     return (
       <form onSubmit={handleSubmit}>
-        <Card className={classes.registerCard}>
+        <Card className={classes.authCard}>
           <CardHeader
             className={
-              `${classes.cardHeader} ${classes.center}
+              `text-center
                ${formType === LOGIN ? classes.loginPanel : ''}`}
             color="main"
           >
@@ -192,7 +203,7 @@ class Form extends Component {
           </CardHeader>
           <CardBody>
             { renderedForm }
-            { formType === LOGIN && <ResetPassword /> }
+            { formType === LOGIN && <ForgotPassword email={email} /> }
             { formType === REGISTER && (
               <FormControlLabel
                 control={(
@@ -215,26 +226,55 @@ class Form extends Component {
                 )}
               />
             )}
-            <div className={classes.center}>
+            <div className={`text-center ${classes.authAction}`}>
               <Button
-                color="primary"
                 variant="contained"
+                className={!isValid ? '' : 'main-button-active'}
                 fullWidth
                 disabled={!isValid}
                 type="submit"
               >
-                Submit
+                {formType === REGISTER ? 'Submit' : 'Let\'s Go'}
               </Button>
               <Button
                 color="primary"
                 variant="text"
                 disableRipple
-                className={classes.simpleButton}
+                className="simple-button"
                 onClick={onClose}
               >
                 {formType === REGISTER ? 'Discard' : 'Close'}
               </Button>
             </div>
+            { formType === LOGIN ? (
+              <div className="text-center flex h-center">
+                <Typography variant="body2" color="secondary">
+                  Do not have an account yet?
+                </Typography>
+                <Typography
+                  onClick={() => this.handleAuth('isRegisterOpen')}
+                  variant="subheading"
+                  color="primary"
+                  className="hover-pointer fit-button button-text-center"
+                >
+                  Register
+                </Typography>
+              </div>
+            ) : (
+              <div className="text-center flex h-center">
+                <Typography variant="body2" color="secondary">
+                  Already have an account!
+                </Typography>
+                <Typography
+                  onClick={() => this.handleAuth('isLoginOpen')}
+                  variant="subheading"
+                  color="primary"
+                  className="hover-pointer fit-button button-text-center"
+                >
+                  Login
+                </Typography>
+              </div>
+            )}
           </CardBody>
         </Card>
       </form>
@@ -244,16 +284,17 @@ class Form extends Component {
 
 Form.propTypes = {
   classes: classesType.isRequired,
-  isValid: bool.isRequired,
   handleSubmit: func.isRequired,
   onClose: func.isRequired,
   handleChange: func.isRequired,
+  isValid: bool.isRequired,
   errors: objectOf(any).isRequired,
   touched: objectOf(any).isRequired,
   setFieldTouched: func.isRequired,
   values: objectOf(any).isRequired,
   formType: string,
   socialActions: socialLoginType,
+  handleAuthenticate: func,
 };
 
 Form.defaultProps = {
@@ -263,6 +304,7 @@ Form.defaultProps = {
     facebook: () => {},
     'google-plus-g': () => {},
   },
+  handleAuthenticate: () => {},
 };
 
 export default withStyles(s)(Form);

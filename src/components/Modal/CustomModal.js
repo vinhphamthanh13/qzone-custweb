@@ -21,11 +21,11 @@ const CustomModal = (props) => {
       onClose={onClose}
       className={classes.modalRoot}
     >
-      <Paper className={classes.paperRoot}>
-        <div className={classes.logo}>
-          <Avatar className={classes.avatarRoot} src={logo} />
+      <Paper className="verification-modal">
+        <div className="verification-modal-logo">
+          <Avatar className="verification-modal-avatar" src={logo} />
         </div>
-        <div className={classes.message}>
+        <div className="verification-modal-content">
           <Typography variant="h5" color={headingColor} component="h5">
             {title.toUpperCase()}
           </Typography>

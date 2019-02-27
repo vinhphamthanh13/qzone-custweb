@@ -44,7 +44,7 @@ class Register extends React.Component {
 
   render() {
     const {
-      isOpen,
+      isOpen, handleAuthenticate,
     } = this.props;
     const registerInit = {
       givenName: '',
@@ -90,6 +90,7 @@ class Register extends React.Component {
                 {...props}
                 onClose={this.onClose}
                 formType="register"
+                handleAuthenticate={handleAuthenticate}
               />
             )}
           />
@@ -106,6 +107,7 @@ Register.propTypes = {
   errorMessage: string,
   registerPayload: objectOf(any),
   resetErrorMessageAction: func.isRequired,
+  handleAuthenticate: func.isRequired,
 };
 
 Register.defaultProps = {

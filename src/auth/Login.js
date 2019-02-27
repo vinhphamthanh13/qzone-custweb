@@ -61,7 +61,7 @@ class Login extends React.Component {
   };
 
   render() {
-    const { isOpen } = this.props;
+    const { isOpen, handleAuthenticate } = this.props;
     const socialActions = {
       facebook: () => this.onLogin('', loginType.FB),
       'google-plus-g': () => this.onLogin('', loginType.GP),
@@ -95,6 +95,7 @@ class Login extends React.Component {
                 {...props}
                 onClose={this.onClose}
                 socialActions={socialActions}
+                handleAuthenticate={handleAuthenticate}
               />
             )}
           />
@@ -112,6 +113,7 @@ Login.propTypes = {
   isOpen: bool,
   resetErrorMessageAction: func.isRequired,
   errorMessage: string,
+  handleAuthenticate: func.isRequired,
 };
 
 Login.defaultProps = {

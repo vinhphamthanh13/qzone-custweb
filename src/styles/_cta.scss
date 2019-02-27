@@ -1,3 +1,5 @@
+@import "color";
+
 .simple-button {
   &:hover {
     background: transparent;
@@ -8,4 +10,59 @@
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   border-radius: 50%;
+}
+
+.button-lg {
+  margin: 1rem auto;
+}
+
+.button-pad-bot {
+  margin: 0.5rem auto 1rem;
+}
+
+.main-button {
+  background: transparent;
+  color: $primary;
+  transition: all 0.4s;
+  &-active {
+    background: linear-gradient($malibu, $primary);
+    color: $we_peep;
+  }
+  &-disabled {
+    background: $grayNickel;
+    color: $we_peep;
+  }
+}
+
+.hover-pointer {
+  &:hover {
+    cursor: pointer;
+    text-shadow: 1px 1px 1px $grayNickel;
+  }
+}
+
+.button-text-center {
+  padding: 0 1rem;
+}
+
+.hover-bright {
+  &:hover {
+    text-shadow: 0 5px 10px $we_peep_rgba;
+  }
+}
+
+.hover-main-color {
+  &:hover {
+    color: $main;
+  }
+}
+
+.fit-button {
+  width: fit-content;
+}
+
+.cta-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem auto;
 }
