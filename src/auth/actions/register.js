@@ -28,6 +28,7 @@ export const register = (user) => {
         'custom:user_type': 'CUSTOMER',
         phone_number: user.telephone,
         given_name: user.givenName,
+        preferred_username: 'CUSTOMER',
       },
       validationData: [],
     })
