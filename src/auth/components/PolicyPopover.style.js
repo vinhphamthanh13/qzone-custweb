@@ -2,11 +2,11 @@ import { infoColor } from 'components/material-dashboard-pro-react';
 
 const style = theme => ({
 
-  passwordHint: {
+  hint: {
     color: infoColor,
     minWidth: 'unset',
   },
-  passwordHintConventions: {
+  hintConventions: {
     padding: `0px ${theme.spacing.unit * 2}px`,
   },
 });

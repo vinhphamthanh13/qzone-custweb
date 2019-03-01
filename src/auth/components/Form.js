@@ -13,8 +13,9 @@ import {
 import Card from 'components/Card/Card';
 import CardHeader from 'components/Card/CardHeader';
 import CardBody from 'components/Card/CardBody';
+import { POPOVER_TYPE } from 'utils/constants';
 import SocialAccountsLogin from './SocialAccountsLogin';
-import PasswordPolicy from './PasswordPolicy';
+import PolicyPopover from './PolicyPopover';
 import ForgotPassword from './ForgotPassword';
 import s from './Form.style';
 
@@ -145,6 +146,12 @@ class Form extends Component {
               className: classes.marginDense,
               endAdornment: (
                 <InputAdornment position="end">
+                  {
+                    field.id === FIELD_IDS.TEL
+                    && errors[FIELD_IDS.TEL]
+                    && touched[FIELD_IDS.TEL]
+                    && <PolicyPopover type={POPOVER_TYPE.TEL} />
+                  }
                   {field.id === FIELD_IDS.CONFIRM_PASSWORD ? passwordMatched : (
                     <field.icon
                       className={resolveIconClassName(field.name, field.value, errors, touched, classes)}
@@ -174,8 +181,12 @@ class Form extends Component {
               className: classes.marginDense,
               endAdornment: (
                 <InputAdornment position="end">
-                  {field.id === FIELD_IDS.PASSWORD
-                  && errors[FIELD_IDS.PASSWORD] && touched[FIELD_IDS.PASSWORD] && <PasswordPolicy />}
+                  {
+                    field.id === FIELD_IDS.PASSWORD
+                    && errors[FIELD_IDS.PASSWORD]
+                    && touched[FIELD_IDS.PASSWORD]
+                    && <PolicyPopover type={POPOVER_TYPE.PASSWORD} />
+                  }
                   <field.icon
                     className={resolveIconClassName(field.name, field.value, errors, touched, classes)}
                   />
@@ -302,7 +313,7 @@ Form.defaultProps = {
   socialActions: {
     twitter: () => {},
     facebook: () => {},
-    'google-plus-g': () => {},
+    google: () => {},
   },
   handleAuthenticate: () => {},
 };

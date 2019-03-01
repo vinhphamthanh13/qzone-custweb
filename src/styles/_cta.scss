@@ -27,6 +27,7 @@
   &-active {
     background: linear-gradient($malibu, $primary);
     color: $we_peep;
+    border: none;
   }
   &-disabled {
     background: $grayNickel;
@@ -65,4 +66,8 @@
   display: flex;
   justify-content: space-between;
   margin: 1rem auto;
+}
+
+.tooltip-lg {
+  font-size: 0.8rem;
 }

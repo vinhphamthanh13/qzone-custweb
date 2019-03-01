@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
+import { string } from 'prop-types';
 import { classesType } from 'types/global';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { Button, Popover, Typography } from '@material-ui/core';
 import { ContactSupportRounded } from '@material-ui/icons';
-import { passwordPolicyTerms, registerPopoverPosition } from 'utils/constants';
-import s from './PasswordPolicy.style';
+import {
+  POPOVER_TYPE, passwordPolicy, telephonePolicy, registerPopoverPosition,
+} from 'utils/constants';
+import s from './PolicyPopover.style';
 
-class PasswordPolicy extends Component {
+class PolicyPopover extends Component {
   state = {
     anchorEl: null,
   };
@@ -24,10 +27,33 @@ class PasswordPolicy extends Component {
     const { anchorEl } = this.state;
     const openPopover = !!anchorEl;
 
+    const renderContent = () => {
+      const { type } = this.props;
+      let whichPolicy;
+      if (type === POPOVER_TYPE.PASSWORD) {
+        whichPolicy = passwordPolicy;
+      } else if (type === POPOVER_TYPE.TEL) {
+        whichPolicy = telephonePolicy;
+      }
+
+      return (
+        <ul className={classes.hintConventions}>
+          <Typography>{whichPolicy.statement}</Typography>
+          <ul>
+            {whichPolicy.items.map(rule => (
+              <li key={rule}>
+                <Typography>{rule}</Typography>
+              </li>
+            ))}
+          </ul>
+        </ul>
+      );
+    };
+
     return (
       <>
         <Button
-          className={`${classes.passwordHint} simple-button circle-button`}
+          className={`${classes.hint} simple-button circle-button`}
           aria-owns={openPopover ? 'mouse-over-password-hint' : undefined}
           aria-haspopup="true"
           onClick={this.handlePopoverOpen}
@@ -43,24 +69,20 @@ class PasswordPolicy extends Component {
           transformOrigin={registerPopoverPosition.transformOrigin}
           disableAutoFocus
         >
-          <ul className={classes.passwordHintConventions}>
-            <Typography>Password must include at least:</Typography>
-            <ul>
-              {passwordPolicyTerms.map(rule => (
-                <li key={rule}>
-                  <Typography>{rule}</Typography>
-                </li>
-              ))}
-            </ul>
-          </ul>
+          {renderContent()}
         </Popover>
       </>
     );
   }
 }
 
-PasswordPolicy.propTypes = {
+PolicyPopover.propTypes = {
   classes: classesType.isRequired,
+  type: string,
 };
 
-export default withStyles(s)(PasswordPolicy);
+PolicyPopover.defaultProps = {
+  type: POPOVER_TYPE.PASSWORD,
+};
+
+export default withStyles(s)(PolicyPopover);

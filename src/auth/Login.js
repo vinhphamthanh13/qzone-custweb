@@ -37,7 +37,9 @@ class Login extends React.Component {
   }
 
   onLogin = (values, name) => {
-    const { logInAction, facebookSignInAction, googleLogInAction } = this.props;
+    const {
+      logInAction, facebookSignInAction, googleLogInAction, isForgotPassword,
+    } = this.props;
     switch (name) {
       case loginType.FB:
         facebookSignInAction();
@@ -46,7 +48,7 @@ class Login extends React.Component {
         googleLogInAction();
         break;
       default:
-        logInAction(values);
+        if (!isForgotPassword) logInAction(values);
     }
     this.onClose();
   };
@@ -64,7 +66,7 @@ class Login extends React.Component {
     const { isOpen, handleAuthenticate } = this.props;
     const socialActions = {
       facebook: () => this.onLogin('', loginType.FB),
-      'google-plus-g': () => this.onLogin('', loginType.GP),
+      google: () => this.onLogin('', loginType.GP),
     };
     const loginInit = {
       email: '',
@@ -114,6 +116,7 @@ Login.propTypes = {
   resetErrorMessageAction: func.isRequired,
   errorMessage: string,
   handleAuthenticate: func.isRequired,
+  isForgotPassword: bool.isRequired,
 };
 
 Login.defaultProps = {
@@ -123,6 +126,7 @@ Login.defaultProps = {
 
 const mapStateToProps = state => ({
   errorMessage: state.auth.loginErrorMessage,
+  isForgotPassword: state.auth.isForgotPassword,
 });
 
 export default connect(mapStateToProps, {

@@ -4,7 +4,7 @@ import {
 } from 'prop-types';
 import { TextField, Button, InputAdornment } from '@material-ui/core';
 import { VerifiedUser, Lock, LockOpenOutlined } from '@material-ui/icons';
-import PasswordPolicy from './PasswordPolicy';
+import PasswordPolicy from './PolicyPopover';
 import { resolveIconClassName } from './Form';
 
 const FORGOT = {
