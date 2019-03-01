@@ -34,7 +34,7 @@ SocialAccountsLogin.propTypes = {
 SocialAccountsLogin.defaultProps = {
   actions: {
     facebook: () => {},
-    'google-plus-g': () => {},
+    google: () => {},
     twitter: () => {},
   },
 };

@@ -302,7 +302,7 @@ Form.defaultProps = {
   socialActions: {
     twitter: () => {},
     facebook: () => {},
-    'google-plus-g': () => {},
+    google: () => {},
   },
   handleAuthenticate: () => {},
 };

@@ -1,4 +1,3 @@
-export const LOGIN = 'users/find-by-email';
 export const STORE_USER_LOGIN = 'AUTH.STORE_USER_LOGIN';
 export const STORE_USER_ERROR = 'AUTH.STORE_USER_ERROR';
 export const REGISTER_AWS_SUCCESS = 'AUTH.REGISTER_AWS_SUCCESS';

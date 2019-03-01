@@ -1,6 +1,5 @@
 import { Auth } from 'aws-amplify';
 import { GOOGLE_ID, AUTH_METHOD } from 'config/auth';
-// import BASE_URL from 'config/url';
 import { setLoading } from 'actions/common';
 import { getCustomerByEmail as loginApi } from 'api/auth';
 import {
