@@ -40,7 +40,6 @@ class Login extends React.Component {
     const {
       logInAction, facebookSignInAction, googleLogInAction, isForgotPassword,
     } = this.props;
-    console.log('submit login here with isForgotPassword', isForgotPassword);
     switch (name) {
       case loginType.FB:
         facebookSignInAction();

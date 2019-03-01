@@ -27,6 +27,7 @@
   &-active {
     background: linear-gradient($malibu, $primary);
     color: $we_peep;
+    border: none;
   }
   &-disabled {
     background: $grayNickel;
