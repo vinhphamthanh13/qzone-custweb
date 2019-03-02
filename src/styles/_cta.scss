@@ -23,7 +23,7 @@
 .main-button {
   background: transparent;
   color: $primary;
-  transition: all 0.4s;
+  transition: all 0.1s;
   &-active {
     background: linear-gradient($malibu, $primary);
     color: $we_peep;
@@ -32,6 +32,11 @@
   &-disabled {
     background: $grayNickel;
     color: $we_peep;
+  }
+  &:hover {
+    background: linear-gradient($malibu, $primary);
+    color: $we_peep;
+    border: 1px solid $we_peep_rgba;
   }
 }
 
