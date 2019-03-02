@@ -15,6 +15,7 @@ import {
   LOGOUT_SUCCESS,
   TOGGLE_RESET_PASSWORD_DIALOG,
   RESET_PASSWORD_STATUS,
+  LOAD_SESSION_TO_STATE,
 } from './constants';
 
 const authInitialize = {
@@ -99,12 +100,7 @@ const auth = (state = authInitialize, action) => {
     case STORE_USER_LOGIN: {
       return {
         ...state,
-        loginSession: {
-          token: action.payload.token,
-          expiration: action.payload.expiration,
-          userName: action.payload.userName,
-          isAuthenticated: action.payload.isAuthenticated,
-        },
+        loginSession: action.payload,
         loginErrorMessage: '',
       };
     }
@@ -138,9 +134,15 @@ const auth = (state = authInitialize, action) => {
         resetPasswordStatus: action.payload.status,
         resetPasswordMessage: action.payload.message,
       };
+    case LOAD_SESSION_TO_STATE:
+      return {
+        ...state,
+        loginSession: action.payload,
+      };
     case LOGOUT_SUCCESS:
-    default:
       return authInitialize;
+    default:
+      return state;
   }
 };
 

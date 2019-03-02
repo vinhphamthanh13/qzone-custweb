@@ -14,7 +14,7 @@ import {
   NearMe, AssignmentInd, ExitToApp, Mail as MailIcon, Notifications as NotificationsIcon,
   MoreVert as MoreIcon, Fingerprint,
 } from '@material-ui/icons';
-import { logout } from 'auth/actions/login';
+import { logout } from 'authentication/actions/logout';
 import IconMenu from 'components/IconMenu';
 import logo from '../../../images/quezone-logo.png';
 import styles from './PrimarySearchAppBarStyle';
@@ -72,6 +72,7 @@ class PrimarySearchAppBar extends React.Component {
     const {
       classes, loginSession, onSearch, userPosition,
     } = this.props;
+    console.log('login session', loginSession);
     const searchNearByTitle = userPosition.latitude ? 'Search Services Near You' : 'Your Location Not Allowed';
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);

@@ -2,10 +2,10 @@ import { Auth } from 'aws-amplify';
 import { GOOGLE_ID, AUTH_METHOD } from 'config/auth';
 import { setLoading } from 'actions/common';
 import { getCustomerByEmail as loginApi } from 'api/auth';
-import {
-  STORE_USER_LOGIN, STORE_USER_ERROR, LOGOUT_SUCCESS, LOGOUT_ERROR,
-} from './constants';
+import { saveSession } from 'config/localStorage';
+import { STORE_USER_LOGIN, STORE_USER_ERROR } from './constants';
 
+// Redux
 export const storeUserLogin = payload => ({
   type: STORE_USER_LOGIN,
   payload,
@@ -94,17 +94,26 @@ export const login = (value) => {
     Auth.signIn(email, password)
       .then((json) => {
         if (json) {
-          const { idToken: { jwtToken, payload } } = json.signInUserSession;
-          const { exp, sub } = payload;
+          const { idToken: { jwtToken, payload }, refreshToken: { token } } = json.signInUserSession;
+          // eslint-disable-next-line
+          const { exp } = payload;
+          console.log('login data', json.signInUserSession);
           if (payload.email_verified) {
             loginApi({ email })
               .then((response) => {
-                dispatch(storeUserLogin({
-                  token: jwtToken,
-                  userName: sub,
-                  expiration: exp,
-                  isAuthenticated: response.data.isAuthenticated,
-                }));
+                if (response.data.object) {
+                  const { id, givenName } = response.data.object;
+                  const session = {
+                    id,
+                    username: givenName,
+                    qz_token: jwtToken,
+                    qz_refresh_token: token,
+                    expiration: exp,
+                    isAuthenticated: response.data.isAuthenticated,
+                  };
+                  dispatch(storeUserLogin(session));
+                  saveSession(session);
+                }
                 dispatch(setLoading(false));
               })
               .catch((error) => {
@@ -122,29 +131,4 @@ export const login = (value) => {
         dispatch(setLoading(false));
       });
   };
-};
-
-// Logout
-
-const logoutSuccess = payload => ({
-  type: LOGOUT_SUCCESS,
-  payload,
-});
-
-const logoutError = payload => ({
-  type: LOGOUT_ERROR,
-  payload,
-});
-
-export const logout = () => (dispatch) => {
-  dispatch(setLoading(true));
-  Auth.signOut({ global: true })
-    .then((data) => {
-      dispatch(setLoading(false));
-      dispatch(logoutSuccess(data));
-    })
-    .catch((error) => {
-      dispatch(setLoading(false));
-      dispatch(logoutError(error));
-    });
 };

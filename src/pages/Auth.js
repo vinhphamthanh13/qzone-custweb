@@ -3,14 +3,14 @@ import {
   bool, func, string, objectOf, any,
 } from 'prop-types';
 import { connect } from 'react-redux';
-import Register from 'auth/Register';
-import Login from 'auth/Login';
-import VerificationCode from 'auth/components/VerificationCode';
+import Register from 'authentication/Register';
+import Login from 'authentication/Login';
+import VerificationCode from 'authentication/components/VerificationCode';
 import CustomModal from 'components/Modal/CustomModal';
 import {
   reEnterVerificationCode, closeRegisterSuccessModal, resetResendVerificationCodeModal,
   clearResetPasswordStatus,
-} from 'auth/actions/register';
+} from 'authentication/actions/register';
 
 class Auth extends Component {
   handleReEnterVerificationCode = () => {
@@ -156,15 +156,18 @@ Auth.defaultProps = {
   resendVerificationCodeStatus: 'none',
 };
 
-const mapStateToProps = state => ({
-  isVerificationCode: state.auth.isVerificationCode,
-  iSignUpSuccessModal: state.auth.iSignUpSuccessModal,
-  userDetails: state.auth.userDetails,
-  verificationErrorMessage: state.auth.verificationErrorMessage,
-  resendVerificationCodeStatus: state.auth.resendVerificationCodeStatus,
-  resetPasswordStatus: state.auth.resetPasswordStatus,
-  resetPasswordMessage: state.auth.resetPasswordMessage,
-});
+const mapStateToProps = (state) => {
+  console.log('state in the Auth', state);
+  return ({
+    isVerificationCode: state.auth.isVerificationCode,
+    iSignUpSuccessModal: state.auth.iSignUpSuccessModal,
+    userDetails: state.auth.userDetails,
+    verificationErrorMessage: state.auth.verificationErrorMessage,
+    resendVerificationCodeStatus: state.auth.resendVerificationCodeStatus,
+    resetPasswordStatus: state.auth.resetPasswordStatus,
+    resetPasswordMessage: state.auth.resetPasswordMessage,
+  });
+};
 
 export default connect(
   mapStateToProps,
