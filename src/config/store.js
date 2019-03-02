@@ -29,7 +29,7 @@ const store = createStore(
 );
 
 // loading session from local storage to redux store
-if (persistedSession.isAuthenticated || persistedSession.qz_token) {
+if (persistedSession && (persistedSession.isAuthenticated || persistedSession.qz_token)) {
   store.dispatch(loadSessionToState(persistedSession));
 }
 
