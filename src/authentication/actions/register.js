@@ -138,15 +138,15 @@ export const forgotPasswordSubmit = values => (dispatch) => {
       dispatch(setLoading(false));
       dispatch(handleResetPasswordStatus({
         status: 'success',
-        message: 'Password is reset successfully',
+        message: 'Password is reset successfully! Enjoy your new login',
       }));
       dispatch(toggleResetPassword(false));
     })
-    .catch(() => {
+    .catch((error) => {
       dispatch(setLoading(false));
       dispatch(handleResetPasswordStatus({
         status: 'error',
-        message: 'Cannot reset your password! Please try again',
+        message: error.message,
       }));
       dispatch(toggleResetPassword(false));
     });
