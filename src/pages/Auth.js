@@ -156,18 +156,15 @@ Auth.defaultProps = {
   resendVerificationCodeStatus: 'none',
 };
 
-const mapStateToProps = (state) => {
-  console.log('state in the Auth', state);
-  return ({
-    isVerificationCode: state.auth.isVerificationCode,
-    iSignUpSuccessModal: state.auth.iSignUpSuccessModal,
-    userDetails: state.auth.userDetails,
-    verificationErrorMessage: state.auth.verificationErrorMessage,
-    resendVerificationCodeStatus: state.auth.resendVerificationCodeStatus,
-    resetPasswordStatus: state.auth.resetPasswordStatus,
-    resetPasswordMessage: state.auth.resetPasswordMessage,
-  });
-};
+const mapStateToProps = state => ({
+  isVerificationCode: state.auth.isVerificationCode,
+  iSignUpSuccessModal: state.auth.iSignUpSuccessModal,
+  userDetails: state.auth.userDetails,
+  verificationErrorMessage: state.auth.verificationErrorMessage,
+  resendVerificationCodeStatus: state.auth.resendVerificationCodeStatus,
+  resetPasswordStatus: state.auth.resetPasswordStatus,
+  resetPasswordMessage: state.auth.resetPasswordMessage,
+});
 
 export default connect(
   mapStateToProps,

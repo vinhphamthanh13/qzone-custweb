@@ -1,21 +1,24 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import MenuItem from '@material-ui/core/MenuItem';
+import {
+  objectOf, oneOfType, any,
+} from 'prop-types';
+import { MenuItem, IconButton } from '@material-ui/core';
 
 const IconMenu = (props) => {
   const { iconSuite, children } = props;
-
   return (
     <MenuItem onClick={iconSuite.handleMethod}>
-      <iconSuite.component className={iconSuite.classes} />
+      <IconButton>
+        <iconSuite.component className={iconSuite.classes} />
+      </IconButton>
       { children }
     </MenuItem>
   );
 };
 
 IconMenu.propTypes = {
-  iconSuite: PropTypes.objectOf(PropTypes.any).isRequired,
-  children: PropTypes.oneOfType([PropTypes.any]),
+  iconSuite: objectOf(any).isRequired,
+  children: oneOfType([any]),
 };
 
 IconMenu.defaultProps = {
