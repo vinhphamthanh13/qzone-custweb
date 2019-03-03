@@ -7,11 +7,13 @@ const style = () => ({
     flexDirection: 'column',
     alignItems: 'flex-start',
     height: 'auto',
+    transition: 'all 0.2s ease',
     '&:hover': {
       ...mainLinearRight,
     },
   },
   title: {
+    transition: 'all 0.2s ease',
     '&:hover': {
       fontWeight: 'bold',
       color: malibuColor,

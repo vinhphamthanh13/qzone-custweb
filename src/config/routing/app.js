@@ -38,6 +38,13 @@ const rootRoutes = [
     name: '404',
     component: PageNotFound,
   },
+  {
+    exact: true,
+    strict: true,
+    path: '/profile',
+    name: 'Profile',
+    component: Home,
+  },
 ];
 
 export default rootRoutes;

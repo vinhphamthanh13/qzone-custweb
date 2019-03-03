@@ -20,6 +20,7 @@ import Auth from './Auth';
 import PrimarySearchAppBar from './home/appbar/PrimarySearchAppBar';
 import AppointmentDialog from './home/AppointmentDialog';
 import Categorize from './home/Categorize';
+import Profile from './profile/Profile';
 import Footer from './home/footer/Footer';
 
 /* eslint react/no-unused-state: 0 */
@@ -40,6 +41,7 @@ export class Home extends React.PureComponent {
       bookingDetail: undefined,
       menuIconButtonEl: null,
       userPosition: { latitude: 0, longitude: 0 },
+      isOpenProfile: false,
     };
   }
 
@@ -124,6 +126,10 @@ export class Home extends React.PureComponent {
     this.setState({ [key]: false });
   };
 
+  handleToggleProfile = () => {
+    this.setState(prevState => ({ isOpenProfile: !prevState.isOpenProfile }));
+  };
+
   render() {
     const {
       serviceCategories, isLoading, allServices,
@@ -134,7 +140,7 @@ export class Home extends React.PureComponent {
     }));
     const {
       searchText, isRegisterOpen, isLoginOpen, userPosition,
-      selectedService,
+      selectedService, isOpenProfile,
     } = this.state;
     const searchedServices = this.getSearchedServices(allServices, searchText);
     return (
@@ -145,6 +151,7 @@ export class Home extends React.PureComponent {
           closeDialog={this.closeDialog}
           handleAuthenticate={this.openDialog}
         />
+        <Profile isOpenProfile={isOpenProfile} handleCloseProfile={this.handleToggleProfile} />
         <BookingDialog
           initService={selectedService}
           handleClose={this.handleCloseBookingDialog}
@@ -156,6 +163,7 @@ export class Home extends React.PureComponent {
           onSearch={this.onSearch}
           handleChangeCategory={this.onCategoryChange}
           userPosition={userPosition}
+          handleProfile={this.handleToggleProfile}
         />
         <AppointmentDialog />
         <Grid container>

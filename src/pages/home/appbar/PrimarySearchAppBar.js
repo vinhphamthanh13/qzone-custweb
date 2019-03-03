@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core';
 import {
   Search as SearchIcon,
-  HowToReg,
+  HowToReg, Book,
   NearMe, AssignmentInd, ExitToApp, Mail as MailIcon, Notifications as NotificationsIcon,
   MoreVert as MoreIcon, Fingerprint,
 } from '@material-ui/icons';
@@ -57,6 +57,8 @@ class PrimarySearchAppBar extends React.Component {
   };
 
   handleMenuClose = () => {
+    const { handleProfile } = this.props;
+    handleProfile();
     this.setState({ anchorEl: null });
     this.handleMobileMenuClose();
   };
@@ -93,7 +95,7 @@ class PrimarySearchAppBar extends React.Component {
   toggleAppointmentDialog = () => {
     this.props.toggleAppointment(true);
     this.handleMenuClose();
-  }
+  };
 
   render() {
     const { anchorEl, mobileMoreAnchorEl, anchorEventEl } = this.state;
@@ -122,7 +124,7 @@ class PrimarySearchAppBar extends React.Component {
           key="app-bar-appointments"
           iconSuite={{
             handleMethod: this.toggleAppointmentDialog,
-            component: AssignmentInd,
+            component: Book,
             classes: classes.menuIcon,
           }}
         >
@@ -320,6 +322,7 @@ PrimarySearchAppBar.propTypes = {
   loginSession: objectOf(any).isRequired,
   fetchCustomerEventsAction: func.isRequired,
   customerEventList: arrayOf(object).isRequired,
+  handleProfile: func.isRequired,
 };
 
 const mapStateToProps = state => ({
