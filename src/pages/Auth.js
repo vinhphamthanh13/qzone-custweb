@@ -54,8 +54,8 @@ class Auth extends Component {
       <CustomModal
         type="info"
         isOpen
-        title="Register Success"
-        message={`New user is created ${email}`}
+        title="Registration succeed!"
+        message={`Enjoy your new experience with Quezone! ${email}`}
         okButton
         okCallBack={this.handleCloseRegisterSuccessModal}
       />
