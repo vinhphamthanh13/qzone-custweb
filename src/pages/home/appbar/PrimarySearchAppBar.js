@@ -6,19 +6,17 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  AppBar, Toolbar, IconButton, InputBase, Badge, MenuItem, Menu, Avatar, Tooltip,
+  AppBar, Toolbar, IconButton, InputBase,
+  Badge, MenuItem, Menu, Avatar, Tooltip,
   Typography,
 } from '@material-ui/core';
 import {
   Search as SearchIcon,
-  // AccountCircle,
-  // InsertEmoticon,
   HowToReg,
-  // Book as BookIcon,
   NearMe, AssignmentInd, ExitToApp, Mail as MailIcon, Notifications as NotificationsIcon,
   MoreVert as MoreIcon, Fingerprint,
-  // HowToRegSharp,
 } from '@material-ui/icons';
+import { toggleAppointment } from 'reduxModules/appointments.actions';
 import { logout } from 'authentication/actions/logout';
 import IconMenu from 'components/IconMenu';
 import logo from '../../../images/quezone-logo.png';
@@ -72,6 +70,11 @@ class PrimarySearchAppBar extends React.Component {
     this.handleMenuClose();
   };
 
+  toggleAppointmentDialog = () => {
+    this.props.toggleAppointment(true);
+    this.handleMenuClose();
+  }
+
   render() {
     const { anchorEl, mobileMoreAnchorEl } = this.state;
     const {
@@ -92,6 +95,16 @@ class PrimarySearchAppBar extends React.Component {
           }}
         >
           Profile
+        </IconMenu>,
+        <IconMenu
+          key="app-bar-appointments"
+          iconSuite={{
+            handleMethod: this.toggleAppointmentDialog,
+            component: AssignmentInd,
+            classes: classes.menuIcon,
+          }}
+        >
+          Appointments
         </IconMenu>,
         <IconMenu
           key="app-bar-log-out"
@@ -274,6 +287,7 @@ PrimarySearchAppBar.propTypes = {
   classes: objectOf(any).isRequired,
   handleAuthenticate: func.isRequired,
   onSearch: func.isRequired,
+  toggleAppointment: func.isRequired,
   userPosition: objectOf(number).isRequired,
   logoutAction: func.isRequired,
   loginSession: objectOf(any).isRequired,
@@ -286,6 +300,7 @@ const mapStateToProps = state => ({
 export default compose(
   connect(mapStateToProps, {
     logoutAction: logout,
+    toggleAppointment,
   }),
   withStyles(styles),
 )(PrimarySearchAppBar);

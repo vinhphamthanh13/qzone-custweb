@@ -18,6 +18,7 @@ import Services from './home/Services';
 import BookingDialog from './home/BookingDialog';
 import Auth from './Auth';
 import PrimarySearchAppBar from './home/appbar/PrimarySearchAppBar';
+import AppointmentDialog from './home/AppointmentDialog';
 import Categorize from './home/Categorize';
 import Footer from './home/footer/Footer';
 
@@ -156,6 +157,7 @@ export class Home extends React.PureComponent {
           handleChangeCategory={this.onCategoryChange}
           userPosition={userPosition}
         />
+        <AppointmentDialog />
         <Grid container>
           <Grid item xs={12} className={styles.selectService}>
             {searchText.length > 2 && (

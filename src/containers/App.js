@@ -16,6 +16,7 @@ import store from 'config/store';
 import Loading from 'components/Modal/Loading';
 import './App.module.scss';
 import '../styles/_settings.scss';
+import 'react-vertical-timeline-component/style.min.css';
 
 const generateClassName = createGenerateClassName();
 const jss = create({
@@ -34,7 +35,7 @@ const App = () => (
         <Provider store={store}>
           <Router history={history}>
             <Switch>
-              {rootRoutes.map(route => (<Route key={route.path || route.name} {...route} />))}
+              {rootRoutes.map(route => (<Route key={route.name || route.path} {...route} />))}
             </Switch>
           </Router>
           <Loading />
