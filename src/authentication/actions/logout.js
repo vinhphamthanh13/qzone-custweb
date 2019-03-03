@@ -3,7 +3,7 @@
 import { Auth } from 'aws-amplify';
 import { saveSession, loadSession } from 'config/localStorage';
 import { setLoading } from 'actions/common';
-import { AUTH_METHOD } from 'config/auth';
+import { AUTH_METHOD, PROVIDER } from 'config/auth';
 import { LOGOUT_ERROR, LOGOUT_SUCCESS } from './constants';
 
 const initSession = {};
@@ -23,7 +23,7 @@ export const logout = () => (dispatch) => {
   if (currentSession && (currentSession.isAuthenticated || currentSession.qz_token)) {
     const { provider } = currentSession;
     dispatch(setLoading(true));
-    if (provider && provider === 'google') {
+    if (provider && provider === PROVIDER.GOOGLE) {
       const ga = window.gapi[AUTH_METHOD].getAuthInstance();
       ga.signOut().then(() => {
         ga.disconnect();

@@ -1,7 +1,7 @@
 import { Auth } from 'aws-amplify';
 import { setLoading } from 'actions/common';
 import {
-  REGISTER_AWS_SUCCESS, REGISTER_AWS_ERROR, CONFIRM_SIGNUP_SUCCESS, CONFIRM_SIGNUP_ERROR,
+  REGISTER_AWS_SUCCESS, REGISTER_AWS_ERROR, CONFIRM_SIGN_UP_SUCCESS, CONFIRM_SIGN_UP_ERROR,
   HANDLE_VERIFICATION_MODAL, CLOSE_REGISTER_SUCCESS_MODAL, RESEND_VERIFICATION_CODE_STATUS,
   TOGGLE_RESET_PASSWORD_DIALOG, RESET_PASSWORD_STATUS,
 } from './constants';
@@ -41,12 +41,12 @@ export const register = user => (dispatch) => {
 };
 
 const confirmSignUpSuccess = payload => ({
-  type: CONFIRM_SIGNUP_SUCCESS,
+  type: CONFIRM_SIGN_UP_SUCCESS,
   payload,
 });
 
 const confirmSignUpError = payload => ({
-  type: CONFIRM_SIGNUP_ERROR,
+  type: CONFIRM_SIGN_UP_ERROR,
   payload,
 });
 

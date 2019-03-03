@@ -1,18 +1,18 @@
 import { Auth } from 'aws-amplify';
-import { GOOGLE_ID, AUTH_METHOD } from 'config/auth';
+import { GOOGLE_ID, AUTH_METHOD, PROVIDER } from 'config/auth';
 import { setLoading } from 'actions/common';
-import { getCustomerByEmail as loginApi } from 'api/auth';
+import { getCustomerByEmail as loginApi, saveSocialEmail as socialLoginApi } from 'api/auth';
 import { saveSession } from 'config/localStorage';
-import { STORE_USER_LOGIN, STORE_USER_ERROR } from './constants';
+import { STORE_USER_SESSION_LOGIN, STORE_USER_SESSION_ERROR } from './constants';
 
 // Redux
-export const storeUserLogin = payload => ({
-  type: STORE_USER_LOGIN,
+const storeUserSessionLogin = payload => ({
+  type: STORE_USER_SESSION_LOGIN,
   payload,
 });
 
-export const storeUserError = payload => ({
-  type: STORE_USER_ERROR,
+const storeUserSessionError = payload => ({
+  type: STORE_USER_SESSION_ERROR,
   payload,
 });
 
@@ -39,54 +39,79 @@ export const createGoogleScript = () => {
   document.body.appendChild(script);
 };
 
-const getAWSCredentials = async (googleUser, dispatch) => {
+const getAWSCredentials = (googleUser, dispatch) => {
   // eslint-disable-next-line
-  const { id_token, expires_at } = googleUser.getAuthResponse();
+  const { id_token, expires_in } = googleUser.getAuthResponse();
   const profile = googleUser.getBasicProfile();
-  const user = {
-    email: profile.getEmail(),
-    name: profile.getName(),
-  };
-  const credentials = await Auth.federatedSignIn(
-    'google',
-    { token: id_token, expires_at },
+  const email = profile.getEmail();
+  const name = profile.getName();
+  const user = { email, name };
+  Auth.federatedSignIn(
+    PROVIDER.GOOGLE,
+    { token: id_token, expires_in },
     user,
-  );
-  if (credentials) {
-    dispatch(storeUserLogin({
-      email: user.email,
-      token: id_token,
-      expiration: expires_at,
-      isAuthenticated: credentials.authenticated,
-      userName: user.name,
-    }));
-    console.log('Login G++ successful');
-    dispatch(setLoading(false));
-  } else {
-    console.log('Cannot login Google++');
-    dispatch(storeUserError({ message: 'Cannot login with Gmail' }));
-    dispatch(setLoading(false));
-  }
+  )
+    .then((credentials) => {
+      const socialAcc = {
+        email: user.email,
+        userType: 'CUSTOMER',
+      };
+      if (credentials.authenticated) {
+        socialLoginApi(socialAcc)
+          .then((response) => {
+            if (response && response.status === 200) {
+              const { isAuthenticated, object: { id } } = response.data;
+              const session = {
+                provider: PROVIDER.GOOGLE,
+                id,
+                username: name,
+                qz_token: id_token,
+                qz_refresh_token: null,
+                expiration: expires_in,
+                isAuthenticated,
+              };
+              dispatch(setLoading(false));
+              dispatch(storeUserSessionLogin(session));
+              saveSession(session);
+            }
+          })
+          .catch(() => {
+            dispatch(setLoading(false));
+            dispatch(storeUserSessionError(
+              { message: 'Cannot forward GMAIL to Quezone service!' },
+            ));
+          });
+      } else {
+        dispatch(setLoading(false));
+        dispatch(storeUserSessionError(
+          { message: 'Access to GMAIL is unauthorized! Contact Quezone customer service for support!' },
+        ));
+      }
+    })
+    .catch((error) => {
+      dispatch(storeUserSessionError({ message: error.message || 'Cannot login GMAIL account! Please try again!' }));
+      dispatch(setLoading(false));
+    });
 };
 
 export const googleLogIn = () => (dispatch) => {
   dispatch(setLoading(true));
   const ga = window.gapi[AUTH_METHOD].getAuthInstance();
-  ga.signIn().then(
-    async (googleUser) => {
-      console.log('google user---', googleUser);
-      await getAWSCredentials(googleUser, dispatch);
-      dispatch(setLoading(false));
-    },
-    (error) => {
-      dispatch(setLoading(false));
-      console.log('Signing Google Account error', error);
-    },
-  );
+  ga.signIn()
+    .then((googleUser) => {
+      getAWSCredentials(googleUser, dispatch);
+    })
+    .catch(
+      () => {
+        // user case: user trigger google account list popup but then closing
+        // the popup without continuing login with Gmail.
+        // @return {object} - { error: "popup_closed_by_user }
+        dispatch(setLoading(false));
+      },
+    );
 };
 
-// Login Actions
-
+// Q-customer
 export const login = (value) => {
   const { email, password } = value;
   return async (dispatch) => {
@@ -97,7 +122,6 @@ export const login = (value) => {
           const { idToken: { jwtToken, payload }, refreshToken: { token } } = json.signInUserSession;
           // eslint-disable-next-line
           const { exp } = payload;
-          console.log('login data', json.signInUserSession);
           if (payload.email_verified) {
             loginApi({ email })
               .then((response) => {
@@ -111,23 +135,23 @@ export const login = (value) => {
                     expiration: exp,
                     isAuthenticated: response.data.isAuthenticated,
                   };
-                  dispatch(storeUserLogin(session));
+                  dispatch(storeUserSessionLogin(session));
                   saveSession(session);
                 }
                 dispatch(setLoading(false));
               })
               .catch((error) => {
-                dispatch(storeUserError(error));
+                dispatch(storeUserSessionError(error));
                 dispatch(setLoading(false));
               });
           }
         } else {
-          dispatch(storeUserError('Topology Error'));
+          dispatch(storeUserSessionError('Topology Error'));
           dispatch(setLoading(false));
         }
       })
       .catch((error) => {
-        dispatch(storeUserError(error));
+        dispatch(storeUserSessionError(error));
         dispatch(setLoading(false));
       });
   };
