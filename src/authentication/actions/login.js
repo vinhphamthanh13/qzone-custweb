@@ -61,11 +61,12 @@ const getAWSCredentials = (googleUser, dispatch) => {
           .then((response) => {
             if (response && response.status === 200) {
               const { isAuthenticated, object: { id } } = response.data;
+              const { sessionToken } = credentials;
               const session = {
                 provider: PROVIDER.GOOGLE,
                 id,
                 username: name,
-                qz_token: id_token,
+                qz_token: sessionToken,
                 qz_refresh_token: null,
                 expiration: expires_in,
                 isAuthenticated,
