@@ -20,13 +20,15 @@ import { toggleAppointment } from 'reduxModules/appointments.actions';
 import { logout } from 'authentication/actions/logout';
 import IconMenu from 'components/IconMenu';
 import { fetchCustomerEvents } from 'reduxModules/home.actions';
-import logo from '../../../images/quezone-logo.png';
+import logo from 'images/quezone-logo.png';
+import EventMenu from './eventMenu/EventMenu';
 import styles from './PrimarySearchAppBarStyle';
 
 class PrimarySearchAppBar extends React.Component {
   state = {
     anchorEl: null,
     mobileMoreAnchorEl: null,
+    anchorEventEl: null,
   };
 
   componentDidMount() {
@@ -46,10 +48,12 @@ class PrimarySearchAppBar extends React.Component {
   closeAllMenu = () => {
     this.handleMenuClose();
     this.handleMobileMenuClose();
+    this.handleEventListClose();
   };
 
   handleProfileMenuOpen = (event) => {
     this.setState({ anchorEl: event.currentTarget });
+    this.handleEventListClose();
   };
 
   handleMenuClose = () => {
@@ -59,6 +63,15 @@ class PrimarySearchAppBar extends React.Component {
 
   handleMobileMenuOpen = (event) => {
     this.setState({ mobileMoreAnchorEl: event.currentTarget });
+  };
+
+  handleOpenEventList = (event) => {
+    this.setState({ anchorEventEl: event.currentTarget });
+    this.handleMobileMenuClose();
+  };
+
+  handleEventListClose = () => {
+    this.setState({ anchorEventEl: null });
   };
 
   handleMobileMenuClose = () => {
@@ -83,7 +96,7 @@ class PrimarySearchAppBar extends React.Component {
   }
 
   render() {
-    const { anchorEl, mobileMoreAnchorEl } = this.state;
+    const { anchorEl, mobileMoreAnchorEl, anchorEventEl } = this.state;
     const {
       classes, loginSession, onSearch, userPosition, customerEventList,
     } = this.props;
@@ -91,6 +104,7 @@ class PrimarySearchAppBar extends React.Component {
     const searchNearByTitle = userPosition.latitude ? 'Search Services Near You' : 'Your Location Not Allowed';
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+    const isEventListOpen = Boolean(anchorEventEl);
     const isAuthenticated = loginSession ? loginSession.isAuthenticated : false;
     const authorization = isAuthenticated ? (
       [
@@ -172,17 +186,17 @@ class PrimarySearchAppBar extends React.Component {
         { isAuthenticated
           && (
             [
-              <MenuItem key="app-bar-mail-icon-notification">
-                <IconButton color="inherit">
-                  <Badge badgeContent={4} color="secondary">
+              <MenuItem key="app-bar-mail-icon-notification" onClick={this.handleOpenEventList}>
+                <div className="button-text-center">
+                  <Badge badgeContent={eventCount} color="secondary">
                     <MailIcon className={classes.menuIcon} />
                   </Badge>
-                </IconButton>
-                <p>Messages</p>
+                </div>
+                <Typography variant="subheading">Messages</Typography>
               </MenuItem>,
               <MenuItem key="app-bar-notification-icon">
                 <IconButton color="inherit">
-                  <Badge badgeContent={11} color="secondary">
+                  <Badge badgeContent={0} color="secondary">
                     <NotificationsIcon className={classes.menuIcon} />
                   </Badge>
                 </IconButton>
@@ -197,7 +211,7 @@ class PrimarySearchAppBar extends React.Component {
     const customUser = isAuthenticated ? (
       <>
         <div className={classes.sectionDesktop}>
-          <IconButton color="inherit">
+          <IconButton color="inherit" onClick={this.handleOpenEventList}>
             <Badge badgeContent={eventCount} color="secondary">
               <MailIcon />
             </Badge>
@@ -284,6 +298,11 @@ class PrimarySearchAppBar extends React.Component {
             { customUser }
           </Toolbar>
         </AppBar>
+        <EventMenu
+          eventList={customerEventList}
+          isOpenList={isEventListOpen}
+          handleCloseList={this.handleEventListClose}
+        />
         {renderMenu}
         {renderMobileMenu}
       </div>

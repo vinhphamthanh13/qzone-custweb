@@ -103,6 +103,9 @@ export const malibuColor = '#57c9f9';
 export const mainLinear = {
   background: `linear-gradient(${mainColor}, ${malibuColor})`,
 };
+export const mainLinearRight = {
+  background: `linear-gradient(to right, ${mainColor}, ${malibuColor})`,
+};
 export const successLinear = {
   background: `linear-gradient(${successColor}, ${malibuColor})`,
 };

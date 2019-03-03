@@ -158,3 +158,16 @@
   align-items: center;
   z-index: 100000;
 }
+
+.event-list {
+  overflow: auto;
+  top: $app-bar-height;
+  right: 0;
+  position: absolute;
+  width: 100%;
+  z-index: 1000;
+  height: 90%;
+  @include breakpoint-up(md) {
+    width: 35%;
+  }
+}
