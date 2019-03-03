@@ -1,26 +1,22 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { bool } from 'prop-types';
 import { connect } from 'react-redux';
-import { compose } from 'redux';
-import withStyles from '@material-ui/core/styles/withStyles';
 import { PropagateLoader } from 'react-spinners';
 import findValueByKey from 'utils/findValueByKey';
-import { lightGrayColor } from '../material-dashboard-pro-react';
-import ModalStyle from './ModalStyle';
+import { lightGrayColor } from './material-dashboard-pro-react';
 
 
 const Loading = (props) => {
-  const { classes, loading } = props;
+  const { loading } = props;
   return loading ? (
-    <div className={classes.cover}>
+    <div className="cover-bg-black">
       <PropagateLoader color={lightGrayColor} size={38} />
     </div>
   ) : null;
 };
 
 Loading.propTypes = {
-  loading: PropTypes.bool.isRequired,
-  classes: PropTypes.objectOf(PropTypes.any).isRequired,
+  loading: bool.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -31,7 +27,4 @@ const mapStateToProps = (state) => {
   });
 };
 
-export default compose(
-  connect(mapStateToProps),
-  withStyles(ModalStyle),
-)(Loading);
+export default connect(mapStateToProps)(Loading);

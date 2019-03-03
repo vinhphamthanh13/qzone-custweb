@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  objectOf, any, func, number,
+  objectOf, any, func, number, arrayOf, object,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -12,23 +12,32 @@ import {
 } from '@material-ui/core';
 import {
   Search as SearchIcon,
-  HowToReg,
+  HowToReg, Book,
   NearMe, AssignmentInd, ExitToApp, Mail as MailIcon, Notifications as NotificationsIcon,
   MoreVert as MoreIcon, Fingerprint,
 } from '@material-ui/icons';
 import { toggleAppointment } from 'reduxModules/appointments.actions';
 import { logout } from 'authentication/actions/logout';
 import IconMenu from 'components/IconMenu';
-import logo from '../../../images/quezone-logo.png';
+import { fetchCustomerEvents } from 'reduxModules/home.actions';
+import logo from 'images/quezone-logo.png';
+import EventMenu from './eventMenu/EventMenu';
 import styles from './PrimarySearchAppBarStyle';
 
 class PrimarySearchAppBar extends React.Component {
   state = {
     anchorEl: null,
     mobileMoreAnchorEl: null,
+    anchorEventEl: null,
   };
 
   componentDidMount() {
+    const { loginSession, fetchCustomerEventsAction } = this.props;
+    const [isAuthenticated, id] = loginSession
+      ? [loginSession.isAuthenticated, loginSession.id] : [false, ''];
+    if (isAuthenticated) {
+      fetchCustomerEventsAction(id);
+    }
     window.addEventListener('resize', this.closeAllMenu);
   }
 
@@ -39,19 +48,32 @@ class PrimarySearchAppBar extends React.Component {
   closeAllMenu = () => {
     this.handleMenuClose();
     this.handleMobileMenuClose();
+    this.handleEventListClose();
   };
 
   handleProfileMenuOpen = (event) => {
     this.setState({ anchorEl: event.currentTarget });
+    this.handleEventListClose();
   };
 
   handleMenuClose = () => {
+    const { handleProfile } = this.props;
+    handleProfile();
     this.setState({ anchorEl: null });
     this.handleMobileMenuClose();
   };
 
   handleMobileMenuOpen = (event) => {
     this.setState({ mobileMoreAnchorEl: event.currentTarget });
+  };
+
+  handleOpenEventList = (event) => {
+    this.setState({ anchorEventEl: event.currentTarget });
+    this.handleMobileMenuClose();
+  };
+
+  handleEventListClose = () => {
+    this.setState({ anchorEventEl: null });
   };
 
   handleMobileMenuClose = () => {
@@ -73,16 +95,18 @@ class PrimarySearchAppBar extends React.Component {
   toggleAppointmentDialog = () => {
     this.props.toggleAppointment(true);
     this.handleMenuClose();
-  }
+  };
 
   render() {
-    const { anchorEl, mobileMoreAnchorEl } = this.state;
+    const { anchorEl, mobileMoreAnchorEl, anchorEventEl } = this.state;
     const {
-      classes, loginSession, onSearch, userPosition,
+      classes, loginSession, onSearch, userPosition, customerEventList,
     } = this.props;
+    const eventCount = customerEventList && customerEventList.length;
     const searchNearByTitle = userPosition.latitude ? 'Search Services Near You' : 'Your Location Not Allowed';
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+    const isEventListOpen = Boolean(anchorEventEl);
     const isAuthenticated = loginSession ? loginSession.isAuthenticated : false;
     const authorization = isAuthenticated ? (
       [
@@ -100,7 +124,7 @@ class PrimarySearchAppBar extends React.Component {
           key="app-bar-appointments"
           iconSuite={{
             handleMethod: this.toggleAppointmentDialog,
-            component: AssignmentInd,
+            component: Book,
             classes: classes.menuIcon,
           }}
         >
@@ -164,17 +188,17 @@ class PrimarySearchAppBar extends React.Component {
         { isAuthenticated
           && (
             [
-              <MenuItem key="app-bar-mail-icon-notification">
-                <IconButton color="inherit">
-                  <Badge badgeContent={4} color="secondary">
+              <MenuItem key="app-bar-mail-icon-notification" onClick={this.handleOpenEventList}>
+                <div className="button-text-center">
+                  <Badge badgeContent={eventCount} color="secondary">
                     <MailIcon className={classes.menuIcon} />
                   </Badge>
-                </IconButton>
-                <p>Messages</p>
+                </div>
+                <Typography variant="subheading">Messages</Typography>
               </MenuItem>,
               <MenuItem key="app-bar-notification-icon">
                 <IconButton color="inherit">
-                  <Badge badgeContent={11} color="secondary">
+                  <Badge badgeContent={0} color="secondary">
                     <NotificationsIcon className={classes.menuIcon} />
                   </Badge>
                 </IconButton>
@@ -189,13 +213,13 @@ class PrimarySearchAppBar extends React.Component {
     const customUser = isAuthenticated ? (
       <>
         <div className={classes.sectionDesktop}>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
+          <IconButton color="inherit" onClick={this.handleOpenEventList}>
+            <Badge badgeContent={eventCount} color="secondary">
               <MailIcon />
             </Badge>
           </IconButton>
           <IconButton color="inherit">
-            <Badge badgeContent={17} color="secondary">
+            <Badge badgeContent={0} color="secondary">
               <NotificationsIcon />
             </Badge>
           </IconButton>
@@ -276,6 +300,11 @@ class PrimarySearchAppBar extends React.Component {
             { customUser }
           </Toolbar>
         </AppBar>
+        <EventMenu
+          eventList={customerEventList}
+          isOpenList={isEventListOpen}
+          handleCloseList={this.handleEventListClose}
+        />
         {renderMenu}
         {renderMobileMenu}
       </div>
@@ -291,16 +320,21 @@ PrimarySearchAppBar.propTypes = {
   userPosition: objectOf(number).isRequired,
   logoutAction: func.isRequired,
   loginSession: objectOf(any).isRequired,
+  fetchCustomerEventsAction: func.isRequired,
+  customerEventList: arrayOf(object).isRequired,
+  handleProfile: func.isRequired,
 };
 
 const mapStateToProps = state => ({
   loginSession: state.auth.loginSession,
+  customerEventList: state.home.customerEventList,
 });
 
 export default compose(
   connect(mapStateToProps, {
     logoutAction: logout,
     toggleAppointment,
+    fetchCustomerEventsAction: fetchCustomerEvents,
   }),
   withStyles(styles),
 )(PrimarySearchAppBar);

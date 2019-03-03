@@ -1,5 +1,6 @@
 import {
   SET_SERVICE_CATEGORIES, SET_SERVICES, SET_LOADING, SET_ORGS, SET_ALL_SERVICES,
+  GET_CUSTOMER_EVENT_LIST,
 } from './home.actions';
 
 const initialState = {
@@ -8,6 +9,7 @@ const initialState = {
   services: [],
   orgs: [],
   allServices: [],
+  customerEventList: [],
 };
 
 const home = (state = initialState, action) => {
@@ -30,6 +32,11 @@ const home = (state = initialState, action) => {
       return { ...state, isLoading: action.payload };
     case SET_ORGS:
       return { ...state, orgs: action.payload };
+    case GET_CUSTOMER_EVENT_LIST:
+      return {
+        ...state,
+        customerEventList: action.payload,
+      };
     default:
       return state;
   }

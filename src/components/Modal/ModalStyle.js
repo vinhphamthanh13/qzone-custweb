@@ -27,18 +27,6 @@ const style = theme => ({
   okButton: {
     margin: `${theme.spacing.unit}px auto`,
   },
-  // Loading
-  cover: {
-    position: 'fixed',
-    top: 0,
-    background: 'rgba(0,0,0, 0.7)',
-    width: '100%',
-    height: '100vh',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 100000,
-  },
 });
 
 export default style;

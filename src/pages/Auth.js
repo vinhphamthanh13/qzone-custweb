@@ -11,6 +11,7 @@ import {
   reEnterVerificationCode, closeRegisterSuccessModal, resetResendVerificationCodeModal,
   clearResetPasswordStatus,
 } from 'authentication/actions/register';
+import { login as autoLogin } from 'authentication/actions/login';
 
 class Auth extends Component {
   handleReEnterVerificationCode = () => {
@@ -19,8 +20,9 @@ class Auth extends Component {
   };
 
   handleCloseRegisterSuccessModal = () => {
-    const { closeRegisterSuccessModalAction } = this.props;
+    const { closeRegisterSuccessModalAction, autoLoginAction, userDetails: { email, password } } = this.props;
     closeRegisterSuccessModalAction();
+    autoLoginAction({ email, password });
   };
 
   handleCloseResendStatusModal = () => {
@@ -54,8 +56,8 @@ class Auth extends Component {
       <CustomModal
         type="info"
         isOpen
-        title="Register Success"
-        message={`New user is created ${email}`}
+        title="Registration succeed!"
+        message={`Enjoy your new experience with Quezone! ${email}`}
         okButton
         okCallBack={this.handleCloseRegisterSuccessModal}
       />
@@ -147,6 +149,7 @@ Auth.propTypes = {
   resetPasswordStatus: string.isRequired,
   resetPasswordMessage: string.isRequired,
   clearResetPasswordStatusAction: func.isRequired,
+  autoLoginAction: func.isRequired,
 };
 
 Auth.defaultProps = {
@@ -173,5 +176,6 @@ export default connect(
     closeRegisterSuccessModalAction: closeRegisterSuccessModal,
     closeResendStatusModal: resetResendVerificationCodeModal,
     clearResetPasswordStatusAction: clearResetPasswordStatus,
+    autoLoginAction: autoLogin,
   },
 )(Auth);

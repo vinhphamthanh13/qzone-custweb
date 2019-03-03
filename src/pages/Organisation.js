@@ -1,7 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { objectOf, any, func } from 'prop-types';
+import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
 import OrgLogo from 'images/dog_logo.jpg';
+import { fetchOrg } from 'reduxModules/organisation.action';
 import Section1 from './organisation/Section1';
 import Section2 from './organisation/Section2';
 import Section3 from './organisation/Section3';
@@ -38,41 +40,49 @@ const getNavButtons = (org) => {
   ]);
 };
 
-const Organisation = (props) => {
-  const { orgData } = props;
-  const navButtons = getNavButtons(orgData);
-  return (
-    <React.Fragment>
-      <div className={styles.wrapper}>
-        <div className={styles.section1}>
-          <div className={styles.overlay}>
-            <Grid container justify="space-between" className={styles.navBarWrapper}>
-              <Section1
-                menuButtons={navButtons}
-                logo={OrgLogo}
-              />
-            </Grid>
+class Organisation extends Component {
+  componentDidMount() {
+    const { fetchOrgAction } = this.props;
+    fetchOrgAction();
+  }
+
+  render() {
+    const { orgData } = this.props;
+    const navButtons = getNavButtons(orgData);
+    return (
+      <React.Fragment>
+        <div className={styles.wrapper}>
+          <div className={styles.section1}>
+            <div className={styles.overlay}>
+              <Grid container justify="space-between" className={styles.navBarWrapper}>
+                <Section1
+                  menuButtons={navButtons}
+                  logo={OrgLogo}
+                />
+              </Grid>
+            </div>
+          </div>
+          <div className={styles.section2}>
+            <Section2 />
+          </div>
+          <div className={styles.section3}>
+            <Section3 />
+          </div>
+          <div className={styles.sectionServiceCard}>
+            <ServiceCard cardList={serviceList} />
+          </div>
+          <div className={[styles.section3, styles.sectionProviderCard].join(' ')}>
+            <ProviderCard cardList={providerList} />
           </div>
         </div>
-        <div className={styles.section2}>
-          <Section2 />
-        </div>
-        <div className={styles.section3}>
-          <Section3 />
-        </div>
-        <div className={styles.sectionServiceCard}>
-          <ServiceCard cardList={serviceList} />
-        </div>
-        <div className={[styles.section3, styles.sectionProviderCard].join(' ')}>
-          <ProviderCard cardList={providerList} />
-        </div>
-      </div>
-    </React.Fragment>
-  );
-};
+      </React.Fragment>
+    );
+  }
+}
 
 Organisation.propTypes = {
-  orgData: PropTypes.objectOf(PropTypes.any),
+  orgData: objectOf(any),
+  fetchOrgAction: func.isRequired,
 };
 
 Organisation.defaultProps = {
@@ -81,4 +91,6 @@ Organisation.defaultProps = {
   },
 };
 
-export default Organisation;
+export default connect(null, {
+  fetchOrgAction: fetchOrg,
+})(Organisation);
