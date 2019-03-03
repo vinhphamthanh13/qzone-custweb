@@ -14,6 +14,13 @@ const rootRoutes = [
   {
     exact: true,
     strict: true,
+    path: '/appointments',
+    name: 'Home',
+    component: Home,
+  },
+  {
+    exact: true,
+    strict: true,
     path: '/organisation/:id',
     name: 'Organisation',
     component: Organisation,

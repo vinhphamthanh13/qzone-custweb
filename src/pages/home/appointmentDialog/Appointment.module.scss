@@ -1,0 +1,36 @@
+@import "styles/_settings.scss";
+
+.appointment {
+  &Wrapper {
+    height: calc(100% - 64px);
+    background-color: $alto;
+    overflow: auto;
+
+    & > div, & > div > div, & section {
+      min-height: calc(100% - 96px);
+    }
+
+    @media only screen and (max-width: 1169px) {
+      & span[class*="vertical-timeline-element-date"] {
+        display: none;
+      }
+    }
+  }
+
+  &Icon {
+    vertical-align: text-bottom;
+    margin-right: 8px;
+    color: $primary;
+  }
+
+  &Status {
+    text-align: right;
+    margin-top: 0.4rem;
+  }
+
+  @media only screen and (min-width: 1170px) {
+    &Item div[class*="vertical-timeline-element-content"] {
+      width: 44%;
+    }
+  }
+}
