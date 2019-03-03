@@ -6,6 +6,8 @@ import home from 'reduxModules/home.reducer';
 import auth from 'authentication/actions/reducer';
 import { loadSessionToState } from 'authentication/actions/session';
 import selectProvider from 'reduxModules/home/bookingDialog/selectProvider.reducer';
+import bookingDialog from 'reduxModules/home/bookingDialog.reducer';
+import { getUserDetail } from 'authentication/actions/login';
 import { loadSession } from './localStorage';
 
 const persistedSession = loadSession();
@@ -13,7 +15,8 @@ const rootReducer = combineReducers({
   auth,
   home,
   homeModules: combineReducers({
-    bookingDialog: combineReducers({
+    bookingDialog,
+    bookingDialogModules: combineReducers({
       selectProvider,
     }),
   }),
@@ -30,6 +33,7 @@ const store = createStore(
 
 // loading session from local storage to redux store
 if (persistedSession && (persistedSession.isAuthenticated || persistedSession.qz_token)) {
+  store.dispatch(getUserDetail(persistedSession.id));
   store.dispatch(loadSessionToState(persistedSession));
 }
 

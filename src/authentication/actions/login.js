@@ -1,9 +1,10 @@
 import { Auth } from 'aws-amplify';
 import { GOOGLE_ID, AUTH_METHOD, PROVIDER } from 'config/auth';
 import { setLoading } from 'actions/common';
-import { getCustomerByEmail as loginApi, saveSocialEmail as socialLoginApi } from 'api/auth';
+import { getCustomerByEmail as loginApi, saveSocialEmail as socialLoginApi, fetchUserDetail } from 'api/auth';
 import { saveSession } from 'config/localStorage';
-import { STORE_USER_SESSION_LOGIN, STORE_USER_SESSION_ERROR } from './constants';
+import { handleResponse, handleRequest } from 'utils/apiHelpers';
+import { STORE_USER_SESSION_LOGIN, STORE_USER_SESSION_ERROR, SET_USER_DETAILS } from './constants';
 
 // Redux
 const storeUserSessionLogin = payload => ({
@@ -13,6 +14,11 @@ const storeUserSessionLogin = payload => ({
 
 const storeUserSessionError = payload => ({
   type: STORE_USER_SESSION_ERROR,
+  payload,
+});
+
+const setUserDetails = payload => ({
+  type: SET_USER_DETAILS,
   payload,
 });
 
@@ -60,19 +66,20 @@ const getAWSCredentials = (googleUser, dispatch) => {
         socialLoginApi(socialAcc)
           .then((response) => {
             if (response && response.status === 200) {
-              const { isAuthenticated, object: { id } } = response.data;
+              const userDetail = handleResponse(response);
               const { sessionToken } = credentials;
               const session = {
                 provider: PROVIDER.GOOGLE,
-                id,
+                id: userDetail.id,
                 username: name,
                 qz_token: sessionToken,
                 qz_refresh_token: null,
                 expiration: expires_in,
-                isAuthenticated,
+                isAuthenticated: response.data.isAuthenticated,
               };
               dispatch(setLoading(false));
               dispatch(storeUserSessionLogin(session));
+              dispatch(setUserDetails(userDetail));
               saveSession(session);
             }
           })
@@ -121,22 +128,22 @@ export const login = (value) => {
       .then((json) => {
         if (json) {
           const { idToken: { jwtToken, payload }, refreshToken: { token } } = json.signInUserSession;
-          // eslint-disable-next-line
           const { exp } = payload;
           if (payload.email_verified) {
             loginApi({ email })
               .then((response) => {
                 if (response.data.object) {
-                  const { id, givenName } = response.data.object;
+                  const userDetail = handleResponse(response);
                   const session = {
-                    id,
-                    username: givenName,
+                    id: userDetail.id,
+                    username: userDetail.givenName,
                     qz_token: jwtToken,
                     qz_refresh_token: token,
                     expiration: exp,
                     isAuthenticated: response.data.isAuthenticated,
                   };
                   dispatch(storeUserSessionLogin(session));
+                  dispatch(setUserDetails(userDetail));
                   saveSession(session);
                 }
                 dispatch(setLoading(false));
@@ -156,4 +163,11 @@ export const login = (value) => {
         dispatch(setLoading(false));
       });
   };
+};
+
+export const getUserDetail = userId => async (dispatch) => {
+  dispatch(setLoading(true));
+  const [userDetail] = await handleRequest(fetchUserDetail, [userId]);
+  dispatch(setUserDetails(userDetail));
+  dispatch(setLoading(false));
 };

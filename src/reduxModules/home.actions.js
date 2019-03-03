@@ -1,7 +1,7 @@
 import {
   searchServicesByName, searchServicesByCategory, searchOrganizationById, getServices,
 } from 'api/home';
-import { handleResponse, handleRequest } from 'api/helpers';
+import { handleRequest } from 'utils/apiHelpers';
 
 export const SET_ALL_SERVICES = 'HOME.SET_ALL_SERVICES';
 export const SET_SERVICE_CATEGORIES = 'HOME.SET_SERVICE_CATEGORIES';
@@ -31,22 +31,22 @@ export const setOrgs = payload => ({
 
 export const getServicesByName = name => async (dispatch) => {
   dispatch(setLoading(true));
-  const result = await handleRequest(searchServicesByName, name);
+  const [result] = await handleRequest(searchServicesByName, [name], []);
   dispatch(setLoading(false));
-  dispatch(setServices(handleResponse(result)));
+  dispatch(setServices(result));
 };
 
 export const getServicesByCategory = categoryId => async (dispatch) => {
   dispatch(setLoading(true));
-  const rawServices = handleResponse(await handleRequest(searchServicesByCategory, categoryId), []);
+  const [rawServices] = await handleRequest(searchServicesByCategory, [categoryId], []);
   const orgIds = [];
   rawServices.forEach((service) => {
     if (!orgIds.includes(service.organizationId)) {
       orgIds.push(service.organizationId);
     }
   });
-  const result = await Promise.all(orgIds.map(orgId => handleRequest(searchOrganizationById, orgId)));
-  const orgs = result.map(handleResponse);
+  const result = await Promise.all(orgIds.map(orgId => handleRequest(searchOrganizationById, [orgId])));
+  const orgs = result.map(org => org[0]);
   const services = rawServices.map(
     service => ({ ...service, organization: orgs.find(org => org.id === service.organizationId) }),
   );
@@ -63,15 +63,15 @@ const setAllServices = payload => ({
 
 export const getAllServices = () => async (dispatch) => {
   dispatch(setLoading(true));
-  const rawServices = handleResponse(await handleRequest(getServices), []);
+  const [rawServices] = await handleRequest(getServices, [], []);
   const orgIds = [];
   rawServices.forEach((service) => {
     if (!orgIds.includes(service.organizationId)) {
       orgIds.push(service.organizationId);
     }
   });
-  const result = await Promise.all(orgIds.map(orgId => handleRequest(searchOrganizationById, orgId)));
-  const orgs = result.map(handleResponse);
+  const result = await Promise.all(orgIds.map(orgId => handleRequest(searchOrganizationById, [orgId])));
+  const orgs = result.map(org => org[0]);
   const services = rawServices.map(
     service => ({ ...service, organization: orgs.find(org => org.id === service.organizationId) }),
   );
@@ -83,15 +83,15 @@ export const getAllServices = () => async (dispatch) => {
 export const setServicesGlobal = (categoryId = '') => async (dispatch) => {
   dispatch(setLoading(true));
   const [api, save] = categoryId ? [searchServicesByCategory, setServices] : [getServices, setAllServices];
-  const rawServices = handleResponse(await handleRequest(api, categoryId), []);
+  const [rawServices] = await handleRequest(api, [categoryId], []);
   const orgIds = [];
   rawServices.forEach((service) => {
     if (!orgIds.includes(service.organizationId)) {
       orgIds.push(service.organizationId);
     }
   });
-  const result = await Promise.all(orgIds.map(orgId => handleRequest(searchOrganizationById, orgId)));
-  const orgs = result.map(handleResponse);
+  const result = await Promise.all(orgIds.map(orgId => handleRequest(searchOrganizationById, [orgId])));
+  const orgs = result.map(org => org[0]);
   const services = rawServices.map(
     service => ({ ...service, organization: orgs.find(org => org.id === service.organizationId) }),
   );

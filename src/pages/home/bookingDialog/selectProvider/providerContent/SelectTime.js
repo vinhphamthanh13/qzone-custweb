@@ -34,7 +34,7 @@ export class SelectTime extends React.PureComponent {
   onHourChange = ({ start, duration }) => {
     this.props.onChange({
       start: start.valueOf(),
-      end: start.valueOf() + (duration * 1000),
+      duration,
     });
     this.setState({ selectedHour: start });
   }
@@ -86,8 +86,8 @@ SelectTime.defaultProps = {
 };
 
 const mapStateToProps = (states, ownProps) => ({
-  timeDetails: states.homeModules.bookingDialog.selectProvider.providerDetails[ownProps.providerDetail.id],
-  isLoading: states.homeModules.bookingDialog.selectProvider.isLoading,
+  isLoading: states.homeModules.bookingDialog.isLoading,
+  timeDetails: states.homeModules.bookingDialogModules.selectProvider.providerDetails[ownProps.providerDetail.id],
 });
 
 export default connect(mapStateToProps)(SelectTime);

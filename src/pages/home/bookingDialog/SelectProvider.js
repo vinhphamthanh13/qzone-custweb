@@ -83,7 +83,7 @@ SelectProvider.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  ...state.homeModules.bookingDialog.selectProvider,
+  ...state.homeModules.bookingDialogModules.selectProvider,
 });
 
 export default connect(mapStateToProps, { getProvidersByServiceAction: getProvidersByService })(SelectProvider);

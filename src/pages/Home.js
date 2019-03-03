@@ -5,7 +5,7 @@ import {
 import { connect } from 'react-redux';
 import { Grid } from '@material-ui/core';
 import { getServiceCategories } from 'api/home';
-import { handleResponse, handleRequest } from 'api/helpers';
+import { handleRequest } from 'utils/apiHelpers';
 import {
   setServiceCategories,
   getServicesByName,
@@ -44,7 +44,7 @@ export class Home extends React.PureComponent {
 
   async componentDidMount() {
     const { setServiceCategoriesAction, getAllServicesAction } = this.props;
-    const serviceCategories = handleResponse(await handleRequest(getServiceCategories), []);
+    const [serviceCategories] = await handleRequest(getServiceCategories, [], []);
     setServiceCategoriesAction(serviceCategories);
     await getLocation(this.showLocation);
     getAllServicesAction();
@@ -148,6 +148,7 @@ export class Home extends React.PureComponent {
           initService={selectedService}
           handleClose={this.handleCloseBookingDialog}
           onSaveBooking={this.onSaveBooking}
+          openDialog={this.openDialog}
         />
         <PrimarySearchAppBar
           handleAuthenticate={this.openDialog}

@@ -16,6 +16,7 @@ import {
   TOGGLE_RESET_PASSWORD_DIALOG,
   RESET_PASSWORD_STATUS,
   LOAD_SESSION_TO_STATE,
+  SET_USER_DETAILS,
 } from './constants';
 
 const authInitialize = {
@@ -137,6 +138,11 @@ const auth = (state = authInitialize, action) => {
       };
     case LOGOUT_SUCCESS:
       return authInitialize;
+    case SET_USER_DETAILS:
+      return {
+        ...state,
+        userDetails: action.payload,
+      };
     default:
       return state;
   }
