@@ -13,7 +13,7 @@ import styles from './ReadMore.module.scss';
 
 const ReadMore = (props) => {
   const {
-    isOpen, onClose, serviceName, duration, orgName, orgDescription, orgId,
+    isOpen, onClose, serviceName, duration, orgName, orgDescription, orgId, instantBooking,
   } = props;
   return (
     <Dialog
@@ -42,9 +42,10 @@ const ReadMore = (props) => {
         <DialogContentText>{orgDescription}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary" variant="outlined">
-          Close
-        </Button>
+        <div className="flex full-width h-space-btw">
+          <Button variant="outlined" onClick={instantBooking} className="main-button">Book Now!</Button>
+          <Button variant="text" onClick={onClose} color="inherit" className="simple-button">Close</Button>
+        </div>
       </DialogActions>
     </Dialog>
   );
@@ -58,6 +59,7 @@ ReadMore.propTypes = {
   orgName: string.isRequired,
   orgId: string.isRequired,
   orgDescription: string.isRequired,
+  instantBooking: func.isRequired,
 };
 
 export default ReadMore;

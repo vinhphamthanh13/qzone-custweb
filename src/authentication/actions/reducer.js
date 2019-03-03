@@ -3,18 +3,19 @@ import {
   RESET_ERROR_MESSAGE,
 } from 'actions/common';
 import {
-  STORE_USER_LOGIN,
-  STORE_USER_ERROR,
+  STORE_USER_SESSION_LOGIN,
+  STORE_USER_SESSION_ERROR,
   REGISTER_AWS_ERROR,
   REGISTER_AWS_SUCCESS,
-  CONFIRM_SIGNUP_ERROR,
+  CONFIRM_SIGN_UP_ERROR,
   HANDLE_VERIFICATION_MODAL,
-  CONFIRM_SIGNUP_SUCCESS,
+  CONFIRM_SIGN_UP_SUCCESS,
   CLOSE_REGISTER_SUCCESS_MODAL,
   RESEND_VERIFICATION_CODE_STATUS,
   LOGOUT_SUCCESS,
   TOGGLE_RESET_PASSWORD_DIALOG,
   RESET_PASSWORD_STATUS,
+  LOAD_SESSION_TO_STATE,
 } from './constants';
 
 const authInitialize = {
@@ -52,26 +53,25 @@ const authInitialize = {
 
 const auth = (state = authInitialize, action) => {
   switch (action.type) {
-    case REGISTER_AWS_SUCCESS: {
-      return {
-        ...state,
-        userDetails: action.payload,
-        isVerificationCode: true,
-      };
-    }
     case REGISTER_AWS_ERROR:
       return {
         ...state,
         isVerificationCode: false,
         registerErrorMessage: action.payload.message || 'Register AWS failed',
       };
-    case CONFIRM_SIGNUP_ERROR:
+    case REGISTER_AWS_SUCCESS:
+      return {
+        ...state,
+        userDetails: action.payload,
+        isVerificationCode: true,
+      };
+    case CONFIRM_SIGN_UP_ERROR:
       return {
         ...state,
         isVerificationCode: false,
         verificationErrorMessage: action.payload.message,
       };
-    case CONFIRM_SIGNUP_SUCCESS:
+    case CONFIRM_SIGN_UP_SUCCESS:
       return {
         ...state,
         isVerificationCode: false,
@@ -96,19 +96,13 @@ const auth = (state = authInitialize, action) => {
         isVerificationCode,
       };
     }
-    case STORE_USER_LOGIN: {
+    case STORE_USER_SESSION_LOGIN:
       return {
         ...state,
-        loginSession: {
-          token: action.payload.token,
-          expiration: action.payload.expiration,
-          userName: action.payload.userName,
-          isAuthenticated: action.payload.isAuthenticated,
-        },
+        loginSession: action.payload,
         loginErrorMessage: '',
       };
-    }
-    case STORE_USER_ERROR: {
+    case STORE_USER_SESSION_ERROR:
       return {
         ...state,
         loginSession: {
@@ -116,7 +110,6 @@ const auth = (state = authInitialize, action) => {
         },
         loginErrorMessage: action.payload.message,
       };
-    }
     case RESET_ERROR_MESSAGE:
       return {
         ...state,
@@ -124,9 +117,8 @@ const auth = (state = authInitialize, action) => {
         loginErrorMessage: '',
         verificationErrorMessage: '',
       };
-    case SET_LOADING: {
+    case SET_LOADING:
       return { ...state, isLoading: action.payload };
-    }
     case TOGGLE_RESET_PASSWORD_DIALOG:
       return {
         ...state,
@@ -138,9 +130,15 @@ const auth = (state = authInitialize, action) => {
         resetPasswordStatus: action.payload.status,
         resetPasswordMessage: action.payload.message,
       };
+    case LOAD_SESSION_TO_STATE:
+      return {
+        ...state,
+        loginSession: action.payload,
+      };
     case LOGOUT_SUCCESS:
-    default:
       return authInitialize;
+    default:
+      return state;
   }
 };
 

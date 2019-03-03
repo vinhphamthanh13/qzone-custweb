@@ -1,4 +1,5 @@
 import React from 'react';
+import { func } from 'prop-types';
 import {
   Typography,
   // Button,
@@ -28,6 +29,12 @@ export default class ServiceDetail extends React.PureComponent {
     this.setState({ isDialogDescOpen: true });
   };
 
+  handleInstantBooking = () => {
+    const { instantBooking } = this.props;
+    this.handleClose();
+    instantBooking();
+  };
+
   render() {
     const { service } = this.props;
     const { isDialogDescOpen } = this.state;
@@ -41,6 +48,7 @@ export default class ServiceDetail extends React.PureComponent {
           orgName={service.organization.name}
           orgId={service.organization.id}
           orgDescription={service.description || ''}
+          instantBooking={this.handleInstantBooking}
         />
         <Typography
           variant="subheading"
@@ -80,4 +88,5 @@ export default class ServiceDetail extends React.PureComponent {
 
 ServiceDetail.propTypes = {
   service: serviceType.isRequired,
+  instantBooking: func.isRequired,
 };

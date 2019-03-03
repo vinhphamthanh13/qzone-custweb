@@ -21,6 +21,7 @@
     "history": "^4.7.2",
     "html-react-parser": "^0.4.7",
     "jss": "^9.8.7",
+    "lodash": "^4.17.11",
     "material-ui-pickers": "^2.2.1",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.23",

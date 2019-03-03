@@ -10,11 +10,16 @@ import {
   Typography,
 } from '@material-ui/core';
 import {
-  Search as SearchIcon, AccountCircle, InsertEmoticon, HowToReg, Book as BookIcon,
+  Search as SearchIcon,
+  // AccountCircle,
+  // InsertEmoticon,
+  HowToReg,
+  // Book as BookIcon,
   NearMe, AssignmentInd, ExitToApp, Mail as MailIcon, Notifications as NotificationsIcon,
   MoreVert as MoreIcon, Fingerprint,
+  // HowToRegSharp,
 } from '@material-ui/icons';
-import { logout } from 'auth/actions/login';
+import { logout } from 'authentication/actions/logout';
 import IconMenu from 'components/IconMenu';
 import logo from '../../../images/quezone-logo.png';
 import styles from './PrimarySearchAppBarStyle';
@@ -78,16 +83,6 @@ class PrimarySearchAppBar extends React.Component {
     const isAuthenticated = loginSession ? loginSession.isAuthenticated : false;
     const authorization = isAuthenticated ? (
       [
-        <IconMenu
-          key="app-bar-booking"
-          iconSuite={{
-            handleMethod: this.handleMenuClose,
-            component: BookIcon,
-            classes: classes.menuIcon,
-          }}
-        >
-          Booking
-        </IconMenu>,
         <IconMenu
           key="app-bar-profile"
           iconSuite={{
@@ -159,7 +154,7 @@ class PrimarySearchAppBar extends React.Component {
               <MenuItem key="app-bar-mail-icon-notification">
                 <IconButton color="inherit">
                   <Badge badgeContent={4} color="secondary">
-                    <MailIcon />
+                    <MailIcon className={classes.menuIcon} />
                   </Badge>
                 </IconButton>
                 <p>Messages</p>
@@ -167,20 +162,15 @@ class PrimarySearchAppBar extends React.Component {
               <MenuItem key="app-bar-notification-icon">
                 <IconButton color="inherit">
                   <Badge badgeContent={11} color="secondary">
-                    <NotificationsIcon />
+                    <NotificationsIcon className={classes.menuIcon} />
                   </Badge>
                 </IconButton>
                 <p>Notifications</p>
               </MenuItem>,
+              ...authorization,
             ]
           )
         }
-        <MenuItem onClick={this.handleProfileMenuOpen}>
-          <IconButton color="inherit">
-            { isAuthenticated ? <InsertEmoticon /> : <AccountCircle /> }
-          </IconButton>
-          <p>Profile</p>
-        </MenuItem>
       </Menu>
     );
     const customUser = isAuthenticated ? (
@@ -196,14 +186,15 @@ class PrimarySearchAppBar extends React.Component {
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          <IconButton
-            aria-owns={isMenuOpen ? 'material-appbar' : undefined}
+          <Typography
             aria-haspopup="true"
             onClick={this.handleProfileMenuOpen}
             color="inherit"
+            variant="subheading"
+            className="button-text-center hover-pointer hover-bright"
           >
-            <InsertEmoticon />
-          </IconButton>
+            Hi! {loginSession.username}
+          </Typography>
         </div>
         <div className={classes.sectionMobile}>
           <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">

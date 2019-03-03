@@ -43,7 +43,7 @@ export default class ServiceCard extends PureComponent {
           onError={this.onError}
         />
         <CardContent className={styles.serviceContent}>
-          <ServiceDetail service={service} />
+          <ServiceDetail service={service} instantBooking={this.onSelectService} />
         </CardContent>
         <CardActions>
           <Button

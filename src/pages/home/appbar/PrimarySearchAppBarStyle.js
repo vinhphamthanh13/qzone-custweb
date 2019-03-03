@@ -16,7 +16,6 @@ const styles = theme => ({
   },
   menuIcon: {
     color: theme.palette.primary.main,
-    paddingRight: '10px',
   },
   menuListMobile: {
     color: theme.palette.primary.contrastText,

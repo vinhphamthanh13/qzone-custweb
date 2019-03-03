@@ -10,6 +10,10 @@
   flex-grow: 1;
 }
 
+.full-width {
+  width: 100%;
+}
+
 .inline-flex {
   display: inline-flex;
   align-items: center;
@@ -29,6 +33,14 @@
 
 .h-end {
   justify-content: flex-end;
+}
+
+.h-space-e {
+  justify-content: space-evenly;
+}
+
+.h-space-btw {
+  justify-content: space-between;
 }
 
 .auto-margin-vertical {
