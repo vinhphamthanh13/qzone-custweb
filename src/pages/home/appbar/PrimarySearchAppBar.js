@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  objectOf, any, func, number,
+  objectOf, any, func, number, arrayOf, object,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -19,6 +19,7 @@ import {
 import { toggleAppointment } from 'reduxModules/appointments.actions';
 import { logout } from 'authentication/actions/logout';
 import IconMenu from 'components/IconMenu';
+import { fetchCustomerEvents } from 'reduxModules/home.actions';
 import logo from '../../../images/quezone-logo.png';
 import styles from './PrimarySearchAppBarStyle';
 
@@ -29,6 +30,12 @@ class PrimarySearchAppBar extends React.Component {
   };
 
   componentDidMount() {
+    const { loginSession, fetchCustomerEventsAction } = this.props;
+    const [isAuthenticated, id] = loginSession
+      ? [loginSession.isAuthenticated, loginSession.id] : [false, ''];
+    if (isAuthenticated) {
+      fetchCustomerEventsAction(id);
+    }
     window.addEventListener('resize', this.closeAllMenu);
   }
 
@@ -78,8 +85,9 @@ class PrimarySearchAppBar extends React.Component {
   render() {
     const { anchorEl, mobileMoreAnchorEl } = this.state;
     const {
-      classes, loginSession, onSearch, userPosition,
+      classes, loginSession, onSearch, userPosition, customerEventList,
     } = this.props;
+    const eventCount = customerEventList && customerEventList.length;
     const searchNearByTitle = userPosition.latitude ? 'Search Services Near You' : 'Your Location Not Allowed';
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -190,12 +198,12 @@ class PrimarySearchAppBar extends React.Component {
       <>
         <div className={classes.sectionDesktop}>
           <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
+            <Badge badgeContent={eventCount} color="secondary">
               <MailIcon />
             </Badge>
           </IconButton>
           <IconButton color="inherit">
-            <Badge badgeContent={17} color="secondary">
+            <Badge badgeContent={0} color="secondary">
               <NotificationsIcon />
             </Badge>
           </IconButton>
@@ -291,16 +299,20 @@ PrimarySearchAppBar.propTypes = {
   userPosition: objectOf(number).isRequired,
   logoutAction: func.isRequired,
   loginSession: objectOf(any).isRequired,
+  fetchCustomerEventsAction: func.isRequired,
+  customerEventList: arrayOf(object).isRequired,
 };
 
 const mapStateToProps = state => ({
   loginSession: state.auth.loginSession,
+  customerEventList: state.home.customerEventList,
 });
 
 export default compose(
   connect(mapStateToProps, {
     logoutAction: logout,
     toggleAppointment,
+    fetchCustomerEventsAction: fetchCustomerEvents,
   }),
   withStyles(styles),
 )(PrimarySearchAppBar);

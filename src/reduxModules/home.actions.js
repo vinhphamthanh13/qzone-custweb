@@ -1,5 +1,5 @@
 import {
-  searchServicesByName, searchServicesByCategory, searchOrganizationById, getServices,
+  searchServicesByName, searchServicesByCategory, searchOrganizationById, getServices, getCustomerEvents,
 } from 'api/home';
 import { handleRequest } from 'utils/apiHelpers';
 
@@ -8,6 +8,7 @@ export const SET_SERVICE_CATEGORIES = 'HOME.SET_SERVICE_CATEGORIES';
 export const SET_SERVICES = 'HOME.SET_SERVICES';
 export const SET_LOADING = 'HOME.SET_LOADING';
 export const SET_ORGS = 'HOME.SET_ORGS';
+export const GET_CUSTOMER_EVENT_LIST = 'GET_CUSTOMER_EVENT_LIST';
 
 export const setServiceCategories = payload => ({
   type: SET_SERVICE_CATEGORIES,
@@ -99,4 +100,17 @@ export const setServicesGlobal = (categoryId = '') => async (dispatch) => {
   dispatch(setLoading(false));
   dispatch(save(services));
   dispatch(setOrgs(orgs));
+};
+
+const getCustomerEventList = payload => ({
+  type: GET_CUSTOMER_EVENT_LIST,
+  payload,
+});
+
+
+export const fetchCustomerEvents = id => async (dispatch) => {
+  dispatch(setLoading(true));
+  const [eventList] = await handleRequest(getCustomerEvents, [id], []);
+  dispatch(getCustomerEventList(eventList));
+  dispatch(setLoading(false));
 };
