@@ -1,11 +1,9 @@
 import {
-  SET_LOADING,
   SET_PROVIDERS,
   SET_PROVIDER_TIMES_DETAIL,
 } from './selectProvider.actions';
 
 const initialState = {
-  isLoading: false,
   providers: [],
   providerDetails: {},
 };
@@ -29,8 +27,6 @@ const selectProvider = (state = initialState, action) => {
           ...action.payload,
         },
       };
-    case SET_LOADING:
-      return { ...state, isLoading: action.payload };
     default:
       return state;
   }

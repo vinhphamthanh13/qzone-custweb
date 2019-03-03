@@ -1,4 +1,4 @@
-import { handleResponse, handleRequest } from 'api/helpers';
+import { handleRequest } from 'utils/apiHelpers';
 import {
   searchProvidersByService,
   searchProviderById,
@@ -6,15 +6,10 @@ import {
 } from 'api/home/bookingDialog/selectProvider';
 import { searchOrganizationById } from 'api/home';
 import { setOrgs } from 'reduxModules/home.actions';
+import { setLoading } from '../bookingDialog.actions';
 
-export const SET_LOADING = 'HOME.BOOKING_DIALOG.SELECT_SERVICE.SET_LOADING';
-export const SET_PROVIDERS = 'HOME.BOOKING_DIALOG.SELECT_SERVICE.SET_PROVIDERS';
-export const SET_PROVIDER_TIMES_DETAIL = 'HOME.BOOKING_DIALOG.SELECT_SERVICE.SET_PROVIDER_TIMES_DETAIL';
-
-export const setLoading = payload => ({
-  type: SET_LOADING,
-  payload,
-});
+export const SET_PROVIDERS = 'HOME.BOOKING_DIALOG.SELECT_PROVIDER.SET_PROVIDERS';
+export const SET_PROVIDER_TIMES_DETAIL = 'HOME.BOOKING_DIALOG.SELECT_PROVIDER.SET_PROVIDER_TIMES_DETAIL';
 
 export const setProviders = payload => ({
   type: SET_PROVIDERS,
@@ -29,11 +24,11 @@ export const setProviderTimesDetail = payload => ({
 export const getProvidersByService = serviceId => async (dispatch, getState) => {
   dispatch(setLoading(true));
 
-  const rawProvidersService = handleResponse(await handleRequest(searchProvidersByService, serviceId), []);
+  const [rawProvidersService] = await handleRequest(searchProvidersByService, [serviceId], []);
   const response = await Promise.all(rawProvidersService.map(
-    resp => handleRequest(searchProviderById, resp.providerId),
+    resp => handleRequest(searchProviderById, [resp.providerId]),
   ));
-  const rawProviders = response.map(handleResponse);
+  const rawProviders = response.map(resp => resp[0]);
   const orgIds = [];
   const { home } = getState();
   rawProviders.forEach((provider) => {
@@ -42,8 +37,8 @@ export const getProvidersByService = serviceId => async (dispatch, getState) => 
       orgIds.push(provider.providerInformation.organizationId);
     }
   });
-  const result = await Promise.all(orgIds.map(orgId => handleRequest(searchOrganizationById, orgId)));
-  const orgs = result.map(handleResponse).concat(home.orgs);
+  const result = await Promise.all(orgIds.map(orgId => handleRequest(searchOrganizationById, [orgId])));
+  const orgs = result.map(rs => rs[0]).concat(home.orgs);
   const providers = rawProviders.map(
     provider => ({
       ...provider,
@@ -59,9 +54,9 @@ export const getProvidersByService = serviceId => async (dispatch, getState) => 
 export const getProviderTimes = data => async (dispatch) => {
   dispatch(setLoading(true));
 
-  const response = (await Promise.all(data.providers.map(provider => handleRequest(findAvailabilitiesByDateRange, {
+  const response = (await Promise.all(data.providers.map(provider => handleRequest(findAvailabilitiesByDateRange, [{
     serviceId: data.serviceId, providerId: provider.id, startSec: data.startSec, toSec: data.toSec,
-  })))).map(handleResponse);
+  }])))).map(resp => resp[0]);
 
   const providerTimes = {};
   response.forEach((providerTime) => {

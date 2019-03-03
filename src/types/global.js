@@ -58,3 +58,10 @@ export const socialLoginType = shape({
   facebook: func,
   google: func,
 });
+
+export const userDetailType = shape({
+  givenName: string,
+  familyName: string,
+  telephone: string,
+  email: string,
+});

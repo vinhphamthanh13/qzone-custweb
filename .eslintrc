@@ -8,15 +8,31 @@
   },
   "rules": {
     "linebreak-style": "off",
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-    "max-len": ["error", { "code": 120 }],
-    "quotes": ["error", "single"],
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [
+          ".js",
+          ".jsx"
+        ]
+      }
+    ],
+    "max-len": [
+      "error",
+      {
+        "code": 120
+      }
+    ],
+    "quotes": [
+      "error",
+      "single"
+    ],
     "react/jsx-one-expression-per-line": "off",
     "import/prefer-default-export": "off",
     "import/no-named-as-default": "off",
     "react/destructuring-assignment": "off",
-	"no-console": "off",
-	"no-alert": "off"
+    "no-console": "off",
+    "no-alert": "off"
   },
   "settings": {
     "import/resolver": {
