@@ -8,6 +8,8 @@ import auth from 'authentication/actions/reducer';
 import { loadSessionToState } from 'authentication/actions/session';
 import selectProvider from 'reduxModules/home/bookingDialog/selectProvider.reducer';
 import bookingDialog from 'reduxModules/home/bookingDialog.reducer';
+import organisation from 'reduxModules/organisation.reducer';
+import { loadSessionToState } from 'authentication/actions/session';
 import { getUserDetail } from 'authentication/actions/login';
 import { loadSession } from './localStorage';
 
@@ -22,6 +24,7 @@ const rootReducer = combineReducers({
       selectProvider,
     }),
   }),
+  organisation,
 });
 
 const store = createStore(
