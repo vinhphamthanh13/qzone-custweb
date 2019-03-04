@@ -171,3 +171,31 @@
     width: 35%;
   }
 }
+
+.profile-header {
+  display: flex;
+  padding: 1rem;
+  justify-content: space-between;
+  border-bottom-width: 4px;
+  border-bottom-style: solid;
+  //border-image: linear-gradient(to right, $primary, rgba(0, 0, 0, 0)) 1 100%;
+  //border-left-width: 4px;
+  //border-left-style: solid;
+  border-image:
+    linear-gradient(
+        to right,
+        $primary,
+        rgba(0, 0, 0, 0)
+    ) 1 100%;
+  & .profile-logo {
+    width: 200px;
+  }
+  & .profile-avatar {
+    width: $logo-copyright * 1.5;
+    height: 100%;
+    border-radius: unset;
+  }
+  & .profile-image {
+    width: 100%;
+  }
+}

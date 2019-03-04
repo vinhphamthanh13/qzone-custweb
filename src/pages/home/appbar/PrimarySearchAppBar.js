@@ -41,6 +41,16 @@ class PrimarySearchAppBar extends React.Component {
     window.addEventListener('resize', this.closeAllMenu);
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { loginSession } = nextProps;
+    const { fetchCustomerEventsAction, loginSession: prevSession } = this.props;
+    const { isAuthenticated, id } = loginSession;
+    const { isAuthenticated: prevAuthenticated } = prevSession;
+    if (isAuthenticated && isAuthenticated !== prevAuthenticated) {
+      fetchCustomerEventsAction(id);
+    }
+  }
+
   componentWillUnmount() {
     window.removeEventListener('resize', this.closeAllMenu);
   }
