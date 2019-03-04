@@ -57,10 +57,9 @@ class PrimarySearchAppBar extends React.Component {
   };
 
   handleMenuClose = () => {
-    const { handleProfile } = this.props;
-    handleProfile();
     this.setState({ anchorEl: null });
     this.handleMobileMenuClose();
+    this.handleEventListClose();
   };
 
   handleMobileMenuOpen = (event) => {
@@ -97,6 +96,12 @@ class PrimarySearchAppBar extends React.Component {
     this.handleMenuClose();
   };
 
+  handleOpenProfileDialog = () => {
+    const { handleOpenProfile } = this.props;
+    handleOpenProfile();
+    this.closeAllMenu();
+  };
+
   render() {
     const { anchorEl, mobileMoreAnchorEl, anchorEventEl } = this.state;
     const {
@@ -113,7 +118,7 @@ class PrimarySearchAppBar extends React.Component {
         <IconMenu
           key="app-bar-profile"
           iconSuite={{
-            handleMethod: this.handleMenuClose,
+            handleMethod: this.handleOpenProfileDialog,
             component: AssignmentInd,
             classes: classes.menuIcon,
           }}
@@ -322,7 +327,7 @@ PrimarySearchAppBar.propTypes = {
   loginSession: objectOf(any).isRequired,
   fetchCustomerEventsAction: func.isRequired,
   customerEventList: arrayOf(object).isRequired,
-  handleProfile: func.isRequired,
+  handleOpenProfile: func.isRequired,
 };
 
 const mapStateToProps = state => ({

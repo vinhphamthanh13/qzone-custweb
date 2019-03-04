@@ -23,7 +23,7 @@ class EventMenu extends Component {
     const {
       isOpenList, handleCloseList, eventList, classes,
     } = this.props;
-    return isOpenList ? (
+    return isOpenList && eventList.length ? (
       <Grid>
         <Paper className="event-list">
           {eventList.map(event => (
