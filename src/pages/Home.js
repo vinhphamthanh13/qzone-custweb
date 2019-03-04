@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  arrayOf, bool, func, any,
+  arrayOf, bool, func, any, objectOf, string,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { Grid } from '@material-ui/core';
@@ -126,13 +126,17 @@ export class Home extends React.PureComponent {
     this.setState({ [key]: false });
   };
 
-  handleToggleProfile = () => {
-    this.setState(prevState => ({ isOpenProfile: !prevState.isOpenProfile }));
+  handleOpenProfile = () => {
+    this.setState({ isOpenProfile: true });
+  };
+
+  handleCloseProfile = () => {
+    this.setState({ isOpenProfile: false });
   };
 
   render() {
     const {
-      serviceCategories, isLoading, allServices,
+      serviceCategories, isLoading, allServices, loginSession: { isAuthenticated },
     } = this.props;
     const catWithServices = serviceCategories.map(cat => ({
       name: cat.name,
@@ -143,6 +147,8 @@ export class Home extends React.PureComponent {
       selectedService, isOpenProfile,
     } = this.state;
     const searchedServices = this.getSearchedServices(allServices, searchText);
+    const openAuthenticatedProfile = isAuthenticated && isOpenProfile;
+
     return (
       <>
         <Auth
@@ -151,7 +157,7 @@ export class Home extends React.PureComponent {
           closeDialog={this.closeDialog}
           handleAuthenticate={this.openDialog}
         />
-        <Profile isOpenProfile={isOpenProfile} handleCloseProfile={this.handleToggleProfile} />
+        <Profile isOpenProfile={openAuthenticatedProfile} handleCloseProfile={this.handleCloseProfile} />
         <BookingDialog
           initService={selectedService}
           handleClose={this.handleCloseBookingDialog}
@@ -163,7 +169,7 @@ export class Home extends React.PureComponent {
           onSearch={this.onSearch}
           handleChangeCategory={this.onCategoryChange}
           userPosition={userPosition}
-          handleProfile={this.handleToggleProfile}
+          handleOpenProfile={this.handleOpenProfile}
         />
         <AppointmentDialog />
         <Grid container>
@@ -209,6 +215,7 @@ Home.propTypes = {
   getServicesByNameAction: func.isRequired,
   isLoading: bool.isRequired,
   allServices: arrayOf(any).isRequired,
+  loginSession: objectOf(string).isRequired,
 };
 
 const mapStateToProps = state => ({
