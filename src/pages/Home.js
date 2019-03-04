@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  arrayOf, bool, func, any, objectOf, string,
+  arrayOf, bool, func, any, objectOf,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { Grid } from '@material-ui/core';
@@ -157,7 +157,7 @@ export class Home extends React.PureComponent {
           closeDialog={this.closeDialog}
           handleAuthenticate={this.openDialog}
         />
-        <Profile isOpenProfile={false && openAuthenticatedProfile} handleCloseProfile={this.handleCloseProfile} />
+        <Profile isOpenProfile={openAuthenticatedProfile} handleCloseProfile={this.handleCloseProfile} />
         <BookingDialog
           initService={selectedService}
           handleClose={this.handleCloseBookingDialog}
@@ -215,7 +215,7 @@ Home.propTypes = {
   getServicesByNameAction: func.isRequired,
   isLoading: bool.isRequired,
   allServices: arrayOf(any).isRequired,
-  loginSession: objectOf(string).isRequired,
+  loginSession: objectOf(any).isRequired,
 };
 
 const mapStateToProps = state => ({

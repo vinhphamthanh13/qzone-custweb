@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import {
   Grid, Dialog, Typography, Button,
 } from '@material-ui/core';
+import Header from './components/Header';
 
 class Profile extends Component {
   state = {
@@ -18,6 +19,7 @@ class Profile extends Component {
     return (
       <Grid container>
         <Dialog fullScreen open={isOpenProfile} onClose={handleCloseProfile}>
+          <Header userDetails={{ givenName, email }} />
           <Typography variant="h1">{userId}</Typography>
           <Typography variant="headline">{givenName}</Typography>
           <Typography variant="subheading">{email}</Typography>
