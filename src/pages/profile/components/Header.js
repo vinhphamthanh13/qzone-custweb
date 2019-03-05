@@ -1,32 +1,43 @@
 import React from 'react';
-import { objectOf, any } from 'prop-types';
+import { func } from 'prop-types';
 import { Avatar, Typography } from '@material-ui/core';
 import logo from 'images/quezone-logo.png';
 
 const Header = (props) => {
-  const { userDetails } = props;
+  const { onClose } = props;
   return (
-    <div className="profile-header">
-      <div className="profile-logo">
-        <Avatar
-          src={logo}
-          alt="QZ avatar"
-          className="profile-avatar"
-          imgProps={{
-            className: 'profile-image',
-          }}
-        />
-      </div>
-      <div className="profile-support">
-        <Typography variant="subheading" color="textSecondary">{userDetails.givenName}</Typography>
-        <Typography variant="subheading" color="textSecondary">Help</Typography>
+    <div className="header">
+      <div className="container-max auto-margin-horizontal">
+        <div className="header-title">
+          <div className="header-logo">
+            <Avatar
+              src={logo}
+              alt="QZ avatar"
+              className="header-avatar"
+              imgProps={{
+                className: 'header-image',
+              }}
+            />
+          </div>
+          <div className="header-support">
+            <div className="header-item">
+              <Typography variant="body1" color="textSecondary" onClick={onClose}>Home</Typography>
+            </div>
+            <div className="header-item">
+              <Typography variant="body1" color="textSecondary">Help</Typography>
+            </div>
+            <div className="header-item">
+              <Typography variant="body1" color="textSecondary">My account</Typography>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
 Header.propTypes = {
-  userDetails: objectOf(any).isRequired,
+  onClose: func.isRequired,
 };
 
 export default Header;

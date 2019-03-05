@@ -6,6 +6,10 @@
   display: grid;
 }
 
+.container-max {
+  max-width: $max-width;
+}
+
 .grow {
   flex-grow: 1;
 }
@@ -45,6 +49,10 @@
 
 .auto-margin-vertical {
   margin: auto 0;
+}
+
+.auto-margin-horizontal {
+  margin: 0 auto;
 }
 
 .item-center {
@@ -172,30 +180,65 @@
   }
 }
 
-.profile-header {
-  display: flex;
-  padding: 1rem;
-  justify-content: space-between;
-  border-bottom-width: 4px;
-  border-bottom-style: solid;
-  //border-image: linear-gradient(to right, $primary, rgba(0, 0, 0, 0)) 1 100%;
-  //border-left-width: 4px;
-  //border-left-style: solid;
-  border-image:
-    linear-gradient(
-        to right,
-        $primary,
-        rgba(0, 0, 0, 0)
-    ) 1 100%;
-  & .profile-logo {
-    width: 200px;
+.header {
+  width: 100vw;
+  border-bottom: 3px solid rgba($primary, 0.5);
+  justify-content: center;
+  margin: 0 auto;
+  &-title {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 0.5rem;
+
   }
-  & .profile-avatar {
-    width: $logo-copyright * 1.5;
+  &-avatar {
+    width: $logo-copyright;
     height: 100%;
     border-radius: unset;
   }
-  & .profile-image {
+  &-image {
     width: 100%;
   }
+  &-support {
+    display: flex;
+    justify-content: space-evenly;
+  }
+  &-item {
+    padding: 0 15px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.side-panel {
+  background: rgba($tiara, 0.8);
+  border-radius: 5px;
+  min-width: 250px;
+  max-width: 250px;
+  padding: 1em;
+  margin: 1em 0.5em;
+  @include breakpoint-up(xl) {
+    margin: 1em 0;
+  }
+  &-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    border-bottom: 2px solid rgba($primary, 0.5);
+  }
+  &-cta {
+    padding: 1em 0.5em;
+  }
+  & .item {
+    display: flex;
+    justify-content: flex-start;
+    margin: 1em 0;
+    &:hover {
+      cursor: pointer
+    }
+  }
+}
+
+.qz-icon-padding-small {
+  margin: auto 5px auto 0;
 }
