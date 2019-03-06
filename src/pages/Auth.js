@@ -58,7 +58,6 @@ class Auth extends Component {
         isOpen
         title="Registration succeed!"
         message={`Enjoy your new experience with Quezone! ${email}`}
-        okButton
         okCallBack={this.handleCloseRegisterSuccessModal}
       />
     ) : null;

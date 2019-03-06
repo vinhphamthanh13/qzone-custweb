@@ -10,24 +10,25 @@ import {
 import withStyles from '@material-ui/core/styles/withStyles';
 import CloseIcon from '@material-ui/icons/Close';
 import logo from 'images/logo.png';
-import { serviceType, userDetailType } from 'types/global';
+import { serviceType, userDetailType, eventType } from 'types/global';
 import { setProviders } from 'reduxModules/home/bookingDialog/selectProvider.actions';
 import { bookEvent, resetStatus } from 'reduxModules/home/bookingDialog.actions';
 import CustomModal from 'components/Modal/CustomModal';
+import { toggleAppointment } from 'reduxModules/appointments.actions';
 import SelectProvider from './bookingDialog/SelectProvider';
 import BookingDetail from './bookingDialog/BookingDetail';
 import BookingStyle from './BookingDialogStyle';
+import ViewAppointment from './bookingDialog/ViewAppointment';
 
 function Transition(props) {
   return <Slide direction="down" {...props} />;
 }
 
-/* eslint-disable react/no-unused-state */
 class BookingDialog extends PureComponent {
   constructor(props) {
     super(props);
-    this.bookingStepsComponents = [SelectProvider, BookingDetail];
-    this.bookingSteps = ['Select provider', 'Booking detail'];
+    this.bookingStepsComponents = [SelectProvider, BookingDetail, ViewAppointment];
+    this.bookingSteps = ['Select provider', 'Book appointment', 'Complete booking'];
     this.defaultState = {
       step: 0,
       bookingDetail: {
@@ -35,8 +36,15 @@ class BookingDialog extends PureComponent {
         time: undefined,
         day: undefined,
       },
+      isConfirmDialogOpen: false,
     };
     this.state = { ...this.defaultState };
+  }
+
+  componentDidUpdate = (prevProps) => {
+    if (prevProps.bookingStatus.type === '' && this.props.bookingStatus.type === 'success') {
+      this.handleNext();
+    }
   }
 
   onStepChange = idx => () => {
@@ -77,6 +85,8 @@ class BookingDialog extends PureComponent {
   };
 
   onSaveBooking = () => {
+    this.toggleConfirmDialog(false)();
+
     if (this.props.isAuthenticated) {
       const { userDetail, bookEventAction, initService } = this.props;
       const { bookingDetail } = this.state;
@@ -97,28 +107,47 @@ class BookingDialog extends PureComponent {
     }
   }
 
-  closeInfoModal = () => {
+  closeErrorModal = () => {
     this.handleBack();
     this.props.resetStatusAction();
+  }
+
+  openAppointmentDialog = () => {
+    this.props.toggleAppointmentAction(true);
+  }
+
+  toggleConfirmDialog = isConfirmDialogOpen => () => {
+    this.setState({ isConfirmDialogOpen });
   }
 
   render() {
     const {
       initService, classes, userDetail,
-      isLoading, bookingStatus,
+      isLoading, bookingStatus, bookingEvent,
     } = this.props;
-    const { step, bookingDetail } = this.state;
+    const { step, bookingDetail, isConfirmDialogOpen } = this.state;
     const StepComponent = this.bookingStepsComponents[step];
 
     return (
       <>
         <CustomModal
           type={bookingStatus.type}
-          title={bookingStatus.type === 'error' ? 'Booking failed' : 'Booking succeeded'}
+          title="Booking failed"
           message={bookingStatus.message}
-          isOpen={!!bookingStatus.type}
-          onClose={this.closeInfoModal}
+          isOpen={bookingStatus.type === 'error'}
+          onClose={this.closeErrorModal}
         />
+        {bookingDetail.provider && (
+          <CustomModal
+            type="info"
+            title="Booking confirmation"
+            message="Do you want to book the event?"
+            isOpen={isConfirmDialogOpen}
+            onClose={this.toggleConfirmDialog(false)}
+            okCallBack={this.onSaveBooking}
+            cancelCallBack={this.toggleConfirmDialog(false)}
+          />
+        )}
         <Dialog
           fullScreen
           open={initService !== undefined}
@@ -138,7 +167,7 @@ class BookingDialog extends PureComponent {
           </AppBar>
           <div className={classes.bookingStepsWrapper}>
             <Button
-              disabled={step === 0}
+              disabled={step === 0 || step === this.bookingSteps.length - 1}
               onClick={this.handleBack}
             >
               Back
@@ -167,8 +196,10 @@ class BookingDialog extends PureComponent {
               handleNext={this.handleNext}
               bookingDetail={bookingDetail}
               userDetail={userDetail}
-              onSaveBooking={this.onSaveBooking}
+              onSaveBooking={this.toggleConfirmDialog(true)}
               isLoading={isLoading}
+              bookingEvent={bookingEvent}
+              openAppointmentDialog={this.openAppointmentDialog}
             />
           )}
         </Dialog>
@@ -189,10 +220,13 @@ BookingDialog.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   bookingStatus: PropTypes.shape({ type: PropTypes.string, message: PropTypes.string }).isRequired,
   resetStatusAction: PropTypes.func.isRequired,
+  bookingEvent: eventType,
+  toggleAppointmentAction: PropTypes.func.isRequired,
 };
 
 BookingDialog.defaultProps = {
   initService: undefined,
+  bookingEvent: undefined,
 };
 
 const mapStateToProps = state => ({
@@ -200,6 +234,7 @@ const mapStateToProps = state => ({
   isAuthenticated: state.auth.loginSession.isAuthenticated,
   isLoading: state.homeModules.bookingDialog.isLoading,
   bookingStatus: state.homeModules.bookingDialog.status,
+  bookingEvent: state.appointments.appointments.slice(-1)[0],
 });
 
 export default compose(
@@ -210,6 +245,7 @@ export default compose(
       setProvidersAction: setProviders,
       bookEventAction: bookEvent,
       resetStatusAction: resetStatus,
+      toggleAppointmentAction: toggleAppointment,
     },
   ),
 )(BookingDialog);

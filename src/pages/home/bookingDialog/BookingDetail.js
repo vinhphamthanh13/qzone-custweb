@@ -6,6 +6,7 @@ import {
 import mtz from 'moment-timezone';
 import { bookingDetailType, serviceType, userDetailType } from 'types/global';
 import { defaultDateFormat } from 'utils/constants';
+import formatName from 'utils/formatName';
 import styles from './BookingDetail.module.scss';
 
 const BookingDetail = ({
@@ -19,7 +20,7 @@ const BookingDetail = ({
           disabled
           fullWidth
           label="Name"
-          value={`${userDetail.givenName ? `${userDetail.givenName} ` : ''}${userDetail.familyName || ''}`}
+          value={formatName({ givenName: userDetail.givenName, familyName: userDetail.familyName })}
           margin="normal"
           variant="outlined"
         />
@@ -63,7 +64,10 @@ const BookingDetail = ({
             <Grid item md={5}><Typography variant="body1">Service provider:</Typography></Grid>
             <Grid item md={7}>
               <Typography variant="subtitle1" color="secondary">
-                {bookingDetail.provider.givenName} {bookingDetail.provider.familyName}
+                {formatName({
+                  givenName: bookingDetail.provider.givenName,
+                  familyName: bookingDetail.provider.familyName,
+                })}
               </Typography>
             </Grid>
           </Grid>

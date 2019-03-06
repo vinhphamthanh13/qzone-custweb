@@ -24,8 +24,12 @@ const style = theme => ({
     borderLeft: `4px solid ${mainColor}`,
     paddingLeft: theme.spacing.unit * 2,
   },
-  okButton: {
+  modalActions: {
+    textAlign: 'right',
     margin: `${theme.spacing.unit}px auto`,
+  },
+  cancelButton: {
+    marginRight: theme.spacing.unit,
   },
 });
 

@@ -7,6 +7,7 @@ import {
   providerType, bookingDetailType, serviceType,
 } from 'types/global';
 
+import formatName from 'utils/formatName';
 import SelectTime from './providerContent/SelectTime';
 import styles from './ProviderContent.module.scss';
 import DetailDialog from './providerContent/DetailDialog';
@@ -45,7 +46,7 @@ export default class ProviderContent extends React.PureComponent {
               {initService.name}
             </Typography>
             <Typography variant="h6">
-              {provider.givenName} {provider.familyName}
+              {formatName({ givenName: provider.givenName, familyName: provider.familyName })}
             </Typography>
             <Typography variant="caption">
               {(initService.description).substring(0, 100)}

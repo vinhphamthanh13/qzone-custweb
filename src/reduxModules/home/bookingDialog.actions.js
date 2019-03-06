@@ -1,5 +1,6 @@
 import { postEvent } from 'api/home/bookingDialog';
 import { handleRequest } from 'utils/apiHelpers';
+import { setAppointmentByCustomer } from 'reduxModules/appointments.actions';
 
 export const SET_LOADING = 'HOME.BOOKING_DIALOG.SET_LOADING';
 export const SET_STATUS = 'HOME.BOOKING_DIALOG.SET_STATUS';
@@ -19,12 +20,13 @@ export const resetStatus = () => ({
   type: RESET_STATUS,
 });
 
-export const bookEvent = payload => async (dispatch) => {
+export const bookEvent = payload => async (dispatch, getState) => {
   dispatch(setLoading(true));
-  const [, error] = await handleRequest(postEvent, [payload]);
+  const [event, error] = await handleRequest(postEvent, [payload]);
   if (error) {
     dispatch(setStatus({ type: 'error', message: error }));
   } else {
+    dispatch(setAppointmentByCustomer([...getState().appointments.appointments, event]));
     dispatch(setStatus({ type: 'success', message: '' }));
   }
   dispatch(setLoading(false));

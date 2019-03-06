@@ -12,7 +12,8 @@ import errorStyle from './ModalStyle';
 
 const CustomModal = (props) => {
   const {
-    classes, message, title, isOpen, onClose, type, okButton, okCallBack,
+    classes, message, title, isOpen, onClose, type,
+    okText, okCallBack, cancelText, cancelCallBack,
   } = props;
   const headingColor = type === 'error' ? 'secondary' : 'primary';
   return (
@@ -30,14 +31,27 @@ const CustomModal = (props) => {
             {title}
           </Typography>
           <Typography variant="subheading" color="textSecondary">{message}</Typography>
-          {okButton && (
-            <div className={classes.okButton}>
-              <Button
-                fullWidth
-                variant="outlined"
-                onClick={okCallBack}
-              >Ok
-              </Button>
+          {(okCallBack || cancelCallBack) && (
+            <div className={classes.modalActions}>
+              {cancelCallBack && (
+                <Button
+                  classes={{ root: okCallBack ? classes.cancelButton : undefined }}
+                  onClick={cancelCallBack}
+                >
+                  {cancelText}
+                </Button>
+              )}
+              {okCallBack
+                && (
+                  <Button
+                    fullWidth={!cancelCallBack}
+                    variant="outlined"
+                    color="primary"
+                    onClick={okCallBack}
+                  >
+                    {okText}
+                  </Button>
+                )}
             </div>)
           }
         </div>
@@ -52,14 +66,18 @@ CustomModal.propTypes = {
   isOpen: bool.isRequired,
   onClose: func,
   type: string.isRequired,
-  okButton: bool,
   okCallBack: func,
+  okText: string,
+  cancelCallBack: func,
+  cancelText: string,
 };
 
 CustomModal.defaultProps = {
   onClose: noop,
-  okButton: false,
-  okCallBack: noop,
+  okCallBack: undefined,
+  okText: 'Ok',
+  cancelCallBack: undefined,
+  cancelText: 'Cancel',
 };
 
 export default withStyles(errorStyle)(CustomModal);

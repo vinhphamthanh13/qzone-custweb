@@ -1,0 +1,49 @@
+@import "styles/_settings.scss";
+
+.wrapper {
+  width: 70%;
+  margin: 0 auto 32px;
+}
+
+.titleInner,
+.info {
+  padding: 32px;
+}
+
+.titleWrapper {
+  border-bottom: 1px solid $alto;
+}
+
+.titleInner {
+  display: flex;
+}
+
+.serviceName {
+  flex-grow: 1;
+}
+
+.info {
+  display: flex;
+}
+
+.leftInfo,
+.rightInfo {
+  > * {
+    margin-bottom: 16px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.leftInfo {
+  flex-grow: 1;
+}
+
+.appointment {
+  &Icon {
+    vertical-align: text-bottom;
+    margin-right: 8px;
+    color: $primary;
+  }
+}
