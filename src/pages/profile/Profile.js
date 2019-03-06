@@ -20,7 +20,7 @@ class Profile extends Component {
         <div className="column">
           <Header userDetails={{ givenName, email }} onClose={handleCloseProfile} />
           <div className="container-max auto-margin-horizontal">
-            <SidePanel givenName={givenName} />
+            <SidePanel givenName={givenName} onClose={handleCloseProfile} />
           </div>
         </div>
       </Dialog>

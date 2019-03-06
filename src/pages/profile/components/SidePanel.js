@@ -6,7 +6,12 @@ import { Event, Settings, ExitToApp } from '@material-ui/icons';
 import { logout } from 'authentication/actions/logout';
 
 const SidePanel = (props) => {
-  const { givenName, logoutAction } = props;
+  const { givenName, logoutAction, onClose } = props;
+  const handleSignOut = () => {
+    onClose();
+    logoutAction();
+  };
+
   return (
     <div className="side-panel">
       <div>
@@ -25,7 +30,7 @@ const SidePanel = (props) => {
         </div>
         <div className="item">
           <ExitToApp className="danger-color qz-icon-padding-small" />
-          <Typography variant="subheading" color="textSecondary" onClick={logoutAction}>Sign out</Typography>
+          <Typography variant="subheading" color="textSecondary" onClick={handleSignOut}>Sign out</Typography>
         </div>
       </div>
     </div>
@@ -33,7 +38,7 @@ const SidePanel = (props) => {
 };
 
 SidePanel.propTypes = {
-  // email: string.isRequired,
+  onClose: func.isRequired,
   givenName: string.isRequired,
   logoutAction: func.isRequired,
 };
