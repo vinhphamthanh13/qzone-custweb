@@ -207,7 +207,6 @@ export class Home extends React.PureComponent {
 }
 
 Home.propTypes = {
-  // loginSession: objectOf(any),
   setServiceCategoriesAction: func.isRequired,
   getServicesByCategoryAction: func.isRequired,
   getAllServicesAction: func.isRequired,

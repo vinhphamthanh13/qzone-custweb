@@ -70,6 +70,7 @@ const getAWSCredentials = (googleUser, dispatch) => {
               const { sessionToken } = credentials;
               const session = {
                 provider: PROVIDER.GOOGLE,
+                start_session: new Date().getTime(),
                 id: userDetail.id,
                 username: name,
                 qz_token: sessionToken,
@@ -136,10 +137,11 @@ export const login = (value) => {
                   const userDetail = handleResponse(response);
                   const session = {
                     id: userDetail.id,
+                    start_session: new Date().getTime(),
                     username: userDetail.givenName,
                     qz_token: jwtToken,
                     qz_refresh_token: token,
-                    expiration: exp,
+                    expiration: exp * 1000, // AWS exp counted in second
                     isAuthenticated: response.data.isAuthenticated,
                   };
                   dispatch(storeUserSessionLogin(session));
