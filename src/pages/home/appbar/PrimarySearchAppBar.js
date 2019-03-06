@@ -143,7 +143,7 @@ class PrimarySearchAppBar extends React.Component {
             classes: classes.menuIcon,
           }}
         >
-          Appointments
+          Events
         </IconMenu>,
         <IconMenu
           key="app-bar-log-out"
