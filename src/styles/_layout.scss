@@ -232,6 +232,10 @@
     padding: 0;
   }
   & .item {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
     display: flex;
     justify-content: flex-start;
     padding: 1.2rem 1rem;

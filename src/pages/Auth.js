@@ -23,7 +23,7 @@ class Auth extends Component {
   sessionTimeout = 0;
 
   componentDidMount() {
-    const { loginSession } = this.props;
+    const { loginSession, getSessionTimeoutId } = this.props;
     if (loginSession && loginSession.isAuthenticated) {
       const startSession = loginSession.start_session;
       const currentTime = new Date().getTime();
@@ -33,16 +33,18 @@ class Auth extends Component {
       } else {
         const startTimeout = SESSION.TIMEOUT - parseInt(sessionLive, 0);
         this.sessionTimeout = setTimeout(this.endSession, startTimeout);
+        getSessionTimeoutId(this.sessionTimeout);
       }
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { loginSession: prevLoginSession } = this.props;
+    const { loginSession: prevLoginSession, getSessionTimeoutId } = this.props;
     const { loginSession: { isAuthenticated } } = nextProps;
     const { isAuthenticated: prevAuthenticated } = prevLoginSession;
     if (isAuthenticated && isAuthenticated !== prevAuthenticated) {
       this.sessionTimeout = setTimeout(this.endSession, SESSION.TIMEOUT);
+      getSessionTimeoutId(this.sessionTimeout);
     }
   }
 
@@ -96,7 +98,6 @@ class Auth extends Component {
       resetPasswordMessage,
     } = this.props;
     const { isSessionTimeout } = this.state;
-    console.log('this.state', this.state);
     const renderSessionTimeout = isSessionTimeout
       ? (
         <CustomModal
@@ -217,6 +218,7 @@ Auth.propTypes = {
   autoLoginAction: func.isRequired,
   logoutAction: func.isRequired,
   loginSession: objectOf(any).isRequired,
+  getSessionTimeoutId: func.isRequired,
 };
 
 Auth.defaultProps = {

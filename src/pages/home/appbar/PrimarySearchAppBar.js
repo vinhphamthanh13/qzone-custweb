@@ -96,7 +96,8 @@ class PrimarySearchAppBar extends React.Component {
   };
 
   handleLogout = () => {
-    const { logoutAction } = this.props;
+    const { logoutAction, sessionTimeoutId } = this.props;
+    if (sessionTimeoutId) clearTimeout(sessionTimeoutId);
     logoutAction();
     this.handleMenuClose();
   };
@@ -336,8 +337,9 @@ PrimarySearchAppBar.propTypes = {
   logoutAction: func.isRequired,
   loginSession: objectOf(any).isRequired,
   fetchCustomerEventsAction: func.isRequired,
-  customerEventList: arrayOf(object).isRequired,
   handleOpenProfile: func.isRequired,
+  customerEventList: arrayOf(object).isRequired,
+  sessionTimeoutId: number.isRequired,
 };
 
 const mapStateToProps = state => ({

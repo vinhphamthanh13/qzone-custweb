@@ -5,26 +5,36 @@ import { Typography } from '@material-ui/core';
 import { Event, Settings, ExitToApp } from '@material-ui/icons';
 import { logout } from 'authentication/actions/logout';
 
-const SIDE_PANEL = [
-  {
-    name: 'eventList', icon: Event, text: 'My event list', isSelected: false,
-  },
-  {
-    name: 'myInfo', icon: Settings, text: 'My information', isSelected: false,
-  },
-  {
-    name: 'signOut', icon: ExitToApp, text: 'Sign Out', isSelected: false,
-  },
-];
+class Content extends Component {
+  SIDE_PANEL = [
+    {
+      name: 'eventList', icon: Event, text: 'My event list', isSelected: false,
+    },
+    {
+      name: 'myInfo', icon: Settings, text: 'My information', isSelected: false,
+    },
+    {
+      name: 'signOut',
+      icon: ExitToApp,
+      text: 'Sign Out',
+      isSelected: false,
+      func: () => this.handleSignOut(),
+    },
+  ];
 
-class SidePanel extends Component {
-  initState = SIDE_PANEL.reduce((state, item) => ({
-    ...state,
+  initState = this.SIDE_PANEL.reduce((initItems, item) => ({
+    ...initItems,
     [item.name]: item.isSelected,
   }), {});
 
   state = {
     sidePanel: { ...this.initState },
+  };
+
+  handleSignOut = () => {
+    const { onClose, logoutAction } = this.props;
+    onClose();
+    logoutAction();
   };
 
   handleSelectSideMenu = panel => (event) => {
@@ -34,13 +44,13 @@ class SidePanel extends Component {
         ...this.initState,
         [panel.name]: true,
       },
-    });
+    }, panel.func);
   };
 
-  renderItems = () => SIDE_PANEL.map((panel, index) => {
+  renderItems = () => this.SIDE_PANEL.map((panel) => {
     const { sidePanel } = this.state;
-    const onClick = this.handleSelectSideMenu(panel, index);
-    const className = sidePanel[panel.name] ? 'item selected' : 'item';
+    const onClick = this.handleSelectSideMenu(panel);
+    const [className, textColor] = sidePanel[panel.name] ? ['item selected', 'textPrimary'] : ['item', 'textSecondary'];
     const props = {
       onClick,
       className,
@@ -48,16 +58,10 @@ class SidePanel extends Component {
     return (
       <div {...props} key={panel.name}>
         <panel.icon className="main-color qz-icon-padding-small" />
-        <Typography variant="subheading" color="textSecondary">{panel.text}</Typography>
+        <Typography variant="subheading" color={textColor}>{panel.text}</Typography>
       </div>
     );
   });
-
-  handleSignOut = () => {
-    const { onClose, logoutAction } = this.props;
-    onClose();
-    logoutAction();
-  };
 
   render() {
     const { givenName } = this.props;
@@ -76,7 +80,7 @@ class SidePanel extends Component {
   }
 }
 
-SidePanel.propTypes = {
+Content.propTypes = {
   onClose: func.isRequired,
   givenName: string.isRequired,
   logoutAction: func.isRequired,
@@ -84,4 +88,4 @@ SidePanel.propTypes = {
 
 export default connect(null, {
   logoutAction: logout,
-})(SidePanel);
+})(Content);

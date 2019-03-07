@@ -42,6 +42,7 @@ export class Home extends React.PureComponent {
       menuIconButtonEl: null,
       userPosition: { latitude: 0, longitude: 0 },
       isOpenProfile: false,
+      sessionTimeoutId: 0,
     };
   }
 
@@ -52,6 +53,10 @@ export class Home extends React.PureComponent {
     await getLocation(this.showLocation);
     getAllServicesAction();
   }
+
+  getSessionTimeoutId = (id) => {
+    this.setState({ sessionTimeoutId: id });
+  };
 
   showLocation = (position) => {
     if (!Object.is(position, null) || !Object.is(position, undefined)) {
@@ -144,7 +149,7 @@ export class Home extends React.PureComponent {
     }));
     const {
       searchText, isRegisterOpen, isLoginOpen, userPosition,
-      selectedService, isOpenProfile,
+      selectedService, isOpenProfile, sessionTimeoutId,
     } = this.state;
     const searchedServices = this.getSearchedServices(allServices, searchText);
     const openAuthenticatedProfile = isAuthenticated && isOpenProfile;
@@ -156,8 +161,9 @@ export class Home extends React.PureComponent {
           isLoginOpen={isLoginOpen}
           closeDialog={this.closeDialog}
           handleAuthenticate={this.openDialog}
+          getSessionTimeoutId={this.getSessionTimeoutId}
         />
-        <Profile isOpenProfile={openAuthenticatedProfile} handleCloseProfile={this.handleCloseProfile} />
+        <Profile isOpenProfile={false && openAuthenticatedProfile} handleCloseProfile={this.handleCloseProfile} />
         <BookingDialog
           initService={selectedService}
           handleClose={this.handleCloseBookingDialog}
@@ -170,6 +176,7 @@ export class Home extends React.PureComponent {
           handleChangeCategory={this.onCategoryChange}
           userPosition={userPosition}
           handleOpenProfile={this.handleOpenProfile}
+          sessionTimeoutId={sessionTimeoutId}
         />
         <AppointmentDialog />
         <Grid container>
