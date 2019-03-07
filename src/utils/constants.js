@@ -53,3 +53,12 @@ export const telephonePolicy = {
     'Example: +61412345678',
   ],
 };
+
+export const SESSION = {
+  TIMEOUT: 3600000, // millisecond
+  EXPIRED: {
+    title: 'Session has expired',
+    message: 'To maintain security, your session periodically expires.'
+      + 'To continue booking, please login again!',
+  },
+};

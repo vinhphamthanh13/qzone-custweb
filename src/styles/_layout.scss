@@ -6,6 +6,10 @@
   display: grid;
 }
 
+.container-max {
+  max-width: $max-width;
+}
+
 .grow {
   flex-grow: 1;
 }
@@ -45,6 +49,10 @@
 
 .auto-margin-vertical {
   margin: auto 0;
+}
+
+.auto-margin-horizontal {
+  margin: 0 auto;
 }
 
 .item-center {
@@ -172,30 +180,75 @@
   }
 }
 
-.profile-header {
-  display: flex;
-  padding: 1rem;
-  justify-content: space-between;
-  border-bottom-width: 4px;
-  border-bottom-style: solid;
-  //border-image: linear-gradient(to right, $primary, rgba(0, 0, 0, 0)) 1 100%;
-  //border-left-width: 4px;
-  //border-left-style: solid;
-  border-image:
-    linear-gradient(
-        to right,
-        $primary,
-        rgba(0, 0, 0, 0)
-    ) 1 100%;
-  & .profile-logo {
-    width: 200px;
+.header {
+  width: 100vw;
+  border-bottom: 3px solid rgba($primary, 0.5);
+  justify-content: center;
+  margin: 0 auto;
+  &-title {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 0.5rem;
+    align-items: center;
+
   }
-  & .profile-avatar {
+  &-avatar {
     width: $logo-copyright * 1.5;
     height: 100%;
     border-radius: unset;
   }
-  & .profile-image {
+  &-image {
     width: 100%;
   }
+  &-support {
+    display: flex;
+    justify-content: space-evenly;
+  }
+  &-item {
+    padding: 0 15px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.side-panel {
+  background: rgba($alto, 0.8);
+  border-radius: 5px;
+  min-width: 250px;
+  max-width: 250px;
+  margin: 1em 0.5em;
+  @include breakpoint-up(xl) {
+    margin: 1em 0;
+  }
+  &-title {
+    font-size: 1.5rem;
+    text-align: center;
+    font-weight: bold;
+    border-bottom: 2px solid rgba($primary, 0.5);
+    padding: 1em;
+  }
+  &-cta {
+    padding: 0;
+  }
+  & .item {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    display: flex;
+    justify-content: flex-start;
+    padding: 1.2rem 1rem;
+    &:hover {
+      cursor: pointer;
+      background: rgba($grayNickel, 0.3);
+    }
+  }
+  & .selected {
+    background: rgba($tiara, 0.6);
+  }
+}
+
+.qz-icon-padding-small {
+  margin: auto 5px auto 0;
 }

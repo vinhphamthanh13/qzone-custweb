@@ -1,31 +1,35 @@
 import React, { Component } from 'react';
 import {
-  bool, func, objectOf, any,
+  bool, func, objectOf, any, arrayOf, object,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  Grid, Dialog, Typography, Button,
+  Dialog,
 } from '@material-ui/core';
 import Header from './components/Header';
+import SidePanel from './components/Content';
 
 class Profile extends Component {
   state = {
-    userId: 'PROFILE',
   };
 
   render() {
-    const { userId } = this.state;
-    const { isOpenProfile, handleCloseProfile, userDetails: { givenName, email } } = this.props;
+    const {
+      isOpenProfile, handleCloseProfile, userDetails: { givenName, email },
+      customerEventList,
+    } = this.props;
     return (
-      <Grid container>
-        <Dialog fullScreen open={isOpenProfile} onClose={handleCloseProfile}>
-          <Header userDetails={{ givenName, email }} />
-          <Typography variant="h1">{userId}</Typography>
-          <Typography variant="headline">{givenName}</Typography>
-          <Typography variant="subheading">{email}</Typography>
-          <Button variant="contained" onClick={handleCloseProfile}>Close</Button>
-        </Dialog>
-      </Grid>
+      <Dialog fullScreen open={isOpenProfile}>
+        <div className="column">
+          <Header userDetails={{ givenName, email }} onClose={handleCloseProfile} />
+          <div className="container-max auto-margin-horizontal">
+            <SidePanel givenName={givenName} onClose={handleCloseProfile} />
+            <div>{
+              customerEventList.map(event => (<div key={event.id}>{event.id}</div>))}
+            </div>
+          </div>
+        </div>
+      </Dialog>
     );
   }
 }
@@ -34,10 +38,12 @@ Profile.propTypes = {
   isOpenProfile: bool.isRequired,
   handleCloseProfile: func.isRequired,
   userDetails: objectOf(any).isRequired,
+  customerEventList: arrayOf(object).isRequired,
 };
 
 const mapStateToProps = state => ({
   userDetails: state.auth.userDetails,
+  customerEventList: state.home.customerEventList,
 });
 
 export default connect(mapStateToProps)(Profile);

@@ -7,13 +7,56 @@ import Register from 'authentication/Register';
 import Login from 'authentication/Login';
 import VerificationCode from 'authentication/components/VerificationCode';
 import CustomModal from 'components/Modal/CustomModal';
+import { logout } from 'authentication/actions/logout';
 import {
   reEnterVerificationCode, closeRegisterSuccessModal, resetResendVerificationCodeModal,
   clearResetPasswordStatus,
 } from 'authentication/actions/register';
 import { login as autoLogin } from 'authentication/actions/login';
+import { SESSION } from 'utils/constants';
 
 class Auth extends Component {
+  state = {
+    isSessionTimeout: false,
+  };
+
+  sessionTimeout = 0;
+
+  componentDidMount() {
+    const { loginSession, getSessionTimeoutId } = this.props;
+    if (loginSession && loginSession.isAuthenticated) {
+      const startSession = loginSession.start_session;
+      const currentTime = new Date().getTime();
+      const sessionLive = currentTime - startSession;
+      if (sessionLive > SESSION.TIMEOUT) {
+        this.handleLogout();
+      } else {
+        const startTimeout = SESSION.TIMEOUT - parseInt(sessionLive, 0);
+        this.sessionTimeout = setTimeout(this.endSession, startTimeout);
+        getSessionTimeoutId(this.sessionTimeout);
+      }
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { loginSession: prevLoginSession, getSessionTimeoutId } = this.props;
+    const { loginSession: { isAuthenticated } } = nextProps;
+    const { isAuthenticated: prevAuthenticated } = prevLoginSession;
+    if (isAuthenticated && isAuthenticated !== prevAuthenticated) {
+      this.sessionTimeout = setTimeout(this.endSession, SESSION.TIMEOUT);
+      getSessionTimeoutId(this.sessionTimeout);
+    }
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.sessionTimeout);
+  }
+
+  endSession = () => {
+    this.handleLogout();
+    this.setState({ isSessionTimeout: true });
+  };
+
   handleReEnterVerificationCode = () => {
     const { reEnterVerificationCodeAction } = this.props;
     reEnterVerificationCodeAction();
@@ -35,6 +78,18 @@ class Auth extends Component {
     clearResetPasswordStatusAction();
   };
 
+  handleLogout = () => {
+    const { logoutAction } = this.props;
+    clearTimeout(this.sessionTimeout);
+    logoutAction();
+  };
+
+  handlePopupLogin = () => {
+    const { handleAuthenticate } = this.props;
+    handleAuthenticate('isLoginOpen');
+    this.setState({ isSessionTimeout: false });
+  };
+
   render() {
     const {
       isRegisterOpen, isLoginOpen, closeDialog, isVerificationCode,
@@ -42,6 +97,17 @@ class Auth extends Component {
       resendVerificationCodeStatus, handleAuthenticate, resetPasswordStatus,
       resetPasswordMessage,
     } = this.props;
+    const { isSessionTimeout } = this.state;
+    const renderSessionTimeout = isSessionTimeout
+      ? (
+        <CustomModal
+          type="error"
+          title={SESSION.EXPIRED.title}
+          message={SESSION.EXPIRED.message}
+          isOpen
+          okButton
+          okCallBack={this.handlePopupLogin}
+        />) : null;
     const verificationCodeModal = isVerificationCode ? <VerificationCode /> : null;
     const errorModal = verificationErrorMessage ? (
       <CustomModal
@@ -112,6 +178,7 @@ class Auth extends Component {
 
     return (
       <>
+        {renderSessionTimeout}
         {verificationCodeModal}
         {errorModal}
         {successModal}
@@ -149,6 +216,9 @@ Auth.propTypes = {
   resetPasswordMessage: string.isRequired,
   clearResetPasswordStatusAction: func.isRequired,
   autoLoginAction: func.isRequired,
+  logoutAction: func.isRequired,
+  loginSession: objectOf(any).isRequired,
+  getSessionTimeoutId: func.isRequired,
 };
 
 Auth.defaultProps = {
@@ -162,6 +232,7 @@ const mapStateToProps = state => ({
   isVerificationCode: state.auth.isVerificationCode,
   iSignUpSuccessModal: state.auth.iSignUpSuccessModal,
   userDetails: state.auth.userDetails,
+  loginSession: state.auth.loginSession,
   verificationErrorMessage: state.auth.verificationErrorMessage,
   resendVerificationCodeStatus: state.auth.resendVerificationCodeStatus,
   resetPasswordStatus: state.auth.resetPasswordStatus,
@@ -175,6 +246,7 @@ export default connect(
     closeRegisterSuccessModalAction: closeRegisterSuccessModal,
     closeResendStatusModal: resetResendVerificationCodeModal,
     clearResetPasswordStatusAction: clearResetPasswordStatus,
+    logoutAction: logout,
     autoLoginAction: autoLogin,
   },
 )(Auth);
