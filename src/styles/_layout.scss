@@ -189,6 +189,7 @@
     display: flex;
     justify-content: space-between;
     padding: 1rem 0.5rem;
+    align-items: center;
 
   }
   &-avatar {
@@ -212,30 +213,35 @@
 }
 
 .side-panel {
-  background: rgba($tiara, 0.8);
+  background: rgba($alto, 0.8);
   border-radius: 5px;
   min-width: 250px;
   max-width: 250px;
-  padding: 1em;
   margin: 1em 0.5em;
   @include breakpoint-up(xl) {
     margin: 1em 0;
   }
   &-title {
     font-size: 1.5rem;
+    text-align: center;
     font-weight: bold;
     border-bottom: 2px solid rgba($primary, 0.5);
+    padding: 1em;
   }
   &-cta {
-    padding: 1em 0.5em;
+    padding: 0;
   }
   & .item {
     display: flex;
     justify-content: flex-start;
-    margin: 1em 0;
+    padding: 1.2rem 1rem;
     &:hover {
-      cursor: pointer
+      cursor: pointer;
+      background: rgba($grayNickel, 0.3);
     }
+  }
+  & .selected {
+    background: rgba($tiara, 0.6);
   }
 }
 

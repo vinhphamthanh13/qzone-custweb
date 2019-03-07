@@ -1,41 +1,80 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { string, func } from 'prop-types';
 import { connect } from 'react-redux';
 import { Typography } from '@material-ui/core';
 import { Event, Settings, ExitToApp } from '@material-ui/icons';
 import { logout } from 'authentication/actions/logout';
 
-const SidePanel = (props) => {
-  const { givenName, logoutAction, onClose } = props;
-  const handleSignOut = () => {
+const SIDE_PANEL = [
+  {
+    name: 'eventList', icon: Event, text: 'My event list', isSelected: false,
+  },
+  {
+    name: 'myInfo', icon: Settings, text: 'My information', isSelected: false,
+  },
+  {
+    name: 'signOut', icon: ExitToApp, text: 'Sign Out', isSelected: false,
+  },
+];
+
+class SidePanel extends Component {
+  initState = SIDE_PANEL.reduce((state, item) => ({
+    ...state,
+    [item.name]: item.isSelected,
+  }), {});
+
+  state = {
+    sidePanel: { ...this.initState },
+  };
+
+  handleSelectSideMenu = panel => (event) => {
+    event.preventDefault();
+    this.setState({
+      sidePanel: {
+        ...this.initState,
+        [panel.name]: true,
+      },
+    });
+  };
+
+  renderItems = () => SIDE_PANEL.map((panel, index) => {
+    const { sidePanel } = this.state;
+    const onClick = this.handleSelectSideMenu(panel, index);
+    const className = sidePanel[panel.name] ? 'item selected' : 'item';
+    const props = {
+      onClick,
+      className,
+    };
+    return (
+      <div {...props} key={panel.name}>
+        <panel.icon className="main-color qz-icon-padding-small" />
+        <Typography variant="subheading" color="textSecondary">{panel.text}</Typography>
+      </div>
+    );
+  });
+
+  handleSignOut = () => {
+    const { onClose, logoutAction } = this.props;
     onClose();
     logoutAction();
   };
 
-  return (
-    <div className="side-panel">
-      <div>
-        <Typography variant="subtitle1" color="primary" className="side-panel-title">
-          Hello {givenName}
-        </Typography>
-      </div>
-      <div className="side-panel-cta">
-        <div className="item">
-          <Event className="main-color qz-icon-padding-small" />
-          <Typography variant="subheading" color="textSecondary" className="hover-bright">My event list</Typography>
+  render() {
+    const { givenName } = this.props;
+    return (
+      <div className="side-panel">
+        <div>
+          <Typography variant="subtitle1" color="primary" className="side-panel-title">
+            Hello {givenName}
+          </Typography>
         </div>
-        <div className="item">
-          <Settings className="main-color qz-icon-padding-small" />
-          <Typography variant="subheading" color="textSecondary">My information</Typography>
-        </div>
-        <div className="item">
-          <ExitToApp className="danger-color qz-icon-padding-small" />
-          <Typography variant="subheading" color="textSecondary" onClick={handleSignOut}>Sign out</Typography>
+        <div className="side-panel-cta">
+          {this.renderItems()}
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+}
 
 SidePanel.propTypes = {
   onClose: func.isRequired,
