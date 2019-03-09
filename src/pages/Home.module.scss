@@ -5,5 +5,5 @@
   max-width: $max-width;
   min-width: $min-width;
   height: calc(100vh - 65px);
-  overflow-y: scroll;
+  overflow: auto;
 }

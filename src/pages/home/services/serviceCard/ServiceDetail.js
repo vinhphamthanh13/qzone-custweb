@@ -58,7 +58,7 @@ export default class ServiceDetail extends React.PureComponent {
         >
           {service.name}
         </Typography>
-        <RateStar rating={5} reviews={4000} />
+        <RateStar rating={service.rating} reviews={service.viewNum} />
         <div className={styles.serviceDetail}>
           <Typography variant="body1" color="textSecondary">
             {(service.description || '').split('').length > 180

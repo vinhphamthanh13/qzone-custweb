@@ -159,6 +159,7 @@ export class Home extends React.PureComponent {
     const searchedServices = this.getSearchedServices(allServices, searchText);
     const openAuthenticatedProfile = isAuthenticated && isOpenProfile;
 
+    console.log('all services', allServices);
     return (
       <>
         <Auth
