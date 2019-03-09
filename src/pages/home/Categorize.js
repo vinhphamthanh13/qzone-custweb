@@ -1,12 +1,13 @@
 import React from 'react';
-import { string, node } from 'prop-types';
+import { string, node, bool } from 'prop-types';
 import { Typography } from '@material-ui/core';
 import style from './Categorize.module.scss';
 
 const Categorize = (props) => {
-  const { name } = props;
+  const { name, search } = props;
+  const categoryStyle = search ? style.backdrop : style.category;
   return (
-    <div className={style.category}>
+    <div className={categoryStyle}>
       <Typography classes={{ headline: style.headline }} variant="headline" color="textSecondary">
         {name}
       </Typography>
@@ -18,6 +19,11 @@ const Categorize = (props) => {
 Categorize.propTypes = {
   name: string.isRequired,
   children: node.isRequired,
+  search: bool,
+};
+
+Categorize.defaultProps = {
+  search: false,
 };
 
 export default Categorize;
