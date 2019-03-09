@@ -140,6 +140,10 @@ export class Home extends React.PureComponent {
     this.setState({ isOpenProfile: false });
   };
 
+  handleCloseSearch = () => {
+    this.setState({ searchText: '' });
+  };
+
   render() {
     const {
       serviceCategories, isLoading, allServices, loginSession: { isAuthenticated },
@@ -174,6 +178,7 @@ export class Home extends React.PureComponent {
         <PrimarySearchAppBar
           handleAuthenticate={this.openDialog}
           onSearch={this.onSearch}
+          onSearchValue={searchText}
           handleChangeCategory={this.onCategoryChange}
           userPosition={userPosition}
           handleOpenProfile={this.handleOpenProfile}
@@ -190,6 +195,7 @@ export class Home extends React.PureComponent {
                   onChange={this.onChange}
                   onLoadServices={this.onLoadServices}
                   isLoading={isLoading}
+                  onCloseSearch={this.handleCloseSearch}
                 />
               </Categorize>
             )

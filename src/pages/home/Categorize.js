@@ -5,10 +5,10 @@ import style from './Categorize.module.scss';
 
 const Categorize = (props) => {
   const { name, search } = props;
-  const categoryStyle = search ? style.backdrop : style.category;
+  const [categoryStyle, headline] = search ? [style.backdrop, style.searchHeadline] : [style.category, style.headline];
   return (
     <div className={categoryStyle}>
-      <Typography classes={{ headline: style.headline }} variant="headline" color="textSecondary">
+      <Typography classes={{ headline }} variant="headline" color="textSecondary">
         {name}
       </Typography>
       {props.children}

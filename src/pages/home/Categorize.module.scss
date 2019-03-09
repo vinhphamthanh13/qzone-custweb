@@ -10,6 +10,13 @@
   padding-left: 0.5rem;
 }
 
+.searchHeadline {
+  color: $mako;
+  margin: 0.5em;
+  font-weight: bold;
+  border-bottom: 2px solid $danger;
+}
+
 .backdrop {
   margin: auto;
   overflow: auto;

@@ -11,6 +11,7 @@ export default function Services({
   onChange,
   isLoading,
   onLoadServices,
+  onCloseSearch,
 }) {
   return (
     <>
@@ -21,7 +22,7 @@ export default function Services({
         }
         {services.map(service => (
           <Grid item xs={10} sm={6} md={3} key={service.id}>
-            <ServiceCard onChange={onChange} service={service} />
+            <ServiceCard onChange={onChange} service={service} onCloseSearch={onCloseSearch} />
           </Grid>
         ))}
       </Grid>
@@ -34,4 +35,5 @@ Services.propTypes = {
   onChange: func.isRequired,
   isLoading: bool.isRequired,
   onLoadServices: func.isRequired,
+  onCloseSearch: func,
 };

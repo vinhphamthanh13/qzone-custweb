@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { func } from 'prop-types';
+import noop from 'lodash/noop';
 import serviceImg from 'images/service-provider.jpeg';
 import {
   Card, CardContent, CardMedia, CardActions,
@@ -13,6 +14,11 @@ export default class ServiceCard extends PureComponent {
   static propTypes = {
     service: serviceType.isRequired,
     onChange: func.isRequired,
+    onCloseSearch: func,
+  };
+
+  static defaultProps = {
+    onCloseSearch: noop,
   };
 
   constructor(props) {
@@ -24,8 +30,9 @@ export default class ServiceCard extends PureComponent {
   }
 
   onSelectService = () => {
-    const { onChange, service } = this.props;
+    const { onChange, service, onCloseSearch } = this.props;
     onChange(service, 'selectedService');
+    onCloseSearch();
   };
 
   onError = () => {
