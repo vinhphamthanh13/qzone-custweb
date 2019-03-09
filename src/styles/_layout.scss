@@ -165,16 +165,20 @@
   justify-content: center;
   align-items: center;
   z-index: 100000;
+  &-content {
+    top: $app-bar-height;
+  }
 }
 
 .event-list {
   overflow: auto;
-  top: $app-bar-height;
+  top: 0;
   right: 0;
   position: absolute;
   width: 100%;
   z-index: 1000;
-  height: 90%;
+  height: 92%;
+  border-radius: unset;
   @include breakpoint-up(md) {
     width: 35%;
   }
