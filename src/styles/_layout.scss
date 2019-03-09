@@ -186,9 +186,17 @@
 
 .service-carousel {
   margin: 0.5em;
-  //display: flex;
-  //justify-content: center;
-
+  & .title {
+    margin: 1em 0;
+  }
+  & .slider-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+  & .slider-control {
+    max-width: 570px;
+    min-width: 500px;
+  }
 }
 
 .header {

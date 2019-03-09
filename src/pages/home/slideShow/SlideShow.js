@@ -4,53 +4,54 @@ import Slider from 'react-slick';
 import { Typography } from '@material-ui/core';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import Slide from './Slide';
 
 class SlideShow extends Component {
   static propTypes = {
     services: arrayOf(object).isRequired,
   };
 
-  state = {
-    topServices: 5,
-  };
-
-  componentDidMount() {
-    const { services } = this.props;
-    this.setState({ topServices: this.topTenServices(services) });
+  constructor(props) {
+    super(props);
+    this.state = {
+      topServices: this.topTenServices(props.services),
+    };
   }
-
-  handleClose = () => {
-    this.setState({ openSlide: false });
-  };
-
-  handleOpen = () => {
-    this.setState({ openSlide: true });
-  };
 
   topTenServices = list => list.sort((item1, item2) => item2.rating - item1.rating).slice(0, 10);
 
   render() {
-    const { slide, topServices, openSlide } = this.state;
-    console.log('slide and openSlide', slide, topServices, openSlide);
+    const { topServices } = this.state;
     const slideSettings = {
-      dots: false,
+      dots: true,
       infinite: true,
+      lazyMode: true,
       slidesToShow: 1,
       autoplay: true,
-      autoplaySpeed: 2000,
+      autoplaySpeed: 3000,
       pauseOnHover: true,
+      className: 'slider-control',
     };
 
     return (
       <div className="service-carousel">
-        <Typography variant="headline" color="textSecondary">Top services</Typography>
-        <Slider {...slideSettings}>
-          <div>TEst 1</div>
-          <div>TEst 1</div>
-          <div>TEst 1</div>
-          <div>TEst 1</div>
-          <div>TEst 1</div>
-        </Slider>
+        <div className="title">
+          <Typography variant="headline" color="textSecondary">Top services</Typography>
+        </div>
+        <div className="slider-wrapper">
+          <Slider {...slideSettings}>
+            {topServices.map(service => (
+              <Slide
+                key={service.id}
+                imageUrl={service.image.fileUrl}
+                name={service.name}
+                description={service.description}
+                rating={service.rating}
+                reviews={service.viewNum}
+              />
+            ))}
+          </Slider>
+        </div>
       </div>
     );
   }
