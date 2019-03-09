@@ -8,6 +8,7 @@
     "test": "node scripts/test.js"
   },
   "dependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.3.4",
     "@date-io/moment": "^1.1.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.15",
     "@fortawesome/react-fontawesome": "^0.1.4",
@@ -36,6 +37,7 @@
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-spinners": "^0.5.1",
+    "react-swipeable-views": "^0.13.1",
     "react-vertical-timeline-component": "^2.3.1",
     "reactstrap": "^6.5.0",
     "redux": "^4.0.0",

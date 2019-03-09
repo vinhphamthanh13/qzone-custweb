@@ -22,7 +22,7 @@ class Auth extends Component {
 
   sessionTimeout = 0;
 
-  componentDidMount() {
+  componentWillMount() {
     const { loginSession, getSessionTimeoutId } = this.props;
     if (loginSession && loginSession.isAuthenticated) {
       const startSession = loginSession.start_session;

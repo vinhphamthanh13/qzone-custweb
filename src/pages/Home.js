@@ -22,6 +22,7 @@ import AppointmentDialog from './home/AppointmentDialog';
 import Categorize from './home/Categorize';
 import Profile from './profile/Profile';
 import Footer from './home/footer/Footer';
+import SlideShow from './home/slideShow/SlideShow';
 
 /* eslint react/no-unused-state: 0 */
 export class Home extends React.PureComponent {
@@ -139,6 +140,10 @@ export class Home extends React.PureComponent {
     this.setState({ isOpenProfile: false });
   };
 
+  handleCloseSearch = () => {
+    this.setState({ searchText: '' });
+  };
+
   render() {
     const {
       serviceCategories, isLoading, allServices, loginSession: { isAuthenticated },
@@ -173,21 +178,24 @@ export class Home extends React.PureComponent {
         <PrimarySearchAppBar
           handleAuthenticate={this.openDialog}
           onSearch={this.onSearch}
+          onSearchValue={searchText}
           handleChangeCategory={this.onCategoryChange}
           userPosition={userPosition}
           handleOpenProfile={this.handleOpenProfile}
           sessionTimeoutId={sessionTimeoutId}
         />
+        {false && <SlideShow />}
         <AppointmentDialog />
         <Grid container>
           <Grid item xs={12} className={styles.selectService}>
             {searchText.length > 2 && (
-              <Categorize name="Search results">
+              <Categorize name="Search results" search>
                 <Services
                   services={searchedServices}
                   onChange={this.onChange}
                   onLoadServices={this.onLoadServices}
                   isLoading={isLoading}
+                  onCloseSearch={this.handleCloseSearch}
                 />
               </Categorize>
             )

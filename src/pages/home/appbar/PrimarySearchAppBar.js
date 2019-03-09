@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  objectOf, any, func, number, arrayOf, object,
+  objectOf, any, func, number, arrayOf, object, string,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -116,7 +116,7 @@ class PrimarySearchAppBar extends React.Component {
   render() {
     const { anchorEl, mobileMoreAnchorEl, anchorEventEl } = this.state;
     const {
-      classes, loginSession, onSearch, userPosition, customerEventList,
+      classes, loginSession, onSearch, userPosition, customerEventList, onSearchValue,
     } = this.props;
     const eventCount = customerEventList && customerEventList.length;
     const searchNearByTitle = userPosition.latitude ? 'Search Services Near You' : 'Your Location Not Allowed';
@@ -300,6 +300,7 @@ class PrimarySearchAppBar extends React.Component {
                   input: classes.inputInput,
                 }}
                 onChange={onSearch}
+                value={onSearchValue}
               />
             </div>
             <Tooltip title={searchNearByTitle}>
@@ -340,6 +341,11 @@ PrimarySearchAppBar.propTypes = {
   handleOpenProfile: func.isRequired,
   customerEventList: arrayOf(object).isRequired,
   sessionTimeoutId: number.isRequired,
+  onSearchValue: string,
+};
+
+PrimarySearchAppBar.defaultProps = {
+  onSearchValue: '',
 };
 
 const mapStateToProps = state => ({
