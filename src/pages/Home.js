@@ -184,10 +184,10 @@ export class Home extends React.PureComponent {
           handleOpenProfile={this.handleOpenProfile}
           sessionTimeoutId={sessionTimeoutId}
         />
-        {false && <SlideShow />}
         <AppointmentDialog />
         <Grid container>
           <Grid item xs={12} className={styles.selectService}>
+            {allServices.length > 0 && <SlideShow services={allServices} />}
             {searchText.length > 2 && (
               <Categorize name="Search results" search>
                 <Services
