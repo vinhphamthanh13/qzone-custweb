@@ -11,7 +11,7 @@
   border-radius: 5px;
   width: 350px;
   height: 100vh;
-  background: rgba($we_peep_rgba, 0.8);
+  background: rgba($main, 0.3);
   @include breakpoint-up(xl) {
     margin: 1em 0;
   }
@@ -21,7 +21,7 @@
   font-size: 1.5rem;
   text-align: center;
   font-weight: bold;
-  border-bottom: 2px solid rgba($mako, 0.5);
+  border-bottom: 2px solid rgba($main, 0.5);
   padding: 1em;
 }
 
@@ -40,7 +40,7 @@
   transition: all 0.5s ease;
   &:hover {
     cursor: pointer;
-    background: rgba($mako, 0.4);
+    background: rgba($main, 0.5);
   }
 }
 

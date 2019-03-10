@@ -1,5 +1,11 @@
 @import "color";
 
+.hover-link {
+  &:hover {
+    text-shadow: 1px 1px 1px $grayNickel;
+  }
+}
+
 .simple-button {
   &:hover {
     background: transparent;
@@ -43,7 +49,6 @@
 .hover-pointer {
   &:hover {
     cursor: pointer;
-    text-shadow: 1px 1px 1px $grayNickel;
   }
 }
 

@@ -11,7 +11,6 @@ import {
   getServicesByName,
   setServicesGlobal,
 } from 'reduxModules/home.actions';
-import getLocation from 'utils/getLocation';
 import styles from './Home.module.scss';
 import { serviceCategoriesType } from './home/Header';
 import Services from './home/Services';
@@ -51,7 +50,6 @@ export class Home extends React.PureComponent {
     const { setServiceCategoriesAction, getAllServicesAction } = this.props;
     const [serviceCategories] = await handleRequest(getServiceCategories, [], []);
     setServiceCategoriesAction(serviceCategories);
-    await getLocation(this.showLocation);
     getAllServicesAction();
   }
 
@@ -153,7 +151,7 @@ export class Home extends React.PureComponent {
       list: allServices.filter(ser => ser.serviceCategoryId === cat.id),
     }));
     const {
-      searchText, isRegisterOpen, isLoginOpen, userPosition,
+      searchText, isRegisterOpen, isLoginOpen,
       selectedService, isOpenProfile, sessionTimeoutId,
     } = this.state;
     const searchedServices = this.getSearchedServices(allServices, searchText);
@@ -180,7 +178,6 @@ export class Home extends React.PureComponent {
           onSearch={this.onSearch}
           onSearchValue={searchText}
           handleChangeCategory={this.onCategoryChange}
-          userPosition={userPosition}
           handleOpenProfile={this.handleOpenProfile}
           sessionTimeoutId={sessionTimeoutId}
         />

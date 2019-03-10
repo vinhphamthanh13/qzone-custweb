@@ -24,14 +24,20 @@ const Header = (props) => {
           </div>
           <div className={style.headerSupport}>
             <div className={style.headerItem}>
-              <Typography variant="body1" color="textSecondary" onClick={onClose}>Home</Typography>
+              <Typography variant="subheading" color="textSecondary" onClick={onClose}>Home</Typography>
             </div>
             <div className={style.headerItem}>
-              <Typography variant="body1" color="textSecondary">Help</Typography>
+              <Typography variant="subheading" color="textSecondary">Help</Typography>
               <ExpandMore className="icon-main" />
             </div>
             <div className={style.headerItem}>
-              <Typography variant="body1" color="textSecondary" onClick={onOpenAccount}>My account</Typography>
+              <Typography
+                className="hover-bright"
+                variant="subheading"
+                color="textPrimary"
+                onClick={onOpenAccount}
+              >My account
+              </Typography>
               <ExpandMore className="icon-main" />
             </div>
           </div>

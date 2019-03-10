@@ -24,7 +24,7 @@ const AppointmentContainer = ({
     appointments.length === 0
       ? (<EmptyItem message="You don't have any appointment right now" />)
       : (
-        <div className={styles.appointmentWrapper}>
+        <div className={`${styles.appointmentWrapper} container-max auto-margin-horizontal`}>
           <AppointmentTimeline items={appointments} />
         </div>
       )
