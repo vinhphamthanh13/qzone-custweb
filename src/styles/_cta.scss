@@ -48,6 +48,10 @@
 }
 
 .button-text-center {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   padding: 0 1rem;
 }
 

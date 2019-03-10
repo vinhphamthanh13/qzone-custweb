@@ -1,10 +1,12 @@
 import React from 'react';
 import { func } from 'prop-types';
 import { Avatar, Typography } from '@material-ui/core';
+import { ExpandMore } from '@material-ui/icons';
 import logo from 'images/quezone-logo.png';
 
 const Header = (props) => {
-  const { onClose } = props;
+  const { onClose, onOpenAccount } = props;
+
   return (
     <div className="header">
       <div className="container-max auto-margin-horizontal">
@@ -25,9 +27,11 @@ const Header = (props) => {
             </div>
             <div className="header-item">
               <Typography variant="body1" color="textSecondary">Help</Typography>
+              <ExpandMore className="icon-main" />
             </div>
             <div className="header-item">
-              <Typography variant="body1" color="textSecondary">My account</Typography>
+              <Typography variant="body1" color="textSecondary" onClick={onOpenAccount}>My account</Typography>
+              <ExpandMore className="icon-main" />
             </div>
           </div>
         </div>
@@ -38,6 +42,7 @@ const Header = (props) => {
 
 Header.propTypes = {
   onClose: func.isRequired,
+  onOpenAccount: func.isRequired,
 };
 
 export default Header;

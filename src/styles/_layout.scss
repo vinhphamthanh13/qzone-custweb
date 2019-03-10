@@ -248,6 +248,8 @@
   }
   &-item {
     padding: 0 15px;
+    display: flex;
+    align-items: center;
     &:hover {
       cursor: pointer;
     }
