@@ -99,6 +99,8 @@ export const makoColor = '#3c4149';
 export const lightGrayColor = '#cccccc';
 export const mainColor = '#3f51b5';
 export const malibuColor = '#57c9f9';
+export const galleryColor = '#ebeaea';
+export const whiteColor = '#fff';
 
 export const mainLinear = {
   background: `linear-gradient(${mainColor}, ${malibuColor})`,
@@ -108,6 +110,9 @@ export const mainLinearRight = {
 };
 export const successLinear = {
   background: `linear-gradient(${successColor}, ${malibuColor})`,
+};
+export const malibuLinearRight = {
+  background: `linear-gradient(to right, ${malibuColor}, ${galleryColor})`,
 };
 
 export const primaryBoxShadow = {

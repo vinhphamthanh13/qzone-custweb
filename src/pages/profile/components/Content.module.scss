@@ -11,7 +11,7 @@
   border-radius: 5px;
   width: 350px;
   height: 100vh;
-  background: rgba($main, 0.3);
+  background: linear-gradient(to top, $malibu, $gallery);
   @include breakpoint-up(xl) {
     margin: 1em 0;
   }
@@ -37,15 +37,14 @@
   display: flex;
   justify-content: flex-start;
   padding: 1.2rem 1rem;
-  transition: all 0.5s ease;
   &:hover {
     cursor: pointer;
-    background: rgba($main, 0.5);
+    background: rgba($gallery, 0.9);
   }
 }
 
 .selected {
-  background: rgba($mako, 0.2);
+  background: rgba($malibu, 0.5);
 }
 
 .eventList {

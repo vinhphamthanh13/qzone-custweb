@@ -3,7 +3,7 @@
 .appointment {
   &Wrapper {
     height: calc(100% - 64px);
-    background-color: $alto;
+    background: linear-gradient(to top, $gallery, $white);
     overflow: auto;
 
     & > div, & > div > div, & section {
