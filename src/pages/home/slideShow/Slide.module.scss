@@ -9,7 +9,8 @@
 
 .image {
   box-sizing: border-box;
-  border-radius: 10px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
   overflow: hidden;
   width: 40%;
   height: auto;
@@ -50,5 +51,4 @@
 .icon {
   color: $main;
   margin-right: 0.5rem;
-  //padding-right: 1rem;
 }
