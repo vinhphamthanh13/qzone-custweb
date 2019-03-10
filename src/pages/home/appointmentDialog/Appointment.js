@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
-import Proptypes from 'prop-types';
+import {
+  arrayOf, shape, func, string,
+} from 'prop-types';
 import { connect } from 'react-redux';
 
 import EmptyItem from 'components/EmptyItem';
@@ -30,10 +32,10 @@ const AppointmentContainer = ({
 };
 
 AppointmentContainer.propTypes = {
-  appointments: Proptypes.arrayOf(Proptypes.shape()).isRequired,
-  getAppointmentByCustomerAction: Proptypes.func.isRequired,
-  clearAppointmentsAction: Proptypes.func.isRequired,
-  userId: Proptypes.string,
+  appointments: arrayOf(shape()).isRequired,
+  getAppointmentByCustomerAction: func.isRequired,
+  clearAppointmentsAction: func.isRequired,
+  userId: string,
 };
 
 AppointmentContainer.defaultProps = {

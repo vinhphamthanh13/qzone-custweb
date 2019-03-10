@@ -1,0 +1,39 @@
+@import "styles/_settings.scss";
+
+.header {
+  width: 100vw;
+  border-bottom: 3px solid rgba($mako, 0.5);
+  justify-content: center;
+  margin: 0 auto;
+  position: fixed;
+  height: $app-bar-height;
+  background: rgba($we_peep_rgba, 1);
+  z-index: 1000;
+  &Title {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 0.5rem;
+    align-items: center;
+
+  }
+  &Avatar {
+    width: $logo-copyright * 1.5;
+    height: 100%;
+    border-radius: unset;
+  }
+  &Image {
+    width: 100%;
+  }
+  &Support {
+    display: flex;
+    justify-content: space-evenly;
+  }
+  &Item {
+    padding: 0 15px;
+    display: flex;
+    align-items: center;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}

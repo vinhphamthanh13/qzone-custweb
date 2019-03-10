@@ -3,33 +3,34 @@ import { func } from 'prop-types';
 import { Avatar, Typography } from '@material-ui/core';
 import { ExpandMore } from '@material-ui/icons';
 import logo from 'images/quezone-logo.png';
+import style from './Header.module.scss';
 
 const Header = (props) => {
   const { onClose, onOpenAccount } = props;
 
   return (
-    <div className="header">
+    <div className={style.header}>
       <div className="container-max auto-margin-horizontal">
-        <div className="header-title">
-          <div className="header-logo">
+        <div className={style.headerTitle}>
+          <div className={style.headerLogo}>
             <Avatar
               src={logo}
               alt="QZ avatar"
-              className="header-avatar"
+              className={style.headerAvatar}
               imgProps={{
-                className: 'header-image',
+                className: style.headerImage,
               }}
             />
           </div>
-          <div className="header-support">
-            <div className="header-item">
+          <div className={style.headerSupport}>
+            <div className={style.headerItem}>
               <Typography variant="body1" color="textSecondary" onClick={onClose}>Home</Typography>
             </div>
-            <div className="header-item">
+            <div className={style.headerItem}>
               <Typography variant="body1" color="textSecondary">Help</Typography>
               <ExpandMore className="icon-main" />
             </div>
-            <div className="header-item">
+            <div className={style.headerItem}>
               <Typography variant="body1" color="textSecondary" onClick={onOpenAccount}>My account</Typography>
               <ExpandMore className="icon-main" />
             </div>

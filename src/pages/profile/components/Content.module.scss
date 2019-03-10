@@ -1,0 +1,56 @@
+@import "styles/_settings.scss";
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  margin-top: $app-bar-height;
+}
+
+.sidebar {
+  margin: 1em 0.5em;
+  border-radius: 5px;
+  width: 350px;
+  height: 100vh;
+  background: rgba($we_peep_rgba, 0.8);
+  @include breakpoint-up(xl) {
+    margin: 1em 0;
+  }
+}
+
+.title {
+  font-size: 1.5rem;
+  text-align: center;
+  font-weight: bold;
+  border-bottom: 2px solid rgba($mako, 0.5);
+  padding: 1em;
+}
+
+.cta {
+  padding: 0;
+}
+
+.item {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  display: flex;
+  justify-content: flex-start;
+  padding: 1.2rem 1rem;
+  transition: all 0.5s ease;
+  &:hover {
+    cursor: pointer;
+    background: rgba($mako, 0.4);
+  }
+}
+
+.selected {
+  background: rgba($mako, 0.2);
+}
+
+.eventList {
+  height: 100vh;
+  overflow: auto;
+  width: 100%;
+  margin-left: 1em;
+}

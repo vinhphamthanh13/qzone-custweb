@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { Typography } from '@material-ui/core';
 import { Event, Settings, ExitToApp } from '@material-ui/icons';
 import { logout } from 'authentication/actions/logout';
+import EventList from '../../home/appointmentDialog/Appointment';
+import style from './Content.module.scss';
 
 class Content extends Component {
   SIDE_PANEL = [
@@ -50,7 +52,8 @@ class Content extends Component {
   renderItems = () => this.SIDE_PANEL.map((panel) => {
     const { sidePanel } = this.state;
     const onClick = this.handleSelectSideMenu(panel);
-    const [className, textColor] = sidePanel[panel.name] ? ['item selected', 'textPrimary'] : ['item', 'textSecondary'];
+    const [className, textColor] = sidePanel[panel.name]
+      ? [`${style.item} ${style.selected}`, 'textPrimary'] : [`${style.item}`, 'textSecondary'];
     const props = {
       onClick,
       className,
@@ -65,15 +68,21 @@ class Content extends Component {
 
   render() {
     const { givenName } = this.props;
+    const { sidePanel: { eventList } } = this.state;
     return (
-      <div className="side-panel">
-        <div>
-          <Typography variant="subtitle1" color="primary" className="side-panel-title">
-            Hello {givenName}
-          </Typography>
+      <div className={style.content}>
+        <div className={style.sidebar}>
+          <div>
+            <Typography variant="subtitle1" color="primary" className={`${style.title} text-capitalize`}>
+              Hello {givenName}
+            </Typography>
+          </div>
+          <div className={style.cta}>
+            {this.renderItems()}
+          </div>
         </div>
-        <div className="side-panel-cta">
-          {this.renderItems()}
+        <div className={style.eventList}>
+          {eventList && <EventList />}
         </div>
       </div>
     );
