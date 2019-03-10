@@ -187,7 +187,13 @@ export class Home extends React.PureComponent {
         <AppointmentDialog />
         <Grid container>
           <Grid item xs={12} className={styles.selectService}>
-            {allServices.length > 0 && <SlideShow services={allServices} onBooking={this.onChange} />}
+            {allServices.length > 0 && (
+              <SlideShow
+                services={allServices}
+                onBooking={this.onChange}
+                onSearch={this.onSearch}
+                onSearchValue={searchText}
+              />)}
             {searchText.length > 2 && (
               <Categorize name="Search results" search>
                 <Services

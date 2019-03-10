@@ -191,13 +191,34 @@
   }
   & .slider-wrapper {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    @include breakpoint-up(sm) {
+      flex-direction: row;
+    }
+    justify-content: space-between;
+    & .advanced-search {
+      padding: 0.5rem;
+      width: 100%;
+      @include breakpoint-up(sm) {
+        max-width: 350px;
+        min-width: 200px;
+      }
+    }
+    & .advertisers {
+      display: none;
+      @include breakpoint-up(md) {
+        display: flex;
+        padding: 0.5rem;
+        max-width: 400px;
+      }
+    }
   }
   & .slider-control {
     max-width: 570px;
-    min-width: 500px;
+    min-width: 550px;
     box-shadow: 1px 1px 3px #ccc;
-    padding: 0.5rem;
+    padding: 1rem;
+    margin: 0 1.5em;
   }
 }
 
