@@ -62,3 +62,5 @@ export const SESSION = {
       + 'To continue booking, please login again!',
   },
 };
+
+export const READ_MORE_MAX = 180;

@@ -1,0 +1,54 @@
+@import "styles/_settings.scss";
+
+.wrapper {
+  display: flex;
+  max-width: 650px;
+  height: 250px;
+  justify-content: center;
+}
+
+.image {
+  box-sizing: border-box;
+  border-radius: 10px;
+  overflow: hidden;
+  width: 40%;
+  height: auto;
+}
+
+.content {
+  color: $malibu;
+  width: 60%;
+  padding: 0 0.5em 0 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.title {
+  margin-bottom: 0.5em;
+}
+
+.rating {
+  margin: 0.2em 0;
+}
+
+.description {
+  margin: 0.5em 0;
+  height: 100px;
+}
+
+.blockItem {
+  display: flex;
+  justify-content: space-between;
+}
+
+.iconInfo {
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  color: $main;
+  margin-right: 0.5rem;
+  //padding-right: 1rem;
+}

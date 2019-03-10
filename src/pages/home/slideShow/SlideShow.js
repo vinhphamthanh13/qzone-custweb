@@ -1,45 +1,68 @@
 import React, { Component } from 'react';
-// import { arrayOf, object } from 'prop-types';
-// import { AutoRotatingCarousel } from 'material-auto-rotating-carousel/src';
-// import { Slide } from 'material-auto-rotating-carousel';
+import { arrayOf, object, func } from 'prop-types';
+import Slider from 'react-slick';
+import { Typography } from '@material-ui/core';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import Slide from './Slide';
 
 class SlideShow extends Component {
-  state = {
-    slide: false,
+  static propTypes = {
+    services: arrayOf(object).isRequired,
+    onBooking: func.isRequired,
   };
 
-  handleClose = () => {
-    this.setState({ openSlide: false });
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      topServices: this.topTenServices(props.services),
+    };
+  }
 
-  handleOpen = () => {
-    this.setState({ openSlide: true });
-  };
+  topTenServices = list => list.sort((item1, item2) => item2.rating - item1.rating).slice(0, 10);
 
+  handleBooking = (service) => {
+    const { onBooking } = this.props;
+    onBooking(service, 'selectedService');
+  };
 
   render() {
-    const { slide, openSlide } = this.state;
+    const { topServices } = this.state;
+    const slideSettings = {
+      dots: true,
+      infinite: true,
+      lazyMode: true,
+      slidesToShow: 1,
+      autoplay: true,
+      autoplaySpeed: 3000,
+      pauseOnHover: true,
+      className: 'slider-control',
+    };
+
     return (
-      <>
-        <div
-          label="testing"
-          open={openSlide}
-        >
-          <div
-            media={<div>ABC</div>}
-            mediaBackgroundStyle={{ backgroundColor: 'blue' }}
-            style={{ backgroundColor: 'blue' }}
-            title="Ever wanted to be popular?"
-            subtitle="Well just mix two colors and your are good to go!"
-          />
-          {slide}
-          <div>TEst 1</div>
-          <div>TEst 1</div>
-          <div>TEst 1</div>
-          <div>TEst 1</div>
-          <div>TEst 1</div>
+      <div className="service-carousel">
+        <div className="title">
+          <Typography variant="headline" color="textSecondary">Top services</Typography>
         </div>
-      </>
+        <div className="slider-wrapper">
+          <Slider {...slideSettings}>
+            {topServices.map(service => (
+              <Slide
+                key={service.id}
+                imageUrl={service.image.fileUrl}
+                name={service.name}
+                description={service.description}
+                rating={service.rating}
+                reviews={service.viewNum}
+                onBooking={() => this.handleBooking(service)}
+                duration={service.duration}
+                orgId={service.organization.id}
+                orgName={service.organization.name}
+              />
+            ))}
+          </Slider>
+        </div>
+      </div>
     );
   }
 }

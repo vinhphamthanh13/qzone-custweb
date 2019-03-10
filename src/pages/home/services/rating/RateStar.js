@@ -7,18 +7,19 @@ import style from './RateStar.module.scss';
 
 const RateStar = (props) => {
   const { rating, reviews } = props;
+  const fullStar = parseInt(rating, 0);
+  const halfStar = rating % 1;
   return (
     <div className="flex">
       <div className="flex v-center">
-        <Star className={style.iconStar} />
-        <Star className={style.iconStar} />
-        <Star className={style.iconStar} />
-        <Star className={style.iconStar} />
-        <StarHalf className={style.iconStar} />
+        {Array.from({ length: fullStar }, () => (
+          <Star key={Math.random() * 10} className={style.iconStar} />
+        ))}
+        { halfStar > 0 && <StarHalf className={style.iconStar} /> }
       </div>
       <div className={`flex v-center ${style.reviews}`}>
         <Typography variant="body1" color="textSecondary">
-          { parseInt(Math.random() * (rating + reviews), 0).toLocaleString() }
+          { reviews }
         </Typography>
       </div>
     </div>
