@@ -56,8 +56,8 @@ class Slide extends Component {
           <div className={style.content}>
             <div>
               <div className={style.title}>
-                <Typography variant="headline" color="textSecondary">
-                  {name.length > 23 ? `${name.slice(0, 23)}...` : name}
+                <Typography variant="headline" color="textSecondary" noWrap>
+                  {name}
                 </Typography>
               </div>
               <div className={style.rating}>
