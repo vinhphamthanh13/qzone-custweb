@@ -66,6 +66,7 @@ class PrimarySearchAppBar extends React.Component {
     const { anchorEventEl } = this.state;
     const {
       classes, loginSession, onSearch, customerEventList, onSearchValue,
+      handleViewEvent,
     } = this.props;
     const eventCount = customerEventList && customerEventList.length;
     const isEventListOpen = Boolean(anchorEventEl);
@@ -79,7 +80,7 @@ class PrimarySearchAppBar extends React.Component {
           variant="subheading"
           className={`text-capitalize ${classes.desktopView}`}
         >
-          Hello! {loginSession.username}
+          Hello {loginSession.username}!
         </Typography>
         <IconButton color="inherit" onClick={this.handleOpenEventList}>
           <Badge badgeContent={eventCount} color="secondary">
@@ -144,6 +145,7 @@ class PrimarySearchAppBar extends React.Component {
           eventList={customerEventList}
           isOpenList={isEventListOpen}
           handleCloseList={this.handleEventListClose}
+          handleViewEvent={handleViewEvent}
         />
       </div>
     );
@@ -159,6 +161,7 @@ PrimarySearchAppBar.propTypes = {
   handleOpenProfile: func.isRequired,
   customerEventList: arrayOf(object).isRequired,
   onSearchValue: string,
+  handleViewEvent: func.isRequired,
 };
 
 PrimarySearchAppBar.defaultProps = {

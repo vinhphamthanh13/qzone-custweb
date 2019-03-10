@@ -142,6 +142,10 @@ export class Home extends React.PureComponent {
     this.setState({ searchText: '' });
   };
 
+  handleViewEventMenu = () => {
+    this.handleOpenProfile();
+  };
+
   render() {
     const {
       serviceCategories, isLoading, allServices, loginSession: { isAuthenticated },
@@ -166,7 +170,10 @@ export class Home extends React.PureComponent {
           handleAuthenticate={this.openDialog}
           getSessionTimeoutId={this.getSessionTimeoutId}
         />
-        <Profile isOpenProfile={openAuthenticatedProfile} handleCloseProfile={this.handleCloseProfile} />
+        <Profile
+          isOpenProfile={openAuthenticatedProfile}
+          handleCloseProfile={this.handleCloseProfile}
+        />
         <BookingDialog
           initService={selectedService}
           handleClose={this.handleCloseBookingDialog}
@@ -180,6 +187,7 @@ export class Home extends React.PureComponent {
           handleChangeCategory={this.onCategoryChange}
           handleOpenProfile={this.handleOpenProfile}
           sessionTimeoutId={sessionTimeoutId}
+          handleViewEvent={this.handleViewEventMenu}
         />
         <AppointmentDialog />
         <Grid container>

@@ -16,7 +16,7 @@ import AppointmentContainer from './appointmentDialog/Appointment';
 import BookingStyle from './BookingDialogStyle';
 
 class AppointmentDialog extends React.PureComponent {
-  state = {}
+  state = {};
 
   static getDerivedStateFromProps(props) {
     if (props.match.path === '/appointments' && !props.isOpen) {
@@ -36,7 +36,7 @@ class AppointmentDialog extends React.PureComponent {
     const { isOpen, toggleAppointmentAction, history: { replace } } = this.props;
     toggleAppointmentAction(!isOpen);
     replace(isOpen ? '/' : '/appointments');
-  }
+  };
 
   render() {
     const { classes, isOpen } = this.props;

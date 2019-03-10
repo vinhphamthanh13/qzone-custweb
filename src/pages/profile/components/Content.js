@@ -35,6 +35,10 @@ class Content extends Component {
     sidePanel: { ...this.initState },
   };
 
+  componentDidMount() {
+    this.setState({ sidePanel: { eventList: true } });
+  }
+
   handleSignOut = () => {
     const { onClose, logoutAction } = this.props;
     onClose();
@@ -81,7 +85,7 @@ class Content extends Component {
         <div className={style.sidebar}>
           <div>
             <Typography variant="subtitle1" color="primary" className={`${style.title} text-capitalize`}>
-              Hello {givenName}
+              Hi {givenName}!
             </Typography>
           </div>
           <div className={style.cta}>
