@@ -75,6 +75,8 @@ class Slide extends Component {
                   </Typography>
                 ) : null}
               </div>
+            </div>
+            <div className={style.cta}>
               <div className={style.blockItem}>
                 <div className={style.iconInfo}>
                   <AccessTime className={style.icon} />
@@ -87,8 +89,6 @@ class Slide extends Component {
                   </Typography>
                 </div>
               </div>
-            </div>
-            <div>
               <Button onClick={onBooking} variant="outlined" className="main-button">Book Now!</Button>
             </div>
           </div>

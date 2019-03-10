@@ -5,6 +5,9 @@
   max-width: 650px;
   height: 250px;
   justify-content: center;
+  &:hover .cta {
+    visibility: visible;
+  }
 }
 
 .image {
@@ -17,7 +20,6 @@
 }
 
 .content {
-  color: $malibu;
   width: 60%;
   padding: 0 0.5em 0 1em;
   display: flex;
@@ -41,6 +43,7 @@
 .blockItem {
   display: flex;
   justify-content: space-between;
+  padding-bottom: 0.5em;
 }
 
 .iconInfo {
@@ -51,4 +54,11 @@
 .icon {
   color: $main;
   margin-right: 0.5rem;
+}
+
+.cta {
+  visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
