@@ -66,6 +66,12 @@ const styles = theme => ({
       display: 'flex',
     },
   },
+  mobileView: {
+    display: 'flex',
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
+    },
+  },
 });
 
 export default styles;

@@ -92,16 +92,18 @@ class PrimarySearchAppBar extends React.Component {
       </>
     ) : (
       <>
-        <Typography
-          color="inherit"
-          variant="subtitle1"
-          onClick={() => this.handleAuthenticateUser('isLoginOpen')}
-          className="hover-pointer hover-bright"
-        >
-          Sign In
-        </Typography>
-        <Fingerprint />
-        <div className={classes.sectionMobile}>
+        <div className={classes.desktopView}>
+          <Typography
+            color="inherit"
+            variant="subtitle1"
+            onClick={() => this.handleAuthenticateUser('isLoginOpen')}
+            className="hover-pointer hover-bright"
+          >
+            Sign In
+          </Typography>
+          <Fingerprint />
+        </div>
+        <div className={classes.mobileView}>
           <IconButton aria-haspopup="true" onClick={() => this.handleAuthenticateUser('isLoginOpen')} color="inherit">
             <Fingerprint />
           </IconButton>

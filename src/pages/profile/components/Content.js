@@ -7,10 +7,12 @@ import { logout } from 'authentication/actions/logout';
 import EventList from '../../home/appointmentDialog/Appointment';
 import style from './Content.module.scss';
 
+const EVENT_LIST = 'eventList';
+
 class Content extends Component {
   SIDE_PANEL = [
     {
-      name: 'eventList', icon: Event, text: 'My event list', isSelected: false,
+      name: EVENT_LIST, icon: Event, text: 'My event list', isSelected: false,
     },
     {
       name: 'myInfo', icon: Settings, text: 'My information', isSelected: false,
@@ -49,22 +51,27 @@ class Content extends Component {
     }, panel.func);
   };
 
-  renderItems = () => this.SIDE_PANEL.map((panel) => {
-    const { sidePanel } = this.state;
-    const onClick = this.handleSelectSideMenu(panel);
-    const [className, textColor] = sidePanel[panel.name]
-      ? [`${style.item} ${style.selected}`, 'textPrimary'] : [`${style.item}`, 'textSecondary'];
-    const props = {
-      onClick,
-      className,
-    };
-    return (
-      <div {...props} key={panel.name}>
-        <panel.icon className="main-color qz-icon-padding-small" />
-        <Typography variant="subheading" color={textColor}>{panel.text}</Typography>
-      </div>
-    );
-  });
+  renderItems = () => {
+    const { customerEventList } = this.props;
+    return this.SIDE_PANEL.map((panel) => {
+      const { sidePanel } = this.state;
+      const onClick = this.handleSelectSideMenu(panel);
+      const [className, textColor] = sidePanel[panel.name]
+        ? [`${style.item} ${style.selected}`, 'textPrimary'] : [`${style.item}`, 'textSecondary'];
+      const props = {
+        onClick,
+        className,
+      };
+      return (
+        <div {...props} key={panel.name}>
+          <panel.icon className="main-color qz-icon-padding-small" />
+          <Typography variant="subheading" color={textColor}>{panel.text}</Typography>
+          {panel.name === EVENT_LIST
+            ? <Typography variant="subheading" color={textColor}>{' '}({customerEventList.length})</Typography> : null }
+        </div>
+      );
+    });
+  };
 
   render() {
     const { givenName } = this.props;
@@ -95,6 +102,10 @@ Content.propTypes = {
   logoutAction: func.isRequired,
 };
 
-export default connect(null, {
+const mapStateToProps = state => ({
+  customerEventList: state.home.customerEventList,
+});
+
+export default connect(mapStateToProps, {
   logoutAction: logout,
 })(Content);
