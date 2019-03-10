@@ -1,5 +1,11 @@
 @import "color";
 
+.hover-link {
+  &:hover {
+    text-shadow: 1px 1px 1px $grayNickel;
+  }
+}
+
 .simple-button {
   &:hover {
     background: transparent;
@@ -43,11 +49,14 @@
 .hover-pointer {
   &:hover {
     cursor: pointer;
-    text-shadow: 1px 1px 1px $grayNickel;
   }
 }
 
 .button-text-center {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   padding: 0 1rem;
 }
 

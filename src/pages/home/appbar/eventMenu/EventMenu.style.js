@@ -1,7 +1,6 @@
-import { lightGrayColor, mainLinearRight, malibuColor } from 'components/material-dashboard-pro-react';
+import { galleryColor, whiteColor } from 'components/material-dashboard-pro-react';
 
 const style = () => ({
-  mainLinearRight,
   menuItem: {
     display: 'flex',
     flexDirection: 'column',
@@ -9,20 +8,12 @@ const style = () => ({
     height: 'auto',
     transition: 'all 0.2s ease',
     '&:hover': {
-      ...mainLinearRight,
+      background: `linear-gradient(to right, ${galleryColor}, ${whiteColor})`,
     },
   },
   title: {
-    transition: 'all 0.2s ease',
-    '&:hover': {
-      fontWeight: 'bold',
-      color: malibuColor,
-    },
   },
   content: {
-    '&:hover': {
-      color: lightGrayColor,
-    },
   },
 });
 

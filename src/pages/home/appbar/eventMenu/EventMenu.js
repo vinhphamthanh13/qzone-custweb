@@ -9,6 +9,14 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import s from './EventMenu.style';
 
 class EventMenu extends Component {
+  static propTypes = {
+    classes: objectOf(string).isRequired,
+    eventList: arrayOf(object).isRequired,
+    isOpenList: bool.isRequired,
+    handleCloseList: func.isRequired,
+    handleViewEvent: func.isRequired,
+  };
+
   componentDidMount() {
     const { handleCloseList } = this.props;
     window.addEventListener('resize', handleCloseList);
@@ -21,14 +29,14 @@ class EventMenu extends Component {
 
   render() {
     const {
-      isOpenList, handleCloseList, eventList, classes,
+      isOpenList, handleCloseList, eventList, classes, handleViewEvent,
     } = this.props;
 
     return isOpenList && eventList.length ? (
       <Grid className="cover-bg-black cover-bg-black-content" onClick={handleCloseList}>
         <Paper className="event-list">
           {eventList.map(event => (
-            <MenuItem key={event.id} onClick={handleCloseList} className={classes.menuItem}>
+            <MenuItem key={event.id} onClick={handleViewEvent} className={classes.menuItem}>
               <div>
                 <Typography variant="subheading" color="textPrimary" className={classes.title}>
                   {event.serviceName}
@@ -49,12 +57,5 @@ class EventMenu extends Component {
     ) : null;
   }
 }
-
-EventMenu.propTypes = {
-  classes: objectOf(string).isRequired,
-  eventList: arrayOf(object).isRequired,
-  isOpenList: bool.isRequired,
-  handleCloseList: func.isRequired,
-};
 
 export default withStyles(s)(EventMenu);

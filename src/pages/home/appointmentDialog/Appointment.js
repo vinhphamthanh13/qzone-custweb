@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
-import Proptypes from 'prop-types';
+import {
+  arrayOf, shape, func, string,
+} from 'prop-types';
 import { connect } from 'react-redux';
 
 import EmptyItem from 'components/EmptyItem';
@@ -22,7 +24,7 @@ const AppointmentContainer = ({
     appointments.length === 0
       ? (<EmptyItem message="You don't have any appointment right now" />)
       : (
-        <div className={styles.appointmentWrapper}>
+        <div className={`${styles.appointmentWrapper} container-max auto-margin-horizontal`}>
           <AppointmentTimeline items={appointments} />
         </div>
       )
@@ -30,10 +32,10 @@ const AppointmentContainer = ({
 };
 
 AppointmentContainer.propTypes = {
-  appointments: Proptypes.arrayOf(Proptypes.shape()).isRequired,
-  getAppointmentByCustomerAction: Proptypes.func.isRequired,
-  clearAppointmentsAction: Proptypes.func.isRequired,
-  userId: Proptypes.string,
+  appointments: arrayOf(shape()).isRequired,
+  getAppointmentByCustomerAction: func.isRequired,
+  clearAppointmentsAction: func.isRequired,
+  userId: string,
 };
 
 AppointmentContainer.defaultProps = {

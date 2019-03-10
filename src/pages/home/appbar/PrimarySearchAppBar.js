@@ -1,24 +1,19 @@
 import React from 'react';
 import {
-  objectOf, any, func, number, arrayOf, object, string,
+  objectOf, any, func, arrayOf, object, string,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  AppBar, Toolbar, IconButton, InputBase,
-  Badge, MenuItem, Menu, Avatar, Tooltip,
-  Typography,
+  AppBar, Toolbar, IconButton, InputBase, Badge, Avatar, Typography,
 } from '@material-ui/core';
 import {
   Search as SearchIcon,
-  HowToReg, Book,
-  NearMe, AssignmentInd, ExitToApp, Mail as MailIcon, Notifications as NotificationsIcon,
-  MoreVert as MoreIcon, Fingerprint,
+  AssignmentInd,
+  Notifications as NotificationsIcon,
+  Fingerprint,
 } from '@material-ui/icons';
-import { toggleAppointment } from 'reduxModules/appointments.actions';
-import { logout } from 'authentication/actions/logout';
-import IconMenu from 'components/IconMenu';
 import { fetchCustomerEvents } from 'reduxModules/home.actions';
 import logo from 'images/quezone-logo.png';
 import EventMenu from './eventMenu/EventMenu';
@@ -26,8 +21,6 @@ import styles from './PrimarySearchAppBarStyle';
 
 class PrimarySearchAppBar extends React.Component {
   state = {
-    anchorEl: null,
-    mobileMoreAnchorEl: null,
     anchorEventEl: null,
   };
 
@@ -38,7 +31,6 @@ class PrimarySearchAppBar extends React.Component {
     if (isAuthenticated) {
       fetchCustomerEventsAction(id);
     }
-    window.addEventListener('resize', this.closeAllMenu);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -51,226 +43,68 @@ class PrimarySearchAppBar extends React.Component {
     }
   }
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.closeAllMenu);
-  }
-
-  closeAllMenu = () => {
-    this.handleMenuClose();
-    this.handleMobileMenuClose();
-    this.handleEventListClose();
-  };
-
-  handleProfileMenuOpen = (event) => {
-    this.setState({ anchorEl: event.currentTarget });
-    this.handleEventListClose();
-  };
-
-  handleMenuClose = () => {
-    this.setState({ anchorEl: null });
-    this.handleMobileMenuClose();
-    this.handleEventListClose();
-  };
-
-  handleMobileMenuOpen = (event) => {
-    this.setState({ mobileMoreAnchorEl: event.currentTarget });
-  };
-
   handleOpenEventList = (event) => {
     this.setState({ anchorEventEl: event.currentTarget });
-    this.handleMobileMenuClose();
   };
 
   handleEventListClose = () => {
     this.setState({ anchorEventEl: null });
   };
 
-  handleMobileMenuClose = () => {
-    this.setState({ mobileMoreAnchorEl: null });
-  };
-
   handleAuthenticateUser = (authenticateType) => {
     const { handleAuthenticate } = this.props;
     handleAuthenticate(authenticateType);
-    this.handleMenuClose();
-  };
-
-  handleLogout = () => {
-    const { logoutAction, sessionTimeoutId } = this.props;
-    if (sessionTimeoutId) clearTimeout(sessionTimeoutId);
-    logoutAction();
-    this.handleMenuClose();
-  };
-
-  toggleAppointmentDialog = () => {
-    this.props.toggleAppointment(true);
-    this.handleMenuClose();
   };
 
   handleOpenProfileDialog = () => {
     const { handleOpenProfile } = this.props;
     handleOpenProfile();
-    this.closeAllMenu();
+    this.handleEventListClose();
   };
 
   render() {
-    const { anchorEl, mobileMoreAnchorEl, anchorEventEl } = this.state;
+    const { anchorEventEl } = this.state;
     const {
-      classes, loginSession, onSearch, userPosition, customerEventList, onSearchValue,
+      classes, loginSession, onSearch, customerEventList, onSearchValue,
+      handleViewEvent,
     } = this.props;
     const eventCount = customerEventList && customerEventList.length;
-    const searchNearByTitle = userPosition.latitude ? 'Search Services Near You' : 'Your Location Not Allowed';
-    const isMenuOpen = Boolean(anchorEl);
-    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
     const isEventListOpen = Boolean(anchorEventEl);
     const isAuthenticated = loginSession ? loginSession.isAuthenticated : false;
-    const authorization = isAuthenticated ? (
-      [
-        <IconMenu
-          key="app-bar-profile"
-          iconSuite={{
-            handleMethod: this.handleOpenProfileDialog,
-            component: AssignmentInd,
-            classes: classes.menuIcon,
-          }}
-        >
-          Profile
-        </IconMenu>,
-        <IconMenu
-          key="app-bar-appointments"
-          iconSuite={{
-            handleMethod: this.toggleAppointmentDialog,
-            component: Book,
-            classes: classes.menuIcon,
-          }}
-        >
-          Events
-        </IconMenu>,
-        <IconMenu
-          key="app-bar-log-out"
-          iconSuite={{
-            handleMethod: this.handleLogout,
-            component: ExitToApp,
-            classes: classes.menuIcon,
-          }}
-        >
-          Sign out
-        </IconMenu>,
-      ]
-    ) : (
-      <IconMenu
-        key="app-log-in"
-        iconSuite={{
-          handleMethod: () => this.handleAuthenticateUser('isLoginOpen'),
-          component: HowToReg,
-          classes: classes.menuIcon,
-        }}
-      >
-        Login
-      </IconMenu>
-    );
-    const renderMenu = (
-      <Menu
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        open={isMenuOpen}
-        onClose={this.handleMenuClose}
-      >
-        { authorization }
-      </Menu>
-    );
 
-    const renderMobileMenu = (
-      <Menu
-        anchorEl={mobileMoreAnchorEl}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        open={isMobileMenuOpen}
-        onClose={this.handleMobileMenuClose}
-      >
-        { isAuthenticated
-          && (
-            [
-              <MenuItem key="app-bar-mail-icon-notification" onClick={this.handleOpenEventList}>
-                <div className="button-text-center">
-                  <Badge badgeContent={eventCount} color="secondary">
-                    <MailIcon className={classes.menuIcon} />
-                  </Badge>
-                </div>
-                <Typography variant="subheading">Messages</Typography>
-              </MenuItem>,
-              <MenuItem key="app-bar-notification-icon">
-                <IconButton color="inherit">
-                  <Badge badgeContent={0} color="secondary">
-                    <NotificationsIcon className={classes.menuIcon} />
-                  </Badge>
-                </IconButton>
-                <p>Notifications</p>
-              </MenuItem>,
-              ...authorization,
-            ]
-          )
-        }
-      </Menu>
-    );
     const customUser = isAuthenticated ? (
       <>
-        <div className={classes.sectionDesktop}>
-          <IconButton color="inherit" onClick={this.handleOpenEventList}>
-            <Badge badgeContent={eventCount} color="secondary">
-              <MailIcon />
-            </Badge>
-          </IconButton>
-          <IconButton color="inherit">
-            <Badge badgeContent={0} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          <Typography
-            aria-haspopup="true"
-            onClick={this.handleProfileMenuOpen}
-            color="inherit"
-            variant="subheading"
-            className="button-text-center hover-pointer hover-bright"
-          >
-            Hi! {loginSession.username}
-          </Typography>
-        </div>
-        <div className={classes.sectionMobile}>
-          <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
-            <MoreIcon />
-          </IconButton>
-        </div>
+        <Typography
+          aria-haspopup="true"
+          color="inherit"
+          variant="subheading"
+          className={`text-capitalize ${classes.desktopView}`}
+        >
+          Hello {loginSession.username}!
+        </Typography>
+        <IconButton color="inherit" onClick={this.handleOpenEventList}>
+          <Badge badgeContent={eventCount} color="secondary">
+            <NotificationsIcon />
+          </Badge>
+        </IconButton>
+        <IconButton onClick={this.handleOpenProfileDialog} color="inherit">
+          <AssignmentInd />
+        </IconButton>
       </>
     ) : (
       <>
-        { /* eslint-disable-next-line */ }
-        <div
-          className={`${classes.sectionDesktop} hover-bright`}
-          onClick={() => this.handleAuthenticateUser('isLoginOpen')}
-        >
+        <div className={classes.desktopView}>
           <Typography
             color="inherit"
             variant="subtitle1"
+            onClick={() => this.handleAuthenticateUser('isLoginOpen')}
+            className="hover-pointer hover-bright"
           >
-            Sign in
+            Sign In
           </Typography>
           <Fingerprint />
         </div>
-        <div className={classes.sectionMobile}>
+        <div className={classes.mobileView}>
           <IconButton aria-haspopup="true" onClick={() => this.handleAuthenticateUser('isLoginOpen')} color="inherit">
             <Fingerprint />
           </IconButton>
@@ -303,16 +137,6 @@ class PrimarySearchAppBar extends React.Component {
                 value={onSearchValue}
               />
             </div>
-            <Tooltip title={searchNearByTitle}>
-              <div>
-                <IconButton
-                  className={classes.menuListDesktop}
-                  disabled={!userPosition.latitude}
-                >
-                  <NearMe />
-                </IconButton>
-              </div>
-            </Tooltip>
             <div className={classes.grow} />
             { customUser }
           </Toolbar>
@@ -321,9 +145,8 @@ class PrimarySearchAppBar extends React.Component {
           eventList={customerEventList}
           isOpenList={isEventListOpen}
           handleCloseList={this.handleEventListClose}
+          handleViewEvent={handleViewEvent}
         />
-        {renderMenu}
-        {renderMobileMenu}
       </div>
     );
   }
@@ -333,15 +156,12 @@ PrimarySearchAppBar.propTypes = {
   classes: objectOf(any).isRequired,
   handleAuthenticate: func.isRequired,
   onSearch: func.isRequired,
-  toggleAppointment: func.isRequired,
-  userPosition: objectOf(number).isRequired,
-  logoutAction: func.isRequired,
   loginSession: objectOf(any).isRequired,
   fetchCustomerEventsAction: func.isRequired,
   handleOpenProfile: func.isRequired,
   customerEventList: arrayOf(object).isRequired,
-  sessionTimeoutId: number.isRequired,
   onSearchValue: string,
+  handleViewEvent: func.isRequired,
 };
 
 PrimarySearchAppBar.defaultProps = {
@@ -355,8 +175,6 @@ const mapStateToProps = state => ({
 
 export default compose(
   connect(mapStateToProps, {
-    logoutAction: logout,
-    toggleAppointment,
     fetchCustomerEventsAction: fetchCustomerEvents,
   }),
   withStyles(styles),

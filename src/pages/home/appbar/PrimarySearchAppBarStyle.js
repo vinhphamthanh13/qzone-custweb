@@ -10,34 +10,6 @@ const styles = theme => ({
   grow: {
     flexGrow: 1,
   },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
-  },
-  menuIcon: {
-    color: theme.palette.primary.main,
-  },
-  menuListMobile: {
-    color: theme.palette.primary.contrastText,
-    display: 'flex',
-    padding: `0 ${theme.spacing.unit + 2}px`,
-    [theme.breakpoints.up('sm')]: {
-      display: 'none',
-    },
-  },
-  menuListDesktop: {
-    color: theme.palette.primary.contrastText,
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'flex',
-    },
-  },
-  title: {
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
-    },
-  },
   avatar: {
     display: 'none',
     [theme.breakpoints.up('sm')]: {
@@ -88,17 +60,13 @@ const styles = theme => ({
       width: 200,
     },
   },
-  sectionDesktop: {
+  desktopView: {
     display: 'none',
     [theme.breakpoints.up('md')]: {
       display: 'flex',
-      alignItems: 'center',
-      '&:hover': {
-        cursor: 'pointer',
-      },
     },
   },
-  sectionMobile: {
+  mobileView: {
     display: 'flex',
     [theme.breakpoints.up('md')]: {
       display: 'none',
