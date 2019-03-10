@@ -1,13 +1,10 @@
 import React from 'react';
 import { func } from 'prop-types';
-import {
-  Typography,
-  // Button,
-  // Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions,
-} from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import { AccessTime, LocationOn } from '@material-ui/icons';
 import { serviceType } from 'types/global';
 import CustomLink from 'components/CustomLink';
+import { READ_MORE_MAX } from 'utils/constants';
 import styles from './ServiceDetail.module.scss';
 import RateStar from '../rating/RateStar';
 import ReadMore from '../readMore/ReadMore';
@@ -49,6 +46,8 @@ export default class ServiceDetail extends React.PureComponent {
           orgId={service.organization.id}
           orgDescription={service.description || ''}
           instantBooking={this.handleInstantBooking}
+          rating={service.rating}
+          reviews={service.viewNum}
         />
         <Typography
           variant="subheading"
@@ -61,9 +60,9 @@ export default class ServiceDetail extends React.PureComponent {
         <RateStar rating={service.rating} reviews={service.viewNum} />
         <div className={styles.serviceDetail}>
           <Typography variant="body1" color="textSecondary">
-            {(service.description || '').split('').length > 180
+            {(service.description || '').split('').length > READ_MORE_MAX
               && <>
-                { (service.description || '').substring(0, 180)}...&nbsp;
+                { (service.description || '').substring(0, READ_MORE_MAX)}...&nbsp;
                 <CustomLink text="Read more" small to="#" onClick={this.openDialog} />
               </>
             }

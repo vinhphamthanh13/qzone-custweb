@@ -18,7 +18,7 @@
 .content {
   color: $malibu;
   width: 60%;
-  padding-left: 1em;
+  padding: 0 0.5em 0 1em;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -34,5 +34,21 @@
 
 .description {
   margin: 0.5em 0;
-  max-height: 100px;
+  height: 100px;
+}
+
+.blockItem {
+  display: flex;
+  justify-content: space-between;
+}
+
+.iconInfo {
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  color: $main;
+  margin-right: 0.5rem;
+  //padding-right: 1rem;
 }

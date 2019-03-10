@@ -159,7 +159,6 @@ export class Home extends React.PureComponent {
     const searchedServices = this.getSearchedServices(allServices, searchText);
     const openAuthenticatedProfile = isAuthenticated && isOpenProfile;
 
-    console.log('all services', allServices);
     return (
       <>
         <Auth
@@ -188,7 +187,7 @@ export class Home extends React.PureComponent {
         <AppointmentDialog />
         <Grid container>
           <Grid item xs={12} className={styles.selectService}>
-            {allServices.length > 0 && <SlideShow services={allServices} />}
+            {allServices.length > 0 && <SlideShow services={allServices} onBooking={this.onChange} />}
             {searchText.length > 2 && (
               <Categorize name="Search results" search>
                 <Services

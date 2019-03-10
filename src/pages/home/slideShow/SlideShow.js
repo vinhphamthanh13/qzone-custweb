@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { arrayOf, object } from 'prop-types';
+import { arrayOf, object, func } from 'prop-types';
 import Slider from 'react-slick';
 import { Typography } from '@material-ui/core';
 import 'slick-carousel/slick/slick.css';
@@ -9,6 +9,7 @@ import Slide from './Slide';
 class SlideShow extends Component {
   static propTypes = {
     services: arrayOf(object).isRequired,
+    onBooking: func.isRequired,
   };
 
   constructor(props) {
@@ -19,6 +20,11 @@ class SlideShow extends Component {
   }
 
   topTenServices = list => list.sort((item1, item2) => item2.rating - item1.rating).slice(0, 10);
+
+  handleBooking = (service) => {
+    const { onBooking } = this.props;
+    onBooking(service, 'selectedService');
+  };
 
   render() {
     const { topServices } = this.state;
@@ -48,6 +54,10 @@ class SlideShow extends Component {
                 description={service.description}
                 rating={service.rating}
                 reviews={service.viewNum}
+                onBooking={() => this.handleBooking(service)}
+                duration={service.duration}
+                orgId={service.organization.id}
+                orgName={service.organization.name}
               />
             ))}
           </Slider>

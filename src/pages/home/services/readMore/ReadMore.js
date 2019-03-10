@@ -14,6 +14,7 @@ import styles from './ReadMore.module.scss';
 const ReadMore = (props) => {
   const {
     isOpen, onClose, serviceName, duration, orgName, orgDescription, orgId, instantBooking,
+    rating, reviews,
   } = props;
   return (
     <Dialog
@@ -24,7 +25,7 @@ const ReadMore = (props) => {
     >
       <DialogTitle id="description-dialog">
         <div className={styles.readMoreTitle}>{serviceName}</div>
-        <RateStar rating={5} reviews={4000} />
+        <RateStar rating={rating} reviews={reviews} />
         <div className={styles.blockItem}>
           <div className={styles.iconInfo}>
             <AccessTime className={styles.icon} />
@@ -60,6 +61,13 @@ ReadMore.propTypes = {
   orgId: string.isRequired,
   orgDescription: string.isRequired,
   instantBooking: func.isRequired,
+  rating: number,
+  reviews: number,
+};
+
+ReadMore.defaultProps = {
+  rating: 0,
+  reviews: 0,
 };
 
 export default ReadMore;
