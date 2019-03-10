@@ -24,7 +24,7 @@ function TimelineCard({
     >
       <Grid container>
         <Grid item xs={6}>
-          <Typography variant="h6">{serviceName}</Typography>
+          <Typography variant="headline" color="textSecondary">{serviceName}</Typography>
         </Grid>
         <Grid item xs={6}>
           <Typography variant="subtitle2" color="secondary" className={styles.appointmentStatus}>
@@ -54,7 +54,7 @@ function TimelineCard({
 export default function AppointmentTimeline({ items }) {
   return (
     <VerticalTimeline>
-      {items.map(item => <TimelineCard key={item.id} {...item} />)}
+      {items.sort((a, b) => a.slot.startSec - b.slot.startSec).map(item => (<TimelineCard key={item.id} {...item} />))}
     </VerticalTimeline>
   );
 }
