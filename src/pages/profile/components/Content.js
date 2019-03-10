@@ -65,9 +65,9 @@ class Content extends Component {
       return (
         <div {...props} key={panel.name}>
           <panel.icon className="main-color qz-icon-padding-small" />
-          <Typography variant="subheading" color={textColor}>{panel.text}</Typography>
-          {panel.name === EVENT_LIST
-            ? <Typography variant="subheading" color={textColor}>{' '}({customerEventList.length})</Typography> : null }
+          <Typography variant="subheading" color={textColor}>
+            {panel.text} {panel.name === EVENT_LIST ? `(${customerEventList.length})` : null}
+          </Typography>
         </div>
       );
     });
