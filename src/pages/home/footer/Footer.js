@@ -70,9 +70,9 @@ const Footer = props => !props.loading && (
         ))}
       </div>
     </div>
-    <div className={style.copyright}>
-      <Typography variant="body1" color="textSecondary" classes={{ body1: style.copyText }}>&#x24B8; 2019</Typography>
-      <Avatar src={logo} classes={{ root: style.footerAvatar }} imgProps={{ className: style.smallAvatar }} />
+    <div className="copyright">
+      <Typography variant="body1" color="textSecondary" classes={{ body1: 'copyText' }}>&#x24B8; 2019</Typography>
+      <Avatar src={logo} classes={{ root: 'footerAvatar' }} imgProps={{ className: 'smallAvatar' }} />
     </div>
   </div>
 );

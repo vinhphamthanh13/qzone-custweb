@@ -296,3 +296,26 @@
 .qz-icon-padding-small {
   margin: auto 5px auto 0;
 }
+
+.copyright {
+  margin: $global-margin auto 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.copyText {
+  padding-top: 2px;
+  padding-right: 5px;
+}
+
+.footerAvatar {
+  border-radius: 0;
+  width: $logo-copyright;
+  height: unset;
+}
+
+.smallAvatar {
+  height: 100%;
+  width: 100%;
+}

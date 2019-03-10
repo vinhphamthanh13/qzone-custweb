@@ -244,7 +244,7 @@ class PrimarySearchAppBar extends React.Component {
             onClick={this.handleProfileMenuOpen}
             color="inherit"
             variant="subheading"
-            className="button-text-center hover-pointer hover-bright"
+            className="button-text-center hover-pointer hover-bright text-capitalize"
           >
             Hi! {loginSession.username}
           </Typography>

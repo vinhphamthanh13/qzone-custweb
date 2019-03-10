@@ -9,6 +9,13 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import s from './EventMenu.style';
 
 class EventMenu extends Component {
+  static propTypes = {
+    classes: objectOf(string).isRequired,
+    eventList: arrayOf(object).isRequired,
+    isOpenList: bool.isRequired,
+    handleCloseList: func.isRequired,
+  };
+
   componentDidMount() {
     const { handleCloseList } = this.props;
     window.addEventListener('resize', handleCloseList);
@@ -49,12 +56,5 @@ class EventMenu extends Component {
     ) : null;
   }
 }
-
-EventMenu.propTypes = {
-  classes: objectOf(string).isRequired,
-  eventList: arrayOf(object).isRequired,
-  isOpenList: bool.isRequired,
-  handleCloseList: func.isRequired,
-};
 
 export default withStyles(s)(EventMenu);
