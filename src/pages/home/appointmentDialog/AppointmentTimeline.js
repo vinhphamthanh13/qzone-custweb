@@ -7,7 +7,7 @@ import { Typography } from '@material-ui/core';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import {
   DateRange, Schedule, AlarmOff, AlarmOn,
-  AirlineSeatReclineExtra,
+  AirlineSeatReclineNormal, DoneAll,
 } from '@material-ui/icons';
 
 import styles from './Appointment.module.scss';
@@ -28,10 +28,23 @@ function TimelineCard({
   const current = new Date();
   const currentSec = current.getTime() / 1000;
   const remainTimeSec = currentSec - (+startSec);
-  const [eventStyle, icon] = remainTimeSec > 0
-    ? [{ background: 'rgb(61, 63, 66)', color: '#fff' }, <AlarmOff />]
-    : [{ background: 'rgb(33, 150, 243)', color: '#fff' }, <AlarmOn />];
-  const remainTimeHr = Math.abs(remainTimeSec) / 3600;
+  const [eventStyle, iconTimeline, eventStatus, iconStatus, styleStatus] = remainTimeSec > 0
+    ? [
+      { background: 'rgb(61, 63, 66)', color: '#fff' },
+      <AlarmOff />,
+      'Completed',
+      <DoneAll className="icon-main" />,
+      styles.eventStatusComplete,
+    ]
+    : [
+      { background: 'rgb(33, 150, 243)', color: '#fff' },
+      <AlarmOn />,
+      'Waiting',
+      <AirlineSeatReclineNormal className="icon-main" />,
+      styles.eventStatusWaiting,
+    ];
+
+  const remainTimeHr = remainTimeSec < 0 ? Math.abs(remainTimeSec) / 3600 : 0;
   const remainTimeMn = (remainTimeHr % 1) * 60;
   const waitingHr = parseInt(remainTimeHr, 0);
   const waitingMn = parseInt(remainTimeMn, 0);
@@ -39,7 +52,7 @@ function TimelineCard({
   return (
     <VerticalTimelineElement
       iconStyle={eventStyle}
-      icon={icon}
+      icon={iconTimeline}
       date={moment(startSec * 1000).format('l LT')}
       className={styles.appointmentItem}
     >
@@ -76,13 +89,13 @@ function TimelineCard({
           </div>
         </div>
         <div className={styles.appointmentItem}>
-          <AirlineSeatReclineExtra className="icon-main" />
-          <Typography variant="subheading" color="textSecondary">Waiting</Typography>
+          {iconStatus}
+          <Typography variant="subheading" color="textSecondary">{eventStatus}</Typography>
         </div>
-        <div className={styles.appointmentRemainedTime}>
+        <div className={`${styles.appointmentRemainedTime} ${styleStatus}`}>
           <AlarmOn className="icon-white" />
           <Typography variant="subheading" color="secondary" classes={{ subheading: styles.remainedText }}>
-            {waitingHr > 0 ? `${waitingHr} hr` : null} {waitingMn > 1 ? `${waitingMn} min` : null}
+            {waitingHr} hr, {waitingMn} min
           </Typography>
         </div>
       </div>

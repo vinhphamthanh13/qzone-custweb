@@ -41,6 +41,10 @@
   }
 }
 
+.eventCard {
+  width: 350px;
+}
+
 .textCode {
   font-weight: bolder;
 }
@@ -53,10 +57,21 @@
 .appointmentRemainedTime {
   display: flex;
   align-items: center;
-  background: $persimnon;
 }
 
 .remainedText {
   font-weight: bold;
   color: $white;
+}
+
+.eventStatusComplete {
+  background: linear-gradient(to right, $grayNickel, $white);
+}
+
+.eventStatusWaiting {
+  background: linear-gradient(to right, $success, $white);
+}
+
+.eventStatusCountDown {
+  background: linear-gradient(to right, $persimnon, $white);
 }
