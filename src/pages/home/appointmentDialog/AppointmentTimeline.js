@@ -15,9 +15,14 @@ function TimelineCard({
   status,
 }) {
   const toSecCalc = (toSec || startSec + duration * 60) * 1000;
+  const current = new Date();
+  const currentSec = current.getTime();
+  const eventStyle = currentSec - (+startSec * 1000) > 0
+    ? { background: 'rgb(61, 63, 66)', color: '#fff' } : { background: 'rgb(33, 150, 243)', color: '#fff' };
+
   return (
     <VerticalTimelineElement
-      iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
+      iconStyle={eventStyle}
       icon={<Assignment />}
       date={moment(startSec * 1000).format('l LT')}
       className={styles.appointmentItem}
