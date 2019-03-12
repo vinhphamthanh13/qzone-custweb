@@ -53,51 +53,48 @@ function TimelineCard({
     <VerticalTimelineElement
       iconStyle={eventStyle}
       icon={iconTimeline}
-      date={moment(startSec * 1000).format('l LT')}
-      className={styles.appointmentItem}
+      className={styles.cardContainer}
     >
-      <div className={styles.eventCard}>
-        <div>
-          <Typography variant="h6" color="primary" noWrap align="center">
-            {streetAddress}
+      <div>
+        <Typography variant="h6" color="primary" noWrap align="center">
+          {streetAddress}
+        </Typography>
+      </div>
+      <div>
+        <Typography variant="subtitle1" color="textSecondary" align="center">
+          {district} {state} {postCode} - {city} {country}
+        </Typography>
+      </div>
+      <div className={styles.appointmentCode}>
+        <Typography variant="headline" color="secondary" align="center" classes={{ headline: styles.textCode }}>
+          S-123456
+        </Typography>
+      </div>
+      <div>
+        <Typography variant="h6" color="textSecondary">{serviceName}</Typography>
+        <Typography variant="subheading" color="textSecondary">{providerName}</Typography>
+        <div className={styles.appointmentItem}>
+          <DateRange className="icon-main" />
+          <Typography variant="subheading" color="primary" inline noWrap>
+            {moment(startSec * 1000).format('l')}
           </Typography>
-        </div>
-        <div>
-          <Typography variant="subtitle1" color="textSecondary" align="center">
-            {district} {state} {postCode} - {city} {country}
-          </Typography>
-        </div>
-        <div className={styles.appointmentCode}>
-          <Typography variant="headline" color="secondary" align="center" classes={{ headline: styles.textCode }}>
-            S-123456
-          </Typography>
-        </div>
-        <div>
-          <Typography variant="h6" color="textSecondary">{serviceName}</Typography>
-          <Typography variant="subheading" color="textSecondary">{providerName}</Typography>
-          <div className={styles.appointmentItem}>
-            <DateRange className="icon-main" />
-            <Typography variant="subheading" color="primary" inline noWrap>
-              {moment(startSec * 1000).format('l')}
-            </Typography>
-          </div>
-          <div className={styles.appointmentItem}>
-            <Schedule className="icon-main" />
-            <Typography variant="subheading" color="primary" inline noWrap>
-              {`From ${moment(startSec * 1000).format('LT')} to ${moment(toSecCalc).format('LT')}`}
-            </Typography>
-          </div>
         </div>
         <div className={styles.appointmentItem}>
-          {iconStatus}
-          <Typography variant="subheading" color="textSecondary">{eventStatus}</Typography>
-        </div>
-        <div className={`${styles.appointmentRemainedTime} ${styleStatus}`}>
-          <AlarmOn className="icon-white" />
-          <Typography variant="subheading" color="secondary" classes={{ subheading: styles.remainedText }}>
-            {waitingHr} hr, {waitingMn} min
+          <Schedule className="icon-main" />
+          <Typography variant="subheading" color="primary" inline noWrap>
+            {`From ${moment(startSec * 1000).format('LT')} to ${moment(toSecCalc).format('LT')}`}
           </Typography>
         </div>
+      </div>
+      <div className={styles.appointmentItem}>
+        {iconStatus}
+        <Typography variant="subheading" color="secondary">{eventStatus}</Typography>
+      </div>
+      <div className={`${styles.appointmentRemainedTime} ${styleStatus}`}>
+        <AlarmOn className="icon-white" />
+        <Typography variant="subheading" color="secondary" classes={{ subheading: styles.remainedText }}>
+          {waitingHr} hr, {waitingMn} min
+        </Typography>
       </div>
     </VerticalTimelineElement>
   );
@@ -106,7 +103,11 @@ function TimelineCard({
 export default function AppointmentTimeline({ items }) {
   return (
     <VerticalTimeline>
-      {items.sort((a, b) => a.slot.startSec - b.slot.startSec).map(item => (<TimelineCard key={item.id} {...item} />))}
+      <div>
+        {items.sort((a, b) => b.slot.startSec - a.slot.startSec)
+          .map(item => (<TimelineCard key={item.id} {...item} />))
+        }
+      </div>
     </VerticalTimeline>
   );
 }
