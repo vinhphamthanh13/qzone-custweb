@@ -32,7 +32,7 @@ function TimelineCard({
     ? [
       { background: 'rgb(61, 63, 66)', color: '#fff' },
       <AlarmOff />,
-      'Completed',
+      'Expired',
       <DoneAll className="icon-main" />,
       styles.eventStatusComplete,
     ]
@@ -45,8 +45,10 @@ function TimelineCard({
     ];
 
   const remainTimeHr = remainTimeSec < 0 ? Math.abs(remainTimeSec) / 3600 : 0;
+  const remainDay = remainTimeHr > 24 ? remainTimeHr / 24 : 0;
   const remainTimeMn = (remainTimeHr % 1) * 60;
-  const waitingHr = parseInt(remainTimeHr, 0);
+  const waitingDay = parseInt(remainDay, 0);
+  const waitingHr = waitingDay ? parseInt((remainDay % 1) * 24, 0) : parseInt(remainTimeHr, 0);
   const waitingMn = parseInt(remainTimeMn, 0);
 
   return (
@@ -93,7 +95,7 @@ function TimelineCard({
       <div className={`${styles.appointmentRemainedTime} ${styleStatus}`}>
         <AlarmOn className="icon-white" />
         <Typography variant="subheading" color="secondary" classes={{ subheading: styles.remainedText }}>
-          {waitingHr} hr, {waitingMn} min
+          {waitingDay ? `${waitingDay} day, ` : null}{waitingHr} hr, {waitingMn} min
         </Typography>
       </div>
     </VerticalTimelineElement>
