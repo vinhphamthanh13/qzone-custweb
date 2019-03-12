@@ -25,8 +25,9 @@ const style = theme => ({
     paddingLeft: theme.spacing.unit * 2,
   },
   modalActions: {
-    textAlign: 'right',
-    margin: `${theme.spacing.unit}px auto`,
+    display: 'flex',
+    justifyContent: 'space-between',
+    margin: `${theme.spacing.unit * 2}px auto auto auto`,
   },
   cancelButton: {
     marginRight: theme.spacing.unit,

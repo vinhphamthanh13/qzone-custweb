@@ -1,9 +1,14 @@
 import React from 'react';
-import Proptypes from 'prop-types';
+import {
+  arrayOf, shape, string, number, objectOf, any,
+} from 'prop-types';
 import moment from 'moment';
-import { Grid, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
-import { Assignment, DateRange, Schedule } from '@material-ui/icons';
+import {
+  DateRange, Schedule, AlarmOff, AlarmOn,
+  AirlineSeatReclineNormal, DoneAll,
+} from '@material-ui/icons';
 
 import styles from './Appointment.module.scss';
 
@@ -12,41 +17,85 @@ function TimelineCard({
   providerName,
   slot: { startSec, toSec },
   duration,
-  status,
+  // status,
+  geoLocation: {
+    city, country,
+    district, postCode, state,
+    streetAddress,
+  },
 }) {
   const toSecCalc = (toSec || startSec + duration * 60) * 1000;
+  const current = new Date();
+  const currentSec = current.getTime() / 1000;
+  const remainTimeSec = currentSec - (+startSec);
+  const [eventStyle, iconTimeline, eventStatus, iconStatus, styleStatus] = remainTimeSec > 0
+    ? [
+      { background: 'rgb(61, 63, 66)', color: '#fff' },
+      <AlarmOff />,
+      'Completed',
+      <DoneAll className="icon-main" />,
+      styles.eventStatusComplete,
+    ]
+    : [
+      { background: 'rgb(33, 150, 243)', color: '#fff' },
+      <AlarmOn />,
+      'Waiting',
+      <AirlineSeatReclineNormal className="icon-main" />,
+      styles.eventStatusWaiting,
+    ];
+
+  const remainTimeHr = remainTimeSec < 0 ? Math.abs(remainTimeSec) / 3600 : 0;
+  const remainTimeMn = (remainTimeHr % 1) * 60;
+  const waitingHr = parseInt(remainTimeHr, 0);
+  const waitingMn = parseInt(remainTimeMn, 0);
+
   return (
     <VerticalTimelineElement
-      iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
-      icon={<Assignment />}
-      date={moment(startSec * 1000).format('l LT')}
-      className={styles.appointmentItem}
+      iconStyle={eventStyle}
+      icon={iconTimeline}
+      className={styles.cardContainer}
     >
-      <Grid container>
-        <Grid item xs={6}>
-          <Typography variant="headline" color="textSecondary">{serviceName}</Typography>
-        </Grid>
-        <Grid item xs={6}>
-          <Typography variant="subtitle2" color="secondary" className={styles.appointmentStatus}>
-            {status}
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="subtitle1">{providerName}</Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <DateRange className={styles.appointmentIcon} />
+      <div>
+        <Typography variant="h6" color="primary" noWrap align="center">
+          {streetAddress}
+        </Typography>
+      </div>
+      <div>
+        <Typography variant="subtitle1" color="textSecondary" align="center">
+          {district} {state} {postCode} - {city} {country}
+        </Typography>
+      </div>
+      <div className={styles.appointmentCode}>
+        <Typography variant="headline" color="secondary" align="center" classes={{ headline: styles.textCode }}>
+          S-123456
+        </Typography>
+      </div>
+      <div>
+        <Typography variant="h6" color="textSecondary">{serviceName}</Typography>
+        <Typography variant="subheading" color="textSecondary">{providerName}</Typography>
+        <div className={styles.appointmentItem}>
+          <DateRange className="icon-main" />
           <Typography variant="subheading" color="primary" inline noWrap>
             {moment(startSec * 1000).format('l')}
           </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Schedule className={styles.appointmentIcon} />
+        </div>
+        <div className={styles.appointmentItem}>
+          <Schedule className="icon-main" />
           <Typography variant="subheading" color="primary" inline noWrap>
             {`From ${moment(startSec * 1000).format('LT')} to ${moment(toSecCalc).format('LT')}`}
           </Typography>
-        </Grid>
-      </Grid>
+        </div>
+      </div>
+      <div className={styles.appointmentItem}>
+        {iconStatus}
+        <Typography variant="subheading" color="secondary">{eventStatus}</Typography>
+      </div>
+      <div className={`${styles.appointmentRemainedTime} ${styleStatus}`}>
+        <AlarmOn className="icon-white" />
+        <Typography variant="subheading" color="secondary" classes={{ subheading: styles.remainedText }}>
+          {waitingHr} hr, {waitingMn} min
+        </Typography>
+      </div>
     </VerticalTimelineElement>
   );
 }
@@ -54,34 +103,39 @@ function TimelineCard({
 export default function AppointmentTimeline({ items }) {
   return (
     <VerticalTimeline>
-      {items.sort((a, b) => a.slot.startSec - b.slot.startSec).map(item => (<TimelineCard key={item.id} {...item} />))}
+      <div>
+        {items.sort((a, b) => b.slot.startSec - a.slot.startSec)
+          .map(item => (<TimelineCard key={item.id} {...item} />))
+        }
+      </div>
     </VerticalTimeline>
   );
 }
 
 AppointmentTimeline.propTypes = {
-  items: Proptypes.arrayOf(
-    Proptypes.shape({
-      id: Proptypes.string.isRequired,
-      serviceName: Proptypes.string.isRequired,
-      providerName: Proptypes.string.isRequired,
-      slot: Proptypes.shape({
-        startSec: Proptypes.number.isRequired,
-        toSec: Proptypes.number,
+  items: arrayOf(
+    shape({
+      id: string.isRequired,
+      serviceName: string.isRequired,
+      providerName: string.isRequired,
+      slot: shape({
+        startSec: number.isRequired,
+        toSec: number,
       }).isRequired,
-      status: Proptypes.string.isRequired,
-      duration: Proptypes.number.isRequired,
+      status: string.isRequired,
+      duration: number.isRequired,
     }).isRequired,
   ).isRequired,
 };
 
 TimelineCard.propTypes = {
-  serviceName: Proptypes.string.isRequired,
-  providerName: Proptypes.string.isRequired,
-  slot: Proptypes.shape({
-    startSec: Proptypes.number.isRequired,
-    toSec: Proptypes.number,
+  serviceName: string.isRequired,
+  providerName: string.isRequired,
+  slot: shape({
+    startSec: number.isRequired,
+    toSec: number,
   }).isRequired,
-  status: Proptypes.string.isRequired,
-  duration: Proptypes.number.isRequired,
+  // status: string.isRequired,
+  duration: number.isRequired,
+  geoLocation: objectOf(any).isRequired,
 };

@@ -28,9 +28,48 @@
     margin-top: 0.4rem;
   }
 
-  @media only screen and (min-width: 1170px) {
-    &Item div[class*="vertical-timeline-element-content"] {
-      width: 44%;
-    }
+  &Code {
+    margin: 1em auto;
+    padding: 1em 0;
+    border-top: 2px solid rgba($grayNickel, 0.4);
+    border-bottom: 2px solid rgba($grayNickel, 0.4);
   }
+}
+
+.textCode {
+  font-weight: bolder;
+}
+
+.cardContainer {
+  width: auto;
+  & div[class*="vertical-timeline-element-content"] {
+    width: 400px;
+  }
+}
+
+.appointmentItem {
+  display: flex;
+  align-items: center;
+}
+
+.appointmentRemainedTime {
+  display: flex;
+  align-items: center;
+}
+
+.remainedText {
+  font-weight: bold;
+  color: $white;
+}
+
+.eventStatusComplete {
+  background: linear-gradient(to right, $grayNickel, $white);
+}
+
+.eventStatusWaiting {
+  background: linear-gradient(to right, $success, $white);
+}
+
+.eventStatusCountDown {
+  background: linear-gradient(to right, $persimnon, $white);
 }

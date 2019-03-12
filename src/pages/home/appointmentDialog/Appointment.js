@@ -19,7 +19,6 @@ const AppointmentContainer = ({
     }
     getAppointmentByCustomerAction(userId);
   }, []);
-
   return (
     appointments.length === 0
       ? (<EmptyItem message="You don't have any appointment right now" />)
