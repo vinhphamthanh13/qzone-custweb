@@ -8,9 +8,16 @@ import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeli
 import {
   DateRange, Schedule, AlarmOff, AlarmOn,
   AirlineSeatReclineNormal, DoneAll,
+  // Update,
 } from '@material-ui/icons';
-
+import CountDown from 'react-countdown-now';
 import styles from './Appointment.module.scss';
+
+const STATUS = {
+  WAITING: 'Waiting',
+  COUNTDOWN: 'Counting down',
+  EXPIRED: 'Expired',
+};
 
 function TimelineCard({
   serviceName,
@@ -32,14 +39,14 @@ function TimelineCard({
     ? [
       { background: 'rgb(61, 63, 66)', color: '#fff' },
       <AlarmOff />,
-      'Expired',
+      STATUS.EXPIRED,
       <DoneAll className="icon-main" />,
       styles.eventStatusComplete,
     ]
     : [
-      { background: 'rgb(33, 150, 243)', color: '#fff' },
+      { background: 'rgb(87, 201, 249)', color: '#fff' },
       <AlarmOn />,
-      'Waiting',
+      STATUS.WAITING,
       <AirlineSeatReclineNormal className="icon-main" />,
       styles.eventStatusWaiting,
     ];
@@ -50,6 +57,15 @@ function TimelineCard({
   const waitingDay = parseInt(remainDay, 0);
   const waitingHr = waitingDay ? parseInt((remainDay % 1) * 24, 0) : parseInt(remainTimeHr, 0);
   const waitingMn = parseInt(remainTimeMn, 0);
+
+  let displayTimeout = null;
+  if (waitingDay) {
+    displayTimeout = `${waitingDay} day, ${waitingHr} hr, ${waitingMn} min`;
+  } else if (remainTimeHr < 1 && remainTimeMn > 0) {
+    displayTimeout = <CountDown date={Date.now() + (remainTimeMn * 60 * 1000)} />;
+  } else {
+    displayTimeout = `${waitingHr} hr, ${waitingMn} min`;
+  }
 
   return (
     <VerticalTimelineElement
@@ -95,7 +111,7 @@ function TimelineCard({
       <div className={`${styles.appointmentRemainedTime} ${styleStatus}`}>
         <AlarmOn className="icon-white" />
         <Typography variant="subheading" color="secondary" classes={{ subheading: styles.remainedText }}>
-          {waitingDay ? `${waitingDay} day, ` : null}{waitingHr} hr, {waitingMn} min
+          {displayTimeout}
         </Typography>
       </div>
     </VerticalTimelineElement>

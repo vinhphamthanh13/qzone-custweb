@@ -179,6 +179,7 @@ export class Home extends React.PureComponent {
           handleClose={this.handleCloseBookingDialog}
           onSaveBooking={this.onSaveBooking}
           openDialog={this.openDialog}
+          handleOpenProfile={this.handleOpenProfile}
         />
         <PrimarySearchAppBar
           handleAuthenticate={this.openDialog}

@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
+import {
+  string, bool, func, shape, objectOf, any,
+} from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import {
@@ -45,7 +47,7 @@ class BookingDialog extends PureComponent {
     if (prevProps.bookingStatus.type === '' && this.props.bookingStatus.type === 'success') {
       this.handleNext();
     }
-  }
+  };
 
   onStepChange = idx => () => {
     this.setState({ step: idx });
@@ -105,25 +107,26 @@ class BookingDialog extends PureComponent {
     } else {
       this.props.openDialog('isLoginOpen');
     }
-  }
+  };
 
   closeErrorModal = () => {
     this.handleBack();
     this.props.resetStatusAction();
-  }
+  };
 
   openAppointmentDialog = () => {
     this.props.toggleAppointmentAction(true);
-  }
+  };
 
   toggleConfirmDialog = isConfirmDialogOpen => () => {
     this.setState({ isConfirmDialogOpen });
-  }
+  };
 
   render() {
     const {
       initService, classes, userDetail,
       isLoading, bookingStatus, bookingEvent,
+      handleOpenProfile,
     } = this.props;
     const { step, bookingDetail, isConfirmDialogOpen } = this.state;
     const StepComponent = this.bookingStepsComponents[step];
@@ -200,6 +203,7 @@ class BookingDialog extends PureComponent {
               isLoading={isLoading}
               bookingEvent={bookingEvent}
               openAppointmentDialog={this.openAppointmentDialog}
+              handleOpenProfile={handleOpenProfile}
             />
           )}
         </Dialog>
@@ -210,18 +214,19 @@ class BookingDialog extends PureComponent {
 
 BookingDialog.propTypes = {
   initService: serviceType,
-  handleClose: PropTypes.func.isRequired,
-  setProvidersAction: PropTypes.func.isRequired,
-  classes: PropTypes.objectOf(PropTypes.any).isRequired,
+  handleClose: func.isRequired,
+  setProvidersAction: func.isRequired,
+  classes: objectOf(any).isRequired,
   userDetail: userDetailType.isRequired,
-  isAuthenticated: PropTypes.bool.isRequired,
-  openDialog: PropTypes.func.isRequired,
-  bookEventAction: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool.isRequired,
-  bookingStatus: PropTypes.shape({ type: PropTypes.string, message: PropTypes.string }).isRequired,
-  resetStatusAction: PropTypes.func.isRequired,
+  isAuthenticated: bool.isRequired,
+  openDialog: func.isRequired,
+  bookEventAction: func.isRequired,
+  isLoading: bool.isRequired,
+  bookingStatus: shape({ type: string, message: string }).isRequired,
+  resetStatusAction: func.isRequired,
   bookingEvent: eventType,
-  toggleAppointmentAction: PropTypes.func.isRequired,
+  toggleAppointmentAction: func.isRequired,
+  handleOpenProfile: func.isRequired,
 };
 
 BookingDialog.defaultProps = {
