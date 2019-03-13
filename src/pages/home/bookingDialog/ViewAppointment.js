@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { func } from 'prop-types';
 import {
   Grid, Typography, Button, Paper,
 } from '@material-ui/core';
@@ -9,13 +9,13 @@ import { eventType } from 'types/global';
 import { defaultDateFormat } from 'utils/constants';
 import styles from './ViewAppointment.module.scss';
 
-const ViewAppointment = ({ bookingEvent, openAppointmentDialog }) => (
+const ViewAppointment = ({ bookingEvent, handleOpenProfile }) => (
   <Paper square classes={{ root: styles.wrapper }} elevation={1}>
     <Grid container>
       <Grid item xs={12} classes={{ item: styles.titleWrapper }}>
         <div className={styles.titleInner}>
           <Typography variant="h4" classes={{ root: styles.serviceName }}>{bookingEvent.serviceName}</Typography>
-          <Button variant="outlined" color="primary" onClick={openAppointmentDialog}>
+          <Button variant="outlined" color="primary" onClick={handleOpenProfile}>
             <Assignment />
             Check your appointments
           </Button>
@@ -57,7 +57,7 @@ const ViewAppointment = ({ bookingEvent, openAppointmentDialog }) => (
 
 ViewAppointment.propTypes = {
   bookingEvent: eventType,
-  openAppointmentDialog: PropTypes.func.isRequired,
+  handleOpenProfile: func.isRequired,
 };
 
 ViewAppointment.defaultProps = {

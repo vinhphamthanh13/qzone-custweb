@@ -1,12 +1,24 @@
 import React from 'react';
 import { func } from 'prop-types';
 import { Avatar, Typography } from '@material-ui/core';
+import { noop } from 'utils/constants';
 import { ExpandMore } from '@material-ui/icons';
 import logo from 'images/quezone-logo.png';
 import style from './Header.module.scss';
 
 const Header = (props) => {
   const { onClose, onOpenAccount } = props;
+  const NAVBAR = [
+    {
+      id: 0, name: 'Home', action: onClose, appendIcon: null,
+    },
+    {
+      id: 1, name: 'Help', action: noop, appendIcon: <ExpandMore className="icon-main" />,
+    },
+    {
+      id: 2, name: 'My account', action: onOpenAccount, appendIcon: <ExpandMore className="icon-main" />,
+    },
+  ];
 
   return (
     <div className={style.header}>
@@ -23,23 +35,19 @@ const Header = (props) => {
             />
           </div>
           <div className={style.headerSupport}>
-            <div className={style.headerItem}>
-              <Typography variant="subheading" color="textSecondary" onClick={onClose}>Home</Typography>
-            </div>
-            <div className={style.headerItem}>
-              <Typography variant="subheading" color="textSecondary">Help</Typography>
-              <ExpandMore className="icon-main" />
-            </div>
-            <div className={style.headerItem}>
-              <Typography
-                className="hover-bright"
-                variant="subheading"
-                color="textPrimary"
-                onClick={onOpenAccount}
-              >My account
-              </Typography>
-              <ExpandMore className="icon-main" />
-            </div>
+            { NAVBAR.map(nav => (
+              <div key={nav.id} className={style.headerItem}>
+                <Typography
+                  className="hover-bright"
+                  variant="subheading"
+                  color="primary"
+                  onClick={nav.action}
+                >
+                  {nav.name}
+                </Typography>
+                {nav.appendIcon}
+              </div>
+            ))}
           </div>
         </div>
       </div>
