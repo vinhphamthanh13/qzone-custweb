@@ -8,14 +8,14 @@ import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeli
 import {
   DateRange, Schedule, AlarmOff, AlarmOn,
   AirlineSeatReclineNormal, DoneAll,
-  // Update,
+  Update,
 } from '@material-ui/icons';
 import CountDown from 'react-countdown-now';
 import styles from './Appointment.module.scss';
 
 const STATUS = {
   WAITING: 'Waiting',
-  COUNTDOWN: 'Counting down',
+  COMING: 'Coming soon ...',
   EXPIRED: 'Expired',
 };
 
@@ -59,62 +59,72 @@ function TimelineCard({
   const waitingMn = parseInt(remainTimeMn, 0);
 
   let displayTimeout = null;
+  let currentEventStyle = eventStyle;
+  let currentStyleStatus = styleStatus;
+  let currentIconTimeline = iconTimeline;
+  let currentEventStatus = eventStatus;
   if (waitingDay) {
     displayTimeout = `${waitingDay} day, ${waitingHr} hr, ${waitingMn} min`;
   } else if (remainTimeHr < 1 && remainTimeMn > 0) {
     displayTimeout = <CountDown date={Date.now() + (remainTimeMn * 60 * 1000)} />;
+    currentEventStyle = { background: 'rgb(255, 95, 87)', color: '#fff' };
+    currentStyleStatus = styles.eventStatusCountDown;
+    currentIconTimeline = <Update />;
+    currentEventStatus = STATUS.COMING;
   } else {
     displayTimeout = `${waitingHr} hr, ${waitingMn} min`;
   }
 
   return (
-    <VerticalTimelineElement
-      iconStyle={eventStyle}
-      icon={iconTimeline}
-      className={styles.cardContainer}
-    >
-      <div>
-        <Typography variant="h6" color="primary" noWrap align="center">
-          {streetAddress}
-        </Typography>
-      </div>
-      <div>
-        <Typography variant="subtitle1" color="textSecondary" align="center">
-          {district} {state} {postCode} - {city} {country}
-        </Typography>
-      </div>
-      <div className={styles.appointmentCode}>
-        <Typography variant="headline" color="secondary" align="center" classes={{ headline: styles.textCode }}>
-          S-123456
-        </Typography>
-      </div>
-      <div>
-        <Typography variant="h6" color="textSecondary">{serviceName}</Typography>
-        <Typography variant="subheading" color="textSecondary">{providerName}</Typography>
-        <div className={styles.appointmentItem}>
-          <DateRange className="icon-main" />
-          <Typography variant="subheading" color="primary" inline noWrap>
-            {moment(startSec * 1000).format('l')}
+    <>
+      <VerticalTimelineElement
+        iconStyle={currentEventStyle}
+        icon={currentIconTimeline}
+        className={styles.cardContainer}
+      >
+        <div>
+          <Typography variant="h6" color="primary" noWrap align="center">
+            {streetAddress}
           </Typography>
         </div>
-        <div className={styles.appointmentItem}>
-          <Schedule className="icon-main" />
-          <Typography variant="subheading" color="primary" inline noWrap>
-            {`From ${moment(startSec * 1000).format('LT')} to ${moment(toSecCalc).format('LT')}`}
+        <div>
+          <Typography variant="subtitle1" color="textSecondary" align="center">
+            {district} {state} {postCode} - {city} {country}
           </Typography>
         </div>
-      </div>
-      <div className={styles.appointmentItem}>
-        {iconStatus}
-        <Typography variant="subheading" color="secondary">{eventStatus}</Typography>
-      </div>
-      <div className={`${styles.appointmentRemainedTime} ${styleStatus}`}>
-        <AlarmOn className="icon-white" />
-        <Typography variant="subheading" color="secondary" classes={{ subheading: styles.remainedText }}>
-          {displayTimeout}
-        </Typography>
-      </div>
-    </VerticalTimelineElement>
+        <div className={styles.appointmentCode}>
+          <Typography variant="headline" color="secondary" align="center" classes={{ headline: styles.textCode }}>
+            S-123456
+          </Typography>
+        </div>
+        <div>
+          <Typography variant="h6" color="textSecondary">{serviceName}</Typography>
+          <Typography variant="subheading" color="textSecondary">{providerName}</Typography>
+          <div className={styles.appointmentItem}>
+            <DateRange className="icon-main" />
+            <Typography variant="subheading" color="primary" inline noWrap>
+              {moment(startSec * 1000).format('l')}
+            </Typography>
+          </div>
+          <div className={styles.appointmentItem}>
+            <Schedule className="icon-main" />
+            <Typography variant="subheading" color="primary" inline noWrap>
+              {`From ${moment(startSec * 1000).format('LT')} to ${moment(toSecCalc).format('LT')}`}
+            </Typography>
+          </div>
+        </div>
+        <div className={styles.appointmentItem}>
+          {iconStatus}
+          <Typography variant="subheading" color="secondary">{currentEventStatus}</Typography>
+        </div>
+        <div className={`${styles.appointmentRemainedTime} ${currentStyleStatus}`}>
+          <AlarmOn className="icon-white" />
+          <Typography variant="subheading" color="secondary" classes={{ subheading: styles.remainedText }}>
+            {displayTimeout}
+          </Typography>
+        </div>
+      </VerticalTimelineElement>
+    </>
   );
 }
 

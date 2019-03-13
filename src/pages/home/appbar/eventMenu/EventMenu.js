@@ -35,23 +35,27 @@ class EventMenu extends Component {
     return isOpenList && eventList.length ? (
       <Grid className="cover-bg-black cover-bg-black-content" onClick={handleCloseList}>
         <Paper className="event-list">
-          {eventList.map(event => (
-            <MenuItem key={event.id} onClick={handleViewEvent} className={classes.menuItem}>
-              <div>
-                <Typography variant="subheading" color="textPrimary" className={classes.title}>
-                  {event.serviceName}
-                </Typography>
-              </div>
-              <div>
-                <Typography variant="body2" color="textSecondary" className={classes.content}>
-                  {event.providerName} -
-                </Typography>
-                <Typography variant="body2" color="textSecondary" className={classes.content}>
-                  {event.geoLocation.streetAddress}
-                </Typography>
-              </div>
-            </MenuItem>
-          ))}
+          {eventList.sort((a, b) => b.slot.startSec - a.slot.startSec).map((event) => {
+            const current = event.slot.startSec;
+            console.log('current', current);
+            return (
+              <MenuItem key={event.id} onClick={handleViewEvent} className={classes.menuItem}>
+                <div>
+                  <Typography variant="subheading" color="textPrimary" className={classes.title}>
+                    {event.serviceName}
+                  </Typography>
+                </div>
+                <div>
+                  <Typography variant="body2" color="textSecondary" className={classes.content}>
+                    {event.providerName} -
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary" className={classes.content}>
+                    {event.geoLocation.streetAddress}
+                  </Typography>
+                </div>
+              </MenuItem>
+            );
+          })}
         </Paper>
       </Grid>
     ) : null;
