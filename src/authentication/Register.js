@@ -27,7 +27,7 @@ class Register extends React.Component {
     this.setState({ error });
   }
 
-  registerHandle = (user) => {
+  handleRegister = (user) => {
     const { registerAction } = this.props;
     registerAction(user);
     this.onClose();
@@ -84,7 +84,7 @@ class Register extends React.Component {
             initialValues={registerInit}
             validationSchema={registerSchema}
             enableReinitialize
-            onSubmit={this.registerHandle}
+            onSubmit={this.handleRegister}
             render={props => (
               <Form
                 {...props}
