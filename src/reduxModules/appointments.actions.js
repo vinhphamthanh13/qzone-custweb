@@ -24,5 +24,5 @@ export const getAppointmentByCustomer = customerId => async (dispatch) => {
   dispatch(setLoading(true));
   const [result] = await handleRequest(getAppointmentsByUser, [customerId], []);
   dispatch(setLoading(false));
-  dispatch(setAppointmentByCustomer(result));
+  dispatch(setAppointmentByCustomer(result || []));
 };

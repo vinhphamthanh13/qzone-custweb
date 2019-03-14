@@ -43,6 +43,7 @@ export const getProvidersByService = serviceId => async (dispatch, getState) => 
     provider => ({
       ...provider,
       organization: orgs.find(org => org.id === provider.providerInformation.organizationId),
+      geoLocation: (rawProvidersService.find(rps => rps.providerId === provider.id) || {}).geoLocation,
     }),
   );
 

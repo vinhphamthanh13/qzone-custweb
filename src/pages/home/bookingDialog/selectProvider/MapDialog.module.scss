@@ -1,0 +1,21 @@
+@import "styles/_settings.scss";
+
+.mapDialogWrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.mapWrapper {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.addressLine {
+  align-self: center;
+}
+
+.icon {
+  color: $primary;
+  vertical-align: text-bottom;
+}

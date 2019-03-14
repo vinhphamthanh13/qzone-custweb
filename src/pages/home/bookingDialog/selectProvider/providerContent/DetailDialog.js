@@ -8,11 +8,11 @@ import CustomLink from 'components/CustomLink';
 import { serviceType } from 'types/global';
 import styles from './DetailDialog.module.scss';
 
-export default function DetailDialog({ isDetailDialogOpen, togggleDetailDialog, initService }) {
+export default function DetailDialog({ isDetailDialogOpen, toggleDetailDialog, initService }) {
   return (
     <Dialog
       open={isDetailDialogOpen}
-      onClose={togggleDetailDialog}
+      onClose={toggleDetailDialog}
     >
       <DialogTitle disableTypography classes={{ root: styles.title }}>
         <div className={styles.leftTitle}>
@@ -36,7 +36,7 @@ export default function DetailDialog({ isDetailDialogOpen, togggleDetailDialog, 
         </Grid>
       </DialogContent>
       <DialogActions classes={{ root: styles.footer }}>
-        <Button variant="outlined" color="primary" onClick={togggleDetailDialog}>Close</Button>
+        <Button variant="outlined" color="primary" onClick={toggleDetailDialog}>Close</Button>
       </DialogActions>
     </Dialog>
   );
@@ -44,7 +44,7 @@ export default function DetailDialog({ isDetailDialogOpen, togggleDetailDialog, 
 
 DetailDialog.propTypes = {
   isDetailDialogOpen: PropTypes.bool.isRequired,
-  togggleDetailDialog: PropTypes.func.isRequired,
+  toggleDetailDialog: PropTypes.func.isRequired,
   initService: serviceType,
 };
 

@@ -3,6 +3,7 @@ import { number, func } from 'prop-types';
 import {
   Grid, Typography, ButtonBase,
 } from '@material-ui/core';
+import { Map } from '@material-ui/icons';
 import {
   providerType, bookingDetailType, serviceType,
 } from 'types/global';
@@ -11,6 +12,7 @@ import formatName from 'utils/formatName';
 import SelectTime from './providerContent/SelectTime';
 import styles from './ProviderContent.module.scss';
 import DetailDialog from './providerContent/DetailDialog';
+import MapDialog from './MapDialog';
 
 export default class ProviderContent extends React.PureComponent {
   constructor(props) {
@@ -18,12 +20,19 @@ export default class ProviderContent extends React.PureComponent {
 
     this.state = {
       isDetailDialogOpen: false,
+      isMapDialogOpen: false,
     };
   }
 
-  togggleDetailDialog = () => {
+  toggleDetailDialog = () => {
     this.setState(oldState => ({
       isDetailDialogOpen: !oldState.isDetailDialogOpen,
+    }));
+  }
+
+  toggleMapDialog = () => {
+    this.setState(oldState => ({
+      isMapDialogOpen: !oldState.isMapDialogOpen,
     }));
   }
 
@@ -31,14 +40,20 @@ export default class ProviderContent extends React.PureComponent {
     const {
       provider, initService, bookingDetail, onTimeSelect, duration,
     } = this.props;
-    const { isDetailDialogOpen } = this.state;
+    const { isDetailDialogOpen, isMapDialogOpen } = this.state;
 
     return (
       <>
         <DetailDialog
           isDetailDialogOpen={isDetailDialogOpen}
-          togggleDetailDialog={this.togggleDetailDialog}
+          toggleDetailDialog={this.toggleDetailDialog}
           initService={initService}
+        />
+        <MapDialog
+          isOpen={isMapDialogOpen}
+          toggle={this.toggleMapDialog}
+          initService={initService}
+          provider={provider}
         />
         <Grid container wrap="nowrap">
           <Grid item classes={{ item: styles.providerLeftHeader }}>
@@ -51,7 +66,7 @@ export default class ProviderContent extends React.PureComponent {
             <Typography variant="caption">
               {(initService.description).substring(0, 100)}
               <>...&nbsp;
-                <ButtonBase onClick={this.togggleDetailDialog}>
+                <ButtonBase onClick={this.toggleDetailDialog}>
                   <Typography variant="caption" className={styles.providerLeftHeader__description}>
                     MORE
                   </Typography>
@@ -66,6 +81,9 @@ export default class ProviderContent extends React.PureComponent {
             <Typography variant="body1" classes={{ root: styles.providerRightHeader__duration }}>
               {duration} min
             </Typography>
+            <ButtonBase onClick={this.toggleMapDialog}>
+              <Map className={styles.icon} />
+            </ButtonBase>
           </Grid>
         </Grid>
         <div className={styles.providerDetail}>
