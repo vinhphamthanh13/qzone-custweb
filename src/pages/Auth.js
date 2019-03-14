@@ -123,7 +123,7 @@ class Auth extends Component {
         type="info"
         isOpen
         title="Registration succeed!"
-        message={`Enjoy your new experience with Quezone! ${email}`}
+        message={`Enjoy your experience at Quezone! ${email.split('').slice(0, 27).join('')}...`}
         okCallBack={this.handleCloseRegisterSuccessModal}
       />
     ) : null;

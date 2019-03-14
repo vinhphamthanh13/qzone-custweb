@@ -39,7 +39,7 @@ class SlideShow extends Component {
     const { topServices } = this.state;
     const { onSearch, onSearchValue } = this.props;
     const slideSettings = {
-      dots: true,
+      // dots: true,
       infinite: true,
       lazyMode: true,
       slidesToShow: 1,
@@ -78,7 +78,7 @@ class SlideShow extends Component {
           </div>
           <div className="advertisers">
             <Typography variant="subheading" color="textSecondary">
-            For Advertisement. Contact us at Quezone.com.au or
+            For advertisement. Contact us at Quezone.com.au or
             Hotline: +61 222 33 44 444
             </Typography>
           </div>

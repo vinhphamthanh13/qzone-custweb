@@ -72,9 +72,9 @@ class VerificationCode extends Component {
 
   handleSubmitCode = () => {
     const { verificationCode } = this.state;
-    const { confirmSignUpAction, userDetails: { email } } = this.props;
+    const { confirmSignUpAction, userDetails } = this.props;
     this.stopTick();
-    confirmSignUpAction({ email, code: verificationCode });
+    confirmSignUpAction({ userDetails, code: verificationCode });
   };
 
   render() {

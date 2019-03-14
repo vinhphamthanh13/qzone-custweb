@@ -1,5 +1,6 @@
 import { Auth } from 'aws-amplify';
 import { setLoading } from 'actions/common';
+import { catchAwsUser } from 'api/auth';
 import {
   REGISTER_AWS_SUCCESS, REGISTER_AWS_ERROR, CONFIRM_SIGN_UP_SUCCESS, CONFIRM_SIGN_UP_ERROR,
   HANDLE_VERIFICATION_MODAL, CLOSE_REGISTER_SUCCESS_MODAL, RESEND_VERIFICATION_CODE_STATUS,
@@ -67,13 +68,26 @@ export const reEnterVerificationCode = () => (dispatch) => {
   dispatch(handleVerificationCodeModal(true));
 };
 
-export const confirmSignUp = ({ email, code }) => (dispatch) => {
+export const confirmSignUp = ({ userDetails, code }) => (dispatch) => {
   dispatch(setLoading(true));
   dispatch(handleVerificationCodeModal(false));
+  const { email } = userDetails;
   Auth.confirmSignUp(email, code, { forceAliasCreation: true })
     .then((data) => {
-      dispatch(confirmSignUpSuccess(data));
-      dispatch(setLoading(false));
+      const trackedInfo = {
+        ...userDetails,
+        userStatus: 'CONFIRMED',
+        userType: 'CUSTOMER',
+      };
+      catchAwsUser(trackedInfo).then(
+        () => {
+          dispatch(confirmSignUpSuccess(data));
+          dispatch(setLoading(false));
+        },
+      ).catch((error) => {
+        dispatch(setLoading(false));
+        dispatch(confirmSignUpError(error)); // error returns object { code, message, }
+      });
     })
     .catch((error) => {
       dispatch(confirmSignUpError(error)); // error returns object { code, message, }
