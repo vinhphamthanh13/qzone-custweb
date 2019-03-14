@@ -12,6 +12,11 @@ const style = () => ({
       background: `linear-gradient(to right, ${galleryColor}, ${whiteColor})`,
     },
   },
+  itemTitle: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
   title: {
   },
   content: {
