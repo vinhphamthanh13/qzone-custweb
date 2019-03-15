@@ -4,7 +4,7 @@ import { Typography, Button } from '@material-ui/core';
 import { AccessTime, LocationOn } from '@material-ui/icons';
 import CustomLink from 'components/CustomLink';
 import { READ_MORE_MAX } from 'utils/constants';
-import RateStar from '../services/rating/RateStar';
+import RateStar from 'components/Rating/RateStar';
 import ReadMore from '../services/readMore/ReadMore';
 import style from './Slide.module.scss';
 

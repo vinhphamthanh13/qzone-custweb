@@ -8,7 +8,7 @@ import {
   DialogTitle, Typography,
 } from '@material-ui/core';
 import CustomLink from 'components/CustomLink';
-import RateStar from '../rating/RateStar';
+import RateStar from 'components/Rating/RateStar';
 import styles from './ReadMore.module.scss';
 
 const ReadMore = (props) => {
