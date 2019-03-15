@@ -61,10 +61,11 @@ export default class ServiceDetail extends React.PureComponent {
         <div className={styles.serviceDetail}>
           <Typography variant="body1" color="textSecondary">
             {(service.description || '').split('').length > READ_MORE_MAX
-              && <>
+              ? (<>
                 { (service.description || '').substring(0, READ_MORE_MAX)}...&nbsp;
                 <CustomLink text="Read more" small to="#" onClick={this.openDialog} />
-              </>
+              </>)
+              : service.description
             }
           </Typography>
         </div>
