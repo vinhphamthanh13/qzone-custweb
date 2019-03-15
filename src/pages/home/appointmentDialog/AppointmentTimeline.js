@@ -10,8 +10,8 @@ import {
   AirlineSeatReclineNormal, DoneAll,
   Update, Timer,
 } from '@material-ui/icons';
-import CountDown from 'react-countdown-now';
 import styles from './Appointment.module.scss';
+import CountDownDisplay from './CountDownDisplay';
 
 const STATUS = {
   WAITING: 'Waiting',
@@ -68,7 +68,9 @@ function TimelineCard({
   if (waitingDay) {
     displayTimeout = `${waitingDay} day, ${waitingHr} hr, ${waitingMn} min`;
   } else if (remainTimeHr < 1 && remainTimeMn > 0) {
-    displayTimeout = <CountDown date={Date.now() + (remainTimeMn * 60 * 1000)} />;
+    displayTimeout = (
+      <CountDownDisplay startTime={remainTimeMn} serviceName={serviceName} providerName={providerName} />
+    );
     currentEventStyle = { background: 'rgb(255, 95, 87)', color: '#fff' };
     currentStyleStatus = styles.eventStatusCountDown;
     currentIconTimeline = <Update />;
