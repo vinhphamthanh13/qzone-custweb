@@ -8,7 +8,7 @@ import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeli
 import {
   DateRange, Schedule, AlarmOff, AlarmOn,
   AirlineSeatReclineNormal, DoneAll,
-  Update,
+  Update, Timer,
 } from '@material-ui/icons';
 import CountDown from 'react-countdown-now';
 import styles from './Appointment.module.scss';
@@ -30,6 +30,7 @@ function TimelineCard({
     district, postCode, state,
     streetAddress,
   },
+  bookingCode,
 }) {
   const toSecCalc = (toSec || startSec + duration * 60) * 1000;
   const current = new Date();
@@ -63,6 +64,7 @@ function TimelineCard({
   let currentStyleStatus = styleStatus;
   let currentIconTimeline = iconTimeline;
   let currentEventStatus = eventStatus;
+  let displayIconStatus = iconStatus;
   if (waitingDay) {
     displayTimeout = `${waitingDay} day, ${waitingHr} hr, ${waitingMn} min`;
   } else if (remainTimeHr < 1 && remainTimeMn > 0) {
@@ -71,6 +73,7 @@ function TimelineCard({
     currentStyleStatus = styles.eventStatusCountDown;
     currentIconTimeline = <Update />;
     currentEventStatus = STATUS.COMING;
+    displayIconStatus = <Timer className="icon-danger" />;
   } else {
     displayTimeout = `${waitingHr} hr, ${waitingMn} min`;
   }
@@ -94,7 +97,7 @@ function TimelineCard({
         </div>
         <div className={styles.appointmentCode}>
           <Typography variant="headline" color="secondary" align="center" classes={{ headline: styles.textCode }}>
-            S-123456
+            {bookingCode}
           </Typography>
         </div>
         <div>
@@ -114,7 +117,7 @@ function TimelineCard({
           </div>
         </div>
         <div className={styles.appointmentItem}>
-          {iconStatus}
+          {displayIconStatus}
           <Typography variant="subheading" color="secondary">{currentEventStatus}</Typography>
         </div>
         <div className={`${styles.appointmentRemainedTime} ${currentStyleStatus}`}>
