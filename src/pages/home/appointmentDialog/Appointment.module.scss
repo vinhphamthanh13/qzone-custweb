@@ -43,7 +43,7 @@
 .cardContainer {
   width: auto;
   & div[class*="vertical-timeline-element-content"] {
-    width: 400px;
+    width: $event-card-width;
   }
 }
 

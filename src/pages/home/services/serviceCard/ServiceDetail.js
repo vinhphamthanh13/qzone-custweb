@@ -5,8 +5,8 @@ import { AccessTime, LocationOn } from '@material-ui/icons';
 import { serviceType } from 'types/global';
 import CustomLink from 'components/CustomLink';
 import { READ_MORE_MAX } from 'utils/constants';
+import RateStar from 'components/Rating/RateStar';
 import styles from './ServiceDetail.module.scss';
-import RateStar from '../rating/RateStar';
 import ReadMore from '../readMore/ReadMore';
 
 export default class ServiceDetail extends React.PureComponent {

@@ -11,20 +11,31 @@ class CountDownDisplay extends Component {
   };
 
   handleCloseStartPopUp = () => {
-    this.setState({ isStartingCountDown: false });
+    this.setState({
+      isStartingCountDown: false,
+      isStoppingCountDown: false,
+    });
   };
 
   handleOpenStartPopUp = () => {
-    console.log('start contdown', this.state);
-    this.setState({ isStartingCountDown: true });
+    this.setState({
+      isStartingCountDown: true,
+      isStoppingCountDown: false,
+    });
   };
 
   handleCloseStopPopUp = () => {
-    this.setState({ isStoppingCountDown: false });
+    this.setState({
+      isStoppingCountDown: false,
+      isStartingCountDown: false,
+    });
   };
 
   handleOpenStopPopUp = () => {
-    this.setState({ isStoppingCountDown: true });
+    this.setState({
+      isStoppingCountDown: true,
+      isStartingCountDown: false,
+    });
   };
 
   render() {
