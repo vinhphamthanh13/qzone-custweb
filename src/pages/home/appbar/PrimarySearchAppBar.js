@@ -4,6 +4,7 @@ import {
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import moment from 'moment';
 import { withStyles } from '@material-ui/core/styles';
 import {
   AppBar, Toolbar, IconButton, InputBase, Badge, Avatar, Typography,
@@ -68,7 +69,9 @@ class PrimarySearchAppBar extends React.Component {
       classes, loginSession, onSearch, customerEventList, onSearchValue,
       handleViewEvent,
     } = this.props;
-    const eventCount = customerEventList && customerEventList.length;
+    const currentTime = moment.now();
+    const eventCount = customerEventList
+      && customerEventList.filter(event => event.slot.startSec * 1000 > currentTime).length;
     const isEventListOpen = Boolean(anchorEventEl);
     const isAuthenticated = loginSession ? loginSession.isAuthenticated : false;
 
