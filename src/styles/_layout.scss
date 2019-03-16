@@ -208,20 +208,12 @@
       flex-direction: row;
     }
     justify-content: space-between;
-    & .advanced-search {
-      padding: 0.5rem;
-      width: 100%;
-      @include breakpoint-up(sm) {
-        max-width: 350px;
-        min-width: 200px;
-      }
-    }
     & .advertisers {
       display: none;
       @include breakpoint-up(md) {
         display: flex;
         padding: 0.5rem;
-        max-width: 400px;
+        width: 30%;
       }
     }
   }
@@ -260,3 +252,26 @@
   height: 100%;
   width: 100%;
 }
+
+.advanced-search {
+  padding: 1em;
+  border-radius: 5px;
+  width: 100%;
+  background: $gallery;
+  @include breakpoint-up(sm) {
+    width: 450px;
+    height: auto;
+  }
+  &-title {
+    margin: 5px auto;
+  }
+  &-item {
+    margin: auto auto 10px auto;
+  }
+  &-cta {
+    display: flex;
+    margin: 1rem auto 0;
+    justify-content: space-between;
+  }
+}
+

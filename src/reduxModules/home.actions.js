@@ -1,5 +1,6 @@
 import {
   searchServicesByName, searchServicesByCategory, searchOrganizationById, getServices, getCustomerEvents,
+  searchByDistance,
 } from 'api/home';
 import { handleRequest } from 'utils/apiHelpers';
 
@@ -9,6 +10,7 @@ export const SET_SERVICES = 'HOME.SET_SERVICES';
 export const SET_LOADING = 'HOME.SET_LOADING';
 export const SET_ORGS = 'HOME.SET_ORGS';
 export const GET_CUSTOMER_EVENT_LIST = 'GET_CUSTOMER_EVENT_LIST';
+export const SEARCH_PROVIDER_BY_DISTANCE = 'SEARCH_PROVIDER_BY_DISTANCE';
 
 export const setServiceCategories = payload => ({
   type: SET_SERVICE_CATEGORIES,
@@ -107,10 +109,19 @@ const getCustomerEventList = payload => ({
   payload,
 });
 
-
 export const fetchCustomerEvents = id => async (dispatch) => {
   dispatch(setLoading(true));
   const [eventList] = await handleRequest(getCustomerEvents, [id], []);
   dispatch(getCustomerEventList(eventList));
+  dispatch(setLoading(false));
+};
+
+const getProviderByDistance = payload => ({ type: SEARCH_PROVIDER_BY_DISTANCE, payload });
+
+export const searchProviderByDistance = (address, radius) => async (dispatch) => {
+  console.log('search by distance', address, radius);
+  dispatch(setLoading(true));
+  const providerList = await handleRequest(searchByDistance, [address, radius], []);
+  dispatch(getProviderByDistance(providerList));
   dispatch(setLoading(false));
 };

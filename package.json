@@ -34,6 +34,7 @@
     "react-countdown-now": "^2.1.0",
     "react-dev-utils": "^7.0.3",
     "react-dom": "^16.8.2",
+    "react-geocode": "^0.1.2",
     "react-jss": "^8.6.1",
     "react-redux": "^6.0.0",
     "react-router": "^4.3.1",
@@ -44,8 +45,8 @@
     "reactstrap": "^6.5.0",
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0",
-    "uuid": "^3.3.2",
     "slick-carousel": "^1.8.1",
+    "uuid": "^3.3.2",
     "whatwg-fetch": "^3.0.0",
     "yup": "^0.26.10"
   },

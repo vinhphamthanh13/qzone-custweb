@@ -6,7 +6,6 @@ import Slider from 'react-slick';
 import { Typography } from '@material-ui/core';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import Search from '../Search/Search';
 import Slide from './Slide';
 
 class SlideShow extends Component {
@@ -37,7 +36,6 @@ class SlideShow extends Component {
 
   render() {
     const { topServices } = this.state;
-    const { onSearch, onSearchValue } = this.props;
     const slideSettings = {
       // dots: true,
       infinite: true,
@@ -55,9 +53,7 @@ class SlideShow extends Component {
           <Typography variant="headline" color="textSecondary">Trending</Typography>
         </div>
         <div className="slider-wrapper">
-          <div className="advanced-search">
-            <Search onSearch={onSearch} onSearchValue={onSearchValue} />
-          </div>
+          <div className="advertisers" />
           <div>
             <Slider {...slideSettings}>
               {topServices.map(service => (

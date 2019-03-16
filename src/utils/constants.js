@@ -64,3 +64,9 @@ export const SESSION = {
 };
 
 export const READ_MORE_MAX = 180;
+
+export const DISTANCE = {
+  KM: 'KILOMETERS',
+  MI: 'MILES',
+  NU: 'NEUTRAL',
+};

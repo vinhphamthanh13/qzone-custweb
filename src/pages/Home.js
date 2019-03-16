@@ -22,6 +22,7 @@ import Categorize from './home/Categorize';
 import Profile from './profile/Profile';
 import Footer from './home/footer/Footer';
 import SlideShow from './home/slideShow/SlideShow';
+import AdvancedSearch from './home/search/AdvancedSearch';
 
 /* eslint react/no-unused-state: 0 */
 export class Home extends React.PureComponent {
@@ -43,6 +44,7 @@ export class Home extends React.PureComponent {
       userPosition: { latitude: 0, longitude: 0 },
       isOpenProfile: false,
       sessionTimeoutId: 0,
+      isOpenAdvancedSearch: false,
     };
   }
 
@@ -146,6 +148,10 @@ export class Home extends React.PureComponent {
     this.handleOpenProfile();
   };
 
+  handleToggleAdvancedSearch = () => {
+    this.setState(oldState => ({ isOpenAdvancedSearch: !oldState.isOpenAdvancedSearch }));
+  };
+
   render() {
     const {
       serviceCategories, isLoading, allServices, loginSession: { isAuthenticated },
@@ -155,7 +161,7 @@ export class Home extends React.PureComponent {
       list: allServices.filter(ser => ser.serviceCategoryId === cat.id),
     }));
     const {
-      searchText, isRegisterOpen, isLoginOpen,
+      searchText, isRegisterOpen, isLoginOpen, isOpenAdvancedSearch,
       selectedService, isOpenProfile, sessionTimeoutId,
     } = this.state;
     const searchedServices = this.getSearchedServices(allServices, searchText);
@@ -163,6 +169,13 @@ export class Home extends React.PureComponent {
 
     return (
       <>
+        {isOpenAdvancedSearch && (
+          <div className="flex auto-margin-horizontal cover-bg-black">
+            <AdvancedSearch
+              onClose={this.handleToggleAdvancedSearch}
+            />
+          </div>)
+        }
         <Auth
           isRegisterOpen={isRegisterOpen}
           isLoginOpen={isLoginOpen}
@@ -189,6 +202,7 @@ export class Home extends React.PureComponent {
           handleOpenProfile={this.handleOpenProfile}
           sessionTimeoutId={sessionTimeoutId}
           handleViewEvent={this.handleViewEventMenu}
+          handleAdvancedSearch={this.handleToggleAdvancedSearch}
         />
         <AppointmentDialog />
         <Grid container>
