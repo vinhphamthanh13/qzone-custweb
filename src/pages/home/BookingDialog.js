@@ -101,7 +101,7 @@ class BookingDialog extends PureComponent {
           serviceId: initService.id,
           startSec: bookingDetail.time.start / 1000,
         },
-        status: 'BOOKING_STATUS_UNSPECIFIED',
+        status: 'UNSPECIFIED',
         type: 'APPOINTMENT',
       });
     } else {
