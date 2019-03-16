@@ -155,6 +155,7 @@ export class Home extends React.PureComponent {
   render() {
     const {
       serviceCategories, isLoading, allServices, loginSession: { isAuthenticated },
+      providerListByDistance,
     } = this.props;
     const catWithServices = serviceCategories.map(cat => ({
       name: cat.name,
@@ -166,6 +167,7 @@ export class Home extends React.PureComponent {
     } = this.state;
     const searchedServices = this.getSearchedServices(allServices, searchText);
     const openAuthenticatedProfile = isAuthenticated && isOpenProfile;
+    console.log('providerListByDistance', providerListByDistance);
 
     return (
       <>
@@ -256,6 +258,7 @@ Home.propTypes = {
   isLoading: bool.isRequired,
   allServices: arrayOf(any).isRequired,
   loginSession: objectOf(any).isRequired,
+  providerListByDistance: arrayOf(any).isRequired,
 };
 
 const mapStateToProps = state => ({

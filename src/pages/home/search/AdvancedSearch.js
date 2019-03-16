@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import { func } from 'prop-types';
+import { get } from 'lodash';
 import { connect } from 'react-redux';
 import { Typography, TextField, Button } from '@material-ui/core';
-// import { GOOGLE_GEO_API_KEY } from 'config/auth';
+import Geocode from 'react-geocode';
+import { GOOGLE_GEO_API_KEY } from 'config/auth';
 import { searchProviderByDistance } from 'reduxModules/home.actions';
+import { DISTANCE } from 'utils/constants';
 
 export const SEARCH_KEY = {
   ADDRESS: 'asAddress',
@@ -13,8 +16,14 @@ export const SEARCH_KEY = {
 class AdvancedSearch extends Component {
   state = {
     asAddress: '',
-    asRadius: null,
+    asRadius: 0,
   };
+
+  componentDidMount() {
+    Geocode.setApiKey(GOOGLE_GEO_API_KEY);
+  }
+
+  resolveAddressToLatLng = async address => Geocode.fromAddress(address);
 
   handleChange = (event) => {
     event.preventDefault();
@@ -24,10 +33,24 @@ class AdvancedSearch extends Component {
     });
   };
 
-  handleSearch = () => {
+  handleSearch = async () => {
     const { searchProviderByDistanceAction, onClose } = this.props;
     const { asAddress, asRadius } = this.state;
-    searchProviderByDistanceAction(asAddress, asRadius);
+    const geoCode = await this.resolveAddressToLatLng(asAddress);
+    const userLocation = get(geoCode, 'results.0.geometry.location');
+    const latitude = get(userLocation, 'lat');
+    const longitude = get(userLocation, 'lng');
+    const dataSearch = {
+      coordinates: {
+        latitude,
+        longitude,
+      },
+      distance: {
+        metric: DISTANCE.KM,
+        value: asRadius,
+      },
+    };
+    searchProviderByDistanceAction(dataSearch);
     onClose();
   };
 

@@ -118,10 +118,9 @@ export const fetchCustomerEvents = id => async (dispatch) => {
 
 const getProviderByDistance = payload => ({ type: SEARCH_PROVIDER_BY_DISTANCE, payload });
 
-export const searchProviderByDistance = (address, radius) => async (dispatch) => {
-  console.log('search by distance', address, radius);
+export const searchProviderByDistance = data => async (dispatch) => {
   dispatch(setLoading(true));
-  const providerList = await handleRequest(searchByDistance, [address, radius], []);
-  dispatch(getProviderByDistance(providerList));
+  const providerList = await handleRequest(searchByDistance, [data], []);
+  dispatch(getProviderByDistance(providerList[0]));
   dispatch(setLoading(false));
 };
