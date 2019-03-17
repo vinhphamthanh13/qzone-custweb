@@ -59,6 +59,7 @@ class AdvancedSearch extends Component {
   render() {
     const { onClose } = this.props;
     const { asAddress, asRadius } = this.state;
+    const submitValid = asAddress.split(',').length > 2 && asRadius > 0;
     return (
       <div className="advanced-search">
         <div className="advanced-search-title">
@@ -78,6 +79,9 @@ class AdvancedSearch extends Component {
           <Typography variant="caption" color="textSecondary" className="advanced-search-helper">
             *Precise address that would help you search more accurate result
           </Typography>
+          <Typography variant="caption" color="textSecondary" className="advanced-search-helper">
+            *Valid string template: street, city, country
+          </Typography>
         </div>
         <div className="advanced-search-cta">
           <div>
@@ -93,7 +97,12 @@ class AdvancedSearch extends Component {
             </Typography>
           </div>
           <div className="advanced-search-cta-buttons">
-            <Button variant="outlined" className="simple-button hover-outline" onClick={this.handleSearch}>
+            <Button
+              disabled={!submitValid}
+              variant="outlined"
+              className="simple-button hover-outline"
+              onClick={this.handleSearch}
+            >
               <Search className="icon-main" /> Go!
             </Button>
             <Button variant="text" type="submit" className="simple-button" onClick={onClose}>Cancel</Button>
