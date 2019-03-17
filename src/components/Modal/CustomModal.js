@@ -27,7 +27,7 @@ const CustomModal = (props) => {
           <Avatar className="verification-modal-avatar" src={logo} />
         </div>
         <div className="verification-modal-content">
-          <Typography variant="h5" color={headingColor}>
+          <Typography className="text-capitalize" variant="h5" color={headingColor}>
             {title}
           </Typography>
           <Typography variant="subheading" color="textSecondary">{message}</Typography>

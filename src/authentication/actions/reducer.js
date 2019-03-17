@@ -13,10 +13,11 @@ import {
   CLOSE_REGISTER_SUCCESS_MODAL,
   RESEND_VERIFICATION_CODE_STATUS,
   LOGOUT_SUCCESS,
+  LOGOUT_ERROR,
   TOGGLE_RESET_PASSWORD_DIALOG,
   RESET_PASSWORD_STATUS,
   LOAD_SESSION_TO_STATE,
-  SET_USER_DETAILS,
+  SET_USER_DETAILS, LOGOUT_ERROR_RST,
 } from './constants';
 
 const authInitialize = {
@@ -50,6 +51,7 @@ const authInitialize = {
   isForgotPassword: false,
   resetPasswordStatus: 'none', // success, error, none
   resetPasswordMessage: '',
+  isLogoutError: false,
 };
 
 const auth = (state = authInitialize, action) => {
@@ -138,6 +140,18 @@ const auth = (state = authInitialize, action) => {
       };
     case LOGOUT_SUCCESS:
       return authInitialize;
+    case LOGOUT_ERROR:
+      return {
+        ...state,
+        isLogoutError: true,
+        logoutErrorMessage: action.payload.message || 'There is error occur! Try again.',
+      };
+    case LOGOUT_ERROR_RST:
+      return {
+        ...state,
+        isLogoutError: false,
+        logoutErrorMessage: '',
+      };
     case SET_USER_DETAILS:
       return {
         ...state,

@@ -1,7 +1,7 @@
 import React from 'react';
 import { func } from 'prop-types';
 import { Avatar, Typography } from '@material-ui/core';
-import { noop } from 'utils/constants';
+// import { noop } from 'utils/constants';
 import { ExpandMore } from '@material-ui/icons';
 import logo from 'images/quezone-logo.png';
 import style from './Header.module.scss';
@@ -12,9 +12,9 @@ const Header = (props) => {
     {
       id: 0, name: 'Home', action: onClose, appendIcon: null,
     },
-    {
-      id: 1, name: 'Help', action: noop, appendIcon: <ExpandMore className="icon-white" />,
-    },
+    // {
+    //   id: 1, name: 'Help', action: noop, appendIcon: <ExpandMore className="icon-white" />,
+    // },
     {
       id: 2, name: 'My account', action: onOpenAccount, appendIcon: <ExpandMore className="icon-white" />,
     },

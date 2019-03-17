@@ -7,7 +7,7 @@ import Register from 'authentication/Register';
 import Login from 'authentication/Login';
 import VerificationCode from 'authentication/components/VerificationCode';
 import CustomModal from 'components/Modal/CustomModal';
-import { logout } from 'authentication/actions/logout';
+import { logout, clearLogoutErrorStatus } from 'authentication/actions/logout';
 import {
   reEnterVerificationCode, closeRegisterSuccessModal, resetResendVerificationCodeModal,
   clearResetPasswordStatus,
@@ -90,12 +90,17 @@ class Auth extends Component {
     this.setState({ isSessionTimeout: false });
   };
 
+  handleLogoutError = () => {
+    const { clearLogoutErrorStatusAction } = this.props;
+    clearLogoutErrorStatusAction();
+  };
+
   render() {
     const {
       isRegisterOpen, isLoginOpen, closeDialog, isVerificationCode,
       verificationErrorMessage, iSignUpSuccessModal, userDetail: { email },
       resendVerificationCodeStatus, handleAuthenticate, resetPasswordStatus,
-      resetPasswordMessage,
+      resetPasswordMessage, isLogoutError, logoutErrorMessage,
     } = this.props;
     const { isSessionTimeout } = this.state;
     const renderSessionTimeout = isSessionTimeout
@@ -176,8 +181,18 @@ class Auth extends Component {
       resetPasswordModal = null;
     }
 
+    const renderLogoutError = isLogoutError ? (
+      <CustomModal
+        type="error"
+        isOpen
+        title="Sign out error"
+        message={logoutErrorMessage}
+        onClose={this.handleLogoutError}
+      />) : null;
+
     return (
       <>
+        {renderLogoutError}
         {renderSessionTimeout}
         {verificationCodeModal}
         {errorModal}
@@ -219,6 +234,9 @@ Auth.propTypes = {
   logoutAction: func.isRequired,
   loginSession: objectOf(any).isRequired,
   getSessionTimeoutId: func.isRequired,
+  isLogoutError: bool,
+  logoutErrorMessage: string,
+  clearLogoutErrorStatusAction: func.isRequired,
 };
 
 Auth.defaultProps = {
@@ -226,6 +244,8 @@ Auth.defaultProps = {
   iSignUpSuccessModal: false,
   verificationErrorMessage: '',
   resendVerificationCodeStatus: 'none',
+  isLogoutError: false,
+  logoutErrorMessage: '',
 };
 
 const mapStateToProps = state => ({
@@ -237,6 +257,8 @@ const mapStateToProps = state => ({
   resendVerificationCodeStatus: state.auth.resendVerificationCodeStatus,
   resetPasswordStatus: state.auth.resetPasswordStatus,
   resetPasswordMessage: state.auth.resetPasswordMessage,
+  isLogoutError: state.auth.isLogoutError,
+  logoutErrorMessage: state.auth.logoutErrorMessage,
 });
 
 export default connect(
@@ -248,5 +270,6 @@ export default connect(
     clearResetPasswordStatusAction: clearResetPasswordStatus,
     logoutAction: logout,
     autoLoginAction: autoLogin,
+    clearLogoutErrorStatusAction: clearLogoutErrorStatus,
   },
 )(Auth);

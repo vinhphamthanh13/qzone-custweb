@@ -4,9 +4,15 @@ import { Auth } from 'aws-amplify';
 import { saveSession, loadSession } from 'config/localStorage';
 import { setLoading } from 'actions/common';
 import { AUTH_METHOD, PROVIDER } from 'config/auth';
-import { LOGOUT_ERROR, LOGOUT_SUCCESS } from './constants';
+import { LOGOUT_ERROR, LOGOUT_SUCCESS, LOGOUT_ERROR_RST } from './constants';
 
 const initSession = {};
+
+const resetLogoutError = () => ({
+  type: LOGOUT_ERROR_RST,
+});
+
+export const clearLogoutErrorStatus = () => dispatch => dispatch(resetLogoutError());
 
 const logoutSuccess = payload => ({
   type: LOGOUT_SUCCESS,
