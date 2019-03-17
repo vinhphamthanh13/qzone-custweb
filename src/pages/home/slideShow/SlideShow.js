@@ -4,9 +4,9 @@ import {
 } from 'prop-types';
 import Slider from 'react-slick';
 import { Typography } from '@material-ui/core';
+import { get } from 'lodash';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import Search from '../Search/Search';
 import Slide from './Slide';
 
 class SlideShow extends Component {
@@ -37,7 +37,6 @@ class SlideShow extends Component {
 
   render() {
     const { topServices } = this.state;
-    const { onSearch, onSearchValue } = this.props;
     const slideSettings = {
       // dots: true,
       infinite: true,
@@ -55,25 +54,35 @@ class SlideShow extends Component {
           <Typography variant="headline" color="textSecondary">Trending</Typography>
         </div>
         <div className="slider-wrapper">
-          <div className="advanced-search">
-            <Search onSearch={onSearch} onSearchValue={onSearchValue} />
-          </div>
+          <div className="advertisers" />
           <div>
             <Slider {...slideSettings}>
-              {topServices.map(service => (
-                <Slide
-                  key={service.id}
-                  imageUrl={service.image.fileUrl}
-                  name={service.name}
-                  description={service.description}
-                  rating={service.rating}
-                  reviews={service.viewNum}
-                  onBooking={() => this.handleBooking(service)}
-                  duration={service.duration}
-                  orgId={service.organization.id}
-                  orgName={service.organization.name}
-                />
-              ))}
+              {topServices.map((service) => {
+                const id = get(service, 'id');
+                const fileUrl = get(service, 'image.fileUrl');
+                const name = get(service, 'name');
+                const description = get(service, 'description');
+                const rating = get(service, 'rating');
+                const viewNum = get(service, 'viewNum');
+                const duration = get(service, 'duration');
+                const orgId = get(service, 'organization.id');
+                const orgName = get(service, 'organization.name');
+
+                return (
+                  <Slide
+                    key={id}
+                    imageUrl={fileUrl}
+                    name={name}
+                    description={description}
+                    rating={rating}
+                    reviews={viewNum}
+                    onBooking={() => this.handleBooking(service)}
+                    duration={duration}
+                    orgId={orgId}
+                    orgName={orgName}
+                  />
+                );
+              })}
             </Slider>
           </div>
           <div className="advertisers">

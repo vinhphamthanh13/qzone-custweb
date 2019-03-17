@@ -13,7 +13,7 @@ import {
   Search as SearchIcon,
   AssignmentInd,
   Notifications as NotificationsIcon,
-  Fingerprint,
+  Fingerprint, FindInPage,
 } from '@material-ui/icons';
 import { fetchCustomerEvents } from 'reduxModules/home.actions';
 import logo from 'images/quezone-logo.png';
@@ -67,7 +67,7 @@ class PrimarySearchAppBar extends React.Component {
     const { anchorEventEl } = this.state;
     const {
       classes, loginSession, onSearch, customerEventList, onSearchValue,
-      handleViewEvent,
+      handleViewEvent, handleAdvancedSearch,
     } = this.props;
     const currentTime = moment.now();
     const eventCount = customerEventList
@@ -140,6 +140,16 @@ class PrimarySearchAppBar extends React.Component {
                 value={onSearchValue}
               />
             </div>
+            <Typography variant="subheading" color="inherit">
+              OR
+            </Typography>
+            <div className="advanced-search-app-bar">
+              <IconButton onClick={handleAdvancedSearch} className="simple-button">
+                <FindInPage className="icon-white" />
+                <Typography className="white-color" variant="subheading">Advanced search!
+                </Typography>
+              </IconButton>
+            </div>
             <div className={classes.grow} />
             { customUser }
           </Toolbar>
@@ -165,6 +175,7 @@ PrimarySearchAppBar.propTypes = {
   customerEventList: arrayOf(object).isRequired,
   onSearchValue: string,
   handleViewEvent: func.isRequired,
+  handleAdvancedSearch: func.isRequired,
 };
 
 PrimarySearchAppBar.defaultProps = {

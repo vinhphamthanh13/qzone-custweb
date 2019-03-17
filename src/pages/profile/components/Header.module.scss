@@ -7,7 +7,7 @@
   margin: 0 auto;
   position: fixed;
   height: $app-bar-height;
-  background: linear-gradient(to right, $main, $malibu);
+  background: linear-gradient(to right, $malibu, $main);
   z-index: 1000;
   &Title {
     display: flex;

@@ -9,6 +9,7 @@
 .simple-button {
   &:hover {
     background: transparent;
+    color: $main;
   }
 }
 
@@ -69,6 +70,12 @@
 .hover-main-color {
   &:hover {
     color: $main;
+  }
+}
+
+.hover-outline {
+  &:hover {
+    border: 1px solid $main;
   }
 }
 

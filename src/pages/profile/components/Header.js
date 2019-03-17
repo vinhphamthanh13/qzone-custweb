@@ -13,10 +13,10 @@ const Header = (props) => {
       id: 0, name: 'Home', action: onClose, appendIcon: null,
     },
     {
-      id: 1, name: 'Help', action: noop, appendIcon: <ExpandMore className="icon-main" />,
+      id: 1, name: 'Help', action: noop, appendIcon: <ExpandMore className="icon-white" />,
     },
     {
-      id: 2, name: 'My account', action: onOpenAccount, appendIcon: <ExpandMore className="icon-main" />,
+      id: 2, name: 'My account', action: onOpenAccount, appendIcon: <ExpandMore className="icon-white" />,
     },
   ];
 
@@ -38,9 +38,8 @@ const Header = (props) => {
             { NAVBAR.map(nav => (
               <div key={nav.id} className={style.headerItem}>
                 <Typography
-                  className="hover-bright"
+                  className="hover-bright white-color"
                   variant="subheading"
-                  color="primary"
                   onClick={nav.action}
                 >
                   {nav.name}

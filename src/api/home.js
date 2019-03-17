@@ -11,3 +11,5 @@ export const searchOrganizationById = orgId => axios.get(`/organizations/${orgId
 export const getServices = () => axios.get('/services');
 
 export const getCustomerEvents = id => axios.get(`/find-events-by-customer-id/${id}`);
+
+export const searchByDistance = body => axios.post('/service-providers-near-by', body);

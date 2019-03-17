@@ -1,5 +1,6 @@
 import {
   searchServicesByName, searchServicesByCategory, searchOrganizationById, getServices, getCustomerEvents,
+  searchByDistance,
 } from 'api/home';
 import { handleRequest } from 'utils/apiHelpers';
 
@@ -9,6 +10,7 @@ export const SET_SERVICES = 'HOME.SET_SERVICES';
 export const SET_LOADING = 'HOME.SET_LOADING';
 export const SET_ORGS = 'HOME.SET_ORGS';
 export const GET_CUSTOMER_EVENT_LIST = 'GET_CUSTOMER_EVENT_LIST';
+export const SEARCH_PROVIDER_BY_DISTANCE = 'SEARCH_PROVIDER_BY_DISTANCE';
 
 export const setServiceCategories = payload => ({
   type: SET_SERVICE_CATEGORIES,
@@ -92,9 +94,13 @@ export const setServicesGlobal = (categoryId = '') => async (dispatch) => {
     }
   });
   const result = await Promise.all(orgIds.map(orgId => handleRequest(searchOrganizationById, [orgId])));
-  const orgs = result.map(org => org[0]);
+  const orgs = result.map(org => org[0]).filter(org => !Object.is(org, undefined));
   const services = rawServices.map(
-    service => ({ ...service, organization: orgs.find(org => org.id === service.organizationId) }),
+    service => ({
+      ...service,
+      organization: orgs.filter(org => !Object.is(org, undefined))
+        .find(org => org.id === service.organizationId),
+    }),
   );
 
   dispatch(setLoading(false));
@@ -107,10 +113,18 @@ const getCustomerEventList = payload => ({
   payload,
 });
 
-
 export const fetchCustomerEvents = id => async (dispatch) => {
   dispatch(setLoading(true));
   const [eventList] = await handleRequest(getCustomerEvents, [id], []);
   dispatch(getCustomerEventList(eventList));
+  dispatch(setLoading(false));
+};
+
+const getProviderByDistance = payload => ({ type: SEARCH_PROVIDER_BY_DISTANCE, payload });
+
+export const searchProviderByDistance = data => async (dispatch) => {
+  dispatch(setLoading(true));
+  const providerList = await handleRequest(searchByDistance, [data], []);
+  dispatch(getProviderByDistance(providerList[0]));
   dispatch(setLoading(false));
 };

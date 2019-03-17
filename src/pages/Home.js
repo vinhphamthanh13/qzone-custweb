@@ -22,6 +22,7 @@ import Categorize from './home/Categorize';
 import Profile from './profile/Profile';
 import Footer from './home/footer/Footer';
 import SlideShow from './home/slideShow/SlideShow';
+import AdvancedSearch from './home/search/AdvancedSearch';
 
 /* eslint react/no-unused-state: 0 */
 export class Home extends React.PureComponent {
@@ -43,6 +44,7 @@ export class Home extends React.PureComponent {
       userPosition: { latitude: 0, longitude: 0 },
       isOpenProfile: false,
       sessionTimeoutId: 0,
+      isOpenAdvancedSearch: false,
     };
   }
 
@@ -146,23 +148,36 @@ export class Home extends React.PureComponent {
     this.handleOpenProfile();
   };
 
+  handleToggleAdvancedSearch = () => {
+    this.setState(oldState => ({ isOpenAdvancedSearch: !oldState.isOpenAdvancedSearch }));
+  };
+
   render() {
     const {
       serviceCategories, isLoading, allServices, loginSession: { isAuthenticated },
+      providerListByDistance,
     } = this.props;
     const catWithServices = serviceCategories.map(cat => ({
       name: cat.name,
       list: allServices.filter(ser => ser.serviceCategoryId === cat.id),
     }));
     const {
-      searchText, isRegisterOpen, isLoginOpen,
+      searchText, isRegisterOpen, isLoginOpen, isOpenAdvancedSearch,
       selectedService, isOpenProfile, sessionTimeoutId,
     } = this.state;
     const searchedServices = this.getSearchedServices(allServices, searchText);
     const openAuthenticatedProfile = isAuthenticated && isOpenProfile;
+    console.log('providerListByDistance', providerListByDistance);
 
     return (
       <>
+        {isOpenAdvancedSearch && (
+          <div className="flex auto-margin-horizontal cover-bg-black">
+            <AdvancedSearch
+              onClose={this.handleToggleAdvancedSearch}
+            />
+          </div>)
+        }
         <Auth
           isRegisterOpen={isRegisterOpen}
           isLoginOpen={isLoginOpen}
@@ -189,6 +204,7 @@ export class Home extends React.PureComponent {
           handleOpenProfile={this.handleOpenProfile}
           sessionTimeoutId={sessionTimeoutId}
           handleViewEvent={this.handleViewEventMenu}
+          handleAdvancedSearch={this.handleToggleAdvancedSearch}
         />
         <AppointmentDialog />
         <Grid container>
@@ -242,6 +258,7 @@ Home.propTypes = {
   isLoading: bool.isRequired,
   allServices: arrayOf(any).isRequired,
   loginSession: objectOf(any).isRequired,
+  providerListByDistance: arrayOf(any).isRequired,
 };
 
 const mapStateToProps = state => ({
