@@ -58,7 +58,6 @@ class SlideShow extends Component {
           <div>
             <Slider {...slideSettings}>
               {topServices.map((service) => {
-                console.log('service', service);
                 const id = get(service, 'id');
                 const fileUrl = get(service, 'image.fileUrl');
                 const name = get(service, 'name');

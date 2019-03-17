@@ -29,6 +29,7 @@ class AdvancedSearch extends Component {
   handleChange = (event) => {
     event.preventDefault();
     const { name, value } = event.target;
+    if ((name === SEARCH_KEY.RADIUS && !/^\d+$/.test(value) && value.length) || value > DISTANCE.EQUATOR) return;
     this.setState({
       [name]: value,
     });
@@ -85,7 +86,7 @@ class AdvancedSearch extends Component {
               label="Search radius (km)"
               onChange={this.handleChange}
               value={asRadius}
-              placeholder="E.g, 25"
+              placeholder="e.g, 25"
             />
             <Typography variant="caption" color="textSecondary" className="advanced-search-helper">
               *Provider near by

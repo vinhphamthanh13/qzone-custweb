@@ -66,6 +66,7 @@ export const SESSION = {
 export const READ_MORE_MAX = 180;
 
 export const DISTANCE = {
+  EQUATOR: 40075,
   KM: 'KILOMETERS',
   MI: 'MILES',
   NU: 'NEUTRAL',
