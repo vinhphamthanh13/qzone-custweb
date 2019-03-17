@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Grid, Card, CardContent } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import {
   providerType, serviceType, bookingDetailType, providerDetailsType,
 } from 'types/global';
 import { getProvidersByService } from 'reduxModules/home/bookingDialog/selectProvider.actions';
 import EmptyItem from 'components/EmptyItem';
 import ProviderContent from './selectProvider/ProviderContent';
-import styles from './SelectProvider.module.scss';
+// import styles from './SelectProvider.module.scss';
 import DateSelect from './selectProvider/DateSelect';
 
 class SelectProvider extends React.PureComponent {
@@ -30,23 +30,52 @@ class SelectProvider extends React.PureComponent {
       isLoading, providers, bookingDetail, initService, providerDetails,
       onChange,
     } = this.props;
+    console.log('initservie', initService);
     return (
       <>
         {!isLoading && providers.length === 0 ? <EmptyItem message="No available providers" />
           : (
-            <div className={styles.selectProvider}>
-              {providers.length > 0 && (
+            <div className="selectProviderWrapper">
+              <div className="serviceName">
+                <Typography color="textSecondary" variant="title">
+                  {initService.name}
+                </Typography>
+              </div>
+              <div className="selectProvider">
                 <DateSelect
                   bookingDetail={bookingDetail}
                   onChange={onChange}
                   providers={providers}
                   initServiceId={initService ? initService.id : -1}
-                />)}
-              <Grid container spacing={16} classes={{ container: styles.providerCardsWrapper }}>
-                {providers.map(provider => (
-                  <Grid item xs={12} md={6} key={provider.id}>
-                    <Card>
-                      <CardContent>
+                />
+                <div className="selectProviderContent">
+                  <div className="calendarTimeWrapper">
+                    <div className="calendarTime">
+                      {Array.from({ length: 24 }, (number, index) => {
+                        const roundTime = index < 10 ? `0${index}` : index;
+                        const halfTime = `${roundTime}:30`;
+                        return (
+                          <>
+                            <li className="dayTime">
+                              <div className="startTime">
+                                <Typography variant="body1" color="inherit">
+                                  {`${roundTime}:00`}
+                                </Typography>
+                              </div>
+                              <div className="midTime">
+                                <Typography variant="caption" color="inherit">
+                                  {halfTime}
+                                </Typography>
+                              </div>
+                            </li>
+                          </>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  <div>
+                    {providers.map(provider => (
+                      <div key={provider.id}>
                         <ProviderContent
                           initService={initService}
                           provider={provider}
@@ -54,11 +83,11 @@ class SelectProvider extends React.PureComponent {
                           duration={providerDetails[provider.id] ? providerDetails[provider.id][0].durationSec : 0}
                           onTimeSelect={this.onSelectBooking(provider)}
                         />
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                ))}
-              </Grid>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>)
         }
       </>

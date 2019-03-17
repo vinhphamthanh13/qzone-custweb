@@ -345,3 +345,54 @@
   }
   padding-right: 15px;
 }
+
+.serviceName {
+  padding: 0 1rem 1rem;
+}
+
+.selectProviderWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.calendarTimeWrapper {
+  width: 450px;
+}
+
+.calendarTime {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.dayTime {
+  height: 40px;
+  border-bottom: 1px solid $gallery;
+  list-style: none;
+  padding: 0 0 0 0.5rem;
+  width: 100%;
+  &:hover {
+    background: linear-gradient(to bottom, $gallery, $white);
+  }
+}
+
+.startTime {
+  color: $main;
+}
+
+.midTime {
+  color: $malibu;
+}
+
+.selectProviderContent {
+  display: flex;
+  width: 100%;
+  overflow: auto;
+}
+
+.selectProvider {
+  padding: 0 1rem;
+  display: flex;
+  width: 100%;
+}

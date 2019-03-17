@@ -13,9 +13,9 @@ const style = theme => ({
   },
   bookingContent: {
     maxWidth: 1440,
-    margin: '24px auto',
-    maxHeight: 'calc(100vh - 90%)',
-    minHeight: 'calc(100vh - 20%)',
+    paddingTop: '1rem',
+    width: '100%',
+    height: 'calc(100vh - 65px)',
     display: 'flex',
   },
 
