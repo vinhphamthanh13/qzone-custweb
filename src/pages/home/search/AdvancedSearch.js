@@ -35,8 +35,20 @@ class AdvancedSearch extends Component {
     });
   };
 
+  handleClose = () => {
+    const { onClose, onCloseResult } = this.props;
+    onClose();
+    onCloseResult();
+  };
+
+  handleOpenResult = () => {
+    const { onClose, onOpenResult } = this.props;
+    onClose();
+    onOpenResult();
+  };
+
   handleSearch = async () => {
-    const { searchProviderByDistanceAction, onClose } = this.props;
+    const { searchProviderByDistanceAction } = this.props;
     const { asAddress, asRadius } = this.state;
     const geoCode = await this.resolveAddressToLatLng(asAddress);
     const userLocation = get(geoCode, 'results.0.geometry.location');
@@ -53,13 +65,12 @@ class AdvancedSearch extends Component {
       },
     };
     searchProviderByDistanceAction(dataSearch);
-    onClose();
+    this.handleOpenResult();
   };
 
   render() {
-    const { onClose } = this.props;
     const { asAddress, asRadius } = this.state;
-    const submitValid = asAddress.split(',').length > 2 && asRadius > 0;
+    const submitValid = asAddress.split(',').length > 1 && asRadius > 0;
     const iconSearchStyle = submitValid ? 'icon-main' : 'icon-disabled';
     return (
       <div className="advanced-search">
@@ -106,7 +117,7 @@ class AdvancedSearch extends Component {
             >
               <Search className={iconSearchStyle} /> Go!
             </Button>
-            <Button variant="text" type="submit" className="simple-button" onClick={onClose}>Cancel</Button>
+            <Button variant="text" type="submit" className="simple-button" onClick={this.handleClose}>Cancel</Button>
           </div>
         </div>
       </div>
@@ -116,6 +127,8 @@ class AdvancedSearch extends Component {
 
 AdvancedSearch.propTypes = {
   onClose: func.isRequired,
+  onCloseResult: func.isRequired,
+  onOpenResult: func.isRequired,
   searchProviderByDistanceAction: func.isRequired,
 };
 

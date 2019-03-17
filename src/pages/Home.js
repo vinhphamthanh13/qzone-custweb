@@ -45,6 +45,7 @@ export class Home extends React.PureComponent {
       isOpenProfile: false,
       sessionTimeoutId: 0,
       isOpenAdvancedSearch: false,
+      isShowingAdvancedSearch: false,
     };
   }
 
@@ -141,15 +142,38 @@ export class Home extends React.PureComponent {
   };
 
   handleCloseSearch = () => {
-    this.setState({ searchText: '' });
+    this.closeAdvancedSearchResult();
+    this.setState({
+      searchText: '',
+    });
   };
 
   handleViewEventMenu = () => {
     this.handleOpenProfile();
   };
 
-  handleToggleAdvancedSearch = () => {
-    this.setState(oldState => ({ isOpenAdvancedSearch: !oldState.isOpenAdvancedSearch }));
+  handleAdvancedSearchResult = (value) => {
+    this.setState({ isShowingAdvancedSearch: value });
+  };
+
+  openAdvancedSearchResult = () => {
+    this.handleAdvancedSearchResult(true);
+  };
+
+  closeAdvancedSearchResult = () => {
+    this.handleAdvancedSearchResult(false);
+  };
+
+  handleAdvancedSearch = (value) => {
+    this.setState({ isOpenAdvancedSearch: value });
+  };
+
+  openAdvancedSearch = () => {
+    this.handleAdvancedSearch(true);
+  };
+
+  closeAdvancedSearch = () => {
+    this.handleAdvancedSearch(false);
   };
 
   render() {
@@ -157,24 +181,26 @@ export class Home extends React.PureComponent {
       serviceCategories, isLoading, allServices, loginSession: { isAuthenticated },
       providerListByDistance,
     } = this.props;
-    const catWithServices = serviceCategories.map(cat => ({
+    const catWithServices = serviceCategories.length > 0 && serviceCategories.map(cat => ({
       name: cat.name,
       list: allServices.filter(ser => ser.serviceCategoryId === cat.id),
     }));
     const {
       searchText, isRegisterOpen, isLoginOpen, isOpenAdvancedSearch,
-      selectedService, isOpenProfile, sessionTimeoutId,
+      selectedService, isOpenProfile, sessionTimeoutId, isShowingAdvancedSearch,
     } = this.state;
     const searchedServices = this.getSearchedServices(allServices, searchText);
     const openAuthenticatedProfile = isAuthenticated && isOpenProfile;
-    console.log('providerListByDistance', providerListByDistance);
+    const advancedSearchAvailable = providerListByDistance.length > 0 && isShowingAdvancedSearch;
 
     return (
       <>
         {isOpenAdvancedSearch && (
           <div className="flex auto-margin-horizontal cover-bg-black">
             <AdvancedSearch
-              onClose={this.handleToggleAdvancedSearch}
+              onOpenResult={this.openAdvancedSearchResult}
+              onCloseResult={this.closeAdvancedSearchResult}
+              onClose={this.closeAdvancedSearch}
             />
           </div>)
         }
@@ -204,7 +230,7 @@ export class Home extends React.PureComponent {
           handleOpenProfile={this.handleOpenProfile}
           sessionTimeoutId={sessionTimeoutId}
           handleViewEvent={this.handleViewEventMenu}
-          handleAdvancedSearch={this.handleToggleAdvancedSearch}
+          handleAdvancedSearch={this.openAdvancedSearch}
         />
         <AppointmentDialog />
         <Grid container>
@@ -225,9 +251,18 @@ export class Home extends React.PureComponent {
                   isLoading={isLoading}
                   onCloseSearch={this.handleCloseSearch}
                 />
-              </Categorize>
-            )
+              </Categorize>)
             }
+            {advancedSearchAvailable && (
+              <Categorize name="Advanced Search Results" search onClose={this.handleCloseSearch}>
+                <Services
+                  services={providerListByDistance}
+                  onChange={this.onChange}
+                  isLoading={isLoading}
+                  onLoadServices={this.onLoadServices}
+                />
+              </Categorize>
+            )}
             {catWithServices && catWithServices.map(category => (
               <Categorize
                 key={category.name}
