@@ -14,7 +14,6 @@
   color: $mako;
   margin: 0.5em;
   font-weight: bold;
-  border-bottom: 2px solid $danger;
 }
 
 .backdrop {
@@ -28,4 +27,11 @@
   position: absolute;
   z-index: 1000;
   max-width: $max-width;
+}
+
+.categorizeHeadline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid $info;
 }

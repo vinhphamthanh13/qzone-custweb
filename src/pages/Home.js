@@ -217,7 +217,7 @@ export class Home extends React.PureComponent {
                 onSearchValue={searchText}
               />)}
             {searchText.length > 2 && (
-              <Categorize name="Search results" search>
+              <Categorize name="Search results" search onClose={this.handleCloseSearch}>
                 <Services
                   services={searchedServices}
                   onChange={this.onChange}
