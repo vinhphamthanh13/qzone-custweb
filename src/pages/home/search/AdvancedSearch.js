@@ -60,6 +60,7 @@ class AdvancedSearch extends Component {
     const { onClose } = this.props;
     const { asAddress, asRadius } = this.state;
     const submitValid = asAddress.split(',').length > 2 && asRadius > 0;
+    const iconSearchStyle = submitValid ? 'icon-main' : 'icon-disabled';
     return (
       <div className="advanced-search">
         <div className="advanced-search-title">
@@ -103,7 +104,7 @@ class AdvancedSearch extends Component {
               className="simple-button hover-outline"
               onClick={this.handleSearch}
             >
-              <Search className="icon-main" /> Go!
+              <Search className={iconSearchStyle} /> Go!
             </Button>
             <Button variant="text" type="submit" className="simple-button" onClick={onClose}>Cancel</Button>
           </div>

@@ -50,8 +50,8 @@ class SlideShow extends Component {
 
     return (
       <div className="service-carousel">
-        <div className="title">
-          <Typography variant="headline" color="textSecondary">Trending</Typography>
+        <div>
+          <Typography className="title" variant="headline" color="textSecondary">Trending</Typography>
         </div>
         <div className="slider-wrapper">
           <div className="advertisers" />

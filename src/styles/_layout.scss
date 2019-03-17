@@ -112,6 +112,11 @@
   }
 }
 
+.icon-disabled {
+  margin: 5px;
+  color: $grayNickel;
+}
+
 .icon-danger {
   margin: 5px;
   color: $danger;
@@ -199,7 +204,9 @@
 .service-carousel {
   margin: 0.5em;
   & .title {
-    margin: 1em 0;
+    margin: 0.5rem 0.5rem 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid $alto;
   }
   & .slider-wrapper {
     display: flex;

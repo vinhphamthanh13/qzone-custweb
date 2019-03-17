@@ -9,16 +9,19 @@ import style from './Categorize.module.scss';
 
 const Categorize = (props) => {
   const { name, search, onClose } = props;
-  const [categoryStyle, headline] = search ? [style.backdrop, style.searchHeadline] : [style.category, style.headline];
+  const categoryStyle = search ? style.backdrop : style.category;
+
   return (
     <div className={categoryStyle}>
       <div className={style.categorizeHeadline}>
-        <Typography classes={{ headline }} variant="headline" color="textSecondary">
+        <Typography variant="headline" color="textSecondary">
           {name}
         </Typography>
-        <IconButton onClick={onClose}>
-          <Close />
-        </IconButton>
+        { search && (
+          <IconButton onClick={onClose} className="simple-button">
+            <Close />
+          </IconButton>)
+        }
       </div>
       {props.children}
     </div>
