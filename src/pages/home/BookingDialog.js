@@ -207,8 +207,8 @@ class BookingDialog extends PureComponent {
               </div>
             </Toolbar>
           </AppBar>
-          <div className={classes.bookingContent}>
-            {initService && (
+          {initService && (
+            <div className={classes.bookingContent}>
               <StepComponent
                 initService={initService}
                 onChange={this.onChangeBookingDetail}
@@ -221,8 +221,8 @@ class BookingDialog extends PureComponent {
                 openAppointmentDialog={this.openAppointmentDialog}
                 handleOpenProfile={handleOpenProfile}
               />
-            )}
-          </div>
+            </div>
+          )}
         </Dialog>
       </>
     );
