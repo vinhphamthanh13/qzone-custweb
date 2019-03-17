@@ -3,6 +3,7 @@ import { func } from 'prop-types';
 import { get } from 'lodash';
 import { connect } from 'react-redux';
 import { Typography, TextField, Button } from '@material-ui/core';
+import { Search } from '@material-ui/icons';
 import Geocode from 'react-geocode';
 import { GOOGLE_GEO_API_KEY } from 'config/auth';
 import { searchProviderByDistance } from 'reduxModules/home.actions';
@@ -16,7 +17,7 @@ export const SEARCH_KEY = {
 class AdvancedSearch extends Component {
   state = {
     asAddress: '',
-    asRadius: 0,
+    asRadius: '',
   };
 
   componentDidMount() {
@@ -60,7 +61,7 @@ class AdvancedSearch extends Component {
     return (
       <div className="advanced-search">
         <div className="advanced-search-title">
-          <Typography variant="title" color="primary" className="text-bold">
+          <Typography variant="title" color="inherit" className="text-bold">
             Advanced Search
           </Typography>
         </div>
@@ -73,23 +74,29 @@ class AdvancedSearch extends Component {
             value={asAddress}
             placeholder="e.g, Street, City, Country"
           />
-          <Typography variant="caption" color="textSecondary">
+          <Typography variant="caption" color="textSecondary" className="advanced-search-helper">
             *Precise address that would help you search more accurate result
           </Typography>
         </div>
-        <div className="advanced-search-item">
-          <TextField
-            fullWidth
-            name={SEARCH_KEY.RADIUS}
-            label="Search radius (km)"
-            onChange={this.handleChange}
-            value={asRadius}
-            placeholder="E.g, 25"
-          />
-        </div>
         <div className="advanced-search-cta">
-          <Button variant="text" type="submit" onClick={onClose}>Cancel</Button>
-          <Button variant="outlined" onClick={this.handleSearch}>Go!</Button>
+          <div>
+            <TextField
+              name={SEARCH_KEY.RADIUS}
+              label="Search radius (km)"
+              onChange={this.handleChange}
+              value={asRadius}
+              placeholder="E.g, 25"
+            />
+            <Typography variant="caption" color="textSecondary" className="advanced-search-helper">
+              *Provider near by
+            </Typography>
+          </div>
+          <div className="advanced-search-cta-buttons">
+            <Button variant="outlined" className="simple-button hover-outline" onClick={this.handleSearch}>
+              <Search className="icon-main" /> Go!
+            </Button>
+            <Button variant="text" type="submit" className="simple-button" onClick={onClose}>Cancel</Button>
+          </div>
         </div>
       </div>
     );

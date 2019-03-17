@@ -4,6 +4,7 @@ import {
 } from 'prop-types';
 import Slider from 'react-slick';
 import { Typography } from '@material-ui/core';
+import { get } from 'lodash';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slide from './Slide';
@@ -56,20 +57,33 @@ class SlideShow extends Component {
           <div className="advertisers" />
           <div>
             <Slider {...slideSettings}>
-              {topServices.map(service => (
-                <Slide
-                  key={service.id}
-                  imageUrl={service.image.fileUrl}
-                  name={service.name}
-                  description={service.description}
-                  rating={service.rating}
-                  reviews={service.viewNum}
-                  onBooking={() => this.handleBooking(service)}
-                  duration={service.duration}
-                  orgId={service.organization.id}
-                  orgName={service.organization.name}
-                />
-              ))}
+              {topServices.map((service) => {
+                console.log('service', service);
+                const id = get(service, 'id');
+                const fileUrl = get(service, 'image.fileUrl');
+                const name = get(service, 'name');
+                const description = get(service, 'description');
+                const rating = get(service, 'rating');
+                const viewNum = get(service, 'viewNum');
+                const duration = get(service, 'duration');
+                const orgId = get(service, 'organization.id');
+                const orgName = get(service, 'organization.name');
+
+                return (
+                  <Slide
+                    key={id}
+                    imageUrl={fileUrl}
+                    name={name}
+                    description={description}
+                    rating={rating}
+                    reviews={viewNum}
+                    onBooking={() => this.handleBooking(service)}
+                    duration={duration}
+                    orgId={orgId}
+                    orgName={orgName}
+                  />
+                );
+              })}
             </Slider>
           </div>
           <div className="advertisers">

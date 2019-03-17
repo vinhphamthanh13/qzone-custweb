@@ -94,9 +94,13 @@ export const setServicesGlobal = (categoryId = '') => async (dispatch) => {
     }
   });
   const result = await Promise.all(orgIds.map(orgId => handleRequest(searchOrganizationById, [orgId])));
-  const orgs = result.map(org => org[0]);
+  const orgs = result.map(org => org[0]).filter(org => !Object.is(org, undefined));
   const services = rawServices.map(
-    service => ({ ...service, organization: orgs.find(org => org.id === service.organizationId) }),
+    service => ({
+      ...service,
+      organization: orgs.filter(org => !Object.is(org, undefined))
+        .find(org => org.id === service.organizationId),
+    }),
   );
 
   dispatch(setLoading(false));

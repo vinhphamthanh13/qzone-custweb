@@ -254,24 +254,40 @@
 }
 
 .advanced-search {
-  padding: 1em;
-  border-radius: 5px;
+  border-radius: 10px;
   width: 100%;
   background: $gallery;
   @include breakpoint-up(sm) {
-    width: 450px;
+    width: 500px;
     height: auto;
   }
   &-title {
-    margin: 5px auto;
+    //margin: 5px auto;
+    color: $white;
+    padding: 1rem;
+    border-bottom: 3px solid $grayNickel;
+    background: linear-gradient(to right, $main, $malibu);
   }
   &-item {
-    margin: auto auto 10px auto;
+    margin: 1rem auto;
+    padding: 0 1rem;
   }
   &-cta {
     display: flex;
     margin: 1rem auto 0;
+    padding: 0 1rem 1rem;
     justify-content: space-between;
+    align-items: center;
+    &-buttons {
+      width: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+  &-helper {
+    margin-top: 5px;
+    color: $info;
   }
 }
 
