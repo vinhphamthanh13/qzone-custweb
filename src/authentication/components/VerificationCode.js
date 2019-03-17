@@ -65,16 +65,16 @@ class VerificationCode extends Component {
   };
 
   handleResendCode = () => {
-    const { resendCodeAction, userDetails: { email } } = this.props;
+    const { resendCodeAction, userDetail: { email } } = this.props;
     resendCodeAction(email);
     this.setState({ ...this.initState }, this.startTick);
   };
 
   handleSubmitCode = () => {
     const { verificationCode } = this.state;
-    const { confirmSignUpAction, userDetails } = this.props;
+    const { confirmSignUpAction, userDetail } = this.props;
     this.stopTick();
-    confirmSignUpAction({ userDetails, code: verificationCode });
+    confirmSignUpAction({ userDetail, code: verificationCode });
   };
 
   render() {
@@ -137,12 +137,12 @@ class VerificationCode extends Component {
 VerificationCode.propTypes = {
   classes: classesType.isRequired,
   confirmSignUpAction: func.isRequired,
-  userDetails: objectOf(any).isRequired,
+  userDetail: objectOf(any).isRequired,
   resendCodeAction: func.isRequired,
 };
 
 const mapStateToProps = state => ({
-  userDetails: state.auth.userDetails,
+  userDetail: state.auth.userDetail,
 });
 
 export default compose(

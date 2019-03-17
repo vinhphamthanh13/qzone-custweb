@@ -68,14 +68,14 @@ export const reEnterVerificationCode = () => (dispatch) => {
   dispatch(handleVerificationCodeModal(true));
 };
 
-export const confirmSignUp = ({ userDetails, code }) => (dispatch) => {
+export const confirmSignUp = ({ userDetail, code }) => (dispatch) => {
   dispatch(setLoading(true));
   dispatch(handleVerificationCodeModal(false));
-  const { email } = userDetails;
+  const { email } = userDetail;
   Auth.confirmSignUp(email, code, { forceAliasCreation: true })
     .then((data) => {
       const trackedInfo = {
-        ...userDetails,
+        ...userDetail,
         userStatus: 'CONFIRMED',
         userType: 'CUSTOMER',
       };

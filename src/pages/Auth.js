@@ -63,7 +63,7 @@ class Auth extends Component {
   };
 
   handleCloseRegisterSuccessModal = () => {
-    const { closeRegisterSuccessModalAction, autoLoginAction, userDetails: { email, password } } = this.props;
+    const { closeRegisterSuccessModalAction, autoLoginAction, userDetail: { email, password } } = this.props;
     closeRegisterSuccessModalAction();
     autoLoginAction({ email, password });
   };
@@ -93,7 +93,7 @@ class Auth extends Component {
   render() {
     const {
       isRegisterOpen, isLoginOpen, closeDialog, isVerificationCode,
-      verificationErrorMessage, iSignUpSuccessModal, userDetails: { email },
+      verificationErrorMessage, iSignUpSuccessModal, userDetail: { email },
       resendVerificationCodeStatus, handleAuthenticate, resetPasswordStatus,
       resetPasswordMessage,
     } = this.props;
@@ -208,7 +208,7 @@ Auth.propTypes = {
   closeRegisterSuccessModalAction: func.isRequired,
   iSignUpSuccessModal: bool,
   verificationErrorMessage: string,
-  userDetails: objectOf(any).isRequired,
+  userDetail: objectOf(any).isRequired,
   resendVerificationCodeStatus: string,
   closeResendStatusModal: func.isRequired,
   handleAuthenticate: func.isRequired,
@@ -231,7 +231,7 @@ Auth.defaultProps = {
 const mapStateToProps = state => ({
   isVerificationCode: state.auth.isVerificationCode,
   iSignUpSuccessModal: state.auth.iSignUpSuccessModal,
-  userDetails: state.auth.userDetails,
+  userDetail: state.auth.userDetail,
   loginSession: state.auth.loginSession,
   verificationErrorMessage: state.auth.verificationErrorMessage,
   resendVerificationCodeStatus: state.auth.resendVerificationCodeStatus,

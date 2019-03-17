@@ -20,7 +20,7 @@ import {
 } from './constants';
 
 const authInitialize = {
-  userDetails: {
+  userDetail: {
     givenName: '',
     familyName: '',
     telephone: '',
@@ -63,7 +63,7 @@ const auth = (state = authInitialize, action) => {
     case REGISTER_AWS_SUCCESS:
       return {
         ...state,
-        userDetails: action.payload,
+        userDetail: action.payload,
         isVerificationCode: true,
       };
     case CONFIRM_SIGN_UP_ERROR:
@@ -141,7 +141,7 @@ const auth = (state = authInitialize, action) => {
     case SET_USER_DETAILS:
       return {
         ...state,
-        userDetails: action.payload,
+        userDetail: action.payload,
       };
     default:
       return state;

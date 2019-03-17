@@ -15,13 +15,13 @@ class Profile extends Component {
 
   render() {
     const {
-      isOpenProfile, handleCloseProfile, userDetails: { givenName, email },
+      isOpenProfile, handleCloseProfile, userDetail: { givenName, email },
     } = this.props;
 
     return (
       <Dialog fullScreen open={isOpenProfile}>
         <div className={`${style.profile} column`}>
-          <Header userDetails={{ givenName, email }} onClose={handleCloseProfile} onOpenAccount={this.handleAccount} />
+          <Header userDetail={{ givenName, email }} onClose={handleCloseProfile} onOpenAccount={this.handleAccount} />
           <div className={`container-max auto-margin-horizontal ${style.contentAfooter}`}>
             <Content
               givenName={givenName}
@@ -37,11 +37,11 @@ class Profile extends Component {
 Profile.propTypes = {
   isOpenProfile: bool.isRequired,
   handleCloseProfile: func.isRequired,
-  userDetails: objectOf(any).isRequired,
+  userDetail: objectOf(any).isRequired,
 };
 
 const mapStateToProps = state => ({
-  userDetails: state.auth.userDetails,
+  userDetail: state.auth.userDetail,
 });
 
 export default connect(mapStateToProps)(Profile);

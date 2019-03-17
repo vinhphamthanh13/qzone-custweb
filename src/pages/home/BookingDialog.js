@@ -252,7 +252,7 @@ BookingDialog.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  userDetail: state.auth.userDetails,
+  userDetail: state.auth.userDetail,
   isAuthenticated: state.auth.loginSession.isAuthenticated,
   isLoading: state.homeModules.bookingDialog.isLoading,
   bookingStatus: state.homeModules.bookingDialog.status,
