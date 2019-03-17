@@ -105,11 +105,24 @@
 .icon-main {
   margin: 5px;
   color: $primary;
-  &-shake {
-    &:hover {
-      animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
-    }
+}
+
+.icon-shake {
+  &:hover {
+    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
   }
+}
+
+.icon-normal {
+  font-size: 24px;
+}
+
+.icon-big {
+  font-size: 32px;
+}
+
+.icon-transparent {
+  color: transparent;
 }
 
 .icon-disabled {
@@ -296,4 +309,39 @@
     margin-top: 5px;
     color: $info;
   }
+}
+
+.logoBrand {
+  width: 50px;
+  white-space: nowrap;
+}
+
+.closeBook {
+  width: 50px;
+  white-space: nowrap;
+}
+
+.bookingStepsWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stepper {
+  display: flex;
+  justify-content: space-between;
+  height: auto;
+  padding: 15px;
+  border-radius: 6px;
+  background: linear-gradient(to bottom, $gallery, $white);
+}
+
+.step {
+  &>span>span:first-child>svg {
+    font-size: 28px;
+  }
+  &>span>span:last-child>span {
+    font-size: 18px;
+  }
+  padding-right: 15px;
 }

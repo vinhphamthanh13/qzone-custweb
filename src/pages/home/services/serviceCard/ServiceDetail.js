@@ -85,7 +85,7 @@ export default class ServiceDetail extends React.PureComponent {
           <div className={styles.iconInfo}>
             <LocationOn className={styles.icon} />
             <Typography variant="body1">
-              <CustomLink target="" text={orgName} to={`/organisation/${orgId}`} />
+              <CustomLink text={orgName} to={`/organisation/${orgId}`} />
             </Typography>
           </div>
         </div>
