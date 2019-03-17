@@ -3,18 +3,13 @@
 .category {
   margin-top: $global-margin;
   padding-bottom: $global-padding;
-  border-bottom: 2px solid $gallery;
-}
-
-.headline {
-  padding-left: 0.5rem;
+  border-bottom: 1px solid $gallery;
 }
 
 .searchHeadline {
   color: $mako;
   margin: 0.5em;
   font-weight: bold;
-  border-bottom: 2px solid $danger;
 }
 
 .backdrop {
@@ -24,8 +19,16 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba($we_peep_rgba, 0.9);
+  background: rgba($gallery, 0.95);
   position: absolute;
   z-index: 1000;
   max-width: $max-width;
+}
+
+.categorizeHeadline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid $alto;
+  margin: auto 0.5rem;
 }

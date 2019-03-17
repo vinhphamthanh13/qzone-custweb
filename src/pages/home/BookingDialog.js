@@ -6,11 +6,17 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import {
   Slide, Dialog, AppBar, Toolbar, IconButton,
-  Avatar, Typography, Button,
+  Avatar,
+  // Typography,
+  Button,
   Stepper, Step, StepLabel,
 } from '@material-ui/core';
 import withStyles from '@material-ui/core/styles/withStyles';
-import CloseIcon from '@material-ui/icons/Close';
+import {
+  Close,
+  ChevronLeft,
+  ChevronRight,
+} from '@material-ui/icons';
 import logo from 'images/logo.png';
 import { serviceType, userDetailType, eventType } from 'types/global';
 import { setProviders } from 'reduxModules/home/bookingDialog/selectProvider.actions';
@@ -130,6 +136,14 @@ class BookingDialog extends PureComponent {
     } = this.props;
     const { step, bookingDetail, isConfirmDialogOpen } = this.state;
     const StepComponent = this.bookingStepsComponents[step];
+    const isBackValid = !(step === 0 || step === this.bookingSteps.length - 1);
+    const isNextValid = !(step === this.bookingSteps.length - 1 || !this.isStepCompleted());
+    const renderBackButton = isBackValid
+      ? <ChevronLeft className="icon-white icon-big icon-shake" />
+      : <ChevronLeft className="icon-transparent icon-big" />;
+    const renderNextButton = isNextValid
+      ? <ChevronRight className="icon-white icon-big icon-shake" />
+      : <ChevronRight className="icon-transparent icon-big" />;
 
     return (
       <>
@@ -159,53 +173,57 @@ class BookingDialog extends PureComponent {
           classes={{ root: classes.diagRoot }}
         >
           <AppBar position="relative">
-            <Toolbar className={classes.mainLinear}>
-              <Avatar src={logo} alt="Quezone Logo" className={classes.avatar} />
-              {initService && <Typography variant="subtitle1" color="inherit">{initService.name}</Typography>}
-              <div className="grow" />
-              <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
-                <CloseIcon />
-              </IconButton>
+            <Toolbar className={`${classes.mainLinear} h-space-btw`}>
+              <div className="logoBrand">
+                <Avatar src={logo} alt="Quezone Logo" className={classes.avatar} />
+              </div>
+              <div>
+                <div className="bookingStepsWrapper">
+                  <Button disabled={!isBackValid} onClick={this.handleBack} className="simple-button">
+                    {renderBackButton}
+                  </Button>
+                  <Stepper
+                    classes={{ root: 'stepper' }}
+                    elevation={1}
+                    activeStep={step}
+                    connector={<div />}
+                  >
+                    {this.bookingSteps.map(bookingStep => (
+                      <Step key={bookingStep} classes={{ root: 'step' }}>
+                        <StepLabel>
+                          {bookingStep}
+                        </StepLabel>
+                      </Step>
+                    ))}
+                  </Stepper>
+                  <Button disabled={!isNextValid} onClick={this.handleNext} className="simple-button">
+                    {renderNextButton}
+                  </Button>
+                </div>
+              </div>
+              <div className="closeBook">
+                <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
+                  <Close />
+                </IconButton>
+              </div>
             </Toolbar>
           </AppBar>
-          <div className={classes.bookingStepsWrapper}>
-            <Button
-              disabled={step === 0 || step === this.bookingSteps.length - 1}
-              onClick={this.handleBack}
-            >
-              Back
-            </Button>
-            <Stepper classes={{ root: classes.bookingStepper }} elevation={1} activeStep={step}>
-              {this.bookingSteps.map(bookingStep => (
-                <Step key={bookingStep}>
-                  <StepLabel>
-                    {bookingStep}
-                  </StepLabel>
-                </Step>
-              ))}
-            </Stepper>
-            <Button
-              color="primary"
-              disabled={step === this.bookingSteps.length - 1 || !this.isStepCompleted()}
-              onClick={this.handleNext}
-            >
-              Next
-            </Button>
+          <div className={classes.bookingContent}>
+            {initService && (
+              <StepComponent
+                initService={initService}
+                onChange={this.onChangeBookingDetail}
+                handleNext={this.handleNext}
+                bookingDetail={bookingDetail}
+                userDetail={userDetail}
+                onSaveBooking={this.toggleConfirmDialog(true)}
+                isLoading={isLoading}
+                bookingEvent={bookingEvent}
+                openAppointmentDialog={this.openAppointmentDialog}
+                handleOpenProfile={handleOpenProfile}
+              />
+            )}
           </div>
-          {initService && (
-            <StepComponent
-              initService={initService}
-              onChange={this.onChangeBookingDetail}
-              handleNext={this.handleNext}
-              bookingDetail={bookingDetail}
-              userDetail={userDetail}
-              onSaveBooking={this.toggleConfirmDialog(true)}
-              isLoading={isLoading}
-              bookingEvent={bookingEvent}
-              openAppointmentDialog={this.openAppointmentDialog}
-              handleOpenProfile={handleOpenProfile}
-            />
-          )}
         </Dialog>
       </>
     );

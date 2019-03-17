@@ -105,11 +105,29 @@
 .icon-main {
   margin: 5px;
   color: $primary;
-  &-shake {
-    &:hover {
-      animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
-    }
+}
+
+.icon-shake {
+  &:hover {
+    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
   }
+}
+
+.icon-normal {
+  font-size: 24px;
+}
+
+.icon-big {
+  font-size: 32px;
+}
+
+.icon-transparent {
+  color: transparent;
+}
+
+.icon-disabled {
+  margin: 5px;
+  color: $grayNickel;
 }
 
 .icon-danger {
@@ -199,7 +217,9 @@
 .service-carousel {
   margin: 0.5em;
   & .title {
-    margin: 1em 0;
+    margin: 0.5rem 0.5rem 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid $alto;
   }
   & .slider-wrapper {
     display: flex;
@@ -291,3 +311,37 @@
   }
 }
 
+.logoBrand {
+  width: 50px;
+  white-space: nowrap;
+}
+
+.closeBook {
+  width: 50px;
+  white-space: nowrap;
+}
+
+.bookingStepsWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stepper {
+  display: flex;
+  justify-content: space-between;
+  height: auto;
+  padding: 15px;
+  border-radius: 6px;
+  background: linear-gradient(to bottom, $gallery, $white);
+}
+
+.step {
+  &>span>span:first-child>svg {
+    font-size: 28px;
+  }
+  &>span>span:last-child>span {
+    font-size: 18px;
+  }
+  padding-right: 15px;
+}

@@ -4,6 +4,7 @@ import {
   searchProviderById,
   findAvailabilitiesByDateRange,
 } from 'api/home/bookingDialog/selectProvider';
+import moment from 'moment';
 import { searchOrganizationById } from 'api/home';
 import { setOrgs } from 'reduxModules/home.actions';
 import { setLoading } from '../bookingDialog.actions';
@@ -54,11 +55,13 @@ export const getProvidersByService = serviceId => async (dispatch, getState) => 
 
 export const getProviderTimes = data => async (dispatch) => {
   dispatch(setLoading(true));
-
   const response = (await Promise.all(data.providers.map(provider => handleRequest(findAvailabilitiesByDateRange, [{
-    serviceId: data.serviceId, providerId: provider.id, startSec: data.startSec, toSec: data.toSec,
+    serviceId: data.serviceId,
+    providerId: provider.id,
+    startSec: data.startSec,
+    toSec: data.toSec,
+    customerTimezone: moment.tz.guess(),
   }])))).map(resp => resp[0]);
-
   const providerTimes = {};
   response.forEach((providerTime) => {
     providerTimes[providerTime[0].providerId] = [...providerTime];

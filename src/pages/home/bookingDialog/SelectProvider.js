@@ -18,12 +18,12 @@ class SelectProvider extends React.PureComponent {
     if (providers.length === 0) {
       getProvidersByServiceAction(initService.id);
     }
-  }
+  };
 
   onSelectBooking = provider => (time) => {
     this.props.onChange(provider, 'provider');
     this.props.onChange(time, 'time', this.props.handleNext);
-  }
+  };
 
   render() {
     const {
