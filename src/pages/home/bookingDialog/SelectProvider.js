@@ -73,7 +73,7 @@ class SelectProvider extends React.PureComponent {
                       })}
                     </div>
                   </div>
-                  <div>
+                  <div className="selectProviderList">
                     {providers.map(provider => (
                       <div key={provider.id}>
                         <ProviderContent

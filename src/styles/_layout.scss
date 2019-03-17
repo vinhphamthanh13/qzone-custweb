@@ -370,7 +370,7 @@
   height: 40px;
   border-bottom: 1px solid $gallery;
   list-style: none;
-  padding: 0 0 0 0.5rem;
+  padding: 0 0 0 1rem;
   width: 100%;
   &:hover {
     background: linear-gradient(to bottom, $gallery, $white);
@@ -395,4 +395,37 @@
   padding: 0 1rem;
   display: flex;
   width: 100%;
+}
+
+.selectProviderList {
+  width: auto;
+}
+
+.providerListCard {
+  color: red;
+}
+
+.providerListCardTitle {
+  color: $main;
+}
+
+.providerListCardDescription {
+  color: $malibu;
+}
+
+.providerListCardService {
+  color: $success;
+}
+
+.providerListCardMap {
+  color: $danger;
+}
+
+.providerListCardAvailableTime {
+  color: $grayNickel;
+}
+
+.providerListCardLogo {
+  background: linear-gradient(to right, $malibu, $white);
+  width: 200px;
 }

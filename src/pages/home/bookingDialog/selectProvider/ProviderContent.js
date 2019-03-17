@@ -1,14 +1,13 @@
 import React from 'react';
 import { number, func } from 'prop-types';
-import {
-  Grid, Typography, ButtonBase,
-} from '@material-ui/core';
+import { Typography, ButtonBase } from '@material-ui/core';
 import { Map } from '@material-ui/icons';
 import {
   providerType, bookingDetailType, serviceType,
 } from 'types/global';
 
 import formatName from 'utils/formatName';
+import QLogo from 'images/quezone-logo.png';
 import SelectTime from './providerContent/SelectTime';
 import styles from './ProviderContent.module.scss';
 import DetailDialog from './providerContent/DetailDialog';
@@ -28,20 +27,22 @@ export default class ProviderContent extends React.PureComponent {
     this.setState(oldState => ({
       isDetailDialogOpen: !oldState.isDetailDialogOpen,
     }));
-  }
+  };
 
   toggleMapDialog = () => {
     this.setState(oldState => ({
       isMapDialogOpen: !oldState.isMapDialogOpen,
     }));
-  }
+  };
 
   render() {
     const {
       provider, initService, bookingDetail, onTimeSelect, duration,
     } = this.props;
     const { isDetailDialogOpen, isMapDialogOpen } = this.state;
-
+    console.log('provider title: --> ', provider);
+    console.log('provider bookingDeaati: --> ', bookingDetail);
+    console.log('provider initservice: --> ', initService);
     return (
       <>
         <DetailDialog
@@ -55,11 +56,11 @@ export default class ProviderContent extends React.PureComponent {
           initService={initService}
           provider={provider}
         />
-        <Grid container wrap="nowrap">
-          <Grid item classes={{ item: styles.providerLeftHeader }}>
-            <Typography variant="h5">
-              {initService.name}
-            </Typography>
+        <div className="providerListCard">
+          <div className="providerListCardLogo">
+            <img src={QLogo} alt="Q-Provider" width="100%" />
+          </div>
+          <div className="providerListCardTitle">
             <Typography variant="h6">
               {formatName({ givenName: provider.givenName, familyName: provider.familyName })}
             </Typography>
@@ -67,31 +68,33 @@ export default class ProviderContent extends React.PureComponent {
               {(initService.description).substring(0, 100)}
               <>...&nbsp;
                 <ButtonBase onClick={this.toggleDetailDialog}>
-                  <Typography variant="caption" className={styles.providerLeftHeader__description}>
+                  <Typography variant="caption" className="providerListCardDescription">
                     MORE
                   </Typography>
                 </ButtonBase>
               </>
             </Typography>
-          </Grid>
-          <Grid item classes={{ item: styles.providerRightHeader }}>
+          </div>
+          <div className="providerListCardService">
             <Typography variant="title">
               $20.00
             </Typography>
-            <Typography variant="body1" classes={{ root: styles.providerRightHeader__duration }}>
+            <Typography variant="body1">
               {duration} min
             </Typography>
-            <ButtonBase onClick={this.toggleMapDialog}>
-              <Map className={styles.icon} />
-            </ButtonBase>
-          </Grid>
-        </Grid>
-        <div className={styles.providerDetail}>
-          <SelectTime
-            bookingDetail={bookingDetail}
-            providerDetail={provider}
-            onChange={onTimeSelect}
-          />
+            <div className="providerListCardMap">
+              <ButtonBase onClick={this.toggleMapDialog}>
+                <Map className={styles.icon} />
+              </ButtonBase>
+            </div>
+          </div>
+          <div className="providerListCardAvailableTime">
+            <SelectTime
+              bookingDetail={bookingDetail}
+              providerDetail={provider}
+              onChange={onTimeSelect}
+            />
+          </div>
         </div>
       </>
     );

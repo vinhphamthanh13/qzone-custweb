@@ -1,13 +1,5 @@
 @import "styles/_settings.scss";
 
-.providerLeftHeader {
-  flex-grow: 1;
-  margin-right: 16px;
-  &__description {
-    color: $primary;
-  }
-}
-
 .providerRightHeader {
   text-align: right;
   &__duration {
