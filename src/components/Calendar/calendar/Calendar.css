@@ -1,0 +1,243 @@
+/**
+ * Home Credit (https://www.homecredit.vn/)
+ *
+ * Copyright © 2018-present HomeCredit, LLC. All rights reserved.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE.txt file in the root directory of this source tree.
+ */
+
+:root {
+  --calendar-min-width: 250px;
+  --calendar-max-width: 310px;
+  --calendar-max-height: 402px;
+  --calendar-date-container: 338px;
+  --calendar-year-row: 68px;
+  --calendar-month-row: 90px;
+}
+
+.calendar {
+  border: 1px solid var(--c-brand);
+  border-radius: calc(var(--border-radius) * 2.5);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: var(--calendar-min-width);
+  max-width: var(--calendar-max-width);
+  height: var(--calendar-max-height);
+}
+
+.calendarHeader {
+  padding: var(--b-space-xs) 0;
+  display: flex;
+  justify-content: space-evenly;
+  background: var(--c-brand);
+}
+
+.caret {
+  display: flex;
+  color: var(--c-brand);
+  align-items: center;
+}
+
+.monthAndYear {
+  user-select: none;
+  font-size: var(--font-size-huge);
+  font-weight: var(--font-weight-bold);
+  color: var(--c-text-inverse);
+  cursor: pointer;
+
+  &:hover {
+    text-shadow: var(--b-space-3xs) var(--b-space-3xs) var(--b-space-md) var(--c-text-inverse);
+  }
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.daysOfWeek {
+  padding: var(--b-space-xs) 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  background: var(--c-brand);
+  box-sizing: border-box;
+}
+
+.dayOfWeek {
+  width: var(--b-space-3xl);
+  user-select: none;
+  font-weight: var(--font-weight-semi-bold);
+  font-size: var(--font-size-big);
+  color: var(--c-text-inverse);
+  text-align: center;
+}
+
+.datesOfMonth {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: var(--c-ui-lighter);
+}
+
+.week {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.dateOfMonth {
+  user-select: none;
+  cursor: pointer;
+  text-align: center;
+  color: var(--c-text);
+  width: var(--b-space-3xl);
+  box-sizing: border-box;
+  border: 1px solid transparent;
+  border-radius: var(--border-radius);
+  padding: var(--b-space-xs);
+  font-size: var(--font-size-big);
+  transition: all 0.25s ease-in;
+}
+
+.today {
+  background: var(--c-ui-light);
+  border-radius: calc(var(--border-radius) * 5);
+  border: 1px solid var(--c-text-lighter);
+  font-weight: var(--font-weight-semi-bold);
+  color: var(--c-text) !important;
+
+  &:hover {
+    border: 1px solid var(--c-text-lighter);
+  }
+}
+
+.month {
+  color: var(--c-brand);
+}
+
+.invalidDate {
+  color: var(--c-ui-light);
+
+  &:hover {
+    border: 1px solid transparent;
+  }
+}
+
+.buttonOk {
+  user-select: none;
+  background: var(--c-brand);
+  border: none;
+  border-top: 1px solid var(--c-brand);
+  height: calc(var(--b-space-2xl) * 1.2);
+  font-weight: var(--font-weight-semi-bold);
+  color: var(--c-text-inverse);
+
+  &:hover {
+    text-shadow: var(--b-space-3xs) var(--b-space-3xs) var(--b-space-md) var(--c-text-inverse);
+  }
+}
+
+.monthList {
+  display: flex;
+  flex-direction: column;
+  background: var(--c-ui-light);
+  overflow: auto;
+  height: var(--calendar-date-container);
+  min-width: var(--calendar-min-width);
+  max-width: var(--calendar-max-width);
+}
+
+.monthRow {
+  height: var(--calendar-month-row);
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid var(--c-ui-lighter);
+}
+
+.monthCell {
+  user-select: none;
+  box-sizing: border-box;
+  display: inline-block;
+  font-size: var(--font-size);
+  margin: auto;
+  padding: calc(var(--b-space-md) * 1.24);
+  color: var(--c-brand);
+  text-align: center;
+  border-right: 1px solid var(--c-ui-lighter);
+  border-bottom: 1px solid var(--c-ui-lighter);
+  transition: background 0.25s ease, color 0.3s ease-in;
+
+  &:hover {
+    cursor: pointer;
+    background: var(--c-gray);
+    color: var(--c-text-inverse);
+  }
+}
+
+.invalidMonth {
+  cursor: unset;
+  color: var(--c-gray);
+
+  &:hover {
+    cursor: unset;
+    background: unset;
+    color: var(--c-gray);
+  }
+}
+
+.yearList {
+  list-style-type: none;
+  background: var(--c-ui-light);
+  overflow: auto;
+  height: var(--calendar-date-container);
+  min-width: var(--calendar-min-width);
+  max-width: var(--calendar-max-width);
+}
+
+.yearRow {
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  box-sizing: border-box;
+  width: var(--calendar-max-width);
+  max-width: var(--calendar-max-width);
+  min-width: var(--calendar-min-width);
+  height: var(--calendar-year-row);
+}
+
+.yearCell {
+  padding: calc(var(--b-space-md) * 1.25) calc(var(--b-space-md) * 1.1);
+  color: var(--c-brand);
+  box-sizing: border-box;
+  border: 1px solid var(--c-ui-lighter);
+  transition: all 0.3s ease;
+
+  &:hover {
+    cursor: pointer;
+    background: var(--c-gray);
+    color: var(--c-text-inverse);
+    border-bottom-right-radius: var(--b-space-sm);
+    border-bottom-left-radius: var(--b-space-sm);
+   }
+}
+
+.invalidYear {
+  color: var(--c-gray);
+  cursor: unset;
+
+  &:hover {
+    background: unset;
+    color: var(--c-gray);
+    cursor: unset;
+    border-radius: unset;
+  }
+}
+
+.currentMonthYear {
+  cursor: pointer;
+  background: var(--c-gray);
+  color: var(--c-text-inverse);
+}

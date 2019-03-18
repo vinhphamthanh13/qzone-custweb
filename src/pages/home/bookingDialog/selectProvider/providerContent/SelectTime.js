@@ -23,7 +23,7 @@ export class SelectTime extends React.PureComponent {
     const { bookingDetail, providerDetail } = this.props;
     if (bookingDetail.provider && bookingDetail.time && providerDetail.id === bookingDetail.provider.id) {
       this.setState({
-        selectedHour: mtz(bookingDetail.time.start),
+        selectedHour: moment(bookingDetail.time.start),
       });
     }
   }
@@ -45,10 +45,19 @@ export class SelectTime extends React.PureComponent {
 
   getHourBoxes = timeDetails => timeDetails.map((d) => {
     const customerStartSec = get(d, 'customerStartSec');
+    const providerStartSec = get(d, 'providerStartSec');
+    const durationSec = get(d, 'durationSec');
     return ({
-      startHour: moment(customerStartSec),
-      displayedStartHour: moment(customerStartSec),
-      durationSec: d.durationSec,
+      customer: {
+        startHour: moment(customerStartSec),
+        displayedStartHour: moment(customerStartSec),
+        durationSec,
+      },
+      provider: {
+        startHour: moment(providerStartSec),
+        displayedStartHour: moment(providerStartSec),
+        durationSec,
+      },
     });
   });
 
@@ -58,10 +67,8 @@ export class SelectTime extends React.PureComponent {
     const hourBoxes = this.getHourBoxes(timeDetails);
     return (
       <div className={styles.selectTimeWrapper}>
-        {!isLoading && hourBoxes.length === 0
-          && <EmptyItem message="No available slot" />}
-        {hourBoxes.length > 0
-          && (
+        {!isLoading && Object.keys(hourBoxes).length === 0 ? <EmptyItem message="No available slot" />
+          : (
             <HourSelectBox
               hourBoxes={hourBoxes}
               selectedHour={selectedHour}
