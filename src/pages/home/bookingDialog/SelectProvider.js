@@ -5,6 +5,7 @@ import { Typography } from '@material-ui/core';
 import {
   providerType, serviceType, bookingDetailType, providerDetailsType,
 } from 'types/global';
+import RateStar from 'components/Rating/RateStar';
 import { getProvidersByService } from 'reduxModules/home/bookingDialog/selectProvider.actions';
 import EmptyItem from 'components/EmptyItem';
 import ProviderContent from './selectProvider/ProviderContent';
@@ -36,18 +37,23 @@ class SelectProvider extends React.PureComponent {
         {!isLoading && providers.length === 0 ? <EmptyItem message="No available providers" />
           : (
             <div className="selectProviderWrapper">
-              <div className="serviceName">
-                <Typography color="textSecondary" variant="title">
-                  {initService.name}
-                </Typography>
-              </div>
-              <div className="selectProvider">
+              <div className="selectProviderHeader">
+                <div>
+                  <Typography color="textSecondary" variant="title">
+                    {initService.name}
+                  </Typography>
+                  <div className="selectedProviderReputation">
+                    <RateStar rating={initService.rating} reviews={initService.viewNum} />
+                  </div>
+                </div>
                 <DateSelect
                   bookingDetail={bookingDetail}
                   onChange={onChange}
                   providers={providers}
                   initServiceId={initService ? initService.id : -1}
                 />
+              </div>
+              <div className="selectProvider">
                 <div className="selectProviderContent">
                   <div className="calendarTimeWrapper">
                     <div className="calendarTime">

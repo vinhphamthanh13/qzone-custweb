@@ -208,7 +208,7 @@ class BookingDialog extends PureComponent {
             </Toolbar>
           </AppBar>
           {initService && (
-            <div className={classes.bookingContent}>
+            <div className={`${classes.bookingContent} container-max auto-margin-horizontal`}>
               <StepComponent
                 initService={initService}
                 onChange={this.onChangeBookingDetail}

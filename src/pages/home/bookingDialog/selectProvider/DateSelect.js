@@ -6,7 +6,7 @@ import mtz from 'moment-timezone';
 import { defaultDateFormat } from 'utils/constants';
 import { getProviderTimes } from 'reduxModules/home/bookingDialog/selectProvider.actions';
 import { bookingDetailType, providerType } from 'types/global';
-import styles from './DateSelect.module.scss';
+// import styles from './DateSelect.module.scss';
 
 const onDateChange = (
   [selectedDay, setSelectedDay],
@@ -43,7 +43,7 @@ function DateSelect(props) {
   }, []);
 
   return (
-    <div className={styles.selectDate}>
+    <div>
       <InlineDatePicker
         variant="outlined"
         label="Booking day"

@@ -12,8 +12,6 @@ const style = theme => ({
     margin: theme.spacing.unit * 2,
   },
   bookingContent: {
-    maxWidth: 1440,
-    paddingTop: '1rem',
     width: '100%',
     height: 'calc(100vh - 65px)',
     display: 'flex',
