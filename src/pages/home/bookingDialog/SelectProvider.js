@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Grid, Card, CardContent } from '@material-ui/core';
+import moment from 'moment';
+import {
+  Grid, Card, CardContent, Typography,
+} from '@material-ui/core';
 import {
   providerType, serviceType, bookingDetailType, providerDetailsType,
 } from 'types/global';
@@ -36,12 +39,16 @@ class SelectProvider extends React.PureComponent {
           && <EmptyItem message="No available providers" />}
         <div className={styles.selectProvider}>
           {providers.length > 0 && (
-            <DateSelect
-              bookingDetail={bookingDetail}
-              onChange={onChange}
-              providers={providers}
-              initServiceId={initService ? initService.id : -1}
-            />)}
+            <div className="calendarSection">
+              <DateSelect
+                bookingDetail={bookingDetail}
+                onChange={onChange}
+                providers={providers}
+                initServiceId={initService ? initService.id : -1}
+              />
+              <Typography color="secondary" variant="body2">*Your current timezone {moment.tz.guess()}</Typography>
+            </div>
+          )}
           <Grid container spacing={16} classes={{ container: styles.providerCardsWrapper }}>
             {providers.map(provider => (
               <Grid item xs={12} md={6} key={provider.id}>

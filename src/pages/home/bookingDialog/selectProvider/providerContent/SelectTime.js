@@ -1,7 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import mtz from 'moment-timezone';
-import PropTypes from 'prop-types';
+import moment from 'moment';
+import { get } from 'lodash';
+import {
+  func, arrayOf, bool, shape, number,
+} from 'prop-types';
 import { bookingDetailType, providerType } from 'types/global';
 import EmptyItem from 'components/EmptyItem';
 import HourSelectBox from './selectTime/HourSelectBox';
@@ -37,13 +41,16 @@ export class SelectTime extends React.PureComponent {
       duration,
     });
     this.setState({ selectedHour: start });
-  }
+  };
 
-  getHourBoxes = timeDetails => timeDetails.map(d => ({
-    startHour: mtz(d.startSec * 1000),
-    displayedStartHour: mtz(d.startSec * 1000),
-    durationSec: d.durationSec,
-  }))
+  getHourBoxes = timeDetails => timeDetails.map((d) => {
+    const customerStartSec = get(d, 'customerStartSec');
+    return ({
+      startHour: moment(customerStartSec),
+      displayedStartHour: moment(customerStartSec),
+      durationSec: d.durationSec,
+    });
+  });
 
   render() {
     const { timeDetails, isLoading } = this.props;
@@ -68,15 +75,15 @@ export class SelectTime extends React.PureComponent {
 
 SelectTime.propTypes = {
   bookingDetail: bookingDetailType.isRequired,
-  timeDetails: PropTypes.arrayOf(
-    PropTypes.shape({
-      startSec: PropTypes.number,
-      durationSec: PropTypes.number,
-      spotsOpen: PropTypes.number,
+  timeDetails: arrayOf(
+    shape({
+      startSec: number,
+      durationSec: number,
+      spotsOpen: number,
     }),
   ),
-  onChange: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool,
+  onChange: func.isRequired,
+  isLoading: bool,
   providerDetail: providerType.isRequired,
 };
 
