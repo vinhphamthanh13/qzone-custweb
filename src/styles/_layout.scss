@@ -355,7 +355,7 @@
 .selectProviderWrapper {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: 100%;
 }
 
@@ -398,22 +398,9 @@
   color: $malibu;
 }
 
-.selectProviderContent {
-  display: flex;
-  width: 100%;
-  overflow: auto;
-}
-
-.selectProvider {
-  padding: 0;
-  display: flex;
-  width: 100%;
-}
-
 .selectProviderList {
   width: auto;
   display: flex;
-  flex-direction: column;
   justify-content: flex-start;
 }
 

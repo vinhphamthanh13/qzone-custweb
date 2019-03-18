@@ -53,46 +53,18 @@ class SelectProvider extends React.PureComponent {
                   initServiceId={initService ? initService.id : -1}
                 />
               </div>
-              <div className="selectProvider">
-                <div className="selectProviderContent">
-                  <div className="calendarTimeWrapper">
-                    <div className="calendarTime">
-                      {Array.from({ length: 24 }, (number, index) => {
-                        const roundTime = index < 10 ? `0${index}` : index;
-                        const halfTime = `${roundTime}:30`;
-                        return (
-                          <>
-                            <li className="dayTime">
-                              <div className="startTime">
-                                <Typography variant="body1" color="inherit">
-                                  {`${roundTime}:00`}
-                                </Typography>
-                              </div>
-                              <div className="midTime">
-                                <Typography variant="caption" color="inherit">
-                                  {halfTime}
-                                </Typography>
-                              </div>
-                            </li>
-                          </>
-                        );
-                      })}
-                    </div>
+              <div className="selectProviderList">
+                {providers.map(provider => (
+                  <div key={provider.id}>
+                    <ProviderContent
+                      initService={initService}
+                      provider={provider}
+                      bookingDetail={bookingDetail}
+                      duration={providerDetails[provider.id] ? providerDetails[provider.id][0].durationSec : 0}
+                      onTimeSelect={this.onSelectBooking(provider)}
+                    />
                   </div>
-                  <div className="selectProviderList">
-                    {providers.map(provider => (
-                      <div key={provider.id}>
-                        <ProviderContent
-                          initService={initService}
-                          provider={provider}
-                          bookingDetail={bookingDetail}
-                          duration={providerDetails[provider.id] ? providerDetails[provider.id][0].durationSec : 0}
-                          onTimeSelect={this.onSelectBooking(provider)}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                ))}
               </div>
             </div>)
         }
