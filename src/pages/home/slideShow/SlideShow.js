@@ -38,7 +38,6 @@ class SlideShow extends Component {
   render() {
     const { topServices } = this.state;
     const slideSettings = {
-      // dots: true,
       infinite: true,
       lazyMode: true,
       slidesToShow: 1,

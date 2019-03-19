@@ -24,6 +24,7 @@
     "jss": "^9.8.7",
     "lodash": "^4.17.11",
     "material-ui-pickers": "^2.2.1",
+    "material-ui-rating": "^3.0.1",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.23",
     "ol": "^5.3.1",

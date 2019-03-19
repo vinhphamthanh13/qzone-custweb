@@ -5,12 +5,16 @@ import {
 import { connect } from 'react-redux';
 
 import EmptyItem from 'components/EmptyItem';
-import { getAppointmentByCustomer, clearAppointments } from 'reduxModules/appointments.actions';
+import {
+  getAppointmentByCustomer,
+  clearAppointments,
+  rateAppointmentByCustomer,
+} from 'reduxModules/appointments.actions';
 import AppointmentTimeline from './AppointmentTimeline';
 import styles from './Appointment.module.scss';
 
 const AppointmentContainer = ({
-  appointments, userId,
+  appointments, userId, rateAppointmentByCustomerAction,
   getAppointmentByCustomerAction, clearAppointmentsAction,
 }) => {
   useEffect(() => {
@@ -24,7 +28,10 @@ const AppointmentContainer = ({
       ? (<EmptyItem message="You don't have any appointment right now" />)
       : (
         <div className={`${styles.appointmentWrapper} container-max auto-margin-horizontal`}>
-          <AppointmentTimeline items={appointments} />
+          <AppointmentTimeline
+            items={appointments}
+            rateAppointmentByCustomer={rateAppointmentByCustomerAction}
+          />
         </div>
       )
   );
@@ -34,6 +41,7 @@ AppointmentContainer.propTypes = {
   appointments: arrayOf(shape()).isRequired,
   getAppointmentByCustomerAction: func.isRequired,
   clearAppointmentsAction: func.isRequired,
+  rateAppointmentByCustomerAction: func.isRequired,
   userId: string,
 };
 
@@ -48,6 +56,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   getAppointmentByCustomerAction: getAppointmentByCustomer,
+  rateAppointmentByCustomerAction: rateAppointmentByCustomer,
   clearAppointmentsAction: clearAppointments,
 };
 

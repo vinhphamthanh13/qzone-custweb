@@ -7,7 +7,6 @@ import { compose } from 'redux';
 import {
   Slide, Dialog, AppBar, Toolbar, IconButton,
   Avatar,
-  // Typography,
   Button,
   Stepper, Step, StepLabel,
 } from '@material-ui/core';
