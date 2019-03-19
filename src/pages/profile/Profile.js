@@ -3,11 +3,7 @@ import {
   bool, func, objectOf, any,
 } from 'prop-types';
 import { connect } from 'react-redux';
-import {
-  Dialog,
-  // Typography, Avatar,
-} from '@material-ui/core';
-// import logo from 'images/quezone-logo.png';
+import { Dialog } from '@material-ui/core';
 import Header from './components/Header';
 import Content from './components/Content';
 import style from './Profile.module.scss';
