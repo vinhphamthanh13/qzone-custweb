@@ -1,16 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-// import mtz from 'moment-timezone';
 import { Typography } from '@material-ui/core';
 import moment from 'moment';
 import {
   bool, func, number, arrayOf, shape,
 } from 'prop-types';
-import { get, chunk } from 'lodash';
+import { get, chunk, noop } from 'lodash';
 import { bookingDetailType, providerType } from 'types/global';
-// import EmptyItem from 'components/EmptyItem';
-// import HourSelectBox from './selectTime/HourSelectBox';
-import styles from './SelectTime.module.scss';
+import zeroPad from 'utils/zeroPad';
 
 export class SelectTime extends React.PureComponent {
   constructor(props) {
@@ -62,10 +59,11 @@ export class SelectTime extends React.PureComponent {
       let hourStep = hourStart;
       const timeSlots = Array.from({ length: 48 }, (_, key) => {
         hourStep += 1800000;
+        const startTime = new Date(hourStep);
         return ({
           key,
-          time: new Date(hourStep),
-          display: moment(hourStep).format('HH:MM'),
+          time: startTime,
+          display: `${zeroPad(startTime.getHours(), 2)}:${zeroPad(startTime.getMinutes(), 2)}`,
           duration: durationSec,
           valid: customerStartSec === hourStep,
           action: this.onHourChange({ start: hourStep, duration: durationSec }),
@@ -78,15 +76,15 @@ export class SelectTime extends React.PureComponent {
   };
 
   renderTimeBox = list => list.map(row => (
-    <div className="time-row">
+    <div key={Math.random()} className="time-row">
       {row.map((slot) => {
         const {
           display, valid, action,
         } = slot;
-        const slotStyle = valid ? 'time-slot' : 'invalid-slot';
+        const slotStyle = valid ? 'valid-slot' : 'invalid-slot';
         return (
-          <div className={slotStyle}>
-            <Typography variant="body2" color="primary" onClick={action}>
+          <div className={`time-slot ${slotStyle}`}>
+            <Typography variant="body1" color="inherit" onClick={valid ? action : noop}>
               {display}
             </Typography>
           </div>
@@ -99,12 +97,8 @@ export class SelectTime extends React.PureComponent {
     const { timeDetails, isLoading } = this.props;
     const { selectedHour } = this.state;
     const hourBoxes = this.getHourBoxes(timeDetails);
-    return (
-      <div className={styles.selectTimeWrapper}>
-        {selectedHour} {isLoading}
-        {this.renderTimeBox(hourBoxes)}
-      </div>
-    );
+
+    return this.renderTimeBox(hourBoxes);
   }
 }
 

@@ -5,7 +5,7 @@ import {
 } from 'prop-types';
 import { get } from 'lodash';
 import { Typography, ButtonBase } from '@material-ui/core';
-import moment from 'moment';
+// import moment from 'moment';
 import {
   PersonPin, Schedule, EmailOutlined, CallOutlined, PlaceOutlined, AddOutlined,
 } from '@material-ui/icons';
@@ -62,7 +62,7 @@ export default class ProviderContent extends React.PureComponent {
     const providerCountry = get(provider, 'geoLocation.country');
     const providerPostCode = get(provider, 'geoLocation.postCode');
     const providerTimeZone = get(provider, 'providerInformation.timeZoneId');
-    const customerTimeZone = moment.tz.guess();
+    // const customerTimeZone = moment.tz.guess();
 
     return (
       <>
@@ -153,9 +153,6 @@ export default class ProviderContent extends React.PureComponent {
             </div>
           </div>
           <div className="calendarTime">
-            <Typography variant="subheading" color="inherit">
-              Your current timezone {customerTimeZone}
-            </Typography>
             <SelectTime
               bookingDetail={bookingDetail}
               providerDetail={provider}

@@ -402,47 +402,39 @@
 
 .time-row {
   display: flex;
+  width: 100%;
+  justify-content: space-between;
+  border-top: 1px solid rgba($grayNickel, 0.3);
 }
 
-.time-slot {
-  height: 30px;
-  background: linear-gradient(to bottom, $malibu, $gallery);
+.valid-slot {
+  background: rgba($malibu, 0.5);
   color: $crimson;
 }
 
 .invalid-slot {
-  height: 30px;
-  background: $gray;
-  color: $white;
-}
-
-.dayTime {
-  height: 35px;
-  border-bottom: 1px solid $gallery;
-  list-style: none;
-  padding: 0 0 0 1rem;
-  width: 100%;
+  background: transparent;
+  color: $grayNickel;
   &:hover {
-    background: linear-gradient(to bottom, $gallery, $white);
+    background: $grayNickel;
+    color: $white;
   }
 }
 
-.timeTable {
+.time-slot {
   display: flex;
-  flex-direction: column;
-}
-
-.startTime {
-  color: $main;
-  height: 20px;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+  width: 46px;
+  border-right: 1px solid rgba($grayNickel, 0.3);
+  box-sizing: border-box;
+  transition: all 0.25s ease;
+  user-select: none;
   &:hover {
-    background: linear-gradient(to right, $main, $malibu);
+    border-radius: 15px;
     cursor: pointer;
   }
-}
-
-.midTime {
-  color: $malibu;
 }
 
 .selectProviderList {
@@ -455,8 +447,8 @@
 .providerListCard {
   color: $crimson;
   border-radius: 10px;
-  margin: 0.5rem 1rem;
-  border: 1px solid $goldTips;
+  margin: 2rem 1rem;
+  border: 1px solid $grayNickel;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -470,7 +462,7 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  background: $goldTips;
+  background: rgba($goldTips, 0.8);
   width: 50%;
   padding-bottom: 0.5rem;
 }
@@ -509,7 +501,7 @@
   display: flex;
   color: $main;
   box-sizing: border-box;
-  border-bottom: 1px solid $goldTips;
+  //border-bottom: 1px solid $goldTips;
 }
 
 .contentItem {

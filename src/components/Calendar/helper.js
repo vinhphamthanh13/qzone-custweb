@@ -21,17 +21,17 @@ export const getDaysOfMonth = (month = THIS_MONTH, year = THIS_YEAR) => {
   return numberOfDate;
 };
 
-export const getFirstDayOfMonth = (month = THIS_MONTH, year = THIS_YEAR) => {
-  return +(new Date(`${year}-${zeroPad(month, 2)}-01`).getDay()) + 1;
-};
+export const getFirstDayOfMonth = (month = THIS_MONTH, year = THIS_YEAR) => +(new Date(
+  `${year}-${zeroPad(month, 2)}-01`,
+).getDay()) + 1;
 
-export const isDate = () => {
+export const isDate = (date) => {
   const isDateObject = Object.prototype.toString.call(date) === '[object Date]';
   const isValidDate = date && !Number.isNaN(date.valueOf());
   return isDateObject && isValidDate;
 };
 
-export const isSameMonth = (date, baseDate = new Date) => {
+export const isSameMonth = (date, baseDate = new Date()) => {
   if (!(isDate(date) && isDate(baseDate))) return false;
   const baseDateMonth = +(baseDate.getMonth()) + 1;
   const baseDateYear = baseDate.getFullYear();
@@ -40,7 +40,7 @@ export const isSameMonth = (date, baseDate = new Date) => {
   return baseDateMonth === dateMonth && baseDateYear === dateYear;
 };
 
-export const isSameDay = (date, baseDate = new Date) => {
+export const isSameDay = (date, baseDate = new Date()) => {
   if (!(isDate(date) && isDate(baseDate))) return false;
   const baseDateDate = baseDate.getDate();
   const baseDateMonth = +(baseDate.getMonth()) + 1;
@@ -53,7 +53,7 @@ export const isSameDay = (date, baseDate = new Date) => {
 
 // Format the given date as DD/MM/YYYY
 // Months and days are zero padding
-export const getDateISO = (date = new Date) => {
+export const getDateISO = (date = new Date()) => {
   if (!isDate(date)) return null;
   return [
     date.getFullYear(),
@@ -62,7 +62,7 @@ export const getDateISO = (date = new Date) => {
   ].join('/');
 };
 
-export const getLocaleDate = (date = new Date) => {
+export const getLocaleDate = (date = new Date()) => {
   if (!isDate(date)) return null;
   return [
     zeroPad(date.getDate(), 2),
@@ -72,7 +72,7 @@ export const getLocaleDate = (date = new Date) => {
 };
 
 export const getPreviousMonth = (month, year) => {
-  const [previousMonth, previousYear ] = +month > 1 ? [+month - 1, year] : [12, +year - 1];
+  const [previousMonth, previousYear] = +month > 1 ? [+month - 1, year] : [12, +year - 1];
   return { month: previousMonth, year: previousYear };
 };
 
@@ -99,6 +99,7 @@ export default (month = THIS_MONTH, year = THIS_YEAR) => {
 
   // Build dates to be displayed from previous month
   const previousMonthDates = [
+    // eslint-disable-next-line
     ...Array.apply(null, { length: daysOfPreviousMonth }).map((date, index) => {
       const day = index + 1 + (previousMonthDays - daysOfPreviousMonth);
       return [
@@ -106,11 +107,12 @@ export default (month = THIS_MONTH, year = THIS_YEAR) => {
         zeroPad(previousMonth, 2),
         zeroPad(day, 2),
       ];
-    })
+    }),
   ];
 
   // Build dates to be displayed in current month
   const currentMonthDates = [
+    // eslint-disable-next-line
     ...Array.apply(null, { length: daysOfMonth }).map((date, index) => {
       const day = index + 1;
       return [
@@ -118,11 +120,13 @@ export default (month = THIS_MONTH, year = THIS_YEAR) => {
         zeroPad(month, 2),
         zeroPad(day, 2),
       ];
-    })
+    }),
   ];
 
-  //Build dates to be displayed from next month
+  // Build dates to be displayed from next month
+
   const nextMonthDates = [
+    // eslint-disable-next-line
     ...Array.apply(null, { length: daysOfNextMonth }).map((date, index) => {
       const day = index + 1;
       return [
@@ -130,9 +134,9 @@ export default (month = THIS_MONTH, year = THIS_YEAR) => {
         zeroPad(nextMonth, 2),
         zeroPad(day, 2),
       ];
-    })
+    }),
   ];
 
   // Combine all dates
   return chunk([...previousMonthDates, ...currentMonthDates, ...nextMonthDates], DAYS_OF_WEEK);
-}
+};

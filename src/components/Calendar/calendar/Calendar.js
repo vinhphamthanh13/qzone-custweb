@@ -1,21 +1,25 @@
 import React, { Component } from 'react';
-import { instanceOf, oneOfType, string, func } from 'prop-types';
+import {
+  instanceOf, oneOfType, string, func,
+} from 'prop-types';
+import { Button } from '@material-ui/core';
 import { chunk, noop } from 'lodash';
-import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import calendar, {
   zeroPad,
   isDate,
   isSameDay,
   isSameMonth,
   getDateISO,
-} from '../calendar';
-import { WEEK_DAYS, MONTH_NAME, MONTH_INDEX, NUMBER_OF_MONTH_IN_ROW, NUMBER_OF_YEAR_IN_ROW } from '../constants';
-import s from './Calendar.css';
+} from '../helper';
+import {
+  WEEK_DAYS, MONTH_NAME, MONTH_INDEX, NUMBER_OF_MONTH_IN_ROW, NUMBER_OF_YEAR_IN_ROW,
+} from '../constants';
+import s from './Calendar.scss';
 
 const expandMore = () => (
   <svg width="24" height="24" viewBox="0 0 24 24">
-    <path fill="#fff" d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"/>
-    <path d="M0 0h24v24H0z" fill="none"/>
+    <path fill="#fff" d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z" />
+    <path d="M0 0h24v24H0z" fill="none" />
   </svg>
 );
 
@@ -32,6 +36,8 @@ class Calendar extends Component {
     maxDate: null,
     minDate: null,
     date: null,
+    onDateChanged: noop,
+    onClose: noop,
   };
 
   constructor(props) {
@@ -53,34 +59,26 @@ class Calendar extends Component {
     onDateChanged(current);
   }
 
-  componentDidUpdate(prevProps) {
-    const { date, onDateChanged } = this.props;
-    const { date: prevDate } = prevProps;
-    const dateMatch = date === prevDate || isSameDay(date, prevDate);
-    if (!dateMatch) {
-      this.setState(this.resolveStateFromDate(date), () => {
-        typeof onDateChanged === 'function' && onDateChanged(date);
-      });
-    }
-  }
+  // componentDidUpdate(prevProps) {
+  //   const { date, onDateChanged } = this.props;
+  //   const { date: prevDate } = prevProps;
+  //   const dateMatch = date === prevDate || isSameDay(date, prevDate);
+  //   if (!dateMatch) {
+  //     this.setState(this.resolveStateFromDate(date), () => {
+  //       typeof onDateChanged === 'function' && onDateChanged(date);
+  //     });
+  //   }
+  // }
 
-  clearDayTimeout = () => {
-    this.dayTimeout && clearTimeout(this.dayTimeout);
-  };
-
-  componentWillUnmount() {
-    this.clearDayTimeout();
-  }
-
-  resolveStateFromDate = date => {
+  resolveStateFromDate = (date) => {
     const isDateObject = isDate(date);
-    const _date = isDateObject ? date : new Date();
+    const $date = isDateObject ? date : new Date();
     return {
       current: isDateObject ? date : null,
-      month: +_date.getMonth() + 1,
-      year: _date.getFullYear(),
-      selectedYear: _date.getFullYear(),
-      selectedMonth: +_date.getMonth() + 1,
+      month: +$date.getMonth() + 1,
+      year: $date.getFullYear(),
+      selectedYear: $date.getFullYear(),
+      selectedMonth: +$date.getMonth() + 1,
     };
   };
 
@@ -94,16 +92,17 @@ class Calendar extends Component {
   // Render month and year header
   renderMonthAndYear = () => {
     const { selectedMonth, selectedYear } = this.state;
-    const nameOfMonth =
-      MONTH_NAME[
-        Object.keys(MONTH_NAME)[Math.max(0, Math.min(+selectedMonth - 1, 11))]
-      ];
+    const nameOfMonth = MONTH_NAME[
+      Object.keys(MONTH_NAME)[Math.max(0, Math.min(+selectedMonth - 1, 11))]
+    ];
     return (
       <div className={s.calendarHeader}>
+        { /* eslint-disable-next-line */ }
         <div className={s.monthAndYear} onClick={this.onMonthClick}>
           {nameOfMonth}
           {expandMore()}
         </div>
+        { /* eslint-disable-next-line */ }
         <div className={s.monthAndYear} onClick={this.onYearClick}>
           {selectedYear}
           {expandMore()}
@@ -127,20 +126,23 @@ class Calendar extends Component {
   // Render calendar date as returned from the calendar builder function
   renderCalendarDate = (date, index) => {
     const { minDate, maxDate } = this.props;
-    const { selectedMonth, selectedYear, today, current } = this.state;
-    const _date = new Date(date.join('-'));
-    const sameDate = isSameDay(current, _date);
-    const isToday = isSameDay(_date, today);
-    const inMonth =
-      selectedMonth && selectedYear && isSameMonth(_date, new Date([selectedYear, selectedMonth, 1].join('-')));
+    const {
+      selectedMonth, selectedYear, today, current,
+    } = this.state;
+    const $date = new Date(date.join('-'));
+    const sameDate = isSameDay(current, $date);
+    const isToday = isSameDay($date, today);
+    const inMonth = selectedMonth && selectedYear && isSameMonth(
+      $date, new Date([selectedYear, selectedMonth, 1].join('-')),
+    );
     const shortMaxDate = new Date(
       `${zeroPad(maxDate.getMonth() + 1, 2)}/${zeroPad(
         maxDate.getDate() + 1,
         2,
       )}/${maxDate.getFullYear()}`,
     );
-    const isValidDate = _date < shortMaxDate && _date > minDate;
-    const onClick = isValidDate ? this.gotoDate(_date) : noop;
+    const isValidDate = $date < shortMaxDate && $date > minDate;
+    const onClick = isValidDate ? this.gotoDate($date) : noop;
     const props = {
       index,
       onClick,
@@ -152,11 +154,11 @@ class Calendar extends Component {
       : `${s.invalidDate}`;
     return (
       <div
-        key={getDateISO(_date)}
+        key={getDateISO($date)}
         className={`${s.dateOfMonth} ${dateStyles}`}
         {...props}
       >
-        {_date.getDate()}
+        {$date.getDate()}
       </div>
     );
   };
@@ -165,21 +167,22 @@ class Calendar extends Component {
   renderWeekDays = () => {
     const { isClickingYear, isClickingMonth } = this.state;
     return (
-      !isClickingYear &&
-      !isClickingMonth &&
-      this.getCalendarDates().map((week, index) => (
+      !isClickingYear && !isClickingMonth
+      && this.getCalendarDates().map((week, index) => (
         <div className={s.week} key={week[index]}>
-          {week.map((day, index) => this.renderCalendarDate(day, index))}
+          {week.map((day, tInd) => this.renderCalendarDate(day, tInd))}
         </div>
       ))
     );
   };
 
-  gotoDate = date => event => {
+  gotoDate = date => (event) => {
+    // eslint-disable-next-line
     event && event.preventDefault();
     const { onDateChanged } = this.props;
     this.setState(this.resolveStateFromDate(date), () => {
-      typeof onDateChanged === 'function' && onDateChanged(date);
+      // eslint-disable-next-line
+      (typeof onDateChanged === 'function') && onDateChanged(date);
     });
   };
 
@@ -188,8 +191,9 @@ class Calendar extends Component {
     const { selectedYear, current } = this.state;
     const quarter = chunk(Object.keys(MONTH_NAME), NUMBER_OF_MONTH_IN_ROW);
     return quarter.map((monthRow, index) => (
+      // eslint-disable-next-line
       <div key={index} className={s.monthRow}>
-        {monthRow.map(month => {
+        {monthRow.map((month) => {
           const compareMaxDate = new Date(selectedYear, MONTH_INDEX[month], maxDate.getDate(), 0, 0, 0);
           const compareMinDate = new Date(selectedYear, MONTH_INDEX[month], maxDate.getDate(), 0, 0, 1);
           const isValidMonth = compareMaxDate <= maxDate && compareMinDate >= minDate;
@@ -220,7 +224,7 @@ class Calendar extends Component {
     ) : null;
   };
 
-  onMonthClick = event => {
+  onMonthClick = (event) => {
     event.preventDefault();
     this.setState({
       isClickingMonth: true,
@@ -228,7 +232,7 @@ class Calendar extends Component {
     });
   };
 
-  onMonthSelected = month => event => {
+  onMonthSelected = month => (event) => {
     const { selectedYear, current } = this.state;
     this.gotoDate(new Date(selectedYear, month, current.getDate()));
     event.preventDefault();
@@ -238,7 +242,7 @@ class Calendar extends Component {
     });
   };
 
-  onYearClick = event => {
+  onYearClick = (event) => {
     event.preventDefault();
     this.setState({
       isClickingYear: true,
@@ -246,7 +250,7 @@ class Calendar extends Component {
     });
   };
 
-  onYearSelected = year => event => {
+  onYearSelected = year => (event) => {
     event.preventDefault();
     this.setState({
       selectedYear: year,
@@ -270,19 +274,20 @@ class Calendar extends Component {
     return yearMatrix.reverse().map((yearRow, index) => {
       let fullYearRow = null;
       if (yearRow.length < NUMBER_OF_YEAR_IN_ROW) {
-        fullYearRow = Array.from({ length: NUMBER_OF_YEAR_IN_ROW }, (value, index) => index + yearRow[0])
+        fullYearRow = Array.from({ length: NUMBER_OF_YEAR_IN_ROW }, (value, tInd) => tInd + yearRow[0]);
       } else {
         fullYearRow = yearRow.slice();
       }
       return (
+        // eslint-disable-next-line
         <div key={index} className={s.yearRow}>
-          {fullYearRow.reverse().map(year => {
+          {fullYearRow.reverse().map((year) => {
             const compareMaxDate = new Date(year, +selectedMonth - 1, maxDate.getDate(), 0, 0, 0);
             const compareMinDate = new Date(year, +selectedMonth - 1, maxDate.getDate(), 0, 0, 1);
             const isValidYear = compareMaxDate <= maxDate && compareMinDate >= minDate;
             const currentYearStyle = current.getFullYear() === year ? s.currentMonthYear : '';
             const className = isValidYear
-              ? `${s.yearCell}  ${currentYearStyle}`: `${s.yearCell} ${s.invalidYear}`;
+              ? `${s.yearCell}  ${currentYearStyle}` : `${s.yearCell} ${s.invalidYear}`;
             const onClick = isValidYear ? this.onYearSelected(year) : noop;
             const props = {
               className,
@@ -295,7 +300,7 @@ class Calendar extends Component {
             );
           })}
         </div>
-      )
+      );
     });
   };
 
@@ -310,9 +315,9 @@ class Calendar extends Component {
     const { isClickingMonth, isClickingYear } = this.state;
     const { onClose } = this.props;
     return !isClickingMonth && !isClickingYear ? (
-      <button className={s.buttonOk} onClick={onClose}>
+      <Button className={s.buttonOk} onClick={onClose}>
         Đồng ý
-      </button>
+      </Button>
     ) : null;
   };
 
@@ -337,4 +342,4 @@ class Calendar extends Component {
   }
 }
 
-export default withStyles(s)(Calendar);
+export default Calendar;
