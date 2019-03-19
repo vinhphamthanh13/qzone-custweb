@@ -1,14 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import mtz from 'moment-timezone';
+// import mtz from 'moment-timezone';
+import { Typography } from '@material-ui/core';
 import moment from 'moment';
-import { get } from 'lodash';
 import {
-  func, arrayOf, bool, shape, number,
+  bool, func, number, arrayOf, shape,
 } from 'prop-types';
+import { get, chunk } from 'lodash';
 import { bookingDetailType, providerType } from 'types/global';
-import EmptyItem from 'components/EmptyItem';
-import HourSelectBox from './selectTime/HourSelectBox';
+// import EmptyItem from 'components/EmptyItem';
+// import HourSelectBox from './selectTime/HourSelectBox';
 import styles from './SelectTime.module.scss';
 
 export class SelectTime extends React.PureComponent {
@@ -35,7 +36,10 @@ export class SelectTime extends React.PureComponent {
       : { selectedHour: null };
   }
 
-  onHourChange = ({ start, duration }) => {
+  onHourChange = ({ start, duration }) => (event) => {
+    event.preventDefault();
+    console.log('start', start);
+    console.log('duration', duration);
     this.props.onChange({
       start: start.valueOf(),
       duration,
@@ -43,23 +47,53 @@ export class SelectTime extends React.PureComponent {
     this.setState({ selectedHour: start });
   };
 
-  getHourBoxes = timeDetails => timeDetails.map((d) => {
-    const customerStartSec = get(d, 'customerStartSec');
-    const providerStartSec = get(d, 'providerStartSec');
-    const durationSec = get(d, 'durationSec');
-    return ({
-      customer: {
-        startHour: moment(customerStartSec),
-        displayedStartHour: moment(customerStartSec),
-        durationSec,
-      },
-      provider: {
-        startHour: moment(providerStartSec),
-        displayedStartHour: moment(providerStartSec),
-        durationSec,
-      },
+  getHourBoxes = (timeDetails) => {
+    let timeRanges = [];
+    timeDetails.map((d) => {
+      const startDay = new Date();
+      const year = startDay.getFullYear();
+      const month = +startDay.getMonth() + 1;
+      const date = startDay.getDate();
+      const startHourRange = new Date(`${year}-${month}-${date} 00:00`);
+      const hourStart = startHourRange.getTime() - 1800000;
+      const customer = new Date(get(d, 'customerStartSec'));
+      const customerStartSec = customer.getTime();
+      const durationSec = get(d, 'durationSec');
+      let hourStep = hourStart;
+      const timeSlots = Array.from({ length: 48 }, (_, key) => {
+        hourStep += 1800000;
+        return ({
+          key,
+          time: new Date(hourStep),
+          display: moment(hourStep).format('HH:MM'),
+          duration: durationSec,
+          valid: customerStartSec === hourStep,
+          action: this.onHourChange({ start: hourStep, duration: durationSec }),
+        });
+      });
+      timeRanges = chunk(timeSlots, 12);
+      return timeRanges;
     });
-  });
+    return timeRanges;
+  };
+
+  renderTimeBox = list => list.map(row => (
+    <div className="time-row">
+      {row.map((slot) => {
+        const {
+          display, valid, action,
+        } = slot;
+        const slotStyle = valid ? 'time-slot' : 'invalid-slot';
+        return (
+          <div className={slotStyle}>
+            <Typography variant="body2" color="primary" onClick={action}>
+              {display}
+            </Typography>
+          </div>
+        );
+      })}
+    </div>
+  ));
 
   render() {
     const { timeDetails, isLoading } = this.props;
@@ -67,14 +101,8 @@ export class SelectTime extends React.PureComponent {
     const hourBoxes = this.getHourBoxes(timeDetails);
     return (
       <div className={styles.selectTimeWrapper}>
-        {!isLoading && Object.keys(hourBoxes).length === 0 ? <EmptyItem message="No available slot" />
-          : (
-            <HourSelectBox
-              hourBoxes={hourBoxes}
-              selectedHour={selectedHour}
-              onChange={this.onHourChange}
-            />
-          )}
+        {selectedHour} {isLoading}
+        {this.renderTimeBox(hourBoxes)}
       </div>
     );
   }

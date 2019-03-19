@@ -9,11 +9,11 @@ import styles from './HourSelectBox.module.scss';
 
 const renderTimeBox = (data) => {
   const {
-    startTime, duration, timezone, onClick,
+    startTime,
+    // duration,
+    // timezone,
+    onClick,
   } = data;
-  console.log('startTime', startTime);
-  console.log('duration', duration);
-  console.log('timezone', timezone);
 
   return (
     <div className="startTime">
@@ -40,11 +40,9 @@ export default function HourSelectBox({ hourBoxes = {}, onChange, selectedHour }
   return (
     <div className={styles.selectHour}>
       <Grid container spacing={16}>
-        {hourBoxes.sort((a, b) => a.startHour.unix() - b.startHour.unix()).map(box => Object.keys(box).map((timeType) => {
-          console.log('hoursbax', hourBoxes);
-          console.log('timeType', timeType);
+        {hourBoxes.sort((a, b) => a.startHour.unix() - b.startHour.unix()).map((timeType) => {
           let hourStep = hourStart;
-          const { startHour, displayedStartHour, durationSec } = box[timeType];
+          const { startHour, displayedStartHour, durationSec } = timeType;
           return (
             <Grid item xs={3} key={startHour.toISOString()}>
               <div className="timeTable">
@@ -72,7 +70,7 @@ export default function HourSelectBox({ hourBoxes = {}, onChange, selectedHour }
               </Card>
             </Grid>
           );
-        }))
+        })
         }
       </Grid>
     </div>

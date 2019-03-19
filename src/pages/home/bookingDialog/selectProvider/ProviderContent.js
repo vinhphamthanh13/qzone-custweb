@@ -1,20 +1,23 @@
 import React from 'react';
 import {
   number,
-  // func,
+  func,
 } from 'prop-types';
 import { get } from 'lodash';
 import { Typography, ButtonBase } from '@material-ui/core';
-import { PersonPin, Schedule } from '@material-ui/icons';
+import moment from 'moment';
+import {
+  PersonPin, Schedule, EmailOutlined, CallOutlined, PlaceOutlined, AddOutlined,
+} from '@material-ui/icons';
 import {
   providerType,
-  // bookingDetailType,
+  bookingDetailType,
   serviceType,
 } from 'types/global';
 
 import formatName from 'utils/formatName';
 import QLogo from 'images/quezone-logo.png';
-// import SelectTime from './providerContent/SelectTime';
+import SelectTime from './providerContent/SelectTime';
 // import styles from './ProviderContent.module.scss';
 import DetailDialog from './providerContent/DetailDialog';
 import MapDialog from './MapDialog';
@@ -44,8 +47,8 @@ export default class ProviderContent extends React.PureComponent {
   render() {
     const {
       provider, initService,
-      // bookingDetail,
-      // onTimeSelect,
+      bookingDetail,
+      onTimeSelect,
       duration,
     } = this.props;
     const { isDetailDialogOpen, isMapDialogOpen } = this.state;
@@ -59,6 +62,7 @@ export default class ProviderContent extends React.PureComponent {
     const providerCountry = get(provider, 'geoLocation.country');
     const providerPostCode = get(provider, 'geoLocation.postCode');
     const providerTimeZone = get(provider, 'providerInformation.timeZoneId');
+    const customerTimeZone = moment.tz.guess();
 
     return (
       <>
@@ -74,7 +78,7 @@ export default class ProviderContent extends React.PureComponent {
           provider={provider}
         />
         <div className="providerListCard">
-          <div>
+          <div className="providerListCardContent">
             <div className="providerListCardHeader">
               <div className="providerListCardLogo">
                 <div className="providerListCardImg">
@@ -82,41 +86,54 @@ export default class ProviderContent extends React.PureComponent {
                 </div>
               </div>
               <div className="providerListCardTitle">
-                <Typography variant="headline" color="inherit">
+                <Typography noWrap variant="headline" color="inherit">
                   {formatName({ givenName: provider.givenName, familyName: provider.familyName })}
                 </Typography>
               </div>
-              <div className="providerAddress">
-                <div className="address1">
-                  <Typography variant="body2" color="textSecondary">Email: {providerEmail}</Typography>
-                </div>
-                <div className="address1">
-                  <Typography variant="body2" color="textSecondary">Tel: {providerPhone}</Typography>
-                </div>
-                <div className="address1">
-                  <Typography variant="body2" color="textSecondary">{providerStreet}, {providerDistrict}</Typography>
-                </div>
-                <div className="address1">
-                  <Typography variant="body2" color="textSecondary">{providerState}, {providerCity}</Typography>
-                </div>
-                <div className="address1">
-                  <Typography variant="body2" color="textSecondary">{providerCountry}, {providerPostCode}</Typography>
-                </div>
-                <div className="address1">
-                  <Typography variant="body2" color="textSecondary">{providerTimeZone}</Typography>
-                </div>
-                <div className="address1">
-                  <Typography variant="body2" color="textSecondary">{providerWebsite}</Typography>
-                </div>
-              </div>
               <div className="providerListCardMap">
                 <ButtonBase onClick={this.toggleMapDialog}>
-                  <PersonPin className="icon-main icon-shake" />
+                  <PersonPin className="icon-normal icon-brand icon-shake" />
                 </ButtonBase>
-                <Typography variant="subheading" color="inherit">View map</Typography>
+                <Typography noWrap variant="subheading" color="inherit">View map</Typography>
+              </div>
+              <div className="providerAddress">
+                <div className="icon-text">
+                  <EmailOutlined className="icon-small icon-brand" />
+                  <Typography noWrap variant="body2" color="textSecondary">{providerEmail}</Typography>
+                </div>
+                <div className="icon-text">
+                  <CallOutlined className="icon-small icon-brand" />
+                  <Typography noWrap variant="body2" color="textSecondary">{providerPhone}</Typography>
+                </div>
+                <div className="icon-text">
+                  <PlaceOutlined className="icon-small icon-brand" />
+                  <Typography noWrap variant="body2" color="textSecondary">
+                    {providerStreet}, {providerDistrict}
+                  </Typography>
+                </div>
+                <div className="icon-text">
+                  <AddOutlined className="icon-small icon-transparent" />
+                  <Typography noWrap variant="body2" color="textSecondary">{providerState}, {providerCity}</Typography>
+                </div>
+                <div className="icon-text">
+                  <AddOutlined className="icon-small icon-transparent" />
+                  <Typography noWrap variant="body2" color="textSecondary">
+                    {providerCountry}, {providerPostCode}
+                  </Typography>
+                </div>
+                <div className="icon-text">
+                  <AddOutlined className="icon-small icon-transparent" />
+                  <Typography noWrap variant="body2" color="textSecondary">
+                    {providerWebsite || 'https://info.quezone.com.au'}
+                  </Typography>
+                </div>
+                <div className="icon-text">
+                  <AddOutlined className="icon-small icon-transparent" />
+                  <Typography noWrap variant="body2" color="textSecondary">{providerTimeZone}</Typography>
+                </div>
               </div>
             </div>
-            <div className="providerListCardContent">
+            <div className="providerListCardDescription">
               <Typography variant="body1" color="inherit">
                 {initService.description}
               </Typography>
@@ -133,12 +150,17 @@ export default class ProviderContent extends React.PureComponent {
                   </Typography>
                 </div>
               </div>
-              { /* eslint-disable-next-line */ }
-              { /* <div className="providerListCardAvailableTime">              <SelectTime                bookingDetail={bookingDetail}                providerDetail={provider}                onChange={onTimeSelect}              />            </div> */}
             </div>
           </div>
           <div className="calendarTime">
-            abcdefg akldjsfldajsf s
+            <Typography variant="subheading" color="inherit">
+              Your current timezone {customerTimeZone}
+            </Typography>
+            <SelectTime
+              bookingDetail={bookingDetail}
+              providerDetail={provider}
+              onChange={onTimeSelect}
+            />
           </div>
         </div>
       </>
@@ -149,8 +171,8 @@ export default class ProviderContent extends React.PureComponent {
 ProviderContent.propTypes = {
   initService: serviceType,
   provider: providerType,
-  // bookingDetail: bookingDetailType.isRequired,
-  // onTimeSelect: func.isRequired,
+  bookingDetail: bookingDetailType.isRequired,
+  onTimeSelect: func.isRequired,
   duration: number.isRequired,
 };
 

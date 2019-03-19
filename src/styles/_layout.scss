@@ -113,7 +113,13 @@
   }
 }
 
+.icon-small {
+  margin: 5px;
+  font-size: 18px;
+}
+
 .icon-normal {
+  margin: 5px;
   font-size: 24px;
 }
 
@@ -135,9 +141,24 @@
   color: $danger;
 }
 
+.icon-brand {
+  color: $crimson;
+}
+
+.icon-s-brand {
+  color: $goldTips;
+}
+
 .icon-white{
   margin: 5px;
   color: $white;
+}
+
+.icon-text {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
 }
 
 .verification-modal {
@@ -333,7 +354,7 @@
   height: auto;
   padding: 15px;
   border-radius: 6px;
-  background: linear-gradient(to bottom, $gallery, $white);
+  background: linear-gradient($main, $white, $malibu);
 }
 
 .step {
@@ -379,6 +400,22 @@
   align-items: center;
 }
 
+.time-row {
+  display: flex;
+}
+
+.time-slot {
+  height: 30px;
+  background: linear-gradient(to bottom, $malibu, $gallery);
+  color: $crimson;
+}
+
+.invalid-slot {
+  height: 30px;
+  background: $gray;
+  color: $white;
+}
+
 .dayTime {
   height: 35px;
   border-bottom: 1px solid $gallery;
@@ -422,9 +459,10 @@
   border: 1px solid $goldTips;
   box-sizing: border-box;
   display: flex;
+  flex-direction: column;
   overflow: hidden;
   box-shadow: 2px 1px 1px $grayNickel;
-  max-width: 650px;
+  max-width: 550px;
 }
 
 .providerListCardHeader {
@@ -433,7 +471,14 @@
   align-items: flex-start;
   justify-content: flex-start;
   background: $goldTips;
-  min-width: 300px;
+  width: 50%;
+  padding-bottom: 0.5rem;
+}
+
+.providerListCardDescription {
+  color: $malibu;
+  width: 50%;
+  padding: 0.5rem;
 }
 
 .providerListCardLogo {
@@ -456,13 +501,15 @@
 }
 
 .providerAddress {
-  padding: 1rem 0.5rem;
+  padding: 1rem 0.5rem 0;
+  width: 100%;
 }
 
 .providerListCardContent {
+  display: flex;
   color: $main;
-  padding: 0.5rem;
   box-sizing: border-box;
+  border-bottom: 1px solid $goldTips;
 }
 
 .contentItem {
@@ -470,10 +517,6 @@
   justify-content: space-between;
   align-items: center;
   color: $crimson;
-}
-
-.providerListCardDescription {
-  color: $malibu;
 }
 
 .providerListCardService {
@@ -489,6 +532,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 0 0.5rem 0
 }
 
 .providerListCardAvailableTime {
