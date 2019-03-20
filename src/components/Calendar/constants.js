@@ -4,13 +4,13 @@ export const THIS_YEAR = +(new Date().getFullYear());
 export const THIS_MONTH = +(new Date().getMonth() + 1);
 
 export const WEEK_DAYS = {
-  sunday: 'CN',
-  monday: 'T2',
-  tuesday: 'T3',
-  wednesday: 'T4',
-  thursday: 'T5',
-  friday: 'T6',
-  saturday: 'T7',
+  sunday: 'Sun',
+  monday: 'Mon',
+  tuesday: 'Tue',
+  wednesday: 'Wed',
+  thursday: 'Thu',
+  friday: 'Fri',
+  saturday: 'Sat',
 };
 
 export const MONTH_INDEX = {
@@ -29,18 +29,18 @@ export const MONTH_INDEX = {
 };
 
 export const MONTH_NAME = {
-  jan: 'Tháng 01',
-  feb: 'Tháng 02',
-  mar: 'Tháng 03',
-  apr: 'Tháng 04',
-  may: 'Tháng 05',
-  jun: 'Tháng 06',
-  jul: 'Tháng 07',
-  aug: 'Tháng 08',
-  sep: 'Tháng 09',
-  oct: 'Tháng 10',
-  nov: 'Tháng 11',
-  dec: 'Tháng 12',
+  jan: 'January',
+  feb: 'February',
+  mar: 'March',
+  apr: 'April',
+  may: 'May',
+  jun: 'June',
+  jul: 'July',
+  aug: 'August',
+  sep: 'September',
+  oct: 'October',
+  nov: 'November',
+  dec: 'December',
 };
 
 export const CALENDAR_WEEKS = 6;

@@ -5,7 +5,7 @@ import {
 } from 'prop-types';
 import { get } from 'lodash';
 import { Typography, ButtonBase } from '@material-ui/core';
-// import moment from 'moment';
+import moment from 'moment';
 import {
   PersonPin, Schedule, EmailOutlined, CallOutlined, PlaceOutlined, AddOutlined,
 } from '@material-ui/icons';
@@ -14,6 +14,7 @@ import {
   bookingDetailType,
   serviceType,
 } from 'types/global';
+import Calendar from 'components/Calendar/Calendar';
 
 import formatName from 'utils/formatName';
 import QLogo from 'images/quezone-logo.png';
@@ -134,21 +135,28 @@ export default class ProviderContent extends React.PureComponent {
               </div>
             </div>
             <div className="providerListCardDescription">
-              <Typography variant="body1" color="inherit">
-                {initService.description}
-              </Typography>
-              <div className="providerListCardService">
-                <div className="contentItem">
-                  <Schedule className="icon-main" />
-                  <Typography variant="subheading" color="primary">
-                    {duration} min
-                  </Typography>
+              <div className="providerListCardDescriptionTop">
+                <Typography variant="body1" color="inherit">
+                  {initService.description}
+                </Typography>
+                <div className="providerListCardService">
+                  <div className="contentItem">
+                    <Schedule className="icon-main" />
+                    <Typography variant="subheading" color="primary">
+                      {duration} min
+                    </Typography>
+                  </div>
+                  <div className="contentItem">
+                    <Typography variant="title" color="inherit">
+                      ${parseFloat(Math.random(15) * 100).toFixed(2)}
+                    </Typography>
+                  </div>
                 </div>
-                <div className="contentItem">
-                  <Typography variant="title" color="inherit">
-                    ${parseFloat(Math.random(15) * 100).toFixed(2)}
-                  </Typography>
-                </div>
+              </div>
+              <div className="providerListCardDescriptionBottom">
+                <Typography variant="body1" color="inherit">
+                  Your current timezone: {moment.tz.guess()}
+                </Typography>
               </div>
             </div>
           </div>
@@ -160,6 +168,11 @@ export default class ProviderContent extends React.PureComponent {
             />
           </div>
         </div>
+        <Calendar
+          maxDate={new Date(2999, 1, 1)}
+          minDate={new Date()}
+          date={new Date()}
+        />
       </>
     );
   }

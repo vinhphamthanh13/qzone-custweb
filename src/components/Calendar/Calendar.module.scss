@@ -1,55 +1,32 @@
-/**
- * Home Credit (https://www.homecredit.vn/)
- *
- * Copyright © 2018-present HomeCredit, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
-:root {
-  --calendar-min-width: 250px;
-  --calendar-max-width: 310px;
-  --calendar-max-height: 402px;
-  --calendar-date-container: 338px;
-  --calendar-year-row: 68px;
-  --calendar-month-row: 90px;
-}
+@import "styles/_settings.scss";
 
 .calendar {
-  border: 1px solid var(--c-brand);
-  border-radius: calc(var(--border-radius) * 2.5);
+  border: 1px solid $grayNickel;
+  border-radius: 5px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  min-width: var(--calendar-min-width);
-  max-width: var(--calendar-max-width);
-  height: var(--calendar-max-height);
+  max-width: 320px;
 }
 
 .calendarHeader {
-  padding: var(--b-space-xs) 0;
+  padding: 1em 2em 0.5em;
   display: flex;
+  flex-direction: column;
   justify-content: space-evenly;
-  background: var(--c-brand);
+  background: $crimson;
+  color: $gallery;
 }
 
-.caret {
+.monthYearSelection {
   display: flex;
-  color: var(--c-brand);
-  align-items: center;
+  justify-content: space-between;
 }
 
-.monthAndYear {
-  user-select: none;
-  font-size: var(--font-size-huge);
-  font-weight: var(--font-weight-bold);
-  color: var(--c-text-inverse);
-  cursor: pointer;
-
-  &:hover {
-    text-shadow: var(--b-space-3xs) var(--b-space-3xs) var(--b-space-md) var(--c-text-inverse);
-  }
+.headerToday {
+  text-align: right;
+  border-bottom: 1px solid $gallery;
+  padding-bottom: 0.5rem;
 }
 
 .grid {
@@ -58,28 +35,26 @@
 }
 
 .daysOfWeek {
-  padding: var(--b-space-xs) 0;
+  padding: 0.2rem 0;
   width: 100%;
   display: flex;
   justify-content: space-evenly;
-  background: var(--c-brand);
+  background: $goldTips;
+  color: $gallery;
   box-sizing: border-box;
 }
 
 .dayOfWeek {
-  width: var(--b-space-3xl);
-  user-select: none;
-  font-weight: var(--font-weight-semi-bold);
-  font-size: var(--font-size-big);
-  color: var(--c-text-inverse);
-  text-align: center;
+  margin: 0;
+  border: 1px solid $crimson;
+  text-transform: capitalize;
 }
 
 .datesOfMonth {
   display: flex;
   flex-direction: column;
   width: 100%;
-  background: var(--c-ui-lighter);
+  background: $gallery;
 }
 
 .week {
@@ -91,22 +66,21 @@
   user-select: none;
   cursor: pointer;
   text-align: center;
-  color: var(--c-text);
-  width: var(--b-space-3xl);
+  color: $crimson;
+  width: 48px;
   box-sizing: border-box;
   border: 1px solid transparent;
-  border-radius: var(--border-radius);
-  padding: var(--b-space-xs);
-  font-size: var(--font-size-big);
+  border-radius: 10px;
+  padding: 8px;
   transition: all 0.25s ease-in;
 }
 
 .today {
-  background: var(--c-ui-light);
-  border-radius: calc(var(--border-radius) * 5);
-  border: 1px solid var(--c-text-lighter);
-  font-weight: var(--font-weight-semi-bold);
-  color: var(--c-text) !important;
+  background: #f4f3f3;
+  border-radius: 15px;
+  border: 1px solid $alto;
+  font-weight: 400;
+  color: $malibu !important;
 
   &:hover {
     border: 1px solid var(--c-text-lighter);
@@ -114,11 +88,11 @@
 }
 
 .month {
-  color: var(--c-brand);
+  color: $crimson;
 }
 
 .invalidDate {
-  color: var(--c-ui-light);
+  color: $grayNickel;
 
   &:hover {
     border: 1px solid transparent;
@@ -127,22 +101,23 @@
 
 .buttonOk {
   user-select: none;
-  background: var(--c-brand);
+  background: $crimson;
+  color: $gallery;
   border: none;
-  border-top: 1px solid var(--c-brand);
-  height: calc(var(--b-space-2xl) * 1.2);
-  font-weight: var(--font-weight-semi-bold);
-  color: var(--c-text-inverse);
-
+  border-radius: unset;
+  height: 36px;
+  font-weight: bold;
+  transition: all 0.2s ease;
   &:hover {
-    text-shadow: var(--b-space-3xs) var(--b-space-3xs) var(--b-space-md) var(--c-text-inverse);
+    background: rgba($crimson, 0.8);
+    //color: $crimson;
   }
 }
 
 .monthList {
   display: flex;
   flex-direction: column;
-  background: var(--c-ui-light);
+  background: #f4f3f3;
   overflow: auto;
   height: var(--calendar-date-container);
   min-width: var(--calendar-min-width);
@@ -189,7 +164,7 @@
 
 .yearList {
   list-style-type: none;
-  background: var(--c-ui-light);
+  background: #f4f3f3;
   overflow: auto;
   height: var(--calendar-date-container);
   min-width: var(--calendar-min-width);

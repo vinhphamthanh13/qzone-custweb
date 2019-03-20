@@ -2,26 +2,21 @@ import React, { Component } from 'react';
 import {
   instanceOf, oneOfType, string, func,
 } from 'prop-types';
-import { Button } from '@material-ui/core';
+import { Button, Typography, IconButton } from '@material-ui/core';
+import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons';
 import { chunk, noop } from 'lodash';
+import moment from 'moment';
 import calendar, {
   zeroPad,
   isDate,
   isSameDay,
   isSameMonth,
   getDateISO,
-} from '../helper';
+} from './helper';
 import {
   WEEK_DAYS, MONTH_NAME, MONTH_INDEX, NUMBER_OF_MONTH_IN_ROW, NUMBER_OF_YEAR_IN_ROW,
-} from '../constants';
-import s from './Calendar.scss';
-
-const expandMore = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24">
-    <path fill="#fff" d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z" />
-    <path d="M0 0h24v24H0z" fill="none" />
-  </svg>
-);
+} from './constants';
+import s from './Calendar.module.scss';
 
 class Calendar extends Component {
   static propTypes = {
@@ -50,6 +45,8 @@ class Calendar extends Component {
       isClickingMonth: false,
       maxYear: props.maxDate.getFullYear(),
       minYear: +(props.maxDate.getFullYear() - 40),
+      toggleMonthSelection: false,
+      toggleYearSelection: false,
     };
   }
 
@@ -58,17 +55,6 @@ class Calendar extends Component {
     const { onDateChanged } = this.props;
     onDateChanged(current);
   }
-
-  // componentDidUpdate(prevProps) {
-  //   const { date, onDateChanged } = this.props;
-  //   const { date: prevDate } = prevProps;
-  //   const dateMatch = date === prevDate || isSameDay(date, prevDate);
-  //   if (!dateMatch) {
-  //     this.setState(this.resolveStateFromDate(date), () => {
-  //       typeof onDateChanged === 'function' && onDateChanged(date);
-  //     });
-  //   }
-  // }
 
   resolveStateFromDate = (date) => {
     const isDateObject = isDate(date);
@@ -89,23 +75,61 @@ class Calendar extends Component {
     return calendar(displayMonth, displayYear);
   };
 
+  onMonthClick = (event) => {
+    event.preventDefault();
+    this.setState(oldState => (
+      {
+        isClickingMonth: !oldState.isClickingMonth,
+        isClickingYear: false,
+        toggleMonthSelection: !oldState.toggleMonthSelection,
+        toggleYearSelection: false,
+      }
+    ));
+  };
+
+  onYearClick = (event) => {
+    event.preventDefault();
+    this.setState(oldState => (
+      {
+        isClickingYear: !oldState.isClickingYear,
+        isClickingMonth: false,
+        toggleYearSelection: !oldState.toggleYearSelection,
+        toggleMonthSelection: false,
+      }
+    ));
+  };
+
   // Render month and year header
   renderMonthAndYear = () => {
-    const { selectedMonth, selectedYear } = this.state;
+    const { date } = this.props;
+    const {
+      selectedMonth, selectedYear, toggleMonthSelection, toggleYearSelection,
+    } = this.state;
     const nameOfMonth = MONTH_NAME[
       Object.keys(MONTH_NAME)[Math.max(0, Math.min(+selectedMonth - 1, 11))]
     ];
+    const ArrowMonth = toggleMonthSelection ? <KeyboardArrowUp className="icon-white icon-shake" />
+      : <KeyboardArrowDown className="icon-white icon-shake" />;
+    const ArrowYear = toggleYearSelection ? <KeyboardArrowUp className="icon-white icon-shake" />
+      : <KeyboardArrowDown className="icon-white icon-shake" />;
     return (
       <div className={s.calendarHeader}>
-        { /* eslint-disable-next-line */ }
-        <div className={s.monthAndYear} onClick={this.onMonthClick}>
-          {nameOfMonth}
-          {expandMore()}
+        <div className={s.headerToday}>
+          <Typography variant="h4" color="inherit">{moment(date).format('ddd, DD MMM YYYY')}</Typography>
         </div>
-        { /* eslint-disable-next-line */ }
-        <div className={s.monthAndYear} onClick={this.onYearClick}>
-          {selectedYear}
-          {expandMore()}
+        <div className={s.monthYearSelection}>
+          <div>
+            <Typography variant="title" color="inherit" onClick={this.onMonthClick}>
+              {nameOfMonth}
+              <IconButton className="simple-button button-xs">{ArrowMonth}</IconButton>
+            </Typography>
+          </div>
+          <div>
+            <Typography variant="title" color="inherit" onClick={this.onYearClick}>
+              {selectedYear}
+              <IconButton className="simple-button button-xs">{ArrowYear}</IconButton>
+            </Typography>
+          </div>
         </div>
       </div>
     );
@@ -114,11 +138,11 @@ class Calendar extends Component {
   // Render the label for day of week
   renderDayLabel = (day, index) => {
     const { isClickingMonth, isClickingYear } = this.state;
-    const dayLabel = WEEK_DAYS[day].toUpperCase();
+    const dayLabel = WEEK_DAYS[day];
 
     return !isClickingMonth && !isClickingYear ? (
-      <div key={dayLabel} className={s.dayOfWeek} tabIndex={index}>
-        {dayLabel}
+      <div key={dayLabel} tabIndex={index} className="dayOfWeek">
+        <Typography variant="subtitle1" color="inherit">{dayLabel}</Typography>
       </div>
     ) : null;
   };
@@ -158,7 +182,7 @@ class Calendar extends Component {
         className={`${s.dateOfMonth} ${dateStyles}`}
         {...props}
       >
-        {$date.getDate()}
+        <Typography variant="subheading" color="inherit">{zeroPad($date.getDate(), 2)}</Typography>
       </div>
     );
   };
@@ -224,28 +248,12 @@ class Calendar extends Component {
     ) : null;
   };
 
-  onMonthClick = (event) => {
-    event.preventDefault();
-    this.setState({
-      isClickingMonth: true,
-      isClickingYear: false,
-    });
-  };
-
   onMonthSelected = month => (event) => {
     const { selectedYear, current } = this.state;
     this.gotoDate(new Date(selectedYear, month, current.getDate()));
     event.preventDefault();
     this.setState({
       selectedMonth: +month + 1,
-      isClickingMonth: false,
-    });
-  };
-
-  onYearClick = (event) => {
-    event.preventDefault();
-    this.setState({
-      isClickingYear: true,
       isClickingMonth: false,
     });
   };
@@ -316,13 +324,13 @@ class Calendar extends Component {
     const { onClose } = this.props;
     return !isClickingMonth && !isClickingYear ? (
       <Button className={s.buttonOk} onClick={onClose}>
-        Đồng ý
+        <Typography variant="subheading" color="inherit">OK</Typography>
       </Button>
     ) : null;
   };
 
   render() {
-    console.log();
+    console.log('calendar style', s);
     return (
       <>
         <div className={s.calendar}>
