@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import { func } from 'prop-types';
+import { func, string } from 'prop-types';
+import moment from 'moment';
 import { DateRange } from '@material-ui/icons';
-import { IconButton } from '@material-ui/core';
+import { IconButton, Typography } from '@material-ui/core';
 import Calendar from './Calendar';
 import s from './DatePicker.module.scss';
 
 class DatePicker extends Component {
   state = {
-    selectedDate: '',
+    selectedDate: new Date(),
     isOpenCalendar: false,
   };
 
@@ -23,10 +24,14 @@ class DatePicker extends Component {
   };
 
   handleCloseCalendar = () => {
+    const { selectDate } = this.props;
+    const { selectedDate } = this.state;
     this.setState({ isOpenCalendar: false });
+    selectDate(selectedDate);
   };
 
   render() {
+    const { label } = this.props;
     const { selectedDate, isOpenCalendar } = this.state;
     const now = new Date();
     const year = now.getFullYear();
@@ -43,12 +48,49 @@ class DatePicker extends Component {
         />
       </div>
     ) : null;
-    console.log('selected Date', selectedDate);
+    console.log('selected Date', selectedDate, label);
     return (
       <div className={s.datePicker}>
-        <IconButton className="simple-button button-xs" onClick={this.handleOpenCalendar}>
-          <DateRange className="icon-big icon-brand icon-shake" />
-        </IconButton>
+        <div className={s.calendarCabin}>
+          <div className={s.calendarTab}>
+            <div className={s.calendarDot}>
+              <div className={s.calendarTabCircle} />
+              <div className={s.calendarTabCircle} />
+            </div>
+            <div className={s.calendarText}>
+              <Typography variant="h4" color="inherit" className={s.calendarFont}>
+                {moment(selectedDate).format('DD')}
+              </Typography>
+            </div>
+          </div>
+          <div className={s.calendarTab}>
+            <div className={s.calendarDot}>
+              <div className={s.calendarTabCircle} />
+              <div className={s.calendarTabCircle} />
+            </div>
+            <div className={s.calendarText}>
+              <Typography variant="h4" color="inherit" className={s.calendarFont}>
+                {moment(selectedDate).format('MMM')}
+              </Typography>
+            </div>
+          </div>
+          <div className={s.calendarTab}>
+            <div className={s.calendarDot}>
+              <div className={s.calendarTabCircle} />
+              <div className={s.calendarTabCircle} />
+            </div>
+            <div className={s.calendarText}>
+              <Typography variant="h4" color="inherit" className={s.calendarFont}>
+                {moment(selectedDate).format('YYYY')}
+              </Typography>
+            </div>
+          </div>
+          <div>
+            <IconButton className="simple-button button-xs" onClick={this.handleOpenCalendar}>
+              <DateRange className="icon-huge icon-brand icon-shake" />
+            </IconButton>`
+          </div>
+        </div>
         {renderCalendar}
       </div>
     );
@@ -57,6 +99,8 @@ class DatePicker extends Component {
 
 DatePicker.propTypes = {
   onChange: func.isRequired,
+  selectDate: func.isRequired,
+  label: string.isRequired,
 };
 
 export default DatePicker;

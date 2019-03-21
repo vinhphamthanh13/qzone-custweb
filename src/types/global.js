@@ -45,6 +45,7 @@ export const providerType = shape({
 export const bookingDetailType = shape({
   provider: object,
   time: object,
+  selectedDate: oneOfType([Date, string]),
 });
 
 export const providerDetailsType = shape({

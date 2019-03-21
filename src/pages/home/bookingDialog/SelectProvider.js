@@ -14,6 +14,10 @@ import ProviderContent from './selectProvider/ProviderContent';
 import DateSelect from './selectProvider/DateSelect';
 
 class SelectProvider extends React.PureComponent {
+  state = {
+    selectedDate: new Date(),
+  };
+
   componentDidMount = () => {
     const { providers, getProvidersByServiceAction, initService } = this.props;
 
@@ -27,11 +31,21 @@ class SelectProvider extends React.PureComponent {
     this.props.onChange(time, 'time', this.props.handleNext);
   };
 
+  handleSelectDate = (date) => {
+    this.setState({ selectedDate: date });
+  };
+
   render() {
     const {
       isLoading, providers, bookingDetail, initService, providerDetails,
       onChange,
     } = this.props;
+    const { selectedDate } = this.state;
+    const bookingDetailWithDate = {
+      ...bookingDetail,
+      selectedDate,
+    };
+
     return (
       <>
         {!isLoading && providers.length === 0 ? <EmptyItem message="No available providers" />
@@ -45,9 +59,6 @@ class SelectProvider extends React.PureComponent {
                   <div className="selectedProviderReputation">
                     <RateStar rating={initService.rating} reviews={initService.viewNum} />
                   </div>
-                  <div className="selectDateOfBooking">
-                    <DatePicker onChange={onChange} />
-                  </div>
                 </div>
                 <DateSelect
                   bookingDetail={bookingDetail}
@@ -55,6 +66,9 @@ class SelectProvider extends React.PureComponent {
                   providers={providers}
                   initServiceId={initService ? initService.id : -1}
                 />
+                <div className="selectDateOfBooking">
+                  <DatePicker label="Find booking date" onChange={onChange} selectDate={this.handleSelectDate} />
+                </div>
               </div>
               <div className="selectProviderList">
                 {providers.map(provider => (
@@ -62,7 +76,7 @@ class SelectProvider extends React.PureComponent {
                     <ProviderContent
                       initService={initService}
                       provider={provider}
-                      bookingDetail={bookingDetail}
+                      bookingDetail={bookingDetailWithDate}
                       duration={providerDetails[provider.id] ? providerDetails[provider.id][0].durationSec : 0}
                       onTimeSelect={this.onSelectBooking(provider)}
                     />

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { string, arrayOf, func } from 'prop-types';
 import { connect } from 'react-redux';
 import { InlineDatePicker } from 'material-ui-pickers';
 import mtz from 'moment-timezone';
@@ -59,9 +59,9 @@ function DateSelect(props) {
 
 DateSelect.propTypes = {
   bookingDetail: bookingDetailType.isRequired,
-  initServiceId: PropTypes.string.isRequired,
-  providers: PropTypes.arrayOf(providerType).isRequired,
-  getProviderTimesAction: PropTypes.func.isRequired,
+  initServiceId: string.isRequired,
+  providers: arrayOf(providerType).isRequired,
+  getProviderTimesAction: func.isRequired,
 };
 
 export default connect(null, { getProviderTimesAction: getProviderTimes })(DateSelect);

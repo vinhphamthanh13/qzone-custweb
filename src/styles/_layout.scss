@@ -127,6 +127,10 @@
   font-size: 32px;
 }
 
+.icon-huge {
+  font-size: 62px;
+}
+
 .icon-transparent {
   color: transparent;
 }
@@ -386,8 +390,8 @@
 }
 
 .selectProviderHeader {
-  margin: 2rem 0 0;
-  padding: 0 1rem 2rem;
+  margin: 1rem 0 0;
+  padding: 0 1rem 0.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -547,4 +551,8 @@
 
 .providerListCardAvailableTime {
   color: $grayNickel;
+}
+
+.selectDateOfBooking {
+  height: 100%;
 }
