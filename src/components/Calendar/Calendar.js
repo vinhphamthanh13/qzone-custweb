@@ -126,8 +126,8 @@ class Calendar extends Component {
           </div>
           <div>
             <Typography variant="title" color="inherit" onClick={this.onYearClick}>
-              {selectedYear}
               <IconButton className="simple-button button-xs">{ArrowYear}</IconButton>
+              {selectedYear}
             </Typography>
           </div>
         </div>
