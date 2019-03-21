@@ -44,7 +44,7 @@ class Calendar extends Component {
       isClickingYear: false,
       isClickingMonth: false,
       maxYear: props.maxDate.getFullYear(),
-      minYear: +(props.maxDate.getFullYear() - 40),
+      minYear: new Date(),
       toggleMonthSelection: false,
       toggleYearSelection: false,
     };
@@ -305,7 +305,7 @@ class Calendar extends Component {
             };
             return (
               <li key={year} {...props}>
-                <Typography variant="subtitle2" color="inherit">{year}</Typography>
+                <Typography variant="subheading" color="inherit">{year}</Typography>
               </li>
             );
           })}

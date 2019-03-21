@@ -59,7 +59,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  background: $gallery;
+  background: $white;
 }
 
 .week {
@@ -82,14 +82,14 @@
 }
 
 .today {
-  background: #f4f3f3;
-  border-radius: 15px;
+  background: rgba($goldTips, 0.9);
+  border-radius: 50%;
   border: 1px solid $alto;
   font-weight: 400;
-  color: $malibu !important;
+  color: $white !important;
 
   &:hover {
-    border: 1px solid var(--c-text-lighter);
+    border: 1px solid $grayNickel;
   }
 }
 
@@ -99,7 +99,6 @@
 
 .invalidDate {
   color: $grayNickel;
-
   &:hover {
     border: 1px solid transparent;
   }
@@ -116,7 +115,6 @@
   transition: all 0.2s ease;
   &:hover {
     background: rgba($crimson, 0.8);
-    //color: $crimson;
   }
 }
 
@@ -155,7 +153,9 @@
   &:hover {
     cursor: pointer;
     background: $goldTips;
-    color: $crimson;
+    -webkit-border-bottom-right-radius: 10px;
+    -webkit-border-bottom-left-radius: 10px;
+    color: $gallery;
   }
 }
 
@@ -186,7 +186,7 @@
 }
 
 .yearCell {
-  padding: 1.5rem 1.3rem;
+  padding: 1.5rem 1.15rem;
   color: $crimson;
   box-sizing: border-box;
   border: 1px solid $white;
@@ -195,8 +195,9 @@
   &:hover {
     cursor: pointer;
     background: $goldTips;
-    border-bottom-right-radius: 5px;
-    border-bottom-left-radius: 5px;
+    color: $alto;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
    }
 }
 
