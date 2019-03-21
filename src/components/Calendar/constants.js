@@ -45,5 +45,5 @@ export const MONTH_NAME = {
 
 export const CALENDAR_WEEKS = 6;
 export const DAYS_OF_WEEK = 7;
-export const NUMBER_OF_YEAR_IN_ROW = 4;
+export const NUMBER_OF_YEAR_IN_ROW = 3;
 export const NUMBER_OF_MONTH_IN_ROW = 3;

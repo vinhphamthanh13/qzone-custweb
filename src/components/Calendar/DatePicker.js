@@ -7,7 +7,7 @@ import s from './DatePicker.module.scss';
 
 class DatePicker extends Component {
   state = {
-    selectedDate: '',
+    selectedDate: new Date(),
     isOpenCalendar: false,
   };
 
@@ -27,17 +27,22 @@ class DatePicker extends Component {
 
   render() {
     const { selectedDate, isOpenCalendar } = this.state;
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const date = now.getDate();
     const renderCalendar = isOpenCalendar ? (
       <div className="cover-bg-black">
         <Calendar
-          minDate={new Date()}
-          maxDate={new Date(2038, 0, 1, 0, 0, 0)}
+          minDate={new Date(year, month, date, 0, 0, 0)}
+          maxDate={new Date(year + 11, month, date, 0, 0, 0)}
           date={selectedDate}
           onDateChanged={this.handleChangeDate}
           onClose={this.handleCloseCalendar}
         />
       </div>
     ) : null;
+    console.log('selected Date', selectedDate);
     return (
       <div className={s.datePicker}>
         <IconButton className="simple-button button-xs" onClick={this.handleOpenCalendar}>

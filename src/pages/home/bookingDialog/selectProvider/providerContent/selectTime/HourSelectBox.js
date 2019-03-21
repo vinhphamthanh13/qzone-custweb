@@ -26,7 +26,6 @@ const renderTimeBox = (data) => {
 
 const onClick = time => (event) => {
   if (event) event.preventDefault();
-  console.log('hi time', time);
   return time;
 };
 

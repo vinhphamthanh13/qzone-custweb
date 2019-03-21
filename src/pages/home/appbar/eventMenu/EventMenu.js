@@ -37,34 +37,30 @@ class EventMenu extends Component {
       <Grid className="cover-bg-black cover-bg-black-content" onClick={handleCloseList}>
         <Paper className="event-list">
           {eventList.sort((a, b) => b.slot.startSec - a.slot.startSec)
-            .filter(event => event.slot.startSec * 1000 > currentTime).map((event) => {
-              const current = event.slot.startSec;
-              console.log('current', current);
-              return (
-                <MenuItem key={event.id} onClick={handleViewEvent} className={classes.menuItem}>
-                  <div className={classes.itemTitle}>
-                    <div>
-                      <Typography variant="subheading" color="textPrimary" className={classes.title}>
-                        {event.serviceName}
-                      </Typography>
-                    </div>
-                    <div>
-                      <Typography variant="body1" color="secondary">
-                        {moment(event.slot.startSec * 1000).fromNow()}
-                      </Typography>
-                    </div>
+            .filter(event => event.slot.startSec * 1000 > currentTime).map(event => (
+              <MenuItem key={event.id} onClick={handleViewEvent} className={classes.menuItem}>
+                <div className={classes.itemTitle}>
+                  <div>
+                    <Typography variant="subheading" color="textPrimary" className={classes.title}>
+                      {event.serviceName}
+                    </Typography>
                   </div>
                   <div>
-                    <Typography variant="body2" color="textSecondary" className={classes.content}>
-                      {event.providerName} -
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" className={classes.content}>
-                      {event.geoLocation.streetAddress}
+                    <Typography variant="body1" color="secondary">
+                      {moment(event.slot.startSec * 1000).fromNow()}
                     </Typography>
                   </div>
-                </MenuItem>
-              );
-            })}
+                </div>
+                <div>
+                  <Typography variant="body2" color="textSecondary" className={classes.content}>
+                    {event.providerName} -
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary" className={classes.content}>
+                    {event.geoLocation.streetAddress}
+                  </Typography>
+                </div>
+              </MenuItem>
+            ))}
         </Paper>
       </Grid>
     ) : null;

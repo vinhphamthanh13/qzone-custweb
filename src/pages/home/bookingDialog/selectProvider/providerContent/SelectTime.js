@@ -35,8 +35,6 @@ export class SelectTime extends React.PureComponent {
 
   onHourChange = ({ start, duration }) => (event) => {
     event.preventDefault();
-    console.log('start', start);
-    console.log('duration', duration);
     this.props.onChange({
       start: start.valueOf(),
       duration,
@@ -96,6 +94,7 @@ export class SelectTime extends React.PureComponent {
   render() {
     const { timeDetails, isLoading } = this.props;
     const { selectedHour } = this.state;
+    console.log('isLoading', isLoading, selectedHour);
     const hourBoxes = this.getHourBoxes(timeDetails);
 
     return this.renderTimeBox(hourBoxes);

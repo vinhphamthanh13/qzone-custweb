@@ -32,7 +32,6 @@ class SelectProvider extends React.PureComponent {
       isLoading, providers, bookingDetail, initService, providerDetails,
       onChange,
     } = this.props;
-    console.log('initservie', initService);
     return (
       <>
         {!isLoading && providers.length === 0 ? <EmptyItem message="No available providers" />

@@ -281,7 +281,7 @@ class Calendar extends Component {
     const { minDate, maxDate } = this.props;
     const { selectedMonth, current } = this.state;
     const yearMatrix = this.parseYearRange();
-    return yearMatrix.reverse().map((yearRow, index) => {
+    return yearMatrix.map((yearRow, index) => {
       let fullYearRow = null;
       if (yearRow.length < NUMBER_OF_YEAR_IN_ROW) {
         fullYearRow = Array.from({ length: NUMBER_OF_YEAR_IN_ROW }, (value, tInd) => tInd + yearRow[0]);
@@ -291,7 +291,7 @@ class Calendar extends Component {
       return (
         // eslint-disable-next-line
         <div key={index} className={s.yearRow}>
-          {fullYearRow.reverse().map((year) => {
+          {fullYearRow.map((year) => {
             const compareMaxDate = new Date(year, +selectedMonth - 1, maxDate.getDate(), 0, 0, 0);
             const compareMinDate = new Date(year, +selectedMonth - 1, maxDate.getDate(), 0, 0, 1);
             const isValidYear = compareMaxDate <= maxDate && compareMinDate >= minDate;
@@ -305,7 +305,7 @@ class Calendar extends Component {
             };
             return (
               <li key={year} {...props}>
-                <Typography variant="subheading" color="inherit">{year}</Typography>
+                <Typography variant="title" color="inherit">{year}</Typography>
               </li>
             );
           })}
@@ -332,7 +332,6 @@ class Calendar extends Component {
   };
 
   render() {
-    console.log('calendar style', s);
     return (
       <>
         <div className={s.calendar}>
