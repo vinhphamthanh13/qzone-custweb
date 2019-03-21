@@ -6,6 +6,7 @@ import {
   providerType, serviceType, bookingDetailType, providerDetailsType,
 } from 'types/global';
 import RateStar from 'components/Rating/RateStar';
+import DatePicker from 'components/Calendar/DatePicker';
 import { getProvidersByService } from 'reduxModules/home/bookingDialog/selectProvider.actions';
 import EmptyItem from 'components/EmptyItem';
 import ProviderContent from './selectProvider/ProviderContent';
@@ -44,6 +45,9 @@ class SelectProvider extends React.PureComponent {
                   </Typography>
                   <div className="selectedProviderReputation">
                     <RateStar rating={initService.rating} reviews={initService.viewNum} />
+                  </div>
+                  <div className="selectDateOfBooking">
+                    <DatePicker onChange={onChange} />
                   </div>
                 </div>
                 <DateSelect

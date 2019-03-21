@@ -44,7 +44,7 @@ class Calendar extends Component {
       isClickingYear: false,
       isClickingMonth: false,
       maxYear: props.maxDate.getFullYear(),
-      minYear: new Date(),
+      minYear: props.minDate.getFullYear(),
       toggleMonthSelection: false,
       toggleYearSelection: false,
     };

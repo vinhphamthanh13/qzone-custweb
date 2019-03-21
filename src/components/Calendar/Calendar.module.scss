@@ -1,12 +1,12 @@
 @import "styles/_settings.scss";
 
 .calendar {
-  border: 1px solid $grayNickel;
+  border: 1px solid transparent;
   border-radius: 5px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  max-width: 320px;
+  width: 310px;
 }
 
 .calendarHeader {
@@ -72,7 +72,7 @@
   user-select: none;
   cursor: pointer;
   text-align: center;
-  color: $crimson;
+  color: $grayNickel;
   width: 48px;
   box-sizing: border-box;
   border: 1px solid transparent;
@@ -98,7 +98,7 @@
 }
 
 .invalidDate {
-  color: $grayNickel;
+  color: $alto;
   &:hover {
     border: 1px solid transparent;
   }
@@ -123,9 +123,8 @@
   flex-direction: column;
   background: $gallery;
   overflow: auto;
-  height: 315px;
-  min-width: 310px;
-  max-width: 320px;
+  height: 340px;
+  width: 308px;
 }
 
 .monthRow {
@@ -135,17 +134,11 @@
   color: $crimson;
 }
 
-.currentMonthYear {
-  cursor: pointer;
-  background: $gallery;
-  color: $goldTips;
-}
-
 .monthCell {
-  width: 106px;
+  width: 105px;
   user-select: none;
   box-sizing: border-box;
-  padding: 1.65rem 1.5rem;
+  padding: 1.84rem 1rem;
   text-align: center;
   border: 1px solid $white;
   transition: background 0.25s ease, color 0.3s ease-in;
@@ -174,7 +167,8 @@
   list-style-type: none;
   background: $gallery;
   overflow: auto;
-  height: 315px;
+  height: 340px;
+  width: 310px;
 }
 
 .yearRow {
@@ -199,6 +193,13 @@
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
    }
+}
+
+.currentMonthYear {
+  cursor: pointer;
+  color: $goldTips;
+  background: rgba($crimson, 0.8);
+  border-radius: 5px;
 }
 
 .invalidYear {

@@ -14,12 +14,9 @@ import {
   bookingDetailType,
   serviceType,
 } from 'types/global';
-import Calendar from 'components/Calendar/Calendar';
-
 import formatName from 'utils/formatName';
 import QLogo from 'images/quezone-logo.png';
 import SelectTime from './providerContent/SelectTime';
-// import styles from './ProviderContent.module.scss';
 import DetailDialog from './providerContent/DetailDialog';
 import MapDialog from './MapDialog';
 
@@ -168,11 +165,6 @@ export default class ProviderContent extends React.PureComponent {
             />
           </div>
         </div>
-        <Calendar
-          maxDate={new Date(2999, 1, 1)}
-          minDate={new Date()}
-          date={new Date()}
-        />
       </>
     );
   }
