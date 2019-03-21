@@ -141,7 +141,7 @@ class Calendar extends Component {
     const dayLabel = WEEK_DAYS[day];
 
     return !isClickingMonth && !isClickingYear ? (
-      <div key={dayLabel} tabIndex={index} className="dayOfWeek">
+      <div key={dayLabel} tabIndex={index} className={s.dayOfWeek}>
         <Typography variant="subtitle1" color="inherit">{dayLabel}</Typography>
       </div>
     ) : null;
@@ -182,7 +182,7 @@ class Calendar extends Component {
         className={`${s.dateOfMonth} ${dateStyles}`}
         {...props}
       >
-        <Typography variant="subheading" color="inherit">{zeroPad($date.getDate(), 2)}</Typography>
+        <Typography variant="subtitle1" color="inherit">{zeroPad($date.getDate(), 2)}</Typography>
       </div>
     );
   };
@@ -233,7 +233,9 @@ class Calendar extends Component {
           };
           return (
             <div key={month} {...props}>
-              <div>{MONTH_NAME[month]}</div>
+              <div>
+                <Typography variant="title" color="inherit">{MONTH_NAME[month]}</Typography>
+              </div>
             </div>
           );
         })}
@@ -303,7 +305,7 @@ class Calendar extends Component {
             };
             return (
               <li key={year} {...props}>
-                {year}
+                <Typography variant="subtitle2" color="inherit">{year}</Typography>
               </li>
             );
           })}
