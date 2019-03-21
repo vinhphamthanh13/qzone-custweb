@@ -61,7 +61,6 @@ export default class ProviderContent extends React.PureComponent {
     const providerPostCode = get(provider, 'geoLocation.postCode');
     const providerTimeZone = get(provider, 'providerInformation.timeZoneId');
     // const customerTimeZone = moment.tz.guess();
-    console.log('bookingDetail in providerContent', bookingDetail);
     return (
       <>
         <DetailDialog

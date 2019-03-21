@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { func, string } from 'prop-types';
+import { func } from 'prop-types';
 import moment from 'moment';
 import { DateRange } from '@material-ui/icons';
 import { IconButton, Typography } from '@material-ui/core';
@@ -8,13 +8,13 @@ import s from './DatePicker.module.scss';
 
 class DatePicker extends Component {
   state = {
-    selectedDate: new Date(),
+    selectedDate: new Date(moment().year(), moment().month(), moment().date()),
     isOpenCalendar: false,
   };
 
   handleChangeDate = (date) => {
     const { onChange } = this.props;
-    console.log('get date in handlechange date', date);
+    console.log('current date', date);
     onChange(date);
     this.setState({ selectedDate: date });
   };
@@ -31,7 +31,6 @@ class DatePicker extends Component {
   };
 
   render() {
-    const { label } = this.props;
     const { selectedDate, isOpenCalendar } = this.state;
     const now = new Date();
     const year = now.getFullYear();
@@ -48,7 +47,6 @@ class DatePicker extends Component {
         />
       </div>
     ) : null;
-    console.log('selected Date', selectedDate, label);
     return (
       <div className={s.datePicker}>
         <div className={s.calendarCabin}>
@@ -58,7 +56,7 @@ class DatePicker extends Component {
               <div className={s.calendarTabCircle} />
             </div>
             <div className={s.calendarText}>
-              <Typography variant="h4" color="inherit" className={s.calendarFont}>
+              <Typography variant="h5" color="inherit" className={s.calendarFont}>
                 {moment(selectedDate).format('DD')}
               </Typography>
             </div>
@@ -69,7 +67,7 @@ class DatePicker extends Component {
               <div className={s.calendarTabCircle} />
             </div>
             <div className={s.calendarText}>
-              <Typography variant="h4" color="inherit" className={s.calendarFont}>
+              <Typography variant="h5" color="inherit" className={s.calendarFont}>
                 {moment(selectedDate).format('MMM')}
               </Typography>
             </div>
@@ -80,7 +78,7 @@ class DatePicker extends Component {
               <div className={s.calendarTabCircle} />
             </div>
             <div className={s.calendarText}>
-              <Typography variant="h4" color="inherit" className={s.calendarFont}>
+              <Typography variant="h5" color="inherit" className={s.calendarFont}>
                 {moment(selectedDate).format('YYYY')}
               </Typography>
             </div>
@@ -100,7 +98,6 @@ class DatePicker extends Component {
 DatePicker.propTypes = {
   onChange: func.isRequired,
   selectDate: func.isRequired,
-  label: string.isRequired,
 };
 
 export default DatePicker;

@@ -38,9 +38,10 @@ class Calendar extends Component {
   constructor(props) {
     super(props);
     const resolveDate = props.date || props.minDate;
+    const mm = moment();
     this.initValues = {
       ...this.resolveStateFromDate(resolveDate),
-      today: new Date(),
+      today: new Date(mm.year(), +moment().month() + 1, mm.date()),
       isClickingYear: false,
       isClickingMonth: false,
       maxYear: props.maxDate.getFullYear(),
@@ -205,6 +206,7 @@ class Calendar extends Component {
     // eslint-disable-next-line
     event && event.preventDefault();
     const { onDateChanged } = this.props;
+    console.log('ondate change', date);
     this.setState(this.resolveStateFromDate(date), () => {
       // eslint-disable-next-line
       (typeof onDateChanged === 'function') && onDateChanged(date);

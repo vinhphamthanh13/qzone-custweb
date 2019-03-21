@@ -32,6 +32,7 @@ class SelectProvider extends React.PureComponent {
   };
 
   handleSelectDate = (date) => {
+    console.log('chose a date', date);
     this.setState({ selectedDate: date });
   };
 
@@ -67,7 +68,7 @@ class SelectProvider extends React.PureComponent {
                   initServiceId={initService ? initService.id : -1}
                 />
                 <div className="selectDateOfBooking">
-                  <DatePicker label="Find booking date" onChange={onChange} selectDate={this.handleSelectDate} />
+                  <DatePicker onChange={onChange} selectDate={this.handleSelectDate} />
                 </div>
               </div>
               <div className="selectProviderList">

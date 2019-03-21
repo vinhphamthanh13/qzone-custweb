@@ -44,7 +44,6 @@ export class SelectTime extends React.PureComponent {
 
   getHourBoxes = (timeDetails) => {
     const { bookingDetail: { selectedDate } } = this.props;
-    console.log('selectedDate in selectTime', selectedDate);
     let timeRanges = [];
     timeDetails.map((d) => {
       const startDay = new Date(selectedDate);
