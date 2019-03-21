@@ -38,7 +38,7 @@ class Calendar extends Component {
   constructor(props) {
     super(props);
     const resolveDate = props.date || props.maxDate;
-    this.state = {
+    const initValues = {
       ...this.resolveStateFromDate(resolveDate),
       today: new Date(),
       isClickingYear: false,
@@ -48,6 +48,7 @@ class Calendar extends Component {
       toggleMonthSelection: false,
       toggleYearSelection: false,
     };
+    this.state = { ...initValues };
   }
 
   componentDidMount() {
@@ -254,18 +255,24 @@ class Calendar extends Component {
     const { selectedYear, current } = this.state;
     this.gotoDate(new Date(selectedYear, month, current.getDate()));
     event.preventDefault();
-    this.setState({
+    this.setState(oldState => ({
       selectedMonth: +month + 1,
-      isClickingMonth: false,
-    });
+      isClickingMonth: !oldState.isClickingMonth,
+      isClickingYear: false,
+      toggleMonthSelection: !oldState.toggleMonthSelection,
+      toggleYearSelection: false,
+    }));
   };
 
   onYearSelected = year => (event) => {
     event.preventDefault();
-    this.setState({
+    this.setState(oldState => ({
       selectedYear: year,
-      isClickingYear: false,
-    });
+      isClickingYear: !oldState.isClickingYear,
+      isClickingMonth: false,
+      toggleYearSelection: !oldState.toggleYearSelection,
+      toggleMonthSelection: false,
+    }));
   };
 
   parseYearRange = () => {
@@ -321,11 +328,16 @@ class Calendar extends Component {
     ) : null;
   };
 
+  handleClose = () => {
+    const { onClose } = this.props;
+    this.setState({ ...this.initState });
+    onClose();
+  };
+
   renderOkButton = () => {
     const { isClickingMonth, isClickingYear } = this.state;
-    const { onClose } = this.props;
     return !isClickingMonth && !isClickingYear ? (
-      <Button className={s.buttonOk} onClick={onClose}>
+      <Button className={s.buttonOk} onClick={this.handleClose}>
         <Typography variant="subheading" color="inherit">OK</Typography>
       </Button>
     ) : null;
