@@ -7,12 +7,13 @@ import s from './DatePicker.module.scss';
 
 class DatePicker extends Component {
   state = {
-    selectedDate: new Date(),
+    selectedDate: '',
     isOpenCalendar: false,
   };
 
   handleChangeDate = (date) => {
     const { onChange } = this.props;
+    console.log('get date in handlechange date', date);
     onChange(date);
     this.setState({ selectedDate: date });
   };
@@ -46,7 +47,7 @@ class DatePicker extends Component {
     return (
       <div className={s.datePicker}>
         <IconButton className="simple-button button-xs" onClick={this.handleOpenCalendar}>
-          <DateRange className="icon-big icon-main icon-shake" />
+          <DateRange className="icon-big icon-brand icon-shake" />
         </IconButton>
         {renderCalendar}
       </div>

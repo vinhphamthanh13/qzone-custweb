@@ -37,8 +37,8 @@ class Calendar extends Component {
 
   constructor(props) {
     super(props);
-    const resolveDate = props.date || props.maxDate;
-    const initValues = {
+    const resolveDate = props.date || props.minDate;
+    this.initValues = {
       ...this.resolveStateFromDate(resolveDate),
       today: new Date(),
       isClickingYear: false,
@@ -48,7 +48,7 @@ class Calendar extends Component {
       toggleMonthSelection: false,
       toggleYearSelection: false,
     };
-    this.state = { ...initValues };
+    this.state = { ...this.initValues };
   }
 
   componentDidMount() {
@@ -330,7 +330,7 @@ class Calendar extends Component {
 
   handleClose = () => {
     const { onClose } = this.props;
-    this.setState({ ...this.initState });
+    this.setState({ ...this.initValues });
     onClose();
   };
 

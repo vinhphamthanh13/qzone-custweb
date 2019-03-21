@@ -81,7 +81,7 @@ export class SelectTime extends React.PureComponent {
         } = slot;
         const slotStyle = valid ? 'valid-slot' : 'invalid-slot';
         return (
-          <div className={`time-slot ${slotStyle}`}>
+          <div key={Math.random()} className={`time-slot ${slotStyle}`}>
             <Typography variant="body1" color="inherit" onClick={valid ? action : noop}>
               {display}
             </Typography>

@@ -410,7 +410,6 @@
 
 .valid-slot {
   background: rgba($goldTips, 0.8);
-  color: $crimson;
   &:hover {
     color: $goldTips;
     background: rgba($crimson, 0.8);
@@ -437,7 +436,7 @@
   transition: all 0.25s ease;
   user-select: none;
   &:hover {
-    border-radius: 15px;
+    border-radius: 8px;
     cursor: pointer;
   }
 }
