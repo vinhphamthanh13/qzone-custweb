@@ -44,48 +44,57 @@ export class SelectTime extends React.PureComponent {
 
   getHourBoxes = (timeDetails) => {
     const { bookingDetail: { selectedDate } } = this.props;
-    let timeRanges = [];
-    timeDetails.map((d) => {
-      const startDay = new Date(selectedDate);
-      const year = startDay.getFullYear();
-      const month = +startDay.getMonth() + 1;
-      const date = startDay.getDate();
-      console.log('startDay', startDay);
-      const startHourRange = new Date(`${year}-${month}-${date} 00:00:00`);
-      console.log('starthoursng', startHourRange);
-      const hourStart = startHourRange.getTime() - 1800000;
-      const customer = new Date(get(d, 'customerStartSec'));
-      const customerStartSec = customer.getTime();
-      const durationSec = get(d, 'durationSec');
-      let hourStep = hourStart;
-      const timeSlots = Array.from({ length: 48 }, (_, key) => {
-        hourStep += 1800000;
-        const startTime = new Date(hourStep);
-        return ({
-          key,
-          time: startTime,
-          display: `${zeroPad(startTime.getHours(), 2)}:${zeroPad(startTime.getMinutes(), 2)}`,
-          duration: durationSec,
-          valid: customerStartSec === hourStep,
-          action: this.onHourChange({ start: hourStep, duration: durationSec }),
-        });
+    const startDay = new Date(selectedDate);
+    const year = startDay.getFullYear();
+    const month = +startDay.getMonth() + 1;
+    const date = startDay.getDate();
+    const startHourRange = new Date(`${year}-${month}-${date} 00:00:00`);
+    let hourStep = startHourRange.getTime() - 1800000;
+    const timeSlots = Array.from({ length: 48 }, (_, key) => {
+      hourStep += 1800000;
+      const startTime = new Date(hourStep);
+
+      return ({
+        key,
+        time: startTime,
+        display: `${zeroPad(startTime.getHours(), 2)}:${zeroPad(startTime.getMinutes(), 2)}`,
+        duration: 0,
+        valid: false,
+        canBook: false,
+        action: noop,
       });
-      timeRanges = chunk(timeSlots, 12);
-      return timeRanges;
     });
-    return timeRanges;
+    const mergeTime = timeSlots.map((slot) => {
+      const newSlot = Object.assign({}, { ...slot });
+      // There is a mutation if the provider has more than one slot.
+      // So, re-assign the original to the slot if condition is not satisfied is correct.
+      // eslint-disable-next-line
+      timeDetails.map((bookedSlot) => {
+        const customer = new Date(get(bookedSlot, 'customerStartSec'));
+        const customerStartSec = customer.getTime();
+        const durationSec = get(bookedSlot, 'durationSec');
+        newSlot.valid = customerStartSec === newSlot.time.getTime();
+        newSlot.duration = newSlot.valid ? durationSec : newSlot.duration;
+        newSlot.canBook = newSlot.valid && +customerStartSec > +moment.now() ? true : newSlot.canBook;
+        newSlot.action = newSlot.valid && newSlot.canBook
+          ? this.onHourChange({ start: customerStartSec, duration: durationSec }) : newSlot.action;
+      });
+      return newSlot;
+    });
+    return chunk(mergeTime, 12);
   };
 
   renderTimeBox = list => list.map(row => (
     <div key={Math.random()} className="time-row">
       {row.map((slot) => {
         const {
-          display, valid, action,
+          display, valid, action, duration, canBook,
         } = slot;
-        const slotStyle = valid ? 'valid-slot' : 'invalid-slot';
+        const slotStyle = valid || duration > 0 ? 'valid-slot' : 'invalid-slot';
+        const bookStyle = duration && canBook ? slotStyle : 'kantBook';
         return (
-          <div key={Math.random()} className={`time-slot ${slotStyle}`}>
-            <Typography variant="body1" color="inherit" onClick={valid ? action : noop}>
+          <div key={Math.random()} className={`time-slot ${bookStyle}`}>
+            <Typography variant="body1" color="inherit" onClick={duration > 0 && canBook ? action : noop}>
               {display}
             </Typography>
           </div>
@@ -95,11 +104,15 @@ export class SelectTime extends React.PureComponent {
   ));
 
   render() {
-    const { timeDetails, isLoading } = this.props;
+    const {
+      timeDetails,
+      isLoading,
+    } = this.props;
     const { selectedHour } = this.state;
     console.log('isLoading', isLoading, selectedHour);
+    // console.log('timeDetails', timeDetails);
     const hourBoxes = this.getHourBoxes(timeDetails);
-
+    console.log('hourboxes', hourBoxes);
     return this.renderTimeBox(hourBoxes);
   }
 }

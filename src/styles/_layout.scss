@@ -412,23 +412,6 @@
   border-top: 1px solid rgba($grayNickel, 0.3);
 }
 
-.valid-slot {
-  background: rgba($goldTips, 0.8);
-  &:hover {
-    color: $goldTips;
-    background: rgba($crimson, 0.8);
-  }
-}
-
-.invalid-slot {
-  background: transparent;
-  color: $grayNickel;
-  &:hover {
-    background: rgba($grayNickel, 0.6);
-    color: $white;
-  }
-}
-
 .time-slot {
   display: flex;
   align-items: center;
@@ -442,6 +425,31 @@
   &:hover {
     border-radius: 8px;
     cursor: pointer;
+  }
+}
+
+.kantBook {
+  background: $grayNickel;
+  color: $gallery;
+}
+
+.valid-slot {
+  background: rgba($goldTips, 0.6);
+  border-radius: 7px;
+  border: 1px solid $crimson;
+  &:hover {
+    color: $goldTips;
+    background: rgba($crimson, 0.8);
+    border: 1px solid $goldTips;
+  }
+}
+
+.invalid-slot {
+  background: transparent;
+  color: $grayNickel;
+  &:hover {
+    background: rgba($grayNickel, 0.4);
+    color: $white;
   }
 }
 
