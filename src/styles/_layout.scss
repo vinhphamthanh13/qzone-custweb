@@ -428,18 +428,13 @@
   }
 }
 
-.kantBook {
-  background: $grayNickel;
-  color: $gallery;
-}
-
 .valid-slot {
   background: rgba($goldTips, 0.6);
-  border-radius: 7px;
+  border-radius: 6px;
   border: 1px solid $crimson;
   &:hover {
-    color: $goldTips;
-    background: rgba($crimson, 0.8);
+    color: $white;
+    background: rgba($crimson, 0.6);
     border: 1px solid $goldTips;
   }
 }
@@ -448,8 +443,17 @@
   background: transparent;
   color: $grayNickel;
   &:hover {
-    background: rgba($grayNickel, 0.4);
     color: $white;
+  }
+}
+
+.kantBook {
+  background: unset;
+  color: $grayNickel;
+  &:hover {
+    background: unset;
+    color: $grayNickel;
+    border: 1px solid $grayNickel;
   }
 }
 

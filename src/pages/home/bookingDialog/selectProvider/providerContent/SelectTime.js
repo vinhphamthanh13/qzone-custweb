@@ -91,7 +91,7 @@ export class SelectTime extends React.PureComponent {
           display, valid, action, duration, canBook,
         } = slot;
         const slotStyle = valid || duration > 0 ? 'valid-slot' : 'invalid-slot';
-        const bookStyle = duration && canBook ? slotStyle : 'kantBook';
+        const bookStyle = duration > 0 && canBook ? slotStyle : `${slotStyle} kantBook`;
         return (
           <div key={Math.random()} className={`time-slot ${bookStyle}`}>
             <Typography variant="body1" color="inherit" onClick={duration > 0 && canBook ? action : noop}>
