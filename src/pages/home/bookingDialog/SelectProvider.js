@@ -8,15 +8,16 @@ import {
 import moment from 'moment';
 import RateStar from 'components/Rating/RateStar';
 import DatePicker from 'components/Calendar/DatePicker';
-import { getProvidersByService } from 'reduxModules/home/bookingDialog/selectProvider.actions';
+import { getProvidersByService, getProviderTimes } from 'reduxModules/home/bookingDialog/selectProvider.actions';
 import EmptyItem from 'components/EmptyItem';
 import ProviderContent from './selectProvider/ProviderContent';
-// import styles from './SelectProvider.module.scss';
-import DateSelect from './selectProvider/DateSelect';
+
+const today = moment();
 
 class SelectProvider extends React.PureComponent {
   state = {
-    selectedDate: new Date(moment().year(), moment().month(), moment().date(), 0, 0, 0),
+    selectedDate: new Date(today.year(), today.month(), today.date(), 0, 0, 0),
+    sameDate: new Date(today.year(), today.month(), today.date(), 0, 0, 0),
   };
 
   componentDidMount = () => {
@@ -33,8 +34,20 @@ class SelectProvider extends React.PureComponent {
   };
 
   handleSelectDate = (date) => {
-    console.log('chose a date', date);
+    const { getProviderTimesAction, providers, initService } = this.props;
+    const { sameDate } = this.state;
     this.setState({ selectedDate: date });
+    const availabilityData = {
+      serviceId: initService.id,
+      providers,
+      startSec: date.getTime() / 1000,
+      toSec: date.getTime() / 1000,
+    };
+    if (date.getTime() === sameDate.getTime()) {
+      availabilityData.startSec = (moment.now() + 10000) / 1000;
+      availabilityData.toSec = (moment.now() + 10000) / 1000;
+    }
+    getProviderTimesAction(availabilityData);
   };
 
   render() {
@@ -62,12 +75,6 @@ class SelectProvider extends React.PureComponent {
                     <RateStar rating={initService.rating} reviews={initService.viewNum} />
                   </div>
                 </div>
-                <DateSelect
-                  bookingDetail={bookingDetail}
-                  onChange={onChange}
-                  providers={providers}
-                  initServiceId={initService ? initService.id : -1}
-                />
                 <div className="selectDateOfBooking">
                   <DatePicker onChange={onChange} selectDate={this.handleSelectDate} />
                 </div>
@@ -100,6 +107,7 @@ SelectProvider.propTypes = {
   }).isRequired,
   isLoading: PropTypes.bool.isRequired,
   getProvidersByServiceAction: PropTypes.func.isRequired,
+  getProviderTimesAction: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   bookingDetail: bookingDetailType.isRequired,
   handleNext: PropTypes.func.isRequired,
@@ -113,4 +121,7 @@ const mapStateToProps = state => ({
   ...state.homeModules.bookingDialogModules.selectProvider,
 });
 
-export default connect(mapStateToProps, { getProvidersByServiceAction: getProvidersByService })(SelectProvider);
+export default connect(mapStateToProps, {
+  getProvidersByServiceAction: getProvidersByService,
+  getProviderTimesAction: getProviderTimes,
+})(SelectProvider);

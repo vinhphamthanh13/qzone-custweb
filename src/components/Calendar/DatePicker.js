@@ -12,6 +12,12 @@ class DatePicker extends Component {
     isOpenCalendar: false,
   };
 
+  componentWillMount() {
+    const { selectDate } = this.props;
+    const { selectedDate } = this.state;
+    selectDate(selectedDate);
+  }
+
   handleChangeDate = (date) => {
     const { onChange } = this.props;
     onChange(date);

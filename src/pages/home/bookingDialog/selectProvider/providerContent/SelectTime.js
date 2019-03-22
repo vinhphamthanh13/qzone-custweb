@@ -6,26 +6,10 @@ import {
   bool, func, number, arrayOf, shape,
 } from 'prop-types';
 import { get, chunk, noop } from 'lodash';
-import { bookingDetailType, providerType } from 'types/global';
+import { bookingDetailType } from 'types/global';
 import zeroPad from 'utils/zeroPad';
 
 export class SelectTime extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedHour: null,
-    };
-  }
-
-  componentDidMount() {
-    const { bookingDetail, providerDetail } = this.props;
-    if (bookingDetail.provider && bookingDetail.time && providerDetail.id === bookingDetail.provider.id) {
-      this.setState({
-        selectedHour: moment(bookingDetail.time.start),
-      });
-    }
-  }
-
   static getDerivedStateFromProps(nextProps) {
     return nextProps.bookingDetail.provider && nextProps.providerDetail.id === nextProps.bookingDetail.provider.id
       && nextProps.bookingDetail.time
@@ -39,7 +23,6 @@ export class SelectTime extends React.PureComponent {
       start: start.valueOf(),
       duration,
     });
-    this.setState({ selectedHour: start });
   };
 
   getHourBoxes = (timeDetails) => {
@@ -108,11 +91,7 @@ export class SelectTime extends React.PureComponent {
       timeDetails,
       isLoading,
     } = this.props;
-    const { selectedHour } = this.state;
-    console.log('isLoading', isLoading, selectedHour);
-    // console.log('timeDetails', timeDetails);
     const hourBoxes = this.getHourBoxes(timeDetails);
-    console.log('hourboxes', hourBoxes);
     return !isLoading && this.renderTimeBox(hourBoxes);
   }
 }
@@ -128,7 +107,6 @@ SelectTime.propTypes = {
   ),
   onChange: func.isRequired,
   isLoading: bool,
-  providerDetail: providerType.isRequired,
 };
 
 SelectTime.defaultProps = {

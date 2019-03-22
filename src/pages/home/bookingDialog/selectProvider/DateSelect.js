@@ -30,10 +30,8 @@ const onDateChange = (
 };
 
 function DateSelect(props) {
-  console.log('Date Select --> ', props);
   const initialSelectedDay = props.bookingDetail.day || mtz().add(5, 'minutes');
   const selectedDayState = useState(initialSelectedDay);
-  console.log('Date select', initialSelectedDay);
   useEffect(() => {
     const initialSelectedDayByUnix = initialSelectedDay.unix();
     props.getProviderTimesAction({
