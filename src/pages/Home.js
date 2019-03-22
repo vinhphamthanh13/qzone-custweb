@@ -11,6 +11,7 @@ import {
   getServicesByName,
   setServicesGlobal,
 } from 'reduxModules/home.actions';
+import Loading from 'components/Loading';
 import styles from './Home.module.scss';
 import { serviceCategoriesType } from './home/Header';
 import Services from './home/Services';
@@ -195,6 +196,7 @@ export class Home extends React.PureComponent {
 
     return (
       <>
+        <Loading />
         {isOpenAdvancedSearch && (
           <div className="flex auto-margin-horizontal cover-bg-black">
             <AdvancedSearch

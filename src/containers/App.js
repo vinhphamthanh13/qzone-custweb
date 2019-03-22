@@ -13,7 +13,6 @@ import Amplify from 'aws-amplify';
 import 'config/api';
 import { AWS_CONFIG } from 'config/auth';
 import store from 'config/store';
-import Loading from 'components/Loading';
 import './App.module.scss';
 import '../styles/_settings.scss';
 import 'react-vertical-timeline-component/style.min.css';
@@ -38,7 +37,6 @@ const App = () => (
               {rootRoutes.map(route => (<Route key={route.name || route.path} {...route} />))}
             </Switch>
           </Router>
-          <Loading />
         </Provider>
       </MuiPickersUtilsProvider>
       <CssBaseline />
