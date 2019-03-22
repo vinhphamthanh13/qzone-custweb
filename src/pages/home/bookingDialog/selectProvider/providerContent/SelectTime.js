@@ -89,7 +89,7 @@ SelectTime.propTypes = {
 
 SelectTime.defaultProps = {
   timeDetails: [],
-  isLoading: true,
+  isLoading: false,
 };
 
 const mapStateToProps = (states, ownProps) => ({
