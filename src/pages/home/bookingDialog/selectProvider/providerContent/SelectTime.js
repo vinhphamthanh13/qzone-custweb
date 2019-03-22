@@ -113,7 +113,7 @@ export class SelectTime extends React.PureComponent {
     // console.log('timeDetails', timeDetails);
     const hourBoxes = this.getHourBoxes(timeDetails);
     console.log('hourboxes', hourBoxes);
-    return this.renderTimeBox(hourBoxes);
+    return !isLoading && this.renderTimeBox(hourBoxes);
   }
 }
 
