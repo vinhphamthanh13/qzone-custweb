@@ -14,7 +14,6 @@ class DatePicker extends Component {
 
   handleChangeDate = (date) => {
     const { onChange } = this.props;
-    console.log('current date', date);
     onChange(date);
     this.setState({ selectedDate: date });
   };

@@ -5,6 +5,7 @@ import { Typography } from '@material-ui/core';
 import {
   providerType, serviceType, bookingDetailType, providerDetailsType,
 } from 'types/global';
+import moment from 'moment';
 import RateStar from 'components/Rating/RateStar';
 import DatePicker from 'components/Calendar/DatePicker';
 import { getProvidersByService } from 'reduxModules/home/bookingDialog/selectProvider.actions';
@@ -15,7 +16,7 @@ import DateSelect from './selectProvider/DateSelect';
 
 class SelectProvider extends React.PureComponent {
   state = {
-    selectedDate: new Date(),
+    selectedDate: new Date(moment().year(), moment().month(), moment().date(), 0, 0, 0),
   };
 
   componentDidMount = () => {

@@ -50,7 +50,9 @@ export class SelectTime extends React.PureComponent {
       const year = startDay.getFullYear();
       const month = +startDay.getMonth() + 1;
       const date = startDay.getDate();
-      const startHourRange = new Date(`${year}-${month}-${date} 00:00`);
+      console.log('startDay', startDay);
+      const startHourRange = new Date(`${year}-${month}-${date} 00:00:00`);
+      console.log('starthoursng', startHourRange);
       const hourStart = startHourRange.getTime() - 1800000;
       const customer = new Date(get(d, 'customerStartSec'));
       const customerStartSec = customer.getTime();
