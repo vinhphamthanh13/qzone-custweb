@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { objectOf, any, func } from 'prop-types';
 import { matchType } from 'types/global';
 import { connect } from 'react-redux';
+import { get } from 'lodash';
 import Grid from '@material-ui/core/Grid';
-import OrgLogo from 'images/dog_logo.jpg';
+// import OrgLogo from 'images/dog_logo.jpg';
 import { fetchOrg } from 'reduxModules/organisation.action';
 import Loading from 'components/Loading';
 import Section1 from './organisation/Section1';
@@ -49,8 +50,13 @@ class Organisation extends Component {
   }
 
   render() {
-    const { orgData } = this.props;
+    const { orgData, orgs } = this.props;
     const navButtons = getNavButtons(orgData);
+    const orgName = get(orgs, 'name');
+    const logo = get(orgs, 'logo.fileUrl');
+    // const orgTel = get(orgs, telephone);
+    // const orgSite = get(orgs, website);
+
     return (
       <>
         <div className={styles.wrapper}>
@@ -59,7 +65,8 @@ class Organisation extends Component {
               <Grid container justify="space-between" className={styles.navBarWrapper}>
                 <Section1
                   menuButtons={navButtons}
-                  logo={OrgLogo}
+                  logo={logo}
+                  orgName={orgName}
                 />
               </Grid>
             </div>
@@ -87,6 +94,7 @@ Organisation.propTypes = {
   orgData: objectOf(any),
   fetchOrgAction: func.isRequired,
   match: matchType.isRequired,
+  orgs: objectOf(any).isRequired,
 };
 
 Organisation.defaultProps = {
@@ -95,6 +103,8 @@ Organisation.defaultProps = {
   },
 };
 
-export default connect(null, {
+export default connect(state => ({
+  orgs: state.organisation.orgs,
+}), {
   fetchOrgAction: fetchOrg,
 })(Organisation);

@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { string, arrayOf, object } from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Brand from 'components/Brand';
 import NavBar from 'components/NavBar';
@@ -29,12 +29,12 @@ const sectionClasses = {
 };
 
 const Section1 = (props) => {
-  const { menuButtons, logo } = props;
+  const { menuButtons, logo, orgName } = props;
   const title = 'We care for your furry little loved ones<br/> while<br/>you\'re away';
   return (
     <React.Fragment>
       <Grid container justify="space-between">
-        <Brand logo={logo} brandClass={sectionClasses.brand} />
+        <Brand logo={logo} brandClass={sectionClasses.brand} organisationName={orgName} />
         <NavBar buttons={menuButtons} linkClass={sectionClasses.linkClass} />
       </Grid>
       <Grid container justify="flex-end">
@@ -51,12 +51,14 @@ const Section1 = (props) => {
 };
 
 Section1.propTypes = {
-  menuButtons: PropTypes.arrayOf(PropTypes.object).isRequired,
-  logo: PropTypes.string,
+  menuButtons: arrayOf(object).isRequired,
+  logo: string,
+  orgName: string,
 };
 
 Section1.defaultProps = {
   logo: 'null',
+  orgName: 'Quezone',
 };
 
 export default Section1;

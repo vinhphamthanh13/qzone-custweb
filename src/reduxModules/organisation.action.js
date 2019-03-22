@@ -14,7 +14,7 @@ export const fetchOrg = id => async (dispatch) => {
   dispatch(setLoading(true));
   const orgs = await handleRequest(getOrgs, [id], []);
   if (orgs.length > 0) {
-    dispatch(setOrgs(orgs));
+    dispatch(setOrgs(orgs[0]));
     dispatch(setLoading(false));
   }
 };
