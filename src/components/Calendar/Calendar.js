@@ -41,7 +41,7 @@ class Calendar extends Component {
     const mm = moment();
     this.initValues = {
       ...this.resolveStateFromDate(resolveDate),
-      today: new Date(mm.year(), +moment().month() + 1, mm.date()),
+      today: new Date(mm.year(), +mm.month(), mm.date(), 0, 0, 0, 0),
       isClickingYear: false,
       isClickingMonth: false,
       maxYear: props.maxDate.getFullYear(),
@@ -155,11 +155,11 @@ class Calendar extends Component {
     const {
       selectedMonth, selectedYear, today, current,
     } = this.state;
-    const $date = new Date(date.join('-'));
+    const $date = new Date(`${date.join('-')} 00:00:00:00`);
     const sameDate = isSameDay(current, $date);
     const isToday = isSameDay($date, today);
     const inMonth = selectedMonth && selectedYear && isSameMonth(
-      $date, new Date([selectedYear, selectedMonth, 1].join('-')),
+      $date, new Date(`${[selectedYear, selectedMonth, 1].join('-')} 00:00:00:00`),
     );
     const shortMaxDate = new Date(
       `${zeroPad(maxDate.getMonth() + 1, 2)}/${zeroPad(
@@ -167,13 +167,14 @@ class Calendar extends Component {
         2,
       )}/${maxDate.getFullYear()}`,
     );
-    const isValidDate = $date < shortMaxDate && $date > minDate;
+    const isValidDate = $date < shortMaxDate && $date >= minDate;
     const onClick = isValidDate ? this.gotoDate($date) : noop;
     const props = {
       index,
       onClick,
     };
-    const formatToday = isToday || sameDate ? `${s.today}` : '';
+    const formatToday = isToday ? `${s.today}` : '';
+    const formatSameDay = sameDate ? `${s.sameDay}` : '';
     const formatMonth = inMonth ? `${s.month}` : '';
     const dateStyles = isValidDate
       ? `${formatMonth} ${formatToday}`
@@ -181,7 +182,7 @@ class Calendar extends Component {
     return (
       <div
         key={getDateISO($date)}
-        className={`${s.dateOfMonth} ${dateStyles}`}
+        className={`${s.dateOfMonth} ${dateStyles} ${formatSameDay}`}
         {...props}
       >
         <Typography variant="subtitle1" color="inherit">{zeroPad($date.getDate(), 2)}</Typography>

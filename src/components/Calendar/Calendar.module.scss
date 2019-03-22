@@ -80,19 +80,6 @@
   padding: 8px;
   transition: all 0.25s ease-in;
 }
-
-.today {
-  background: rgba($goldTips, 0.9);
-  border-radius: 50%;
-  border: 1px solid $alto;
-  font-weight: 400;
-  color: $white;
-
-  &:hover {
-    border: 1px solid $grayNickel;
-  }
-}
-
 .month {
   color: $crimson;
 }
@@ -214,5 +201,28 @@
     color: $grayNickel;
     cursor: unset;
     border-radius: unset;
+  }
+}
+
+.today {
+  background: $white;
+  border-radius: 10px;
+  border: 1px solid $fruitSalad;
+  font-weight: 400;
+  color: $crimson;
+
+  &:hover {
+    border: 1px solid $goldTips;
+  }
+}
+
+.sameDay {
+  background: $goldTips;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  font-weight: 600;
+  color: $crimson;
+  &:hover {
+    border: 1px solid $goldTips;
   }
 }
