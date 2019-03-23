@@ -13,7 +13,6 @@ export const setProviderSlots = payload => ({
 export const fetchProviderSlots = data => async (dispatch) => {
   dispatch(setLoading(true));
   const [availableSlots] = await handleRequest(findAvailabilitiesByDateRange, [data], []);
-  console.log('apin provider slots --> ', availableSlots);
   const providerId = get(data, 'providerId');
   if (availableSlots.length > 0) {
     dispatch(setLoading(false));

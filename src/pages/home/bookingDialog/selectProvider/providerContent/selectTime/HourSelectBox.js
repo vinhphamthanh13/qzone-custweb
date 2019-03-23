@@ -10,7 +10,7 @@ export default function HourSelectBox({ hourBoxes = [], onChange, selectedHour }
   return (
     <div className={styles.selectHour}>
       <Grid container spacing={16}>
-        {hourBoxes.map(({
+        {hourBoxes.sort((a, b) => a.startHour.unix() - b.startHour.unix()).map(({
           startHour, displayedStartHour, durationSec,
         }) => (
           <Grid item xs={3} key={startHour.toISOString()}>
