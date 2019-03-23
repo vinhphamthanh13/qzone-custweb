@@ -1,6 +1,6 @@
 import {
   SET_SERVICE_CATEGORIES, SET_SERVICES, SET_LOADING, SET_ORGS, SET_ALL_SERVICES,
-  GET_CUSTOMER_EVENT_LIST, SEARCH_PROVIDER_BY_DISTANCE,
+  GET_CUSTOMER_EVENT_LIST, SEARCH_PROVIDER_BY_DISTANCE, SET_SERVICE_PROVIDERS,
 } from './home.actions';
 
 const initialState = {
@@ -11,6 +11,7 @@ const initialState = {
   allServices: [],
   customerEventList: [],
   providerListByDistance: [],
+  providerList: [],
 };
 
 const home = (state = initialState, action) => {
@@ -33,6 +34,11 @@ const home = (state = initialState, action) => {
       return { ...state, isLoading: action.payload };
     case SET_ORGS:
       return { ...state, orgs: action.payload };
+    case SET_SERVICE_PROVIDERS:
+      return {
+        ...state,
+        providerList: action.payload,
+      };
     case GET_CUSTOMER_EVENT_LIST:
       return {
         ...state,

@@ -1,0 +1,51 @@
+@import "styles/_settings.scss";
+
+.linkedProvider {
+  color: $fruitSalad;
+}
+
+.providerList {
+  color: $grayNickel;
+}
+
+.expanderTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: $malibu;
+}
+ .providerName {
+   color: $fruitSalad;
+   text-transform: uppercase;
+ }
+
+ .earliestSlot {
+   display: flex;
+   justify-content: flex-start;
+   align-items: center;
+ }
+ .expandList {
+   color: $fruitSalad;
+   margin: 0 0.5rem;
+ }
+
+ .providerSlot {
+   color: $alto;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+ }
+ 
+ .slot {
+   color: $malibu;
+   margin: 0.2rem;
+   padding: 0.3rem 0.5rem;
+   border-radius: 6px;
+   border: 1px solid $fruitSalad;
+   transition: all 0.3s ease;
+   &:hover {
+     cursor: pointer;
+     background: $fruitSalad;
+     color: $gallery;
+   }
+ }

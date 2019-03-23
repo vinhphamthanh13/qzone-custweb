@@ -25,17 +25,29 @@ $info: #00ACC1;
 $gray: #999;
 
 .main-color {
-  color: $main;
+  color: $main !important;
 }
 
 .danger-color {
-  color: $danger;
+  color: $danger !important;
 }
 
 .gallery-color {
-  color: $gallery;
+  color: $gallery !important;
 }
 
 .white-color {
-  color: $white;
+  color: $white !important;
+}
+
+.fruit-color {
+  color: $fruitSalad !important;
+}
+
+.info-color {
+  color: $info !important;
+}
+
+.malibu-color {
+  color: $malibu !important;
 }

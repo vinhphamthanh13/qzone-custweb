@@ -1,7 +1,7 @@
 import React from 'react';
 import { func } from 'prop-types';
 import { Typography } from '@material-ui/core';
-import { AccessTime, LocationOn } from '@material-ui/icons';
+import { AccessTime, Domain } from '@material-ui/icons';
 import { serviceType } from 'types/global';
 import { get } from 'lodash';
 import CustomLink from 'components/CustomLink';
@@ -9,6 +9,7 @@ import { READ_MORE_MAX } from 'utils/constants';
 import RateStar from 'components/Rating/RateStar';
 import styles from './ServiceDetail.module.scss';
 import ReadMore from '../readMore/ReadMore';
+import LinkedProvider from '../linkedProviders/LinkedProviders';
 
 export default class ServiceDetail extends React.PureComponent {
   constructor(props) {
@@ -43,6 +44,7 @@ export default class ServiceDetail extends React.PureComponent {
     const viewNum = get(service, 'viewNum');
     const orgName = get(service, 'organizationEntity.name');
     const orgId = get(service, 'organizationEntity.id');
+
     return (
       <>
         <ReadMore
@@ -83,11 +85,14 @@ export default class ServiceDetail extends React.PureComponent {
             <Typography variant="body1" color="primary">{duration} minutes</Typography>
           </div>
           <div className={styles.iconInfo}>
-            <LocationOn className={styles.icon} />
+            <Domain className={styles.icon} />
             <Typography variant="body1">
               <CustomLink text={orgName} to={`/organisation/${orgId}`} />
             </Typography>
           </div>
+        </div>
+        <div className={styles.linkedProviders}>
+          <LinkedProvider service={service} />
         </div>
       </>
     );

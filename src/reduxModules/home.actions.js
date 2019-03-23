@@ -1,6 +1,6 @@
 import {
   searchServicesByName, searchServicesByCategory, searchOrganizationById, getServices, getCustomerEvents,
-  searchByDistance,
+  searchByDistance, getServiceProviders,
 } from 'api/home';
 import { handleRequest } from 'utils/apiHelpers';
 
@@ -11,6 +11,7 @@ export const SET_LOADING = 'HOME.SET_LOADING';
 export const SET_ORGS = 'HOME.SET_ORGS';
 export const GET_CUSTOMER_EVENT_LIST = 'GET_CUSTOMER_EVENT_LIST';
 export const SEARCH_PROVIDER_BY_DISTANCE = 'SEARCH_PROVIDER_BY_DISTANCE';
+export const SET_SERVICE_PROVIDERS = 'SET_SERVICE_PROVIDERS';
 
 export const setServiceCategories = payload => ({
   type: SET_SERVICE_CATEGORIES,
@@ -31,6 +32,22 @@ export const setOrgs = payload => ({
   type: SET_ORGS,
   payload,
 });
+
+const setServiceProviders = payload => ({
+  type: SET_SERVICE_PROVIDERS,
+  payload,
+});
+
+export const fetchServiceProviders = () => async (dispatch) => {
+  dispatch(setLoading(true));
+  const providerList = await handleRequest(getServiceProviders, [], []);
+  if (providerList.length > 0) {
+    dispatch(setServiceProviders(providerList[0]));
+    dispatch(setLoading(false));
+  } else {
+    dispatch(setLoading(false));
+  }
+};
 
 export const getServicesByName = name => async (dispatch) => {
   dispatch(setLoading(true));
