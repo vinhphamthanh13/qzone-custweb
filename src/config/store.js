@@ -9,6 +9,7 @@ import { loadSessionToState } from 'authentication/actions/session';
 import selectProvider from 'reduxModules/home/bookingDialog/selectProvider.reducer';
 import bookingDialog from 'reduxModules/home/bookingDialog.reducer';
 import organisation from 'reduxModules/organisation.reducer';
+import serviceCard from 'reduxModules/serviceCard.reducer';
 import { getUserDetail } from 'authentication/actions/login';
 import { loadSession } from './localStorage';
 
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
     }),
   }),
   organisation,
+  serviceCard,
 });
 
 const store = createStore(

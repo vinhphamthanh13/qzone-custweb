@@ -27,7 +27,23 @@ class LinkedProviders extends Component {
     const expandChevron = isExpandList
       ? <ExpandLess className="icon-main icon-shake malibu-color" />
       : <ExpandMore className="icon-main icon-shake malibu-color" />;
-    console.log('service', service);
+
+    const renderExpandProvider = isExpandList ? (
+      <div className={s.expandList}>
+        {linkedProvider.map((provider) => {
+          const providerName = get(provider, 'providerName');
+          const providerId = get(provider, 'providerId');
+          const serviceId = get(provider, 'serviceId');
+          return (
+            <EarliestSlot
+              key={uuidv1()}
+              providerName={providerName}
+              providerId={providerId}
+              serviceId={serviceId}
+              onBooking={this.handleInstanceBooking}
+            />);
+        })}
+      </div>) : null;
 
     return (
       <div className={s.providerList}>
@@ -41,21 +57,7 @@ class LinkedProviders extends Component {
             </IconButton>)
           }
         </div>
-        {isExpandList && (
-          <div className={s.expandList}>
-            {linkedProvider.map((provider) => {
-              const providerName = get(provider, 'providerName');
-              const timeSlots = get(provider, 'serviceTimeSlot');
-              return (
-                <EarliestSlot
-                  key={uuidv1()}
-                  providerName={providerName}
-                  slots={timeSlots}
-                  onBooking={this.handleInstanceBooking}
-                />);
-            })}
-          </div>)
-        }
+        {renderExpandProvider}
       </div>
     );
   }

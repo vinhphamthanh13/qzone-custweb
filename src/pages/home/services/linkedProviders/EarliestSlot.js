@@ -1,33 +1,42 @@
 import React, { Component } from 'react';
-import { string, func, arrayOf } from 'prop-types';
+import {
+  string, func, objectOf, any,
+} from 'prop-types';
 import { Typography, IconButton } from '@material-ui/core';
-import { ExpandMoreRounded, ExpandLessRounded } from '@material-ui/icons';
+import { ExpandMoreRounded } from '@material-ui/icons';
 import uuidv1 from 'uuid/v1';
-// import { connect } from 'react-redux';
-// import moment from 'moment';
+import { get } from 'lodash';
+import moment from 'moment';
+import { fetchProviderSlots } from 'reduxModules/serviceCard.actions';
+import { connect } from 'react-redux';
 import s from './LinkedProviders.module.scss';
 
 class EarliestSlot extends Component {
-  state = {
-    isExpandList: false,
-  };
-
   handleSelectBookTime = selectedTime => () => {
     const { onBooking } = this.props;
     onBooking(selectedTime);
   };
 
-  handleExpandSlot = () => {
-    this.setState(oldState => ({
-      isExpandList: !oldState.isExpandList,
-    }));
+  handleFetchProviderSlots = providerId => () => {
+    const {
+      fetchProviderSlotsAction, serviceId, providerSlots,
+    } = this.props;
+    const data = {
+      customerTimezone: moment.tz.guess(),
+      providerId,
+      serviceId,
+      startSec: (moment.now() + 10000) / 1000,
+      toSec: (moment.now() + 10000) / 1000,
+    };
+    if (!providerSlots[providerId]) {
+      fetchProviderSlotsAction(data);
+    }
   };
 
   render() {
-    const { providerName, slots } = this.props;
-    const { isExpandList } = this.state;
-    const expandIconList = isExpandList
-      ? <ExpandLessRounded className="icon-main icon-shake fruit-color" />
+    const { providerName, providerSlots, providerId } = this.props;
+    const expandIconList = providerSlots[providerId]
+      ? null
       : <ExpandMoreRounded className="icon-main icon-shake fruit-color" />;
 
     return (
@@ -37,20 +46,23 @@ class EarliestSlot extends Component {
             <Typography variant="body2" color="inherit">
               {providerName}
             </Typography>
-            <IconButton className="button-sm" onClick={this.handleExpandSlot}>
+            <IconButton className="button-sm" onClick={this.handleFetchProviderSlots(providerId)}>
               {expandIconList}
             </IconButton>
           </div>
         </div>
-        {isExpandList && (
+        {providerSlots[providerId] && (
           <div className={s.providerSlot}>
-            {slots.map(slot => (
-              <div key={uuidv1()} className={`hover-bright ${s.slot}`}>
-                <Typography variant="subheading" color="inherit" onClick={this.handleSelectBookTime(slot.startTime)}>
-                  {slot.startTime}
-                </Typography>
-              </div>
-            ))}
+            {providerSlots[providerId].sort((a, b) => a.startSec - b.startSec).map((slot) => {
+              const startSec = get(slot, 'startSec');
+              return (
+                <div key={uuidv1()} className={`hover-bright ${s.slot}`}>
+                  <Typography variant="subheading" color="inherit" onClick={this.handleSelectBookTime(startSec)}>
+                    {moment(startSec * 1000).format('HH:mm')}
+                  </Typography>
+                </div>
+              );
+            })});
           </div>)}
       </div>
     );
@@ -59,8 +71,18 @@ class EarliestSlot extends Component {
 
 EarliestSlot.propTypes = {
   providerName: string.isRequired,
-  slots: arrayOf(string).isRequired,
   onBooking: func.isRequired,
+  providerId: string.isRequired,
+  fetchProviderSlotsAction: func.isRequired,
+  providerSlots: objectOf(any).isRequired,
+  serviceId: string.isRequired,
 };
 
-export default EarliestSlot;
+const mapStateToProps = state => ({
+  providerSlots: state.serviceCard.providerSlots,
+  searchedId: state.serviceCard.searchedId,
+});
+
+export default connect(mapStateToProps, {
+  fetchProviderSlotsAction: fetchProviderSlots,
+})(EarliestSlot);
