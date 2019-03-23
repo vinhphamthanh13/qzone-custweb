@@ -19,14 +19,21 @@
    text-transform: uppercase;
  }
 
- .earliestSlot {
+ .earliestTitle {
    display: flex;
    justify-content: flex-start;
+   align-items: center;
+ }
+ 
+ .earliestSlot {
+   display: flex;
+   justify-content: space-between;
    align-items: center;
  }
  .expandList {
    color: $fruitSalad;
    margin: 0 0.5rem;
+   justify-content: space-around;
  }
 
  .providerSlot {
@@ -39,15 +46,30 @@
  }
  
  .slot {
-   color: $malibu;
    margin: 0.2rem;
    padding: 0.3rem 0.5rem;
    border-radius: 6px;
-   border: 1px solid $fruitSalad;
    transition: all 0.3s ease;
    &:hover {
      cursor: pointer;
+   }
+ }
+
+ .validSlot {
+   color: $malibu;
+   border: 1px solid $fruitSalad;
+   &:hover {
      background: $fruitSalad;
      color: $gallery;
+   }
+ }
+ 
+ .invalidSlot {
+   color: $grayNickel;
+   border: 1px solid $gray;
+   background: $gallery;
+   &:hover {
+     color: $gallery;
+     background: $grayNickel;
    }
  }

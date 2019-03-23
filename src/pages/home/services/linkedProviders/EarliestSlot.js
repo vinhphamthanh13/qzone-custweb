@@ -5,7 +5,7 @@ import {
 import { Typography, IconButton } from '@material-ui/core';
 import { ExpandMoreRounded } from '@material-ui/icons';
 import uuidv1 from 'uuid/v1';
-import { get } from 'lodash';
+import { get, noop } from 'lodash';
 import moment from 'moment';
 import { fetchProviderSlots } from 'reduxModules/serviceCard.actions';
 import { connect } from 'react-redux';
@@ -42,7 +42,7 @@ class EarliestSlot extends Component {
     return (
       <div>
         <div className={s.providerName}>
-          <div className={s.earliestSlot}>
+          <div className={s.earliestTitle}>
             <Typography variant="body2" color="inherit">
               {providerName}
             </Typography>
@@ -55,14 +55,18 @@ class EarliestSlot extends Component {
           <div className={s.providerSlot}>
             {providerSlots[providerId].sort((a, b) => a.startSec - b.startSec).map((slot) => {
               const startSec = get(slot, 'startSec');
+              const [slotStyle, onclick] = moment.now() < startSec * 1000
+                ? [`hover-bright ${s.slot} ${s.validSlot}`, this.handleSelectBookTime(startSec)]
+                : [`hover-bright ${s.slot} ${s.invalidSlot}`, noop];
+
               return (
-                <div key={uuidv1()} className={`hover-bright ${s.slot}`}>
-                  <Typography variant="subheading" color="inherit" onClick={this.handleSelectBookTime(startSec)}>
+                <div key={uuidv1()} className={slotStyle}>
+                  <Typography variant="subheading" color="inherit" onClick={onclick}>
                     {moment(startSec * 1000).format('HH:mm')}
                   </Typography>
                 </div>
               );
-            })});
+            })}
           </div>)}
       </div>
     );
