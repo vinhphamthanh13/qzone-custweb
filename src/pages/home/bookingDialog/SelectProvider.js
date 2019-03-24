@@ -44,8 +44,9 @@ class SelectProvider extends React.PureComponent {
       toSec: date.getTime() / 1000,
     };
     if (date.getTime() === sameDate.getTime()) {
-      availabilityData.startSec = (moment.now() + 10000) / 1000;
-      availabilityData.toSec = (moment.now() + 10000) / 1000;
+      // Add the search time slot to 3 minutes in case the request timeout
+      availabilityData.startSec = (moment.now() + 180000) / 1000;
+      availabilityData.toSec = (moment.now() + 180000) / 1000;
     }
     getProviderTimesAction(availabilityData);
   };

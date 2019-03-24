@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Typography } from '@material-ui/core';
 import moment from 'moment';
 import {
-  bool, func, number, arrayOf, shape,
+  func, number, arrayOf, shape,
 } from 'prop-types';
 import { get, chunk, noop } from 'lodash';
 import { bookingDetailType } from 'types/global';
@@ -89,10 +89,9 @@ export class SelectTime extends React.PureComponent {
   render() {
     const {
       timeDetails,
-      isLoading,
     } = this.props;
     const hourBoxes = this.getHourBoxes(timeDetails);
-    return !isLoading && this.renderTimeBox(hourBoxes);
+    return this.renderTimeBox(hourBoxes);
   }
 }
 
@@ -106,12 +105,10 @@ SelectTime.propTypes = {
     }),
   ),
   onChange: func.isRequired,
-  isLoading: bool,
 };
 
 SelectTime.defaultProps = {
   timeDetails: [],
-  isLoading: false,
 };
 
 const mapStateToProps = (states, ownProps) => ({
