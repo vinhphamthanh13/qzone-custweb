@@ -9,6 +9,7 @@ import { get, noop } from 'lodash';
 import moment from 'moment';
 import { fetchProviderSlots } from 'reduxModules/serviceCard.actions';
 import { connect } from 'react-redux';
+import CustomLink from 'components/CustomLink';
 import s from './LinkedProviders.module.scss';
 
 class EarliestSlot extends Component {
@@ -49,7 +50,7 @@ class EarliestSlot extends Component {
         <div className={s.providerName}>
           <div className={s.earliestTitle}>
             <Typography variant="body2" color="inherit">
-              {providerName}
+              <CustomLink text={providerName} to={`/provider/${providerId}`} />
             </Typography>
             <IconButton className="button-sm" onClick={this.handleFetchProviderSlots(providerId)}>
               {expandIconList}
