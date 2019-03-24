@@ -423,14 +423,14 @@
   transition: all 0.25s ease;
   user-select: none;
   &:hover {
-    border-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
     cursor: pointer;
   }
 }
 
 .valid-slot {
   background: $malibu;
-  border-radius: 10px;
   border: 1px solid $malibu;
   &:hover {
     color: $white;

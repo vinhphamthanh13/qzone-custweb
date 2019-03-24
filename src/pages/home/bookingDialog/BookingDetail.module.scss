@@ -1,25 +1,55 @@
 @import "styles/_color.scss";
 
-.wrapper {
-  padding: 0 32px;
+.bookingAppointment {
+  margin: 1em;
+  padding: 1em;
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
 }
 
-.userInfo {
-  border-right: 2px solid $we_peep;
-  margin-right: 7%;
-  padding: 32px 7% 32px 0;
+.bookingHeadInfo {
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid $gallery;
 }
 
-@media(max-width: 960px) {
-  .userInfo {
-    border-right: none;
-    margin-right: 0;
-    padding-right: 0;
-  }
+.bookingDetail {
+  color: $main;
 }
 
-.service {
-  padding: 32px 0 32px 0;
+.serviceTitle {
+  color: $main;
+}
+
+.bookingItems {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.bookingCta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid $gallery;
+  margin: 1em auto;
+  padding-top: 1em;
+}
+
+.clientInfo {
+  color: $main;
+}
+
+.formTitle {
+  color: $main;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid $gallery;
+}
+
+.formFields {
+  color: $info;
+  padding: 0 2em 0;
+  width: 480px;
 }
 
 .serviceItems {

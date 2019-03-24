@@ -1,14 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Grid, TextField, Typography, Fab,
+  Button, TextField, Typography,
 } from '@material-ui/core';
+import {
+  Schedule, DateRange, LocationOn, PersonPin,
+} from '@material-ui/icons';
 import mtz from 'moment-timezone';
 import { bookingDetailType, serviceType, userDetailType } from 'types/global';
 import { defaultDateFormat } from 'utils/constants';
 import formatName from 'utils/formatName';
+import RateStar from 'components/Rating/RateStar';
 import MapDialog from './selectProvider/MapDialog';
-import styles from './BookingDetail.module.scss';
+import s from './BookingDetail.module.scss';
 
 class BookingDetail extends React.PureComponent {
   constructor(props) {
@@ -21,91 +25,104 @@ class BookingDetail extends React.PureComponent {
 
   toggleMapDialog = () => {
     this.setState(oldState => ({ isMapDialogOpen: !oldState.isMapDialogOpen }));
-  }
+  };
 
   render() {
     const {
       bookingDetail, initService, userDetail, onSaveBooking,
     } = this.props;
     const localBookingStartTime = mtz(bookingDetail.time.start);
+    console.log('booking Detail', bookingDetail);
+    console.log('initService', initService);
 
     return (
-      <>
-        <Grid container className={styles.wrapper}>
-          <Grid item md={6} className={styles.userInfo}>
-            <TextField
-              disabled
-              fullWidth
-              label="Name"
-              value={formatName({ givenName: userDetail.givenName, familyName: userDetail.familyName })}
-              margin="normal"
-              variant="outlined"
-            />
-            <TextField
-              disabled
-              fullWidth
-              label="Email"
-              value={userDetail.email || ''}
-              margin="normal"
-              variant="outlined"
-            />
-            <TextField
-              disabled
-              fullWidth
-              label="Phone number"
-              value={userDetail.telephone || ''}
-              margin="normal"
-              variant="outlined"
-            />
-          </Grid>
-          <Grid item md={5} className={styles.service}>
-            <Typography variant="h5">{initService.name}</Typography>
-            <div className={styles.serviceItems}>
-              <Grid container>
-                <Grid item md={5}><Typography variant="body1">Date:</Typography></Grid>
-                <Grid item md={7}>
-                  <Typography variant="subtitle1" color="secondary">
-                    {localBookingStartTime.format(defaultDateFormat)}
-                  </Typography>
-                </Grid>
-              </Grid>
-              <Grid container>
-                <Grid item md={5}><Typography variant="body1">Starts at:</Typography></Grid>
-                <Grid item md={7}>
-                  <Typography variant="subtitle1" color="secondary">
-                    {localBookingStartTime.format('hh:mm A')}
-                  </Typography>
-                </Grid>
-              </Grid>
-              <Grid container>
-                <Grid item md={5}><Typography variant="body1">Service provider:</Typography></Grid>
-                <Grid item md={7}>
-                  <Typography variant="subtitle1" color="secondary">
-                    {formatName({
-                      givenName: bookingDetail.provider.givenName,
-                      familyName: bookingDetail.provider.familyName,
-                    })}
-                  </Typography>
-                </Grid>
-              </Grid>
+      <div className={s.bookingAppointment}>
+        <div className={s.bookingDetail}>
+          <div className={s.bookingHeadInfo}>
+            <div className={s.serviceTitle}>
+              <Typography variant="title" color="textSecondary">{initService.name}</Typography>
             </div>
-            <div className={styles.serviceItems}>
-              <Fab color="primary" variant="extended" onClick={onSaveBooking}>
-                Book now
-              </Fab>
-              <Fab variant="extended" onClick={this.toggleMapDialog} className={styles.viewMapButton}>
+            <div>
+              <RateStar reviews={initService.viewNum} rating={initService.rating} />
+            </div>
+          </div>
+          <div className={s.serviceItems}>
+            <div className={s.bookingItems}>
+              <DateRange className="icon-main" />
+              <Typography variant="subtitle1" color="inherit">
+                {localBookingStartTime.format(defaultDateFormat)}
+              </Typography>
+            </div>
+            <div className={s.bookingItems}>
+              <Schedule className="icon-main" />
+              <Typography variant="subtitle1" color="inherit">
+                {localBookingStartTime.format('hh:mm A')}
+              </Typography>
+            </div>
+            <div className={s.bookingItems}>
+              <LocationOn className="icon-main" />
+              <Typography variant="subtitle1" color="inherit">
+                {formatName({
+                  givenName: bookingDetail.provider.givenName,
+                  familyName: bookingDetail.provider.familyName,
+                })}
+              </Typography>
+            </div>
+            <div className={s.bookingItems}>
+              <PersonPin className="icon-main icon-shake" onClick={this.toggleMapDialog} />
+              <Typography
+                variant="subtitle1"
+                color="inherit"
+                onClick={this.toggleMapDialog}
+                className="text-bold"
+              >
                 View map
-              </Fab>
+              </Typography>
             </div>
-          </Grid>
-        </Grid>
+          </div>
+          <div className={s.bookingCta}>
+            <Button variant="contained" className="button-normal main-button" onClick={onSaveBooking}>
+              Book now!
+            </Button>
+          </div>
+        </div>
+        <div>
+          <div className={s.formTitle}>
+            <Typography variant="title" color="inherit">Client Info</Typography>
+          </div>
+          <div className={s.clientInfo}>
+            <div className={s.formFields}>
+              <TextField
+                disabled
+                fullWidth
+                label="Client name"
+                value={formatName({ givenName: userDetail.givenName, familyName: userDetail.familyName })}
+                margin="dense"
+              />
+              <TextField
+                disabled
+                fullWidth
+                label="Email"
+                value={userDetail.email || ''}
+                margin="dense"
+              />
+              <TextField
+                disabled
+                fullWidth
+                label="Phone number"
+                value={userDetail.telephone || ''}
+                margin="dense"
+              />
+            </div>
+          </div>
+        </div>
         <MapDialog
           isOpen={this.state.isMapDialogOpen}
           toggle={this.toggleMapDialog}
           initService={initService}
           provider={bookingDetail.provider}
         />
-      </>
+      </div>
     );
   }
 }
