@@ -87,13 +87,20 @@ export default class ProviderContent extends React.PureComponent {
                   {formatName({ givenName: provider.givenName, familyName: provider.familyName })}
                 </Typography>
               </div>
-              <div className="providerListCardMap">
-                <ButtonBase onClick={this.toggleMapDialog}>
-                  <PersonPin className="icon-normal icon-brand icon-shake" />
-                </ButtonBase>
-                <Typography noWrap variant="subheading" color="inherit">View map</Typography>
-              </div>
               <div className="providerAddress">
+                <div className="providerListCardMap">
+                  <ButtonBase onClick={this.toggleMapDialog}>
+                    <PersonPin className="icon-small icon-brand icon-shake" />
+                  </ButtonBase>
+                  <Typography
+                    noWrap
+                    variant="subheading"
+                    color="inherit"
+                    onClick={this.toggleMapDialog}
+                    className="hover-pointer text-bold"
+                  >View map
+                  </Typography>
+                </div>
                 <div className="icon-text">
                   <EmailOutlined className="icon-small icon-brand" />
                   <Typography noWrap variant="body2" color="textSecondary">{providerEmail}</Typography>

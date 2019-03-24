@@ -429,12 +429,12 @@
 }
 
 .valid-slot {
-  background: rgba($goldTips, 0.6);
+  background: $malibu;
   border-radius: 6px;
-  border: 1px solid $crimson;
+  border: 1px solid $malibu;
   &:hover {
     color: $white;
-    background: rgba($crimson, 0.6);
+    background: linear-gradient(to bottom, $main, $malibu);
     border: 1px solid $goldTips;
   }
 }
@@ -484,7 +484,7 @@
   justify-content: flex-start;
   background: rgba($goldTips, 0.8);
   width: 50%;
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.2rem;
 }
 
 .providerListCardDescription {
@@ -501,10 +501,11 @@
 }
 
 .providerListCardDescriptionBottom {
-  color: $gallery;
-  background: $grayNickel;
+  color: $main;
+  background: $gallery;
   text-align: right;
-  padding-right: 0.5rem;
+  padding: 0.5rem 0.5rem;
+  
 }
 
 .providerListCardLogo {
@@ -518,12 +519,12 @@
 
 .providerListCardImg {
   width: 110px;
-  padding: 0.2rem 0 0
+  padding: 0.2rem 0.2rem 0; 
 }
 
 .providerListCardTitle {
   padding: 0.5rem;
-  color: $gallery;
+  color: $primary;
 }
 
 .providerAddress {
@@ -554,11 +555,10 @@
 }
 
 .providerListCardMap {
-  color: $crimson;
+  color: $main;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 0.5rem 0
+  font-weight: bold;
 }
 
 .providerListCardAvailableTime {
