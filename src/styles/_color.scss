@@ -1,5 +1,6 @@
 /* Theme colors */
-
+$crimson: #be4233;
+$goldTips: #edc11b;
 $white: #FFFFFF;
 $mako: #3D3F42; // 61, 63, 66
 $we_peep: #FAEBEB;
@@ -23,7 +24,6 @@ $danger: #F44336;
 $success: #4CAF50; // 76, 175, 80
 $info: #00ACC1;
 $gray: #999;
-
 .main-color {
   color: $main !important;
 }
@@ -50,4 +50,12 @@ $gray: #999;
 
 .malibu-color {
   color: $malibu !important;
+}
+
+.crimson-color {
+  color: $crimson !important;
+}
+
+.goldTips {
+  color: $goldTips !important;
 }

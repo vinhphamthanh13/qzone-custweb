@@ -15,7 +15,7 @@
   color: $malibu;
 }
  .providerName {
-   color: $fruitSalad;
+   color: $crimson;
    text-transform: uppercase;
  }
 
@@ -37,15 +37,28 @@
  }
 
  .providerSlot {
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+   align-items: flex-start;
+ }
+ 
+ .availableSlots {
+   width: 100%;
    color: $alto;
    display: flex;
    justify-content: space-between;
    align-items: center;
-   border-bottom: 1px solid $gallery;
-   padding-bottom: 0.5rem;
  }
- 
- .slot {
+
+.findMoreSlots {
+  color: $goldTips;
+  border-bottom: 1px solid $gallery;
+  padding: 0.5rem 0;
+  
+}
+
+.slot {
    margin: 0.2rem;
    padding: 0.3rem 0.5rem;
    border-radius: 6px;

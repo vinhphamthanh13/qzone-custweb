@@ -33,11 +33,16 @@ class EarliestSlot extends Component {
     }
   };
 
+  handleFindMoreBooking = () => {
+    const { instantBooking } = this.props;
+    instantBooking();
+  };
+
   render() {
     const { providerName, providerSlots, providerId } = this.props;
     const expandIconList = providerSlots[providerId]
       ? null
-      : <ExpandMoreRounded className="icon-main icon-shake fruit-color" />;
+      : <ExpandMoreRounded className="icon-main icon-shake crimson-color" />;
 
     return (
       <div>
@@ -53,20 +58,31 @@ class EarliestSlot extends Component {
         </div>
         {providerSlots[providerId] && (
           <div className={s.providerSlot}>
-            {providerSlots[providerId].sort((a, b) => a.startSec - b.startSec).map((slot) => {
-              const startSec = get(slot, 'startSec');
-              const [slotStyle, onclick] = moment.now() < startSec * 1000
-                ? [`hover-bright ${s.slot} ${s.validSlot}`, this.handleSelectBookTime(startSec)]
-                : [`hover-bright ${s.slot} ${s.invalidSlot}`, noop];
+            <div className={s.availableSlots}>
+              {providerSlots[providerId].sort((a, b) => a.startSec - b.startSec).map((slot) => {
+                const startSec = get(slot, 'startSec');
+                const [slotStyle, onclick] = moment.now() < startSec * 1000
+                  ? [`hover-bright ${s.slot} ${s.validSlot}`, this.handleSelectBookTime(startSec)]
+                  : [`hover-bright ${s.slot} ${s.invalidSlot}`, noop];
 
-              return (
-                <div key={uuidv1()} className={slotStyle}>
-                  <Typography variant="subheading" color="inherit" onClick={onclick}>
-                    {moment(startSec * 1000).format('HH:mm')}
-                  </Typography>
-                </div>
-              );
-            })}
+                return (
+                  <div key={uuidv1()} className={slotStyle}>
+                    <Typography variant="subheading" color="inherit" onClick={onclick}>
+                      {moment(startSec * 1000).format('HH:mm')}
+                    </Typography>
+                  </div>
+                );
+              })}
+            </div>
+            <div className={s.findMoreSlots}>
+              <Typography
+                variant="body2"
+                color="inherit"
+                onClick={this.handleFindMoreBooking}
+                className="hover-pointer"
+              >Find more...
+              </Typography>
+            </div>
           </div>)}
       </div>
     );
@@ -80,6 +96,7 @@ EarliestSlot.propTypes = {
   fetchProviderSlotsAction: func.isRequired,
   providerSlots: objectOf(any).isRequired,
   serviceId: string.isRequired,
+  instantBooking: func.isRequired,
 };
 
 const mapStateToProps = state => ({

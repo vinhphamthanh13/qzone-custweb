@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { serviceType } from 'types/global';
+import { func } from 'prop-types';
 import { get } from 'lodash';
 import { Typography, IconButton } from '@material-ui/core';
 import { ExpandMore, ExpandLess } from '@material-ui/icons';
@@ -16,12 +17,12 @@ class LinkedProviders extends Component {
     this.setState(oldState => ({ isExpandList: !oldState.isExpandList }));
   };
 
-  handleInstanceBooking = (slot) => {
+  handleInstanceSlotBooking = (slot) => {
     console.log('instance booking now', slot);
   };
 
   render() {
-    const { service } = this.props;
+    const { service, instantBooking } = this.props;
     const { isExpandList } = this.state;
     const linkedProvider = get(service, 'linkedProvider');
     const expandChevron = isExpandList
@@ -40,7 +41,8 @@ class LinkedProviders extends Component {
               providerName={providerName}
               providerId={providerId}
               serviceId={serviceId}
-              onBooking={this.handleInstanceBooking}
+              onSlotBooking={this.handleInstanceSlotBooking}
+              instantBooking={instantBooking}
             />);
         })}
       </div>) : null;
@@ -65,6 +67,7 @@ class LinkedProviders extends Component {
 
 LinkedProviders.propTypes = {
   service: serviceType.isRequired,
+  instantBooking: func.isRequired,
 };
 
 export default LinkedProviders;
