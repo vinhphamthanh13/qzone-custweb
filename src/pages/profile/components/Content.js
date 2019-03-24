@@ -57,7 +57,6 @@ class Content extends Component {
 
   renderItems = () => {
     const { customerEventList } = this.props;
-    console.log('customerEventList', customerEventList);
 
     return this.SIDE_PANEL.map((panel) => {
       const { sidePanel } = this.state;

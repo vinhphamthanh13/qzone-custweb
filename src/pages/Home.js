@@ -10,6 +10,7 @@ import {
   setServiceCategories,
   getServicesByName,
   setServicesGlobal,
+  fetchServiceProviders,
 } from 'reduxModules/home.actions';
 import Loading from 'components/Loading';
 import styles from './Home.module.scss';
@@ -51,10 +52,11 @@ export class Home extends React.PureComponent {
   }
 
   async componentDidMount() {
-    const { setServiceCategoriesAction, getAllServicesAction } = this.props;
+    const { setServiceCategoriesAction, getAllServicesAction, fetchServiceProvidersAction } = this.props;
     const [serviceCategories] = await handleRequest(getServiceCategories, [], []);
     setServiceCategoriesAction(serviceCategories);
     getAllServicesAction();
+    fetchServiceProvidersAction();
   }
 
   getSessionTimeoutId = (id) => {
@@ -180,18 +182,22 @@ export class Home extends React.PureComponent {
   render() {
     const {
       serviceCategories, isLoading, allServices, loginSession: { isAuthenticated },
-      providerListByDistance,
+      providerListByDistance, providerList,
     } = this.props;
-    const catWithServices = serviceCategories.length > 0 && serviceCategories.map(cat => ({
-      name: cat.name,
-      list: allServices.filter(ser => ser.serviceCategoryId === cat.id),
-    }));
     const {
       searchText, isRegisterOpen, isLoginOpen, isOpenAdvancedSearch,
       selectedService, isOpenProfile, sessionTimeoutId, isShowingAdvancedSearch,
     } = this.state;
-    const searchedServices = this.getSearchedServices(allServices, searchText);
     const openAuthenticatedProfile = isAuthenticated && isOpenProfile;
+    const combineServiceProviders = allServices.map((service) => {
+      const serviceProviders = providerList.filter(provider => provider.serviceId === service.id);
+      return { ...service, linkedProvider: serviceProviders };
+    });
+    const catWithServices = serviceCategories.length > 0 && serviceCategories.map(cat => ({
+      name: cat.name,
+      list: combineServiceProviders.filter(ser => ser.serviceCategoryId === cat.id),
+    }));
+    const searchedServices = this.getSearchedServices(combineServiceProviders, searchText);
     const advancedSearchAvailable = providerListByDistance.length > 0 && isShowingAdvancedSearch;
 
     return (
@@ -239,7 +245,7 @@ export class Home extends React.PureComponent {
           <Grid item xs={12} className={styles.selectService}>
             {allServices.length > 0 && (
               <SlideShow
-                services={allServices}
+                services={combineServiceProviders}
                 onBooking={this.onChange}
                 onSearch={this.onSearch}
                 onSearchValue={searchText}
@@ -296,6 +302,8 @@ Home.propTypes = {
   allServices: arrayOf(any).isRequired,
   loginSession: objectOf(any).isRequired,
   providerListByDistance: arrayOf(any).isRequired,
+  fetchServiceProvidersAction: func.isRequired,
+  providerList: arrayOf(any).isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -311,5 +319,6 @@ export default connect(
     getServicesByNameAction: getServicesByName,
     getServicesByCategoryAction: setServicesGlobal,
     getAllServicesAction: setServicesGlobal,
+    fetchServiceProvidersAction: fetchServiceProviders,
   },
 )(Home);

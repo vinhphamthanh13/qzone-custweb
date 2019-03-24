@@ -22,6 +22,6 @@ CustomLink.propTypes = {
 
 CustomLink.defaultProps = {
   className: '',
-  target: '',
+  target: '_blank',
   small: false,
 };

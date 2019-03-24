@@ -1,0 +1,88 @@
+@import "styles/_settings.scss";
+
+.linkedProvider {
+  color: $fruitSalad;
+}
+
+.providerList {
+  color: $grayNickel;
+}
+
+.expanderTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: $malibu;
+}
+ .providerName {
+   color: $crimson;
+   text-transform: uppercase;
+ }
+
+ .earliestTitle {
+   display: flex;
+   justify-content: flex-start;
+   align-items: center;
+ }
+ 
+ .earliestSlot {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+ }
+ .expandList {
+   color: $fruitSalad;
+   margin: 0 0.5rem;
+   justify-content: space-around;
+ }
+
+ .providerSlot {
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+   align-items: flex-start;
+ }
+ 
+ .availableSlots {
+   width: 100%;
+   color: $alto;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+ }
+
+.findMoreSlots {
+  color: $goldTips;
+  border-bottom: 1px solid $gallery;
+  padding: 0.5rem 0;
+  
+}
+
+.slot {
+   margin: 0.2rem;
+   padding: 0.3rem 0.5rem;
+   border-radius: 6px;
+   transition: all 0.3s ease;
+   &:hover {
+     cursor: pointer;
+   }
+ }
+
+ .validSlot {
+   color: $malibu;
+   border: 1px solid $fruitSalad;
+   &:hover {
+     background: $fruitSalad;
+     color: $gallery;
+   }
+ }
+ 
+ .invalidSlot {
+   color: $grayNickel;
+   border: 1px solid $gray;
+   background: $gallery;
+   &:hover {
+     color: $gallery;
+     background: $grayNickel;
+   }
+ }

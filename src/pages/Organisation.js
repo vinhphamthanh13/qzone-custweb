@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import { objectOf, any, func } from 'prop-types';
+import { matchType } from 'types/global';
 import { connect } from 'react-redux';
+import { get } from 'lodash';
 import Grid from '@material-ui/core/Grid';
-import OrgLogo from 'images/dog_logo.jpg';
+// import OrgLogo from 'images/dog_logo.jpg';
 import { fetchOrg } from 'reduxModules/organisation.action';
+import Loading from 'components/Loading';
 import Section1 from './organisation/Section1';
 import Section2 from './organisation/Section2';
 import Section3 from './organisation/Section3';
@@ -42,22 +45,28 @@ const getNavButtons = (org) => {
 
 class Organisation extends Component {
   componentDidMount() {
-    const { fetchOrgAction } = this.props;
-    fetchOrgAction();
+    const { fetchOrgAction, match: { params: { id } } } = this.props;
+    fetchOrgAction(id);
   }
 
   render() {
-    const { orgData } = this.props;
+    const { orgData, orgs } = this.props;
     const navButtons = getNavButtons(orgData);
+    const orgName = get(orgs, 'name');
+    const logo = get(orgs, 'logo.fileUrl');
+    // const orgTel = get(orgs, telephone);
+    // const orgSite = get(orgs, website);
+
     return (
-      <React.Fragment>
+      <>
         <div className={styles.wrapper}>
           <div className={styles.section1}>
             <div className={styles.overlay}>
               <Grid container justify="space-between" className={styles.navBarWrapper}>
                 <Section1
                   menuButtons={navButtons}
-                  logo={OrgLogo}
+                  logo={logo}
+                  orgName={orgName}
                 />
               </Grid>
             </div>
@@ -75,7 +84,8 @@ class Organisation extends Component {
             <ProviderCard cardList={providerList} />
           </div>
         </div>
-      </React.Fragment>
+        <Loading />
+      </>
     );
   }
 }
@@ -83,6 +93,8 @@ class Organisation extends Component {
 Organisation.propTypes = {
   orgData: objectOf(any),
   fetchOrgAction: func.isRequired,
+  match: matchType.isRequired,
+  orgs: objectOf(any).isRequired,
 };
 
 Organisation.defaultProps = {
@@ -91,6 +103,8 @@ Organisation.defaultProps = {
   },
 };
 
-export default connect(null, {
+export default connect(state => ({
+  orgs: state.organisation.orgs,
+}), {
   fetchOrgAction: fetchOrg,
 })(Organisation);

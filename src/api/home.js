@@ -13,3 +13,5 @@ export const getServices = () => axios.get('/services');
 export const getCustomerEvents = id => axios.get(`/find-events-by-customer-id/${id}`);
 
 export const searchByDistance = body => axios.post('/service-providers-near-by', body);
+
+export const getServiceProviders = () => axios.get('/service-providers');

@@ -2,6 +2,7 @@ import Home from 'pages/Home';
 import Organisation from 'pages/Organisation';
 import PageNotFound from 'pages/PageNotFound';
 import AccessDenied from 'pages/AccessDenied';
+import Provider from 'pages/Provider';
 
 const rootRoutes = [
   {
@@ -35,15 +36,22 @@ const rootRoutes = [
   {
     exact: true,
     strict: true,
-    name: '404',
-    component: PageNotFound,
+    path: '/profile',
+    name: 'Profile',
+    component: Home,
   },
   {
     exact: true,
     strict: true,
-    path: '/profile',
-    name: 'Profile',
-    component: Home,
+    path: '/provider/:id',
+    name: 'Provider',
+    component: Provider,
+  },
+  {
+    exact: true,
+    strict: true,
+    name: '404',
+    component: PageNotFound,
   },
 ];
 

@@ -15,8 +15,9 @@
 }
 
 .blockItem {
-  margin-top: 16px;
-  flex-direction: column;
+  margin-top: 0.5em;
+  display: flex;
+  justify-content: space-between;
 }
 
 .title {
@@ -38,3 +39,8 @@
   margin-right: 10px;
 }
 
+.linkedProviders {
+  margin-top: 0.5rem;
+  border-top: 1px solid $grayNickel;
+  padding-top: 0.5rem;
+}
