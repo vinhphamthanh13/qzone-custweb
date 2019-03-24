@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { serviceType } from 'types/global';
 import { func } from 'prop-types';
-import { get } from 'lodash';
+import { get, noop } from 'lodash';
 import { Typography, IconButton } from '@material-ui/core';
 import { ExpandMore, ExpandLess } from '@material-ui/icons';
 import uuidv1 from 'uuid/v1';
@@ -53,11 +53,13 @@ class LinkedProviders extends Component {
           <Typography variant="body1" color="inherit">
             Discover our providers ({linkedProvider.length})
           </Typography>
-          {linkedProvider.length > 0 && (
+          {linkedProvider.length > 0 ? (
             <IconButton className="button-sm" onClick={this.handleExpandList}>
               {expandChevron}
-            </IconButton>)
-          }
+            </IconButton>) : (
+              <IconButton className="button-sm simple-button" onClick={noop}>
+                <ExpandMore className="icon-main gray-color" />
+              </IconButton>)}
         </div>
         {renderExpandProvider}
       </div>
