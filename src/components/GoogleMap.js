@@ -1,5 +1,5 @@
 import React from 'react';
-import Proptypes from 'prop-types';
+import { number, func, shape } from 'prop-types';
 import uuid from 'uuid/v4';
 import { Map, Feature, View } from 'ol';
 import { Tile, Vector } from 'ol/layer';
@@ -67,7 +67,7 @@ export default class GoogleMap extends React.Component {
   onMapMoveEnd = () => {
     const [longitude, latitude] = this.map.getView().getCenter();
     this.props.onMapMove(longitude, latitude);
-  }
+  };
 
   render() {
     return (
@@ -77,16 +77,16 @@ export default class GoogleMap extends React.Component {
 }
 
 GoogleMap.propTypes = {
-  view: Proptypes.shape({
-    longitude: Proptypes.number,
-    latitude: Proptypes.number,
+  view: shape({
+    longitude: number,
+    latitude: number,
   }),
-  marker: Proptypes.shape({
-    longitude: Proptypes.number,
-    latitude: Proptypes.number,
+  marker: shape({
+    longitude: number,
+    latitude: number,
   }),
-  zoom: Proptypes.number,
-  onMapMove: Proptypes.func,
+  zoom: number,
+  onMapMove: func,
 };
 
 GoogleMap.defaultProps = {

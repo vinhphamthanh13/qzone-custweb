@@ -5,17 +5,57 @@
   height: 100%;
 }
 
-.mapWrapper {
+.closeMap {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  border: 1px solid $danger;
+  background: $danger;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mapTitle {
+  color: $main;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: flex-start;
+  padding: 1em 0 0 1em;
+}
+
+.mapBody {
   width: 100%;
   height: 100%;
   margin: 0;
 }
 
-.addressLine {
-  align-self: center;
+.mapContainer {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-.icon {
-  color: $primary;
-  vertical-align: text-bottom;
+.serviceTitle {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.providerLocation {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0.5em 1em;
+  color: $main;
+}
+
+.iconItems {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
