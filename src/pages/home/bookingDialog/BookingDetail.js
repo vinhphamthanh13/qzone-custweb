@@ -81,7 +81,7 @@ class BookingDetail extends React.PureComponent {
                 variant="subtitle1"
                 color="inherit"
                 onClick={this.toggleMapDialog}
-                className="text-bold"
+                className="text-bold hover-pointer"
               >
                 View map
               </Typography>

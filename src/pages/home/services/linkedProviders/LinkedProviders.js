@@ -13,8 +13,14 @@ class LinkedProviders extends Component {
     isExpandList: false,
   };
 
+  handleHiddenBookingButton = () => {
+    const { handleBookingButton } = this.props;
+    const { isExpandList } = this.state;
+    handleBookingButton(isExpandList);
+  };
+
   handleExpandList = () => {
-    this.setState(oldState => ({ isExpandList: !oldState.isExpandList }));
+    this.setState(oldState => ({ isExpandList: !oldState.isExpandList }), this.handleHiddenBookingButton);
   };
 
   handleInstanceSlotBooking = (slot) => {
@@ -70,6 +76,7 @@ class LinkedProviders extends Component {
 LinkedProviders.propTypes = {
   service: serviceType.isRequired,
   instantBooking: func.isRequired,
+  handleBookingButton: func.isRequired,
 };
 
 export default LinkedProviders;

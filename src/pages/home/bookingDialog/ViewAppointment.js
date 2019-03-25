@@ -1,7 +1,6 @@
 import React from 'react';
 import { func } from 'prop-types';
 import { Typography, IconButton } from '@material-ui/core';
-import { connect } from 'react-redux';
 import {
   DateRange, Schedule, ViewList, EmailOutlined, CallOutlined, PlaceOutlined,
 } from '@material-ui/icons';
@@ -136,8 +135,4 @@ ViewAppointment.defaultProps = {
   bookingEvent: undefined,
 };
 
-const mapStateToProps = state => ({
-  provider: state.home.provider,
-});
-
-export default connect(mapStateToProps)(React.memo(ViewAppointment));
+export default React.memo(ViewAppointment);
