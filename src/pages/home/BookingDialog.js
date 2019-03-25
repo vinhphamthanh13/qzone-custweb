@@ -185,7 +185,6 @@ class BookingDialog extends PureComponent {
                     classes={{ root: 'stepper' }}
                     elevation={1}
                     activeStep={step}
-                    // connector={<div />}
                   >
                     {this.bookingSteps.map(bookingStep => (
                       <Step key={bookingStep} classes={{ root: 'step' }}>

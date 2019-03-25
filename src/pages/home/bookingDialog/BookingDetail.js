@@ -4,8 +4,9 @@ import {
   Button, TextField, Typography,
 } from '@material-ui/core';
 import {
-  Schedule, DateRange, LocationOn, PersonPin,
+  Schedule, DateRange, LocationOn, PersonPin, Call,
 } from '@material-ui/icons';
+import { get } from 'lodash';
 import mtz from 'moment-timezone';
 import { bookingDetailType, serviceType, userDetailType } from 'types/global';
 import { defaultDateFormat } from 'utils/constants';
@@ -32,8 +33,8 @@ class BookingDetail extends React.PureComponent {
       bookingDetail, initService, userDetail, onSaveBooking,
     } = this.props;
     const localBookingStartTime = mtz(bookingDetail.time.start);
-    console.log('booking Detail', bookingDetail);
-    console.log('initService', initService);
+    const provider = get(bookingDetail, 'provider');
+    const providerPhone = get(provider, 'telephone');
 
     return (
       <div className={s.bookingAppointment}>
@@ -69,6 +70,12 @@ class BookingDetail extends React.PureComponent {
               </Typography>
             </div>
             <div className={s.bookingItems}>
+              <Call className="icon-main" />
+              <Typography variant="subtitle1" color="inherit">
+                {providerPhone}
+              </Typography>
+            </div>
+            <div className={s.bookingItems}>
               <PersonPin className="icon-main icon-shake" onClick={this.toggleMapDialog} />
               <Typography
                 variant="subtitle1"
@@ -86,11 +93,11 @@ class BookingDetail extends React.PureComponent {
             </Button>
           </div>
         </div>
-        <div>
+        <div className={s.clientInfo}>
           <div className={s.formTitle}>
             <Typography variant="title" color="inherit">Client Info</Typography>
           </div>
-          <div className={s.clientInfo}>
+          <div>
             <div className={s.formFields}>
               <TextField
                 disabled

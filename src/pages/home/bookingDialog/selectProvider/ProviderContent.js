@@ -14,6 +14,7 @@ import {
   bookingDetailType,
   serviceType,
 } from 'types/global';
+import RateStar from 'components/Rating/RateStar';
 import formatName from 'utils/formatName';
 import QLogo from 'images/quezone-logo.png';
 import SelectTime from './providerContent/SelectTime';
@@ -51,6 +52,7 @@ export default class ProviderContent extends React.PureComponent {
     } = this.props;
     const { isDetailDialogOpen, isMapDialogOpen } = this.state;
     const providerEmail = get(provider, 'email');
+    const providerRating = get(provider, 'rating');
     const providerPhone = get(provider, 'telephone');
     const providerWebsite = get(provider, 'website');
     const providerStreet = get(provider, 'geoLocation.streetAddress');
@@ -83,9 +85,10 @@ export default class ProviderContent extends React.PureComponent {
                 </div>
               </div>
               <div className="providerListCardTitle">
-                <Typography noWrap variant="headline" color="inherit">
+                <Typography noWrap variant="title" color="inherit" className="text-bold">
                   {formatName({ givenName: provider.givenName, familyName: provider.familyName })}
                 </Typography>
+                <RateStar rating={providerRating} />
               </div>
               <div className="providerAddress">
                 <div className="providerListCardMap">
@@ -103,37 +106,37 @@ export default class ProviderContent extends React.PureComponent {
                 </div>
                 <div className="icon-text">
                   <EmailOutlined className="icon-small icon-brand" />
-                  <Typography noWrap variant="body2" color="textSecondary">{providerEmail}</Typography>
+                  <Typography noWrap variant="body2" color="inherit">{providerEmail}</Typography>
                 </div>
                 <div className="icon-text">
                   <CallOutlined className="icon-small icon-brand" />
-                  <Typography noWrap variant="body2" color="textSecondary">{providerPhone}</Typography>
+                  <Typography noWrap variant="body2" color="inherit">{providerPhone}</Typography>
                 </div>
                 <div className="icon-text">
                   <PlaceOutlined className="icon-small icon-brand" />
-                  <Typography noWrap variant="body2" color="textSecondary">
+                  <Typography noWrap variant="body2" color="inherit">
                     {providerStreet}, {providerDistrict}
                   </Typography>
                 </div>
                 <div className="icon-text">
                   <AddOutlined className="icon-small icon-transparent" />
-                  <Typography noWrap variant="body2" color="textSecondary">{providerState}, {providerCity}</Typography>
+                  <Typography noWrap variant="body2" color="inherit">{providerState}, {providerCity}</Typography>
                 </div>
                 <div className="icon-text">
                   <AddOutlined className="icon-small icon-transparent" />
-                  <Typography noWrap variant="body2" color="textSecondary">
+                  <Typography noWrap variant="body2" color="inherit">
                     {providerCountry}, {providerPostCode}
                   </Typography>
                 </div>
                 <div className="icon-text">
                   <AddOutlined className="icon-small icon-transparent" />
-                  <Typography noWrap variant="body2" color="textSecondary">
+                  <Typography noWrap variant="body2" color="inherit">
                     {providerWebsite || 'https://info.quezone.com.au'}
                   </Typography>
                 </div>
                 <div className="icon-text">
                   <AddOutlined className="icon-small icon-transparent" />
-                  <Typography noWrap variant="body2" color="textSecondary">{providerTimeZone}</Typography>
+                  <Typography noWrap variant="body2" color="inherit">{providerTimeZone}</Typography>
                 </div>
               </div>
             </div>

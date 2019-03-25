@@ -8,7 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { noop } from 'utils/constants';
 import logo from 'images/logo.png';
-import errorStyle from './ModalStyle';
+import s from './ModalStyle';
 
 const CustomModal = (props) => {
   const {
@@ -80,4 +80,4 @@ CustomModal.defaultProps = {
   cancelText: 'Cancel',
 };
 
-export default withStyles(errorStyle)(CustomModal);
+export default withStyles(s)(CustomModal);
