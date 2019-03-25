@@ -15,6 +15,7 @@ import {
   serviceType,
 } from 'types/global';
 import RateStar from 'components/Rating/RateStar';
+import CustomLink from 'components/CustomLink';
 import formatName from 'utils/formatName';
 import QLogo from 'images/quezone-logo.png';
 import SelectTime from './providerContent/SelectTime';
@@ -51,6 +52,7 @@ export default class ProviderContent extends React.PureComponent {
       duration,
     } = this.props;
     const { isDetailDialogOpen, isMapDialogOpen } = this.state;
+    const providerId = get(provider, 'id');
     const providerEmail = get(provider, 'email');
     const providerRating = get(provider, 'rating');
     const providerPhone = get(provider, 'telephone');
@@ -86,7 +88,11 @@ export default class ProviderContent extends React.PureComponent {
               </div>
               <div className="providerListCardTitle">
                 <Typography noWrap variant="title" color="inherit" className="text-bold">
-                  {formatName({ givenName: provider.givenName, familyName: provider.familyName })}
+                  <CustomLink
+                    text={formatName({ givenName: provider.givenName, familyName: provider.familyName })}
+                    to={`/provider/${providerId}`}
+                    big
+                  />
                 </Typography>
                 <RateStar rating={providerRating} />
               </div>
