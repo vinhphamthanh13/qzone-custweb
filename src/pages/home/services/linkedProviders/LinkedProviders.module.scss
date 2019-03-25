@@ -16,7 +16,7 @@
 }
  .providerName {
    color: $crimson;
-   text-transform: uppercase;
+   text-transform: capitalize;
  }
 
  .earliestTitle {
@@ -81,8 +81,4 @@
    color: $grayNickel;
    border: 1px solid $gray;
    background: $gallery;
-   &:hover {
-     color: $gallery;
-     background: $grayNickel;
-   }
  }
