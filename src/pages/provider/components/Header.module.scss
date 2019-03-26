@@ -1,0 +1,22 @@
+@import "styles/_settings.scss";
+
+.navigationBar {
+  color: $malibu;
+  width: 100%;
+  background: linear-gradient(to right, $main, $malibu);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navLogin {
+  color: $main;
+}
+
+.contactPhone {
+  color: $main;
+}
+
+.contactEmail {
+  color: $main;
+}
