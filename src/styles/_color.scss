@@ -1,6 +1,5 @@
 /* Theme colors */
-$crimson: #be4233;
-$goldTips: #edc11b;
+
 $white: #FFFFFF;
 $mako: #3D3F42; // 61, 63, 66
 $we_peep: #FAEBEB;
@@ -10,7 +9,7 @@ $mercury: #e3e3e3;
 $tiara: #CDD5D8;
 $primary: #3f51b5;
 $secondary: #f50057;
-$malibu: #57C9F9; // 87, 201, 249
+$malibu: #88D4FC; // RGB: 136, 212, 252
 $fruitSalad: #4CAF50;
 $seaGreen: #2F843F;
 $celadon: #A9E2AD;
@@ -24,6 +23,9 @@ $danger: #F44336;
 $success: #4CAF50; // 76, 175, 80
 $info: #00ACC1;
 $gray: #999;
+$crimson: $main;
+$goldTips: $malibu;
+
 .main-color {
   color: $main !important;
 }

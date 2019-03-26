@@ -1,20 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import moment from 'moment';
-import {
-  Grid, Card, CardContent, Typography,
-} from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import {
   providerType, serviceType, bookingDetailType, providerDetailsType,
 } from 'types/global';
-import { getProvidersByService } from 'reduxModules/home/bookingDialog/selectProvider.actions';
+import moment from 'moment';
+import RateStar from 'components/Rating/RateStar';
+import DatePicker from 'components/Calendar/DatePicker';
+import { getProvidersByService, getProviderTimes } from 'reduxModules/home/bookingDialog/selectProvider.actions';
 import EmptyItem from 'components/EmptyItem';
 import ProviderContent from './selectProvider/ProviderContent';
-import styles from './SelectProvider.module.scss';
-import DateSelect from './selectProvider/DateSelect';
+
+const today = moment();
 
 class SelectProvider extends React.PureComponent {
+  state = {
+    selectedDate: new Date(today.year(), today.month(), today.date(), 0, 0, 0),
+    sameDate: new Date(today.year(), today.month(), today.date(), 0, 0, 0),
+  };
+
   componentDidMount = () => {
     const { providers, getProvidersByServiceAction, initService } = this.props;
 
@@ -28,45 +33,68 @@ class SelectProvider extends React.PureComponent {
     this.props.onChange(time, 'time', this.props.handleNext);
   };
 
+  handleSelectDate = (date) => {
+    const { getProviderTimesAction, providers, initService } = this.props;
+    const { sameDate } = this.state;
+    this.setState({ selectedDate: date });
+    const availabilityData = {
+      serviceId: initService.id,
+      providers,
+      startSec: date.getTime() / 1000,
+      toSec: date.getTime() / 1000,
+    };
+    if (date.getTime() === sameDate.getTime()) {
+      // Add the search time slot to 3 minutes in case the request timeout
+      availabilityData.startSec = (moment.now() + 180000) / 1000;
+      availabilityData.toSec = (moment.now() + 180000) / 1000;
+    }
+    getProviderTimesAction(availabilityData);
+  };
+
   render() {
     const {
       isLoading, providers, bookingDetail, initService, providerDetails,
       onChange,
     } = this.props;
+    const { selectedDate } = this.state;
+    const bookingDetailWithDate = {
+      ...bookingDetail,
+      selectedDate,
+    };
+
     return (
       <>
-        {!isLoading && providers.length === 0
-          && <EmptyItem message="No available providers" />}
-        <div className={styles.selectProvider}>
-          {providers.length > 0 && (
-            <div className="calendarSection">
-              <DateSelect
-                bookingDetail={bookingDetail}
-                onChange={onChange}
-                providers={providers}
-                initServiceId={initService ? initService.id : -1}
-              />
-              <Typography color="secondary" variant="body2">*Your current timezone {moment.tz.guess()}</Typography>
-            </div>
-          )}
-          <Grid container spacing={16} classes={{ container: styles.providerCardsWrapper }}>
-            {providers.map(provider => (
-              <Grid item xs={12} md={6} key={provider.id}>
-                <Card>
-                  <CardContent>
+        {!isLoading && providers.length === 0 ? <EmptyItem message="No available providers" />
+          : (
+            <div className="selectProviderWrapper">
+              <div className="selectProviderHeader">
+                <div>
+                  <Typography color="textSecondary" variant="title">
+                    {initService.name}
+                  </Typography>
+                  <div className="selectedProviderReputation">
+                    <RateStar rating={initService.rating} reviews={initService.viewNum} />
+                  </div>
+                </div>
+                <div className="selectDateOfBooking">
+                  <DatePicker onChange={onChange} selectDate={this.handleSelectDate} />
+                </div>
+              </div>
+              <div className="selectProviderList">
+                {providers.map(provider => (
+                  <div key={provider.id}>
                     <ProviderContent
                       initService={initService}
                       provider={provider}
-                      bookingDetail={bookingDetail}
+                      bookingDetail={bookingDetailWithDate}
                       duration={providerDetails[provider.id] ? providerDetails[provider.id][0].durationSec : 0}
                       onTimeSelect={this.onSelectBooking(provider)}
                     />
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </div>
+                  </div>
+                ))}
+              </div>
+            </div>)
+        }
       </>
     );
   }
@@ -80,6 +108,7 @@ SelectProvider.propTypes = {
   }).isRequired,
   isLoading: PropTypes.bool.isRequired,
   getProvidersByServiceAction: PropTypes.func.isRequired,
+  getProviderTimesAction: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   bookingDetail: bookingDetailType.isRequired,
   handleNext: PropTypes.func.isRequired,
@@ -93,4 +122,7 @@ const mapStateToProps = state => ({
   ...state.homeModules.bookingDialogModules.selectProvider,
 });
 
-export default connect(mapStateToProps, { getProvidersByServiceAction: getProvidersByService })(SelectProvider);
+export default connect(mapStateToProps, {
+  getProvidersByServiceAction: getProvidersByService,
+  getProviderTimesAction: getProviderTimes,
+})(SelectProvider);

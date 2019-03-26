@@ -251,7 +251,12 @@ export class Home extends React.PureComponent {
                 onSearchValue={searchText}
               />)}
             {searchText.length > 2 && (
-              <Categorize name="Search results" search onClose={this.handleCloseSearch}>
+              <Categorize
+                name="Search results"
+                loading={isLoading}
+                search
+                onClose={this.handleCloseSearch}
+              >
                 <Services
                   services={searchedServices}
                   onChange={this.onChange}
@@ -262,7 +267,12 @@ export class Home extends React.PureComponent {
               </Categorize>)
             }
             {advancedSearchAvailable && (
-              <Categorize name="Advanced Search Results" search onClose={this.handleCloseSearch}>
+              <Categorize
+                name="Advanced Search Results"
+                loading={isLoading}
+                search
+                onClose={this.handleCloseSearch}
+              >
                 <Services
                   services={providerListByDistance}
                   onChange={this.onChange}
@@ -272,10 +282,7 @@ export class Home extends React.PureComponent {
               </Categorize>
             )}
             {catWithServices && catWithServices.map(category => (
-              <Categorize
-                key={category.name}
-                name={category.name}
-              >
+              <Categorize key={category.name} name={category.name} loading={isLoading}>
                 <Services
                   services={category.list}
                   onChange={this.onChange}

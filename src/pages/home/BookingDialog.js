@@ -185,7 +185,6 @@ class BookingDialog extends PureComponent {
                     classes={{ root: 'stepper' }}
                     elevation={1}
                     activeStep={step}
-                    // connector={<div />}
                   >
                     {this.bookingSteps.map(bookingStep => (
                       <Step key={bookingStep} classes={{ root: 'step' }}>
@@ -207,8 +206,8 @@ class BookingDialog extends PureComponent {
               </div>
             </Toolbar>
           </AppBar>
-          <div className={classes.bookingContent}>
-            {initService && (
+          {initService && (
+            <div className={`${classes.bookingContent} container-max auto-margin-horizontal`}>
               <StepComponent
                 initService={initService}
                 onChange={this.onChangeBookingDetail}
@@ -221,8 +220,8 @@ class BookingDialog extends PureComponent {
                 openAppointmentDialog={this.openAppointmentDialog}
                 handleOpenProfile={handleOpenProfile}
               />
-            )}
-          </div>
+            </div>
+          )}
         </Dialog>
       </>
     );
@@ -252,7 +251,7 @@ BookingDialog.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  userDetail: state.auth.userDetails,
+  userDetail: state.auth.userDetail,
   isAuthenticated: state.auth.loginSession.isAuthenticated,
   isLoading: state.homeModules.bookingDialog.isLoading,
   bookingStatus: state.homeModules.bookingDialog.status,

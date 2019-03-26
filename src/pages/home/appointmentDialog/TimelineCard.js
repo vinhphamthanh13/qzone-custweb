@@ -9,12 +9,13 @@ import {
   DateRange, Schedule, AlarmOff, AlarmOn,
   AirlineSeatReclineNormal, DoneAll,
   Update, Timer, TagFaces,
+  // PersonPin,
 } from '@material-ui/icons';
 import Rating from 'material-ui-rating';
-
 import styles from './TimelineCard.module.scss';
 import CountDownDisplay from './CountDownDisplay';
 import { STATUS } from './Appointment.constants';
+// import MapDialog from '../bookingDialog/selectProvider/MapDialog';
 
 export default function TimelineCard({
   serviceName,
@@ -118,18 +119,23 @@ export default function TimelineCard({
           </Typography>
         </div>
         <div>
-          <Typography variant="h6" color="textSecondary">{serviceName}</Typography>
-          <Typography variant="subheading" color="textSecondary">{providerName}</Typography>
+          <Typography variant="title" color="textSecondary">{serviceName}</Typography>
+          <Typography
+            variant="subheading"
+            color="textSecondary"
+            className="text-bold icon-main"
+          >{providerName}
+          </Typography>
           <div className={styles.appointmentItem}>
             <DateRange className="icon-main" />
             <Typography variant="subheading" color="primary" inline noWrap>
-              {moment(startSec * 1000).format('l')}
+              {moment(startSec * 1000).format('DD MMM YYYY')}
             </Typography>
           </div>
           <div className={styles.appointmentItem}>
             <Schedule className="icon-main" />
             <Typography variant="subheading" color="primary" inline noWrap>
-              {`From ${moment(startSec * 1000).format('LT')} to ${moment(toSecCalc).format('LT')}`}
+              {moment(startSec * 1000).format('LT')}{' - '}{moment(toSecCalc).format('LT')}
             </Typography>
           </div>
         </div>

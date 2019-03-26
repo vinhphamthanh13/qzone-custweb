@@ -45,6 +45,7 @@ class CountDownDisplay extends Component {
     const startCountDownPopup = isStartingCountDown
       ? (
         <CustomModal
+          type="info"
           isOpen
           title="Coming Booking!"
           message={

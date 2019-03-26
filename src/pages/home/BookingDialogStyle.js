@@ -12,8 +12,9 @@ const style = theme => ({
     margin: theme.spacing.unit * 2,
   },
   bookingContent: {
-    maxWidth: 1440,
-    margin: '24px auto',
+    width: '100%',
+    height: 'calc(100vh - 65px)',
+    display: 'flex',
   },
 
   diagRoot: {

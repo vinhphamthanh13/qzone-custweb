@@ -24,6 +24,7 @@ export default class ServiceCard extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      isHiddenBooking: false,
       imgSrc: props.service.image && props.service.image.fileUrl
         ? props.service.image.fileUrl : serviceImg,
     };
@@ -39,9 +40,13 @@ export default class ServiceCard extends PureComponent {
     this.setState({ imgSrc: serviceImg });
   };
 
+  handleHidingBookingButton = (value) => {
+    this.setState({ isHiddenBooking: value });
+  };
+
   render() {
     const { service } = this.props;
-    const { imgSrc } = this.state;
+    const { imgSrc, isHiddenBooking } = this.state;
     return (
       <Card raised classes={{ root: styles.serviceCard }}>
         <CardMedia
@@ -50,19 +55,25 @@ export default class ServiceCard extends PureComponent {
           onError={this.onError}
         />
         <CardContent className={styles.serviceContent}>
-          <ServiceDetail service={service} instantBooking={this.onSelectService} />
+          <ServiceDetail
+            service={service}
+            instantBooking={this.onSelectService}
+            handleHiddenBookingButton={this.handleHidingBookingButton}
+          />
         </CardContent>
-        <CardActions>
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={this.onSelectService}
-            fullWidth
-            className={styles.serviceAction}
-          >
-            Booking
-          </Button>
-        </CardActions>
+        {!isHiddenBooking && (
+          <CardActions>
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={this.onSelectService}
+              fullWidth
+              className={styles.serviceAction}
+            >
+              Booking
+            </Button>
+          </CardActions>
+        )}
       </Card>
     );
   }

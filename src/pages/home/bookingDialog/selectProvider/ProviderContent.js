@@ -1,16 +1,24 @@
 import React from 'react';
-import { number, func } from 'prop-types';
 import {
-  Grid, Typography, ButtonBase,
-} from '@material-ui/core';
-import { Map } from '@material-ui/icons';
+  number,
+  func,
+} from 'prop-types';
+import { get } from 'lodash';
+import { Typography, ButtonBase } from '@material-ui/core';
+import moment from 'moment';
 import {
-  providerType, bookingDetailType, serviceType,
+  PersonPin, Schedule, EmailOutlined, CallOutlined, PlaceOutlined, AddOutlined,
+} from '@material-ui/icons';
+import {
+  providerType,
+  bookingDetailType,
+  serviceType,
 } from 'types/global';
-
+import RateStar from 'components/Rating/RateStar';
+import CustomLink from 'components/CustomLink';
 import formatName from 'utils/formatName';
+import QLogo from 'images/quezone-logo.png';
 import SelectTime from './providerContent/SelectTime';
-import styles from './ProviderContent.module.scss';
 import DetailDialog from './providerContent/DetailDialog';
 import MapDialog from './MapDialog';
 
@@ -28,19 +36,34 @@ export default class ProviderContent extends React.PureComponent {
     this.setState(oldState => ({
       isDetailDialogOpen: !oldState.isDetailDialogOpen,
     }));
-  }
+  };
 
   toggleMapDialog = () => {
     this.setState(oldState => ({
       isMapDialogOpen: !oldState.isMapDialogOpen,
     }));
-  }
+  };
 
   render() {
     const {
-      provider, initService, bookingDetail, onTimeSelect, duration,
+      provider, initService,
+      bookingDetail,
+      onTimeSelect,
+      duration,
     } = this.props;
     const { isDetailDialogOpen, isMapDialogOpen } = this.state;
+    const providerId = get(provider, 'id');
+    const providerEmail = get(provider, 'email');
+    const providerRating = get(provider, 'rating');
+    const providerPhone = get(provider, 'telephone');
+    const providerWebsite = get(provider, 'website');
+    const providerStreet = get(provider, 'geoLocation.streetAddress');
+    const providerDistrict = get(provider, 'geoLocation.district');
+    const providerState = get(provider, 'geoLocation.state');
+    const providerCity = get(provider, 'geoLocation.city');
+    const providerCountry = get(provider, 'geoLocation.country');
+    const providerPostCode = get(provider, 'geoLocation.postCode');
+    const providerTimeZone = get(provider, 'providerInformation.timeZoneId');
 
     return (
       <>
@@ -55,43 +78,107 @@ export default class ProviderContent extends React.PureComponent {
           initService={initService}
           provider={provider}
         />
-        <Grid container wrap="nowrap">
-          <Grid item classes={{ item: styles.providerLeftHeader }}>
-            <Typography variant="h5">
-              {initService.name}
-            </Typography>
-            <Typography variant="h6">
-              {formatName({ givenName: provider.givenName, familyName: provider.familyName })}
-            </Typography>
-            <Typography variant="caption">
-              {(initService.description).substring(0, 100)}
-              <>...&nbsp;
-                <ButtonBase onClick={this.toggleDetailDialog}>
-                  <Typography variant="caption" className={styles.providerLeftHeader__description}>
-                    MORE
+        <div className="providerListCard">
+          <div className="providerListCardContent">
+            <div className="providerListCardHeader">
+              <div className="providerListCardLogo">
+                <div className="providerListCardImg">
+                  <img src={QLogo} alt="Q-Provider" width="100%" />
+                </div>
+              </div>
+              <div className="providerListCardTitle">
+                <Typography noWrap variant="title" color="inherit" className="text-bold">
+                  <CustomLink
+                    text={formatName({ givenName: provider.givenName, familyName: provider.familyName })}
+                    to={`/provider/${providerId}`}
+                    big
+                  />
+                </Typography>
+                <RateStar rating={providerRating} />
+              </div>
+              <div className="providerAddress">
+                <div className="providerListCardMap">
+                  <ButtonBase onClick={this.toggleMapDialog}>
+                    <PersonPin className="icon-small icon-brand icon-shake" />
+                  </ButtonBase>
+                  <Typography
+                    noWrap
+                    variant="subheading"
+                    color="inherit"
+                    onClick={this.toggleMapDialog}
+                    className="hover-pointer text-bold"
+                  >View map
                   </Typography>
-                </ButtonBase>
-              </>
-            </Typography>
-          </Grid>
-          <Grid item classes={{ item: styles.providerRightHeader }}>
-            <Typography variant="title">
-              $20.00
-            </Typography>
-            <Typography variant="body1" classes={{ root: styles.providerRightHeader__duration }}>
-              {duration} min
-            </Typography>
-            <ButtonBase onClick={this.toggleMapDialog}>
-              <Map className={styles.icon} />
-            </ButtonBase>
-          </Grid>
-        </Grid>
-        <div className={styles.providerDetail}>
-          <SelectTime
-            bookingDetail={bookingDetail}
-            providerDetail={provider}
-            onChange={onTimeSelect}
-          />
+                </div>
+                <div className="icon-text">
+                  <EmailOutlined className="icon-small icon-brand" />
+                  <Typography noWrap variant="body2" color="inherit">{providerEmail}</Typography>
+                </div>
+                <div className="icon-text">
+                  <CallOutlined className="icon-small icon-brand" />
+                  <Typography noWrap variant="body2" color="inherit">{providerPhone}</Typography>
+                </div>
+                <div className="icon-text">
+                  <PlaceOutlined className="icon-small icon-brand" />
+                  <Typography noWrap variant="body2" color="inherit">
+                    {providerStreet}, {providerDistrict}
+                  </Typography>
+                </div>
+                <div className="icon-text">
+                  <AddOutlined className="icon-small icon-transparent" />
+                  <Typography noWrap variant="body2" color="inherit">{providerState}, {providerCity}</Typography>
+                </div>
+                <div className="icon-text">
+                  <AddOutlined className="icon-small icon-transparent" />
+                  <Typography noWrap variant="body2" color="inherit">
+                    {providerCountry}, {providerPostCode}
+                  </Typography>
+                </div>
+                <div className="icon-text">
+                  <AddOutlined className="icon-small icon-transparent" />
+                  <Typography noWrap variant="body2" color="inherit">
+                    {providerWebsite || 'https://info.quezone.com.au'}
+                  </Typography>
+                </div>
+                <div className="icon-text">
+                  <AddOutlined className="icon-small icon-transparent" />
+                  <Typography noWrap variant="body2" color="inherit">{providerTimeZone}</Typography>
+                </div>
+              </div>
+            </div>
+            <div className="providerListCardDescription">
+              <div className="providerListCardDescriptionTop">
+                <Typography variant="body1" color="inherit">
+                  {initService.description}
+                </Typography>
+                <div className="providerListCardService">
+                  <div className="contentItem">
+                    <Schedule className="icon-main" />
+                    <Typography variant="subheading" color="primary">
+                      {duration} min
+                    </Typography>
+                  </div>
+                  <div className="contentItem">
+                    <Typography variant="title" color="inherit">
+                      ${parseFloat(Math.random(15) * 100).toFixed(2)}
+                    </Typography>
+                  </div>
+                </div>
+              </div>
+              <div className="providerListCardDescriptionBottom">
+                <Typography variant="body1" color="inherit">
+                  Your current timezone: {moment.tz.guess()}
+                </Typography>
+              </div>
+            </div>
+          </div>
+          <div className="calendarTime">
+            <SelectTime
+              bookingDetail={bookingDetail}
+              providerDetail={provider}
+              onChange={onTimeSelect}
+            />
+          </div>
         </div>
       </>
     );

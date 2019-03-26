@@ -1,81 +1,82 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {
-  Typography, Button, Grid,
-  Dialog, DialogTitle, DialogContent, DialogActions,
-} from '@material-ui/core';
-import { LocationOn } from '@material-ui/icons';
-import CustomLink from 'components/CustomLink';
+  number, shape, bool, func,
+} from 'prop-types';
+import { Typography, Dialog, IconButton } from '@material-ui/core';
+import { LocationOnOutlined, CloseSharp } from '@material-ui/icons';
+import { get } from 'lodash';
 import { serviceType } from 'types/global';
-
+import RateStar from 'components/Rating/RateStar';
 import GoogleMap from 'components/GoogleMap';
-import mapStyles from './MapDialog.module.scss';
-import styles from './providerContent/DetailDialog.module.scss';
+import s from './MapDialog.module.scss';
 
 export default function MapDialog({
   isOpen, toggle, initService, provider,
 }) {
-  const { geoLocation } = provider;
+  const serviceRating = get(initService, 'rating');
+  const serviceView = get(initService, 'viewNum');
+  console.log('initService', provider);
+  const providerStreet = get(provider, 'geoLocation.streetAddress');
+  const providerDistrict = get(provider, 'geoLocation.district');
+  const providerState = get(provider, 'geoLocation.state');
+  const providerCountry = get(provider, 'geoLocation.country');
+  const providerPostCode = get(provider, 'geoLocation.postCode');
+  const providerLat = get(provider, 'geoLocation.coordinates.latitude');
+  const providerLng = get(provider, 'geoLocation.coordinates.longitude');
+
   return (
     <Dialog
       open={isOpen}
       onClose={toggle}
+      disableBackdropClick
       maxWidth="xl"
-      classes={{ paper: mapStyles.mapDialogWrapper }}
+      classes={{ paper: s.mapDialogWrapper }}
     >
-      <DialogTitle disableTypography classes={{ root: styles.title }}>
-        <div className={styles.leftTitle}>
-          <Typography variant="h5">{initService.name}</Typography>
-          <Typography variant="subtitle2">
-            <CustomLink
-              text={initService.organization.name}
-              to={`/organisation/${initService.organization.id}`}
-            />
-          </Typography>
-        </div>
+      <div className={s.mapContainer}>
         <div>
-          <Typography variant="subtitle1">{initService.duration} minutes</Typography>
+          <div className={s.closeMap}>
+            <IconButton className="simple-button" onClick={toggle}>
+              <CloseSharp className="icon-white icon-normal" />
+            </IconButton>
+          </div>
+          <div className={s.mapTitle}>
+            <Typography variant="title" className="text-bold text-margin-right">{initService.name}</Typography>
+            <RateStar rating={serviceRating} reviews={serviceView} />
+          </div>
+          <div className={s.providerLocation}>
+            <div className="icon-text">
+              <LocationOnOutlined className="icon-main icon-small" />
+              <Typography variant="subtitle2">
+                {providerStreet}, {providerDistrict}, {providerState}, {providerPostCode},  {providerCountry}
+              </Typography>
+            </div>
+          </div>
         </div>
-      </DialogTitle>
-      <DialogContent>
-        <Grid container spacing={16} className={mapStyles.mapWrapper}>
-          <Grid item xs={12} className={mapStyles.addressLine}>
-            <LocationOn className={mapStyles.icon} />
-            <Typography variant="subtitle1" inline>
-              {geoLocation.streetAddress},&nbsp;
-              District {geoLocation.district},&nbsp;
-              {geoLocation.state}&nbsp;
-              {geoLocation.postCode}&nbsp;
-              {geoLocation.country}
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
+        <div className={s.mapBody}>
+          <div className={s.mapContainer}>
             <GoogleMap
               marker={{
-                longitude: geoLocation.coordinates.longitude,
-                latitude: geoLocation.coordinates.latitude,
+                longitude: providerLng,
+                latitude: providerLat,
               }}
               zoom={16}
             />
-          </Grid>
-        </Grid>
-      </DialogContent>
-      <DialogActions classes={{ root: styles.footer }}>
-        <Button variant="outlined" color="primary" onClick={toggle}>Close</Button>
-      </DialogActions>
+          </div>
+        </div>
+      </div>
     </Dialog>
   );
 }
 
 MapDialog.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  toggle: PropTypes.func.isRequired,
+  isOpen: bool.isRequired,
+  toggle: func.isRequired,
   initService: serviceType,
-  provider: PropTypes.shape({
+  provider: shape({
     geoLocation: {
       coordinates: {
-        longitude: PropTypes.number,
-        latitude: PropTypes.number,
+        longitude: number,
+        latitude: number,
       },
     },
   }),

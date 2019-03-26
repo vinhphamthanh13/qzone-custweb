@@ -8,7 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { noop } from 'utils/constants';
 import logo from 'images/logo.png';
-import errorStyle from './ModalStyle';
+import s from './ModalStyle';
 
 const CustomModal = (props) => {
   const {
@@ -27,7 +27,7 @@ const CustomModal = (props) => {
           <Avatar className="verification-modal-avatar" src={logo} />
         </div>
         <div className="verification-modal-content">
-          <Typography variant="h5" color={headingColor}>
+          <Typography className="text-capitalize" variant="h5" color={headingColor}>
             {title}
           </Typography>
           <Typography variant="subheading" color="textSecondary">{message}</Typography>
@@ -80,4 +80,4 @@ CustomModal.defaultProps = {
   cancelText: 'Cancel',
 };
 
-export default withStyles(errorStyle)(CustomModal);
+export default withStyles(s)(CustomModal);

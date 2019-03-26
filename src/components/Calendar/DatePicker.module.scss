@@ -1,0 +1,48 @@
+@import "styles/_settings.scss";
+
+.datePicker {
+  color: $crimson;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.calendarCabin {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.calendarTab {
+  justify-content: center;
+  color: $crimson;
+  padding: 0.5em 1.5em;
+  background: $goldTips;
+  border: 2px solid $white;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.calendarDot {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 0.5em;
+}
+
+.calendarTabCircle {
+  color: $goldTips;
+  width: 0.9em;
+  height: 0.9em;
+  border-radius: 50%;
+  background: $white;
+  margin: auto 0.2em;
+}
+
+.calendarFont {
+  font-weight: 800;
+}
+
+.calendarText {
+  text-align: center;
+}

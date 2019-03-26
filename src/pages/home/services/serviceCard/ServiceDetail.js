@@ -35,7 +35,7 @@ export default class ServiceDetail extends React.PureComponent {
   };
 
   render() {
-    const { service, instantBooking } = this.props;
+    const { service, instantBooking, handleHiddenBookingButton } = this.props;
     const { isDialogDescOpen } = this.state;
     const serviceName = get(service, 'name');
     const duration = get(service, 'duration');
@@ -92,7 +92,11 @@ export default class ServiceDetail extends React.PureComponent {
           </div>
         </div>
         <div className={styles.linkedProviders}>
-          <LinkedProvider service={service} instantBooking={instantBooking} />
+          <LinkedProvider
+            service={service}
+            instantBooking={instantBooking}
+            handleBookingButton={handleHiddenBookingButton}
+          />
         </div>
       </>
     );
@@ -102,4 +106,5 @@ export default class ServiceDetail extends React.PureComponent {
 ServiceDetail.propTypes = {
   service: serviceType.isRequired,
   instantBooking: func.isRequired,
+  handleHiddenBookingButton: func.isRequired,
 };

@@ -113,12 +113,22 @@
   }
 }
 
+.icon-small {
+  margin: 5px;
+  font-size: 18px;
+}
+
 .icon-normal {
+  margin: 5px;
   font-size: 24px;
 }
 
 .icon-big {
   font-size: 32px;
+}
+
+.icon-huge {
+  font-size: 62px;
 }
 
 .icon-transparent {
@@ -135,9 +145,24 @@
   color: $danger;
 }
 
+.icon-brand {
+  color: $crimson;
+}
+
+.icon-s-brand {
+  color: $goldTips;
+}
+
 .icon-white{
   margin: 5px;
   color: $white;
+}
+
+.icon-text {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
 }
 
 .verification-modal {
@@ -188,6 +213,7 @@
 .cover-bg-black {
   position: fixed;
   top: 0;
+  left: 0;
   background: rgba(0,0,0, 0.7);
   width: 100%;
   height: 100vh;
@@ -333,15 +359,212 @@
   height: auto;
   padding: 15px;
   border-radius: 6px;
-  background: linear-gradient(to bottom, $gallery, $white);
+  background: linear-gradient($main, $white, $malibu);
 }
 
 .step {
   &>span>span:first-child>svg {
-    font-size: 28px;
+    font-size: 26px;
   }
   &>span>span:last-child>span {
-    font-size: 18px;
+    font-size: 17px;
   }
   padding-right: 15px;
+}
+
+.serviceName {
+  padding: 0 1rem 1rem;
+}
+
+/* Select Provider */
+
+.selectProviderWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.calendarTimeWrapper {
+  width: 100%;
+}
+
+.selectProviderHeader {
+  margin: 1rem 0 0;
+  padding: 0 1rem 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid rgba($grayNickel, 0.5);
+}
+
+.calendarTime {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.time-row {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  border-top: 1px solid rgba($grayNickel, 0.3);
+}
+
+.time-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+  width: 46px;
+  border-right: 1px solid rgba($grayNickel, 0.3);
+  box-sizing: border-box;
+  transition: all 0.25s ease;
+  user-select: none;
+  &:hover {
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    cursor: pointer;
+  }
+}
+
+.valid-slot {
+  background: $malibu;
+  border: 1px solid $malibu;
+  &:hover {
+    color: $white;
+    background: linear-gradient(to bottom, $main, $malibu);
+    border: 1px solid $goldTips;
+  }
+}
+
+.invalid-slot {
+  background: transparent;
+  color: $grayNickel;
+  &:hover {
+    color: $white;
+  }
+}
+
+.kantBook {
+  background: unset;
+  color: $grayNickel;
+  &:hover {
+    background: unset;
+    color: $grayNickel;
+    border: 1px solid $grayNickel;
+  }
+}
+
+.selectProviderList {
+  width: auto;
+  display: flex;
+  justify-content: center;
+  overflow: auto;
+}
+
+.providerListCard {
+  color: $crimson;
+  border-radius: 10px;
+  margin: 2rem 1rem;
+  border: 1px solid $grayNickel;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 2px 1px 1px $grayNickel;
+  max-width: 550px;
+}
+
+.providerListCardHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  background: rgba($goldTips, 0.8);
+  width: 50%;
+  padding-bottom: 0.2rem;
+}
+
+.providerListCardDescription {
+  color: $malibu;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.providerListCardDescriptionTop {
+  color: $main;
+  padding: 0.5rem 0.5rem 0;
+}
+
+.providerListCardDescriptionBottom {
+  color: $main;
+  background: $gallery;
+  text-align: right;
+  padding: 0.5rem 0.5rem;
+  
+}
+
+.providerListCardLogo {
+  background: linear-gradient(to right, $gallery, $crimson);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 35px;
+}
+
+.providerListCardImg {
+  width: 110px;
+  padding: 0.2rem 0.2rem 0; 
+}
+
+.providerListCardTitle {
+  padding: 0.5rem;
+  color: $primary;
+}
+
+.providerAddress {
+  padding: 1rem 0.5rem 0;
+  width: 100%;
+}
+
+.providerListCardContent {
+  display: flex;
+  color: $main;
+  box-sizing: border-box;
+  //border-bottom: 1px solid $goldTips;
+}
+
+.contentItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: $crimson;
+}
+
+.providerListCardService {
+  color: $success;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
+.providerListCardMap {
+  color: $main;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+}
+
+.providerListCardAvailableTime {
+  color: $grayNickel;
+}
+
+.selectDateOfBooking {
+  height: 100%;
 }
