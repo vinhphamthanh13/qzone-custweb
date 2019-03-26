@@ -6,13 +6,15 @@ import { IconButton, Typography } from '@material-ui/core';
 import Calendar from './Calendar';
 import s from './DatePicker.module.scss';
 
+const today = moment();
+
 class DatePicker extends Component {
   state = {
-    selectedDate: new Date(moment().year(), moment().month(), moment().date()),
+    selectedDate: new Date(today.year(), today.month(), today.date()),
     isOpenCalendar: false,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     const { selectDate } = this.props;
     const { selectedDate } = this.state;
     selectDate(selectedDate);

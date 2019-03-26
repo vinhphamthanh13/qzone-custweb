@@ -207,7 +207,6 @@ class Calendar extends Component {
     // eslint-disable-next-line
     event && event.preventDefault();
     const { onDateChanged } = this.props;
-    console.log('ondate change', date);
     this.setState(this.resolveStateFromDate(date), () => {
       // eslint-disable-next-line
       (typeof onDateChanged === 'function') && onDateChanged(date);

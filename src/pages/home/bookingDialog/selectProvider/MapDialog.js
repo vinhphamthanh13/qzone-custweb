@@ -15,7 +15,6 @@ export default function MapDialog({
 }) {
   const serviceRating = get(initService, 'rating');
   const serviceView = get(initService, 'viewNum');
-  console.log('initService', provider);
   const providerStreet = get(provider, 'geoLocation.streetAddress');
   const providerDistrict = get(provider, 'geoLocation.district');
   const providerState = get(provider, 'geoLocation.state');

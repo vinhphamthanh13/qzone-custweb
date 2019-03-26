@@ -14,9 +14,6 @@ import s from './ViewAppointment.module.scss';
 const ViewAppointment = ({
   bookingEvent, handleOpenProfile, initService, bookingDetail,
 }) => {
-  console.log('bookingEvent', bookingEvent);
-  console.log('initService', initService);
-  console.log('bookingDetail', bookingDetail);
   const provider = get(bookingDetail, 'provider');
   const stateName = get(bookingEvent, 'geoLocation.state');
   const bookingCode = get(bookingEvent, 'bookingCode');
