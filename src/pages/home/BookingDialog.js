@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import {
-  string, bool, func, shape, objectOf, any,
+  string, bool, func, shape, objectOf, any, number,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -17,7 +17,9 @@ import {
   ChevronRight,
 } from '@material-ui/icons';
 import logo from 'images/logo.png';
-import { serviceType, userDetailType, eventType } from 'types/global';
+import {
+  serviceType, userDetailType, eventType, bookingDetailType,
+} from 'types/global';
 import { setProviders } from 'reduxModules/home/bookingDialog/selectProvider.actions';
 import { bookEvent, resetStatus } from 'reduxModules/home/bookingDialog.actions';
 import CustomModal from 'components/Modal/CustomModal';
@@ -37,8 +39,8 @@ class BookingDialog extends PureComponent {
     this.bookingStepsComponents = [SelectProvider, BookingDetail, ViewAppointment];
     this.bookingSteps = ['Select provider', 'Book appointment', 'Complete booking'];
     this.defaultState = {
-      step: 0,
-      bookingDetail: {
+      step: props.initialStep || 0,
+      bookingDetail: props.bookingDetail || {
         provider: undefined,
         time: undefined,
         day: undefined,
@@ -144,6 +146,8 @@ class BookingDialog extends PureComponent {
       ? <ChevronRight className="icon-white icon-big icon-shake" />
       : <ChevronRight className="icon-transparent icon-big" />;
 
+    console.log('this.props of booking Dialog', this.props);
+    console.log('this.state of booking Dialog', this.state);
     return (
       <>
         <CustomModal
@@ -243,11 +247,15 @@ BookingDialog.propTypes = {
   bookingEvent: eventType,
   toggleAppointmentAction: func.isRequired,
   handleOpenProfile: func.isRequired,
+  initialStep: number,
+  bookingDetail: bookingDetailType,
 };
 
 BookingDialog.defaultProps = {
   initService: undefined,
   bookingEvent: undefined,
+  initialStep: 0,
+  bookingDetail: {},
 };
 
 const mapStateToProps = state => ({

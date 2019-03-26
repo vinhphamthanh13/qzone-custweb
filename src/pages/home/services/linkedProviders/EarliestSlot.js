@@ -14,8 +14,8 @@ import s from './LinkedProviders.module.scss';
 
 class EarliestSlot extends Component {
   handleSelectBookTime = selectedTime => () => {
-    const { onBooking } = this.props;
-    onBooking(selectedTime);
+    const { onSlotBooking } = this.props;
+    onSlotBooking(selectedTime);
   };
 
   handleFetchProviderSlots = providerId => () => {
@@ -92,7 +92,7 @@ class EarliestSlot extends Component {
 
 EarliestSlot.propTypes = {
   providerName: string.isRequired,
-  onBooking: func.isRequired,
+  onSlotBooking: func.isRequired,
   providerId: string.isRequired,
   fetchProviderSlotsAction: func.isRequired,
   providerSlots: objectOf(any).isRequired,
