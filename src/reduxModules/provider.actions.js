@@ -1,20 +1,37 @@
 import { setLoading } from 'actions/common';
-import { getProvider } from 'api/provider';
+import { getProviderServices, getProviderDetail } from 'api/provider';
 
 export const FETCH_PROVIDER_DETAIL = 'PROVIDER.FETCH_PROVIDER_DETAIL';
+export const FETCH_PROVIDER_SERVICE = 'PROVIDER.FETCH_PROVIDER_SERVICE';
 
 const setProviderDetail = payload => ({
   type: FETCH_PROVIDER_DETAIL,
   payload,
 });
 
-export const fetchProvider = id => async (dispatch) => {
+const setProviderService = payload => ({
+  type: FETCH_PROVIDER_SERVICE,
+  payload,
+});
+
+export const fetchProviderService = id => async (dispatch) => {
   dispatch(setLoading(true));
-  const providerDetail = await getProvider(id);
-  console.log('providerDetails', providerDetail);
+  const providerServices = await getProviderServices(id);
+  if (providerServices.data.isAuthenticated) {
+    dispatch(setLoading(false));
+    dispatch(setProviderService(providerServices.data.objects));
+  } else {
+    dispatch(setLoading(false));
+  }
+};
+
+export const fetchProviderDetail = id => async (dispatch) => {
+  dispatch(setLoading(true));
+  const providerDetail = await getProviderDetail(id);
+  console.log('providerdetail', providerDetail);
   if (providerDetail.data.isAuthenticated) {
     dispatch(setLoading(false));
-    dispatch(setProviderDetail(providerDetail.data.objects));
+    dispatch(setProviderDetail(providerDetail.data.object));
   } else {
     dispatch(setLoading(false));
   }

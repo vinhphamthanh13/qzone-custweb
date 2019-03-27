@@ -1,22 +1,68 @@
 @import "styles/_settings.scss";
 
-.navigationBar {
+.header {
+  color: $main;
+}
+
+.miniBanner {
+  padding: 1em 3em;
   color: $malibu;
   width: 100%;
-  background: linear-gradient(to right, $main, $malibu);
+  background: $malibu;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: $app-bar-height - 40px;
+}
+
+.navLogin {
+  color: $main;
+  
+}
+
+.contact {
+  color: $gallery;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.brandAndNav {
+  color: $main;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: $app-bar-height * 2;
+  padding: 0 2em;
+  max-width: $max-width;
+}
+
+.brand {
+  color: $main;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.navLogin {
-  color: $main;
+.logo {
+  margin: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.contactPhone {
+.navigation {
   color: $main;
+  display: flex;
+  justify-content: space-between;
+  margin: 1em 2em 1em auto;
 }
 
-.contactEmail {
-  color: $main;
+.navItem {
+  margin: 1em;
+  border-bottom: 4px solid transparent;
+  box-sizing: border-box;
+  &:hover {
+    cursor: pointer;
+    border-bottom: 4px solid $malibu;
+  }
 }

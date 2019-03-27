@@ -1,34 +1,85 @@
 import React, { Component } from 'react';
 import { func } from 'prop-types';
-import { IconButton, Icon } from '@material-ui/core';
+import {
+  IconButton, Icon, Typography, Avatar,
+} from '@material-ui/core';
+import { noop } from 'lodash';
+import uuidv1 from 'uuid/v1';
+import CustomLink from 'components/CustomLink';
 import { Call, Mail } from '@material-ui/icons';
+import { basicContact } from 'types/global';
 import s from './Header.module.scss';
 
-class Header extends Component {
-  state = {
-    help: '',
-  };
+const navs = [
+  {
+    label: 'HOME',
+    action: noop,
+    link: '/',
+  },
+  {
+    label: 'ABOUT',
+    action: noop,
+    link: '/about',
+  },
+  {
+    label: 'CONTACT',
+    action: noop,
+    link: '/contact',
+  },
+];
 
+class Header extends Component {
   handleLogin = () => {
     const { login } = this.props;
     login();
   };
 
   render() {
-    const { help } = this.state;
+    const {
+      providerContact: {
+        name, telephone, email, logo,
+      },
+    } = this.props;
     return (
-      <div className={s.navigationBar}>
-        {help}
-        <div className={s.contactPhone}>
-          <Call className="icon-white icon-small" />
+      <div className={s.header}>
+        <div className={s.miniBanner}>
+          <div className={s.contact}>
+            <div className="icon-text text-margin-right">
+              <Call className="icon-white icon-small" />
+              <Typography variant="subtitle1" color="inherit">{telephone}</Typography>
+            </div>
+            <div className="icon-text">
+              <Mail className="icon-white icon-small" />
+              <Typography variant="subtitle1" color="inherit">{email}</Typography>
+            </div>
+          </div>
+          <div className={s.navLogin}>
+            <IconButton className="button-sm simple-button" onClick={this.handleLogin}>
+              <Icon className="fab fa-google icon-white" />
+            </IconButton>
+            <IconButton className="button-sm simple-button" onClick={this.handleLogin}>
+              <Icon className="fab fa-facebook icon-white" />
+            </IconButton>
+          </div>
         </div>
-        <div className={s.contactEmail}>
-          <Mail className="icon-white icon-small" />
-        </div>
-        <div className={s.navLogin}>
-          <IconButton onClick={this.handleLogin}>
-            <Icon className="fab fa-google" />
-          </IconButton>
+        <div className={`${s.brandAndNav} auto-margin-horizontal`}>
+          <div className={s.brand}>
+            <div className={s.logo}>
+              <Avatar src={logo} alt={email} />
+            </div>
+            <div>
+              <Typography variant="h4" color="inherit" className="text-bold">{name}</Typography>
+            </div>
+          </div>
+          <div className={s.navigation}>
+            {navs.map(nav => (
+              <div key={uuidv1()} className={s.navItem}>
+                <Typography variant="subtitle1" color="inherit">
+                  <CustomLink text={nav.label} target="" to={nav.link} />
+                </Typography>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -37,6 +88,7 @@ class Header extends Component {
 
 Header.propTypes = {
   login: func.isRequired,
+  providerContact: basicContact.isRequired,
 };
 
 export default Header;

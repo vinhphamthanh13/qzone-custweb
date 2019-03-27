@@ -1,3 +1,4 @@
 import axios from 'axios';
 
-export const getProvider = id => axios.get(`/services-by-provider-id/${id}`);
+export const getProviderServices = id => axios.get(`/services-by-provider-id/${id}`);
+export const getProviderDetail = id => axios.get(`/users/${id}`);
