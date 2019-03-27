@@ -4,12 +4,13 @@ import {
 } from 'prop-types';
 import { noop, get } from 'lodash';
 import { connect } from 'react-redux';
-import uuidv1 from 'uuid/v1';
+import { Typography } from '@material-ui/core';
 import { fetchProviderService, fetchProviderDetail } from 'reduxModules/provider.actions';
 import Loading from 'components/Loading';
 import logo from 'images/logo.png';
 import Header from './components/Header';
 import ProviderContent from './components/ProviderContent';
+import ProviderService from './components/ProviderService';
 import bgImage from './images/service-queue.jpg';
 import s from './Provider.module.scss';
 
@@ -46,15 +47,13 @@ class Provider extends Component {
             qualifications={providerQualification}
             bgImage={bgImage}
           />
-          <div className={s.providerInfo}>
-            discription
-          </div>
-          <div className={s.services}>
-            {!isLoading && providerServices.map(provider => (
-              <div key={uuidv1()} className={s.serviceDetail}>
-                {provider.name}
-              </div>
-            ))}
+          <div className={s.providerServices}>
+            <div className={s.providerCategory}>
+              <Typography variant="h4" color="inherit">
+                Our services
+              </Typography>
+            </div>
+            {!isLoading && <ProviderService services={providerServices} />}
           </div>
         </div>
       </>

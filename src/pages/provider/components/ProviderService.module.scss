@@ -1,27 +1,51 @@
 @import "styles/_settings.scss";
 
-.content {
+.services {
   color: $main;
+  max-width: $max-width;
+  padding: 0 1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.contentDescription {
+.serviceCard {
   color: $main;
-  position: relative;
+  width: 320px;
+  border: 1px solid $grayNickel;
+  box-sizing: border-box;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0.2em 0.3em 0.5em $grayNickel;
+  margin: 1em 0.5em;
 }
 
-.contentQuotes {
+.serviceCardHeader {
   color: $gallery;
-  border: 10px solid $malibu;
-  box-shadow: 5px 5px 10px $grayNickel;
-  width: 350px;
-  height: 100%;
-  position: absolute;
-  top: 20px;
-  right: 40px;
-  padding: 10px;
+  margin-bottom: 0.5em;
+  
 }
 
-.introDesc {
+.serviceImage {
   color: $fruitSalad;
-  margin: 1.5em 2em;
+  margin-bottom: 0.5em;
+}
+
+.serviceTitle {
+  color: $mako;
+  padding: 0 0.5em;
+  
+}
+
+.servingTime {
+  color: $main;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 0.2em;
+}
+
+.serviceCardBody {
+  color: $main;
+  padding: 0 0.5em 1em;
 }

@@ -12,8 +12,15 @@
   color: $main;  
 }
 
-.services {
+.providerServices {
   color: $main;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.providerCategory {
+  color: $malibu;
 }
 
 .serviceDetail {

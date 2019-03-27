@@ -1,6 +1,7 @@
 import React from 'react';
 import { arrayOf, object } from 'prop-types';
 import { get } from 'lodash';
+import uuidv1 from 'uuid/v1';
 import RateStar from 'components/Rating/RateStar';
 import { Typography } from '@material-ui/core';
 import { Schedule } from '@material-ui/icons';
@@ -18,7 +19,7 @@ const ProviderContent = (props) => {
         const description = get(service, 'description');
         const duration = get(service, 'duration');
         return (
-          <div className={s.serviceCard}>
+          <div key={uuidv1()} className={s.serviceCard}>
             <div className={s.serviceCardHeader}>
               <div className={s.serviceImage}>
                 <img src={srvImg} alt={name} className="full-width" />
@@ -29,7 +30,7 @@ const ProviderContent = (props) => {
               </div>
               <div className={s.servingTime}>
                 <Schedule className="icon-small icon-main" />
-                <Typography variant="body1" color="inherit">{duration}</Typography>
+                <Typography variant="body1" color="inherit">{duration} minutes</Typography>
               </div>
             </div>
             <div className={s.serviceCardBody}>
