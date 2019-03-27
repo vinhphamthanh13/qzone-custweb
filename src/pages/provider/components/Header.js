@@ -60,6 +60,9 @@ class Header extends Component {
             <IconButton className="button-sm simple-button" onClick={this.handleLogin}>
               <Icon className="fab fa-facebook icon-white" />
             </IconButton>
+            <IconButton className="button-sm simple-button" onClick={this.handleLogin}>
+              <Icon className="fab fa-twitter icon-white" />
+            </IconButton>
           </div>
         </div>
         <div className={`${s.brandAndNav} auto-margin-horizontal`}>

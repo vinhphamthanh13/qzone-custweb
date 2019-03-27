@@ -60,7 +60,8 @@ class EarliestSlot extends Component {
         {providerSlots[providerId] && (
           <div className={s.providerSlot}>
             <div className={s.availableSlots}>
-              {providerSlots[providerId].sort((a, b) => a.startSec - b.startSec).map((slot) => {
+              { /* Show max 3 earliest slots */ }
+              {providerSlots[providerId].sort((a, b) => a.startSec - b.startSec).slice(0, 3).map((slot) => {
                 const startSec = get(slot, 'startSec');
                 const [slotStyle, onclick] = moment.now() < startSec * 1000
                   ? [`hover-bright ${s.slot} ${s.validSlot}`, this.handleSelectBookTime(startSec)]
