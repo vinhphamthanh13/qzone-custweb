@@ -122,6 +122,7 @@ class PrimarySearchAppBar extends React.Component {
         </div>
       </>
     );
+    const adSearchStyle = maintenance ? 'icon-main gray-color' : 'icon-main white-color';
     return (
       <div className={classes.root}>
         <AppBar position="fixed">
@@ -149,13 +150,13 @@ class PrimarySearchAppBar extends React.Component {
                 disabled={maintenance}
               />
             </div>
-            <Typography variant="subheading" className={maintenance ? 'gray-color' : 'white-color'}>
-              OR
+            <Typography variant="subheading" className={adSearchStyle}>
+              or
             </Typography>
             <div className="advanced-search-app-bar">
               <Button onClick={this.handleActionAdvancedSearch} className="simple-button">
-                <FindInPage className={maintenance ? 'gray-color' : 'white-color'} />
-                <Typography className={maintenance ? 'gray-color' : 'white-color'} variant="subheading">Advanced search
+                <FindInPage className={adSearchStyle} />
+                <Typography className={adSearchStyle} variant="subheading">Advanced search
                 </Typography>
               </Button>
             </div>
