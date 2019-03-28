@@ -14,6 +14,7 @@ import {
 } from 'reduxModules/home.actions';
 import Loading from 'components/Loading';
 import styles from './Home.module.scss';
+import Maintenance from './home/footer/Maintenance';
 import { serviceCategoriesType } from './home/Header';
 import Services from './home/Services';
 import BookingDialog from './home/BookingDialog';
@@ -48,15 +49,20 @@ export class Home extends React.PureComponent {
       sessionTimeoutId: 0,
       isOpenAdvancedSearch: false,
       isShowingAdvancedSearch: false,
+      isMaintenance: false,
     };
   }
 
   async componentDidMount() {
     const { setServiceCategoriesAction, getAllServicesAction, fetchServiceProvidersAction } = this.props;
     const [serviceCategories] = await handleRequest(getServiceCategories, [], []);
-    setServiceCategoriesAction(serviceCategories);
-    getAllServicesAction();
-    fetchServiceProvidersAction();
+    if (serviceCategories && serviceCategories.length) {
+      setServiceCategoriesAction(serviceCategories);
+      getAllServicesAction();
+      fetchServiceProvidersAction();
+    } else {
+      this.setState({ isMaintenance: true });
+    }
   }
 
   getSessionTimeoutId = (id) => {
@@ -185,7 +191,7 @@ export class Home extends React.PureComponent {
       providerListByDistance, providerList,
     } = this.props;
     const {
-      searchText, isRegisterOpen, isLoginOpen, isOpenAdvancedSearch,
+      searchText, isRegisterOpen, isLoginOpen, isOpenAdvancedSearch, isMaintenance,
       selectedService, isOpenProfile, sessionTimeoutId, isShowingAdvancedSearch,
     } = this.state;
     const openAuthenticatedProfile = isAuthenticated && isOpenProfile;
@@ -193,12 +199,16 @@ export class Home extends React.PureComponent {
       const serviceProviders = providerList.filter(provider => provider.serviceId === service.id);
       return { ...service, linkedProvider: serviceProviders };
     });
-    const catWithServices = serviceCategories.length > 0 && serviceCategories.map(cat => ({
+    const catWithServices = serviceCategories && serviceCategories.length > 0 && serviceCategories.map(cat => ({
       name: cat.name,
       list: combineServiceProviders.filter(ser => ser.serviceCategoryId === cat.id),
     }));
     const searchedServices = this.getSearchedServices(combineServiceProviders, searchText);
     const advancedSearchAvailable = providerListByDistance.length > 0 && isShowingAdvancedSearch;
+
+    const underInstruction = isMaintenance && (<Maintenance />);
+    console.log('under instruction', underInstruction);
+    console.log('this.props', this.props);
 
     return (
       <>
@@ -239,6 +249,7 @@ export class Home extends React.PureComponent {
           sessionTimeoutId={sessionTimeoutId}
           handleViewEvent={this.handleViewEventMenu}
           handleAdvancedSearch={this.openAdvancedSearch}
+          maintenance={isMaintenance}
         />
         <AppointmentDialog />
         <Grid container>
@@ -291,6 +302,7 @@ export class Home extends React.PureComponent {
                 />
               </Categorize>
             ))}
+            {underInstruction}
             <Footer loading={isLoading} />
           </Grid>
         </Grid>

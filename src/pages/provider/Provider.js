@@ -1,23 +1,85 @@
 import React, { Component } from 'react';
+import {
+  arrayOf, func, string, object, bool, oneOfType,
+} from 'prop-types';
+import { noop, get } from 'lodash';
+import { connect } from 'react-redux';
+import { Typography } from '@material-ui/core';
+import { fetchProviderService, fetchProviderDetail } from 'reduxModules/provider.actions';
+import Loading from 'components/Loading';
+import logo from 'images/logo.png';
+import Header from './components/Header';
+import ProviderContent from './components/ProviderContent';
+import ProviderService from './components/ProviderService';
+import ProviderFooter from '../home/footer/Footer';
+import bgImage from './images/service-queue.jpg';
 import s from './Provider.module.scss';
 
 class Provider extends Component {
-  state = {
-    isLoading: false,
-  };
+  componentDidMount() {
+    const { fetchProviderServiceAction, fetchProviderDetailAction, id } = this.props;
+    fetchProviderServiceAction(id);
+    fetchProviderDetailAction(id);
+  }
 
   render() {
-    const { isLoading } = this.state;
+    const { providerDetail, providerServices, isLoading } = this.props;
+    console.log('providerDetail', providerDetail);
+    const providerName = get(providerDetail, 'givenName');
+    const providerPhone = get(providerDetail, 'telephone');
+    const providerEmail = get(providerDetail, 'email');
+    const headContact = {
+      name: providerName,
+      email: providerEmail,
+      telephone: providerPhone,
+      logo,
+    };
+    const providerInfo = get(providerDetail, 'providerInformation');
+    const providerDescription = get(providerInfo, 'description');
+    const providerQualification = get(providerInfo, 'qualifications');
 
     return (
-      <div className={s.providerPage}>
-        {!isLoading && <div>Provider Name with</div>}
-      </div>
+      <>
+        <Loading />
+        <div className={s.providerPage}>
+          <Header login={noop} providerContact={headContact} />
+          <div className={s.providerBody}>
+            <ProviderContent
+              description={providerDescription}
+              qualifications={providerQualification}
+              bgImage={bgImage}
+            />
+            <div className={s.providerServices}>
+              <div className={s.providerCategory}>
+                <Typography variant="h4" color="inherit" className="text-bold">
+                  Our services
+                </Typography>
+              </div>
+              {!isLoading && <ProviderService services={providerServices} />}
+            </div>
+          </div>
+          <ProviderFooter loading={isLoading} />
+        </div>
+      </>
     );
   }
 }
 
 Provider.propTypes = {
+  fetchProviderServiceAction: func.isRequired,
+  fetchProviderDetailAction: func.isRequired,
+  id: string.isRequired,
+  providerDetail: oneOfType([object]).isRequired,
+  providerServices: arrayOf(object).isRequired,
+  isLoading: bool.isRequired,
 };
 
-export default Provider;
+const mapStateToProps = state => ({
+  providerDetail: state.providerPage.providerDetail,
+  providerServices: state.providerPage.providerServices,
+});
+
+export default connect(mapStateToProps, {
+  fetchProviderServiceAction: fetchProviderService,
+  fetchProviderDetailAction: fetchProviderDetail,
+})(Provider);

@@ -93,3 +93,10 @@ export const eventType = shape({
     }),
   }),
 });
+
+export const basicContact = shape({
+  name: string,
+  telephone: string,
+  email: string,
+  logo: oneOfType([object, string]),
+});

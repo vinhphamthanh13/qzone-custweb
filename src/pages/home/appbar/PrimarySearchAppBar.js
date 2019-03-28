@@ -1,13 +1,13 @@
 import React from 'react';
 import {
-  objectOf, any, func, arrayOf, object, string,
+  objectOf, any, func, arrayOf, object, string, bool,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import moment from 'moment';
 import { withStyles } from '@material-ui/core/styles';
 import {
-  AppBar, Toolbar, IconButton, InputBase, Badge, Avatar, Typography,
+  AppBar, Toolbar, IconButton, InputBase, Badge, Avatar, Typography, Button,
 } from '@material-ui/core';
 import {
   Search as SearchIcon,
@@ -63,18 +63,26 @@ class PrimarySearchAppBar extends React.Component {
     this.handleEventListClose();
   };
 
+  handleActionAdvancedSearch = () => {
+    const { handleAdvancedSearch, maintenance } = this.props;
+    if (!maintenance) {
+      handleAdvancedSearch();
+    }
+  };
+
   render() {
-    const { anchorEventEl } = this.state;
     const {
       classes, loginSession, onSearch, customerEventList, onSearchValue,
-      handleViewEvent, handleAdvancedSearch,
+      handleViewEvent, maintenance,
     } = this.props;
+    const { anchorEventEl } = this.state;
     const currentTime = moment.now();
     const eventCount = customerEventList
       && customerEventList.filter(event => event.slot.startSec * 1000 > currentTime).length;
     const isEventListOpen = Boolean(anchorEventEl);
     const isAuthenticated = loginSession ? loginSession.isAuthenticated : false;
 
+    const [authLabel, openForm] = maintenance ? ['Sign Up', 'isRegisterOpen'] : ['Sign In', 'isLoginOpen'];
     const customUser = isAuthenticated ? (
       <>
         <Typography
@@ -100,20 +108,21 @@ class PrimarySearchAppBar extends React.Component {
           <Typography
             color="inherit"
             variant="subtitle1"
-            onClick={() => this.handleAuthenticateUser('isLoginOpen')}
-            className="hover-pointer hover-bright"
+            onClick={() => this.handleAuthenticateUser(openForm)}
+            className="hover-pointer hover-bright text-margin-right"
           >
-            Sign In
+            {authLabel}
           </Typography>
           <Fingerprint />
         </div>
         <div className={classes.mobileView}>
-          <IconButton aria-haspopup="true" onClick={() => this.handleAuthenticateUser('isLoginOpen')} color="inherit">
+          <IconButton aria-haspopup="true" onClick={() => this.handleAuthenticateUser(openForm)} color="inherit">
             <Fingerprint />
           </IconButton>
         </div>
       </>
     );
+    const adSearchStyle = maintenance ? 'icon-main gray-color' : 'icon-main white-color';
     return (
       <div className={classes.root}>
         <AppBar position="fixed">
@@ -138,17 +147,18 @@ class PrimarySearchAppBar extends React.Component {
                 }}
                 onChange={onSearch}
                 value={onSearchValue}
+                disabled={maintenance}
               />
             </div>
-            <Typography variant="subheading" color="inherit">
-              OR
+            <Typography variant="subheading" className={adSearchStyle}>
+              or
             </Typography>
             <div className="advanced-search-app-bar">
-              <IconButton onClick={handleAdvancedSearch} className="simple-button">
-                <FindInPage className="icon-white" />
-                <Typography className="white-color" variant="subheading">Advanced search!
+              <Button onClick={this.handleActionAdvancedSearch} className="simple-button">
+                <FindInPage className={adSearchStyle} />
+                <Typography className={adSearchStyle} variant="subheading">Advanced search
                 </Typography>
-              </IconButton>
+              </Button>
             </div>
             <div className={classes.grow} />
             { customUser }
@@ -176,6 +186,7 @@ PrimarySearchAppBar.propTypes = {
   onSearchValue: string,
   handleViewEvent: func.isRequired,
   handleAdvancedSearch: func.isRequired,
+  maintenance: bool.isRequired,
 };
 
 PrimarySearchAppBar.defaultProps = {

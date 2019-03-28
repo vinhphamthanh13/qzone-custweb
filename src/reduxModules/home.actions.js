@@ -105,24 +105,28 @@ export const setServicesGlobal = (categoryId = '') => async (dispatch) => {
   const [api, save] = categoryId ? [searchServicesByCategory, setServices] : [getServices, setAllServices];
   const [rawServices] = await handleRequest(api, [categoryId], []);
   const orgIds = [];
-  rawServices.forEach((service) => {
-    if (!orgIds.includes(service.organizationId)) {
-      orgIds.push(service.organizationId);
-    }
-  });
-  const result = await Promise.all(orgIds.map(orgId => handleRequest(searchOrganizationById, [orgId])));
-  const orgs = result.map(org => org[0]).filter(org => !Object.is(org, undefined));
-  const services = rawServices.map(
-    service => ({
-      ...service,
-      organization: orgs.filter(org => !Object.is(org, undefined))
-        .find(org => org.id === service.organizationId),
-    }),
-  );
+  if (rawServices && rawServices.length) {
+    rawServices.forEach((service) => {
+      if (!orgIds.includes(service.organizationId)) {
+        orgIds.push(service.organizationId);
+      }
+    });
+    const result = await Promise.all(orgIds.map(orgId => handleRequest(searchOrganizationById, [orgId])));
+    const orgs = result.map(org => org[0]).filter(org => !Object.is(org, undefined));
+    const services = rawServices.map(
+      service => ({
+        ...service,
+        organization: orgs.filter(org => !Object.is(org, undefined))
+          .find(org => org.id === service.organizationId),
+      }),
+    );
 
-  dispatch(setLoading(false));
-  dispatch(save(services));
-  dispatch(setOrgs(orgs));
+    dispatch(setLoading(false));
+    dispatch(save(services));
+    dispatch(setOrgs(orgs));
+  } else {
+    dispatch(setLoading(false));
+  }
 };
 
 const getCustomerEventList = payload => ({

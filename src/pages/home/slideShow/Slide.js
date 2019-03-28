@@ -73,7 +73,8 @@ class Slide extends Component {
                       onClick={this.handleOpenReadMore}
                     />
                   </Typography>
-                ) : null}
+                ) : <Typography variant="body1" color="textSecondary">{description}</Typography>
+                }
               </div>
             </div>
             <div className={style.cta}>
