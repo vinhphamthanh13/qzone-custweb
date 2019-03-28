@@ -5,8 +5,8 @@
   max-width: $max-width;
   padding: 0 1em;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 .serviceCard {
@@ -17,7 +17,7 @@
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0.2em 0.3em 0.5em $grayNickel;
-  margin: 1em 0.5em;
+  margin: 0.5em;
 }
 
 .serviceCardHeader {
@@ -48,4 +48,9 @@
 .serviceCardBody {
   color: $main;
   padding: 0 0.5em 1em;
+}
+
+.serviceChunked {
+  display: flex;
+  flex-direction: column;
 }

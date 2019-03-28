@@ -42,18 +42,20 @@ class Provider extends Component {
         <Loading />
         <div className={s.providerPage}>
           <Header login={noop} providerContact={headContact} />
-          <ProviderContent
-            description={providerDescription}
-            qualifications={providerQualification}
-            bgImage={bgImage}
-          />
-          <div className={s.providerServices}>
-            <div className={s.providerCategory}>
-              <Typography variant="h4" color="inherit">
-                Our services
-              </Typography>
+          <div className={s.providerBody}>
+            <ProviderContent
+              description={providerDescription}
+              qualifications={providerQualification}
+              bgImage={bgImage}
+            />
+            <div className={s.providerServices}>
+              <div className={s.providerCategory}>
+                <Typography variant="h4" color="inherit" className="text-bold">
+                  Our services
+                </Typography>
+              </div>
+              {!isLoading && <ProviderService services={providerServices} />}
             </div>
-            {!isLoading && <ProviderService services={providerServices} />}
           </div>
         </div>
       </>

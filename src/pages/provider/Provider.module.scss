@@ -8,6 +8,11 @@
   height: 100vh;
 }
 
+.providerBody {
+  margin: 0 auto;
+  max-width: $max-width;
+}
+
 .providerInfo {
   color: $main;  
 }
@@ -15,12 +20,17 @@
 .providerServices {
   color: $main;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 .providerCategory {
-  color: $malibu;
+  color: $mako;
+  border-bottom: 2px solid $grayNickel;
+  padding: 1em 0 0.5em 1em;
+  width: 100%;
+  margin-bottom: 1em;
 }
 
 .serviceDetail {
