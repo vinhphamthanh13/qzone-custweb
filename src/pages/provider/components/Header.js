@@ -55,13 +55,13 @@ class Header extends Component {
           </div>
           <div className={s.navLogin}>
             <IconButton className="button-sm simple-button" onClick={this.handleLogin}>
-              <Icon className="fab fa-google icon-white" />
+              <Icon className="fab fa-google icon-white icon-small" />
             </IconButton>
             <IconButton className="button-sm simple-button" onClick={this.handleLogin}>
-              <Icon className="fab fa-facebook icon-white" />
+              <Icon className="fab fa-facebook icon-white icon-small" />
             </IconButton>
             <IconButton className="button-sm simple-button" onClick={this.handleLogin}>
-              <Icon className="fab fa-twitter icon-white" />
+              <Icon className="fab fa-twitter icon-white icon-small" />
             </IconButton>
           </div>
         </div>

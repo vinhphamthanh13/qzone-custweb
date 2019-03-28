@@ -1,5 +1,12 @@
 @import "styles/_settings.scss";
 
+.orgBanner {
+  color: $white;
+  display: flex;
+  justify-content: center;
+  background: rgba($mako, 0.8);
+}
+
 .wrapper {
   display: block;
   width: 100%;
