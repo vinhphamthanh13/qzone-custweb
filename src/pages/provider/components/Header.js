@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { func } from 'prop-types';
-import {
-  IconButton, Icon, Typography, Avatar,
-} from '@material-ui/core';
+import { Typography, Avatar } from '@material-ui/core';
 import { noop } from 'lodash';
 import uuidv1 from 'uuid/v1';
 import CustomLink from 'components/CustomLink';
@@ -12,7 +10,7 @@ import s from './Header.module.scss';
 
 const navs = [
   {
-    label: 'HOME',
+    label: 'BOOKING',
     action: noop,
     link: '/',
   },
@@ -52,17 +50,6 @@ class Header extends Component {
               <Mail className="icon-white icon-small" />
               <Typography variant="subtitle1" color="inherit">{email}</Typography>
             </div>
-          </div>
-          <div className={s.navLogin}>
-            <IconButton className="button-sm simple-button" onClick={this.handleLogin}>
-              <Icon className="fab fa-google icon-white icon-small" />
-            </IconButton>
-            <IconButton className="button-sm simple-button" onClick={this.handleLogin}>
-              <Icon className="fab fa-facebook icon-white icon-small" />
-            </IconButton>
-            <IconButton className="button-sm simple-button" onClick={this.handleLogin}>
-              <Icon className="fab fa-twitter icon-white icon-small" />
-            </IconButton>
           </div>
         </div>
         <div className={`${s.brandAndNav} auto-margin-horizontal`}>

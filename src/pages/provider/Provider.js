@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import {
-  arrayOf, func, string, object, bool, oneOfType,
+  arrayOf, func, string, object, bool, oneOfType, objectOf, any,
 } from 'prop-types';
 import { noop, get } from 'lodash';
 import { connect } from 'react-redux';
 import { Typography } from '@material-ui/core';
-import { fetchProviderService, fetchProviderDetail } from 'reduxModules/provider.actions';
+import { fetchProviderService, fetchProviderDetail, setRatingService } from 'reduxModules/provider.actions';
 import Loading from 'components/Loading';
 import logo from 'images/logo.png';
 import Header from './components/Header';
@@ -23,8 +23,9 @@ class Provider extends Component {
   }
 
   render() {
-    const { providerDetail, providerServices, isLoading } = this.props;
-    console.log('providerDetail', providerDetail);
+    const {
+      providerDetail, providerServices, isLoading, setRatingServiceAction, userDetail,
+    } = this.props;
     const providerName = get(providerDetail, 'givenName');
     const providerPhone = get(providerDetail, 'telephone');
     const providerEmail = get(providerDetail, 'email');
@@ -37,6 +38,7 @@ class Provider extends Component {
     const providerInfo = get(providerDetail, 'providerInformation');
     const providerDescription = get(providerInfo, 'description');
     const providerQualification = get(providerInfo, 'qualifications');
+    const customerId = get(userDetail, 'userSub');
 
     return (
       <>
@@ -55,7 +57,12 @@ class Provider extends Component {
                   Our services
                 </Typography>
               </div>
-              {!isLoading && <ProviderService services={providerServices} />}
+              {!isLoading && (
+                <ProviderService
+                  services={providerServices}
+                  ratingService={setRatingServiceAction}
+                  customerId={customerId}
+                />)}
             </div>
           </div>
           <ProviderFooter loading={isLoading} />
@@ -72,14 +79,23 @@ Provider.propTypes = {
   providerDetail: oneOfType([object]).isRequired,
   providerServices: arrayOf(object).isRequired,
   isLoading: bool.isRequired,
+  setRatingServiceAction: func.isRequired,
+  userDetail: objectOf(any),
+};
+
+Provider.defaultProps = {
+  userDetail: {},
 };
 
 const mapStateToProps = state => ({
   providerDetail: state.providerPage.providerDetail,
   providerServices: state.providerPage.providerServices,
+  isLoading: state.providerPage.isLoading,
+  userDetail: state.auth.userDetail,
 });
 
 export default connect(mapStateToProps, {
   fetchProviderServiceAction: fetchProviderService,
   fetchProviderDetailAction: fetchProviderDetail,
+  setRatingServiceAction: setRatingService,
 })(Provider);

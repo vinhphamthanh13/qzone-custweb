@@ -1,4 +1,5 @@
 import { setLoading } from 'actions/common';
+import { rateAppointmentByUser } from 'api/appointment';
 import { getProviderServices, getProviderDetail } from 'api/provider';
 
 export const FETCH_PROVIDER_DETAIL = 'PROVIDER.FETCH_PROVIDER_DETAIL';
@@ -28,11 +29,16 @@ export const fetchProviderService = id => async (dispatch) => {
 export const fetchProviderDetail = id => async (dispatch) => {
   dispatch(setLoading(true));
   const providerDetail = await getProviderDetail(id);
-  console.log('providerdetail', providerDetail);
   if (providerDetail.data.isAuthenticated) {
     dispatch(setLoading(false));
     dispatch(setProviderDetail(providerDetail.data.object));
   } else {
     dispatch(setLoading(false));
   }
+};
+
+export const setRatingService = data => async (dispatch) => {
+  dispatch(setLoading(true));
+  await rateAppointmentByUser(data);
+  dispatch(setLoading(false));
 };

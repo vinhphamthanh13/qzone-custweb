@@ -7,6 +7,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
+  margin-bottom: 1em;
 }
 
 .serviceCard {
@@ -53,4 +54,19 @@
 .serviceChunked {
   display: flex;
   flex-direction: column;
+}
+
+.ratingService {
+  color: $main;
+  display: flex;
+  justify-content: center;
+  margin: auto auto 1em;
+  flex-direction: column;
+  align-items: center;
+  border-top: 1px solid $gallery;
+  padding-top: 0.5rem;
+}
+
+.ratingLabel {
+  color: $fruitSalad;
 }

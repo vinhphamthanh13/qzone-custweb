@@ -28,9 +28,13 @@ const ProviderContent = (props) => {
 };
 
 ProviderContent.propTypes = {
-  description: string.isRequired,
+  description: string,
   qualification: string,
   bgImage: oneOfType([object, string]).isRequired,
+};
+
+ProviderContent.defaultProps = {
+  description: '',
 };
 
 ProviderContent.defaultProps = {

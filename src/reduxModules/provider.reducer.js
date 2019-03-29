@@ -1,9 +1,10 @@
-import { SET_LOADING } from 'reduxModules/home.actions';
+import { SET_LOADING } from 'actions/common';
 import { FETCH_PROVIDER_DETAIL, FETCH_PROVIDER_SERVICE } from 'reduxModules/provider.actions';
 
 const initState = {
   providerDetail: {},
   providerServices: [],
+  isLoading: false,
 };
 
 const providerPage = (state = initState, action) => {
