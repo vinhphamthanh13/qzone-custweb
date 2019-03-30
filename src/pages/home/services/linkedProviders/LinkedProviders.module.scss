@@ -47,7 +47,7 @@
    width: 100%;
    color: $alto;
    display: flex;
-   justify-content: space-between;
+   justify-content: flex-start;
    align-items: center;
  }
 
@@ -61,7 +61,7 @@
 .slot {
    margin: 0.2rem;
    padding: 0.3rem 0.5rem;
-   border-radius: 6px;
+   border-radius: 4px;
    transition: all 0.3s ease;
    &:hover {
      cursor: pointer;
@@ -78,7 +78,10 @@
  }
  
  .invalidSlot {
-   color: $grayNickel;
-   border: 1px solid $gray;
-   background: $gallery;
+   color: $gallery;
+   border: 1px solid rgba($danger, 0.4);
+   background: rgba($danger, 0.4);
+   &:hover {
+     cursor: unset;
+   }
  }
