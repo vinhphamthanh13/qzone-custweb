@@ -1,28 +1,34 @@
 import React, { Component } from 'react';
 import {
-  arrayOf, object, func, string,
+  arrayOf, object, func, string, any,
 } from 'prop-types';
+import { connect } from 'react-redux';
 import { get, chunk } from 'lodash';
 import uuidv1 from 'uuid/v1';
 import RateStar from 'components/Rating/RateStar';
 import { Typography } from '@material-ui/core';
 import { Schedule } from '@material-ui/icons';
 import Rating from 'material-ui-rating';
+import { fetchServiceProviders } from 'reduxModules/home.actions';
 import s from './ProviderService.module.scss';
 
 class ProviderContent extends Component {
-  handleRating = (customerId, providerId, ratingService) => (value) => {
+  componentDidMount() {
+    const { fetchServiceProvidersAction } = this.props;
+    fetchServiceProvidersAction();
+  }
+
+  handleRating = (customerId, serviceProviderId, ratingService) => (value) => {
     ratingService({
       customerId,
-      serviceProviderId: providerId,
+      serviceProviderId,
       rating: value,
-      id: '',
     });
   };
 
   render() {
     const {
-      services, customerId, ratingService, providerId,
+      services, customerId, ratingService, providerId, providerList,
     } = this.props;
 
     return (
@@ -31,12 +37,14 @@ class ProviderContent extends Component {
           <div key={uuidv1()} className={s.serviceChunked}>
             {chunked.map((service) => {
               const srvImg = get(service, 'image.fileUrl');
-              const rating = get(service, 'rating');
-              const views = get(service, 'viewNum');
               const name = get(service, 'name');
               const description = get(service, 'description');
               const duration = get(service, 'duration');
-
+              const serviceId = get(service, 'id');
+              const serviceProvider = providerList
+                .filter(item => item.providerId === providerId && item.serviceId === serviceId);
+              const serviceProviderId = get(serviceProvider, '0.id');
+              const providerRating = get(serviceProvider, '0.rating');
               return (
                 <div key={uuidv1()} className={s.serviceCard}>
                   <div className={s.serviceCardHeader}>
@@ -45,7 +53,7 @@ class ProviderContent extends Component {
                     </div>
                     <div className={s.serviceTitle}>
                       <Typography variant="title" color="inherit">{name}</Typography>
-                      <RateStar reviews={views} rating={rating} />
+                      <RateStar />
                     </div>
                     <div className={s.servingTime}>
                       <Schedule className="icon-small icon-main" />
@@ -63,13 +71,14 @@ class ProviderContent extends Component {
                           color="inherit"
                           className="text-bold"
                         >
-                          Rate our quality on this service!
+                          {providerRating ? 'Thanks for rating our quality!' : 'Rate our quality on this service!'}
                         </Typography>
                       </div>
                       <Rating
+                        readOnly={providerRating}
                         max={5}
-                        onChange={this.handleRating(customerId, providerId, ratingService)}
-                        value={rating}
+                        onChange={this.handleRating(customerId, serviceProviderId, ratingService)}
+                        value={providerRating}
                       />
                     </div>
                   ) : null}
@@ -88,10 +97,18 @@ ProviderContent.propTypes = {
   ratingService: func.isRequired,
   customerId: string,
   providerId: string.isRequired,
+  providerList: arrayOf(any).isRequired,
+  fetchServiceProvidersAction: func.isRequired,
 };
 
 ProviderContent.defaultProps = {
   customerId: null,
 };
 
-export default ProviderContent;
+const mapStateToProps = state => ({
+  providerList: state.home.providerList,
+});
+
+export default connect(mapStateToProps, {
+  fetchServiceProvidersAction: fetchServiceProviders,
+})(ProviderContent);
