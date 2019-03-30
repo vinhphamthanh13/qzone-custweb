@@ -2,10 +2,12 @@ import React from 'react';
 import {
   number,
   func,
+  arrayOf, any,
 } from 'prop-types';
 import { get } from 'lodash';
 import { Typography, ButtonBase } from '@material-ui/core';
 import moment from 'moment';
+import { connect } from 'react-redux';
 import {
   PersonPin, Schedule, EmailOutlined, CallOutlined, PlaceOutlined, AddOutlined,
 } from '@material-ui/icons';
@@ -22,7 +24,7 @@ import SelectTime from './providerContent/SelectTime';
 import DetailDialog from './providerContent/DetailDialog';
 import MapDialog from './MapDialog';
 
-export default class ProviderContent extends React.PureComponent {
+class ProviderContent extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -50,11 +52,11 @@ export default class ProviderContent extends React.PureComponent {
       bookingDetail,
       onTimeSelect,
       duration,
+      providerList,
     } = this.props;
     const { isDetailDialogOpen, isMapDialogOpen } = this.state;
     const providerId = get(provider, 'id');
     const providerEmail = get(provider, 'email');
-    const providerRating = get(provider, 'rating');
     const providerPhone = get(provider, 'telephone');
     const providerWebsite = get(provider, 'website');
     const providerStreet = get(provider, 'geoLocation.streetAddress');
@@ -64,6 +66,9 @@ export default class ProviderContent extends React.PureComponent {
     const providerCountry = get(provider, 'geoLocation.country');
     const providerPostCode = get(provider, 'geoLocation.postCode');
     const providerTimeZone = get(provider, 'providerInformation.timeZoneId');
+    const providerService = providerList
+      .filter(item => providerId === item.providerId && initService.id === item.serviceId);
+    const providerRating = get(providerService, '0.rating');
 
     return (
       <>
@@ -191,9 +196,16 @@ ProviderContent.propTypes = {
   bookingDetail: bookingDetailType.isRequired,
   onTimeSelect: func.isRequired,
   duration: number.isRequired,
+  providerList: arrayOf(any).isRequired,
 };
 
 ProviderContent.defaultProps = {
   initService: undefined,
   provider: undefined,
 };
+
+const mapStateToProps = state => ({
+  providerList: state.home.providerList,
+});
+
+export default connect(mapStateToProps)(ProviderContent);
