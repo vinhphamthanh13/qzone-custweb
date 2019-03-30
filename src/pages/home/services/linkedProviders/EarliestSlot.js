@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  string, func, objectOf, any,
+  string, func, objectOf, any, number,
 } from 'prop-types';
 import { Typography, IconButton } from '@material-ui/core';
 import { ExpandMoreRounded } from '@material-ui/icons';
@@ -10,6 +10,7 @@ import moment from 'moment';
 import { fetchProviderSlots } from 'reduxModules/serviceCard.actions';
 import { connect } from 'react-redux';
 import CustomLink from 'components/CustomLink';
+import RateStar from 'components/Rating/RateStar';
 import s from './LinkedProviders.module.scss';
 
 class EarliestSlot extends Component {
@@ -40,7 +41,9 @@ class EarliestSlot extends Component {
   };
 
   render() {
-    const { providerName, providerSlots, providerId } = this.props;
+    const {
+      providerName, providerSlots, providerId, providerRating,
+    } = this.props;
     const expandIconList = providerSlots[providerId]
       ? null
       : <ExpandMoreRounded className="icon-main icon-shake crimson-color" />;
@@ -55,6 +58,9 @@ class EarliestSlot extends Component {
             <IconButton className="button-sm" onClick={this.handleFetchProviderSlots(providerId)}>
               {expandIconList}
             </IconButton>
+          </div>
+          <div>
+            <RateStar rating={providerRating} />
           </div>
         </div>
         {providerSlots[providerId] && (
@@ -99,6 +105,11 @@ EarliestSlot.propTypes = {
   providerSlots: objectOf(any).isRequired,
   serviceId: string.isRequired,
   instantBooking: func.isRequired,
+  providerRating: number,
+};
+
+EarliestSlot.defaultProps = {
+  providerRating: 0,
 };
 
 const mapStateToProps = state => ({

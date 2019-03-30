@@ -63,7 +63,7 @@ class ProviderContent extends Component {
                           color="inherit"
                           className="text-bold"
                         >
-                          Rate our service!
+                          Rate our quality on this service!
                         </Typography>
                       </div>
                       <Rating

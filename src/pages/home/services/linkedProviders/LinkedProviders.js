@@ -41,11 +41,13 @@ class LinkedProviders extends Component {
           const providerName = get(provider, 'providerName');
           const providerId = get(provider, 'providerId');
           const serviceId = get(provider, 'serviceId');
+          const providerRating = get(provider, 'rating');
           return (
             <EarliestSlot
               key={uuidv1()}
               providerName={providerName}
               providerId={providerId}
+              providerRating={providerRating}
               serviceId={serviceId}
               onSlotBooking={this.handleInstanceSlotBooking}
               instantBooking={instantBooking}

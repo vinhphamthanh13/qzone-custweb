@@ -17,6 +17,9 @@
  .providerName {
    color: $crimson;
    text-transform: capitalize;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
  }
 
  .earliestTitle {
@@ -32,7 +35,6 @@
  }
  .expandList {
    color: $fruitSalad;
-   margin: 0 0.5rem;
    justify-content: space-around;
  }
 

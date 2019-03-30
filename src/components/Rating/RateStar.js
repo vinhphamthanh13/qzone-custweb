@@ -11,7 +11,7 @@ const RateStar = (props) => {
   const halfStar = rating % 1;
   const borderStar = Object.is(rating, null) || rating === 0;
   const comments = Object.is(reviews, null) || Object.is(reviews, undefined) || reviews === 0
-    ? 'No review available!' : reviews;
+    ? '' : reviews;
   return (
     <div className="flex">
       <div className="flex v-center">
