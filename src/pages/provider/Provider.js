@@ -29,6 +29,7 @@ class Provider extends Component {
     const providerName = get(providerDetail, 'givenName');
     const providerPhone = get(providerDetail, 'telephone');
     const providerEmail = get(providerDetail, 'email');
+    const providerId = get(providerDetail, 'id');
     const headContact = {
       name: providerName,
       email: providerEmail,
@@ -39,6 +40,7 @@ class Provider extends Component {
     const providerDescription = get(providerInfo, 'description');
     const providerQualification = get(providerInfo, 'qualifications');
     const customerId = get(userDetail, 'userSub');
+    console.log('providerDetail', providerDetail);
 
     return (
       <>
@@ -62,6 +64,7 @@ class Provider extends Component {
                   services={providerServices}
                   ratingService={setRatingServiceAction}
                   customerId={customerId}
+                  providerId={providerId}
                 />)}
             </div>
           </div>

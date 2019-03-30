@@ -11,16 +11,19 @@ import Rating from 'material-ui-rating';
 import s from './ProviderService.module.scss';
 
 class ProviderContent extends Component {
-  handleRating = (customerId, serviceId, ratingService) => (value) => {
+  handleRating = (customerId, providerId, ratingService) => (value) => {
     ratingService({
       customerId,
-      serviceId,
+      serviceProviderId: providerId,
       rating: value,
+      id: '',
     });
   };
 
   render() {
-    const { services, customerId, ratingService } = this.props;
+    const {
+      services, customerId, ratingService, providerId,
+    } = this.props;
 
     return (
       <div className={s.services}>
@@ -33,7 +36,6 @@ class ProviderContent extends Component {
               const name = get(service, 'name');
               const description = get(service, 'description');
               const duration = get(service, 'duration');
-              const serviceId = get(service, 'id');
 
               return (
                 <div key={uuidv1()} className={s.serviceCard}>
@@ -66,7 +68,7 @@ class ProviderContent extends Component {
                       </div>
                       <Rating
                         max={5}
-                        onChange={this.handleRating(customerId, serviceId, ratingService)}
+                        onChange={this.handleRating(customerId, providerId, ratingService)}
                         value={rating}
                       />
                     </div>
@@ -85,6 +87,7 @@ ProviderContent.propTypes = {
   services: arrayOf(object).isRequired,
   ratingService: func.isRequired,
   customerId: string,
+  providerId: string.isRequired,
 };
 
 ProviderContent.defaultProps = {

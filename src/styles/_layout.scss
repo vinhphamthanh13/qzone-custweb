@@ -405,58 +405,6 @@
   align-items: center;
 }
 
-.time-row {
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-  border-top: 1px solid rgba($grayNickel, 0.3);
-}
-
-.time-slot {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 42px;
-  width: 46px;
-  border-right: 1px solid rgba($grayNickel, 0.3);
-  box-sizing: border-box;
-  transition: all 0.25s ease;
-  user-select: none;
-  &:hover {
-    border-bottom-right-radius: 10px;
-    border-bottom-left-radius: 10px;
-    cursor: pointer;
-  }
-}
-
-.valid-slot {
-  background: $malibu;
-  border: 1px solid $malibu;
-  &:hover {
-    color: $white;
-    background: linear-gradient(to bottom, $main, $malibu);
-    border: 1px solid $goldTips;
-  }
-}
-
-.invalid-slot {
-  background: transparent;
-  color: $grayNickel;
-  &:hover {
-    color: $white;
-  }
-}
-
-.kantBook {
-  background: unset;
-  color: $grayNickel;
-  &:hover {
-    background: unset;
-    color: $grayNickel;
-    border: 1px solid $grayNickel;
-  }
-}
-
 .selectProviderList {
   width: auto;
   display: flex;
@@ -467,13 +415,13 @@
 .providerListCard {
   color: $crimson;
   border-radius: 10px;
-  margin: 2rem 1rem;
-  border: 1px solid $grayNickel;
+  margin: 1rem 1rem 0.5rem;
+  border: 1px solid $malibu;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 2px 1px 1px $grayNickel;
+  box-shadow: 2px 1px 1px $malibu;
   max-width: 550px;
 }
 

@@ -7,7 +7,7 @@ import {
 } from 'prop-types';
 import { get, chunk, noop } from 'lodash';
 import { bookingDetailType } from 'types/global';
-import zeroPad from 'utils/zeroPad';
+import s from './SelectTime.module.scss';
 
 export class SelectTime extends React.PureComponent {
   static getDerivedStateFromProps(nextProps) {
@@ -40,7 +40,7 @@ export class SelectTime extends React.PureComponent {
       return ({
         key,
         time: startTime,
-        display: `${zeroPad(startTime.getHours(), 2)}:${zeroPad(startTime.getMinutes(), 2)}`,
+        display: moment(startTime).format('hh:mm A'),
         duration: 0,
         valid: false,
         canBook: false,
@@ -64,20 +64,20 @@ export class SelectTime extends React.PureComponent {
       });
       return newSlot;
     });
-    return chunk(mergeTime, 12);
+    return chunk(mergeTime, 48);
   };
 
   renderTimeBox = list => list.map(row => (
-    <div key={Math.random()} className="time-row">
+    <div key={Math.random()} className={s.timeRow}>
       {row.map((slot) => {
         const {
           display, valid, action, duration, canBook,
         } = slot;
-        const slotStyle = valid || duration > 0 ? 'valid-slot' : 'invalid-slot';
-        const bookStyle = duration > 0 && canBook ? slotStyle : `${slotStyle} kantBook`;
+        const slotStyle = valid || duration > 0 ? s.validSlot : s.invalidSlot;
+        const bookStyle = duration > 0 && canBook ? slotStyle : `${slotStyle} ${s.kantBook}`;
         return (
-          <div key={Math.random()} className={`time-slot ${bookStyle}`}>
-            <Typography variant="body1" color="inherit" onClick={duration > 0 && canBook ? action : noop}>
+          <div key={Math.random()} className={`${s.timeSlot} ${bookStyle}`}>
+            <Typography variant="subheading" color="inherit" onClick={duration > 0 && canBook ? action : noop}>
               {display}
             </Typography>
           </div>

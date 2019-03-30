@@ -1,6 +1,7 @@
 import { setLoading } from 'actions/common';
-import { rateAppointmentByUser } from 'api/appointment';
+import { rateAppointmentByUser } from 'api/rating';
 import { getProviderServices, getProviderDetail } from 'api/provider';
+import { handleRequest } from 'utils/apiHelpers';
 
 export const FETCH_PROVIDER_DETAIL = 'PROVIDER.FETCH_PROVIDER_DETAIL';
 export const FETCH_PROVIDER_SERVICE = 'PROVIDER.FETCH_PROVIDER_SERVICE';
@@ -39,6 +40,12 @@ export const fetchProviderDetail = id => async (dispatch) => {
 
 export const setRatingService = data => async (dispatch) => {
   dispatch(setLoading(true));
-  await rateAppointmentByUser(data);
-  dispatch(setLoading(false));
+  const rated = await handleRequest(rateAppointmentByUser, [data], []);
+  console.log('rated', rated);
+  if (rated) {
+    dispatch(setLoading(false));
+  } else {
+    dispatch(setLoading(false));
+    console.log('error');
+  }
 };
