@@ -68,9 +68,9 @@ class EarliestSlot extends Component {
                   : [`hover-bright ${s.slot} ${s.invalidSlot}`, noop];
 
                 return (
-                  <div key={uuidv1()} className={slotStyle}>
+                  <div key={uuidv1()} className={`${slotStyle} text-center`}>
                     <Typography variant="subheading" color="inherit" onClick={onclick}>
-                      {moment(startSec * 1000).format('HH:mm')}
+                      {moment(startSec * 1000).format('hh:mm A')}
                     </Typography>
                   </div>
                 );

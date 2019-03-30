@@ -69,10 +69,12 @@
  }
 
  .validSlot {
-   color: $fruitSalad;
-   border: 1px solid $fruitSalad;
+   color: $main;
+   border: 1px solid $main;
    &:hover {
-     background: $fruitSalad;
+     background: $main;
+     border: 1px solid $gallery;
+     box-shadow: 1px 1px 3px $main;
      color: $gallery;
    }
  }
