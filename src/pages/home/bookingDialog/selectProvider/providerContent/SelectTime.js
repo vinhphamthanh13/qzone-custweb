@@ -64,7 +64,7 @@ export class SelectTime extends React.PureComponent {
       });
       return newSlot;
     });
-    return chunk(mergeTime, 48);
+    return chunk(mergeTime.filter(slot => slot.duration > 0), 4);
   };
 
   renderTimeBox = list => list.map(row => (
