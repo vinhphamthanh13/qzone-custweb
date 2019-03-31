@@ -1,11 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { func, arrayOf, any } from 'prop-types';
 import {
   Button, TextField, Typography,
 } from '@material-ui/core';
 import {
   Schedule, DateRange, LocationOn, PersonPin, Call,
 } from '@material-ui/icons';
+import { connect } from 'react-redux';
 import { get } from 'lodash';
 import mtz from 'moment-timezone';
 import { bookingDetailType, serviceType, userDetailType } from 'types/global';
@@ -30,11 +31,14 @@ class BookingDetail extends React.PureComponent {
 
   render() {
     const {
-      bookingDetail, initService, userDetail, onSaveBooking,
+      bookingDetail, initService, userDetail, onSaveBooking, providerList,
     } = this.props;
     const localBookingStartTime = mtz(bookingDetail.time.start);
     const provider = get(bookingDetail, 'provider');
     const providerPhone = get(provider, 'telephone');
+    const seriveProvider = providerList
+      .filter(items => items.providerId === provider.id && items.serviceId === initService.id);
+    const providerRating = get(seriveProvider, '0.rating');
 
     return (
       <div className={s.bookingAppointment}>
@@ -42,9 +46,6 @@ class BookingDetail extends React.PureComponent {
           <div className={s.bookingHeadInfo}>
             <div className={s.serviceTitle}>
               <Typography variant="title" color="textSecondary">{initService.name}</Typography>
-            </div>
-            <div>
-              <RateStar reviews={initService.viewNum} rating={initService.rating} />
             </div>
           </div>
           <div className={s.serviceItems}>
@@ -62,12 +63,15 @@ class BookingDetail extends React.PureComponent {
             </div>
             <div className={s.bookingItems}>
               <LocationOn className="icon-main" />
-              <Typography variant="subtitle1" color="inherit">
+              <Typography variant="subtitle1" color="inherit" className="text-margin-right">
                 {formatName({
                   givenName: bookingDetail.provider.givenName,
                   familyName: bookingDetail.provider.familyName,
                 })}
               </Typography>
+              <div>
+                <RateStar rating={providerRating} />
+              </div>
             </div>
             <div className={s.bookingItems}>
               <Call className="icon-main" />
@@ -138,11 +142,16 @@ BookingDetail.propTypes = {
   bookingDetail: bookingDetailType.isRequired,
   initService: serviceType,
   userDetail: userDetailType.isRequired,
-  onSaveBooking: PropTypes.func.isRequired,
+  onSaveBooking: func.isRequired,
+  providerList: arrayOf(any).isRequired,
 };
 
 BookingDetail.defaultProps = {
   initService: undefined,
 };
 
-export default React.memo(BookingDetail);
+const mapStatToProps = state => ({
+  providerList: state.home.providerList,
+});
+
+export default connect(mapStatToProps)(React.memo(BookingDetail));
