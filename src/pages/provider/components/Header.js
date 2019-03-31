@@ -55,7 +55,7 @@ class Header extends Component {
         <div className={`${s.brandAndNav} auto-margin-horizontal`}>
           <div className={s.brand}>
             <div className={s.logo}>
-              <Avatar src={logo} alt={email} />
+              <Avatar src={logo} alt={email} className="avatar-big64" />
             </div>
             <div>
               <Typography variant="h4" color="inherit" className="text-bold">{name}</Typography>

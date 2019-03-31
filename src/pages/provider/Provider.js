@@ -8,7 +8,6 @@ import { Typography } from '@material-ui/core';
 import { setRatingService } from 'actions/common';
 import { fetchProviderService, fetchProviderDetail } from 'reduxModules/provider.actions';
 import Loading from 'components/Loading';
-import logo from 'images/logo.png';
 import Header from './components/Header';
 import ProviderContent from './components/ProviderContent';
 import ProviderService from './components/ProviderService';
@@ -31,16 +30,17 @@ class Provider extends Component {
     const providerPhone = get(providerDetail, 'telephone');
     const providerEmail = get(providerDetail, 'email');
     const providerId = get(providerDetail, 'id');
+    const providerInfo = get(providerDetail, 'providerInformation');
+    const providerAvatar = get(providerInfo, 'image.fileUrl');
+    const providerDescription = get(providerInfo, 'description');
+    const providerQualification = get(providerInfo, 'qualifications');
+    const customerId = get(userDetail, 'userSub');
     const headContact = {
       name: providerName,
       email: providerEmail,
       telephone: providerPhone,
-      logo,
+      logo: providerAvatar,
     };
-    const providerInfo = get(providerDetail, 'providerInformation');
-    const providerDescription = get(providerInfo, 'description');
-    const providerQualification = get(providerInfo, 'qualifications');
-    const customerId = get(userDetail, 'userSub');
     console.log('providerDetail', providerDetail);
 
     return (
