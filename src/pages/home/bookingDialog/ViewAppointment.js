@@ -1,8 +1,12 @@
 import React from 'react';
-import { func } from 'prop-types';
+import {
+  func, arrayOf, objectOf, any,
+} from 'prop-types';
 import { Typography, IconButton } from '@material-ui/core';
+import { connect } from 'react-redux';
 import {
   DateRange, Schedule, ViewList, EmailOutlined, CallOutlined, PlaceOutlined,
+  CheckCircle, Event, Share,
 } from '@material-ui/icons';
 import { get } from 'lodash';
 import mtz from 'moment-timezone';
@@ -11,8 +15,16 @@ import { eventType, serviceType, bookingDetailType } from 'types/global';
 import { defaultDateFormat } from 'utils/constants';
 import s from './ViewAppointment.module.scss';
 
+const handleAddBookingToCalendar = () => {
+  console.log('adding booking to googleCalener');
+};
+
+const handleShareBooking = () => {
+  console.log('sharing booking to friend');
+};
+
 const ViewAppointment = ({
-  bookingEvent, handleOpenProfile, initService, bookingDetail,
+  bookingEvent, handleOpenProfile, initService, bookingDetail, providerList, userDetail,
 }) => {
   const provider = get(bookingDetail, 'provider');
   const stateName = get(bookingEvent, 'geoLocation.state');
@@ -22,61 +34,28 @@ const ViewAppointment = ({
   const district = get(bookingEvent, 'geoLocation.district');
   const postCode = get(bookingEvent, 'geoLocation.postCode');
   const streetAddress = get(bookingEvent, 'geoLocation.streetAddress');
-  const providerRating = get(bookingEvent, 'rating');
   const providerEmail = get(provider, 'email');
   const providerPhone = get(provider, 'telephone');
   const providerWebsite = get(provider, 'website');
+  const serviceProvider = providerList
+    .filter(item => item.providerId === provider.id && item.serviceId === initService.id);
+  const providerRating = get(serviceProvider, '0.rating');
+  const email = get(userDetail, 'email');
+
+  console.log('bookingEvent', bookingEvent);
+  console.log('bookingDetail', bookingDetail);
 
   return (
     <div className={s.viewAppointment}>
       <div className={s.viewTitle}>
         <div className={s.serviceName}>
-          <Typography variant="title" color="textSecondary">
+          <Typography variant="title" color="textSecondary" className="text-bold">
             {bookingEvent.serviceName}
           </Typography>
-          <RateStar reviews={initService.viewNum} rating={initService.rating} />
-        </div>
-        <div className={s.viewAppointmentCta}>
-          <IconButton className="button-sm" onClick={handleOpenProfile}>
-            <ViewList className="icon-main icon-shake" />
-          </IconButton>
-          <Typography
-            className="hover-pointer"
-            onClick={handleOpenProfile}
-            variant="subheading"
-            color="inherit"
-          >View appointment list
-          </Typography>
-        </div>
-      </div>
-      <div className={s.appointmentDetail}>
-        <div className={s.bookedInfo}>
-          <Typography variant="title" color="inherit">Booking Summary</Typography>
-        </div>
-        <div className={s.appointmentInfo}>
-          <div className={s.appointmentCode}>
-            <Typography variant="subtitle2" color="primary" className="icon-main">Booking code:{' '}</Typography>
-            <Typography variant="subtitle2" color="secondary">
-              {bookingCode}
-            </Typography>
-          </div>
-          <div className={s.viewItems}>
-            <DateRange className="icon-main" />
-            <Typography variant="body1" color="primary" inline noWrap>
-              {mtz(bookingEvent.slot.startSec * 1000).format(defaultDateFormat)}
-            </Typography>
-          </div>
-          <div className={s.viewItems}>
-            <Schedule className="icon-main" />
-            <Typography variant="body1" color="primary" inline noWrap>
-              {mtz(bookingEvent.slot.startSec * 1000).format('LT')}{' - '}
-              {mtz((bookingEvent.slot.startSec + bookingEvent.duration * 60) * 1000).format('LT')}
-            </Typography>
-          </div>
         </div>
         <div className={s.providerAddress}>
           <div className={s.providerName}>
-            <Typography variant="title" color="inherit" className="text-bold">
+            <Typography variant="title" color="inherit" className="text-bold text-margin-right">
               {bookingEvent.providerName}
             </Typography>
             <RateStar rating={providerRating} />
@@ -116,6 +95,71 @@ const ViewAppointment = ({
             </div>
           </div>
         </div>
+        <div className={s.viewAppointmentCta}>
+          <IconButton className="button-sm" onClick={handleOpenProfile}>
+            <ViewList className="icon-main icon-shake" />
+          </IconButton>
+          <Typography
+            className="hover-pointer"
+            onClick={handleOpenProfile}
+            variant="subheading"
+            color="inherit"
+          >View appointment
+          </Typography>
+        </div>
+      </div>
+      <div className={s.appointmentDetail}>
+        <div className={s.bookingConfirmedIcon}>
+          <CheckCircle className="icon-big fruit-color" />
+        </div>
+        <div className={s.bookedInfo}>
+          <Typography variant="title" color="inherit" className="text-bold">Booking Confirmation</Typography>
+        </div>
+        <div className={s.appointmentInfo}>
+          <div className={s.appointmentCode}>
+            <Typography variant="subtitle2" color="primary" className="icon-main">Booking code:{' '}</Typography>
+            <Typography variant="subtitle2" color="secondary">
+              {bookingCode}
+            </Typography>
+          </div>
+          <div className={s.viewItems}>
+            <DateRange className="icon-main" />
+            <Typography variant="body1" color="primary" inline noWrap>
+              {mtz(bookingEvent.slot.startSec * 1000).format(defaultDateFormat)}
+            </Typography>
+          </div>
+          <div className={s.viewItems}>
+            <Schedule className="icon-main" />
+            <Typography variant="body1" color="primary" inline noWrap>
+              {mtz(bookingEvent.slot.startSec * 1000).format('LT')}{' - '}
+              {mtz((bookingEvent.slot.startSec + bookingEvent.duration * 60) * 1000).format('LT')}
+            </Typography>
+          </div>
+        </div>
+        <div className={s.postCta}>
+          <div>
+            <Typography variant="body1" color="textSecondary" className="text-bold">
+              Your confirmation sent to
+            </Typography>
+            <Typography variant="body1" color="textSecondary">
+              {email}
+            </Typography>
+          </div>
+          <div className={s.socialCta}>
+            <div className={s.addCalendar}>
+              <IconButton className="simple-button button-sm" onClick={handleAddBookingToCalendar}>
+                <Event className="icon-main" />
+              </IconButton>
+              <Typography variant="caption" color="textSecondary">Add to calendar</Typography>
+            </div>
+            <div className={s.shareBooking}>
+              <IconButton className="simple-button button-sm" onClick={handleShareBooking}>
+                <Share className="icon-main" />
+              </IconButton>
+              <Typography variant="caption" color="textSecondary">Share</Typography>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -126,10 +170,17 @@ ViewAppointment.propTypes = {
   handleOpenProfile: func.isRequired,
   initService: serviceType.isRequired,
   bookingDetail: bookingDetailType.isRequired,
+  providerList: arrayOf(any).isRequired,
+  userDetail: objectOf(any).isRequired,
 };
 
 ViewAppointment.defaultProps = {
   bookingEvent: undefined,
 };
 
-export default React.memo(ViewAppointment);
+const mapStateToProps = state => ({
+  providerList: state.home.providerList,
+  userDetail: state.home.userDetail,
+});
+
+export default connect(mapStateToProps)(React.memo(ViewAppointment));

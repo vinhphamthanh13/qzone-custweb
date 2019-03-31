@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Typography } from '@material-ui/core';
+import { Typography, Button } from '@material-ui/core';
 import moment from 'moment';
 import {
   func, number, arrayOf, shape,
@@ -76,11 +76,15 @@ export class SelectTime extends React.PureComponent {
         const slotStyle = valid || duration > 0 ? s.validSlot : s.invalidSlot;
         const bookStyle = duration > 0 && canBook ? slotStyle : `${slotStyle} ${s.kantBook}`;
         return (
-          <div key={Math.random()} className={`${s.timeSlot} ${bookStyle}`}>
-            <Typography variant="subheading" color="inherit" onClick={duration > 0 && canBook ? action : noop}>
+          <Button
+            key={Math.random()}
+            className={`${s.timeSlot} ${bookStyle}`}
+            onClick={duration > 0 && canBook ? action : noop}
+          >
+            <Typography variant="subheading" color="inherit">
               {display}
             </Typography>
-          </div>
+          </Button>
         );
       })}
     </div>

@@ -23,6 +23,7 @@ import QLogo from 'images/quezone-logo.png';
 import SelectTime from './providerContent/SelectTime';
 import DetailDialog from './providerContent/DetailDialog';
 import MapDialog from './MapDialog';
+import s from './ProviderContent.module.scss';
 
 class ProviderContent extends React.PureComponent {
   constructor(props) {
@@ -83,15 +84,15 @@ class ProviderContent extends React.PureComponent {
           initService={initService}
           provider={provider}
         />
-        <div className="providerListCard">
-          <div className="providerListCardContent">
-            <div className="providerListCardHeader">
-              <div className="providerListCardLogo">
-                <div className="providerListCardImg">
+        <div className={s.providerListCard}>
+          <div className={s.providerListCardContent}>
+            <div className={s.providerListCardHeader}>
+              <div className={s.providerListCardLogo}>
+                <div className={s.providerListCardImg}>
                   <img src={QLogo} alt="Q-Provider" width="100%" />
                 </div>
               </div>
-              <div className="providerListCardTitle">
+              <div className={s.providerListCardTitle}>
                 <Typography noWrap variant="title" color="inherit" className="text-bold">
                   <CustomLink
                     text={formatName({ givenName: provider.givenName, familyName: provider.familyName })}
@@ -101,8 +102,8 @@ class ProviderContent extends React.PureComponent {
                 </Typography>
                 <RateStar rating={providerRating} />
               </div>
-              <div className="providerAddress">
-                <div className="providerListCardMap">
+              <div className={s.providerAddress}>
+                <div className={s.providerListCardMap}>
                   <ButtonBase onClick={this.toggleMapDialog}>
                     <PersonPin className="icon-small icon-brand icon-shake" />
                   </ButtonBase>
@@ -151,33 +152,33 @@ class ProviderContent extends React.PureComponent {
                 </div>
               </div>
             </div>
-            <div className="providerListCardDescription">
-              <div className="providerListCardDescriptionTop">
+            <div className={s.providerListCardDescription}>
+              <div className={s.providerListCardDescriptionTop}>
                 <Typography variant="body1" color="inherit">
                   {initService.description}
                 </Typography>
-                <div className="providerListCardService">
-                  <div className="contentItem">
+                <div className={s.providerListCardService}>
+                  <div className={s.contentItem}>
                     <Schedule className="icon-main" />
                     <Typography variant="subheading" color="primary">
                       {duration} min
                     </Typography>
                   </div>
-                  <div className="contentItem">
+                  <div className={s.contentItem}>
                     <Typography variant="title" color="inherit">
                       ${parseFloat(Math.random(15) * 100).toFixed(2)}
                     </Typography>
                   </div>
                 </div>
               </div>
-              <div className="providerListCardDescriptionBottom">
+              <div className={s.providerListCardDescriptionBottom}>
                 <Typography variant="body1" color="inherit">
                   Your current timezone: {moment.tz.guess()}
                 </Typography>
               </div>
             </div>
           </div>
-          <div className="calendarTime">
+          <div className={s.calendarTime}>
             <SelectTime
               bookingDetail={bookingDetail}
               providerDetail={provider}

@@ -1,1 +1,45 @@
-@import "styles/_color.scss";
+@import "styles/_settings.scss";
+
+/* Select Provider */
+
+.selectProviderWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  min-width: $smx;
+}
+
+.selectProviderHeader {
+  margin: 1rem 0 0;
+  padding: 0 1rem 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid rgba($grayNickel, 0.5);
+}
+
+.selectProviderList {
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  overflow: auto;
+}
+
+.providerListCardAvailableTime {
+  color: $grayNickel;
+}
+
+.selectDateOfBooking {
+  height: 100%;
+}
+
+@media (min-width: $smx) {
+  .selectProviderList {
+    flex-direction: row;
+    justify-content: center;
+    align-items: unset;
+  }
+}

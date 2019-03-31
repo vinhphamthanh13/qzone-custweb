@@ -6,11 +6,11 @@ import {
   providerType, serviceType, bookingDetailType, providerDetailsType,
 } from 'types/global';
 import moment from 'moment';
-import RateStar from 'components/Rating/RateStar';
 import DatePicker from 'components/Calendar/DatePicker';
 import { getProvidersByService, getProviderTimes } from 'reduxModules/home/bookingDialog/selectProvider.actions';
 import EmptyItem from 'components/EmptyItem';
 import ProviderContent from './selectProvider/ProviderContent';
+import s from './SelectProvider.module.scss';
 
 const today = moment();
 
@@ -66,21 +66,18 @@ class SelectProvider extends React.PureComponent {
       <>
         {!isLoading && providers.length === 0 ? <EmptyItem message="No available providers" />
           : (
-            <div className="selectProviderWrapper">
-              <div className="selectProviderHeader">
+            <div className={s.selectProviderWrapper}>
+              <div className={s.selectProviderHeader}>
                 <div>
-                  <Typography color="textSecondary" variant="title">
+                  <Typography color="textSecondary" variant="title" className="text-bold">
                     {initService.name}
                   </Typography>
-                  <div className="selectedProviderReputation">
-                    <RateStar rating={initService.rating} reviews={initService.viewNum} />
-                  </div>
                 </div>
-                <div className="selectDateOfBooking">
+                <div className={s.selectDateOfBooking}>
                   <DatePicker onChange={onChange} selectDate={this.handleSelectDate} />
                 </div>
               </div>
-              <div className="selectProviderList">
+              <div className={s.selectProviderList}>
                 {providers.map(provider => (
                   <div key={provider.id}>
                     <ProviderContent

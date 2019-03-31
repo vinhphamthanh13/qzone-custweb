@@ -4,6 +4,7 @@ const style = theme => ({
   mainLinear,
   root: {
     width: '100%',
+    minWidth: '768px',
   },
   avatar: {
     maxWidth: theme.spacing.unit * 4,
@@ -15,10 +16,12 @@ const style = theme => ({
     width: '100%',
     height: 'calc(100vh - 65px)',
     display: 'flex',
+    minWidth: '768px',
   },
 
   diagRoot: {
     padding: '0px !important',
+    minWidth: '768px',
   },
   // bookingStepsWrapper: {
   //   display: 'flex',

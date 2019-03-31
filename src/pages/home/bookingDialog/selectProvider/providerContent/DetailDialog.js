@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { bool, func } from 'prop-types';
 import {
   Grid, Typography, Button,
   Dialog, DialogTitle, DialogContent, DialogActions,
@@ -16,7 +16,7 @@ export default function DetailDialog({ isDetailDialogOpen, toggleDetailDialog, i
     >
       <DialogTitle disableTypography classes={{ root: styles.title }}>
         <div className={styles.leftTitle}>
-          <Typography variant="h5">{initService.name}</Typography>
+          <Typography variant="title" className="text-bold">{initService.name}</Typography>
           <Typography variant="subtitle2">
             <CustomLink
               text={initService.organization.name}
@@ -43,8 +43,8 @@ export default function DetailDialog({ isDetailDialogOpen, toggleDetailDialog, i
 }
 
 DetailDialog.propTypes = {
-  isDetailDialogOpen: PropTypes.bool.isRequired,
-  toggleDetailDialog: PropTypes.func.isRequired,
+  isDetailDialogOpen: bool.isRequired,
+  toggleDetailDialog: func.isRequired,
   initService: serviceType,
 };
 

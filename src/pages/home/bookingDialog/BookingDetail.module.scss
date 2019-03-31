@@ -1,9 +1,10 @@
-@import "styles/_color.scss";
+@import "styles/_settings.scss";
 
 .bookingAppointment {
   margin: 1em auto;
   display: flex;
   justify-content: space-evenly;
+  min-width: $smx;
   width: 60%;
   border: 1px solid $malibu;
   border-bottom-left-radius: 1em;

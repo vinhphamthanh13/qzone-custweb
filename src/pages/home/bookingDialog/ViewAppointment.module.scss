@@ -4,6 +4,7 @@
   margin: 1em auto;
   display: flex;
   justify-content: space-evenly;
+  min-width: $sm;
   width: 60%;
   border: 1px solid $malibu;
   border-bottom-left-radius: 1em;
@@ -13,12 +14,14 @@
 }
 
 .viewTitle {
-  color: $main;
+  width: 100%;
 }
 
 .viewAppointmentCta {
   color: $main;
   margin: 1em auto;
+  border-top: 1px solid $gallery;
+  padding-top: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -27,21 +30,27 @@
 .bookedInfo {
   color: $fruitSalad;
   margin: 0.5em 0;
+  text-align: center;
+  padding-bottom: 1rem;
   border-bottom: 1px solid $gallery;
 }
 
 .viewItems {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 }
 
 .serviceName {
   border-bottom: 1px solid $gallery;
-  padding: 0.5em;
+  padding: 2em 1em;
+  width: 100%;
+  text-align: center;
+  background: linear-gradient(to bottom, $malibu, $gallery)
 }
 
 .appointmentDetail {
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -52,11 +61,13 @@
     $malibu,
     rgba(0, 0, 0, 0)
   ) 1 100%;
-  padding-left: 3.5em;
+  //padding-left: 3.5em;
 }
 
 .providerName {
-  color: $malibu;
+  color: $main;
+  display: flex;
+  justify-content: space-between;
 }
 
 .addressItems {
@@ -68,7 +79,7 @@
 
 .providerAddress {
   color: $malibu;
-  width: 100%;
+  margin: 1rem 0.5rem;
 }
 
 .appointmentInfo {
@@ -79,7 +90,7 @@
 
 .appointmentCode {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 }
 
@@ -125,4 +136,34 @@
     margin-right: 8px;
     color: $primary;
   }
+}
+
+.bookingConfirmedIcon {
+  color: $main;
+  display: flex;
+  justify-content: center;
+  margin-top: 1em;
+}
+
+.postCta {
+  color: $main;
+  margin-top: 1rem;
+}
+
+.addCalendar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.shareBooking {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.socialCta {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 1rem;
 }

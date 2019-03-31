@@ -45,7 +45,7 @@ class BookingDetail extends React.PureComponent {
         <div className={s.bookingDetail}>
           <div className={s.bookingHeadInfo}>
             <div className={s.serviceTitle}>
-              <Typography variant="title" color="textSecondary">{initService.name}</Typography>
+              <Typography variant="title" color="textSecondary" className="text-bold">{initService.name}</Typography>
             </div>
           </div>
           <div className={s.serviceItems}>
@@ -99,7 +99,7 @@ class BookingDetail extends React.PureComponent {
         </div>
         <div className={s.clientInfo}>
           <div className={s.formTitle}>
-            <Typography variant="title" color="inherit">Client Info</Typography>
+            <Typography variant="title" color="inherit" className="text-bold">Client Info</Typography>
           </div>
           <div>
             <div className={s.formFields}>

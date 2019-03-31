@@ -63,7 +63,7 @@ class DatePicker extends Component {
               <div className={s.calendarTabCircle} />
             </div>
             <div className={s.calendarText}>
-              <Typography variant="h5" color="inherit" className={s.calendarFont}>
+              <Typography variant="title" color="inherit" className={s.calendarFont}>
                 {moment(selectedDate).format('DD')}
               </Typography>
             </div>
@@ -74,7 +74,7 @@ class DatePicker extends Component {
               <div className={s.calendarTabCircle} />
             </div>
             <div className={s.calendarText}>
-              <Typography variant="h5" color="inherit" className={s.calendarFont}>
+              <Typography variant="title" color="inherit" className={s.calendarFont}>
                 {moment(selectedDate).format('MMM')}
               </Typography>
             </div>
@@ -85,7 +85,7 @@ class DatePicker extends Component {
               <div className={s.calendarTabCircle} />
             </div>
             <div className={s.calendarText}>
-              <Typography variant="h5" color="inherit" className={s.calendarFont}>
+              <Typography variant="title" color="inherit" className={s.calendarFont}>
                 {moment(selectedDate).format('YYYY')}
               </Typography>
             </div>
@@ -93,7 +93,7 @@ class DatePicker extends Component {
           <div>
             <IconButton className="simple-button button-xs" onClick={this.handleOpenCalendar}>
               <DateRange className="icon-huge icon-brand icon-shake" />
-            </IconButton>`
+            </IconButton>
           </div>
         </div>
         {renderCalendar}
