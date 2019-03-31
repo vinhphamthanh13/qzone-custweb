@@ -154,7 +154,7 @@ class TimelineCard extends Component {
                 <div className={styles.appointmentRemainedTime}>
                   <Rating
                     value={providerRating}
-                    readOnly={providerRating}
+                    readOnly={!!providerRating}
                     onChange={this.handleCustomerRating(customerId, serviceProviderId)}
                     classes={{ iconButton: styles.ratingIcon }}
                   />

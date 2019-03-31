@@ -32,7 +32,6 @@ class CountDownDisplay extends Component {
     this.setState({
       isStoppingCountDown: false,
       isStartingCountDown: false,
-      startCountDown: 0,
     });
   };
 
@@ -40,6 +39,7 @@ class CountDownDisplay extends Component {
     this.setState({
       isStoppingCountDown: true,
       isStartingCountDown: false,
+      startCountDown: 0,
     });
   };
 
