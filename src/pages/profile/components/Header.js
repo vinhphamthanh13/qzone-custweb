@@ -10,7 +10,7 @@ const Header = (props) => {
   const { onClose, onOpenAccount } = props;
   const NAVBAR = [
     {
-      id: 0, name: 'Home', action: onClose, appendIcon: null,
+      id: 0, name: 'Booking', action: onClose, appendIcon: null,
     },
     // {
     //   id: 1, name: 'Help', action: noop, appendIcon: <ExpandMore className="icon-white" />,

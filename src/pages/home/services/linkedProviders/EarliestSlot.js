@@ -13,6 +13,8 @@ import CustomLink from 'components/CustomLink';
 import RateStar from 'components/Rating/RateStar';
 import s from './LinkedProviders.module.scss';
 
+const nowSec = moment.now();
+
 class EarliestSlot extends Component {
   handleSelectBookTime = selectedTime => () => {
     const { onSlotBooking } = this.props;
@@ -67,20 +69,24 @@ class EarliestSlot extends Component {
           <div className={s.providerSlot}>
             <div className={s.availableSlots}>
               { /* Show max 3 earliest slots */ }
-              {providerSlots[providerId].sort((a, b) => a.startSec - b.startSec).slice(0, 3).map((slot) => {
-                const startSec = get(slot, 'startSec');
-                const [slotStyle, onclick] = moment.now() < startSec * 1000
-                  ? [`hover-bright ${s.slot} ${s.validSlot}`, this.handleSelectBookTime(startSec)]
-                  : [`hover-bright ${s.slot} ${s.invalidSlot}`, noop];
+              {providerSlots[providerId].sort((a, b) => a.startSec - b.startSec)
+                .filter(validSlot => validSlot.startSec * 1000 > nowSec).slice(0, 3).map((slot) => {
+                  const startSec = get(slot, 'startSec');
+                  if (startSec * 1000 > nowSec) {
+                    const [slotStyle, onclick] = moment.now() < startSec * 1000
+                      ? [`hover-bright ${s.slot} ${s.validSlot}`, this.handleSelectBookTime(startSec)]
+                      : [`hover-bright ${s.slot} ${s.invalidSlot}`, noop];
 
-                return (
-                  <div key={uuidv1()} className={`${slotStyle} text-center`}>
-                    <Typography variant="subheading" color="inherit" onClick={onclick}>
-                      {moment(startSec * 1000).format('hh:mm A')}
-                    </Typography>
-                  </div>
-                );
-              })}
+                    return (
+                      <div key={uuidv1()} className={`${slotStyle} text-center`}>
+                        <Typography variant="subheading" color="inherit" onClick={onclick}>
+                          {moment(startSec * 1000).format('hh:mm A')}
+                        </Typography>
+                      </div>
+                    );
+                  }
+                  return null;
+                })}
             </div>
             <div className={s.findMoreSlots}>
               <Typography
