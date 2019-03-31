@@ -68,7 +68,7 @@ class TimelineCard extends Component {
         { background: 'rgb(61, 63, 66)', color: '#fff' },
         <AlarmOff />,
         STATUS.EXPIRED,
-        <DoneAll className="icon-main" />,
+        <DoneAll className="icon-main danger-color" />,
         styles.eventStatusComplete,
       ] : [
         { background: 'rgb(87, 201, 249)', color: '#fff' },
@@ -199,11 +199,11 @@ class TimelineCard extends Component {
           </div>
           <div className={styles.appointmentItem}>
             {displayIconStatus}
-            <Typography variant="subheading" color="secondary">{currentEventStatus}</Typography>
+            <Typography variant="subheading" className="danger-color">{currentEventStatus}</Typography>
           </div>
           <div className={`${styles.appointmentRemainedTime} ${currentStyleStatus}`}>
             <AlarmOn className="icon-white" />
-            <Typography variant="subheading" color="secondary" classes={{ subheading: styles.remainedText }}>
+            <Typography variant="subheading" classes={{ subheading: styles.remainedText }}>
               {displayTimeout}
             </Typography>
           </div>

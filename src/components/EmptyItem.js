@@ -35,5 +35,5 @@ EmptyItem.propTypes = {
 
 EmptyItem.defaultProps = {
   onLoadServices: undefined,
-  message: 'No available services',
+  message: 'No service available!',
 };
