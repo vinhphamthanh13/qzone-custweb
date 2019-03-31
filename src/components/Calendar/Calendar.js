@@ -161,13 +161,9 @@ class Calendar extends Component {
     const inMonth = selectedMonth && selectedYear && isSameMonth(
       $date, new Date(`${[selectedYear, selectedMonth, 1].join('-')} 00:00:00:00`),
     );
-    const shortMaxDate = new Date(
-      `${zeroPad(maxDate.getMonth() + 1, 2)}/${zeroPad(
-        maxDate.getDate() + 1,
-        2,
-      )}/${maxDate.getFullYear()}`,
-    );
-    const isValidDate = $date < shortMaxDate && $date >= minDate;
+    const shortMaxDate = new Date(`${maxDate}`);
+    const maxDateTime = shortMaxDate.getTime();
+    const isValidDate = $date < maxDateTime && $date >= minDate;
     const onClick = isValidDate ? this.gotoDate($date) : noop;
     const props = {
       index,

@@ -16,5 +16,7 @@ export const fetchOrg = id => async (dispatch) => {
   if (orgs.length > 0) {
     dispatch(setOrgs(orgs[0]));
     dispatch(setLoading(false));
+  } else {
+    dispatch(setLoading(false));
   }
 };

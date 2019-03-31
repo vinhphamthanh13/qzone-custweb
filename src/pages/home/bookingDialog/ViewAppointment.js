@@ -137,7 +137,7 @@ const ViewAppointment = ({
           </div>
         </div>
         <div className={s.postCta}>
-          <div>
+          <div className={s.postEmail}>
             <Typography variant="body1" color="textSecondary" className="text-bold">
               Your confirmation sent to
             </Typography>
@@ -180,7 +180,7 @@ ViewAppointment.defaultProps = {
 
 const mapStateToProps = state => ({
   providerList: state.home.providerList,
-  userDetail: state.home.userDetail,
+  userDetail: state.auth.userDetail,
 });
 
 export default connect(mapStateToProps)(React.memo(ViewAppointment));
