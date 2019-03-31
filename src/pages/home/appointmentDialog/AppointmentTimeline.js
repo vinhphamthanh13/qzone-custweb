@@ -1,32 +1,25 @@
 import React from 'react';
 import {
-  arrayOf, shape, string, number, func,
+  arrayOf, shape, string, number,
 } from 'prop-types';
 import { VerticalTimeline } from 'react-vertical-timeline-component';
 
 import TimelineCard from './TimelineCard';
 
-export default function AppointmentTimeline({ items, rateAppointmentByCustomer }) {
-  const rateAppointment = (id, customerId, serviceId) => rating => rateAppointmentByCustomer({
-    id, customerId, serviceId, rating,
-  });
-
-  return (
-    <VerticalTimeline>
-      <div>
-        {items.sort((a, b) => b.slot.startSec - a.slot.startSec)
-          .map(item => (
-            <TimelineCard
-              key={item.id}
-              rateAppointment={rateAppointment(item.id, item.customerId, item.slot.serviceId)}
-              {...item}
-            />
-          ))
-        }
-      </div>
-    </VerticalTimeline>
-  );
-}
+const AppointmentTimeline = ({ items }) => (
+  <VerticalTimeline>
+    <div>
+      {items.sort((a, b) => b.slot.startSec - a.slot.startSec)
+        .map(item => (
+          <TimelineCard
+            key={item.id}
+            {...item}
+          />
+        ))
+      }
+    </div>
+  </VerticalTimeline>
+);
 
 AppointmentTimeline.propTypes = {
   items: arrayOf(
@@ -42,5 +35,6 @@ AppointmentTimeline.propTypes = {
       duration: number.isRequired,
     }).isRequired,
   ).isRequired,
-  rateAppointmentByCustomer: func.isRequired,
 };
+
+export default AppointmentTimeline;

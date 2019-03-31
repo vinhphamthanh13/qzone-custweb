@@ -8,13 +8,12 @@ import EmptyItem from 'components/EmptyItem';
 import {
   getAppointmentByCustomer,
   clearAppointments,
-  rateAppointmentByCustomer,
 } from 'reduxModules/appointments.actions';
 import AppointmentTimeline from './AppointmentTimeline';
 import styles from './Appointment.module.scss';
 
 const AppointmentContainer = ({
-  appointments, userId, rateAppointmentByCustomerAction,
+  appointments, userId,
   getAppointmentByCustomerAction, clearAppointmentsAction,
 }) => {
   useEffect(() => {
@@ -30,7 +29,6 @@ const AppointmentContainer = ({
         <div className={`${styles.appointmentWrapper} container-max auto-margin-horizontal`}>
           <AppointmentTimeline
             items={appointments}
-            rateAppointmentByCustomer={rateAppointmentByCustomerAction}
           />
         </div>
       )
@@ -41,7 +39,6 @@ AppointmentContainer.propTypes = {
   appointments: arrayOf(shape()).isRequired,
   getAppointmentByCustomerAction: func.isRequired,
   clearAppointmentsAction: func.isRequired,
-  rateAppointmentByCustomerAction: func.isRequired,
   userId: string,
 };
 
@@ -56,7 +53,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   getAppointmentByCustomerAction: getAppointmentByCustomer,
-  rateAppointmentByCustomerAction: rateAppointmentByCustomer,
   clearAppointmentsAction: clearAppointments,
 };
 
