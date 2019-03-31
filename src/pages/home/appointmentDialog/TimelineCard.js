@@ -5,13 +5,13 @@ import {
 import { connect } from 'react-redux';
 import { get } from 'lodash';
 import moment from 'moment';
-import { Typography } from '@material-ui/core';
+import { IconButton, Typography } from '@material-ui/core';
 import { VerticalTimelineElement } from 'react-vertical-timeline-component';
 import {
   DateRange, Schedule, AlarmOff, AlarmOn,
   AirlineSeatReclineNormal, DoneAll,
   Update, Timer,
-  // PersonPin,
+  PersonPin,
 } from '@material-ui/icons';
 import RateStar from 'components/Rating/RateStar';
 import { setRatingService } from 'actions/common';
@@ -19,9 +19,13 @@ import Rating from 'material-ui-rating';
 import styles from './TimelineCard.module.scss';
 import CountDownDisplay from './CountDownDisplay';
 import { STATUS } from './Appointment.constants';
-// import MapDialog from '../bookingDialog/selectProvider/MapDialog';
+import MapDialog from '../bookingDialog/selectProvider/MapDialog';
 
 class TimelineCard extends Component {
+  state = {
+    isOpenMap: false,
+  };
+
   handleCustomerRating = (customerId, serviceProviderId) => (rating) => {
     const { rateAppointmentAction } = this.props;
     rateAppointmentAction({
@@ -29,6 +33,12 @@ class TimelineCard extends Component {
       serviceProviderId,
       rating,
     });
+  };
+
+  handleToggleMap = () => {
+    this.setState(oldState => ({
+      isOpenMap: !oldState.isOpenMap,
+    }));
   };
 
   render() {
@@ -45,7 +55,9 @@ class TimelineCard extends Component {
       bookingCode,
       providerList,
       customerId,
+      geoLocation,
     } = this.props;
+    const { isOpenMap } = this.state;
     console.log('this.porops CARD TIMELHKEN', this.props);
     const toSecCalc = (toSec || startSec + duration * 60) * 1000;
     const current = new Date();
@@ -98,8 +110,26 @@ class TimelineCard extends Component {
       displayTimeout = `${waitingHr} hr, ${waitingMn} min`;
     }
 
+    const mapService = {
+      id: serviceId,
+      name: serviceName,
+      allowProviderSelection: true,
+      description: '',
+      serviceCategoryId: '',
+    };
+
+    const mapProvider = { geoLocation };
+
     return (
       <>
+        {isOpenMap && (
+          <MapDialog
+            toggle={this.handleToggleMap}
+            isOpen={isOpenMap}
+            initService={mapService}
+            provider={mapProvider}
+          />)
+        }
         <VerticalTimelineElement
           iconStyle={currentEventStyle}
           icon={currentIconTimeline}
@@ -138,7 +168,13 @@ class TimelineCard extends Component {
             </Typography>
           </div>
           <div>
-            <Typography variant="title" color="textSecondary">{serviceName}</Typography>
+            <div className={styles.serviceTitleMap}>
+              <Typography variant="title" color="textSecondary">{serviceName}</Typography>
+              <IconButton className="button-sm simple-button" onClick={this.handleToggleMap}>
+                <PersonPin className="icon-main icon-shake icon-small danger-color" />
+                <Typography variant="caption" color="inherit" className="danger-color">View map</Typography>
+              </IconButton>
+            </div>
             <div className={styles.providerRating}>
               <Typography
                 variant="subheading"
