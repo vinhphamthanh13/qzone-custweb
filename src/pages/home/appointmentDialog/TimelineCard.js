@@ -169,7 +169,7 @@ class TimelineCard extends Component {
           </div>
           <div>
             <div className={styles.serviceTitleMap}>
-              <Typography variant="title" color="textSecondary">{serviceName}</Typography>
+              <Typography variant="title" color="textSecondary" noWrap>{serviceName}</Typography>
               <IconButton className="button-sm simple-button" onClick={this.handleToggleMap}>
                 <PersonPin className="icon-main icon-shake icon-small danger-color" />
                 <Typography variant="caption" color="inherit" className="danger-color">View map</Typography>

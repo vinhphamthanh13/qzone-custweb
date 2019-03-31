@@ -24,6 +24,7 @@ import { setProviders } from 'reduxModules/home/bookingDialog/selectProvider.act
 import { bookEvent, resetStatus } from 'reduxModules/home/bookingDialog.actions';
 import CustomModal from 'components/Modal/CustomModal';
 import { toggleAppointment } from 'reduxModules/appointments.actions';
+import { fetchCustomerEvents } from 'reduxModules/home.actions';
 import SelectProvider from './bookingDialog/SelectProvider';
 import BookingDetail from './bookingDialog/BookingDetail';
 import BookingStyle from './BookingDialogStyle';
@@ -130,7 +131,8 @@ class BookingDialog extends PureComponent {
   };
 
   handleViewAppointment = () => {
-    const { handleOpenProfile } = this.props;
+    const { handleOpenProfile, fetchCustomerEventsAction, userDetail: { userSub } } = this.props;
+    fetchCustomerEventsAction(userSub);
     handleOpenProfile();
     this.handleClose();
   };
@@ -253,6 +255,7 @@ BookingDialog.propTypes = {
   handleOpenProfile: func.isRequired,
   initialStep: number,
   bookingDetail: bookingDetailType,
+  fetchCustomerEventsAction: func.isRequired,
 };
 
 BookingDialog.defaultProps = {
@@ -279,6 +282,7 @@ export default compose(
       bookEventAction: bookEvent,
       resetStatusAction: resetStatus,
       toggleAppointmentAction: toggleAppointment,
+      fetchCustomerEventsAction: fetchCustomerEvents,
     },
   ),
 )(BookingDialog);
