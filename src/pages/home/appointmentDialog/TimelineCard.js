@@ -8,7 +8,7 @@ import { VerticalTimelineElement } from 'react-vertical-timeline-component';
 import {
   DateRange, Schedule, AlarmOff, AlarmOn,
   AirlineSeatReclineNormal, DoneAll,
-  Update, Timer, TagFaces,
+  Update, Timer,
   // PersonPin,
 } from '@material-ui/icons';
 import Rating from 'material-ui-rating';
@@ -99,10 +99,9 @@ export default function TimelineCard({
           <div className={styles.ratingWrapper}>
             <div className={styles.ratingInner}>
               <Typography variant="subheading" classes={{ subheading: styles.ratingText }}>
-                {rating === 0 ? 'Please rate for our service !' : 'Thank you for choosing our service !'}
+                {rating === 0 ? 'Rate our provider quality.' : 'Thank you for choosing us!'}
               </Typography>
               <div className={styles.appointmentRemainedTime}>
-                <TagFaces className={styles.ratingIconFace} />
                 <Rating
                   value={rating}
                   readOnly={rating > 0}

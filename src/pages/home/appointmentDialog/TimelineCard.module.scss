@@ -57,16 +57,16 @@
   $text-color: rgb(210, 105, 30);
 
   &Wrapper {
+    color: $fruitSalad;
     display: flex;
     justify-content: center;
+    text-align: center;
   }
 
   &Inner {
-    background: linear-gradient(to right, #ffffe0, $white);
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 8px;
   }
 
   &Icon {
@@ -79,7 +79,8 @@
   }
   
   &Text {
-    color: $text-color;
-    margin-left: 8px;
+    color: $fruitSalad;
+    font-weight: bold;
+    margin: 0.5rem;
   }
 }
