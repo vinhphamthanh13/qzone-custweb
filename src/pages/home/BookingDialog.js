@@ -129,11 +129,15 @@ class BookingDialog extends PureComponent {
     this.setState({ isConfirmDialogOpen });
   };
 
+  handleViewAppointment = () => {
+    const { handleOpenProfile } = this.props;
+    handleOpenProfile();
+    this.handleClose();
+  };
+
   render() {
     const {
-      initService, classes, userDetail,
-      isLoading, bookingStatus, bookingEvent,
-      handleOpenProfile,
+      initService, classes, userDetail, isLoading, bookingStatus, bookingEvent,
     } = this.props;
     const { step, bookingDetail, isConfirmDialogOpen } = this.state;
     const StepComponent = this.bookingStepsComponents[step];
@@ -222,7 +226,7 @@ class BookingDialog extends PureComponent {
                 isLoading={isLoading}
                 bookingEvent={bookingEvent}
                 openAppointmentDialog={this.openAppointmentDialog}
-                handleOpenProfile={handleOpenProfile}
+                handleOpenProfile={this.handleViewAppointment}
               />
             </div>
           )}

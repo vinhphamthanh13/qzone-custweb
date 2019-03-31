@@ -97,7 +97,7 @@ const ViewAppointment = ({
         </div>
         <div className={s.viewAppointmentCta}>
           <IconButton className="button-sm" onClick={handleOpenProfile}>
-            <ViewList className="icon-main icon-shake" />
+            <ViewList className="icon-main" />
           </IconButton>
           <Typography
             className="hover-pointer"
