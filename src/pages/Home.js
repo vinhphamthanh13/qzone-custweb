@@ -205,10 +205,7 @@ export class Home extends React.PureComponent {
     }));
     const searchedServices = this.getSearchedServices(combineServiceProviders, searchText);
     const advancedSearchAvailable = providerListByDistance.length > 0 && isShowingAdvancedSearch;
-
     const underInstruction = isMaintenance && (<Maintenance />);
-    console.log('under instruction', underInstruction);
-    console.log('this.props', this.props);
 
     return (
       <>

@@ -42,9 +42,6 @@ const ViewAppointment = ({
   const providerRating = get(serviceProvider, '0.rating');
   const email = get(userDetail, 'email');
 
-  console.log('bookingEvent', bookingEvent);
-  console.log('bookingDetail', bookingDetail);
-
   return (
     <div className={s.viewAppointment}>
       <div className={s.viewTitle}>

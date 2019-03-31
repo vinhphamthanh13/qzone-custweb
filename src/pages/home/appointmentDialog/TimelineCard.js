@@ -58,7 +58,6 @@ class TimelineCard extends Component {
       geoLocation,
     } = this.props;
     const { isOpenMap } = this.state;
-    console.log('this.porops CARD TIMELHKEN', this.props);
     const toSecCalc = (toSec || startSec + duration * 60) * 1000;
     const current = new Date();
     const currentSec = current.getTime() / 1000;
@@ -68,7 +67,7 @@ class TimelineCard extends Component {
         { background: 'rgb(61, 63, 66)', color: '#fff' },
         <AlarmOff />,
         STATUS.EXPIRED,
-        <DoneAll className="icon-main" />,
+        <DoneAll className="icon-main danger-color" />,
         styles.eventStatusComplete,
       ] : [
         { background: 'rgb(87, 201, 249)', color: '#fff' },
@@ -154,7 +153,7 @@ class TimelineCard extends Component {
                 <div className={styles.appointmentRemainedTime}>
                   <Rating
                     value={providerRating}
-                    readOnly={providerRating}
+                    readOnly={!!providerRating}
                     onChange={this.handleCustomerRating(customerId, serviceProviderId)}
                     classes={{ iconButton: styles.ratingIcon }}
                   />
@@ -169,7 +168,7 @@ class TimelineCard extends Component {
           </div>
           <div>
             <div className={styles.serviceTitleMap}>
-              <Typography variant="title" color="textSecondary">{serviceName}</Typography>
+              <Typography variant="title" color="textSecondary" noWrap>{serviceName}</Typography>
               <IconButton className="button-sm simple-button" onClick={this.handleToggleMap}>
                 <PersonPin className="icon-main icon-shake icon-small danger-color" />
                 <Typography variant="caption" color="inherit" className="danger-color">View map</Typography>
@@ -199,11 +198,11 @@ class TimelineCard extends Component {
           </div>
           <div className={styles.appointmentItem}>
             {displayIconStatus}
-            <Typography variant="subheading" color="secondary">{currentEventStatus}</Typography>
+            <Typography variant="subheading" className="danger-color">{currentEventStatus}</Typography>
           </div>
           <div className={`${styles.appointmentRemainedTime} ${currentStyleStatus}`}>
             <AlarmOn className="icon-white" />
-            <Typography variant="subheading" color="secondary" classes={{ subheading: styles.remainedText }}>
+            <Typography variant="subheading" classes={{ subheading: styles.remainedText }}>
               {displayTimeout}
             </Typography>
           </div>

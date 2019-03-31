@@ -75,7 +75,7 @@ class ProviderContent extends Component {
                         </Typography>
                       </div>
                       <Rating
-                        readOnly={providerRating}
+                        readOnly={!!providerRating}
                         max={5}
                         onChange={this.handleRating(customerId, serviceProviderId, ratingService)}
                         value={providerRating}

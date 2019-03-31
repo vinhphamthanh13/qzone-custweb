@@ -41,7 +41,6 @@ class Provider extends Component {
       telephone: providerPhone,
       logo: providerAvatar,
     };
-    console.log('providerDetail', providerDetail);
 
     return (
       <>

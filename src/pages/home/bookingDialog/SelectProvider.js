@@ -64,7 +64,7 @@ class SelectProvider extends React.PureComponent {
 
     return (
       <>
-        {!isLoading && providers.length === 0 ? <EmptyItem message="No available providers" />
+        {!isLoading && providers.length === 0 ? <EmptyItem message="No provider available!" />
           : (
             <div className={s.selectProviderWrapper}>
               <div className={s.selectProviderHeader}>

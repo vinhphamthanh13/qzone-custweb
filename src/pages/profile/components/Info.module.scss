@@ -1,0 +1,38 @@
+@import "styles/_settings.scss";
+
+.privateInfo {
+  color: $main;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-start;
+  overflow: auto;
+  height: inherit;
+}
+
+.personalInfo {
+  border-right: 1px solid $gallery;
+  min-width: 350px;
+  margin: 0 1rem 0 0.5rem;
+}
+
+.infoTitle {
+  margin-bottom: 1rem;
+}
+
+.infoSubtitle {
+  margin: 1rem 0;
+}
+
+.formData {
+  margin: 1rem;
+}
+
+.formControl {
+  margin: 1rem 0;
+}
+
+.personalCta {
+  display: flex;
+  justify-content: center;
+  margin: 1rem;
+}

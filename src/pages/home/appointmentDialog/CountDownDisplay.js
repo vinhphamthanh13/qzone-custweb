@@ -5,10 +5,14 @@ import CountDown from 'react-countdown-now';
 import CustomModal from 'components/Modal/CustomModal';
 
 class CountDownDisplay extends Component {
-  state = {
-    isStartingCountDown: false,
-    isStoppingCountDown: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      isStartingCountDown: false,
+      isStoppingCountDown: false,
+      startCountDown: props.startTime * 60 * 1000,
+    };
+  }
 
   handleCloseStartPopUp = () => {
     this.setState({
@@ -35,13 +39,13 @@ class CountDownDisplay extends Component {
     this.setState({
       isStoppingCountDown: true,
       isStartingCountDown: false,
+      startCountDown: 0,
     });
   };
 
   render() {
-    const { startTime, serviceName, providerName } = this.props;
-    const { isStartingCountDown, isStoppingCountDown } = this.state;
-    const startCountDown = startTime * 60 * 1000; // in minute
+    const { serviceName, providerName } = this.props;
+    const { isStartingCountDown, isStoppingCountDown, startCountDown } = this.state;
     const startCountDownPopup = isStartingCountDown
       ? (
         <CustomModal
