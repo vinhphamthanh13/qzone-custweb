@@ -22,7 +22,7 @@ class Content extends Component {
     {
       name: 'signOut',
       icon: ExitToApp,
-      text: 'Sign Out',
+      text: 'Sign out',
       isSelected: false,
       func: () => this.handleSignOut(),
     },
@@ -95,12 +95,16 @@ class Content extends Component {
             {this.renderItems()}
           </div>
         </div>
-        <div className={s.eventList}>
-          {eventList && <EventList />}
-        </div>
-        <div className={s.customerInfo}>
-          {myInfo && <Info />}
-        </div>
+        {eventList && (
+          <div className={s.profilePage}>
+            <EventList />
+          </div>)
+        }
+        {myInfo && (
+          <div className={s.profilePage}>
+            <Info />
+          </div>)
+        }
       </div>
     );
   }

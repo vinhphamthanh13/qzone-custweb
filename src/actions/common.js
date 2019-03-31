@@ -16,7 +16,6 @@ export const setLoading = payload => ({
 export const setRatingService = data => async (dispatch) => {
   dispatch(setLoading(true));
   const rated = await handleRequest(rateAppointmentByUser, [data], []);
-  console.log('rated', rated);
   if (rated) {
     dispatch(setLoading(false));
   } else {

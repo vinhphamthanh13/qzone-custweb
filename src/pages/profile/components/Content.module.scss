@@ -47,14 +47,17 @@
   background: rgba($malibu, 0.5);
 }
 
-.eventList {
+.profilePage {
   height: 100vh;
   overflow: auto;
   width: 100%;
   margin-left: 1em;
 }
 
+.eventList {
+  color: $main;
+}
+
 .customerInfo {
-  display: flex;
-  color: $malibu;
+  color: $main;
 }

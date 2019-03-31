@@ -58,7 +58,6 @@ class TimelineCard extends Component {
       geoLocation,
     } = this.props;
     const { isOpenMap } = this.state;
-    console.log('this.porops CARD TIMELHKEN', this.props);
     const toSecCalc = (toSec || startSec + duration * 60) * 1000;
     const current = new Date();
     const currentSec = current.getTime() / 1000;
