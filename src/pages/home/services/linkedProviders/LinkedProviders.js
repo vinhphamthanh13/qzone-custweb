@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { serviceType } from 'types/global';
-import { func, arrayOf, any } from 'prop-types';
+import {
+  func, objectOf, any,
+} from 'prop-types';
 import { connect } from 'react-redux';
 import { get, noop } from 'lodash';
 import { Typography, IconButton } from '@material-ui/core';
@@ -25,16 +27,15 @@ class LinkedProviders extends Component {
     this.setState(oldState => ({ isExpandList: !oldState.isExpandList }), this.handleHiddenBookingButton);
   };
 
-  handleInstanceSlotBooking = provider => (slot) => {
+  handleInstanceSlotBooking = (slot) => {
     const {
-      service, saveEarliestSlotAction, instantBooking, selectProvider,
+      service, saveEarliestSlotAction, instantBooking, providerDetail,
     } = this.props;
-    console.log('selectProvider', selectProvider);
     const duration = get(service, 'duration');
     const earliestSlot = {
       step: 1,
       bookingDetail: {
-        provider,
+        provider: providerDetail,
         time: {
           start: slot * 1000,
           duration,
@@ -67,7 +68,7 @@ class LinkedProviders extends Component {
               providerId={providerId}
               providerRating={providerRating}
               serviceId={serviceId}
-              onSlotBooking={this.handleInstanceSlotBooking(provider)}
+              onSlotBooking={this.handleInstanceSlotBooking}
               instantBooking={instantBooking}
             />);
         })}
@@ -98,11 +99,12 @@ LinkedProviders.propTypes = {
   instantBooking: func.isRequired,
   handleBookingButton: func.isRequired,
   saveEarliestSlotAction: func.isRequired,
-  selectProvider: arrayOf(any).isRequired,
+  providerDetail: objectOf(any).isRequired,
 };
 
 const mapStateToProps = state => ({
   selectProvider: state.homeModules.bookingDialogModules.selectProvider,
+  providerDetail: state.providerPage.providerDetail,
 });
 
 export default connect(mapStateToProps, {

@@ -8,6 +8,7 @@ import uuidv1 from 'uuid/v1';
 import { get, noop } from 'lodash';
 import moment from 'moment';
 import { fetchProviderSlots } from 'reduxModules/serviceCard.actions';
+import { fetchProviderDetail } from 'reduxModules/provider.actions';
 import { connect } from 'react-redux';
 import CustomLink from 'components/CustomLink';
 import RateStar from 'components/Rating/RateStar';
@@ -23,7 +24,7 @@ class EarliestSlot extends Component {
 
   handleFetchProviderSlots = providerId => () => {
     const {
-      fetchProviderSlotsAction, serviceId, providerSlots,
+      fetchProviderSlotsAction, serviceId, providerSlots, fetchProviderDetailAction,
     } = this.props;
     const data = {
       customerTimezone: moment.tz.guess(),
@@ -34,6 +35,7 @@ class EarliestSlot extends Component {
     };
     if (!providerSlots[`${serviceId}-${providerId}`]) {
       fetchProviderSlotsAction(data);
+      fetchProviderDetailAction(providerId);
     }
   };
 
@@ -112,6 +114,7 @@ EarliestSlot.propTypes = {
   serviceId: string.isRequired,
   instantBooking: func.isRequired,
   providerRating: number,
+  fetchProviderDetailAction: func.isRequired,
 };
 
 EarliestSlot.defaultProps = {
@@ -125,4 +128,5 @@ const mapStateToProps = state => ({
 
 export default connect(mapStateToProps, {
   fetchProviderSlotsAction: fetchProviderSlots,
+  fetchProviderDetailAction: fetchProviderDetail,
 })(EarliestSlot);

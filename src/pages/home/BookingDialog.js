@@ -174,8 +174,6 @@ class BookingDialog extends PureComponent {
       ? <ChevronRight className="icon-white icon-big icon-shake" />
       : <ChevronRight className="icon-transparent icon-big" />;
 
-    console.log('bookingDetail', bookingDetail);
-    console.log('step', step);
     return (
       <>
         <CustomModal
