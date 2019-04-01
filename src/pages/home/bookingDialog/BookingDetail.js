@@ -36,9 +36,9 @@ class BookingDetail extends React.PureComponent {
     const localBookingStartTime = mtz(bookingDetail.time.start);
     const provider = get(bookingDetail, 'provider');
     const providerPhone = get(provider, 'telephone');
-    const seriveProvider = providerList
+    const serviceProvider = providerList
       .filter(items => items.providerId === provider.id && items.serviceId === initService.id);
-    const providerRating = get(seriveProvider, '0.rating');
+    const providerRating = get(serviceProvider, '0.rating');
 
     return (
       <div className={s.bookingAppointment}>

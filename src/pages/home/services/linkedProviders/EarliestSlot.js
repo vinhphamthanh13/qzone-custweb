@@ -32,7 +32,7 @@ class EarliestSlot extends Component {
       startSec: (moment.now() + 10000) / 1000,
       toSec: (moment.now() + 10000) / 1000,
     };
-    if (!providerSlots[providerId]) {
+    if (!providerSlots[`${serviceId}-${providerId}`]) {
       fetchProviderSlotsAction(data);
     }
   };
@@ -44,9 +44,9 @@ class EarliestSlot extends Component {
 
   render() {
     const {
-      providerName, providerSlots, providerId, providerRating,
+      providerName, providerSlots, providerId, providerRating, serviceId,
     } = this.props;
-    const expandIconList = providerSlots[providerId]
+    const expandIconList = providerSlots[`${serviceId}-${providerId}`]
       ? null
       : <ExpandMoreRounded className="icon-main icon-shake crimson-color" />;
 
@@ -54,7 +54,7 @@ class EarliestSlot extends Component {
       <div>
         <div className={s.providerName}>
           <div className={s.earliestTitle}>
-            <Typography variant="body2" color="inherit">
+            <Typography variant="body2" color="inherit" noWrap>
               <CustomLink text={providerName} to={`/provider/${providerId}`} />
             </Typography>
             <IconButton className="button-sm" onClick={this.handleFetchProviderSlots(providerId)}>
@@ -65,11 +65,11 @@ class EarliestSlot extends Component {
             <RateStar rating={providerRating} />
           </div>
         </div>
-        {providerSlots[providerId] && (
+        {providerSlots[`${serviceId}-${providerId}`] && (
           <div className={s.providerSlot}>
             <div className={s.availableSlots}>
               { /* Show max 3 earliest slots */ }
-              {providerSlots[providerId].sort((a, b) => a.startSec - b.startSec)
+              {providerSlots[`${serviceId}-${providerId}`].sort((a, b) => a.startSec - b.startSec)
                 .filter(validSlot => validSlot.startSec * 1000 > nowSec).slice(0, 3).map((slot) => {
                   const startSec = get(slot, 'startSec');
                   if (startSec * 1000 > nowSec) {
