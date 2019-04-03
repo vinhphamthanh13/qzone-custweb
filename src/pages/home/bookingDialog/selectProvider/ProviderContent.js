@@ -20,8 +20,7 @@ import RateStar from 'components/Rating/RateStar';
 import CustomLink from 'components/CustomLink';
 import formatName from 'utils/formatName';
 import QLogo from 'images/quezone-logo.png';
-import SelectTime from './providerContent/SelectTime';
-import DetailDialog from './providerContent/DetailDialog';
+import SelectTime from './SelectTime';
 import MapDialog from './MapDialog';
 import s from './ProviderContent.module.scss';
 
@@ -30,7 +29,6 @@ class ProviderContent extends React.PureComponent {
     super(props);
 
     this.state = {
-      isDetailDialogOpen: false,
       isMapDialogOpen: false,
     };
   }
@@ -55,7 +53,8 @@ class ProviderContent extends React.PureComponent {
       duration,
       providerList,
     } = this.props;
-    const { isDetailDialogOpen, isMapDialogOpen } = this.state;
+    const serviceName = get(initService, 'name');
+    const { isMapDialogOpen } = this.state;
     const providerId = get(provider, 'id');
     const providerEmail = get(provider, 'email');
     const providerPhone = get(provider, 'telephone');
@@ -73,15 +72,10 @@ class ProviderContent extends React.PureComponent {
 
     return (
       <>
-        <DetailDialog
-          isDetailDialogOpen={isDetailDialogOpen}
-          toggleDetailDialog={this.toggleDetailDialog}
-          initService={initService}
-        />
         <MapDialog
           isOpen={isMapDialogOpen}
           toggle={this.toggleMapDialog}
-          initService={initService}
+          serviceName={serviceName}
           provider={provider}
         />
         <div className={s.providerListCard}>

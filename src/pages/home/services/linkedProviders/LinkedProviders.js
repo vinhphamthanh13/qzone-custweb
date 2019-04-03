@@ -27,7 +27,7 @@ class LinkedProviders extends Component {
     this.setState(oldState => ({ isExpandList: !oldState.isExpandList }), this.handleHiddenBookingButton);
   };
 
-  handleInstanceSlotBooking = (slot) => {
+  handleInstanceSlotBooking = initProvider => (slot) => {
     const {
       service, saveEarliestSlotAction, instantBooking, providerDetail,
     } = this.props;
@@ -35,7 +35,7 @@ class LinkedProviders extends Component {
     const earliestSlot = {
       step: 1,
       bookingDetail: {
-        provider: providerDetail,
+        provider: { ...providerDetail, ...initProvider },
         time: {
           start: slot * 1000,
           duration,
@@ -68,7 +68,7 @@ class LinkedProviders extends Component {
               providerId={providerId}
               providerRating={providerRating}
               serviceId={serviceId}
-              onSlotBooking={this.handleInstanceSlotBooking}
+              onSlotBooking={this.handleInstanceSlotBooking(provider)}
               instantBooking={instantBooking}
             />);
         })}

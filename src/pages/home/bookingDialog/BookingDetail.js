@@ -33,12 +33,17 @@ class BookingDetail extends React.PureComponent {
     const {
       bookingDetail, initService, userDetail, onSaveBooking, providerList,
     } = this.props;
+    console.log('booking details', bookingDetail);
+    const serviceName = get(initService, 'name');
+    const serviceId = get(initService, 'id');
     const localBookingStartTime = mtz(bookingDetail.time.start);
     const provider = get(bookingDetail, 'provider');
+    const providerId = get(provider, 'id');
     const providerPhone = get(provider, 'telephone');
+    const defaultRating = get(provider, 'rating');
     const serviceProvider = providerList
-      .filter(items => items.providerId === provider.id && items.serviceId === initService.id);
-    const providerRating = get(serviceProvider, '0.rating');
+      .filter(items => items.providerId === providerId && items.serviceId === serviceId);
+    const providerRating = defaultRating || get(serviceProvider, '0.rating');
 
     return (
       <div className={s.bookingAppointment}>
@@ -130,7 +135,7 @@ class BookingDetail extends React.PureComponent {
         <MapDialog
           isOpen={this.state.isMapDialogOpen}
           toggle={this.toggleMapDialog}
-          initService={initService}
+          serviceName={serviceName}
           provider={bookingDetail.provider}
         />
       </div>
