@@ -108,15 +108,6 @@ class TimelineCard extends Component {
     } else {
       displayTimeout = `${waitingHr} hr, ${waitingMn} min`;
     }
-
-    const mapService = {
-      id: serviceId,
-      name: serviceName,
-      allowProviderSelection: true,
-      description: '',
-      serviceCategoryId: '',
-    };
-
     const mapProvider = { geoLocation };
 
     return (
@@ -125,7 +116,7 @@ class TimelineCard extends Component {
           <MapDialog
             toggle={this.handleToggleMap}
             isOpen={isOpenMap}
-            initService={mapService}
+            serviceName={serviceName}
             provider={mapProvider}
           />)
         }

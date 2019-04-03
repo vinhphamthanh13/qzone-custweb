@@ -43,7 +43,7 @@
 
 .serviceName {
   border-bottom: 1px solid $gallery;
-  padding: 2em 1em;
+  padding: 2.25em 1em;
   width: 100%;
   text-align: center;
   background: linear-gradient(to bottom, $malibu, $gallery)
@@ -61,7 +61,6 @@
     $malibu,
     rgba(0, 0, 0, 0)
   ) 1 100%;
-  //padding-left: 3.5em;
 }
 
 .providerName {
@@ -170,4 +169,53 @@
 
 .postEmail {
   text-align: center;
+}
+
+.buttonAddCalOpen {
+  color: $danger;
+}
+
+.buttonAddCalClosed {
+  user-select: none;
+  color: $main;
+  font-family: Roboto, Helvetica, 'Open Sans';
+  font-size: 0.8rem;
+  &:hover {
+    cursor: pointer;
+    font-weight: bold;
+  }
+}
+
+.buttonAddCalWrapper {
+  color: $grayNickel;
+}
+
+.buttonAddCalDropdown {
+  & > ul {
+    list-style-type: none;
+    margin: 0.5rem auto;
+    padding: 0;
+    text-align: center;
+    & > li {
+      padding: 0.2rem 0 0.1rem 1rem;
+      width: 100%;
+      text-align: left;
+      &:hover {
+        font-weight: bold;
+        cursor: pointer;
+      }
+    }
+    & > li a {
+      text-decoration: none;
+      color: $mako;
+      font-size: 0.9rem;
+      width: 100%;
+      font-family: Roboto, Helvetica, 'Open Sans';
+      border-bottom: 1px solid $grayNickel;
+    }
+  }
+}
+
+.addToCalendar {
+  color: $danger;
 }

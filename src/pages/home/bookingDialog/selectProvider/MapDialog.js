@@ -1,20 +1,16 @@
 import React from 'react';
 import {
-  number, shape, bool, func,
+  number, shape, bool, func, string,
 } from 'prop-types';
 import { Typography, Dialog, IconButton } from '@material-ui/core';
 import { LocationOnOutlined, CloseSharp } from '@material-ui/icons';
 import { get } from 'lodash';
-import { serviceType } from 'types/global';
-import RateStar from 'components/Rating/RateStar';
 import GoogleMap from 'components/GoogleMap';
 import s from './MapDialog.module.scss';
 
 export default function MapDialog({
-  isOpen, toggle, initService, provider,
+  isOpen, toggle, provider, serviceName,
 }) {
-  const serviceRating = get(initService, 'rating');
-  const serviceView = get(initService, 'viewNum');
   const providerStreet = get(provider, 'geoLocation.streetAddress');
   const providerDistrict = get(provider, 'geoLocation.district');
   const providerState = get(provider, 'geoLocation.state');
@@ -39,8 +35,7 @@ export default function MapDialog({
             </IconButton>
           </div>
           <div className={s.mapTitle}>
-            <Typography variant="title" className="text-bold text-margin-right">{initService.name}</Typography>
-            <RateStar rating={serviceRating} reviews={serviceView} />
+            <Typography variant="title" className="text-bold text-margin-right">{serviceName}</Typography>
           </div>
           <div className={s.providerLocation}>
             <div className="icon-text">
@@ -70,7 +65,7 @@ export default function MapDialog({
 MapDialog.propTypes = {
   isOpen: bool.isRequired,
   toggle: func.isRequired,
-  initService: serviceType,
+  serviceName: string.isRequired,
   provider: shape({
     geoLocation: {
       coordinates: {
@@ -82,7 +77,6 @@ MapDialog.propTypes = {
 };
 
 MapDialog.defaultProps = {
-  initService: undefined,
   provider: {
     geoLocation: {
       coordinates: {},

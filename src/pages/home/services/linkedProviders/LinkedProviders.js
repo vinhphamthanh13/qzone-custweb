@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import { serviceType } from 'types/global';
-import { func } from 'prop-types';
+import {
+  func, objectOf, any,
+} from 'prop-types';
+import { connect } from 'react-redux';
 import { get, noop } from 'lodash';
 import { Typography, IconButton } from '@material-ui/core';
 import { ExpandMore, ExpandLess } from '@material-ui/icons';
 import uuidv1 from 'uuid/v1';
+import { saveEarliestSlot } from 'reduxModules/serviceCard.actions';
 import EarliestSlot from './EarliestSlot';
 import s from './LinkedProviders.module.scss';
 
@@ -23,8 +27,23 @@ class LinkedProviders extends Component {
     this.setState(oldState => ({ isExpandList: !oldState.isExpandList }), this.handleHiddenBookingButton);
   };
 
-  handleInstanceSlotBooking = (slot) => {
-    console.log('instance booking now', slot);
+  handleInstanceSlotBooking = initProvider => (slot) => {
+    const {
+      service, saveEarliestSlotAction, instantBooking, providerDetail,
+    } = this.props;
+    const duration = get(service, 'duration');
+    const earliestSlot = {
+      step: 1,
+      bookingDetail: {
+        provider: { ...providerDetail, ...initProvider },
+        time: {
+          start: slot * 1000,
+          duration,
+        },
+      },
+    };
+    saveEarliestSlotAction(earliestSlot);
+    instantBooking();
   };
 
   render() {
@@ -49,7 +68,7 @@ class LinkedProviders extends Component {
               providerId={providerId}
               providerRating={providerRating}
               serviceId={serviceId}
-              onSlotBooking={this.handleInstanceSlotBooking}
+              onSlotBooking={this.handleInstanceSlotBooking(provider)}
               instantBooking={instantBooking}
             />);
         })}
@@ -79,6 +98,15 @@ LinkedProviders.propTypes = {
   service: serviceType.isRequired,
   instantBooking: func.isRequired,
   handleBookingButton: func.isRequired,
+  saveEarliestSlotAction: func.isRequired,
+  providerDetail: objectOf(any).isRequired,
 };
 
-export default LinkedProviders;
+const mapStateToProps = state => ({
+  selectProvider: state.homeModules.bookingDialogModules.selectProvider,
+  providerDetail: state.providerPage.providerDetail,
+});
+
+export default connect(mapStateToProps, {
+  saveEarliestSlotAction: saveEarliestSlot,
+})(LinkedProviders);

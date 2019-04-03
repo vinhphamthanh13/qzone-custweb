@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import {
-  string, bool, func, shape, objectOf, any, number,
+  string, bool, func, shape, objectOf, any,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -16,15 +16,17 @@ import {
   ChevronLeft,
   ChevronRight,
 } from '@material-ui/icons';
+import { get } from 'lodash';
 import logo from 'images/logo.png';
 import {
-  serviceType, userDetailType, eventType, bookingDetailType,
+  serviceType, userDetailType, eventType,
 } from 'types/global';
 import { setProviders } from 'reduxModules/home/bookingDialog/selectProvider.actions';
 import { bookEvent, resetStatus } from 'reduxModules/home/bookingDialog.actions';
 import CustomModal from 'components/Modal/CustomModal';
 import { toggleAppointment } from 'reduxModules/appointments.actions';
 import { fetchCustomerEvents } from 'reduxModules/home.actions';
+import { deleteEarliestSlot } from 'reduxModules/serviceCard.actions';
 import SelectProvider from './bookingDialog/SelectProvider';
 import BookingDetail from './bookingDialog/BookingDetail';
 import BookingStyle from './BookingDialogStyle';
@@ -40,8 +42,8 @@ class BookingDialog extends PureComponent {
     this.bookingStepsComponents = [SelectProvider, BookingDetail, ViewAppointment];
     this.bookingSteps = ['Select provider', 'Book appointment', 'Complete booking'];
     this.defaultState = {
-      step: props.initialStep || 0,
-      bookingDetail: props.bookingDetail || {
+      step: 0,
+      bookingDetail: {
         provider: undefined,
         time: undefined,
         day: undefined,
@@ -51,6 +53,17 @@ class BookingDialog extends PureComponent {
     this.state = { ...this.defaultState };
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { earliestSlot: { bookingDetail, step } } = nextProps;
+    const providerId = get(bookingDetail, 'provider.id');
+    if (providerId) {
+      this.setState({
+        bookingDetail,
+        step,
+      });
+    }
+  }
+
   componentDidUpdate = (prevProps) => {
     if (prevProps.bookingStatus.type === '' && this.props.bookingStatus.type === 'success') {
       this.handleNext();
@@ -58,15 +71,15 @@ class BookingDialog extends PureComponent {
   };
 
   onStepChange = idx => () => {
-    this.setState({ step: idx });
+    this.setState({ step: idx }, this.handleClearEarliestSlot);
   };
 
   handleBack = () => {
-    this.setState(oldState => ({ step: oldState.step - 1 }));
+    this.setState(oldState => ({ step: oldState.step - 1 }), this.handleClearEarliestSlot);
   };
 
   handleNext = () => {
-    this.setState(oldState => ({ step: oldState.step + 1 }));
+    this.setState(oldState => ({ step: oldState.step + 1 }), this.handleClearEarliestSlot);
   };
 
   isStepCompleted = () => {
@@ -77,6 +90,11 @@ class BookingDialog extends PureComponent {
       default:
         return false;
     }
+  };
+
+  handleClearEarliestSlot = () => {
+    const { deleteEarliestSlotAction } = this.props;
+    deleteEarliestSlotAction();
   };
 
   onChangeBookingDetail = (value, key, cb) => {
@@ -92,6 +110,7 @@ class BookingDialog extends PureComponent {
     this.props.setProvidersAction([]);
     this.setState(this.defaultState);
     this.props.handleClose();
+    this.handleClearEarliestSlot();
   };
 
   onSaveBooking = () => {
@@ -115,11 +134,13 @@ class BookingDialog extends PureComponent {
     } else {
       this.props.openDialog('isLoginOpen');
     }
+    this.handleClearEarliestSlot();
   };
 
   closeErrorModal = () => {
     this.handleBack();
     this.props.resetStatusAction();
+    this.handleClearEarliestSlot();
   };
 
   openAppointmentDialog = () => {
@@ -135,6 +156,7 @@ class BookingDialog extends PureComponent {
     fetchCustomerEventsAction(userSub);
     handleOpenProfile();
     this.handleClose();
+    this.handleClearEarliestSlot();
   };
 
   render() {
@@ -251,9 +273,9 @@ BookingDialog.propTypes = {
   bookingEvent: eventType,
   toggleAppointmentAction: func.isRequired,
   handleOpenProfile: func.isRequired,
-  initialStep: number,
-  bookingDetail: bookingDetailType,
   fetchCustomerEventsAction: func.isRequired,
+  earliestSlot: objectOf(any),
+  deleteEarliestSlotAction: func.isRequired,
 };
 
 BookingDialog.defaultProps = {
@@ -261,6 +283,10 @@ BookingDialog.defaultProps = {
   bookingEvent: undefined,
   initialStep: 0,
   bookingDetail: {},
+  earliestSlot: {
+    step: 0,
+    bookingDetail: {},
+  },
 };
 
 const mapStateToProps = state => ({
@@ -269,6 +295,7 @@ const mapStateToProps = state => ({
   isLoading: state.homeModules.bookingDialog.isLoading,
   bookingStatus: state.homeModules.bookingDialog.status,
   bookingEvent: state.appointments.appointments.slice(-1)[0],
+  earliestSlot: state.serviceCard.earliestSlot,
 });
 
 export default compose(
@@ -281,6 +308,7 @@ export default compose(
       resetStatusAction: resetStatus,
       toggleAppointmentAction: toggleAppointment,
       fetchCustomerEventsAction: fetchCustomerEvents,
+      deleteEarliestSlotAction: deleteEarliestSlot,
     },
   ),
 )(BookingDialog);

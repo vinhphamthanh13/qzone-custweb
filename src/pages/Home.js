@@ -50,6 +50,13 @@ export class Home extends React.PureComponent {
       isOpenAdvancedSearch: false,
       isShowingAdvancedSearch: false,
       isMaintenance: false,
+      earliestSlot: {
+        step: 0,
+        bookingDetail: {
+          provider: {},
+          time: {},
+        },
+      },
     };
   }
 
