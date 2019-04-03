@@ -2,12 +2,22 @@ import React, { Component } from 'react';
 import { objectOf, any } from 'prop-types';
 import { Typography, TextField, Button } from '@material-ui/core';
 import { get } from 'lodash';
+import uuidv1 from 'uuid/v1';
 import { connect } from 'react-redux';
 import s from './Info.module.scss';
 
 class Info extends Component {
   state = {
-    email: null,
+    email: '',
+    givenName: '',
+    telephone: '',
+    familyName: '',
+    streetAddress: '',
+    district: '',
+    state: '',
+    city: '',
+    postCode: '',
+    country: '',
   };
 
   handleChangeField = (event) => {
@@ -49,8 +59,6 @@ class Info extends Component {
       || (city && city !== defaultCity)
       || (postCode && postCode !== defaultPostCode)
       || (country && country !== defaultCountry);
-    console.log('userDetail', userDetail, isPersonalAddressTouched);
-
     const PERSONAL_DATA = [
       {
         id: 'email', name: 'email', value: email || defaultEmail, label: 'Email',
@@ -109,7 +117,7 @@ class Info extends Component {
             </div>
             <div className={s.formData}>
               {PERSONAL_DATA.map(item => (
-                <div className={s.formControl}>
+                <div key={uuidv1()} className={s.formControl}>
                   <TextField
                     fullWidth
                     onChange={this.handleChangeField}
@@ -146,7 +154,7 @@ class Info extends Component {
             </div>
             <div className={s.formData}>
               {ADDRESS_DATA.map(item => (
-                <div className={s.formControl}>
+                <div key={uuidv1()} className={s.formControl}>
                   <TextField
                     fullWidth
                     onChange={this.handleChangeField}

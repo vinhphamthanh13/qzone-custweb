@@ -10,7 +10,10 @@ import {
 } from '@material-ui/icons';
 import { get } from 'lodash';
 import mtz from 'moment-timezone';
+import moment from 'moment';
+import AddToCalendar from 'react-add-to-calendar';
 import RateStar from 'components/Rating/RateStar';
+import zeroPad from 'utils/zeroPad';
 import { eventType, serviceType, bookingDetailType } from 'types/global';
 import { defaultDateFormat } from 'utils/constants';
 import s from './ViewAppointment.module.scss';
@@ -23,12 +26,18 @@ const handleShareBooking = () => {
   console.log('sharing booking to friend');
 };
 
+const accounts = [
+  { google: 'Google' },
+  { apple: 'Apple' },
+  { outlook: 'Outlook' },
+];
+
 const ViewAppointment = ({
   bookingEvent, handleOpenProfile, initService, bookingDetail, providerList, userDetail,
 }) => {
   const provider = get(bookingDetail, 'provider');
-  const stateName = get(bookingEvent, 'geoLocation.state');
   const bookingCode = get(bookingEvent, 'bookingCode');
+  const stateName = get(bookingEvent, 'geoLocation.state');
   const city = get(bookingEvent, 'geoLocation.city');
   const country = get(bookingEvent, 'geoLocation.country');
   const district = get(bookingEvent, 'geoLocation.district');
@@ -41,6 +50,39 @@ const ViewAppointment = ({
     .filter(item => item.providerId === provider.id && item.serviceId === initService.id);
   const providerRating = get(serviceProvider, '0.rating');
   const email = get(userDetail, 'email');
+  const serviceName = get(bookingEvent, 'serviceName');
+  const serviceDescription = get(initService, 'description');
+  const startSec = get(bookingEvent, 'slot.startSec');
+  const duration = get(bookingEvent, 'duration');
+  const startTime = moment(startSec * 1000);
+  const startYear = startTime.year();
+  const startMonth = startTime.month() + 1;
+  const startDate = startTime.date();
+  const startHour = startTime.hour();
+  const startMin = startTime.minutes();
+  const startSecond = startTime.seconds();
+  // eslint-disable-next-line
+  const startString = `${startYear}-${zeroPad(startMonth, 2)}-${zeroPad(startDate, 2)}T${zeroPad(startHour, 2)}:${zeroPad(startMin, 2)}:${zeroPad(startSecond, 2)}`;
+  const endTime = moment(startSec * 1000 + duration * 60000);
+  const endYear = endTime.year();
+  const endMonth = endTime.month() + 1;
+  const endDate = endTime.date();
+  const endHour = endTime.hour();
+  const endMin = endTime.minutes();
+  const endSecond = endTime.seconds();
+  const timeZoneId = moment.tz.guess();
+  // eslint-disable-next-line
+  const endString = `${endYear}-${zeroPad(endMonth, 2)}-${zeroPad(endDate, 2)}T${zeroPad(endHour, 2)}:${zeroPad(endMin, 2)}:${zeroPad(endSecond, 2)}`;
+  const addToCalendarTZ = moment(startString).tz(timeZoneId).format('z');
+  const bookedEvent = {
+    title: serviceName,
+    description: serviceDescription,
+    location: `${streetAddress}, ${district}, ${stateName}, ${city}, ${country}`,
+    startTime: `${startString}${addToCalendarTZ}:00`,
+    endTime: `${endString}${addToCalendarTZ}:00`,
+  };
+
+  console.log('bookedEvent', bookedEvent);
 
   return (
     <div className={s.viewAppointment}>
@@ -133,30 +175,45 @@ const ViewAppointment = ({
             </Typography>
           </div>
         </div>
-        <div className={s.postCta}>
-          <div className={s.postEmail}>
-            <Typography variant="body1" color="textSecondary" className="text-bold">
-              Your confirmation sent to
-            </Typography>
-            <Typography variant="body1" color="textSecondary">
-              {email}
-            </Typography>
-          </div>
-          <div className={s.socialCta}>
-            <div className={s.addCalendar}>
-              <IconButton className="simple-button button-sm" onClick={handleAddBookingToCalendar}>
-                <Event className="icon-main" />
-              </IconButton>
-              <Typography variant="caption" color="textSecondary">Add to calendar</Typography>
+        {email && (
+          <div className={s.postCta}>
+            <div className={s.postEmail}>
+              <Typography variant="body1" color="textSecondary" className="text-bold">
+                Your confirmation sent to
+              </Typography>
+              <Typography variant="body1" color="textSecondary">
+                {email}
+              </Typography>
             </div>
-            <div className={s.shareBooking}>
-              <IconButton className="simple-button button-sm" onClick={handleShareBooking}>
-                <Share className="icon-main" />
-              </IconButton>
-              <Typography variant="caption" color="textSecondary">Share</Typography>
+            <div className={s.socialCta}>
+              <div className={s.addCalendar}>
+                <IconButton className="simple-button button-sm" onClick={handleAddBookingToCalendar}>
+                  <Event className="icon-main" />
+                </IconButton>
+                <AddToCalendar
+                  buttonLabel="Add to calendar"
+                  buttonClassOpen={s.buttonAddCalOpen}
+                  buttonClassClosed={s.buttonAddCalClosed}
+                  buttonWrapperClass={s.buttonAddCalWrapper}
+                  displayItemIcons={false}
+                  dropdownClass={s.buttonAddCalDropdown}
+                  event={bookedEvent}
+                  listItems={accounts}
+                  rootClass={s.addToCalendar}
+                  buttonTemplate={{
+                    textOnly: 'none',
+                  }}
+                />
+              </div>
+              <div className={s.shareBooking}>
+                <IconButton className="simple-button button-sm" onClick={handleShareBooking}>
+                  <Share className="icon-main" />
+                </IconButton>
+                <Typography variant="caption" color="textSecondary">Share</Typography>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
