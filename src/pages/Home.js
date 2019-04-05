@@ -13,6 +13,7 @@ import {
   fetchServiceProviders,
 } from 'reduxModules/home.actions';
 import Loading from 'components/Loading';
+// import AddToCalendar from 'react-add-to-calendar';
 import styles from './Home.module.scss';
 import Maintenance from './home/footer/Maintenance';
 import { serviceCategoriesType } from './home/Header';
@@ -226,13 +227,15 @@ export class Home extends React.PureComponent {
             />
           </div>)
         }
-        <Auth
-          isRegisterOpen={isRegisterOpen}
-          isLoginOpen={isLoginOpen}
-          closeDialog={this.closeDialog}
-          handleAuthenticate={this.openDialog}
-          getSessionTimeoutId={this.getSessionTimeoutId}
-        />
+        {(isRegisterOpen || isLoginOpen) && (
+          <Auth
+            isRegisterOpen={isRegisterOpen}
+            isLoginOpen={isLoginOpen}
+            closeDialog={this.closeDialog}
+            handleAuthenticate={this.openDialog}
+            getSessionTimeoutId={this.getSessionTimeoutId}
+          />
+        )}
         <Profile
           isOpenProfile={openAuthenticatedProfile}
           handleCloseProfile={this.handleCloseProfile}

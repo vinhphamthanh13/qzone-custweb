@@ -26,7 +26,6 @@ export class SelectTime extends React.PureComponent {
   };
 
   getHourBoxes = (timeDetails) => {
-    console.log('timeDetails', timeDetails);
     const timeBoxes = timeDetails
       .filter(slot => !!slot.spotsOpen && moment.now() < slot.startSec * 1000)
       .sort((a, b) => a.startSec - b.startSec).map((bookedSlot) => {
@@ -43,7 +42,7 @@ export class SelectTime extends React.PureComponent {
           display: moment(time).format('hh:mm a'),
         });
       });
-    return chunk(timeBoxes.filter(slot => slot.duration > 0), 4);
+    return chunk(timeBoxes.filter(slot => slot.duration > 0), 3);
   };
 
   renderTimeBox = list => list.map(row => (
@@ -69,9 +68,15 @@ export class SelectTime extends React.PureComponent {
     const {
       timeDetails,
     } = this.props;
+    console.log('timeDetails', timeDetails);
     const hourBoxes = this.getHourBoxes(timeDetails);
-    console.log('hourboxes', hourBoxes);
-    return this.renderTimeBox(hourBoxes);
+    return hourBoxes.length > 0 ? this.renderTimeBox(hourBoxes) : (
+      <div className={s.noneSlot}>
+        <Typography variant="subheading" color="inherit">
+          There is no slot available from our provider! Please find more in the next day!
+        </Typography>
+      </div>
+    );
   }
 }
 
