@@ -2,11 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Typography, Button } from '@material-ui/core';
 import moment from 'moment';
+import uuidv1 from 'uuid/v1';
 import {
   func, number, arrayOf, shape,
 } from 'prop-types';
 import { get, chunk, noop } from 'lodash';
-import { bookingDetailType } from 'types/global';
 import s from './SelectTime.module.scss';
 
 export class SelectTime extends React.PureComponent {
@@ -26,60 +26,35 @@ export class SelectTime extends React.PureComponent {
   };
 
   getHourBoxes = (timeDetails) => {
-    const { bookingDetail: { selectedDate } } = this.props;
-    const startDay = new Date(selectedDate);
-    const year = startDay.getFullYear();
-    const month = +startDay.getMonth() + 1;
-    const date = startDay.getDate();
-    const startHourRange = new Date(`${year}-${month}-${date} 00:00:00`);
-    let hourStep = startHourRange.getTime() - 1800000;
-    const timeSlots = Array.from({ length: 48 }, (_, key) => {
-      hourStep += 1800000;
-      const startTime = new Date(hourStep);
-
-      return ({
-        key,
-        time: startTime,
-        display: moment(startTime).format('hh:mm A'),
-        duration: 0,
-        valid: false,
-        canBook: false,
-        action: noop,
+    console.log('timeDetails', timeDetails);
+    const timeBoxes = timeDetails
+      .filter(slot => !!slot.spotsOpen && moment.now() < slot.startSec * 1000)
+      .sort((a, b) => a.startSec - b.startSec).map((bookedSlot) => {
+        const time = get(bookedSlot, 'startSec') * 1000;
+        const duration = get(bookedSlot, 'durationSec');
+        const action = bookedSlot.spotsOpen
+          ? this.onHourChange({ start: time, duration }) : noop;
+        return ({
+          key: uuidv1(),
+          time,
+          canBook: !!bookedSlot.spotsOpen,
+          duration,
+          action,
+          display: moment(time).format('hh:mm a'),
+        });
       });
-    });
-    const mergeTime = timeSlots.map((slot) => {
-      const newSlot = Object.assign({}, { ...slot });
-      // There is a mutation if the provider has more than one slot.
-      // So, re-assign the original to the slot if condition is not satisfied is correct.
-      // eslint-disable-next-line
-      timeDetails.map((bookedSlot) => {
-        const customer = new Date(get(bookedSlot, 'customerStartSec'));
-        const customerStartSec = customer.getTime();
-        const durationSec = get(bookedSlot, 'durationSec');
-        newSlot.valid = customerStartSec === newSlot.time.getTime();
-        newSlot.duration = newSlot.valid ? durationSec : newSlot.duration;
-        newSlot.canBook = newSlot.valid && +customerStartSec > +moment.now() ? true : newSlot.canBook;
-        newSlot.action = newSlot.valid && newSlot.canBook
-          ? this.onHourChange({ start: customerStartSec, duration: durationSec }) : newSlot.action;
-      });
-      return newSlot;
-    });
-    return chunk(mergeTime.filter(slot => slot.duration > 0), 4);
+    return chunk(timeBoxes.filter(slot => slot.duration > 0), 4);
   };
 
   renderTimeBox = list => list.map(row => (
-    <div key={Math.random()} className={s.timeRow}>
+    <div key={uuidv1()} className={s.timeRow}>
       {row.map((slot) => {
-        const {
-          display, valid, action, duration, canBook,
-        } = slot;
-        const slotStyle = valid || duration > 0 ? s.validSlot : s.invalidSlot;
-        const bookStyle = duration > 0 && canBook ? slotStyle : `${slotStyle} ${s.kantBook}`;
+        const { display, action } = slot;
         return (
           <Button
-            key={Math.random()}
-            className={`${s.timeSlot} ${bookStyle}`}
-            onClick={duration > 0 && canBook ? action : noop}
+            key={uuidv1()}
+            className={s.timeSlot}
+            onClick={action}
           >
             <Typography variant="subheading" color="inherit">
               {display}
@@ -95,12 +70,12 @@ export class SelectTime extends React.PureComponent {
       timeDetails,
     } = this.props;
     const hourBoxes = this.getHourBoxes(timeDetails);
+    console.log('hourboxes', hourBoxes);
     return this.renderTimeBox(hourBoxes);
   }
 }
 
 SelectTime.propTypes = {
-  bookingDetail: bookingDetailType.isRequired,
   timeDetails: arrayOf(
     shape({
       startSec: number,
