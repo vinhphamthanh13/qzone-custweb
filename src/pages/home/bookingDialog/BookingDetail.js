@@ -44,7 +44,6 @@ class BookingDetail extends React.PureComponent {
     const {
       bookingDetail, initService, userDetail, providerList, isAuthenticated,
     } = this.props;
-    console.log('initservice', initService);
     const serviceName = get(initService, 'name');
     const serviceId = get(initService, 'id');
     const localBookingStartTime = mtz(bookingDetail.time.start);

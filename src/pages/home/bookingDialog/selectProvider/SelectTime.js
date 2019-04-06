@@ -68,7 +68,6 @@ export class SelectTime extends React.PureComponent {
     const {
       timeDetails,
     } = this.props;
-    console.log('timeDetails', timeDetails);
     const hourBoxes = this.getHourBoxes(timeDetails);
     return hourBoxes.length > 0 ? this.renderTimeBox(hourBoxes) : (
       <div className={s.noneSlot}>

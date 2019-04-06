@@ -39,7 +39,7 @@ const ReadMore = (props) => {
           </div>
         </div>
       </DialogTitle>
-      <DialogContent>
+      <DialogContent classes={{ root: styles.readMoreContent }}>
         <DialogContentText>{orgDescription}</DialogContentText>
       </DialogContent>
       <DialogActions>

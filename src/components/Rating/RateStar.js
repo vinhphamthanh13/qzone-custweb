@@ -14,7 +14,7 @@ const RateStar = (props) => {
     ? '' : reviews;
   return (
     <div className="flex">
-      <div className="flex v-center icon-margin-sm">
+      <div className="flex v-center">
         {Array.from({ length: fullStar }, () => (
           <Star key={Math.random() * 10} className={style.iconStar} />
         ))}

@@ -116,7 +116,6 @@ class BookingDialog extends PureComponent {
   onSaveBooking = () => {
     const { userDetail, bookEventAction, initService } = this.props;
     const { bookingDetail } = this.state;
-    console.log('userDetail', userDetail);
     const providerId = get(bookingDetail, 'provider.userSub');
     const serviceId = get(initService, 'id');
     const duration = get(bookingDetail, 'time.duration');

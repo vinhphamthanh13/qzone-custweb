@@ -94,7 +94,7 @@ class PrimarySearchAppBar extends React.Component {
           Hello {loginSession.username}!
         </Typography>
         <IconButton color="inherit" onClick={this.handleOpenEventList}>
-          <Badge badgeContent={eventCount} color="secondary">
+          <Badge badgeContent={eventCount} color="secondary" classes={{ badge: 'badge shake-vertical' }}>
             <NotificationsIcon />
           </Badge>
         </IconButton>

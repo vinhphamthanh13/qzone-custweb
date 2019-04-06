@@ -84,7 +84,7 @@ class LinkedProviders extends Component {
             Discover our providers ({linkedProvider.length})
           </Typography>
           {linkedProvider.length > 0 ? (
-            <IconButton className="button-sm" onClick={this.handleExpandList}>
+            <IconButton className="button-sm shake-vertical" onClick={this.handleExpandList}>
               {this.renderExpandChevron(isExpandList)}
             </IconButton>) : (
               <IconButton className="button-sm simple-button" onClick={noop}>

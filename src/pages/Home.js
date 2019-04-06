@@ -227,15 +227,13 @@ export class Home extends React.PureComponent {
             />
           </div>)
         }
-        {(isRegisterOpen || isLoginOpen) && (
-          <Auth
-            isRegisterOpen={isRegisterOpen}
-            isLoginOpen={isLoginOpen}
-            closeDialog={this.closeDialog}
-            handleAuthenticate={this.openDialog}
-            getSessionTimeoutId={this.getSessionTimeoutId}
-          />
-        )}
+        <Auth
+          isRegisterOpen={isRegisterOpen}
+          isLoginOpen={isLoginOpen}
+          closeDialog={this.closeDialog}
+          handleAuthenticate={this.openDialog}
+          getSessionTimeoutId={this.getSessionTimeoutId}
+        />
         {isAuthenticated && (
           <Profile
             isOpenProfile={openAuthenticatedProfile}

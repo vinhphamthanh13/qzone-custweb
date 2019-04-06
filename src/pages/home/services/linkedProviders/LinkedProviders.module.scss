@@ -17,6 +17,7 @@
 
 .portfolio {
   position: relative;
+  border-top: 1px dashed $galliano;
 }
 
 .providerName {
@@ -27,19 +28,13 @@
   align-items: center;
   width: 100%;
   height: 2.8rem;
+  margin-bottom: 0.5rem;
 }
 
 .providerStar {
   position: absolute;
   margin: 0;
-  top: 1.5rem;
-}
-
-.earliestTitle {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
+  top: 2rem;
 }
 
 .earliestSlot {
@@ -66,7 +61,6 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin: 0.5rem 0 0;
   
 }
 
@@ -90,9 +84,8 @@
  border: 1px solid $main;
  &:hover {
    background: $main;
-   border: 1px solid $gallery;
-     box-shadow: 1px 1px 3px $main;
-     color: $gallery;
+   box-shadow: 1px 1px 3px $main;
+   color: $gallery;
    }
  }
  
