@@ -114,27 +114,26 @@ class BookingDialog extends PureComponent {
   };
 
   onSaveBooking = () => {
+    const { userDetail, bookEventAction, initService } = this.props;
+    const { bookingDetail } = this.state;
+    console.log('userDetail', userDetail);
+    const providerId = get(bookingDetail, 'provider.userSub');
+    const serviceId = get(initService, 'id');
+    const duration = get(bookingDetail, 'time.duration');
+    const customerId = get(userDetail, 'userSub');
     this.toggleConfirmDialog(false)();
-
-    if (this.props.isAuthenticated) {
-      const { userDetail, bookEventAction, initService } = this.props;
-      const { bookingDetail } = this.state;
-
-      bookEventAction({
-        customerId: userDetail.id,
-        duration: bookingDetail.time.duration,
-        slot: {
-          providerId: bookingDetail.provider.id,
-          serviceId: initService.id,
-          startSec: bookingDetail.time.start / 1000,
-        },
-        status: 'BOOKING_STATUS_UNSPECIFIED',
-        type: 'APPOINTMENT',
-      });
-    } else {
-      this.props.openDialog('isLoginOpen');
-    }
     this.handleClearEarliestSlot();
+    bookEventAction({
+      customerId,
+      duration,
+      slot: {
+        providerId,
+        serviceId,
+        startSec: bookingDetail.time.start / 1000,
+      },
+      status: 'BOOKING_STATUS_UNSPECIFIED',
+      type: 'APPOINTMENT',
+    });
   };
 
   closeErrorModal = () => {
@@ -161,7 +160,7 @@ class BookingDialog extends PureComponent {
 
   render() {
     const {
-      initService, classes, userDetail, isLoading, bookingStatus, bookingEvent,
+      initService, classes, userDetail, isLoading, bookingStatus, bookingEvent, openDialog,
     } = this.props;
     const { step, bookingDetail, isConfirmDialogOpen } = this.state;
     const StepComponent = this.bookingStepsComponents[step];
@@ -249,6 +248,7 @@ class BookingDialog extends PureComponent {
                 bookingEvent={bookingEvent}
                 openAppointmentDialog={this.openAppointmentDialog}
                 handleOpenProfile={this.handleViewAppointment}
+                openDialog={openDialog}
               />
             </div>
           )}
@@ -264,7 +264,6 @@ BookingDialog.propTypes = {
   setProvidersAction: func.isRequired,
   classes: objectOf(any).isRequired,
   userDetail: userDetailType.isRequired,
-  isAuthenticated: bool.isRequired,
   openDialog: func.isRequired,
   bookEventAction: func.isRequired,
   isLoading: bool.isRequired,

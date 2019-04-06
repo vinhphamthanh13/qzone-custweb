@@ -71,8 +71,10 @@ class EarliestSlot extends Component {
           <div className={s.providerSlot}>
             <div className={s.availableSlots}>
               { /* Show max 3 earliest slots */ }
-              {providerSlots[`${serviceId}-${providerId}`].sort((a, b) => a.startSec - b.startSec)
-                .filter(validSlot => validSlot.startSec * 1000 > nowSec).slice(0, 3).map((slot) => {
+              {providerSlots[`${serviceId}-${providerId}`]
+                .sort((a, b) => a.startSec - b.startSec)
+                .filter(validSlot => validSlot.spotsOpen > 0 && validSlot.startSec * 1000 > nowSec)
+                .slice(0, 3).map((slot) => {
                   const startSec = get(slot, 'startSec');
                   if (startSec * 1000 > nowSec) {
                     const [slotStyle, onclick] = moment.now() < startSec * 1000
