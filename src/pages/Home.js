@@ -236,10 +236,12 @@ export class Home extends React.PureComponent {
             getSessionTimeoutId={this.getSessionTimeoutId}
           />
         )}
-        <Profile
-          isOpenProfile={openAuthenticatedProfile}
-          handleCloseProfile={this.handleCloseProfile}
-        />
+        {isAuthenticated && (
+          <Profile
+            isOpenProfile={openAuthenticatedProfile}
+            handleCloseProfile={this.handleCloseProfile}
+          />)
+        }
         <BookingDialog
           initService={selectedService}
           handleClose={this.handleCloseBookingDialog}

@@ -153,6 +153,7 @@ const auth = (state = authInitialize, action) => {
         logoutErrorMessage: '',
       };
     case SET_USER_DETAILS:
+      console.log('action', action.payload);
       return {
         ...state,
         userDetail: action.payload,

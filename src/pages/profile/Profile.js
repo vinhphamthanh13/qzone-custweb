@@ -3,6 +3,7 @@ import {
   bool, func, objectOf, any,
 } from 'prop-types';
 import { connect } from 'react-redux';
+import { get } from 'lodash';
 import { Dialog } from '@material-ui/core';
 import Header from './components/Header';
 import Content from './components/Content';
@@ -14,9 +15,12 @@ class Profile extends Component {
   };
 
   render() {
+    console.log('prop', this.props);
     const {
-      isOpenProfile, handleCloseProfile, userDetail: { givenName, email },
+      isOpenProfile, handleCloseProfile, userDetail,
     } = this.props;
+    const givenName = get(userDetail, 'givenName');
+    const email = get(userDetail, 'email');
 
     return (
       <Dialog fullScreen open={isOpenProfile}>

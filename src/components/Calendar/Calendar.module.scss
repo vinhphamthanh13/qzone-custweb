@@ -14,7 +14,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  background: $crimson;
+  background: linear-gradient(to top, $main, $malibu);
   color: $gallery;
 }
 
@@ -41,7 +41,7 @@
   width: 100%;
   display: flex;
   justify-content: space-evenly;
-  background: $goldTips;
+  background: linear-gradient(to bottom, $main, $malibu);
   color: $gallery;
   box-sizing: border-box;
 }
@@ -72,7 +72,7 @@
   user-select: none;
   cursor: pointer;
   text-align: center;
-  color: $grayNickel;
+  color: $gray;
   width: 48px;
   box-sizing: border-box;
   border: 1px solid transparent;
@@ -81,11 +81,11 @@
   transition: all 0.25s ease-in;
 }
 .month {
-  color: $crimson;
+  color: $main;
 }
 
 .invalidDate {
-  color: $alto;
+  color: $gallery;
   &:hover {
     border: 1px solid transparent;
   }
