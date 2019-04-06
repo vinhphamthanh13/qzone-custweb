@@ -6,6 +6,7 @@ import {
   Card, CardContent, CardMedia, CardActions,
   Button,
 } from '@material-ui/core';
+import { get } from 'lodash';
 import { serviceType } from 'types/global';
 import styles from './ServiceCard.module.scss';
 import ServiceDetail from './serviceCard/ServiceDetail';
@@ -46,6 +47,7 @@ export default class ServiceCard extends PureComponent {
 
   render() {
     const { service } = this.props;
+    const linkedProvider = get(service, 'linkedProvider');
     const { imgSrc, isHiddenBooking } = this.state;
     return (
       <Card raised classes={{ root: styles.serviceCard }}>
@@ -64,6 +66,7 @@ export default class ServiceCard extends PureComponent {
         {!isHiddenBooking && (
           <CardActions>
             <Button
+              disabled={linkedProvider.length < 1}
               color="primary"
               variant="contained"
               onClick={this.onSelectService}
