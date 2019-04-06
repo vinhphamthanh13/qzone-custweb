@@ -80,7 +80,7 @@ class LinkedProviders extends Component {
     return (
       <div className={s.providerList}>
         <div className={s.expanderTitle}>
-          <Typography variant="body1" color="inherit">
+          <Typography variant="subtitle1" color="inherit">
             Discover our providers ({linkedProvider.length})
           </Typography>
           {linkedProvider.length > 0 ? (

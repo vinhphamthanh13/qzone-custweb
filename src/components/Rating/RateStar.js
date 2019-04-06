@@ -14,18 +14,20 @@ const RateStar = (props) => {
     ? '' : reviews;
   return (
     <div className="flex">
-      <div className="flex v-center">
+      <div className="flex v-center icon-margin-sm">
         {Array.from({ length: fullStar }, () => (
           <Star key={Math.random() * 10} className={style.iconStar} />
         ))}
         { halfStar > 0 && <StarHalf className={style.iconStar} /> }
         { borderStar && <StarBorder className={style.iconStar} />}
       </div>
-      <div className={`flex v-center ${style.reviews}`}>
-        <Typography variant="body1" color="textSecondary">
-          { comments }
-        </Typography>
-      </div>
+      {reviews > 0 && (
+        <div className={`flex v-center ${style.reviews}`}>
+          <Typography variant="body1" color="textSecondary">
+            { comments }
+          </Typography>
+        </div>
+      )}
     </div>
   );
 };
