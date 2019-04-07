@@ -1,5 +1,4 @@
 import Home from 'pages/Home';
-import Organisation from 'pages/Organisation';
 import PageNotFound from 'pages/PageNotFound';
 import AccessDenied from 'pages/AccessDenied';
 import Provider from 'pages/Provider';
@@ -19,13 +18,6 @@ const rootRoutes = [
     path: '/appointments',
     name: 'Home',
     component: Home,
-  },
-  {
-    exact: true,
-    strict: true,
-    path: '/organisation/:id',
-    name: 'Organisation',
-    component: Organisation,
   },
   {
     exact: true,
