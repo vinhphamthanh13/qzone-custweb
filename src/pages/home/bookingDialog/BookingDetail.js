@@ -47,6 +47,7 @@ class BookingDetail extends React.PureComponent {
     const serviceName = get(initService, 'name');
     const serviceId = get(initService, 'id');
     const localBookingStartTime = mtz(bookingDetail.time.start);
+    const duration = get(initService, 'duration');
     const provider = get(bookingDetail, 'provider');
     const providerId = get(provider, 'id');
     const providerPhone = get(provider, 'telephone');
@@ -73,7 +74,7 @@ class BookingDetail extends React.PureComponent {
             <div className={s.bookingItems}>
               <Schedule className="icon-main" />
               <Typography variant="subtitle1" color="inherit">
-                {localBookingStartTime.format('hh:mm A')}
+                {localBookingStartTime.format('hh:mm A')}{' - '}{duration} minutes
               </Typography>
             </div>
             <div className={s.bookingItems}>

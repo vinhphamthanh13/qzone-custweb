@@ -22,11 +22,7 @@ const handleShareBooking = () => {
   console.log('sharing booking to friend');
 };
 
-const accounts = [
-  { google: 'Google' },
-  { apple: 'Apple' },
-  { outlook: 'Outlook' },
-];
+const accounts = [{ google: 'Google' }];
 
 const ViewAppointment = ({
   bookingEvent, handleOpenProfile, initService, bookingDetail, providerList, userDetail,
