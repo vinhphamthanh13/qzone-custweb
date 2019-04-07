@@ -5,14 +5,18 @@ import {
 import { connect } from 'react-redux';
 import { Grid } from '@material-ui/core';
 import { getServiceCategories } from 'api/home';
+import { get } from 'lodash';
 import { handleRequest } from 'utils/apiHelpers';
 import {
   setServiceCategories,
   getServicesByName,
   setServicesGlobal,
   fetchServiceProviders,
+  fetchServiceProviderByIdAction,
 } from 'reduxModules/home.actions';
+import { history } from 'containers/App';
 import Loading from 'components/Loading';
+import { matchType } from 'types/global';
 // import AddToCalendar from 'react-add-to-calendar';
 import styles from './Home.module.scss';
 import Maintenance from './home/footer/Maintenance';
@@ -58,11 +62,19 @@ export class Home extends React.PureComponent {
           time: {},
         },
       },
+      isSpecialBooking: false,
     };
   }
 
   async componentDidMount() {
-    const { setServiceCategoriesAction, getAllServicesAction, fetchServiceProvidersAction } = this.props;
+    const {
+      setServiceCategoriesAction, getAllServicesAction, fetchServiceProvidersAction,
+      match: { params: { id } }, fetchServiceProviderByIdAction: fetchServiceProviderById,
+    } = this.props;
+    if (id) {
+      fetchServiceProviderById(id);
+      this.setState({ isSpecialBooking: true });
+    }
     const [serviceCategories] = await handleRequest(getServiceCategories, [], []);
     if (serviceCategories && serviceCategories.length) {
       setServiceCategoriesAction(serviceCategories);
@@ -71,6 +83,14 @@ export class Home extends React.PureComponent {
     } else {
       this.setState({ isMaintenance: true });
     }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { isSpecialBooking } = this.state;
+    const { serviceProviderById, allServices } = nextProps;
+    const specialServiceId = get(serviceProviderById, 'serviceId');
+    const specialService = allServices.find(service => service.id === specialServiceId);
+    if (isSpecialBooking) this.onChange(specialService, 'selectedService');
   }
 
   getSessionTimeoutId = (id) => {
@@ -136,10 +156,11 @@ export class Home extends React.PureComponent {
   };
 
   handleCloseBookingDialog = () => {
-    this.setState({ selectedService: undefined });
-  };
-
-  onSaveBooking = () => {
+    this.setState({
+      selectedService: undefined,
+      isSpecialBooking: false,
+    },
+    () => history.push('/'));
   };
 
   openDialog = (key) => {
@@ -330,12 +351,20 @@ Home.propTypes = {
   providerListByDistance: arrayOf(any).isRequired,
   fetchServiceProvidersAction: func.isRequired,
   providerList: arrayOf(any).isRequired,
+  serviceProviderById: objectOf(any),
+  match: matchType,
+};
+
+Home.defaultProps = {
+  serviceProviderById: {},
+  match: { params: {} },
 };
 
 const mapStateToProps = state => ({
   ...state.home,
   loginSession: state.auth.loginSession,
   isLoading: state.home.isLoading,
+  serviceProviderById: state.home.serviceProviderById,
 });
 
 export default connect(
@@ -346,5 +375,6 @@ export default connect(
     getServicesByCategoryAction: setServicesGlobal,
     getAllServicesAction: setServicesGlobal,
     fetchServiceProvidersAction: fetchServiceProviders,
+    fetchServiceProviderByIdAction,
   },
 )(Home);

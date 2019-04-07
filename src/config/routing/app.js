@@ -22,6 +22,13 @@ const rootRoutes = [
   {
     exact: true,
     strict: true,
+    path: '/booking/:id',
+    name: 'Home',
+    component: Home,
+  },
+  {
+    exact: true,
+    strict: true,
     path: '/access-denied',
     name: 'AccessDenied',
     component: AccessDenied,
