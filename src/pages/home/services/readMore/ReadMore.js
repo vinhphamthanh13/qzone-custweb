@@ -34,12 +34,12 @@ const ReadMore = (props) => {
           <div className={styles.iconInfo}>
             <LocationOn className={styles.icon} />
             <Typography variant="body1">
-              <CustomLink text={orgName} to={`/organisation/${orgId}`} />
+              <CustomLink text={orgName} to={`/organization/${orgId}`} />
             </Typography>
           </div>
         </div>
       </DialogTitle>
-      <DialogContent>
+      <DialogContent classes={{ root: styles.readMoreContent }}>
         <DialogContentText>{orgDescription}</DialogContentText>
       </DialogContent>
       <DialogActions>

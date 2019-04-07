@@ -46,14 +46,17 @@ class LinkedProviders extends Component {
     instantBooking();
   };
 
+  renderExpandChevron = (value) => {
+    const props = { className: 'icon-main icon-shake galliano-color' };
+    return (value ? (
+      <ExpandLess {...props} />
+    ) : <ExpandMore {...props} />);
+  };
+
   render() {
     const { service, instantBooking } = this.props;
     const { isExpandList } = this.state;
     const linkedProvider = get(service, 'linkedProvider');
-    const expandChevron = isExpandList
-      ? <ExpandLess className="icon-main icon-shake malibu-color" />
-      : <ExpandMore className="icon-main icon-shake malibu-color" />;
-
     const renderExpandProvider = isExpandList ? (
       <div className={s.expandList}>
         {linkedProvider.map((provider) => {
@@ -77,12 +80,12 @@ class LinkedProviders extends Component {
     return (
       <div className={s.providerList}>
         <div className={s.expanderTitle}>
-          <Typography variant="body1" color="inherit">
+          <Typography variant="subtitle1" color="inherit">
             Discover our providers ({linkedProvider.length})
           </Typography>
           {linkedProvider.length > 0 ? (
-            <IconButton className="button-sm" onClick={this.handleExpandList}>
-              {expandChevron}
+            <IconButton className="button-sm shake-vertical" onClick={this.handleExpandList}>
+              {this.renderExpandChevron(isExpandList)}
             </IconButton>) : (
               <IconButton className="button-sm simple-button" onClick={noop}>
                 <ExpandMore className="icon-main gray-color" />

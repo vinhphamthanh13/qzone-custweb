@@ -1,9 +1,9 @@
 import { SET_LOADING } from 'actions/common';
-import { SET_ORG } from './organisation.action';
+import { SET_ORGANIZATION } from './organization.actions';
 
 const initState = {
   isLoading: false,
-  orgs: [],
+  organization: [],
 };
 
 const reducer = (state = initState, action) => {
@@ -13,10 +13,10 @@ const reducer = (state = initState, action) => {
         ...state,
         isLoading: action.payload,
       };
-    case SET_ORG:
+    case SET_ORGANIZATION:
       return {
         ...state,
-        orgs: action.payload,
+        organization: action.payload,
       };
     default:
       return state;

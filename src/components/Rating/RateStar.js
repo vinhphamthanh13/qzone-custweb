@@ -21,11 +21,13 @@ const RateStar = (props) => {
         { halfStar > 0 && <StarHalf className={style.iconStar} /> }
         { borderStar && <StarBorder className={style.iconStar} />}
       </div>
-      <div className={`flex v-center ${style.reviews}`}>
-        <Typography variant="body1" color="textSecondary">
-          { comments }
-        </Typography>
-      </div>
+      {reviews > 0 && (
+        <div className={`flex v-center ${style.reviews}`}>
+          <Typography variant="body1" color="textSecondary">
+            { comments }
+          </Typography>
+        </div>
+      )}
     </div>
   );
 };

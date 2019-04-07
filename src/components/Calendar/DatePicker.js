@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { func } from 'prop-types';
 import moment from 'moment';
 import { DateRange } from '@material-ui/icons';
-import { IconButton, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import Calendar from './Calendar';
 import s from './DatePicker.module.scss';
 
@@ -56,12 +56,14 @@ class DatePicker extends Component {
     ) : null;
     return (
       <div className={s.datePicker}>
-        <div className={s.calendarCabin}>
-          <div className={s.calendarTab}>
-            <div className={s.calendarDot}>
-              <div className={s.calendarTabCircle} />
-              <div className={s.calendarTabCircle} />
+        {/* eslint-disable-next-line */}
+        <div className={s.calendarCabin} onClick={this.handleOpenCalendar}>
+          <div>
+            <div className="simple-button button-xs">
+              <DateRange className="icon-big icon-brand icon-shake info-color hover-pointer" />
             </div>
+          </div>
+          <div className={s.calendarTab}>
             <div className={s.calendarText}>
               <Typography variant="title" color="inherit" className={s.calendarFont}>
                 {moment(selectedDate).format('DD')}
@@ -69,31 +71,18 @@ class DatePicker extends Component {
             </div>
           </div>
           <div className={s.calendarTab}>
-            <div className={s.calendarDot}>
-              <div className={s.calendarTabCircle} />
-              <div className={s.calendarTabCircle} />
-            </div>
             <div className={s.calendarText}>
               <Typography variant="title" color="inherit" className={s.calendarFont}>
-                {moment(selectedDate).format('MMM')}
+                {moment(selectedDate).format('MMMM')}
               </Typography>
             </div>
           </div>
           <div className={s.calendarTab}>
-            <div className={s.calendarDot}>
-              <div className={s.calendarTabCircle} />
-              <div className={s.calendarTabCircle} />
-            </div>
             <div className={s.calendarText}>
               <Typography variant="title" color="inherit" className={s.calendarFont}>
                 {moment(selectedDate).format('YYYY')}
               </Typography>
             </div>
-          </div>
-          <div>
-            <IconButton className="simple-button button-xs" onClick={this.handleOpenCalendar}>
-              <DateRange className="icon-huge icon-brand icon-shake" />
-            </IconButton>
           </div>
         </div>
         {renderCalendar}

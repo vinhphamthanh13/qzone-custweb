@@ -169,7 +169,7 @@ export const login = (value) => {
 
 export const getUserDetail = userId => async (dispatch) => {
   dispatch(setLoading(true));
-  const [userDetail] = await handleRequest(fetchUserDetail, [userId]);
+  const [userDetail] = await handleRequest(fetchUserDetail, [userId], [{}]);
   dispatch(setUserDetails(userDetail));
   dispatch(setLoading(false));
 };

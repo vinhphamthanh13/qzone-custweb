@@ -3,7 +3,7 @@ import {
   string, func, objectOf, any, number,
 } from 'prop-types';
 import { Typography, IconButton } from '@material-ui/core';
-import { ExpandMoreRounded } from '@material-ui/icons';
+import { ExpandMoreRounded, Search } from '@material-ui/icons';
 import uuidv1 from 'uuid/v1';
 import { get, noop } from 'lodash';
 import moment from 'moment';
@@ -51,11 +51,16 @@ class EarliestSlot extends Component {
     const expandIconList = providerSlots[`${serviceId}-${providerId}`]
       ? null
       : <ExpandMoreRounded className="icon-main icon-shake crimson-color" />;
+    const validEarliestSlots = providerSlots[`${serviceId}-${providerId}`]
+      && providerSlots[`${serviceId}-${providerId}`]
+        .sort((a, b) => a.startSec - b.startSec)
+        .filter(validSlot => validSlot.spotsOpen > 0 && validSlot.startSec * 1000 > nowSec)
+        .slice(0, 3);
 
     return (
-      <div>
-        <div className={s.providerName}>
-          <div className={s.earliestTitle}>
+      <>
+        <div className={s.portfolio}>
+          <div className={s.providerName}>
             <Typography variant="body2" color="inherit" noWrap>
               <CustomLink text={providerName} to={`/provider/${providerId}`} />
             </Typography>
@@ -63,7 +68,7 @@ class EarliestSlot extends Component {
               {expandIconList}
             </IconButton>
           </div>
-          <div>
+          <div className={s.providerStar}>
             <RateStar rating={providerRating} />
           </div>
         </div>
@@ -71,36 +76,46 @@ class EarliestSlot extends Component {
           <div className={s.providerSlot}>
             <div className={s.availableSlots}>
               { /* Show max 3 earliest slots */ }
-              {providerSlots[`${serviceId}-${providerId}`].sort((a, b) => a.startSec - b.startSec)
-                .filter(validSlot => validSlot.startSec * 1000 > nowSec).slice(0, 3).map((slot) => {
-                  const startSec = get(slot, 'startSec');
-                  if (startSec * 1000 > nowSec) {
-                    const [slotStyle, onclick] = moment.now() < startSec * 1000
-                      ? [`hover-bright ${s.slot} ${s.validSlot}`, this.handleSelectBookTime(startSec)]
-                      : [`hover-bright ${s.slot} ${s.invalidSlot}`, noop];
+              {validEarliestSlots.length > 0 ? validEarliestSlots.map((slot) => {
+                const startSec = get(slot, 'startSec');
+                if (startSec * 1000 > nowSec) {
+                  const [slotStyle, onclick] = moment.now() < startSec * 1000
+                    ? [`hover-bright ${s.slot} ${s.validSlot}`, this.handleSelectBookTime(startSec)]
+                    : [`hover-bright ${s.slot} ${s.invalidSlot}`, noop];
 
-                    return (
-                      <div key={uuidv1()} className={`${slotStyle} text-center`}>
-                        <Typography variant="subheading" color="inherit" onClick={onclick}>
-                          {moment(startSec * 1000).format('hh:mm A')}
-                        </Typography>
-                      </div>
-                    );
-                  }
-                  return null;
-                })}
+                  return (
+                    <div key={uuidv1()} className={`${slotStyle} text-center`}>
+                      <Typography variant="subheading" color="inherit" onClick={onclick}>
+                        {moment(startSec * 1000).format('hh:mm A')}
+                      </Typography>
+                    </div>
+                  );
+                }
+                return null;
+              }) : (
+                <Typography
+                  variant="body2"
+                  color="inherit"
+                  className="text-bold danger-color"
+                >
+                  No slot available now!
+                </Typography>)
+              }
             </div>
-            <div className={s.findMoreSlots}>
+            <div className="icon-text">
+              <Search className="icon-small info-color" />
               <Typography
                 variant="body2"
                 color="inherit"
                 onClick={this.handleFindMoreBooking}
                 className="hover-pointer"
-              >Find more...
+              >
+                Find more
               </Typography>
             </div>
-          </div>)}
-      </div>
+          </div>)
+        }
+      </>
     );
   }
 }

@@ -8,7 +8,7 @@ import auth from 'authentication/actions/reducer';
 import { loadSessionToState } from 'authentication/actions/session';
 import selectProvider from 'reduxModules/home/bookingDialog/selectProvider.reducer';
 import bookingDialog from 'reduxModules/home/bookingDialog.reducer';
-import organisation from 'reduxModules/organisation.reducer';
+import organization from 'reduxModules/organization.reducer';
 import serviceCard from 'reduxModules/serviceCard.reducer';
 import providerPage from 'reduxModules/provider.reducer';
 import { getUserDetail } from 'authentication/actions/login';
@@ -25,7 +25,7 @@ const rootReducer = combineReducers({
       selectProvider,
     }),
   }),
-  organisation,
+  organization,
   serviceCard,
   providerPage,
 });

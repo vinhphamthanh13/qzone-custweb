@@ -18,19 +18,11 @@ import { eventType, serviceType, bookingDetailType } from 'types/global';
 import { defaultDateFormat } from 'utils/constants';
 import s from './ViewAppointment.module.scss';
 
-const handleAddBookingToCalendar = () => {
-  console.log('adding booking to googleCalener');
-};
-
 const handleShareBooking = () => {
   console.log('sharing booking to friend');
 };
 
-const accounts = [
-  { google: 'Google' },
-  { apple: 'Apple' },
-  { outlook: 'Outlook' },
-];
+const accounts = [{ google: 'Google' }];
 
 const ViewAppointment = ({
   bookingEvent, handleOpenProfile, initService, bookingDetail, providerList, userDetail,
@@ -81,8 +73,6 @@ const ViewAppointment = ({
     startTime: `${startString}${addToCalendarTZ}:00`,
     endTime: `${endString}${addToCalendarTZ}:00`,
   };
-
-  console.log('bookedEvent', bookedEvent);
 
   return (
     <div className={s.viewAppointment}>
@@ -187,7 +177,7 @@ const ViewAppointment = ({
             </div>
             <div className={s.socialCta}>
               <div className={s.addCalendar}>
-                <IconButton className="simple-button button-sm" onClick={handleAddBookingToCalendar}>
+                <IconButton className="simple-button button-sm">
                   <Event className="icon-main" />
                 </IconButton>
                 <AddToCalendar

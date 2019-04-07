@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { number, string, func } from 'prop-types';
+import {
+  number, string, func, bool,
+} from 'prop-types';
 import { Typography, Button } from '@material-ui/core';
 import { AccessTime, LocationOn } from '@material-ui/icons';
 import CustomLink from 'components/CustomLink';
@@ -31,7 +33,7 @@ class Slide extends Component {
   render() {
     const {
       imageUrl, name, description, rating, reviews, onBooking,
-      duration, orgName, orgId,
+      duration, orgName, orgId, disabledBooking,
     } = this.props;
     const { isReadMoreOpen } = this.state;
 
@@ -86,11 +88,17 @@ class Slide extends Component {
                 <div className={style.iconInfo}>
                   <LocationOn className={style.icon} />
                   <Typography variant="body1">
-                    <CustomLink text={orgName} to={`/organisation/${orgId}`} />
+                    <CustomLink text={orgName} to={`/organization/${orgId}`} />
                   </Typography>
                 </div>
               </div>
-              <Button onClick={onBooking} variant="outlined" className="main-button">Book Now!</Button>
+              <Button
+                disabled={disabledBooking}
+                onClick={onBooking}
+                variant="outlined"
+                className="main-button"
+              >Book Now!
+              </Button>
             </div>
           </div>
         </div>
@@ -109,6 +117,7 @@ Slide.propTypes = {
   duration: number.isRequired,
   orgName: string.isRequired,
   orgId: string.isRequired,
+  disabledBooking: bool.isRequired,
 };
 
 Slide.defaultProps = {

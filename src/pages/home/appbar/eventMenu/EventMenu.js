@@ -33,7 +33,7 @@ class EventMenu extends Component {
       isOpenList, handleCloseList, eventList, classes, handleViewEvent,
     } = this.props;
     const currentTime = moment.now();
-    return isOpenList && eventList.length ? (
+    return isOpenList && eventList && eventList.length ? (
       <Grid className="cover-bg-black cover-bg-black-content" onClick={handleCloseList}>
         <Paper className="event-list">
           {eventList.sort((a, b) => b.slot.startSec - a.slot.startSec)

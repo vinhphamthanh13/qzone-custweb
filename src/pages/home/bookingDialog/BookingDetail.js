@@ -1,5 +1,7 @@
 import React from 'react';
-import { func, arrayOf, any } from 'prop-types';
+import {
+  func, arrayOf, any, bool,
+} from 'prop-types';
 import {
   Button, TextField, Typography,
 } from '@material-ui/core';
@@ -29,13 +31,23 @@ class BookingDetail extends React.PureComponent {
     this.setState(oldState => ({ isMapDialogOpen: !oldState.isMapDialogOpen }));
   };
 
+  handleBooking = () => {
+    const { onSaveBooking, openDialog, isAuthenticated } = this.props;
+    if (isAuthenticated) {
+      onSaveBooking();
+    } else {
+      openDialog('isLoginOpen');
+    }
+  };
+
   render() {
     const {
-      bookingDetail, initService, userDetail, onSaveBooking, providerList,
+      bookingDetail, initService, userDetail, providerList, isAuthenticated,
     } = this.props;
     const serviceName = get(initService, 'name');
     const serviceId = get(initService, 'id');
     const localBookingStartTime = mtz(bookingDetail.time.start);
+    const duration = get(initService, 'duration');
     const provider = get(bookingDetail, 'provider');
     const providerId = get(provider, 'id');
     const providerPhone = get(provider, 'telephone');
@@ -62,7 +74,7 @@ class BookingDetail extends React.PureComponent {
             <div className={s.bookingItems}>
               <Schedule className="icon-main" />
               <Typography variant="subtitle1" color="inherit">
-                {localBookingStartTime.format('hh:mm A')}
+                {localBookingStartTime.format('hh:mm A')}{' - '}{duration} minutes
               </Typography>
             </div>
             <div className={s.bookingItems}>
@@ -96,8 +108,12 @@ class BookingDetail extends React.PureComponent {
             </div>
           </div>
           <div className={s.bookingCta}>
-            <Button variant="contained" className="button-normal main-button" onClick={onSaveBooking}>
-              Book now!
+            <Button
+              variant="contained"
+              className="button-normal main-button"
+              onClick={this.handleBooking}
+            >
+              {isAuthenticated ? 'Book now!' : 'Sign in'}
             </Button>
           </div>
         </div>
@@ -148,6 +164,8 @@ BookingDetail.propTypes = {
   userDetail: userDetailType.isRequired,
   onSaveBooking: func.isRequired,
   providerList: arrayOf(any).isRequired,
+  isAuthenticated: bool.isRequired,
+  openDialog: func.isRequired,
 };
 
 BookingDetail.defaultProps = {
@@ -155,6 +173,7 @@ BookingDetail.defaultProps = {
 };
 
 const mapStatToProps = state => ({
+  isAuthenticated: state.auth.loginSession.isAuthenticated,
   providerList: state.home.providerList,
 });
 

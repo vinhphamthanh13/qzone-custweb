@@ -66,6 +66,7 @@ class SlideShow extends Component {
                 const duration = get(service, 'duration');
                 const orgId = get(service, 'organization.id');
                 const orgName = get(service, 'organization.name');
+                const linkedProvider = get(service, 'linkedProvider');
 
                 return (
                   <Slide
@@ -79,6 +80,7 @@ class SlideShow extends Component {
                     duration={duration}
                     orgId={orgId}
                     orgName={orgName}
+                    disabledBooking={linkedProvider.length < 1}
                   />
                 );
               })}

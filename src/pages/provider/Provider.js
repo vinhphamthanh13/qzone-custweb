@@ -12,7 +12,7 @@ import Header from './components/Header';
 import ProviderContent from './components/ProviderContent';
 import ProviderService from './components/ProviderService';
 import ProviderFooter from '../home/footer/Footer';
-import bgImage from './images/service-queue.jpg';
+import bgImage from './images/provider-bg.png';
 import s from './Provider.module.scss';
 
 class Provider extends Component {

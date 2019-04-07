@@ -1,48 +1,33 @@
 @import "../../../../styles/settings";
 
 .timeRow {
-  display: flex;
   width: 100%;
+  display: flex;
   justify-content: flex-start;
-  border-top: 1px solid rgba($grayNickel, 0.3);
+  border-bottom: 1px solid $gallery;
+  box-sizing: border-box;
 }
 
 .timeSlot {
-  margin: 0.5em 0 0.5em 0.5em;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 70px;
-  width: 140px;
+  user-select: none;
+  border-radius: unset;
+  border-right: 1px solid $gallery;
+  width: 106px;
+  padding: 0.5rem 0;
   box-sizing: border-box;
   transition: all 0.25s ease;
-  user-select: none;
-}
-
-.validSlot {
-  border: 2px solid $main;
-  transition: all 0.1s ease-in;
+  color: $main;
   &:hover {
-    color: $white;
-    background: $main;
-    border-radius: 6px;
-    box-shadow: 2px 2px 3px $main;
-    border-color: $gallery;
+    background: rgba($main, 0.8);
+    color: $gallery;
+    border-right: 1px solid rgba($main, 0.8);
   }
 }
 
-.invalidSlot {
-  display: none;
-}
-
-.kantBook {
-  color: $danger;
-  border-color: $danger;
-  &:hover {
-    color: $danger;
-    background: unset;
-    border-radius: unset;
-    box-shadow: unset;
-    border-color: unset;
-  }
+.noneSlot {
+  color: $info;
+  padding: 1.1rem 0.5rem;
 }
