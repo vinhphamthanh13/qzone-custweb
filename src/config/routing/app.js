@@ -3,6 +3,7 @@ import Organisation from 'pages/Organisation';
 import PageNotFound from 'pages/PageNotFound';
 import AccessDenied from 'pages/AccessDenied';
 import Provider from 'pages/Provider';
+import Organization from 'pages/Organization';
 
 const rootRoutes = [
   {
@@ -46,6 +47,13 @@ const rootRoutes = [
     path: '/provider/:id',
     name: 'Provider',
     component: Provider,
+  },
+  {
+    exact: true,
+    strict: true,
+    path: '/organization/:id',
+    name: 'Organization',
+    component: Organization,
   },
   {
     exact: true,
