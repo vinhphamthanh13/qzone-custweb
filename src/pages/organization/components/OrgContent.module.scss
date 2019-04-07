@@ -10,18 +10,19 @@
 }
 
 .contentQuotes {
-  color: $gallery;
-  border: 10px solid $malibu;
-  box-shadow: 5px 5px 10px $grayNickel;
+  color: $main;
+  border: 10px solid $danger;
+  box-shadow: 5px 5px 10px $mako;
   width: 350px;
   height: 100%;
   position: absolute;
   top: 20px;
-  right: 40px;
+  left: 40px;
   padding: 10px;
+  background: rgba($alto, 0.6);
 }
 
 .introDesc {
-  color: $fruitSalad;
+  color: $mako;
   margin: 1.5em 2em;
 }

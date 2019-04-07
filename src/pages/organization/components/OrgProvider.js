@@ -10,7 +10,7 @@ import { Typography } from '@material-ui/core';
 import { Schedule } from '@material-ui/icons';
 import Rating from 'material-ui-rating';
 import { fetchServiceProviders } from 'reduxModules/home.actions';
-import s from './OrgProvider.scss';
+import s from './OrgProvider.module.scss';
 
 class ProviderContent extends Component {
   componentDidMount() {

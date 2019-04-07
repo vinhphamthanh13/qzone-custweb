@@ -6,7 +6,7 @@ import uuidv1 from 'uuid/v1';
 import CustomLink from 'components/CustomLink';
 import { Call, Mail } from '@material-ui/icons';
 import { basicContact } from 'types/global';
-import s from './Header.scss';
+import s from './Header.module.scss';
 
 const navs = [
   {
@@ -46,10 +46,12 @@ class Header extends Component {
               <Call className="icon-white icon-small" />
               <Typography variant="subtitle1" color="inherit">{telephone}</Typography>
             </div>
-            <div className="icon-text">
-              <Mail className="icon-white icon-small" />
-              <Typography variant="subtitle1" color="inherit">{email}</Typography>
-            </div>
+            {email && (
+              <div className="icon-text">
+                <Mail className="icon-white icon-small" />
+                <Typography variant="subtitle1" color="inherit">{email}</Typography>
+              </div>
+            )}
           </div>
         </div>
         <div className={`${s.brandAndNav} auto-margin-horizontal`}>

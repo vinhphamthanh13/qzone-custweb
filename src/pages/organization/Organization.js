@@ -1,45 +1,36 @@
 import React, { Component } from 'react';
 import {
-  arrayOf, func, string, object, bool, oneOfType, objectOf, any,
+  func, string, object, bool, oneOfType,
 } from 'prop-types';
 import { noop, get } from 'lodash';
 import { connect } from 'react-redux';
 import { Typography } from '@material-ui/core';
-import { setRatingService } from 'actions/common';
-import { fetchProviderService, fetchProviderDetail } from 'reduxModules/provider.actions';
+import { getOrganization } from 'reduxModules/organization.actions';
 import Loading from 'components/Loading';
 import Header from './components/Header';
 import OrgContent from './components/OrgContent';
-import ProviderService from './components/OrgProvider';
-import ProviderFooter from '../home/footer/Footer';
-import bgImage from './images/service-queue.jpg';
-import s from './Organization.scss';
+// import OrgProvider from './components/OrgProvider';
+import OrgFooter from '../home/footer/Footer';
+import bgImage from './images/organization-bg.png';
+import s from './Organization.module.scss';
 
 class Organization extends Component {
   componentDidMount() {
-    const { fetchProviderServiceAction, fetchProviderDetailAction, id } = this.props;
-    fetchProviderServiceAction(id);
-    fetchProviderDetailAction(id);
+    const { getOrganizationAction, id } = this.props;
+    getOrganizationAction(id);
   }
 
   render() {
     const {
-      providerDetail, providerServices, isLoading, setRatingServiceAction, userDetail,
+      organization, isLoading,
     } = this.props;
-    const providerName = get(providerDetail, 'givenName');
-    const providerPhone = get(providerDetail, 'telephone');
-    const providerEmail = get(providerDetail, 'email');
-    const providerId = get(providerDetail, 'id');
-    const providerInfo = get(providerDetail, 'providerInformation');
-    const providerAvatar = get(providerInfo, 'image.fileUrl');
-    const providerDescription = get(providerInfo, 'description');
-    const providerQualification = get(providerInfo, 'qualifications');
-    const customerId = get(userDetail, 'userSub');
+    const organizationAvatar = get(organization, 'logo.fileUrl');
+    const organizationName = get(organization, 'name');
+    const organizationPhone = get(organization, 'telephone');
     const headContact = {
-      name: providerName,
-      email: providerEmail,
-      telephone: providerPhone,
-      logo: providerAvatar,
+      name: organizationName,
+      telephone: organizationPhone,
+      logo: organizationAvatar,
     };
 
     return (
@@ -49,26 +40,19 @@ class Organization extends Component {
           <Header login={noop} providerContact={headContact} />
           <div className={s.providerBody}>
             <OrgContent
-              description={providerDescription}
-              qualifications={providerQualification}
+              description="just for test"
+              qualifications="Org Qualification"
               bgImage={bgImage}
             />
             <div className={s.providerServices}>
               <div className={s.providerCategory}>
                 <Typography variant="h4" color="inherit" className="text-bold">
-                  Our services
+                  Our Providers
                 </Typography>
               </div>
-              {!isLoading && (
-                <ProviderService
-                  services={providerServices}
-                  ratingService={setRatingServiceAction}
-                  customerId={customerId}
-                  providerId={providerId}
-                />)}
             </div>
           </div>
-          <ProviderFooter loading={isLoading} />
+          <OrgFooter loading={isLoading} />
         </div>
       </>
     );
@@ -76,29 +60,17 @@ class Organization extends Component {
 }
 
 Organization.propTypes = {
-  fetchProviderServiceAction: func.isRequired,
-  fetchProviderDetailAction: func.isRequired,
   id: string.isRequired,
-  providerDetail: oneOfType([object]).isRequired,
-  providerServices: arrayOf(object).isRequired,
+  organization: oneOfType([object]).isRequired,
+  getOrganizationAction: func.isRequired,
   isLoading: bool.isRequired,
-  setRatingServiceAction: func.isRequired,
-  userDetail: objectOf(any),
-};
-
-Organization.defaultProps = {
-  userDetail: {},
 };
 
 const mapStateToProps = state => ({
-  providerDetail: state.providerPage.providerDetail,
-  providerServices: state.providerPage.providerServices,
-  isLoading: state.providerPage.isLoading,
-  userDetail: state.auth.userDetail,
+  organization: state.organization.organization,
+  isLoading: state.organization.isLoading,
 });
 
 export default connect(mapStateToProps, {
-  fetchProviderServiceAction: fetchProviderService,
-  fetchProviderDetailAction: fetchProviderDetail,
-  setRatingServiceAction: setRatingService,
+  getOrganizationAction: getOrganization,
 })(Organization);
