@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  string, func, objectOf, any, number,
+  string, func, objectOf, any, number, array, oneOfType, object,
 } from 'prop-types';
 import { Typography, IconButton } from '@material-ui/core';
 import { ExpandMoreRounded, Search } from '@material-ui/icons';
@@ -17,15 +17,45 @@ import s from './LinkedProviders.module.scss';
 const nowSec = moment.now();
 
 class EarliestSlot extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: null,
+      providerName: props.providerName,
+      providerSlots: props.providerSlots,
+      providerId: props.providerId,
+      providerRating: props.providerRating,
+      serviceId: props.serviceId,
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { appointments, fetchProviderSlotsAction } = this.props;
+    const {
+      appointments: nextAppointment,
+      providerName, providerSlots, providerId, providerRating, serviceId,
+    } = nextProps;
+    const { data } = this.state;
+    if (data && appointments && appointments.length !== nextAppointment.length) {
+      fetchProviderSlotsAction(data);
+    }
+    this.setState({
+      providerName,
+      providerSlots,
+      providerId,
+      providerRating,
+      serviceId,
+    });
+  }
+
   handleSelectBookTime = selectedTime => () => {
     const { onSlotBooking } = this.props;
     onSlotBooking(selectedTime);
   };
 
   handleFetchProviderSlots = providerId => () => {
-    const {
-      fetchProviderSlotsAction, serviceId, providerSlots, fetchProviderDetailAction,
-    } = this.props;
+    const { fetchProviderDetailAction, fetchProviderSlotsAction } = this.props;
+    const { serviceId, providerSlots } = this.state;
     const data = {
       customerTimezone: moment.tz.guess(),
       providerId,
@@ -37,6 +67,7 @@ class EarliestSlot extends Component {
       fetchProviderSlotsAction(data);
       fetchProviderDetailAction(providerId);
     }
+    this.setState({ data });
   };
 
   handleFindMoreBooking = () => {
@@ -47,7 +78,7 @@ class EarliestSlot extends Component {
   render() {
     const {
       providerName, providerSlots, providerId, providerRating, serviceId,
-    } = this.props;
+    } = this.state;
     const expandIconList = providerSlots[`${serviceId}-${providerId}`]
       ? null
       : <ExpandMoreRounded className="icon-main icon-shake crimson-color" />;
@@ -130,6 +161,7 @@ EarliestSlot.propTypes = {
   instantBooking: func.isRequired,
   providerRating: number,
   fetchProviderDetailAction: func.isRequired,
+  appointments: oneOfType([object, array, any]).isRequired,
 };
 
 EarliestSlot.defaultProps = {
@@ -139,6 +171,7 @@ EarliestSlot.defaultProps = {
 const mapStateToProps = state => ({
   providerSlots: state.serviceCard.providerSlots,
   searchedId: state.serviceCard.searchedId,
+  appointments: state.appointments.appointments,
 });
 
 export default connect(mapStateToProps, {

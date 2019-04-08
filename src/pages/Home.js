@@ -17,7 +17,6 @@ import {
 import { history } from 'containers/App';
 import Loading from 'components/Loading';
 import { matchType } from 'types/global';
-// import AddToCalendar from 'react-add-to-calendar';
 import styles from './Home.module.scss';
 import Maintenance from './home/footer/Maintenance';
 import { serviceCategoriesType } from './home/Header';
@@ -32,36 +31,20 @@ import Footer from './home/footer/Footer';
 import SlideShow from './home/slideShow/SlideShow';
 import AdvancedSearch from './home/search/AdvancedSearch';
 
-/* eslint react/no-unused-state: 0 */
+// /* eslint react/no-unused-state: 0 */
 export class Home extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      fromDate: undefined,
-      toDate: undefined,
       searchText: '',
-      subCategory: undefined,
-      subCategories: [],
-      selectedCategoryId: '',
-      selectedSubCategoryId: undefined,
       isRegisterOpen: false,
       isLoginOpen: false,
       selectedService: undefined,
-      bookingDetail: undefined,
-      menuIconButtonEl: null,
-      userPosition: { latitude: 0, longitude: 0 },
       isOpenProfile: false,
       sessionTimeoutId: 0,
       isOpenAdvancedSearch: false,
       isShowingAdvancedSearch: false,
       isMaintenance: false,
-      earliestSlot: {
-        step: 0,
-        bookingDetail: {
-          provider: {},
-          time: {},
-        },
-      },
       isSpecialBooking: false,
     };
   }
@@ -97,13 +80,6 @@ export class Home extends React.PureComponent {
     this.setState({ sessionTimeoutId: id });
   };
 
-  showLocation = (position) => {
-    if (!Object.is(position, null) || !Object.is(position, undefined)) {
-      const { coords: { latitude, longitude } } = position;
-      this.setState({ userPosition: { latitude, longitude } });
-    }
-  };
-
   onChange = (value, key) => {
     this.setState({ [key]: value });
   };
@@ -132,29 +108,6 @@ export class Home extends React.PureComponent {
     },
   );
 
-  onCategoryChange = async (event, selectedCategoryId) => {
-    const {
-      serviceCategories, services, getServicesByCategoryAction,
-    } = this.props;
-    const { searchText } = this.state;
-
-    const subCategories = serviceCategories.filter(
-      category => category.parentCategoryId && category.parentCategoryId === selectedCategoryId,
-    );
-
-    const searchedServices = this.getSearchedServices(services, searchText, selectedCategoryId);
-
-    if (searchedServices.length === 0) {
-      getServicesByCategoryAction(selectedCategoryId);
-    }
-
-    this.setState({
-      selectedCategoryId,
-      selectedSubCategoryId: undefined,
-      subCategories,
-    });
-  };
-
   handleCloseBookingDialog = () => {
     this.setState({
       selectedService: undefined,
@@ -176,7 +129,7 @@ export class Home extends React.PureComponent {
   };
 
   handleCloseProfile = () => {
-    this.setState({ isOpenProfile: false });
+    this.setState({ isOpenProfile: false }, () => history.push('/'));
   };
 
   handleCloseSearch = () => {
@@ -272,7 +225,6 @@ export class Home extends React.PureComponent {
           handleAuthenticate={this.openDialog}
           onSearch={this.onSearch}
           onSearchValue={searchText}
-          handleChangeCategory={this.onCategoryChange}
           handleOpenProfile={this.handleOpenProfile}
           sessionTimeoutId={sessionTimeoutId}
           handleViewEvent={this.handleViewEventMenu}
@@ -341,7 +293,6 @@ export class Home extends React.PureComponent {
 
 Home.propTypes = {
   setServiceCategoriesAction: func.isRequired,
-  getServicesByCategoryAction: func.isRequired,
   getAllServicesAction: func.isRequired,
   serviceCategories: serviceCategoriesType.isRequired,
   getServicesByNameAction: func.isRequired,

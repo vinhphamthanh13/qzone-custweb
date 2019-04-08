@@ -5,7 +5,8 @@ import {
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import {
-  Slide, Dialog, AppBar, Toolbar, IconButton,
+  // Slide,
+  Dialog, AppBar, Toolbar, IconButton,
   Avatar,
   Button,
   Stepper, Step, StepLabel,
@@ -32,9 +33,9 @@ import BookingDetail from './bookingDialog/BookingDetail';
 import BookingStyle from './BookingDialogStyle';
 import ViewAppointment from './bookingDialog/ViewAppointment';
 
-function Transition(props) {
-  return <Slide direction="down" {...props} />;
-}
+// function Transition(props) {
+//   return <Slide direction="down" {...props} />;
+// }
 
 class BookingDialog extends PureComponent {
   constructor(props) {
@@ -196,7 +197,7 @@ class BookingDialog extends PureComponent {
           fullScreen
           open={initService !== undefined}
           onClose={this.handleClose}
-          TransitionComponent={Transition}
+          // TransitionComponent={Transition}
           classes={{ root: classes.diagRoot }}
         >
           <AppBar position="relative">
@@ -279,8 +280,6 @@ BookingDialog.propTypes = {
 BookingDialog.defaultProps = {
   initService: undefined,
   bookingEvent: undefined,
-  initialStep: 0,
-  bookingDetail: {},
   earliestSlot: {
     step: 0,
     bookingDetail: {},

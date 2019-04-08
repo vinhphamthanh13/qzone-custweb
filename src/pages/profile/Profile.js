@@ -15,7 +15,6 @@ class Profile extends Component {
   };
 
   render() {
-    console.log('prop', this.props);
     const {
       isOpenProfile, handleCloseProfile, userDetail,
     } = this.props;
