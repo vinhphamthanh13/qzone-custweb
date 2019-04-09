@@ -108,9 +108,11 @@ class BookingDialog extends PureComponent {
   };
 
   handleClose = () => {
-    this.props.setProvidersAction([]);
+    const { resetStatusAction, setProvidersAction, handleClose } = this.props;
+    setProvidersAction([]);
+    handleClose();
+    resetStatusAction();
     this.setState(this.defaultState);
-    this.props.handleClose();
     this.handleClearEarliestSlot();
   };
 
@@ -151,11 +153,15 @@ class BookingDialog extends PureComponent {
   };
 
   handleViewAppointment = () => {
-    const { handleOpenProfile, fetchCustomerEventsAction, userDetail: { userSub } } = this.props;
+    const {
+      handleOpenProfile, fetchCustomerEventsAction, userDetail: { userSub },
+      resetStatusAction,
+    } = this.props;
     fetchCustomerEventsAction(userSub);
     handleOpenProfile();
     this.handleClose();
     this.handleClearEarliestSlot();
+    resetStatusAction();
   };
 
   render() {
