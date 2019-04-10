@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { objectOf, any } from 'prop-types';
+import { objectOf, any, func } from 'prop-types';
 import { Typography, TextField, Button } from '@material-ui/core';
 import { get } from 'lodash';
 import uuidv1 from 'uuid/v1';
@@ -28,12 +28,7 @@ class Info extends Component {
     this.setState({ [name]: value });
   };
 
-  handleSaveChangePersonalData = () => {
-    const { email, givenName, telephone } = this.state;
-    console.log(`new data ${email}, ${givenName}, ${telephone}`);
-  };
-
-  render() {
+  resolveUserInfoFromProps = () => {
     const { userDetail } = this.props;
     const {
       email, givenName, telephone, familyName,
@@ -43,61 +38,108 @@ class Info extends Component {
     const defaultFamilyName = get(userDetail, 'familyName');
     const defaultEmail = get(userDetail, 'email');
     const defaultTelephone = get(userDetail, 'telephone');
-    const isPersonalDataTouched = (email && email !== defaultEmail)
-      || (givenName && givenName !== defaultGivenName)
-      || (telephone && telephone !== defaultTelephone)
-      || (familyName && familyName !== defaultFamilyName);
     const defaultStreetAddress = get(userDetail, 'address.streetAddress');
     const defaultDistrict = get(userDetail, 'address.district');
     const defaultState = get(userDetail, 'address.state');
     const defaultCity = get(userDetail, 'address.city');
     const defaultPostCode = get(userDetail, 'address.postCode');
     const defaultCountry = get(userDetail, 'address.country');
+    const isPersonalDataTouched = (email && email !== defaultEmail)
+      || (givenName && givenName !== defaultGivenName)
+      || (telephone && telephone !== defaultTelephone)
+      || (familyName && familyName !== defaultFamilyName);
     const isPersonalAddressTouched = (streetAddress && streetAddress !== defaultStreetAddress)
       || (district && district !== defaultDistrict)
       || (state && state !== defaultState)
       || (city && city !== defaultCity)
       || (postCode && postCode !== defaultPostCode)
       || (country && country !== defaultCountry);
+    return {
+      personal: {
+        givenName: givenName || defaultGivenName,
+        familyName: familyName || defaultFamilyName,
+        email: email || defaultEmail,
+        telephone: telephone || defaultTelephone,
+      },
+      address: {
+        streetAddress: streetAddress || defaultStreetAddress,
+        district: district || defaultDistrict,
+        state: state || defaultState,
+        city: city || defaultCity,
+        postCode: postCode || defaultPostCode,
+        country: country || defaultCountry,
+      },
+      isPersonalDataTouched,
+      isPersonalAddressTouched,
+    };
+  };
+
+  handleSaveChangePersonalData = () => {
+    const { handleAccount, userDetail } = this.props;
+    const userSub = get(userDetail, 'userSub');
+    const providerInformation = get(userDetail, 'providerInformation');
+    const userStatus = get(userDetail, 'userStatus');
+    const userType = get(userDetail, 'userType');
+    // Todo: resolve userType for customer and provider
+    const { personal, address } = this.resolveUserInfoFromProps();
+    handleAccount({
+      address: {
+        city: address.city,
+        country: address.country,
+        district: address.district,
+        postCode: address.postCode,
+        state: address.state,
+        streetAddress: address.streetAddress,
+      },
+      email: personal.email,
+      familyName: personal.familyName,
+      givenName: personal.givenName,
+      telephone: personal.telephone,
+      id: userSub,
+      userSub,
+      userType,
+      userStatus,
+      providerInformation,
+    });
+  };
+
+  render() {
+    const {
+      personal, address, isPersonalDataTouched, isPersonalAddressTouched,
+    } = this.resolveUserInfoFromProps();
     const PERSONAL_DATA = [
       {
-        id: 'email', name: 'email', value: email || defaultEmail, label: 'Email',
+        id: 'email', name: 'email', value: personal.email, label: 'Email',
       },
       {
-        id: 'telephone', name: 'telephone', value: telephone || defaultTelephone, label: 'Telephone',
+        id: 'telephone', name: 'telephone', value: personal.telephone, label: 'Telephone',
       },
       {
-        id: 'givenName', name: 'givenName', value: givenName || defaultGivenName, label: 'Given name',
+        id: 'givenName', name: 'givenName', value: personal.givenName, label: 'Given name',
       },
       {
-        id: 'familyName', name: 'familyName', value: familyName || defaultFamilyName, label: 'Family name',
+        id: 'familyName', name: 'familyName', value: personal.familyName, label: 'Family name',
       },
     ];
 
     const ADDRESS_DATA = [
       {
-        // eslint-disable-next-line
-        id: 'streetAddress', name: 'streetAddress', value: streetAddress || defaultStreetAddress, label: 'Street'
+        id: 'streetAddress', name: 'streetAddress', value: address.streetAddress, label: 'Street',
       },
       {
-        // eslint-disable-next-line
-        id: 'district', name: 'district', value: district || defaultDistrict, label: 'District'
+        id: 'district', name: 'district', value: address.district, label: 'District',
       },
       {
-        // eslint-disable-next-line
-        id: 'state', name: 'state', value: state || defaultState, label: 'State'
+        id: 'state', name: 'state', value: address.state, label: 'State',
       },
       {
-        // eslint-disable-next-line
-        id: 'city', name: 'city', value: city || defaultCity, label: 'City'
+        id: 'city', name: 'city', value: address.city, label: 'City',
       },
       {
-        // eslint-disable-next-line
-        id: 'postCode', name: 'postCode', value: postCode || defaultPostCode, label: 'Post code'
+        id: 'postCode', name: 'postCode', value: address.postCode, label: 'Post code',
       },
       {
-        // eslint-disable-next-line
-        id: 'country', name: 'country', value: country || defaultCountry, label: 'Country'
+        id: 'country', name: 'country', value: address.country, label: 'Country',
       },
     ];
 
@@ -186,6 +228,7 @@ class Info extends Component {
 
 Info.propTypes = {
   userDetail: objectOf(any).isRequired,
+  handleAccount: func.isRequired,
 };
 
 const mapStateToProps = state => ({

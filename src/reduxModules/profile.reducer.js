@@ -6,7 +6,7 @@ const initState = {
   isLoading: false,
 };
 
-export const profilePage = (state = initState, action) => {
+const profilePage = (state = initState, action) => {
   switch (action.type) {
     case SET_LOADING:
       return {
@@ -22,3 +22,5 @@ export const profilePage = (state = initState, action) => {
       return state;
   }
 };
+
+export default profilePage;
