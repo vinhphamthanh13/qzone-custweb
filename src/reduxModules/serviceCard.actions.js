@@ -17,7 +17,7 @@ export const fetchProviderSlots = data => async (dispatch) => {
   const [availableSlots] = await handleRequest(findAvailabilitiesByDateRange, [data], []);
   const providerId = get(data, 'providerId');
   const serviceId = get(data, 'serviceId');
-  if (availableSlots.length > 0) {
+  if (availableSlots && availableSlots.length > 0) {
     dispatch(setLoading(false));
     dispatch(setProviderSlots({ [`${serviceId}-${providerId}`]: availableSlots }));
   } else {

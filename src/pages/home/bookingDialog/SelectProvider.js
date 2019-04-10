@@ -1,10 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import {
+  arrayOf, shape, bool, func, string,
+} from 'prop-types';
 import { connect } from 'react-redux';
 import { Typography } from '@material-ui/core';
 import {
   providerType, serviceType, bookingDetailType, providerDetailsType,
 } from 'types/global';
+import { chunk } from 'lodash';
 import moment from 'moment';
 import DatePicker from 'components/Calendar/DatePicker';
 import { getProvidersByService, getProviderTimes } from 'reduxModules/home/bookingDialog/selectProvider.actions';
@@ -78,15 +81,19 @@ class SelectProvider extends React.PureComponent {
                 </div>
               </div>
               <div className={s.selectProviderList}>
-                {providers.map(provider => (
-                  <div key={provider.id}>
-                    <ProviderContent
-                      initService={initService}
-                      provider={provider}
-                      bookingDetail={bookingDetailWithDate}
-                      duration={providerDetails[provider.id] ? providerDetails[provider.id][0].durationSec : 0}
-                      onTimeSelect={this.onSelectBooking(provider)}
-                    />
+                {chunk(providers).map(list => (
+                  <div className={s.providerRow}>
+                    {list.map(provider => (
+                      <div key={provider.id}>
+                        <ProviderContent
+                          initService={initService}
+                          provider={provider}
+                          bookingDetail={bookingDetailWithDate}
+                          duration={providerDetails[provider.id] ? providerDetails[provider.id][0].durationSec : 0}
+                          onTimeSelect={this.onSelectBooking(provider)}
+                        />
+                      </div>))
+                    }
                   </div>
                 ))}
               </div>
@@ -99,16 +106,16 @@ class SelectProvider extends React.PureComponent {
 
 SelectProvider.propTypes = {
   initService: serviceType,
-  providers: PropTypes.arrayOf(providerType).isRequired,
-  providerDetails: PropTypes.shape({
-    [PropTypes.string]: providerDetailsType,
+  providers: arrayOf(providerType).isRequired,
+  providerDetails: shape({
+    [string]: providerDetailsType,
   }).isRequired,
-  isLoading: PropTypes.bool.isRequired,
-  getProvidersByServiceAction: PropTypes.func.isRequired,
-  getProviderTimesAction: PropTypes.func.isRequired,
-  onChange: PropTypes.func.isRequired,
+  isLoading: bool.isRequired,
+  getProvidersByServiceAction: func.isRequired,
+  getProviderTimesAction: func.isRequired,
+  onChange: func.isRequired,
   bookingDetail: bookingDetailType.isRequired,
-  handleNext: PropTypes.func.isRequired,
+  handleNext: func.isRequired,
 };
 
 SelectProvider.defaultProps = {
