@@ -82,7 +82,7 @@ class Content extends Component {
   };
 
   render() {
-    const { givenName } = this.props;
+    const { givenName, handleAccount } = this.props;
     const { sidePanel: { eventList, myInfo } } = this.state;
     return (
       <div className={s.content}>
@@ -103,7 +103,7 @@ class Content extends Component {
         }
         {myInfo && (
           <div className={s.profilePage}>
-            <Info />
+            <Info handleAccount={handleAccount} />
           </div>)
         }
       </div>
@@ -115,6 +115,7 @@ Content.propTypes = {
   onClose: func.isRequired,
   givenName: string.isRequired,
   logoutAction: func.isRequired,
+  handleAccount: func.isRequired,
 };
 
 const mapStateToProps = state => ({

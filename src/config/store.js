@@ -11,6 +11,7 @@ import bookingDialog from 'reduxModules/home/bookingDialog.reducer';
 import organization from 'reduxModules/organization.reducer';
 import serviceCard from 'reduxModules/serviceCard.reducer';
 import providerPage from 'reduxModules/provider.reducer';
+import profilePage from 'reduxModules/profile.reducer';
 import { getUserDetail } from 'authentication/actions/login';
 import { loadSession } from './localStorage';
 
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
   organization,
   serviceCard,
   providerPage,
+  profilePage,
 });
 
 const store = createStore(

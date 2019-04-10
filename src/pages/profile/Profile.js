@@ -5,12 +5,27 @@ import {
 import { connect } from 'react-redux';
 import { get } from 'lodash';
 import { Dialog } from '@material-ui/core';
+import { postUpdatedProfile } from 'reduxModules/profile.actions';
 import Header from './components/Header';
 import Content from './components/Content';
 import style from './Profile.module.scss';
 
 class Profile extends Component {
-  handleAccount = () => {
+  state = {
+    isPopupWarning: false,
+  };
+
+  componentWillReceiveProps(nextProps) {
+    const { updateProfileStatus } = nextProps;
+    this.setState({
+      isPopupWarning: updateProfileStatus,
+    });
+  }
+
+
+  handleAccount = (data) => {
+    const { postUpdatedProfile: postUpdatedProfileAction } = this.props;
+    postUpdatedProfileAction(data);
     console.log('handle My Account');
   };
 
@@ -18,6 +33,8 @@ class Profile extends Component {
     const {
       isOpenProfile, handleCloseProfile, userDetail,
     } = this.props;
+    const { isPopupWarning } = this.state;
+    console.log('isPopupWaring', isPopupWarning);
     const givenName = get(userDetail, 'givenName');
     const email = get(userDetail, 'email');
 
@@ -29,6 +46,7 @@ class Profile extends Component {
             <Content
               givenName={givenName}
               onClose={handleCloseProfile}
+              handleAccount={this.handleAccount}
             />
           </div>
         </div>
@@ -41,10 +59,20 @@ Profile.propTypes = {
   isOpenProfile: bool.isRequired,
   handleCloseProfile: func.isRequired,
   userDetail: objectOf(any).isRequired,
+  postUpdatedProfile: func.isRequired,
+  updateProfileStatus: bool,
+};
+
+Profile.defaultProps = {
+  updateProfileStatus: false,
 };
 
 const mapStateToProps = state => ({
   userDetail: state.auth.userDetail,
+  isLoading: state.profilePage.isLoading,
+  updateProfileStatus: state.profilePage.updateProfileStatus,
 });
 
-export default connect(mapStateToProps)(Profile);
+export default connect(mapStateToProps, {
+  postUpdatedProfile,
+})(Profile);
