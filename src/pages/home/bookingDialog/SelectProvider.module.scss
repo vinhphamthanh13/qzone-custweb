@@ -19,17 +19,19 @@
   border-bottom: 2px solid rgba($grayNickel, 0.5);
 }
 
+.providerRow {
+  display: flex;
+  flex-direction: column;
+}
+
 .selectProviderList {
   width: auto;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   height: 100vh;
   overflow: auto;
-}
-
-.providerListCardAvailableTime {
-  color: $grayNickel;
 }
 
 .selectDateOfBooking {

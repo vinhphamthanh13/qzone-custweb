@@ -64,7 +64,9 @@ export const getProviderTimes = data => async (dispatch) => {
   }])))).map(resp => resp[0]);
   const providerTimes = {};
   response.forEach((providerTime) => {
-    providerTimes[providerTime[0].providerId] = [...providerTime];
+    if (providerTime && providerTime.length > 0) {
+      providerTimes[providerTime[0].providerId] = [...providerTime];
+    }
   });
 
   dispatch(setProviderTimesDetail(providerTimes));
