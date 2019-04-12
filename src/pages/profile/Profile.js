@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  bool, func, objectOf, any,
+  bool, func, objectOf, any, string,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
@@ -60,7 +60,7 @@ Profile.propTypes = {
   handleCloseProfile: func.isRequired,
   userDetail: objectOf(any).isRequired,
   postUpdatedProfile: func.isRequired,
-  updateProfileStatus: bool,
+  updateProfileStatus: string,
 };
 
 Profile.defaultProps = {

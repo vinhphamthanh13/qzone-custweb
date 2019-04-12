@@ -5,7 +5,7 @@ import { Typography } from '@material-ui/core';
 import { Event, Settings, ExitToApp } from '@material-ui/icons';
 import { logout } from 'authentication/actions/logout';
 import EventList from '../../home/appointmentDialog/Appointment';
-// import Info from './Info';
+import Info from './Info';
 import s from './Content.module.scss';
 
 const EVENT_LIST = 'eventList';
@@ -104,7 +104,7 @@ class Content extends Component {
         }
         {myInfo && (
           <div className={s.profilePage}>
-            { /* <Info handleAccount={handleAccount} /> */ }
+            <Info handleAccount={handleAccount} />
           </div>)
         }
       </div>
