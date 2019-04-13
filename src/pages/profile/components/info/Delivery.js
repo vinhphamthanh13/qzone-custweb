@@ -56,11 +56,12 @@ export default withFormik({
     country: props.userDetail.address.country || '',
   }),
   validationSchema: Yup.object().shape({
-    'street Address': Yup.string(),
-    district: Yup.string().email(),
-    state: Yup.string(),
-    city: Yup.string(),
-    'post Code': Yup.string(),
-    country: Yup.string(),
+    'street Address': Yup.string().min(3),
+    district: Yup.string().min(3),
+    state: Yup.string().min(2),
+    city: Yup.string().min(3),
+    'post Code': Yup.string().min(5),
+    country: Yup.string().min(7),
   }),
+  handleSubmit: (values, { props }) => props.saveInfo(values),
 })(Delivery);

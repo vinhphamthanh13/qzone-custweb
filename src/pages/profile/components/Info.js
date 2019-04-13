@@ -1,40 +1,16 @@
 import React, { Component } from 'react';
 import { objectOf, any, func } from 'prop-types';
 import { Typography } from '@material-ui/core';
-import { get } from 'lodash';
 import { connect } from 'react-redux';
 import Personal from './info/Personal';
 import Delivery from './info/Delivery';
 import s from './Info.module.scss';
 
 class Info extends Component {
-  handleSaveChangePersonalData = () => {
-    const { handleAccount, userDetail } = this.props;
-    const userSub = get(userDetail, 'userSub');
-    const providerInformation = get(userDetail, 'providerInformation');
-    const userStatus = get(userDetail, 'userStatus');
-    const userType = get(userDetail, 'userType');
-    // Todo: resolve userType for customer and provider
-    const { personal, address } = this.resolveUserInfoFromProps();
-    handleAccount({
-      address: {
-        city: address.city,
-        country: address.country,
-        district: address.district,
-        postCode: address.postCode,
-        state: address.state,
-        streetAddress: address.streetAddress,
-      },
-      email: personal.email,
-      familyName: personal.familyName,
-      givenName: personal.givenName,
-      telephone: personal.telephone,
-      id: userSub,
-      userSub,
-      userType,
-      userStatus,
-      providerInformation,
-    });
+  handleSaveChangePersonalData = (data) => {
+    const { handleAccount } = this.props;
+    console.log('this is handle submit', data);
+    handleAccount(data);
   };
 
   render() {
@@ -54,7 +30,7 @@ class Info extends Component {
               </Typography>
             </div>
             <div className={s.formData}>
-              <Personal userDetail={userDetail} />
+              <Personal userDetail={userDetail} saveInfo={this.handleSaveChangePersonalData} />
             </div>
           </div>
           <div className={s.personalInfo}>
@@ -69,7 +45,7 @@ class Info extends Component {
               </Typography>
             </div>
             <div className={s.formData}>
-              <Delivery userDetail={userDetail} />
+              <Delivery userDetail={userDetail} saveInfo={this.handleSaveChangePersonalData} />
             </div>
           </div>
         </div>
