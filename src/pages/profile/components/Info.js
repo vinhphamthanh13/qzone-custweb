@@ -38,6 +38,7 @@ class Info extends Component {
   };
 
   render() {
+    const { userDetail } = this.props;
     return (
       <>
         <div className={s.privateInfo}>
@@ -53,7 +54,7 @@ class Info extends Component {
               </Typography>
             </div>
             <div className={s.formData}>
-              <Personal />
+              <Personal userDetail={userDetail} />
             </div>
           </div>
           <div className={s.personalInfo}>
@@ -68,7 +69,7 @@ class Info extends Component {
               </Typography>
             </div>
             <div className={s.formData}>
-              <Delivery />
+              <Delivery userDetail={userDetail} />
             </div>
           </div>
         </div>

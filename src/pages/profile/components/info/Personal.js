@@ -1,26 +1,26 @@
 import React from 'react';
-// import { objectOf, any } from 'prop-types';
 import { TextField, Button } from '@material-ui/core';
 import * as Yup from 'yup';
+import { isEqual } from 'lodash';
 import { withFormik } from 'formik';
 import s from '../Info.module.scss';
 
 const Personal = ({
-  values, isValid, touched, errors,
-  // setFieldValue, setFieldTouched, setFieldError,
+  values, isValid, touched, errors, initialValues,
   handleChange, handleBlur, handleSubmit,
 }) => {
+  console.log('initialValues', initialValues);
   // && (touched.givenName || touched.telephone || touched.email || touched.familyName)
   // && (!(errors.email && errors.givenName && errors.telephone && errors.familyName));
   const PERSONAL = ['email', 'telephone', 'given Name', 'family Name'];
   const finalTouched = PERSONAL.reduce((acc, cur) => acc || touched[cur], false);
   const finalError = PERSONAL.reduce((acc, cur) => acc && errors[cur], false);
-  const isSubmitValid = isValid && !finalError && finalTouched;
-  console.log('finalTouched', finalTouched);
-  console.log('finalErrors', finalError);
-  console.log('isSubmitValid', isSubmitValid);
+  const isSubmitValid = isValid && !finalError && finalTouched
+    && !isEqual(JSON.stringify(initialValues), JSON.stringify(values));
+  console.log('values', values);
   console.log('isValid', isValid);
-
+  console.log('touched', touched);
+  console.log('errors', errors);
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -51,12 +51,13 @@ const Personal = ({
 };
 
 export default withFormik({
-  mapPropsToValues: () => ({
-    givenName: '',
-    familyName: '',
-    email: '',
-    telephone: '',
+  mapPropsToValues: props => ({
+    'given Name': props.userDetail.givenName,
+    'family Name': props.userDetail.familyName || '',
+    email: props.userDetail.email,
+    telephone: props.userDetail.telephone,
   }),
+  isInitialValid: true,
   validationSchema: Yup.object().shape({
     'given Name': Yup.string().required(),
     email: Yup.string().email().required(),

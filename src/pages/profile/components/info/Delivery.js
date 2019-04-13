@@ -1,21 +1,21 @@
 import React from 'react';
-// import { objectOf, any } from 'prop-types';
 import { TextField, Button } from '@material-ui/core';
 import * as Yup from 'yup';
+import { isEqual } from 'lodash';
 import { withFormik } from 'formik';
 import s from '../Info.module.scss';
 
 const Delivery = ({
-  values, isValid, touched, errors,
-  // setFieldValue, setFieldTouched, setFieldError,
+  initialValues, values, isValid, touched, errors,
   handleChange, handleBlur, handleSubmit,
 }) => {
-  const isSubmitValid = isValid
-    && (touched.givenName || touched.telephone || touched.email || touched.familyName)
-    && (!(errors.email && errors.givenName && errors.telephone && errors.familyName));
   const DELIVERY = [
     'street Address', 'district', 'state', 'city', 'post Code', 'country',
   ];
+  const finalTouched = DELIVERY.reduce((acc, cur) => acc || touched[cur]);
+  const finalError = DELIVERY.reduce((acc, cur) => acc && errors[cur]);
+  const isSubmitValid = isValid && finalTouched && !finalError
+    && !isEqual(JSON.stringify(initialValues), JSON.stringify(values));
 
   return (
     <>
@@ -47,20 +47,20 @@ const Delivery = ({
 };
 
 export default withFormik({
-  mapPropsToValues: () => ({
-    streetAddress: '',
-    district: '',
-    state: '',
-    city: '',
-    postCode: '',
-    country: '',
+  mapPropsToValues: props => ({
+    'street Address': props.userDetail.address.streetAddress || '',
+    district: props.userDetail.address.district || '',
+    state: props.userDetail.address.state || '',
+    city: props.userDetail.address.city || '',
+    'post Code': props.userDetail.address.postCode || '',
+    country: props.userDetail.address.country || '',
   }),
   validationSchema: Yup.object().shape({
-    streetAddress: Yup.string(),
+    'street Address': Yup.string(),
     district: Yup.string().email(),
     state: Yup.string(),
     city: Yup.string(),
-    postCode: Yup.string(),
+    'post Code': Yup.string(),
     country: Yup.string(),
   }),
 })(Delivery);
