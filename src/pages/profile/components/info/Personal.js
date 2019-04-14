@@ -9,23 +9,28 @@ const Personal = ({
   values, isValid, touched, errors, initialValues,
   handleChange, handleBlur, handleSubmit,
 }) => {
-  const PERSONAL = ['email', 'telephone', 'given Name', 'family Name'];
-  const finalTouched = PERSONAL.reduce((acc, cur) => acc || touched[cur], false);
-  const finalError = PERSONAL.reduce((acc, cur) => acc && errors[cur], false);
+  const PERSONAL = [
+    { id: 'email', value: 'email', label: 'Email' },
+    { id: 'telephone', value: 'telephone', label: 'Telephone' },
+    { id: 'givenName', value: 'givenName', label: 'Given Name' },
+    { id: 'familyName', value: 'familyName', label: 'Family Name' },
+  ];
+  const finalTouched = PERSONAL.reduce((acc, cur) => acc || touched[cur.value], false);
+  const finalError = PERSONAL.reduce((acc, cur) => acc && errors[cur.value], false);
   const isSubmitValid = isValid && !finalError && finalTouched
     && !isEqual(JSON.stringify(initialValues), JSON.stringify(values));
   return (
     <>
       <form onSubmit={handleSubmit}>
         {PERSONAL.map(item => (
-          <div key={item} className={s.formControl}>
+          <div key={item.id} className={s.formControl}>
             <TextField
               fullWidth
-              value={values[item]}
+              value={values[item.value]}
               onChange={handleChange}
               onBlur={handleBlur}
-              name={item}
-              label={item.toUpperCase()}
+              name={item.value}
+              label={item.label}
             />
           </div>
         ))}
@@ -45,17 +50,17 @@ const Personal = ({
 
 export default withFormik({
   mapPropsToValues: props => ({
-    'given Name': props.userDetail.givenName,
-    'family Name': props.userDetail.familyName || '',
-    email: props.userDetail.email,
-    telephone: props.userDetail.telephone,
+    givenName: props.userInfo.givenName,
+    familyName: props.userInfo.familyName || '',
+    email: props.userInfo.email,
+    telephone: props.userInfo.telephone,
   }),
   isInitialValid: true,
   validationSchema: Yup.object().shape({
-    'given Name': Yup.string().min(3).required(),
+    familyName: Yup.string().min(3),
+    givenName: Yup.string().min(3).required(),
     email: Yup.string().email().required(),
     telephone: Yup.string().min(12).required(),
-    'family Name': Yup.string().min(3),
   }),
   handleSubmit: (values, { props, setSubmitting }) => {
     props.saveInfo(values);

@@ -1,7 +1,7 @@
 import React from 'react';
 import { TextField, Button } from '@material-ui/core';
 import * as Yup from 'yup';
-import { isEqual } from 'lodash';
+import { isEqual, get } from 'lodash';
 import { withFormik } from 'formik';
 import s from '../Info.module.scss';
 
@@ -10,10 +10,15 @@ const Delivery = ({
   handleChange, handleBlur, handleSubmit,
 }) => {
   const DELIVERY = [
-    'street Address', 'district', 'state', 'city', 'post Code', 'country',
+    { id: 'streetAddress', value: 'streetAddress', label: 'Street Address' },
+    { id: 'district', value: 'district', label: 'District' },
+    { id: 'state', value: 'state', label: 'State' },
+    { id: 'city', value: 'city', label: 'City' },
+    { id: 'postCode', value: 'postCode', label: 'Post Code' },
+    { id: 'country', value: 'country', label: 'Country' },
   ];
-  const finalTouched = DELIVERY.reduce((acc, cur) => acc || touched[cur]);
-  const finalError = DELIVERY.reduce((acc, cur) => acc && errors[cur]);
+  const finalTouched = DELIVERY.reduce((acc, cur) => acc || touched[cur.value]);
+  const finalError = DELIVERY.reduce((acc, cur) => acc && errors[cur.value]);
   const isSubmitValid = isValid && finalTouched && !finalError
     && !isEqual(JSON.stringify(initialValues), JSON.stringify(values));
 
@@ -21,14 +26,14 @@ const Delivery = ({
     <>
       <form onSubmit={handleSubmit}>
         {DELIVERY.map(item => (
-          <div key={item} className={s.formControl}>
+          <div key={item.id} className={s.formControl}>
             <TextField
               fullWidth
-              value={values[item]}
+              value={values[item.value]}
               onChange={handleChange}
               onBlur={handleBlur}
-              name={item}
-              label={item.toUpperCase()}
+              name={item.value}
+              label={item.label}
             />
           </div>
         ))}
@@ -48,20 +53,20 @@ const Delivery = ({
 
 export default withFormik({
   mapPropsToValues: props => ({
-    'street Address': props.userDetail.address.streetAddress || '',
-    district: props.userDetail.address.district || '',
-    state: props.userDetail.address.state || '',
-    city: props.userDetail.address.city || '',
-    'post Code': props.userDetail.address.postCode || '',
-    country: props.userDetail.address.country || '',
+    streetAddress: get(props.userInfo, 'address.streetAddress') || '',
+    district: get(props.userInfo, 'address.district') || '',
+    state: get(props.userInfo, 'address.state') || '',
+    city: get(props.userInfo, 'address.city') || '',
+    postCode: get(props.userInfo, 'address.postCode') || '',
+    country: get(props.userInfo, 'address.country') || '',
   }),
   validationSchema: Yup.object().shape({
-    'street Address': Yup.string().min(3),
+    streetAddress: Yup.string().min(3),
     district: Yup.string().min(3),
     state: Yup.string().min(2),
     city: Yup.string().min(3),
-    'post Code': Yup.string().min(5),
+    postCode: Yup.string().min(5),
     country: Yup.string().min(7),
   }),
-  handleSubmit: (values, { props }) => props.saveInfo(values),
+  handleSubmit: (values, { props }) => props.saveInfo({ address: values }),
 })(Delivery);
