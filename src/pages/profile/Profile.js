@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
 import {
-  bool, func, objectOf, any,
+  bool, func, objectOf, any, string,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
 import { Dialog } from '@material-ui/core';
-import { postUpdatedProfile } from 'reduxModules/profile.actions';
+import { postUpdatedProfile, updateProfileAction } from 'reduxModules/profile.actions';
+import CustomModal from 'components/Modal/CustomModal';
 import Header from './components/Header';
 import Content from './components/Content';
 import style from './Profile.module.scss';
 
 class Profile extends Component {
   state = {
-    isPopupWarning: false,
+    isPopupWarning: '',
   };
 
   componentWillReceiveProps(nextProps) {
@@ -26,31 +27,48 @@ class Profile extends Component {
   handleAccount = (data) => {
     const { postUpdatedProfile: postUpdatedProfileAction } = this.props;
     postUpdatedProfileAction(data);
-    console.log('handle My Account');
+  };
+
+  resetUpdateProfileStatus = () => {
+    const { updateProfileAction: updateProfileStatus } = this.props;
+    updateProfileStatus('');
   };
 
   render() {
     const {
-      isOpenProfile, handleCloseProfile, userDetail,
+      isOpenProfile, handleCloseProfile, userDetail, updateProfileStatus,
     } = this.props;
     const { isPopupWarning } = this.state;
-    console.log('isPopupWaring', isPopupWarning);
+
     const givenName = get(userDetail, 'givenName');
     const email = get(userDetail, 'email');
+    const updateProfileMsg = isPopupWarning === 'error' ? (
+      <CustomModal
+        isOpen
+        type="error"
+        title="Update Profile Error"
+        message="Error occurs when updating your profile! Please try again."
+        onClose={this.resetUpdateProfileStatus}
+      />
+    ) : null;
 
     return (
-      <Dialog fullScreen open={isOpenProfile}>
-        <div className={`${style.profile} column`}>
-          <Header userDetail={{ givenName, email }} onClose={handleCloseProfile} onOpenAccount={this.handleAccount} />
-          <div className={`container-max auto-margin-horizontal ${style.contentAfooter}`}>
-            <Content
-              givenName={givenName}
-              onClose={handleCloseProfile}
-              handleAccount={this.handleAccount}
-            />
+      <>
+        {updateProfileMsg}
+        <Dialog fullScreen open={isOpenProfile}>
+          <div className={`${style.profile} column`}>
+            <Header userDetail={{ givenName, email }} onClose={handleCloseProfile} onOpenAccount={this.handleAccount} />
+            <div className={`container-max auto-margin-horizontal ${style.contentAfooter}`}>
+              <Content
+                givenName={givenName}
+                onClose={handleCloseProfile}
+                handleAccount={this.handleAccount}
+                updateProfileStatus={updateProfileStatus}
+              />
+            </div>
           </div>
-        </div>
-      </Dialog>
+        </Dialog>
+      </>
     );
   }
 }
@@ -60,7 +78,8 @@ Profile.propTypes = {
   handleCloseProfile: func.isRequired,
   userDetail: objectOf(any).isRequired,
   postUpdatedProfile: func.isRequired,
-  updateProfileStatus: bool,
+  updateProfileStatus: string,
+  updateProfileAction: func.isRequired,
 };
 
 Profile.defaultProps = {
@@ -75,4 +94,5 @@ const mapStateToProps = state => ({
 
 export default connect(mapStateToProps, {
   postUpdatedProfile,
+  updateProfileAction,
 })(Profile);

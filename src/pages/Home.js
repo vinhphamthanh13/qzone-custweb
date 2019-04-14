@@ -139,10 +139,6 @@ export class Home extends React.PureComponent {
     });
   };
 
-  handleViewEventMenu = () => {
-    this.handleOpenProfile();
-  };
-
   handleAdvancedSearchResult = (value) => {
     this.setState({ isShowingAdvancedSearch: value });
   };
@@ -227,7 +223,6 @@ export class Home extends React.PureComponent {
           onSearchValue={searchText}
           handleOpenProfile={this.handleOpenProfile}
           sessionTimeoutId={sessionTimeoutId}
-          handleViewEvent={this.handleViewEventMenu}
           handleAdvancedSearch={this.openAdvancedSearch}
           maintenance={isMaintenance}
         />

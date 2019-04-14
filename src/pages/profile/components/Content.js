@@ -5,7 +5,7 @@ import { Typography } from '@material-ui/core';
 import { Event, Settings, ExitToApp } from '@material-ui/icons';
 import { logout } from 'authentication/actions/logout';
 import EventList from '../../home/appointmentDialog/Appointment';
-// import Info from './Info';
+import Info from './Info';
 import s from './Content.module.scss';
 
 const EVENT_LIST = 'eventList';
@@ -82,8 +82,7 @@ class Content extends Component {
   };
 
   render() {
-    const { givenName, handleAccount } = this.props;
-    console.log('handleAccount', handleAccount);
+    const { givenName, handleAccount, updateProfileStatus } = this.props;
     const { sidePanel: { eventList, myInfo } } = this.state;
     return (
       <div className={s.content}>
@@ -104,7 +103,7 @@ class Content extends Component {
         }
         {myInfo && (
           <div className={s.profilePage}>
-            { /* <Info handleAccount={handleAccount} /> */ }
+            <Info handleAccount={handleAccount} updateProfileStatus={updateProfileStatus} />
           </div>)
         }
       </div>
@@ -117,6 +116,7 @@ Content.propTypes = {
   givenName: string.isRequired,
   logoutAction: func.isRequired,
   handleAccount: func.isRequired,
+  updateProfileStatus: string.isRequired,
 };
 
 const mapStateToProps = state => ({
