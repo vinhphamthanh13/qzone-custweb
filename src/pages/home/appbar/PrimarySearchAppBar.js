@@ -5,6 +5,7 @@ import {
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import moment from 'moment';
+import { noop } from 'lodash';
 import { withStyles } from '@material-ui/core/styles';
 import {
   AppBar, Toolbar, IconButton, InputBase, Badge, Avatar, Typography, Button,
@@ -17,14 +18,9 @@ import {
 } from '@material-ui/icons';
 import { fetchCustomerEvents } from 'reduxModules/home.actions';
 import logo from 'images/quezone-logo.png';
-import EventMenu from './eventMenu/EventMenu';
 import styles from './PrimarySearchAppBarStyle';
 
 class PrimarySearchAppBar extends React.Component {
-  state = {
-    anchorEventEl: null,
-  };
-
   componentDidMount() {
     const { loginSession, fetchCustomerEventsAction } = this.props;
     const [isAuthenticated, id] = loginSession
@@ -44,14 +40,6 @@ class PrimarySearchAppBar extends React.Component {
     }
   }
 
-  handleOpenEventList = (event) => {
-    this.setState({ anchorEventEl: event.currentTarget });
-  };
-
-  handleEventListClose = () => {
-    this.setState({ anchorEventEl: null });
-  };
-
   handleAuthenticateUser = (authenticateType) => {
     const { handleAuthenticate } = this.props;
     handleAuthenticate(authenticateType);
@@ -60,7 +48,6 @@ class PrimarySearchAppBar extends React.Component {
   handleOpenProfileDialog = () => {
     const { handleOpenProfile } = this.props;
     handleOpenProfile();
-    this.handleEventListClose();
   };
 
   handleActionAdvancedSearch = () => {
@@ -72,16 +59,13 @@ class PrimarySearchAppBar extends React.Component {
 
   render() {
     const {
-      classes, loginSession, onSearch, customerEventList, onSearchValue,
-      handleViewEvent, maintenance,
+      classes, loginSession, onSearch, customerEventList, onSearchValue, maintenance,
     } = this.props;
-    const { anchorEventEl } = this.state;
     const currentTime = moment.now();
     const eventCount = customerEventList
       && customerEventList.filter(event => event.slot.startSec * 1000 > currentTime).length;
-    const isEventListOpen = Boolean(anchorEventEl);
+    const badgeStyle = eventCount > 0 ? 'text-margin-lr hover-pointer' : 'text-margin-lr';
     const isAuthenticated = loginSession ? loginSession.isAuthenticated : false;
-
     const [authLabel, openForm] = maintenance ? ['Sign Up', 'isRegisterOpen'] : ['Sign In', 'isLoginOpen'];
     const customUser = isAuthenticated ? (
       <>
@@ -89,15 +73,18 @@ class PrimarySearchAppBar extends React.Component {
           aria-haspopup="true"
           color="inherit"
           variant="subheading"
-          className={`text-capitalize ${classes.desktopView}`}
+          className={`text-capitalize text-margin-lr ${classes.desktopView}`}
         >
           Hello {loginSession.username}!
         </Typography>
-        <IconButton color="inherit" onClick={this.handleOpenEventList}>
-          <Badge badgeContent={eventCount} color="secondary" classes={{ badge: 'badge shake-vertical' }}>
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
+        <Badge
+          onClick={eventCount > 0 ? this.handleOpenProfileDialog : noop}
+          badgeContent={eventCount}
+          color="secondary"
+          className={badgeStyle}
+        >
+          <NotificationsIcon />
+        </Badge>
         <IconButton onClick={this.handleOpenProfileDialog} color="inherit">
           <AssignmentInd />
         </IconButton>
@@ -164,12 +151,6 @@ class PrimarySearchAppBar extends React.Component {
             { customUser }
           </Toolbar>
         </AppBar>
-        <EventMenu
-          eventList={customerEventList}
-          isOpenList={isEventListOpen}
-          handleCloseList={this.handleEventListClose}
-          handleViewEvent={handleViewEvent}
-        />
       </div>
     );
   }
@@ -184,7 +165,6 @@ PrimarySearchAppBar.propTypes = {
   handleOpenProfile: func.isRequired,
   customerEventList: arrayOf(object).isRequired,
   onSearchValue: string,
-  handleViewEvent: func.isRequired,
   handleAdvancedSearch: func.isRequired,
   maintenance: bool.isRequired,
 };
