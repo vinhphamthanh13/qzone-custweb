@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { objectOf, any, func } from 'prop-types';
+import {
+  objectOf, any, func, string,
+} from 'prop-types';
 import { Typography } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
@@ -31,8 +33,6 @@ class Info extends Component {
   handleSaveChangePersonalData = (data) => {
     const { handleAccount } = this.props;
     const { userInfo } = this.state;
-    console.log('userInfo', userInfo);
-    console.log('updated Data', data);
     handleAccount({
       ...userInfo,
       ...data,
@@ -40,6 +40,7 @@ class Info extends Component {
   };
 
   render() {
+    const { updateProfileStatus } = this.props;
     const { userInfo } = this.state;
 
     return (
@@ -57,7 +58,13 @@ class Info extends Component {
               </Typography>
             </div>
             <div className={s.formData}>
-              {userInfo && <Personal userInfo={userInfo} saveInfo={this.handleSaveChangePersonalData} />}
+              {userInfo && (
+                <Personal
+                  userInfo={userInfo}
+                  saveInfo={this.handleSaveChangePersonalData}
+                  updateStatus={updateProfileStatus}
+                />
+              )}
             </div>
           </div>
           <div className={s.personalInfo}>
@@ -72,7 +79,13 @@ class Info extends Component {
               </Typography>
             </div>
             <div className={s.formData}>
-              {userInfo && <Delivery userInfo={userInfo} saveInfo={this.handleSaveChangePersonalData} />}
+              {userInfo && (
+                <Delivery
+                  userInfo={userInfo}
+                  saveInfo={this.handleSaveChangePersonalData}
+                  updateStatus={updateProfileStatus}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -84,6 +97,7 @@ class Info extends Component {
 Info.propTypes = {
   userDetail: objectOf(any).isRequired,
   handleAccount: func.isRequired,
+  updateProfileStatus: string.isRequired,
 };
 
 const mapStateToProps = state => ({

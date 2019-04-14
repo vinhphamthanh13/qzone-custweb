@@ -15,11 +15,11 @@ export const postUpdatedProfile = data => async (dispatch) => {
   dispatch(setLoading(true));
   const userSub = get(data, 'userSub');
   const [response] = await handleRequest(updateProfile, [data], null);
-  console.log('response i sr', response);
   if (response) {
     dispatch(updateProfileAction('success'));
     dispatch(getUserDetail(userSub));
   } else {
+    dispatch(updateProfileAction('error'));
     console.log(response);
   }
   dispatch(setLoading(false));

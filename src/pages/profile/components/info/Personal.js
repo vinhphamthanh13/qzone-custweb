@@ -7,7 +7,7 @@ import s from '../Info.module.scss';
 
 const Personal = ({
   values, isValid, touched, errors, initialValues,
-  handleChange, handleBlur, handleSubmit,
+  handleChange, handleBlur, handleSubmit, updateStatus,
 }) => {
   const PERSONAL = [
     { id: 'email', value: 'email', label: 'Email' },
@@ -17,7 +17,7 @@ const Personal = ({
   ];
   const finalTouched = PERSONAL.reduce((acc, cur) => acc || touched[cur.value], false);
   const finalError = PERSONAL.reduce((acc, cur) => acc && errors[cur.value], false);
-  const isSubmitValid = isValid && !finalError && finalTouched
+  const isSubmitValid = updateStatus === '' && isValid && !finalError && finalTouched
     && !isEqual(JSON.stringify(initialValues), JSON.stringify(values));
   return (
     <>

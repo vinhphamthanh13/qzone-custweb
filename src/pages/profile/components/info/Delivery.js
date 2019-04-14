@@ -7,7 +7,7 @@ import s from '../Info.module.scss';
 
 const Delivery = ({
   initialValues, values, isValid, touched, errors,
-  handleChange, handleBlur, handleSubmit,
+  handleChange, handleBlur, handleSubmit, updateStatus,
 }) => {
   const DELIVERY = [
     { id: 'streetAddress', value: 'streetAddress', label: 'Street Address' },
@@ -19,7 +19,7 @@ const Delivery = ({
   ];
   const finalTouched = DELIVERY.reduce((acc, cur) => acc || touched[cur.value]);
   const finalError = DELIVERY.reduce((acc, cur) => acc && errors[cur.value]);
-  const isSubmitValid = isValid && finalTouched && !finalError
+  const isSubmitValid = updateStatus === '' && isValid && finalTouched && !finalError
     && !isEqual(JSON.stringify(initialValues), JSON.stringify(values));
 
   return (
