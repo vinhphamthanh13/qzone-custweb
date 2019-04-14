@@ -8,6 +8,7 @@ import {
   providerType, serviceType, bookingDetailType, providerDetailsType,
 } from 'types/global';
 import { chunk } from 'lodash';
+import uuidv1 from 'uuid/v1';
 import moment from 'moment';
 import DatePicker from 'components/Calendar/DatePicker';
 import { getProvidersByService, getProviderTimes } from 'reduxModules/home/bookingDialog/selectProvider.actions';
@@ -64,7 +65,7 @@ class SelectProvider extends React.PureComponent {
       ...bookingDetail,
       selectedDate,
     };
-
+    console.log('chunk provider', chunk(providers, 4));
     return (
       <>
         {!isLoading && providers.length === 0 ? <EmptyItem message="No provider available!" />
@@ -81,10 +82,10 @@ class SelectProvider extends React.PureComponent {
                 </div>
               </div>
               <div className={s.selectProviderList}>
-                {chunk(providers).map(list => (
-                  <div className={s.providerRow}>
+                {chunk(providers, 4).map(list => (
+                  <div key={uuidv1()} className={s.providerRow}>
                     {list.map(provider => (
-                      <div key={provider.id}>
+                      <div key={uuidv1()}>
                         <ProviderContent
                           initService={initService}
                           provider={provider}
