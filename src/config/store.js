@@ -12,6 +12,7 @@ import organization from 'reduxModules/organization.reducer';
 import serviceCard from 'reduxModules/serviceCard.reducer';
 import providerPage from 'reduxModules/provider.reducer';
 import profilePage from 'reduxModules/profile.reducer';
+import waitList from 'reduxModules/waitlist.reducer';
 import { getUserDetail } from 'authentication/actions/login';
 import { loadSession } from './localStorage';
 
@@ -30,6 +31,7 @@ const rootReducer = combineReducers({
   serviceCard,
   providerPage,
   profilePage,
+  waitList,
 });
 
 const store = createStore(
