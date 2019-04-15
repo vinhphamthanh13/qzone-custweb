@@ -2,14 +2,14 @@ import React from 'react';
 import {
   number,
   func,
-  arrayOf, any,
 } from 'prop-types';
 import { get } from 'lodash';
 import { Typography, ButtonBase } from '@material-ui/core';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import {
-  PersonPin, Schedule, EmailOutlined, CallOutlined, AddOutlined, Public,
+  PersonPin, Schedule,
+  // EmailOutlined, CallOutlined, Public, AddOutlined,
 } from '@material-ui/icons';
 import {
   providerType,
@@ -18,7 +18,6 @@ import {
 } from 'types/global';
 import RateStar from 'components/Rating/RateStar';
 import CustomLink from 'components/CustomLink';
-import formatName from 'utils/formatName';
 import SelectTime from './SelectTime';
 import MapDialog from './MapDialog';
 import s from './ProviderContent.module.scss';
@@ -50,19 +49,13 @@ class ProviderContent extends React.PureComponent {
       bookingDetail,
       onTimeSelect,
       duration,
-      providerList,
     } = this.props;
     const serviceName = get(initService, 'name');
+    const providerName = get(provider, 'providerName');
     const { isMapDialogOpen } = this.state;
-    const providerId = get(provider, 'id');
-    const providerEmail = get(provider, 'email');
-    const providerPhone = get(provider, 'telephone');
-    const providerWebsite = get(provider, 'website');
-    const providerTimeZone = get(provider, 'providerInformation.timeZoneId');
-    const providerService = providerList
-      .filter(item => providerId === item.providerId && initService.id === item.serviceId);
-    const providerRating = get(providerService, '0.rating');
-
+    const providerId = get(provider, 'providerId');
+    const providerRating = get(provider, 'rating');
+    console.log('provider', provider);
     return (
       <>
         <MapDialog
@@ -77,55 +70,26 @@ class ProviderContent extends React.PureComponent {
               <div className={s.providerListCardTitle}>
                 <Typography variant="title" color="inherit" className="text-bold" noWrap>
                   <CustomLink
-                    text={formatName({ givenName: provider.givenName, familyName: provider.familyName })}
+                    text={providerName}
                     to={`/provider/${providerId}`}
                     big
                   />
                 </Typography>
-                <RateStar rating={providerRating} />
-              </div>
-              <div className={s.providerAddress}>
                 <div className={s.providerListCardMap}>
-                  <ButtonBase onClick={this.toggleMapDialog}>
-                    <PersonPin className="icon-small icon-brand icon-shake" />
-                  </ButtonBase>
-                  <Typography
-                    noWrap
-                    variant="subheading"
-                    color="inherit"
-                    onClick={this.toggleMapDialog}
-                    className="hover-pointer text-bold"
-                  >View map
-                  </Typography>
-                </div>
-                <div className="icon-text">
-                  <EmailOutlined className="icon-small icon-brand" />
-                  <Typography noWrap variant="body2" color="inherit">
-                    <a href={`mailto: ${providerEmail}`} className={s.website}>
-                      {providerEmail}
-                    </a>
-                  </Typography>
-                </div>
-                <div className="icon-text">
-                  <CallOutlined className="icon-small icon-brand" />
-                  <Typography noWrap variant="body2" color="inherit">{providerPhone}</Typography>
-                </div>
-                <div className="icon-text">
-                  <AddOutlined className="icon-small icon-transparent" />
-                  <Typography noWrap variant="body2" color="inherit">{providerTimeZone}</Typography>
-                </div>
-                <div className="icon-text">
-                  <Public className="icon-small" />
-                  <Typography noWrap variant="body2" color="inherit">
-                    <a
-                      href={`${providerWebsite || 'https://info.quezone.co'}`}
-                      rel="noreferrer noopener"
-                      target="_blank"
-                      className={s.website}
-                    >
-                      {`${providerWebsite || 'https://info.quezone.co'}`}
-                    </a>
-                  </Typography>
+                  <RateStar rating={providerRating} />
+                  <div className={s.geoLocation}>
+                    <ButtonBase onClick={this.toggleMapDialog}>
+                      <PersonPin className="icon-brand icon-small" />
+                    </ButtonBase>
+                    <Typography
+                      variant="subtitle1"
+                      color="inherit"
+                      onClick={this.toggleMapDialog}
+                      className="hover-pointer"
+                      noWrap
+                    >View map
+                    </Typography>
+                  </div>
                 </div>
               </div>
             </div>
@@ -167,7 +131,6 @@ ProviderContent.propTypes = {
   bookingDetail: bookingDetailType.isRequired,
   onTimeSelect: func.isRequired,
   duration: number.isRequired,
-  providerList: arrayOf(any).isRequired,
 };
 
 ProviderContent.defaultProps = {

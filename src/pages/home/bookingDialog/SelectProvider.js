@@ -1,17 +1,19 @@
 import React from 'react';
 import {
-  arrayOf, shape, bool, func, string,
+  arrayOf, bool, func,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { Typography } from '@material-ui/core';
 import {
-  providerType, serviceType, bookingDetailType, providerDetailsType,
+  providerType, serviceType, bookingDetailType,
 } from 'types/global';
 import { chunk } from 'lodash';
 import uuidv1 from 'uuid/v1';
 import moment from 'moment';
 import DatePicker from 'components/Calendar/DatePicker';
-import { getProvidersByService, getProviderTimes } from 'reduxModules/home/bookingDialog/selectProvider.actions';
+import {
+  getProvidersByService, getProviderTimes, findSpecialEventsAction,
+} from 'reduxModules/home/bookingDialog/selectProvider.actions';
 import EmptyItem from 'components/EmptyItem';
 import ProviderContent from './selectProvider/ProviderContent';
 import s from './SelectProvider.module.scss';
@@ -25,11 +27,12 @@ class SelectProvider extends React.PureComponent {
   };
 
   componentDidMount = () => {
-    const { providers, getProvidersByServiceAction, initService } = this.props;
+    const {
+      initService,
+      findSpecialEventsAction: findSpecialEvents,
+    } = this.props;
 
-    if (providers.length === 0) {
-      getProvidersByServiceAction(initService.id);
-    }
+    findSpecialEvents(initService.id);
   };
 
   onSelectBooking = provider => (time) => {
@@ -57,8 +60,7 @@ class SelectProvider extends React.PureComponent {
 
   render() {
     const {
-      isLoading, providers, bookingDetail, initService, providerDetails,
-      onChange,
+      isLoading, providers, bookingDetail, initService, onChange, specialEvents,
     } = this.props;
     const { selectedDate } = this.state;
     const bookingDetailWithDate = {
@@ -68,7 +70,7 @@ class SelectProvider extends React.PureComponent {
     console.log('chunk provider', chunk(providers, 4));
     return (
       <>
-        {!isLoading && providers.length === 0 ? <EmptyItem message="No provider available!" />
+        {!isLoading && specialEvents.length === 0 ? <EmptyItem message="No provider available!" />
           : (
             <div className={s.selectProviderWrapper}>
               <div className={s.selectProviderHeader}>
@@ -82,7 +84,7 @@ class SelectProvider extends React.PureComponent {
                 </div>
               </div>
               <div className={s.selectProviderList}>
-                {chunk(providers, 4).map(list => (
+                {chunk(specialEvents, 4).map(list => (
                   <div key={uuidv1()} className={s.providerRow}>
                     {list.map(provider => (
                       <div key={uuidv1()}>
@@ -90,7 +92,7 @@ class SelectProvider extends React.PureComponent {
                           initService={initService}
                           provider={provider}
                           bookingDetail={bookingDetailWithDate}
-                          duration={providerDetails[provider.id] ? providerDetails[provider.id][0].durationSec : 0}
+                          duration={60}
                           onTimeSelect={this.onSelectBooking(provider)}
                         />
                       </div>))
@@ -108,15 +110,13 @@ class SelectProvider extends React.PureComponent {
 SelectProvider.propTypes = {
   initService: serviceType,
   providers: arrayOf(providerType).isRequired,
-  providerDetails: shape({
-    [string]: providerDetailsType,
-  }).isRequired,
   isLoading: bool.isRequired,
-  getProvidersByServiceAction: func.isRequired,
   getProviderTimesAction: func.isRequired,
   onChange: func.isRequired,
   bookingDetail: bookingDetailType.isRequired,
   handleNext: func.isRequired,
+  findSpecialEventsAction: func.isRequired,
+  specialEvents: arrayOf(providerType).isRequired,
 };
 
 SelectProvider.defaultProps = {
@@ -130,4 +130,5 @@ const mapStateToProps = state => ({
 export default connect(mapStateToProps, {
   getProvidersByServiceAction: getProvidersByService,
   getProviderTimesAction: getProviderTimes,
+  findSpecialEventsAction,
 })(SelectProvider);

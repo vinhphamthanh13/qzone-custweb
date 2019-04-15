@@ -33,6 +33,11 @@
   width: 100%;
 }
 
+.geoLocation {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
 .providerAddress {
   padding: 0.5rem;
   width: 100%;
@@ -41,6 +46,7 @@
 .providerListCardMap {
   color: $main;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   font-weight: bold;
 }

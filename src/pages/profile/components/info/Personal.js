@@ -9,6 +9,7 @@ const Personal = ({
   values, isValid, touched, errors, initialValues,
   handleChange, handleBlur, handleSubmit, updateStatus,
 }) => {
+  console.log('updateStatus', updateStatus);
   const PERSONAL = [
     { id: 'email', value: 'email', label: 'Email' },
     { id: 'telephone', value: 'telephone', label: 'Telephone' },
@@ -56,6 +57,7 @@ export default withFormik({
     telephone: props.userInfo.telephone,
   }),
   isInitialValid: true,
+  enableReinitialize: true,
   validationSchema: Yup.object().shape({
     familyName: Yup.string().min(3),
     givenName: Yup.string().min(3).required(),
