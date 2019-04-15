@@ -9,7 +9,6 @@ const Personal = ({
   values, isValid, touched, errors, initialValues,
   handleChange, handleBlur, handleSubmit, updateStatus,
 }) => {
-  console.log('updateStatus', updateStatus);
   const PERSONAL = [
     { id: 'email', value: 'email', label: 'Email' },
     { id: 'telephone', value: 'telephone', label: 'Telephone' },

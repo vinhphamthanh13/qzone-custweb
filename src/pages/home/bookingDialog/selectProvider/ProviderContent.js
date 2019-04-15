@@ -1,15 +1,13 @@
 import React from 'react';
-import {
-  number,
-  func,
-} from 'prop-types';
+import { func } from 'prop-types';
 import { get } from 'lodash';
-import { Typography, ButtonBase } from '@material-ui/core';
+import { Typography, ButtonBase, IconButton } from '@material-ui/core';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import {
   PersonPin, Schedule,
   // EmailOutlined, CallOutlined, Public, AddOutlined,
+  Search,
 } from '@material-ui/icons';
 import {
   providerType,
@@ -18,6 +16,7 @@ import {
 } from 'types/global';
 import RateStar from 'components/Rating/RateStar';
 import CustomLink from 'components/CustomLink';
+import { fetchAvailabilityBySpecialIdAction } from 'reduxModules/home/bookingDialog/specialSlots.actions';
 import SelectTime from './SelectTime';
 import MapDialog from './MapDialog';
 import s from './ProviderContent.module.scss';
@@ -28,8 +27,15 @@ class ProviderContent extends React.PureComponent {
 
     this.state = {
       isMapDialogOpen: false,
+      isSearchTimeSlot: false,
     };
   }
+
+  handleSearchTimeSlot = () => {
+    this.setState({
+      isSearchTimeSlot: true,
+    });
+  };
 
   toggleDetailDialog = () => {
     this.setState(oldState => ({
@@ -48,14 +54,15 @@ class ProviderContent extends React.PureComponent {
       provider, initService,
       bookingDetail,
       onTimeSelect,
-      duration,
+      fetchAvailabilityBySpecialIdAction: fetchAvailabilityBySpecialId,
     } = this.props;
+    const { isSearchTimeSlot } = this.state;
     const serviceName = get(initService, 'name');
     const providerName = get(provider, 'providerName');
     const { isMapDialogOpen } = this.state;
     const providerId = get(provider, 'providerId');
+    const duration = get(provider, 'avgServiceTime');
     const providerRating = get(provider, 'rating');
-    console.log('provider', provider);
     return (
       <>
         <MapDialog
@@ -113,11 +120,27 @@ class ProviderContent extends React.PureComponent {
                 Your current timezone: {moment.tz.guess()}
               </Typography>
             </div>
-            <SelectTime
-              bookingDetail={bookingDetail}
-              providerDetail={provider}
-              onChange={onTimeSelect}
-            />
+            <div className={`${s.providerContentSearchSlot} icon-text`}>
+              <IconButton onClick={this.handleSearchTimeSlot} className="button-sm simple-button">
+                <Search className="icon-normal fruit-color" />
+              </IconButton>
+              <Typography
+                variant="body1"
+                color="inherit"
+                onClick={this.handleSearchTimeSlot}
+                className="hover-pointer"
+              >
+                Find available time slots!
+              </Typography>
+            </div>
+            {isSearchTimeSlot && (
+              <SelectTime
+                bookingDetail={bookingDetail}
+                providerDetail={provider}
+                onChange={onTimeSelect}
+                fetchSlot={fetchAvailabilityBySpecialId}
+              />
+            )}
           </div>
         </div>
       </>
@@ -130,7 +153,7 @@ ProviderContent.propTypes = {
   provider: providerType,
   bookingDetail: bookingDetailType.isRequired,
   onTimeSelect: func.isRequired,
-  duration: number.isRequired,
+  fetchAvailabilityBySpecialIdAction: func.isRequired,
 };
 
 ProviderContent.defaultProps = {
@@ -138,8 +161,6 @@ ProviderContent.defaultProps = {
   provider: undefined,
 };
 
-const mapStateToProps = state => ({
-  providerList: state.home.providerList,
-});
-
-export default connect(mapStateToProps)(ProviderContent);
+export default connect(null, {
+  fetchAvailabilityBySpecialIdAction,
+})(ProviderContent);

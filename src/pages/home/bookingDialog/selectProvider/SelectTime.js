@@ -1,15 +1,21 @@
 import React from 'react';
+import {
+  func, number, arrayOf, shape, objectOf, any,
+} from 'prop-types';
 import { connect } from 'react-redux';
 import { Typography, Button } from '@material-ui/core';
 import moment from 'moment';
 import uuidv1 from 'uuid/v1';
-import {
-  func, number, arrayOf, shape,
-} from 'prop-types';
 import { get, chunk, noop } from 'lodash';
 import s from './SelectTime.module.scss';
 
 export class SelectTime extends React.PureComponent {
+  componentDidMount() {
+    const { fetchSlot, providerDetail } = this.props;
+    const specialId = get(providerDetail, 'id');
+    fetchSlot(specialId);
+  }
+
   static getDerivedStateFromProps(nextProps) {
     return nextProps.bookingDetail.provider && nextProps.providerDetail.id === nextProps.bookingDetail.provider.id
       && nextProps.bookingDetail.time
@@ -65,10 +71,11 @@ export class SelectTime extends React.PureComponent {
   ));
 
   render() {
-    const {
-      timeDetails,
-    } = this.props;
-    const hourBoxes = this.getHourBoxes(timeDetails);
+    const { specialSlots, providerDetail } = this.props;
+    const specialId = get(providerDetail, 'id');
+    console.log('sepcial Slots', specialSlots);
+    const timeDetails = get(specialSlots, `${specialId}`);
+    const hourBoxes = (timeDetails && this.getHourBoxes(timeDetails)) || [];
     return hourBoxes.length > 0 ? this.renderTimeBox(hourBoxes) : (
       <div className={s.noneSlot}>
         <Typography variant="subheading" color="inherit">
@@ -80,7 +87,7 @@ export class SelectTime extends React.PureComponent {
 }
 
 SelectTime.propTypes = {
-  timeDetails: arrayOf(
+  specialSlots: arrayOf(
     shape({
       startSec: number,
       durationSec: number,
@@ -88,15 +95,19 @@ SelectTime.propTypes = {
     }),
   ),
   onChange: func.isRequired,
+  fetchSlot: func.isRequired,
+  providerDetail: objectOf(any),
 };
 
 SelectTime.defaultProps = {
-  timeDetails: [],
+  specialSlots: [],
+  providerDetail: {},
 };
 
 const mapStateToProps = (states, ownProps) => ({
   isLoading: states.homeModules.bookingDialog.isLoading,
   timeDetails: states.homeModules.bookingDialogModules.selectProvider.providerDetails[ownProps.providerDetail.id],
+  specialSlots: states.specialSlots.specialSlots,
 });
 
 export default connect(mapStateToProps)(SelectTime);

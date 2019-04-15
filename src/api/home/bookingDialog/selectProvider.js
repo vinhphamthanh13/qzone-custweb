@@ -7,3 +7,5 @@ export const searchProviderById = providerId => axios.get(`/users/${providerId}`
 export const findAvailabilitiesByDateRange = body => axios.post('/find-availabilities-by-date-range', body);
 
 export const findSpecialEvents = id => axios.get(`/find-special-events-by-service-id/${id}`);
+
+export const fetchAvailabilityBySpecialId = id => axios.get(`/availabilities-by-special-event-id/${id}`);

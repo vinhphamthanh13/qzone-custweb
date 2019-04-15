@@ -60,14 +60,13 @@ class SelectProvider extends React.PureComponent {
 
   render() {
     const {
-      isLoading, providers, bookingDetail, initService, onChange, specialEvents,
+      isLoading, bookingDetail, initService, onChange, specialEvents,
     } = this.props;
     const { selectedDate } = this.state;
     const bookingDetailWithDate = {
       ...bookingDetail,
       selectedDate,
     };
-    console.log('chunk provider', chunk(providers, 4));
     return (
       <>
         {!isLoading && specialEvents.length === 0 ? <EmptyItem message="No provider available!" />
@@ -92,7 +91,6 @@ class SelectProvider extends React.PureComponent {
                           initService={initService}
                           provider={provider}
                           bookingDetail={bookingDetailWithDate}
-                          duration={60}
                           onTimeSelect={this.onSelectBooking(provider)}
                         />
                       </div>))
