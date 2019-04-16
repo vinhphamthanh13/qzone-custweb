@@ -1,12 +1,13 @@
 import React from 'react';
 import {
-  func, arrayOf, any, bool,
+  func,
+  bool,
 } from 'prop-types';
 import {
   Button, TextField, Typography,
 } from '@material-ui/core';
 import {
-  Schedule, DateRange, LocationOn, PersonPin, Call,
+  Schedule, DateRange, LocationOn, PersonPin,
 } from '@material-ui/icons';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
@@ -42,19 +43,15 @@ class BookingDetail extends React.PureComponent {
 
   render() {
     const {
-      bookingDetail, initService, userDetail, providerList, isAuthenticated,
+      bookingDetail, initService, userDetail, isAuthenticated,
     } = this.props;
+    console.log('bookingDetails', bookingDetail);
     const serviceName = get(initService, 'name');
-    const serviceId = get(initService, 'id');
     const localBookingStartTime = mtz(bookingDetail.time.start);
-    const duration = get(initService, 'duration');
     const provider = get(bookingDetail, 'provider');
-    const providerId = get(provider, 'id');
-    const providerPhone = get(provider, 'telephone');
-    const defaultRating = get(provider, 'rating');
-    const serviceProvider = providerList
-      .filter(items => items.providerId === providerId && items.serviceId === serviceId);
-    const providerRating = defaultRating || get(serviceProvider, '0.rating');
+    const providerName = get(provider, 'providerName');
+    const duration = get(provider, 'avgServiceTime');
+    const providerRating = get(provider, 'rating');
 
     return (
       <div className={s.bookingAppointment}>
@@ -80,20 +77,11 @@ class BookingDetail extends React.PureComponent {
             <div className={s.bookingItems}>
               <LocationOn className="icon-main" />
               <Typography variant="subtitle1" color="inherit" className="text-margin-right">
-                {formatName({
-                  givenName: bookingDetail.provider.givenName,
-                  familyName: bookingDetail.provider.familyName,
-                })}
+                {providerName}
               </Typography>
               <div>
                 <RateStar rating={providerRating} />
               </div>
-            </div>
-            <div className={s.bookingItems}>
-              <Call className="icon-main" />
-              <Typography variant="subtitle1" color="inherit">
-                {providerPhone}
-              </Typography>
             </div>
             <div className={s.bookingItems}>
               <PersonPin className="icon-main icon-shake" onClick={this.toggleMapDialog} />
@@ -101,7 +89,7 @@ class BookingDetail extends React.PureComponent {
                 variant="subtitle1"
                 color="inherit"
                 onClick={this.toggleMapDialog}
-                className="text-bold hover-pointer"
+                className="hover-pointer"
               >
                 View map
               </Typography>
@@ -163,7 +151,6 @@ BookingDetail.propTypes = {
   initService: serviceType,
   userDetail: userDetailType.isRequired,
   onSaveBooking: func.isRequired,
-  providerList: arrayOf(any).isRequired,
   isAuthenticated: bool.isRequired,
   openDialog: func.isRequired,
 };
