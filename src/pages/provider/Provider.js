@@ -26,6 +26,7 @@ class Provider extends Component {
     const {
       providerDetail, providerServices, isLoading, setRatingServiceAction, userDetail,
     } = this.props;
+    console.log('provider details', providerDetail);
     const providerName = get(providerDetail, 'givenName');
     const providerPhone = get(providerDetail, 'telephone');
     const providerEmail = get(providerDetail, 'email');

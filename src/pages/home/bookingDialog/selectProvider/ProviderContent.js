@@ -1,12 +1,13 @@
 import React from 'react';
-import { func } from 'prop-types';
+import { func, objectOf, any } from 'prop-types';
 import { get } from 'lodash';
 import { Typography, Button } from '@material-ui/core';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import {
   PersonPin, Schedule,
-  // EmailOutlined, CallOutlined, Public, AddOutlined,
+  EmailOutlined, CallOutlined,
+  Public,
   Search,
 } from '@material-ui/icons';
 import {
@@ -17,6 +18,7 @@ import {
 import RateStar from 'components/Rating/RateStar';
 import CustomLink from 'components/CustomLink';
 import { fetchAvailabilityBySpecialIdAction } from 'reduxModules/home/bookingDialog/specialSlots.actions';
+import { fetchProviderDetail } from 'reduxModules/provider.actions';
 import SelectTime from './SelectTime';
 import MapDialog from './MapDialog';
 import s from './ProviderContent.module.scss';
@@ -29,7 +31,15 @@ class ProviderContent extends React.PureComponent {
       isMapDialogOpen: false,
       fetchingStatus: '',
       isSearchTimeSlot: false,
+      providerId: '',
     };
+  }
+
+  componentDidMount() {
+    const { provider, fetchProviderDetail: fetchProviderDetailAction } = this.props;
+    const providerId = get(provider, 'providerId');
+    fetchProviderDetailAction(providerId);
+    this.setState({ providerId });
   }
 
   handleSearchTimeSlot = () => {
@@ -58,16 +68,23 @@ class ProviderContent extends React.PureComponent {
 
   render() {
     const {
-      provider, initService,
+      provider,
+      initService,
       bookingDetail,
       onTimeSelect,
       fetchAvailabilityBySpecialIdAction: fetchAvailabilityBySpecialId,
+      providerDetail,
     } = this.props;
-    const { isSearchTimeSlot, fetchingStatus } = this.state;
+    const { isSearchTimeSlot, fetchingStatus, providerId } = this.state;
     const serviceName = get(initService, 'name');
-    const providerName = get(provider, 'providerName');
+    const currentDetail = get(providerDetail, providerId);
+    const providerName = get(currentDetail, 'givenName');
+    const providerFamily = get(currentDetail, 'familyName');
+    const providerEmail = get(currentDetail, 'email');
+    const providerPhone = get(currentDetail, 'telephone');
+    const providerImage = get(currentDetail, 'providerInformation.image.fileUrl');
+    const providerTimeZone = get(currentDetail, 'providerInformation.timeZoneId');
     const { isMapDialogOpen } = this.state;
-    const providerId = get(provider, 'providerId');
     const duration = get(provider, 'avgServiceTime');
     const providerRating = get(provider, 'rating');
     return (
@@ -81,10 +98,13 @@ class ProviderContent extends React.PureComponent {
         <div className={s.providerListCard}>
           <div className={s.providerListCardContent}>
             <div className={s.providerListCardHeader}>
+              <div className={s.providerImageWrapper}>
+                <img src={providerImage} alt={providerName} className={s.providerImage} />
+              </div>
               <div className={s.providerListCardTitle}>
                 <Typography variant="title" color="inherit" className="text-bold" noWrap>
                   <CustomLink
-                    text={providerName}
+                    text={`${providerName} ${providerFamily}`}
                     to={`/provider/${providerId}`}
                     big
                   />
@@ -97,6 +117,26 @@ class ProviderContent extends React.PureComponent {
                       View map
                     </Button>
                   </div>
+                </div>
+              </div>
+              <div className={s.providerListCardContent}>
+                <div className="icon-text">
+                  <EmailOutlined className="icon-main icon-small" />
+                  <Typography variant="body1" color="inherit" noWrap>
+                    {providerEmail}
+                  </Typography>
+                </div>
+                <div className="icon-text">
+                  <CallOutlined className="icon-main icon-small" />
+                  <Typography variant="body1" color="inherit" noWrap>
+                    {providerPhone}
+                  </Typography>
+                </div>
+                <div className="icon-text">
+                  <Public className="icon-main icon-small" />
+                  <Typography variant="body1" color="inherit" noWrap>
+                    {providerTimeZone}
+                  </Typography>
                 </div>
               </div>
             </div>
@@ -152,6 +192,8 @@ ProviderContent.propTypes = {
   bookingDetail: bookingDetailType.isRequired,
   onTimeSelect: func.isRequired,
   fetchAvailabilityBySpecialIdAction: func.isRequired,
+  fetchProviderDetail: func.isRequired,
+  providerDetail: objectOf(any).isRequired,
 };
 
 ProviderContent.defaultProps = {
@@ -159,6 +201,11 @@ ProviderContent.defaultProps = {
   provider: undefined,
 };
 
-export default connect(null, {
+const mapStateToProps = state => ({
+  providerDetail: state.providerPage.providerDetail,
+});
+
+export default connect(mapStateToProps, {
   fetchAvailabilityBySpecialIdAction,
+  fetchProviderDetail,
 })(ProviderContent);

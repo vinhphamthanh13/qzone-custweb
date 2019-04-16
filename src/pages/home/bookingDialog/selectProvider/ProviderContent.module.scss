@@ -29,6 +29,16 @@
   background: linear-gradient(to bottom, $white, $malibu);
 }
 
+.providerImageWrapper {
+  display: flex;
+  width: 100%;
+  height: 200px;
+}
+
+.providerImage {
+  width: 100%;
+}
+
 .providerListCardTitle {
   padding: 0.5rem;
   color: $primary;
