@@ -11,6 +11,7 @@ import {
   Button,
   Stepper, Step, StepLabel,
 } from '@material-ui/core';
+import moment from 'moment';
 import withStyles from '@material-ui/core/styles/withStyles';
 import {
   Close,
@@ -32,10 +33,6 @@ import SelectProvider from './bookingDialog/SelectProvider';
 import BookingDetail from './bookingDialog/BookingDetail';
 import BookingStyle from './BookingDialogStyle';
 import ViewAppointment from './bookingDialog/ViewAppointment';
-
-// function Transition(props) {
-//   return <Slide direction="down" {...props} />;
-// }
 
 class BookingDialog extends PureComponent {
   constructor(props) {
@@ -72,15 +69,15 @@ class BookingDialog extends PureComponent {
   };
 
   onStepChange = idx => () => {
-    this.setState({ step: idx }, this.handleClearEarliestSlot);
+    this.setState({ step: idx });
   };
 
   handleBack = () => {
-    this.setState(oldState => ({ step: oldState.step - 1 }), this.handleClearEarliestSlot);
+    this.setState(oldState => ({ step: oldState.step - 1 }));
   };
 
   handleNext = () => {
-    this.setState(oldState => ({ step: oldState.step + 1 }), this.handleClearEarliestSlot);
+    this.setState(oldState => ({ step: oldState.step + 1 }));
   };
 
   isStepCompleted = () => {
@@ -91,11 +88,6 @@ class BookingDialog extends PureComponent {
       default:
         return false;
     }
-  };
-
-  handleClearEarliestSlot = () => {
-    const { deleteEarliestSlotAction } = this.props;
-    deleteEarliestSlotAction();
   };
 
   onChangeBookingDetail = (value, key, cb) => {
@@ -113,22 +105,21 @@ class BookingDialog extends PureComponent {
     handleClose();
     resetStatusAction();
     this.setState(this.defaultState);
-    this.handleClearEarliestSlot();
   };
 
   onSaveBooking = () => {
     const { userDetail, bookEventAction, initService } = this.props;
     const { bookingDetail } = this.state;
-    const providerId = get(bookingDetail, 'provider.userSub');
+    const providerId = get(bookingDetail, 'provider.providerId');
     const serviceId = get(initService, 'id');
     const duration = get(bookingDetail, 'time.duration');
     const customerId = get(userDetail, 'userSub');
     this.toggleConfirmDialog(false)();
-    this.handleClearEarliestSlot();
     bookEventAction({
       customerId,
       duration,
       slot: {
+        customerTimezone: moment.tz.guess(),
         providerId,
         serviceId,
         startSec: bookingDetail.time.start / 1000,
@@ -141,7 +132,6 @@ class BookingDialog extends PureComponent {
   closeErrorModal = () => {
     this.handleBack();
     this.props.resetStatusAction();
-    this.handleClearEarliestSlot();
   };
 
   openAppointmentDialog = () => {
@@ -160,7 +150,6 @@ class BookingDialog extends PureComponent {
     fetchCustomerEventsAction(userSub);
     handleOpenProfile();
     this.handleClose();
-    this.handleClearEarliestSlot();
     resetStatusAction();
   };
 
@@ -280,7 +269,6 @@ BookingDialog.propTypes = {
   handleOpenProfile: func.isRequired,
   fetchCustomerEventsAction: func.isRequired,
   earliestSlot: objectOf(any),
-  deleteEarliestSlotAction: func.isRequired,
 };
 
 BookingDialog.defaultProps = {

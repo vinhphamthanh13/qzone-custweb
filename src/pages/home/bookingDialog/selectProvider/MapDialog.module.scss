@@ -7,13 +7,12 @@
 
 .closeMap {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 16px;
+  right: 16px;
+  background: linear-gradient(to bottom, $danger, $white);
   border-radius: 50%;
-  width: 42px;
-  height: 42px;
-  border: 1px solid $danger;
-  background: $danger;
+  width: 36px;
+  height: 36px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -37,6 +36,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  height: 100%;
 }
 
 .serviceTitle {

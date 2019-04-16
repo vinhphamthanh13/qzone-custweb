@@ -42,7 +42,7 @@ class Profile extends Component {
 
     const givenName = get(userDetail, 'givenName');
     const email = get(userDetail, 'email');
-    const updateProfileMsg = isPopupWarning === 'error' ? (
+    const updateProfileMsgError = isPopupWarning === 'error' ? (
       <CustomModal
         isOpen
         type="error"
@@ -52,9 +52,20 @@ class Profile extends Component {
       />
     ) : null;
 
+    const updateProfileMsgSuccess = isPopupWarning === 'success' ? (
+      <CustomModal
+        isOpen
+        type="info"
+        title="Update Profile Success"
+        message="Your profile is up to date"
+        onClose={this.resetUpdateProfileStatus}
+      />
+    ) : null;
+
     return (
       <>
-        {updateProfileMsg}
+        {updateProfileMsgError}
+        {updateProfileMsgSuccess}
         <Dialog fullScreen open={isOpenProfile}>
           <div className={`${style.profile} column`}>
             <Header userDetail={{ givenName, email }} onClose={handleCloseProfile} onOpenAccount={this.handleAccount} />

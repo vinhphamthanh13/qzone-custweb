@@ -1,15 +1,14 @@
 import React from 'react';
-import {
-  number,
-  func,
-  arrayOf, any,
-} from 'prop-types';
+import { func, objectOf, any } from 'prop-types';
 import { get } from 'lodash';
-import { Typography, ButtonBase } from '@material-ui/core';
+import { Typography, Button } from '@material-ui/core';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import {
-  PersonPin, Schedule, EmailOutlined, CallOutlined, AddOutlined, Public,
+  PersonPin, Schedule,
+  EmailOutlined, CallOutlined,
+  Public,
+  Search,
 } from '@material-ui/icons';
 import {
   providerType,
@@ -18,7 +17,8 @@ import {
 } from 'types/global';
 import RateStar from 'components/Rating/RateStar';
 import CustomLink from 'components/CustomLink';
-import formatName from 'utils/formatName';
+import { fetchAvailabilityBySpecialIdAction } from 'reduxModules/home/bookingDialog/specialSlots.actions';
+import { fetchProviderDetail } from 'reduxModules/provider.actions';
 import SelectTime from './SelectTime';
 import MapDialog from './MapDialog';
 import s from './ProviderContent.module.scss';
@@ -29,8 +29,24 @@ class ProviderContent extends React.PureComponent {
 
     this.state = {
       isMapDialogOpen: false,
+      fetchingStatus: '',
+      isSearchTimeSlot: false,
+      providerId: '',
     };
   }
+
+  componentDidMount() {
+    const { provider, fetchProviderDetail: fetchProviderDetailAction } = this.props;
+    const providerId = get(provider, 'providerId');
+    fetchProviderDetailAction(providerId);
+    this.setState({ providerId });
+  }
+
+  handleSearchTimeSlot = () => {
+    this.setState({
+      isSearchTimeSlot: true,
+    });
+  };
 
   toggleDetailDialog = () => {
     this.setState(oldState => ({
@@ -44,25 +60,33 @@ class ProviderContent extends React.PureComponent {
     }));
   };
 
+  handleFetchingSlotStatus = (status) => {
+    this.setState({
+      fetchingStatus: status,
+    });
+  };
+
   render() {
     const {
-      provider, initService,
+      provider,
+      initService,
       bookingDetail,
       onTimeSelect,
-      duration,
-      providerList,
+      fetchAvailabilityBySpecialIdAction: fetchAvailabilityBySpecialId,
+      providerDetail,
     } = this.props;
+    const { isSearchTimeSlot, fetchingStatus, providerId } = this.state;
     const serviceName = get(initService, 'name');
+    const currentDetail = get(providerDetail, providerId);
+    const providerName = get(currentDetail, 'givenName');
+    const providerFamily = get(currentDetail, 'familyName');
+    const providerEmail = get(currentDetail, 'email');
+    const providerPhone = get(currentDetail, 'telephone');
+    const providerImage = get(currentDetail, 'providerInformation.image.fileUrl');
+    const providerTimeZone = get(currentDetail, 'providerInformation.timeZoneId');
     const { isMapDialogOpen } = this.state;
-    const providerId = get(provider, 'id');
-    const providerEmail = get(provider, 'email');
-    const providerPhone = get(provider, 'telephone');
-    const providerWebsite = get(provider, 'website');
-    const providerTimeZone = get(provider, 'providerInformation.timeZoneId');
-    const providerService = providerList
-      .filter(item => providerId === item.providerId && initService.id === item.serviceId);
-    const providerRating = get(providerService, '0.rating');
-
+    const duration = get(provider, 'avgServiceTime');
+    const providerRating = get(provider, 'rating');
     return (
       <>
         <MapDialog
@@ -74,57 +98,44 @@ class ProviderContent extends React.PureComponent {
         <div className={s.providerListCard}>
           <div className={s.providerListCardContent}>
             <div className={s.providerListCardHeader}>
+              <div className={s.providerImageWrapper}>
+                <img src={providerImage} alt={providerName} className={s.providerImage} />
+              </div>
               <div className={s.providerListCardTitle}>
                 <Typography variant="title" color="inherit" className="text-bold" noWrap>
                   <CustomLink
-                    text={formatName({ givenName: provider.givenName, familyName: provider.familyName })}
+                    text={`${providerName} ${providerFamily}`}
                     to={`/provider/${providerId}`}
                     big
                   />
                 </Typography>
-                <RateStar rating={providerRating} />
-              </div>
-              <div className={s.providerAddress}>
                 <div className={s.providerListCardMap}>
-                  <ButtonBase onClick={this.toggleMapDialog}>
-                    <PersonPin className="icon-small icon-brand icon-shake" />
-                  </ButtonBase>
-                  <Typography
-                    noWrap
-                    variant="subheading"
-                    color="inherit"
-                    onClick={this.toggleMapDialog}
-                    className="hover-pointer text-bold"
-                  >View map
+                  <RateStar rating={providerRating} />
+                  <div className={s.geoLocation}>
+                    <Button onClick={this.toggleMapDialog} className="simple-button">
+                      <PersonPin className="icon-brand icon-small" />
+                      View map
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              <div className={s.providerListCardContent}>
+                <div className="icon-text">
+                  <EmailOutlined className="icon-main icon-small" />
+                  <Typography variant="body1" color="inherit" noWrap>
+                    {providerEmail}
                   </Typography>
                 </div>
                 <div className="icon-text">
-                  <EmailOutlined className="icon-small icon-brand" />
-                  <Typography noWrap variant="body2" color="inherit">
-                    <a href={`mailto: ${providerEmail}`} className={s.website}>
-                      {providerEmail}
-                    </a>
+                  <CallOutlined className="icon-main icon-small" />
+                  <Typography variant="body1" color="inherit" noWrap>
+                    {providerPhone}
                   </Typography>
                 </div>
                 <div className="icon-text">
-                  <CallOutlined className="icon-small icon-brand" />
-                  <Typography noWrap variant="body2" color="inherit">{providerPhone}</Typography>
-                </div>
-                <div className="icon-text">
-                  <AddOutlined className="icon-small icon-transparent" />
-                  <Typography noWrap variant="body2" color="inherit">{providerTimeZone}</Typography>
-                </div>
-                <div className="icon-text">
-                  <Public className="icon-small" />
-                  <Typography noWrap variant="body2" color="inherit">
-                    <a
-                      href={`${providerWebsite || 'https://info.quezone.co'}`}
-                      rel="noreferrer noopener"
-                      target="_blank"
-                      className={s.website}
-                    >
-                      {`${providerWebsite || 'https://info.quezone.co'}`}
-                    </a>
+                  <Public className="icon-main icon-small" />
+                  <Typography variant="body1" color="inherit" noWrap>
+                    {providerTimeZone}
                   </Typography>
                 </div>
               </div>
@@ -149,11 +160,25 @@ class ProviderContent extends React.PureComponent {
                 Your current timezone: {moment.tz.guess()}
               </Typography>
             </div>
-            <SelectTime
-              bookingDetail={bookingDetail}
-              providerDetail={provider}
-              onChange={onTimeSelect}
-            />
+            {
+              fetchingStatus !== 'success' && (
+                <div className={s.providerContentSearchSlot}>
+                  <Button onClick={this.handleSearchTimeSlot} variant="outlined" className="simple-button">
+                    <Search className="icon-normal main-color" />
+                    Find slots
+                  </Button>
+                </div>
+              )
+            }
+            {(isSearchTimeSlot || fetchingStatus === 'success') && (
+              <SelectTime
+                bookingDetail={bookingDetail}
+                providerDetail={provider}
+                onChange={onTimeSelect}
+                fetchSlot={fetchAvailabilityBySpecialId}
+                getSpecialStatus={this.handleFetchingSlotStatus}
+              />
+            )}
           </div>
         </div>
       </>
@@ -166,8 +191,9 @@ ProviderContent.propTypes = {
   provider: providerType,
   bookingDetail: bookingDetailType.isRequired,
   onTimeSelect: func.isRequired,
-  duration: number.isRequired,
-  providerList: arrayOf(any).isRequired,
+  fetchAvailabilityBySpecialIdAction: func.isRequired,
+  fetchProviderDetail: func.isRequired,
+  providerDetail: objectOf(any).isRequired,
 };
 
 ProviderContent.defaultProps = {
@@ -176,7 +202,10 @@ ProviderContent.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  providerList: state.home.providerList,
+  providerDetail: state.providerPage.providerDetail,
 });
 
-export default connect(mapStateToProps)(ProviderContent);
+export default connect(mapStateToProps, {
+  fetchAvailabilityBySpecialIdAction,
+  fetchProviderDetail,
+})(ProviderContent);

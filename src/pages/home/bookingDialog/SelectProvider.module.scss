@@ -27,20 +27,11 @@
 .selectProviderList {
   width: auto;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
   height: 100vh;
   overflow: auto;
 }
 
 .selectDateOfBooking {
   height: 100%;
-}
-
-@media (min-width: $smx) {
-  .selectProviderList {
-    flex-direction: row;
-    align-items: unset;
-  }
 }

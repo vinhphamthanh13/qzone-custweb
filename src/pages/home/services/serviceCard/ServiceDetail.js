@@ -9,7 +9,6 @@ import { READ_MORE_MAX } from 'utils/constants';
 import RateStar from 'components/Rating/RateStar';
 import styles from './ServiceDetail.module.scss';
 import ReadMore from '../readMore/ReadMore';
-import LinkedProvider from '../linkedProviders/LinkedProviders';
 
 export default class ServiceDetail extends React.PureComponent {
   constructor(props) {
@@ -35,7 +34,7 @@ export default class ServiceDetail extends React.PureComponent {
   };
 
   render() {
-    const { service, instantBooking, handleHiddenBookingButton } = this.props;
+    const { service } = this.props;
     const { isDialogDescOpen } = this.state;
     const serviceName = get(service, 'name');
     const duration = get(service, 'duration');
@@ -91,13 +90,6 @@ export default class ServiceDetail extends React.PureComponent {
             </Typography>
           </div>
         </div>
-        <div className={styles.linkedProviders}>
-          <LinkedProvider
-            service={service}
-            instantBooking={instantBooking}
-            handleBookingButton={handleHiddenBookingButton}
-          />
-        </div>
       </>
     );
   }
@@ -106,5 +98,4 @@ export default class ServiceDetail extends React.PureComponent {
 ServiceDetail.propTypes = {
   service: serviceType.isRequired,
   instantBooking: func.isRequired,
-  handleHiddenBookingButton: func.isRequired,
 };

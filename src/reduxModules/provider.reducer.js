@@ -22,7 +22,10 @@ const providerPage = (state = initState, action) => {
     case FETCH_PROVIDER_DETAIL:
       return {
         ...state,
-        providerDetail: action.payload,
+        providerDetail: {
+          ...state.providerDetail,
+          ...action.payload,
+        },
       };
     default:
       return { ...state };

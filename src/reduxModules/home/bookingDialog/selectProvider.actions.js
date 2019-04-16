@@ -3,6 +3,7 @@ import {
   searchProvidersByService,
   searchProviderById,
   findAvailabilitiesByDateRange,
+  findSpecialEvents,
 } from 'api/home/bookingDialog/selectProvider';
 import moment from 'moment';
 import { searchOrganizationById } from 'api/home';
@@ -11,7 +12,24 @@ import { setLoading } from '../bookingDialog.actions';
 
 export const SET_PROVIDERS = 'HOME.BOOKING_DIALOG.SELECT_PROVIDER.SET_PROVIDERS';
 export const SET_PROVIDER_TIMES_DETAIL = 'HOME.BOOKING_DIALOG.SELECT_PROVIDER.SET_PROVIDER_TIMES_DETAIL';
+export const SET_SPECIAL_EVENT_BY_ID = 'HOME.SET_SPECIAL_EVENT_BY_ID';
 
+const setSpecialEventById = payload => ({
+  type: SET_SPECIAL_EVENT_BY_ID,
+  payload,
+});
+
+export const findSpecialEventsAction = id => async (dispatch) => {
+  dispatch(setLoading(true));
+  const [response] = await handleRequest(findSpecialEvents, [id], [null]);
+  console.log('set special event', response);
+  if (response) {
+    dispatch(setSpecialEventById(response));
+  } else {
+    console.log('cannot find special event by id');
+  }
+  dispatch(setLoading(false));
+};
 export const setProviders = payload => ({
   type: SET_PROVIDERS,
   payload,

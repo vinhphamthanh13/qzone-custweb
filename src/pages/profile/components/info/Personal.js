@@ -56,6 +56,7 @@ export default withFormik({
     telephone: props.userInfo.telephone,
   }),
   isInitialValid: true,
+  enableReinitialize: true,
   validationSchema: Yup.object().shape({
     familyName: Yup.string().min(3),
     givenName: Yup.string().min(3).required(),

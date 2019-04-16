@@ -35,7 +35,13 @@ export default function MapDialog({
             </IconButton>
           </div>
           <div className={s.mapTitle}>
-            <Typography variant="title" className="text-bold text-margin-right">{serviceName}</Typography>
+            <Typography
+              variant="title"
+              color="inherit"
+              className="text-bold full-width"
+              noWrap
+            >{serviceName}
+            </Typography>
           </div>
           <div className={s.providerLocation}>
             <div className="icon-text">

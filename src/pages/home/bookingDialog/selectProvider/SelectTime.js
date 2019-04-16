@@ -1,23 +1,42 @@
 import React from 'react';
+import {
+  func,
+  number, arrayOf, shape,
+  objectOf, any,
+} from 'prop-types';
 import { connect } from 'react-redux';
 import { Typography, Button } from '@material-ui/core';
 import moment from 'moment';
 import uuidv1 from 'uuid/v1';
-import {
-  func, number, arrayOf, shape,
-} from 'prop-types';
 import { get, chunk, noop } from 'lodash';
 import s from './SelectTime.module.scss';
 
 export class SelectTime extends React.PureComponent {
-  static getDerivedStateFromProps(nextProps) {
-    return nextProps.bookingDetail.provider && nextProps.providerDetail.id === nextProps.bookingDetail.provider.id
-      && nextProps.bookingDetail.time
-      ? {}
-      : { selectedHour: null };
+  state = {
+    cachedSpecialSlots: null,
+    specialId: null,
+  };
+
+  componentDidMount() {
+    const { fetchSlot, providerDetail } = this.props;
+    const specialEventId = get(providerDetail, 'id');
+    const availabilitySlotReq = {
+      specialEventId,
+      customerTimezoneId: moment.tz.guess(),
+    };
+    fetchSlot(availabilitySlotReq);
+    this.setState({ specialId: specialEventId });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { specialSlots, getSpecialStatus } = nextProps;
+    const { specialId } = this.state;
+    getSpecialStatus(specialSlots[specialId].status);
+    this.setState({ cachedSpecialSlots: specialSlots });
   }
 
   onHourChange = ({ start, duration }) => (event) => {
+    console.log('start', start);
     event.preventDefault();
     this.props.onChange({
       start: start.valueOf(),
@@ -27,12 +46,13 @@ export class SelectTime extends React.PureComponent {
 
   getHourBoxes = (timeDetails) => {
     const timeBoxes = timeDetails
-      .filter(slot => !!slot.spotsOpen && moment.now() < slot.startSec * 1000)
+      .filter(slot => !!slot.spotsOpen && moment.now() < moment(get(slot, 'providerStartSec')).unix() * 1000)
       .sort((a, b) => a.startSec - b.startSec).map((bookedSlot) => {
-        const time = get(bookedSlot, 'startSec') * 1000;
+        const time = moment(get(bookedSlot, 'providerStartSec')).unix() * 1000;
         const duration = get(bookedSlot, 'durationSec');
         const action = bookedSlot.spotsOpen
           ? this.onHourChange({ start: time, duration }) : noop;
+        console.log('start time', time);
         return ({
           key: uuidv1(),
           time,
@@ -65,10 +85,11 @@ export class SelectTime extends React.PureComponent {
   ));
 
   render() {
-    const {
-      timeDetails,
-    } = this.props;
-    const hourBoxes = this.getHourBoxes(timeDetails);
+    const { cachedSpecialSlots, specialId } = this.state;
+    const specialData = get(cachedSpecialSlots, `${specialId}`);
+    const timeDetails = get(specialData, 'slots');
+    console.log('timeDetails ', timeDetails);
+    const hourBoxes = (timeDetails && this.getHourBoxes(timeDetails)) || [];
     return hourBoxes.length > 0 ? this.renderTimeBox(hourBoxes) : (
       <div className={s.noneSlot}>
         <Typography variant="subheading" color="inherit">
@@ -80,7 +101,8 @@ export class SelectTime extends React.PureComponent {
 }
 
 SelectTime.propTypes = {
-  timeDetails: arrayOf(
+  getSpecialStatus: func.isRequired,
+  specialSlots: arrayOf(
     shape({
       startSec: number,
       durationSec: number,
@@ -88,15 +110,19 @@ SelectTime.propTypes = {
     }),
   ),
   onChange: func.isRequired,
+  fetchSlot: func.isRequired,
+  providerDetail: objectOf(any),
 };
 
 SelectTime.defaultProps = {
-  timeDetails: [],
+  specialSlots: [],
+  providerDetail: {},
 };
 
 const mapStateToProps = (states, ownProps) => ({
   isLoading: states.homeModules.bookingDialog.isLoading,
   timeDetails: states.homeModules.bookingDialogModules.selectProvider.providerDetails[ownProps.providerDetail.id],
+  specialSlots: states.specialSlots.specialSlots,
 });
 
 export default connect(mapStateToProps)(SelectTime);
