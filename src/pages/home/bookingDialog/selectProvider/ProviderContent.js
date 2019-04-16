@@ -1,7 +1,7 @@
 import React from 'react';
 import { func } from 'prop-types';
 import { get } from 'lodash';
-import { Typography, ButtonBase, IconButton } from '@material-ui/core';
+import { Typography, Button } from '@material-ui/core';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import {
@@ -27,6 +27,7 @@ class ProviderContent extends React.PureComponent {
 
     this.state = {
       isMapDialogOpen: false,
+      fetchingStatus: '',
       isSearchTimeSlot: false,
     };
   }
@@ -49,6 +50,12 @@ class ProviderContent extends React.PureComponent {
     }));
   };
 
+  handleFetchingSlotStatus = (status) => {
+    this.setState({
+      fetchingStatus: status,
+    });
+  };
+
   render() {
     const {
       provider, initService,
@@ -56,7 +63,7 @@ class ProviderContent extends React.PureComponent {
       onTimeSelect,
       fetchAvailabilityBySpecialIdAction: fetchAvailabilityBySpecialId,
     } = this.props;
-    const { isSearchTimeSlot } = this.state;
+    const { isSearchTimeSlot, fetchingStatus } = this.state;
     const serviceName = get(initService, 'name');
     const providerName = get(provider, 'providerName');
     const { isMapDialogOpen } = this.state;
@@ -85,17 +92,10 @@ class ProviderContent extends React.PureComponent {
                 <div className={s.providerListCardMap}>
                   <RateStar rating={providerRating} />
                   <div className={s.geoLocation}>
-                    <ButtonBase onClick={this.toggleMapDialog}>
+                    <Button onClick={this.toggleMapDialog} className="simple-button">
                       <PersonPin className="icon-brand icon-small" />
-                    </ButtonBase>
-                    <Typography
-                      variant="subtitle1"
-                      color="inherit"
-                      onClick={this.toggleMapDialog}
-                      className="hover-pointer"
-                      noWrap
-                    >View map
-                    </Typography>
+                      View map
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -120,25 +120,23 @@ class ProviderContent extends React.PureComponent {
                 Your current timezone: {moment.tz.guess()}
               </Typography>
             </div>
-            <div className={`${s.providerContentSearchSlot} icon-text`}>
-              <IconButton onClick={this.handleSearchTimeSlot} className="button-sm simple-button">
-                <Search className="icon-normal fruit-color" />
-              </IconButton>
-              <Typography
-                variant="body1"
-                color="inherit"
-                onClick={this.handleSearchTimeSlot}
-                className="hover-pointer"
-              >
-                Find available time slots!
-              </Typography>
-            </div>
-            {isSearchTimeSlot && (
+            {
+              fetchingStatus !== 'success' && (
+                <div className={s.providerContentSearchSlot}>
+                  <Button onClick={this.handleSearchTimeSlot} variant="outlined" className="simple-button">
+                    <Search className="icon-normal main-color" />
+                    Find slots
+                  </Button>
+                </div>
+              )
+            }
+            {(isSearchTimeSlot || fetchingStatus === 'success') && (
               <SelectTime
                 bookingDetail={bookingDetail}
                 providerDetail={provider}
                 onChange={onTimeSelect}
                 fetchSlot={fetchAvailabilityBySpecialId}
+                getSpecialStatus={this.handleFetchingSlotStatus}
               />
             )}
           </div>

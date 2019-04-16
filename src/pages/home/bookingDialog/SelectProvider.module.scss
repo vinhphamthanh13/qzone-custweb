@@ -21,12 +21,12 @@
 
 .providerRow {
   display: flex;
+  flex-direction: column;
 }
 
 .selectProviderList {
   width: auto;
   display: flex;
-  flex-direction: column;
   justify-content: flex-start;
   height: 100vh;
   overflow: auto;

@@ -29,11 +29,14 @@ export class SelectTime extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { specialSlots } = nextProps;
+    const { specialSlots, getSpecialStatus } = nextProps;
+    const { specialId } = this.state;
+    getSpecialStatus(specialSlots[specialId].status);
     this.setState({ cachedSpecialSlots: specialSlots });
   }
 
   onHourChange = ({ start, duration }) => (event) => {
+    console.log('start', start);
     event.preventDefault();
     this.props.onChange({
       start: start.valueOf(),
@@ -49,6 +52,7 @@ export class SelectTime extends React.PureComponent {
         const duration = get(bookedSlot, 'durationSec');
         const action = bookedSlot.spotsOpen
           ? this.onHourChange({ start: time, duration }) : noop;
+        console.log('start time', time);
         return ({
           key: uuidv1(),
           time,
@@ -82,7 +86,8 @@ export class SelectTime extends React.PureComponent {
 
   render() {
     const { cachedSpecialSlots, specialId } = this.state;
-    const timeDetails = get(cachedSpecialSlots, `${specialId}`);
+    const specialData = get(cachedSpecialSlots, `${specialId}`);
+    const timeDetails = get(specialData, 'slots');
     console.log('timeDetails ', timeDetails);
     const hourBoxes = (timeDetails && this.getHourBoxes(timeDetails)) || [];
     return hourBoxes.length > 0 ? this.renderTimeBox(hourBoxes) : (
@@ -96,6 +101,7 @@ export class SelectTime extends React.PureComponent {
 }
 
 SelectTime.propTypes = {
+  getSpecialStatus: func.isRequired,
   specialSlots: arrayOf(
     shape({
       startSec: number,

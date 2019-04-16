@@ -83,7 +83,7 @@ class SelectProvider extends React.PureComponent {
                 </div>
               </div>
               <div className={s.selectProviderList}>
-                {chunk(specialEvents, 4).map(list => (
+                {chunk(specialEvents, Math.ceil(specialEvents.length / 4)).map(list => (
                   <div key={uuidv1()} className={s.providerRow}>
                     {list.map(provider => (
                       <div key={uuidv1()}>

@@ -13,9 +13,21 @@ export const fetchAvailabilityBySpecialIdAction = data => async (dispatch) => {
   dispatch(setLoading(true));
   const [response] = await handleRequest(fetchAvailabilityBySpecialId, [data], [null]);
   if (response) {
-    dispatch(setSlotsBySpecialId({ [data.specialEventId]: response }));
+    dispatch(setSlotsBySpecialId({
+      [data.specialEventId]: {
+        slots: response,
+        status: 'success',
+      },
+    }));
   } else {
     console.log('error during fetch slots by special id');
+    dispatch(setSlotsBySpecialId({
+      [data.specialEventId]: {
+        slots: [],
+        status: 'error',
+        message: `Fetching error by id: ${data.specialEventId}`,
+      },
+    }));
   }
   dispatch(setLoading(false));
 };
