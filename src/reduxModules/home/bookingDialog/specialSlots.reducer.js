@@ -3,7 +3,7 @@ import { SET_SLOTS_BY_SPECIAL_ID } from 'reduxModules/home/bookingDialog/special
 
 const initState = {
   isLoading: false,
-  specialSlots: [],
+  specialSlots: {},
 };
 
 const specialSlots = (state = initState, action) => {
@@ -16,7 +16,10 @@ const specialSlots = (state = initState, action) => {
     case SET_SLOTS_BY_SPECIAL_ID:
       return {
         ...state,
-        specialSlots: action.payload,
+        specialSlots: {
+          ...state.specialSlots,
+          ...action.payload,
+        },
       };
     default:
       return state;

@@ -1,6 +1,8 @@
 import React from 'react';
 import {
-  func, number, arrayOf, shape, objectOf, any,
+  func,
+  // number, arrayOf, shape,
+  objectOf, any,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { Typography, Button } from '@material-ui/core';
@@ -10,6 +12,10 @@ import { get, chunk, noop } from 'lodash';
 import s from './SelectTime.module.scss';
 
 export class SelectTime extends React.PureComponent {
+  state = {
+    cachedSpecialSlots: [],
+  };
+
   componentDidMount() {
     const { fetchSlot, providerDetail } = this.props;
     const specialId = get(providerDetail, 'id');
@@ -20,7 +26,7 @@ export class SelectTime extends React.PureComponent {
     return nextProps.bookingDetail.provider && nextProps.providerDetail.id === nextProps.bookingDetail.provider.id
       && nextProps.bookingDetail.time
       ? {}
-      : { selectedHour: null };
+      : { selectedHour: null, cachedSpecialSlots: nextProps.specialSlots };
   }
 
   onHourChange = ({ start, duration }) => (event) => {
@@ -71,10 +77,11 @@ export class SelectTime extends React.PureComponent {
   ));
 
   render() {
-    const { specialSlots, providerDetail } = this.props;
+    const { providerDetail } = this.props;
+    const { cachedSpecialSlots } = this.state;
     const specialId = get(providerDetail, 'id');
-    console.log('sepcial Slots', specialSlots);
-    const timeDetails = get(specialSlots, `${specialId}`);
+    console.log('sepcial Slots', cachedSpecialSlots);
+    const timeDetails = get(cachedSpecialSlots, `${specialId}`);
     const hourBoxes = (timeDetails && this.getHourBoxes(timeDetails)) || [];
     return hourBoxes.length > 0 ? this.renderTimeBox(hourBoxes) : (
       <div className={s.noneSlot}>
@@ -87,20 +94,20 @@ export class SelectTime extends React.PureComponent {
 }
 
 SelectTime.propTypes = {
-  specialSlots: arrayOf(
-    shape({
-      startSec: number,
-      durationSec: number,
-      spotsOpen: number,
-    }),
-  ),
+  // specialSlots: arrayOf(
+  //   shape({
+  //     startSec: number,
+  //     durationSec: number,
+  //     spotsOpen: number,
+  //   }),
+  // ),
   onChange: func.isRequired,
   fetchSlot: func.isRequired,
   providerDetail: objectOf(any),
 };
 
 SelectTime.defaultProps = {
-  specialSlots: [],
+  // specialSlots: [],
   providerDetail: {},
 };
 
