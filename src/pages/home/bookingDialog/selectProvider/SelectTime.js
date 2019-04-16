@@ -19,9 +19,13 @@ export class SelectTime extends React.PureComponent {
 
   componentDidMount() {
     const { fetchSlot, providerDetail } = this.props;
-    const specialId = get(providerDetail, 'id');
-    fetchSlot(specialId);
-    this.setState({ specialId });
+    const specialEventId = get(providerDetail, 'id');
+    const availabilitySlotReq = {
+      specialEventId,
+      customerTimezoneId: moment.tz.guess(),
+    };
+    fetchSlot(availabilitySlotReq);
+    this.setState({ specialId: specialEventId });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -39,9 +43,9 @@ export class SelectTime extends React.PureComponent {
 
   getHourBoxes = (timeDetails) => {
     const timeBoxes = timeDetails
-      .filter(slot => !!slot.spotsOpen && moment.now() < slot.startSec * 1000)
+      .filter(slot => !!slot.spotsOpen && moment.now() < moment(get(slot, 'providerStartSec')).unix() * 1000)
       .sort((a, b) => a.startSec - b.startSec).map((bookedSlot) => {
-        const time = get(bookedSlot, 'startSec') * 1000;
+        const time = moment(get(bookedSlot, 'providerStartSec')).unix() * 1000;
         const duration = get(bookedSlot, 'durationSec');
         const action = bookedSlot.spotsOpen
           ? this.onHourChange({ start: time, duration }) : noop;
@@ -79,6 +83,7 @@ export class SelectTime extends React.PureComponent {
   render() {
     const { cachedSpecialSlots, specialId } = this.state;
     const timeDetails = get(cachedSpecialSlots, `${specialId}`);
+    console.log('timeDetails ', timeDetails);
     const hourBoxes = (timeDetails && this.getHourBoxes(timeDetails)) || [];
     return hourBoxes.length > 0 ? this.renderTimeBox(hourBoxes) : (
       <div className={s.noneSlot}>

@@ -9,11 +9,11 @@ const setSlotsBySpecialId = payload => ({
   payload,
 });
 
-export const fetchAvailabilityBySpecialIdAction = id => async (dispatch) => {
+export const fetchAvailabilityBySpecialIdAction = data => async (dispatch) => {
   dispatch(setLoading(true));
-  const [response] = await handleRequest(fetchAvailabilityBySpecialId, [id], [null]);
+  const [response] = await handleRequest(fetchAvailabilityBySpecialId, [data], [null]);
   if (response) {
-    dispatch(setSlotsBySpecialId({ [id]: response }));
+    dispatch(setSlotsBySpecialId({ [data.specialEventId]: response }));
   } else {
     console.log('error during fetch slots by special id');
   }

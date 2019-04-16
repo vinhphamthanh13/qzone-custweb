@@ -8,4 +8,4 @@ export const findAvailabilitiesByDateRange = body => axios.post('/find-availabil
 
 export const findSpecialEvents = id => axios.get(`/find-special-events-by-service-id/${id}`);
 
-export const fetchAvailabilityBySpecialId = id => axios.get(`/availabilities-by-special-event-id/${id}`);
+export const fetchAvailabilityBySpecialId = data => axios.post('/availabilities-by-special-event-id/', data);
