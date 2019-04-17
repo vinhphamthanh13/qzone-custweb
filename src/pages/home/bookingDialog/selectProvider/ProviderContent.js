@@ -8,7 +8,6 @@ import {
   PersonPin, Schedule,
   EmailOutlined, CallOutlined,
   Public,
-  Search,
 } from '@material-ui/icons';
 import {
   providerType,
@@ -29,24 +28,17 @@ class ProviderContent extends React.PureComponent {
 
     this.state = {
       isMapDialogOpen: false,
-      fetchingStatus: '',
-      isSearchTimeSlot: false,
       providerId: '',
     };
   }
 
   componentDidMount() {
     const { provider, fetchProviderDetail: fetchProviderDetailAction } = this.props;
+    console.log('component did mount in provider condtent', provider);
     const providerId = get(provider, 'providerId');
     fetchProviderDetailAction(providerId);
     this.setState({ providerId });
   }
-
-  handleSearchTimeSlot = () => {
-    this.setState({
-      isSearchTimeSlot: true,
-    });
-  };
 
   toggleDetailDialog = () => {
     this.setState(oldState => ({
@@ -60,11 +52,6 @@ class ProviderContent extends React.PureComponent {
     }));
   };
 
-  handleFetchingSlotStatus = (status) => {
-    this.setState({
-      fetchingStatus: status,
-    });
-  };
 
   render() {
     const {
@@ -75,7 +62,7 @@ class ProviderContent extends React.PureComponent {
       fetchAvailabilityBySpecialIdAction: fetchAvailabilityBySpecialId,
       providerDetail,
     } = this.props;
-    const { isSearchTimeSlot, fetchingStatus, providerId } = this.state;
+    const { providerId } = this.state;
     const serviceName = get(initService, 'name');
     const currentDetail = get(providerDetail, providerId);
     const providerName = get(currentDetail, 'givenName');
@@ -149,36 +136,18 @@ class ProviderContent extends React.PureComponent {
                   {duration} minutes
                 </Typography>
               </div>
-              <div className={s.contentItem}>
-                <Typography variant="title" color="secondary">
-                  ${parseFloat(Math.random() * 100).toFixed(2)}
-                </Typography>
-              </div>
             </div>
             <div className={s.providerListCardDescriptionBottom}>
               <Typography variant="body1" color="inherit">
                 Your current timezone: {moment.tz.guess()}
               </Typography>
             </div>
-            {
-              fetchingStatus !== 'success' && (
-                <div className={s.providerContentSearchSlot}>
-                  <Button onClick={this.handleSearchTimeSlot} variant="outlined" className="simple-button">
-                    <Search className="icon-normal main-color" />
-                    Find slots
-                  </Button>
-                </div>
-              )
-            }
-            {(isSearchTimeSlot || fetchingStatus === 'success') && (
-              <SelectTime
-                bookingDetail={bookingDetail}
-                providerDetail={provider}
-                onChange={onTimeSelect}
-                fetchSlot={fetchAvailabilityBySpecialId}
-                getSpecialStatus={this.handleFetchingSlotStatus}
-              />
-            )}
+            <SelectTime
+              bookingDetail={bookingDetail}
+              providerDetail={provider}
+              onChange={onTimeSelect}
+              fetchSlot={fetchAvailabilityBySpecialId}
+            />
           </div>
         </div>
       </>

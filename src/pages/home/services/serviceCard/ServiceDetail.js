@@ -1,7 +1,7 @@
 import React from 'react';
 import { func } from 'prop-types';
 import { Typography } from '@material-ui/core';
-import { AccessTime, Domain } from '@material-ui/icons';
+import { Domain } from '@material-ui/icons';
 import { serviceType } from 'types/global';
 import { get } from 'lodash';
 import CustomLink from 'components/CustomLink';
@@ -79,10 +79,6 @@ export default class ServiceDetail extends React.PureComponent {
           </Typography>
         </div>
         <div className={styles.blockItem}>
-          <div className={styles.iconInfo}>
-            <AccessTime className={styles.icon} />
-            <Typography variant="body1" color="primary">{duration} minutes</Typography>
-          </div>
           <div className={styles.iconInfo}>
             <Domain className={styles.icon} />
             <Typography variant="body1">

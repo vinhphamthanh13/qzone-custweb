@@ -5,7 +5,6 @@ import {
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import {
-  // Slide,
   Dialog, AppBar, Toolbar, IconButton,
   Avatar,
   Button,
@@ -44,7 +43,6 @@ class BookingDialog extends PureComponent {
       bookingDetail: {
         provider: undefined,
         time: undefined,
-        day: undefined,
       },
       isConfirmDialogOpen: false,
     };
@@ -115,6 +113,7 @@ class BookingDialog extends PureComponent {
     const duration = get(bookingDetail, 'time.duration');
     const customerId = get(userDetail, 'userSub');
     this.toggleConfirmDialog(false)();
+    console.log('bookingDetail', bookingDetail);
     bookEventAction({
       customerId,
       duration,

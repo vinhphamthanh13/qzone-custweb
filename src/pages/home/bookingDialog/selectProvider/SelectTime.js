@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   func,
-  number, arrayOf, shape,
+  // number, arrayOf, shape,
   objectOf, any,
 } from 'prop-types';
 import { connect } from 'react-redux';
@@ -18,25 +18,25 @@ export class SelectTime extends React.PureComponent {
   };
 
   componentDidMount() {
-    const { fetchSlot, providerDetail } = this.props;
+    const { fetchSlot, providerDetail, specialSlots } = this.props;
+    console.log('selecte timecomponent did mount', specialSlots);
     const specialEventId = get(providerDetail, 'id');
     const availabilitySlotReq = {
       specialEventId,
       customerTimezoneId: moment.tz.guess(),
     };
-    fetchSlot(availabilitySlotReq);
+    if (!specialSlots || Object.keys(specialSlots).length === 0) {
+      fetchSlot(availabilitySlotReq);
+    }
     this.setState({ specialId: specialEventId });
   }
 
   componentWillReceiveProps(nextProps) {
-    const { specialSlots, getSpecialStatus } = nextProps;
-    const { specialId } = this.state;
-    getSpecialStatus(specialSlots[specialId].status);
+    const { specialSlots } = nextProps;
     this.setState({ cachedSpecialSlots: specialSlots });
   }
 
   onHourChange = ({ start, duration }) => (event) => {
-    console.log('start', start);
     event.preventDefault();
     this.props.onChange({
       start: start.valueOf(),
@@ -52,7 +52,6 @@ export class SelectTime extends React.PureComponent {
         const duration = get(bookedSlot, 'durationSec');
         const action = bookedSlot.spotsOpen
           ? this.onHourChange({ start: time, duration }) : noop;
-        console.log('start time', time);
         return ({
           key: uuidv1(),
           time,
@@ -88,7 +87,6 @@ export class SelectTime extends React.PureComponent {
     const { cachedSpecialSlots, specialId } = this.state;
     const specialData = get(cachedSpecialSlots, `${specialId}`);
     const timeDetails = get(specialData, 'slots');
-    console.log('timeDetails ', timeDetails);
     const hourBoxes = (timeDetails && this.getHourBoxes(timeDetails)) || [];
     return hourBoxes.length > 0 ? this.renderTimeBox(hourBoxes) : (
       <div className={s.noneSlot}>
@@ -101,21 +99,14 @@ export class SelectTime extends React.PureComponent {
 }
 
 SelectTime.propTypes = {
-  getSpecialStatus: func.isRequired,
-  specialSlots: arrayOf(
-    shape({
-      startSec: number,
-      durationSec: number,
-      spotsOpen: number,
-    }),
-  ),
+  specialSlots: objectOf(any),
   onChange: func.isRequired,
   fetchSlot: func.isRequired,
   providerDetail: objectOf(any),
 };
 
 SelectTime.defaultProps = {
-  specialSlots: [],
+  specialSlots: {},
   providerDetail: {},
 };
 

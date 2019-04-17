@@ -32,6 +32,7 @@ class SelectProvider extends React.PureComponent {
       findSpecialEventsAction: findSpecialEvents,
     } = this.props;
 
+    console.log('componet did mount in Select Provider', initService.id);
     findSpecialEvents(initService.id);
   };
 
