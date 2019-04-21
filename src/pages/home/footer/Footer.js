@@ -1,9 +1,8 @@
 import React from 'react';
 import { bool } from 'prop-types';
 import { Typography, Icon } from '@material-ui/core';
-import Avatar from '@material-ui/core/es/Avatar/Avatar';
 import logo from 'images/quezone-logo.png';
-import style from './Footer.module.scss';
+import s from './Footer.module.scss';
 
 const needHelp = [
   'help', 'legal information', 'privacy policy', 'delivery information', 'business area',
@@ -24,46 +23,46 @@ const following = [
 ];
 
 const Footer = props => !props.loading && (
-  <div className={style.footer}>
-    <div className={style.info}>
-      <div className={style.infoDetail}>
+  <div className={s.footer}>
+    <div className={s.info}>
+      <div className={s.infoDetail}>
         <Typography variant="subtitle1" color="primary">
           NEED HELP
         </Typography>
         {needHelp.map(item => (
-          <Typography key={item} variant="body1" color="textSecondary" classes={{ body1: style.items }}>
+          <Typography key={item} variant="body1" color="textSecondary" classes={{ body1: s.items }}>
             {item}
           </Typography>
         ))}
       </div>
-      <div className={style.infoDetail}>
+      <div className={s.infoDetail}>
         <Typography variant="subtitle1" color="primary">
           YOUR QUEUING
         </Typography>
         {yourQueuing.map(item => (
-          <Typography key={item} variant="body1" color="textSecondary" classes={{ body1: style.items }}>
+          <Typography key={item} variant="body1" color="textSecondary" classes={{ body1: s.items }}>
             {item}
           </Typography>
         ))}
       </div>
-      <div className={style.infoDetail}>
+      <div className={s.infoDetail}>
         <Typography variant="subtitle1" color="primary">
           ABOUT
         </Typography>
         {about.map(item => (
-          <Typography key={item} variant="body1" color="textSecondary" classes={{ body1: style.items }}>
+          <Typography key={item} variant="body1" color="textSecondary" classes={{ body1: s.items }}>
             {item}
           </Typography>
         ))}
       </div>
-      <div className={style.infoDetail}>
+      <div className={s.infoDetail}>
         <Typography variant="subtitle1" color="primary">
           FOLLOW US
         </Typography>
         {following.map(item => (
           <div key={item.name} className="flex v-center">
             <Icon className={`fab fa-${item.icon} icon-main`} />
-            <Typography variant="body1" color="textSecondary" classes={{ body1: style.items }}>
+            <Typography variant="body1" color="textSecondary" classes={{ body1: s.items }}>
               {item.name}
             </Typography>
           </div>
@@ -72,7 +71,7 @@ const Footer = props => !props.loading && (
     </div>
     <div className="copyright">
       <Typography variant="body1" color="textSecondary" classes={{ body1: 'copyText' }}>&#x24B8; 2019</Typography>
-      <Avatar src={logo} classes={{ root: 'footerAvatar' }} imgProps={{ className: 'smallAvatar' }} />
+      <img src={logo} className={s.footerAvatar} alt="QZLogo" />
     </div>
   </div>
 );

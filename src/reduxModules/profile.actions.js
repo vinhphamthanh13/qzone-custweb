@@ -1,4 +1,4 @@
-import { setLoading } from 'actionsReducers/common';
+import { setLoading } from 'actionsReducers/common.actions';
 import { handleRequest } from 'utils/apiHelpers';
 import { updateProfile } from 'api/profile';
 import { getUserDetail } from 'authentication/actions/login';

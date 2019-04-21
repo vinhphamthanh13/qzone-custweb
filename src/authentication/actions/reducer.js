@@ -1,7 +1,7 @@
 import {
   SET_LOADING,
   RESET_ERROR,
-} from 'actionsReducers/common';
+} from 'actionsReducers/common.actions';
 import {
   STORE_USER_SESSION_LOGIN,
   STORE_USER_SESSION_ERROR,

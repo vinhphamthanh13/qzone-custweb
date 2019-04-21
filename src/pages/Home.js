@@ -17,7 +17,6 @@ import {
 import { history } from 'containers/App';
 import Loading from 'components/Loading';
 import { matchType } from 'types/global';
-import styles from './Home.module.scss';
 import Maintenance from './home/footer/Maintenance';
 import { serviceCategoriesType } from './home/Header';
 import Services from './home/Services';
@@ -30,6 +29,7 @@ import Profile from './profile/Profile';
 import Footer from './home/footer/Footer';
 import SlideShow from './home/slideShow/SlideShow';
 import AdvancedSearch from './home/search/AdvancedSearch';
+import s from './Home.module.scss';
 
 export class Home extends React.PureComponent {
   constructor(props) {
@@ -241,7 +241,7 @@ export class Home extends React.PureComponent {
         />
         <AppointmentDialog />
         <Grid container>
-          <Grid item xs={12} className={styles.selectService}>
+          <Grid item xs={12} className={s.landingPage}>
             {allServices.length > 0 && (
               <SlideShow
                 services={combineServiceProviders}

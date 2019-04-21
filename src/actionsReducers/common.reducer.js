@@ -1,9 +1,11 @@
-import { SET_LOADING } from 'actionsReducers/common.actions';
-import { SET_ORGANIZATION } from './organization.actions';
+import {
+  SET_LOADING,
+  SET_ERROR,
+} from 'actionsReducers/common.actions';
 
 const initState = {
   isLoading: false,
-  organization: [],
+  isError: false,
 };
 
 const reducer = (state = initState, action) => {
@@ -13,10 +15,10 @@ const reducer = (state = initState, action) => {
         ...state,
         isLoading: action.payload,
       };
-    case SET_ORGANIZATION:
+    case SET_ERROR:
       return {
         ...state,
-        organization: action.payload,
+        isError: action.payload,
       };
     default:
       return state;

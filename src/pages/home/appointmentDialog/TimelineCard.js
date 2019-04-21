@@ -14,7 +14,7 @@ import {
   PersonPin,
 } from '@material-ui/icons';
 import RateStar from 'components/Rating/RateStar';
-import { setRatingService } from 'actionsReducers/common';
+import { setRatingService } from 'actionsReducers/common.actions';
 import Rating from 'material-ui-rating';
 import styles from './TimelineCard.module.scss';
 import CountDownDisplay from './CountDownDisplay';

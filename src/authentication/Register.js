@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { Formik } from 'formik';
 import { Modal } from '@material-ui/core';
 import CustomModal from 'components/Modal/CustomModal';
-import { resetErrorMessage } from 'actionsReducers/common';
+import { resetErrorMessage } from 'actionsReducers/common.actions';
 import { register } from './actions/register';
 import Form from './components/Form';
 import { registerSchema } from './components/schemas';

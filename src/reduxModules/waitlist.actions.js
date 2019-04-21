@@ -1,5 +1,5 @@
 import { handleRequest } from 'utils/apiHelpers';
-import { setLoading } from 'actionsReducers/common';
+import { setLoading } from 'actionsReducers/common.actions';
 import { registerWaitList, fetchWaitList } from 'api/waitlist';
 
 

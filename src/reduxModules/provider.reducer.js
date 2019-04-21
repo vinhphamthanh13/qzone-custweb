@@ -1,4 +1,4 @@
-import { SET_LOADING } from 'actionsReducers/common';
+import { SET_LOADING } from 'actionsReducers/common.actions';
 import { FETCH_PROVIDER_DETAIL, FETCH_PROVIDER_SERVICE } from 'reduxModules/provider.actions';
 
 const initState = {

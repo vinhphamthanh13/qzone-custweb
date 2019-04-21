@@ -35,3 +35,9 @@
 .iconSuite {
   display: flex;
 }
+
+.footerAvatar {
+  border-radius: unset;
+  width: $logo-copyright;
+  height: unset;
+}

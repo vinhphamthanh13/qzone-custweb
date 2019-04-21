@@ -1,6 +1,6 @@
 import { Auth } from 'aws-amplify';
 import { GOOGLE_ID, AUTH_METHOD, PROVIDER } from 'config/auth';
-import { setLoading } from 'actionsReducers/common';
+import { setLoading } from 'actionsReducers/common.actions';
 import { getCustomerByEmail as loginApi, saveSocialEmail as socialLoginApi, fetchUserDetail } from 'api/auth';
 import { saveSession } from 'config/localStorage';
 import { handleResponse, handleRequest } from 'utils/apiHelpers';
