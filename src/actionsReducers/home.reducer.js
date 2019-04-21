@@ -2,6 +2,7 @@ import {
   SET_SERVICE_CATEGORIES,
   SET_SERVICES,
   SET_SERVICE_PROVIDERS,
+  SET_SERVICE_PROVIDER_NEAR_BY,
 } from './home.actions';
 
 const initState = {
@@ -26,6 +27,11 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         serviceProviders: action.payload,
+      };
+    case SET_SERVICE_PROVIDER_NEAR_BY:
+      return {
+        ...state,
+        serviceProviderNearByList: action.payload,
       };
     default:
       return state;

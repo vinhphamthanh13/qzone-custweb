@@ -5,7 +5,6 @@ import {
   func,
   any,
   objectOf,
-  // object,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
@@ -17,15 +16,11 @@ import {
 import { Grid } from '@material-ui/core';
 import {
   getServicesByName,
-  setServicesGlobal,
-  fetchServiceProviders,
-  fetchServiceProviderByIdAction,
 } from 'reduxModules/home.actions';
 import { history } from 'containers/App';
 import Loading from 'components/Loading';
 // import { matchType } from 'types/global';
 import Maintenance from './home/footer/Maintenance';
-// import { serviceCategoriesType } from './home/Header';
 import Services from './home/Services';
 import BookingDialog from './home/BookingDialog';
 import Auth from './Auth';
@@ -39,6 +34,22 @@ import AdvancedSearch from './home/search/AdvancedSearch';
 import s from './Home.module.scss';
 
 export class Home extends React.PureComponent {
+  static getDerivedStateFromProps(props, state) {
+    const { categories, serviceProviders, services } = props;
+    const {
+      categories: cachedCategories,
+      serviceProviders: cachedServiceProviders,
+      services: cachedServices,
+    } = state;
+    if (categories !== cachedCategories
+      || serviceProviders !== cachedServiceProviders
+      || services !== cachedServices
+    ) {
+      return { categories, serviceProviders, services };
+    }
+    return null;
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -83,22 +94,6 @@ export class Home extends React.PureComponent {
     // }
   }
 
-  static getDerivedStateFromProps(props, state) {
-    const { categories, serviceProviders, services } = props;
-    const {
-      categories: cachedCategories,
-      serviceProviders: cachedServiceProviders,
-      services: cachedServices,
-    } = state;
-    if (categories !== cachedCategories
-      || serviceProviders !== cachedServiceProviders
-      || services !== cachedServices
-    ) {
-      return { categories, serviceProviders, services };
-    }
-    return null;
-  }
-
   getSessionTimeoutId = (id) => {
     this.setState({ sessionTimeoutId: id });
   };
@@ -121,8 +116,6 @@ export class Home extends React.PureComponent {
     this.setState({ searchResult, searchText: value });
   };
 
-
-  //
   // componentWillReceiveProps(nextProps) {
   //   const { categories, serviceProviders } = nextProps;
   //   const { isSpecialBooking } = this.state;
@@ -134,7 +127,6 @@ export class Home extends React.PureComponent {
   //   const specialService = allServices.find(service => service.id === specialServiceId);
   //   if (isSpecialBooking) this.onChange(specialService, 'selectedService');
   // }
-
 
   onChange = (value, key) => {
     this.setState({ [key]: value });
@@ -217,24 +209,22 @@ export class Home extends React.PureComponent {
     const {
       loginSession: { isAuthenticated },
       isLoading,
-
-      providerListByDistance,
+      serviceProviderNearByList,
     } = this.props;
     const {
       services,
       categories,
       serviceProviders,
-      searchResult,
-
       searchText,
+      searchResult,
       isRegisterOpen,
       isLoginOpen,
       isOpenAdvancedSearch,
       isMaintenance,
-      selectedService,
-      isOpenProfile,
       sessionTimeoutId,
       isShowingAdvancedSearch,
+      selectedService,
+      isOpenProfile,
     } = this.state;
 
     const openAuthenticatedProfile = isAuthenticated && isOpenProfile;
@@ -248,8 +238,6 @@ export class Home extends React.PureComponent {
       name: category.name,
       list: combineServiceProviders.filter(service => service.serviceCategoryId === category.id),
     }));
-
-    const advancedSearchAvailable = providerListByDistance.length > 0 && isShowingAdvancedSearch;
 
     const underInstruction = isMaintenance && (<Maintenance />);
 
@@ -300,37 +288,42 @@ export class Home extends React.PureComponent {
               services={combineServiceProviders}
               onBooking={this.onChange}
             />
-            {searchResult && (
-              <Categorize
-                name="Search results"
-                loading={isLoading}
-                search
-                onClose={this.handleCloseSearch}
-              >
-                <Services
-                  services={searchResult}
-                  onChange={this.onChange}
-                  onLoadServices={this.onLoadServices}
-                  isLoading={isLoading}
-                  onCloseSearch={this.handleCloseSearch}
-                />
-              </Categorize>)
+            {
+              searchResult && (
+                <Categorize
+                  search
+                  loading={isLoading}
+                  name="Search results"
+                  onClose={this.handleCloseSearch}
+                >
+                  <Services
+                    isLoading={isLoading}
+                    services={searchResult}
+                    onChange={this.onChange}
+                    onLoadServices={this.onLoadServices}
+                    onCloseSearch={this.handleCloseSearch}
+                  />
+                </Categorize>
+              )
             }
-            {advancedSearchAvailable && (
-              <Categorize
-                name="Advanced Search Results"
-                loading={isLoading}
-                search
-                onClose={this.handleCloseSearch}
-              >
-                <Services
-                  services={providerListByDistance}
-                  onChange={this.onChange}
-                  isLoading={isLoading}
-                  onLoadServices={this.onLoadServices}
-                />
-              </Categorize>
-            )}
+            {
+              isShowingAdvancedSearch && (
+                <Categorize
+                  search
+                  loading={isLoading}
+                  name="Advanced Search Results"
+                  onClose={this.handleCloseSearch}
+                >
+                  <Services
+                    isLoading={isLoading}
+                    services={serviceProviderNearByList}
+                    onChange={this.onChange}
+                    onLoadServices={this.onLoadServices}
+                    onCloseSearch={this.handleCloseSearch}
+                  />
+                </Categorize>
+              )
+            }
             {categoriesServices && categoriesServices.map(category => (
               <Categorize key={category.name} name={category.name} loading={isLoading}>
                 <Services
@@ -352,33 +345,17 @@ export class Home extends React.PureComponent {
 }
 
 Home.propTypes = {
-  // categories: arrayOf(object),
-  // services: arrayOf(object).isRequired,
-  // serviceProviders: arrayOf(object),
+  isLoading: bool.isRequired,
+  loginSession: objectOf(any).isRequired,
   setServiceCategoriesAction: func.isRequired,
   setServicesAction: func.isRequired,
   setServiceProvidersAction: func.isRequired,
-
-  // setServiceCategoriesAction: func.isRequired,
-  // getAllServicesAction: func.isRequired,
-  // serviceCategories: serviceCategoriesType.isRequired,
   getServicesByNameAction: func.isRequired,
-  isLoading: bool.isRequired,
-  // allServices: arrayOf(any).isRequired,
-  loginSession: objectOf(any).isRequired,
-  providerListByDistance: arrayOf(any).isRequired,
-  // fetchServiceProvidersAction: func.isRequired,
-  // providerList: arrayOf(any).isRequired,
-  // serviceProviderById: objectOf(any),
-  // match: matchType,
+  serviceProviderNearByList: arrayOf(any),
 };
 
 Home.defaultProps = {
-  // categories: null,
-  // serviceProviders: null,
-
-  // serviceProviderById: {},
-  // match: { params: {} },
+  serviceProviderNearByList: [],
 };
 
 const mapStateToProps = state => ({
@@ -395,12 +372,6 @@ export default connect(
     setServiceCategoriesAction,
     setServicesAction,
     setServiceProvidersAction,
-
-    // setServiceCategoriesAction: setServiceCategories,
     getServicesByNameAction: getServicesByName,
-    getServicesByCategoryAction: setServicesGlobal,
-    getAllServicesAction: setServicesGlobal,
-    fetchServiceProvidersAction: fetchServiceProviders,
-    fetchServiceProviderByIdAction,
   },
 )(Home);
