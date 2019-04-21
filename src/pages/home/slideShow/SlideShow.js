@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  arrayOf, object, func, string,
+  arrayOf, object, func,
 } from 'prop-types';
 import Slider from 'react-slick';
 import { Typography } from '@material-ui/core';
@@ -13,12 +13,6 @@ class SlideShow extends Component {
   static propTypes = {
     services: arrayOf(object).isRequired,
     onBooking: func.isRequired,
-    onSearch: func.isRequired,
-    onSearchValue: string,
-  };
-
-  static defaultProps = {
-    onSearchValue: '',
   };
 
   static getDerivedStateFromProps(props, state) {

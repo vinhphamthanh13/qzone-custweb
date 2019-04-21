@@ -8,7 +8,7 @@ import {
   // object,
 } from 'prop-types';
 import { connect } from 'react-redux';
-// import { get } from 'lodash';
+import { get } from 'lodash';
 import {
   setServiceCategoriesAction,
   setServicesAction,
@@ -45,8 +45,9 @@ export class Home extends React.PureComponent {
       categories: null,
       services: null,
       serviceProviders: null,
-
       searchText: '',
+      searchResult: null,
+
       isRegisterOpen: false,
       isLoginOpen: false,
       selectedService: undefined,
@@ -98,6 +99,28 @@ export class Home extends React.PureComponent {
     return null;
   }
 
+  getSessionTimeoutId = (id) => {
+    this.setState({ sessionTimeoutId: id });
+  };
+
+  handleOnSearch = (event) => {
+    event.preventDefault();
+    const { value } = event.target;
+    let searchResult = null;
+    if (value.length > 2) {
+      const { services } = this.state;
+      searchResult = services.filter((service) => {
+        const orgName = get(service, 'organizationEntity.name');
+        const serviceName = get(service, 'name');
+        return (
+          serviceName.toLowerCase().includes(value.toLowerCase())
+          || orgName.toLowerCase().includes(value.toLowerCase())
+        );
+      });
+    }
+    this.setState({ searchResult, searchText: value });
+  };
+
 
   //
   // componentWillReceiveProps(nextProps) {
@@ -112,9 +135,6 @@ export class Home extends React.PureComponent {
   //   if (isSpecialBooking) this.onChange(specialService, 'selectedService');
   // }
 
-  getSessionTimeoutId = (id) => {
-    this.setState({ sessionTimeoutId: id });
-  };
 
   onChange = (value, key) => {
     this.setState({ [key]: value });
@@ -126,16 +146,9 @@ export class Home extends React.PureComponent {
     getServicesByNameAction(searchText);
   };
 
-  onSearch = (event) => {
-    if (event.key === 'Enter') {
-      this.props.getServicesByNameAction(event.target.value);
-    } else {
-      this.setState({ searchText: event.target.value });
-    }
-  };
-
   getSearchedServices = (services, searchText) => services.filter(
     (service) => {
+      console.log('search Service', service);
       const lowerSearchText = searchText ? searchText.toLowerCase() : undefined;
       return searchText
         ? service.name.toLowerCase().includes(lowerSearchText)
@@ -152,7 +165,7 @@ export class Home extends React.PureComponent {
     () => history.push('/'));
   };
 
-  openDialog = (key) => {
+  openAuthModal = (key) => {
     this.setState({ [key]: true });
   };
 
@@ -172,6 +185,7 @@ export class Home extends React.PureComponent {
     this.closeAdvancedSearchResult();
     this.setState({
       searchText: '',
+      searchResult: null,
     });
   };
 
@@ -210,6 +224,7 @@ export class Home extends React.PureComponent {
       services,
       categories,
       serviceProviders,
+      searchResult,
 
       searchText,
       isRegisterOpen,
@@ -221,6 +236,7 @@ export class Home extends React.PureComponent {
       sessionTimeoutId,
       isShowingAdvancedSearch,
     } = this.state;
+
     const openAuthenticatedProfile = isAuthenticated && isOpenProfile;
 
     const combineServiceProviders = services.map((service) => {
@@ -233,14 +249,21 @@ export class Home extends React.PureComponent {
       list: combineServiceProviders.filter(service => service.serviceCategoryId === category.id),
     }));
 
-    const searchedServices = this.getSearchedServices(combineServiceProviders, searchText);
     const advancedSearchAvailable = providerListByDistance.length > 0 && isShowingAdvancedSearch;
 
     const underInstruction = isMaintenance && (<Maintenance />);
 
     return (
       <>
-        <Loading />
+        <PrimarySearchAppBar
+          handleAuthenticate={this.openAuthModal}
+          onSearch={this.handleOnSearch}
+          onSearchValue={searchText}
+          handleAdvancedSearch={this.openAdvancedSearch}
+          sessionTimeoutId={sessionTimeoutId}
+          maintenance={isMaintenance}
+          handleOpenProfile={this.handleOpenProfile}
+        />
         {isOpenAdvancedSearch && (
           <div className="flex auto-margin-horizontal cover-bg-black">
             <AdvancedSearch
@@ -254,7 +277,7 @@ export class Home extends React.PureComponent {
           isRegisterOpen={isRegisterOpen}
           isLoginOpen={isLoginOpen}
           closeDialog={this.closeDialog}
-          handleAuthenticate={this.openDialog}
+          handleAuthenticate={this.openAuthModal}
           getSessionTimeoutId={this.getSessionTimeoutId}
         />
         {isAuthenticated && (
@@ -267,17 +290,8 @@ export class Home extends React.PureComponent {
           initService={selectedService}
           handleClose={this.handleCloseBookingDialog}
           onSaveBooking={this.onSaveBooking}
-          openDialog={this.openDialog}
+          openDialog={this.openAuthModal}
           handleOpenProfile={this.handleOpenProfile}
-        />
-        <PrimarySearchAppBar
-          handleAuthenticate={this.openDialog}
-          onSearch={this.onSearch}
-          onSearchValue={searchText}
-          handleOpenProfile={this.handleOpenProfile}
-          sessionTimeoutId={sessionTimeoutId}
-          handleAdvancedSearch={this.openAdvancedSearch}
-          maintenance={isMaintenance}
         />
         <AppointmentDialog />
         <Grid container>
@@ -285,10 +299,8 @@ export class Home extends React.PureComponent {
             <SlideShow
               services={combineServiceProviders}
               onBooking={this.onChange}
-              onSearch={this.onSearch}
-              onSearchValue={searchText}
             />
-            {searchText.length > 2 && (
+            {searchResult && (
               <Categorize
                 name="Search results"
                 loading={isLoading}
@@ -296,7 +308,7 @@ export class Home extends React.PureComponent {
                 onClose={this.handleCloseSearch}
               >
                 <Services
-                  services={searchedServices}
+                  services={searchResult}
                   onChange={this.onChange}
                   onLoadServices={this.onLoadServices}
                   isLoading={isLoading}
@@ -333,6 +345,7 @@ export class Home extends React.PureComponent {
             <Footer loading={isLoading} />
           </Grid>
         </Grid>
+        <Loading />
       </>
     );
   }
