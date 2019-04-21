@@ -1,4 +1,4 @@
-import { SET_LOADING } from 'actions/common';
+import { SET_LOADING } from 'actionsReducers/common';
 import { UPDATE_PROFILE } from './profile.actions';
 
 const initState = {

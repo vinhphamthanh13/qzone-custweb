@@ -1,0 +1,116 @@
+@import "styles/_settings.scss";
+
+.providerListCard {
+  color: $crimson;
+  margin: 0.6rem 0.5rem;
+  border: 1px solid $malibu;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: 320px;
+  box-shadow: 3px 4px 3px $gallery;
+  border-radius: 5px;
+}
+
+.providerListCardContent {
+  display: flex;
+  flex-direction: column;
+  color: $main;
+  box-sizing: border-box;
+}
+
+.providerListCardHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 0.5rem;
+  background: linear-gradient(to bottom, $white, $malibu);
+}
+
+.providerImageWrapper {
+  display: flex;
+  width: 100%;
+  height: 200px;
+}
+
+.providerImage {
+  width: 100%;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+}
+
+.providerListCardTitle {
+  padding: 0.5rem;
+  color: $primary;
+  width: 100%;
+}
+
+.geoLocation {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.providerContentSearchSlot {
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+  margin: 1.13rem;
+}
+
+.providerAddress {
+  padding: 0.5rem;
+  width: 100%;
+}
+
+.providerListCardMap {
+  color: $main;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+}
+
+.contentItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: $crimson;
+}
+
+.calendarTime {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+}
+
+.providerListCardService {
+  color: $success;
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.5rem;
+  background: linear-gradient(to bottom, $malibu, $gallery);
+}
+
+.providerListCardDescriptionBottom {
+  color: $main;
+  background: $gallery;
+  text-align: center;
+  padding: 0.5rem 0.5rem;
+  width: 100%;
+
+}
+
+.website {
+  text-decoration: none;
+  color: $main;
+  &:hover {
+    color: $danger;
+  }
+}

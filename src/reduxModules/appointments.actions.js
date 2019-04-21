@@ -1,4 +1,4 @@
-import { rateAppointmentByUser } from 'api/rating';
+import { serviceProvidersRating } from 'api/rating';
 import { getAppointmentsByUser } from 'api/appointment';
 import { handleRequest } from 'utils/apiHelpers';
 import { setLoading } from './home.actions';
@@ -38,7 +38,7 @@ export const rateAppointmentByCustomer = ({
   customerId, id, rating, serviceId,
 }) => (dispatch) => {
   dispatch(updateAppointmentRating({ id, rating }));
-  handleRequest(rateAppointmentByUser, [{
+  handleRequest(serviceProvidersRating, [{
     customerId, id, rating, serviceProviderId: serviceId,
   }]);
 };

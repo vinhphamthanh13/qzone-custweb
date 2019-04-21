@@ -4,8 +4,6 @@ import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
 import rootRoutes from 'config/routing/app';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { MuiPickersUtilsProvider } from 'material-ui-pickers';
-import MomentUtils from '@date-io/moment';
 import JssProvider from 'react-jss/lib/JssProvider';
 import { create } from 'jss';
 import { createGenerateClassName, jssPreset } from '@material-ui/core/styles';
@@ -30,15 +28,13 @@ Amplify.configure(AWS_CONFIG);
 const App = () => (
   <JssProvider jss={jss} generateClassName={generateClassName}>
     <React.Fragment>
-      <MuiPickersUtilsProvider utils={MomentUtils}>
-        <Provider store={store}>
-          <Router history={history}>
-            <Switch>
-              {rootRoutes.map(route => (<Route key={route.name || route.path} {...route} />))}
-            </Switch>
-          </Router>
-        </Provider>
-      </MuiPickersUtilsProvider>
+      <Provider store={store}>
+        <Router history={history}>
+          <Switch>
+            {rootRoutes.map(route => (<Route key={route.name || route.path} {...route} />))}
+          </Switch>
+        </Router>
+      </Provider>
       <CssBaseline />
     </React.Fragment>
   </JssProvider>

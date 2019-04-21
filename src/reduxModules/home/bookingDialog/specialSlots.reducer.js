@@ -1,4 +1,4 @@
-import { SET_LOADING } from 'actions/common';
+import { SET_LOADING } from 'actionsReducers/common';
 import { SET_SLOTS_BY_SPECIAL_ID } from 'reduxModules/home/bookingDialog/specialSlots.actions';
 
 const initState = {

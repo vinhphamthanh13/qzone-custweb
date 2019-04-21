@@ -1,4 +1,4 @@
-import { setLoading } from 'actions/common';
+import { setLoading } from 'actionsReducers/common';
 import { getProviderServices, getProviderDetail } from 'api/provider';
 import { handleRequest } from 'utils/apiHelpers';
 

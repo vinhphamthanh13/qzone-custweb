@@ -1,7 +1,7 @@
 import { get } from 'lodash';
 import { handleRequest } from 'utils/apiHelpers';
 import { findAvailabilitiesByDateRange } from 'api/home/bookingDialog/selectProvider';
-import { setLoading } from 'actions/common';
+import { setLoading } from 'actionsReducers/common';
 
 export const SET_PROVIDER_SLOTS = 'HOME.SET_PROVIDER_SLOTS';
 export const SET_EARLIEST_SLOT = 'HOME.SET_EARLIEST_SLOT';

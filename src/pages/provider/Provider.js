@@ -5,7 +5,7 @@ import {
 import { noop, get } from 'lodash';
 import { connect } from 'react-redux';
 import { Typography } from '@material-ui/core';
-import { setRatingService } from 'actions/common';
+import { setRatingService } from 'actionsReducers/common';
 import { fetchProviderService, fetchProviderDetail } from 'reduxModules/provider.actions';
 import Loading from 'components/Loading';
 import Header from './components/Header';

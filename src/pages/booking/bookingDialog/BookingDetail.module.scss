@@ -1,0 +1,73 @@
+@import "styles/_settings.scss";
+
+.bookingAppointment {
+  margin: 1em auto;
+  display: flex;
+  justify-content: space-evenly;
+  min-width: $smx;
+  width: 60%;
+  border: 1px solid $malibu;
+  border-bottom-left-radius: 1em;
+  border-bottom-right-radius: 1em;
+  box-sizing: border-box;
+  box-shadow: 1px 2px 2px $grayNickel;
+  color: $main;
+}
+
+.bookingHeadInfo {
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid $gallery;
+}
+
+.bookingDetail {
+  padding-top: 1em;
+}
+
+.serviceTitle {
+  color: $main;
+}
+
+.bookingItems {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.bookingCta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid $gallery;
+  margin: 1em auto;
+  padding-top: 1em;
+}
+
+.clientInfo {
+  padding: 1em 0 0 2.5em;
+  border-left-width: 4px;
+  border-left-style: solid;
+  border-image: linear-gradient(
+    to bottom,
+    $malibu,
+    rgba(0, 0, 0, 0)
+  ) 1 100%;
+}
+
+.formTitle {
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid $gallery;
+}
+
+.formFields {
+  color: $info;
+  padding: 0 2em 0;
+  width: 400px;
+}
+
+.serviceItems {
+  margin-top: 32px;
+}
+
+.viewMapButton {
+  margin-left: 16px;
+}

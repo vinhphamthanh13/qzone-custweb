@@ -1,13 +1,13 @@
 import React, { PureComponent } from 'react';
 import { func } from 'prop-types';
-import noop from 'lodash/noop';
+import { noop, get } from 'lodash';
 import serviceImg from 'images/service-provider.jpeg';
 import {
   Card, CardContent, CardMedia, CardActions,
   Button,
 } from '@material-ui/core';
-import { get } from 'lodash';
 import { serviceType } from 'types/global';
+import { history } from 'containers/App';
 import styles from './ServiceCard.module.scss';
 import ServiceDetail from './serviceCard/ServiceDetail';
 
@@ -45,6 +45,12 @@ export default class ServiceCard extends PureComponent {
     this.setState({ isHiddenBooking: value });
   };
 
+  handleRedirectBooking = () => {
+    const { service } = this.props;
+    const serviceId = get(service, 'id');
+    history.push(`/booking/${serviceId}`);
+  };
+
   render() {
     const { service } = this.props;
     const linkedProvider = get(service, 'linkedProvider');
@@ -69,7 +75,7 @@ export default class ServiceCard extends PureComponent {
               disabled={linkedProvider.length < 1}
               color="primary"
               variant="contained"
-              onClick={this.onSelectService}
+              onClick={this.handleRedirectBooking}
               fullWidth
               className={styles.serviceAction}
             >

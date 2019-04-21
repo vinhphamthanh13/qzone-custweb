@@ -31,7 +31,6 @@ import Footer from './home/footer/Footer';
 import SlideShow from './home/slideShow/SlideShow';
 import AdvancedSearch from './home/search/AdvancedSearch';
 
-// /* eslint react/no-unused-state: 0 */
 export class Home extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -51,8 +50,11 @@ export class Home extends React.PureComponent {
 
   async componentDidMount() {
     const {
-      setServiceCategoriesAction, getAllServicesAction, fetchServiceProvidersAction,
-      match: { params: { id } }, fetchServiceProviderByIdAction: fetchServiceProviderById,
+      setServiceCategoriesAction,
+      getAllServicesAction,
+      fetchServiceProvidersAction,
+      match: { params: { id } },
+      fetchServiceProviderByIdAction: fetchServiceProviderById,
     } = this.props;
     if (id) {
       fetchServiceProviderById(id);
@@ -165,12 +167,23 @@ export class Home extends React.PureComponent {
 
   render() {
     const {
-      serviceCategories, isLoading, allServices, loginSession: { isAuthenticated },
-      providerListByDistance, providerList,
+      serviceCategories,
+      isLoading,
+      allServices,
+      loginSession: { isAuthenticated },
+      providerListByDistance,
+      providerList,
     } = this.props;
     const {
-      searchText, isRegisterOpen, isLoginOpen, isOpenAdvancedSearch, isMaintenance,
-      selectedService, isOpenProfile, sessionTimeoutId, isShowingAdvancedSearch,
+      searchText,
+      isRegisterOpen,
+      isLoginOpen,
+      isOpenAdvancedSearch,
+      isMaintenance,
+      selectedService,
+      isOpenProfile,
+      sessionTimeoutId,
+      isShowingAdvancedSearch,
     } = this.state;
     const openAuthenticatedProfile = isAuthenticated && isOpenProfile;
     const combineServiceProviders = allServices.map((service) => {

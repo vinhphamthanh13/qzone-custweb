@@ -1,4 +1,4 @@
-import { setLoading } from 'actions/common';
+import { setLoading } from 'actionsReducers/common';
 import { handleRequest } from 'utils/apiHelpers';
 import { fetchAvailabilityBySpecialId } from 'api/home/bookingDialog/selectProvider';
 

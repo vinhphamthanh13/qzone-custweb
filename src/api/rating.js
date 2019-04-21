@@ -1,3 +1,4 @@
 import axios from 'axios';
 
-export const rateAppointmentByUser = body => axios.post('/service-providers-rating', body);
+// service-provider-assignment-controller
+export const serviceProvidersRating = body => axios.post('/service-providers-rating', body);

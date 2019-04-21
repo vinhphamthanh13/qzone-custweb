@@ -2,7 +2,7 @@
 
 import { Auth } from 'aws-amplify';
 import { saveSession, loadSession } from 'config/localStorage';
-import { setLoading } from 'actions/common';
+import { setLoading } from 'actionsReducers/common';
 import { AUTH_METHOD, PROVIDER } from 'config/auth';
 import { LOGOUT_ERROR, LOGOUT_SUCCESS, LOGOUT_ERROR_RST } from './constants';
 

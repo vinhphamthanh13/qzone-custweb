@@ -1,0 +1,43 @@
+@import "styles/_settings.scss";
+
+.navBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(to right, $main, $white);
+  height: $app-bar-height;
+  padding: 0 1.25rem;
+}
+
+.logoImage {
+  width: auto;
+  height: 100%;
+}
+
+.bookingStepsWrapper {
+  border: unset;
+  width: 100%;
+}
+
+.stepper {
+  color: $fruitSalad;
+}
+
+.step {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  color: chocolate;
+}
+
+.stepLabel {
+  color: $main;
+}
+
+.stepNumber {
+
+}
+
+.bookingContent {
+  border: 1px solid red;
+}

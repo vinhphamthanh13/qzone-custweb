@@ -1,5 +1,5 @@
 
-import { setLoading } from 'actions/common';
+import { setLoading } from 'actionsReducers/common';
 import { handleRequest } from 'utils/apiHelpers';
 import { fetchOrganization } from 'api/organization';
 

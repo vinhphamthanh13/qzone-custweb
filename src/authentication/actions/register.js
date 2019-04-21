@@ -1,5 +1,5 @@
 import { Auth } from 'aws-amplify';
-import { setLoading } from 'actions/common';
+import { setLoading } from 'actionsReducers/common';
 import { catchAwsUser } from 'api/auth';
 import {
   REGISTER_AWS_SUCCESS, REGISTER_AWS_ERROR, CONFIRM_SIGN_UP_SUCCESS, CONFIRM_SIGN_UP_ERROR,

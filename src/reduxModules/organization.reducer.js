@@ -1,4 +1,4 @@
-import { SET_LOADING } from 'actions/common';
+import { SET_LOADING } from 'actionsReducers/common';
 import { SET_ORGANIZATION } from './organization.actions';
 
 const initState = {

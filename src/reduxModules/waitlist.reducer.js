@@ -1,4 +1,4 @@
-import { SET_LOADING } from 'actions/common';
+import { SET_LOADING } from 'actionsReducers/common';
 import { REGISTER_WAITLIST, FETCH_WAITLIST } from 'reduxModules/waitlist.actions';
 
 const initState = {
