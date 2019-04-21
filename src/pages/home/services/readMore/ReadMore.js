@@ -2,7 +2,7 @@ import React from 'react';
 import {
   func, bool, string, number,
 } from 'prop-types';
-import { AccessTime, LocationOn } from '@material-ui/icons';
+import { Domain } from '@material-ui/icons';
 import {
   Button, Dialog, DialogActions, DialogContent, DialogContentText,
   DialogTitle, Typography,
@@ -13,7 +13,7 @@ import styles from './ReadMore.module.scss';
 
 const ReadMore = (props) => {
   const {
-    isOpen, onClose, serviceName, duration, orgName, orgDescription, orgId, instantBooking,
+    isOpen, onClose, serviceName, orgName, orgDescription, orgId, instantBooking,
     rating, reviews,
   } = props;
   return (
@@ -28,11 +28,7 @@ const ReadMore = (props) => {
         <RateStar rating={rating} reviews={reviews} />
         <div className={styles.blockItem}>
           <div className={styles.iconInfo}>
-            <AccessTime className={styles.icon} />
-            <Typography variant="body1" color="primary">{duration} minutes</Typography>
-          </div>
-          <div className={styles.iconInfo}>
-            <LocationOn className={styles.icon} />
+            <Domain className={styles.icon} />
             <Typography variant="body1">
               <CustomLink text={orgName} to={`/organization/${orgId}`} />
             </Typography>
@@ -56,7 +52,6 @@ ReadMore.propTypes = {
   isOpen: bool.isRequired,
   onClose: func.isRequired,
   serviceName: string.isRequired,
-  duration: number.isRequired,
   orgName: string.isRequired,
   orgId: string.isRequired,
   orgDescription: string.isRequired,

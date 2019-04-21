@@ -1,14 +1,21 @@
 import React from 'react';
 import {
-  arrayOf, bool, func, any, objectOf,
+  arrayOf,
+  bool,
+  func,
+  any,
+  objectOf,
+  // object,
 } from 'prop-types';
 import { connect } from 'react-redux';
-import { Grid } from '@material-ui/core';
-import { getServiceCategories } from 'api/home';
-import { get } from 'lodash';
-import { handleRequest } from 'utils/apiHelpers';
+// import { get } from 'lodash';
 import {
-  setServiceCategories,
+  setServiceCategoriesAction,
+  setServicesAction,
+  setServiceProvidersAction,
+} from 'actionsReducers/home.actions';
+import { Grid } from '@material-ui/core';
+import {
   getServicesByName,
   setServicesGlobal,
   fetchServiceProviders,
@@ -16,9 +23,9 @@ import {
 } from 'reduxModules/home.actions';
 import { history } from 'containers/App';
 import Loading from 'components/Loading';
-import { matchType } from 'types/global';
+// import { matchType } from 'types/global';
 import Maintenance from './home/footer/Maintenance';
-import { serviceCategoriesType } from './home/Header';
+// import { serviceCategoriesType } from './home/Header';
 import Services from './home/Services';
 import BookingDialog from './home/BookingDialog';
 import Auth from './Auth';
@@ -35,6 +42,10 @@ export class Home extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      categories: null,
+      services: null,
+      serviceProviders: null,
+
       searchText: '',
       isRegisterOpen: false,
       isLoginOpen: false,
@@ -44,39 +55,62 @@ export class Home extends React.PureComponent {
       isOpenAdvancedSearch: false,
       isShowingAdvancedSearch: false,
       isMaintenance: false,
-      isSpecialBooking: false,
+      // isSpecialBooking: false,
     };
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     const {
-      setServiceCategoriesAction,
-      getAllServicesAction,
-      fetchServiceProvidersAction,
-      match: { params: { id } },
-      fetchServiceProviderByIdAction: fetchServiceProviderById,
+      setServiceCategoriesAction: setServiceCategories,
+      setServicesAction: setServices,
+      setServiceProvidersAction: setServiceProviders,
     } = this.props;
-    if (id) {
-      fetchServiceProviderById(id);
-      this.setState({ isSpecialBooking: true });
-    }
-    const [serviceCategories] = await handleRequest(getServiceCategories, [], []);
-    if (serviceCategories && serviceCategories.length) {
-      setServiceCategoriesAction(serviceCategories);
-      getAllServicesAction();
-      fetchServiceProvidersAction();
-    } else {
-      this.setState({ isMaintenance: true });
-    }
+    setServiceCategories();
+    setServices();
+    setServiceProviders();
+    // if (id) {
+    //   fetchServiceProviderById(id);
+    //   this.setState({ isSpecialBooking: true });
+    // }
+    // const [serviceCategories] = await handleRequest(getServiceCategories, [], []);
+    // if (serviceCategories && serviceCategories.length) {
+    //   setServiceCategoriesAction(serviceCategories);
+    //   getAllServicesAction();
+    //   fetchServiceProvidersAction();
+    // } else {
+    //   this.setState({ isMaintenance: true });
+    // }
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { isSpecialBooking } = this.state;
-    const { serviceProviderById, allServices } = nextProps;
-    const specialServiceId = get(serviceProviderById, 'serviceId');
-    const specialService = allServices.find(service => service.id === specialServiceId);
-    if (isSpecialBooking) this.onChange(specialService, 'selectedService');
+  static getDerivedStateFromProps(props, state) {
+    const { categories, serviceProviders, services } = props;
+    const {
+      categories: cachedCategories,
+      serviceProviders: cachedServiceProviders,
+      services: cachedServices,
+    } = state;
+    if (categories !== cachedCategories
+      || serviceProviders !== cachedServiceProviders
+      || services !== cachedServices
+    ) {
+      return { categories, serviceProviders, services };
+    }
+    return null;
   }
+
+
+  //
+  // componentWillReceiveProps(nextProps) {
+  //   const { categories, serviceProviders } = nextProps;
+  //   const { isSpecialBooking } = this.state;
+  //   const {
+  //     serviceProviderById,
+  //     allServices,
+  //   } = nextProps;
+  //   const specialServiceId = get(serviceProviderById, 'serviceId');
+  //   const specialService = allServices.find(service => service.id === specialServiceId);
+  //   if (isSpecialBooking) this.onChange(specialService, 'selectedService');
+  // }
 
   getSessionTimeoutId = (id) => {
     this.setState({ sessionTimeoutId: id });
@@ -113,7 +147,7 @@ export class Home extends React.PureComponent {
   handleCloseBookingDialog = () => {
     this.setState({
       selectedService: undefined,
-      isSpecialBooking: false,
+      // isSpecialBooking: false,
     },
     () => history.push('/'));
   };
@@ -167,14 +201,16 @@ export class Home extends React.PureComponent {
 
   render() {
     const {
-      serviceCategories,
-      isLoading,
-      allServices,
       loginSession: { isAuthenticated },
+      isLoading,
+
       providerListByDistance,
-      providerList,
     } = this.props;
     const {
+      services,
+      categories,
+      serviceProviders,
+
       searchText,
       isRegisterOpen,
       isLoginOpen,
@@ -186,16 +222,20 @@ export class Home extends React.PureComponent {
       isShowingAdvancedSearch,
     } = this.state;
     const openAuthenticatedProfile = isAuthenticated && isOpenProfile;
-    const combineServiceProviders = allServices.map((service) => {
-      const serviceProviders = providerList.filter(provider => provider.serviceId === service.id);
-      return { ...service, linkedProvider: serviceProviders };
+
+    const combineServiceProviders = services.map((service) => {
+      const linkedProvider = serviceProviders && serviceProviders.filter(provider => provider.serviceId === service.id);
+      return { ...service, linkedProvider };
     });
-    const catWithServices = serviceCategories && serviceCategories.length > 0 && serviceCategories.map(cat => ({
-      name: cat.name,
-      list: combineServiceProviders.filter(ser => ser.serviceCategoryId === cat.id),
+
+    const categoriesServices = categories && categories.length > 0 && categories.map(category => ({
+      name: category.name,
+      list: combineServiceProviders.filter(service => service.serviceCategoryId === category.id),
     }));
+
     const searchedServices = this.getSearchedServices(combineServiceProviders, searchText);
     const advancedSearchAvailable = providerListByDistance.length > 0 && isShowingAdvancedSearch;
+
     const underInstruction = isMaintenance && (<Maintenance />);
 
     return (
@@ -242,13 +282,12 @@ export class Home extends React.PureComponent {
         <AppointmentDialog />
         <Grid container>
           <Grid item xs={12} className={s.landingPage}>
-            {allServices.length > 0 && (
-              <SlideShow
-                services={combineServiceProviders}
-                onBooking={this.onChange}
-                onSearch={this.onSearch}
-                onSearchValue={searchText}
-              />)}
+            <SlideShow
+              services={combineServiceProviders}
+              onBooking={this.onChange}
+              onSearch={this.onSearch}
+              onSearchValue={searchText}
+            />
             {searchText.length > 2 && (
               <Categorize
                 name="Search results"
@@ -280,7 +319,7 @@ export class Home extends React.PureComponent {
                 />
               </Categorize>
             )}
-            {catWithServices && catWithServices.map(category => (
+            {categoriesServices && categoriesServices.map(category => (
               <Categorize key={category.name} name={category.name} loading={isLoading}>
                 <Services
                   services={category.list}
@@ -300,36 +339,51 @@ export class Home extends React.PureComponent {
 }
 
 Home.propTypes = {
+  // categories: arrayOf(object),
+  // services: arrayOf(object).isRequired,
+  // serviceProviders: arrayOf(object),
   setServiceCategoriesAction: func.isRequired,
-  getAllServicesAction: func.isRequired,
-  serviceCategories: serviceCategoriesType.isRequired,
+  setServicesAction: func.isRequired,
+  setServiceProvidersAction: func.isRequired,
+
+  // setServiceCategoriesAction: func.isRequired,
+  // getAllServicesAction: func.isRequired,
+  // serviceCategories: serviceCategoriesType.isRequired,
   getServicesByNameAction: func.isRequired,
   isLoading: bool.isRequired,
-  allServices: arrayOf(any).isRequired,
+  // allServices: arrayOf(any).isRequired,
   loginSession: objectOf(any).isRequired,
   providerListByDistance: arrayOf(any).isRequired,
-  fetchServiceProvidersAction: func.isRequired,
-  providerList: arrayOf(any).isRequired,
-  serviceProviderById: objectOf(any),
-  match: matchType,
+  // fetchServiceProvidersAction: func.isRequired,
+  // providerList: arrayOf(any).isRequired,
+  // serviceProviderById: objectOf(any),
+  // match: matchType,
 };
 
 Home.defaultProps = {
-  serviceProviderById: {},
-  match: { params: {} },
+  // categories: null,
+  // serviceProviders: null,
+
+  // serviceProviderById: {},
+  // match: { params: {} },
 };
 
 const mapStateToProps = state => ({
+  ...state.common,
+  ...state.homeNew,
   ...state.home,
   loginSession: state.auth.loginSession,
-  isLoading: state.home.isLoading,
   serviceProviderById: state.home.serviceProviderById,
 });
 
 export default connect(
   mapStateToProps,
   {
-    setServiceCategoriesAction: setServiceCategories,
+    setServiceCategoriesAction,
+    setServicesAction,
+    setServiceProvidersAction,
+
+    // setServiceCategoriesAction: setServiceCategories,
     getServicesByNameAction: getServicesByName,
     getServicesByCategoryAction: setServicesGlobal,
     getAllServicesAction: setServicesGlobal,

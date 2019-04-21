@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import { serviceType } from 'types/global';
 import { history } from 'containers/App';
-import styles from './ServiceCard.module.scss';
+import s from './ServiceCard.module.scss';
 import ServiceDetail from './serviceCard/ServiceDetail';
 
 export default class ServiceCard extends PureComponent {
@@ -56,13 +56,13 @@ export default class ServiceCard extends PureComponent {
     const linkedProvider = get(service, 'linkedProvider');
     const { imgSrc, isHiddenBooking } = this.state;
     return (
-      <Card raised classes={{ root: styles.serviceCard }}>
+      <Card raised classes={{ root: s.serviceCard }}>
         <CardMedia
-          className={styles.image}
+          className={s.image}
           image={imgSrc}
           onError={this.onError}
         />
-        <CardContent className={styles.serviceContent}>
+        <CardContent className={s.serviceContent}>
           <ServiceDetail
             service={service}
             instantBooking={this.onSelectService}
@@ -72,12 +72,12 @@ export default class ServiceCard extends PureComponent {
         {!isHiddenBooking && (
           <CardActions>
             <Button
-              disabled={linkedProvider.length < 1}
+              disabled={!linkedProvider || linkedProvider.length < 1}
               color="primary"
-              variant="contained"
+              variant="outlined"
               onClick={this.handleRedirectBooking}
               fullWidth
-              className={styles.serviceAction}
+              className={s.serviceAction}
             >
               Booking
             </Button>

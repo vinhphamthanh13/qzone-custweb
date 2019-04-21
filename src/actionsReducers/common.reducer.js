@@ -1,11 +1,13 @@
 import {
   SET_LOADING,
   SET_ERROR,
+  RESET_ERROR,
 } from 'actionsReducers/common.actions';
 
 const initState = {
   isLoading: false,
   isError: false,
+  errorMessage: '',
 };
 
 const reducer = (state = initState, action) => {
@@ -18,7 +20,14 @@ const reducer = (state = initState, action) => {
     case SET_ERROR:
       return {
         ...state,
-        isError: action.payload,
+        isEError: true,
+        errorMessage: action.payload,
+      };
+    case RESET_ERROR:
+      return {
+        ...state,
+        isError: false,
+        errorMessage: '',
       };
     default:
       return state;
