@@ -5,9 +5,8 @@ import thunk from 'redux-thunk';
 
 import auth from 'authentication/actions/reducer';
 import common from 'actionsReducers/common.reducer';
-import homeNew from 'actionsReducers/home.reducer';
+import home from 'actionsReducers/home.reducer';
 
-import home from 'reduxModules/home.reducer';
 import appointments from 'reduxModules/appointments.reducer';
 import { loadSessionToState } from 'authentication/actions/session';
 import selectProvider from 'reduxModules/home/bookingDialog/selectProvider.reducer';
@@ -25,7 +24,6 @@ const persistedSession = loadSession();
 const rootReducer = combineReducers({
   auth,
   common,
-  homeNew,
   home,
   appointments,
   homeModules: combineReducers({

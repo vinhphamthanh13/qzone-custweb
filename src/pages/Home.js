@@ -229,14 +229,15 @@ export class Home extends React.PureComponent {
 
     const openAuthenticatedProfile = isAuthenticated && isOpenProfile;
 
-    const combineServiceProviders = services.map((service) => {
+    const combineServiceProviders = services && services.map((service) => {
       const linkedProvider = serviceProviders && serviceProviders.filter(provider => provider.serviceId === service.id);
       return { ...service, linkedProvider };
     });
 
     const categoriesServices = categories && categories.length > 0 && categories.map(category => ({
       name: category.name,
-      list: combineServiceProviders.filter(service => service.serviceCategoryId === category.id),
+      list: combineServiceProviders
+        && combineServiceProviders.filter(service => service.serviceCategoryId === category.id),
     }));
 
     const underInstruction = isMaintenance && (<Maintenance />);
@@ -360,10 +361,9 @@ Home.defaultProps = {
 
 const mapStateToProps = state => ({
   ...state.common,
-  ...state.homeNew,
   ...state.home,
   loginSession: state.auth.loginSession,
-  serviceProviderById: state.home.serviceProviderById,
+  // serviceProviderById: state.home.serviceProviderById,
 });
 
 export default connect(

@@ -17,10 +17,10 @@ export default function Services({
     <>
       <Grid container className={styles.cardsWrapper} justify="center">
         {
-          !isLoading && services.length === 0
+          !isLoading && services && services.length === 0
           && <EmptyItem onLoadServices={onLoadServices} />
         }
-        {services.map(service => (
+        {services && services.map(service => (
           <Grid item xs={10} sm={6} md={3} key={service.id}>
             <ServiceCard onChange={onChange} service={service} onCloseSearch={onCloseSearch} />
           </Grid>
