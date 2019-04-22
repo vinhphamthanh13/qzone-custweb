@@ -16,7 +16,7 @@ import {
   Notifications as NotificationsIcon,
   Fingerprint, FindInPage,
 } from '@material-ui/icons';
-import { findEventByCustomerIdAction } from 'actionsReducers/home.actions';
+import { findEventByCustomerIdAction } from 'actionsReducers/common.actions';
 import logo from 'images/quezone-logo.png';
 import styles from './PrimarySearchAppBarStyle';
 
@@ -30,8 +30,6 @@ class PrimarySearchAppBar extends React.Component {
       eventList: cachedEventList,
       loginSession: cachedLoginSession,
     } = state;
-    console.log('props', props);
-    console.log('state', state);
     const authenticated = get(loginSession, 'isAuthenticated');
     const cachedAuthenticated = get(cachedLoginSession, 'isAuthenticated');
     if (

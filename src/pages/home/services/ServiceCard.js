@@ -1,27 +1,19 @@
 import React, { PureComponent } from 'react';
-import { func } from 'prop-types';
-import { noop, get } from 'lodash';
+import { get } from 'lodash';
 import serviceImg from 'images/service-provider.jpeg';
 import {
-  Card, CardContent, CardMedia, CardActions,
+  Card,
+  CardContent,
+  CardMedia,
+  CardActions,
   Button,
 } from '@material-ui/core';
 import { serviceType } from 'types/global';
 import { history } from 'containers/App';
-import s from './ServiceCard.module.scss';
 import ServiceDetail from './serviceCard/ServiceDetail';
+import s from './ServiceCard.module.scss';
 
-export default class ServiceCard extends PureComponent {
-  static propTypes = {
-    service: serviceType.isRequired,
-    onChange: func.isRequired,
-    onCloseSearch: func,
-  };
-
-  static defaultProps = {
-    onCloseSearch: noop,
-  };
-
+class ServiceCard extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,12 +23,6 @@ export default class ServiceCard extends PureComponent {
     };
   }
 
-  onSelectService = () => {
-    const { onChange, service, onCloseSearch } = this.props;
-    onChange(service, 'selectedService');
-    onCloseSearch();
-  };
-
   onError = () => {
     this.setState({ imgSrc: serviceImg });
   };
@@ -45,7 +31,7 @@ export default class ServiceCard extends PureComponent {
     this.setState({ isHiddenBooking: value });
   };
 
-  handleRedirectBooking = () => {
+  handleBooking = () => {
     const { service } = this.props;
     const serviceId = get(service, 'id');
     history.push(`/booking/${serviceId}`);
@@ -72,12 +58,12 @@ export default class ServiceCard extends PureComponent {
         {!isHiddenBooking && (
           <CardActions>
             <Button
-              disabled={!linkedProvider || linkedProvider.length < 1}
+              fullWidth
               color="primary"
               variant="outlined"
-              onClick={this.handleRedirectBooking}
-              fullWidth
               className={s.serviceAction}
+              disabled={!linkedProvider || linkedProvider.length < 1}
+              onClick={this.handleBooking}
             >
               Booking
             </Button>
@@ -87,3 +73,9 @@ export default class ServiceCard extends PureComponent {
     );
   }
 }
+
+ServiceCard.propTypes = {
+  service: serviceType.isRequired,
+};
+
+export default ServiceCard;

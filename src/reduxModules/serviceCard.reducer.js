@@ -19,7 +19,6 @@ const serviceCardReducer = (state = initState, action) => {
         providerSlots: action.payload,
       };
     case SET_EARLIEST_SLOT:
-      console.log('earliest slo in Redux', action.payload);
       return {
         ...state,
         earliestSlot: action.payload,

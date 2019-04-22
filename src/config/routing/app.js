@@ -1,5 +1,5 @@
 import Home from 'pages/Home';
-// import Booking from 'pages/Booking';
+import Booking from 'pages/Booking';
 import PageNotFound from 'pages/PageNotFound';
 import AccessDenied from 'pages/AccessDenied';
 import Provider from 'pages/Provider';
@@ -20,13 +20,13 @@ const rootRoutes = [
     name: 'Home',
     component: Home,
   },
-  // {
-  //   exact: true,
-  //   strict: true,
-  //   path: '/booking/:id',
-  //   name: 'Booking Flow',
-  //   component: Booking,
-  // },
+  {
+    exact: true,
+    strict: true,
+    path: '/booking/:id',
+    name: 'Booking Flow',
+    component: Booking,
+  },
   {
     exact: true,
     strict: true,

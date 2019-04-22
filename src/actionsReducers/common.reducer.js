@@ -2,6 +2,7 @@ import {
   SET_LOADING,
   SET_ERROR,
   RESET_ERROR,
+  FIND_EVENT_BY_CUSTOMER_ID,
 } from 'actionsReducers/common.actions';
 
 const initState = {
@@ -29,6 +30,12 @@ const reducer = (state = initState, action) => {
         isError: false,
         errorMessage: '',
       };
+    case FIND_EVENT_BY_CUSTOMER_ID:
+      return {
+        ...state,
+        eventList: action.payload,
+      };
+
     default:
       return state;
   }

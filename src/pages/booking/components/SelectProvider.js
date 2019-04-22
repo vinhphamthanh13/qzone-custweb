@@ -12,7 +12,7 @@ import uuidv1 from 'uuid/v1';
 import moment from 'moment';
 import DatePicker from 'components/Calendar/DatePicker';
 import {
-  getProvidersByService, getProviderTimes, findSpecialEventsAction,
+  getProviderTimes, findSpecialEventsAction,
 } from 'reduxModules/home/bookingDialog/selectProvider.actions';
 import EmptyItem from 'components/EmptyItem';
 import ProviderContent from './selectProvider/ProviderContent';
@@ -127,7 +127,7 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, {
-  getProvidersByServiceAction: getProvidersByService,
+  // getProvidersByServiceAction: getProvidersByService,
   getProviderTimesAction: getProviderTimes,
   findSpecialEventsAction,
 })(SelectProvider);

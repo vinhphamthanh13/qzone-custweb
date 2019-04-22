@@ -26,7 +26,6 @@ import { setProviders } from 'reduxModules/home/bookingDialog/selectProvider.act
 import { bookEvent, resetStatus } from 'reduxModules/home/bookingDialog.actions';
 import CustomModal from 'components/Modal/CustomModal';
 import { toggleAppointment } from 'reduxModules/appointments.actions';
-import { fetchCustomerEvents } from 'reduxModules/home.actions';
 import { deleteEarliestSlot } from 'reduxModules/serviceCard.actions';
 import SelectProvider from './bookingDialog/SelectProvider';
 import BookingDetail from './bookingDialog/BookingDetail';
@@ -113,7 +112,6 @@ class BookingDialog extends PureComponent {
     const duration = get(bookingDetail, 'time.duration');
     const customerId = get(userDetail, 'userSub');
     this.toggleConfirmDialog(false)();
-    console.log('bookingDetail', bookingDetail);
     bookEventAction({
       customerId,
       duration,
@@ -297,7 +295,6 @@ export default compose(
       bookEventAction: bookEvent,
       resetStatusAction: resetStatus,
       toggleAppointmentAction: toggleAppointment,
-      fetchCustomerEventsAction: fetchCustomerEvents,
       deleteEarliestSlotAction: deleteEarliestSlot,
     },
   ),

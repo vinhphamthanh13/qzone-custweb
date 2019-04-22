@@ -3,7 +3,6 @@ import {
   SET_SERVICES,
   SET_SERVICE_PROVIDERS,
   SET_SERVICE_PROVIDER_NEAR_BY,
-  FIND_EVENT_BY_CUSTOMER_ID,
   SET_SERVICES_BY_NAME,
 } from './home.actions';
 
@@ -37,11 +36,6 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         serviceProviderNearByList: action.payload,
-      };
-    case FIND_EVENT_BY_CUSTOMER_ID:
-      return {
-        ...state,
-        eventList: action.payload,
       };
     case SET_SERVICES_BY_NAME:
       return {

@@ -20,3 +20,12 @@ export const saveSession = (session) => {
     // ignore when writing localStorage error
   }
 };
+
+export const cachedBookingData = (data) => {
+  try {
+    const serializeData = JSON.stringify(data);
+    localStorage.setItem('BOOKING_DATA', serializeData);
+  } catch (e) {
+    // ignore when writting localStorage error
+  }
+};

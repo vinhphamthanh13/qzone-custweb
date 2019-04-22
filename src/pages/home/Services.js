@@ -8,7 +8,6 @@ import ServiceCard from './services/ServiceCard';
 
 export default function Services({
   services,
-  onChange,
   isLoading,
   onLoadServices,
   onCloseSearch,
@@ -22,7 +21,7 @@ export default function Services({
         }
         {services && services.map(service => (
           <Grid item xs={10} sm={6} md={3} key={service.id}>
-            <ServiceCard onChange={onChange} service={service} onCloseSearch={onCloseSearch} />
+            <ServiceCard service={service} onCloseSearch={onCloseSearch} />
           </Grid>
         ))}
       </Grid>
@@ -32,7 +31,7 @@ export default function Services({
 
 Services.propTypes = {
   services: arrayOf(serviceType).isRequired,
-  onChange: func.isRequired,
+  onBooking: func.isRequired,
   isLoading: bool.isRequired,
   onLoadServices: func.isRequired,
   onCloseSearch: func,

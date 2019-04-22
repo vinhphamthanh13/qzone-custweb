@@ -10,6 +10,3 @@ export const servicesSearchByName = name => axios.get(`/services/search/name?sea
 // service-provider-assignment-controller
 export const serviceProviders = () => axios.get('/service-providers');
 export const serviceProvidersNearBy = body => axios.post('/service-providers-near-by', body);
-
-// event-resource
-export const findEventByCustomerId = id => axios.get(`/find-events-by-customer-id/${id}`);

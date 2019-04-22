@@ -20,15 +20,16 @@ import logo from 'images/quezone-logo.png';
 import {
   userDetailType,
 } from 'types/global';
-import { setProviders } from 'reduxModules/home/bookingDialog/selectProvider.actions';
-import { bookEvent, resetStatus } from 'reduxModules/home/bookingDialog.actions';
 import CustomModal from 'components/Modal/CustomModal';
 import { history } from 'containers/App';
+import { findEventByCustomerIdAction } from 'actionsReducers/common.actions';
+
+import { setProviders } from 'reduxModules/home/bookingDialog/selectProvider.actions';
+import { bookEvent, resetStatus } from 'reduxModules/home/bookingDialog.actions';
 import { toggleAppointment } from 'reduxModules/appointments.actions';
-import { fetchCustomerEvents } from 'reduxModules/home.actions';
-import SelectProvider from './bookingDialog/SelectProvider';
-import BookingDetail from './bookingDialog/BookingDetail';
-import ViewAppointment from './bookingDialog/ViewAppointment';
+import SelectProvider from './components/SelectProvider';
+import BookingDetail from './components/BookingDetail';
+import ViewAppointment from './components/ViewAppointment';
 import s from './Booking.module.scss';
 
 const STEP_LABELS = ['Select provider', 'Book appointment', 'Complete booking'];
@@ -36,7 +37,7 @@ const STEP_LABELS = ['Select provider', 'Book appointment', 'Complete booking'];
 class Booking extends PureComponent {
   constructor(props) {
     super(props);
-    this.bookingStepsComponents = [SelectProvider, BookingDetail, ViewAppointment];
+    this.stepComponents = [SelectProvider, BookingDetail, ViewAppointment];
     this.defaultState = {
       step: 0,
       bookingDetail: {
@@ -130,10 +131,12 @@ class Booking extends PureComponent {
 
   handleViewAppointment = () => {
     const {
-      handleOpenProfile, fetchCustomerEventsAction, userDetail: { userSub },
+      handleOpenProfile,
+      findEventByCustomerIdAction: findEventByCustomerId,
+      userDetail: { userSub },
       resetStatusAction,
     } = this.props;
-    fetchCustomerEventsAction(userSub);
+    findEventByCustomerId(userSub);
     handleOpenProfile();
     resetStatusAction();
   };
@@ -154,7 +157,7 @@ class Booking extends PureComponent {
       // openDialog,
     } = this.props;
     const { step, bookingDetail, isConfirmDialogOpen } = this.state;
-    // const StepComponent = this.bookingStepsComponents[step];
+    const Step = this.stepComponents[step];
     const isBackValid = !(step === 0 || step === STEP_LABELS.length - 1);
     const isNextValid = !(step === STEP_LABELS.length - 1 || !this.isStepCompleted());
     console.log('select provider', this.props);
@@ -214,7 +217,7 @@ class Booking extends PureComponent {
               </IconButton>
             </div>
           </div>
-
+          <Step />
         </div>
       </>
     );
@@ -225,24 +228,16 @@ Booking.propTypes = {
   serviceId: string.isRequired,
   setProvidersAction: func.isRequired,
   userDetail: userDetailType.isRequired,
-  // openDialog: func.isRequired,
-  // initService: serviceType,
-  // isLoading: bool.isRequired,
-  // bookingEvent: eventType,
   bookEventAction: func.isRequired,
   bookingStatus: shape({ type: string, message: string }).isRequired,
   resetStatusAction: func.isRequired,
   toggleAppointmentAction: func.isRequired,
   handleOpenProfile: func.isRequired,
-  fetchCustomerEventsAction: func.isRequired,
-};
-
-Booking.defaultProps = {
-  // initService: undefined,
-  // bookingEvent: undefined,
+  findEventByCustomerIdAction: func.isRequired,
 };
 
 const mapStateToProps = state => ({
+  ...state.common,
   userDetail: state.auth.userDetail,
   isAuthenticated: state.auth.loginSession.isAuthenticated,
   isLoading: state.homeModules.bookingDialog.isLoading,
@@ -258,7 +253,7 @@ export default compose(
       bookEventAction: bookEvent,
       resetStatusAction: resetStatus,
       toggleAppointmentAction: toggleAppointment,
-      fetchCustomerEventsAction: fetchCustomerEvents,
+      findEventByCustomerIdAction,
     },
   ),
 )(Booking);

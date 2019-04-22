@@ -7,15 +7,16 @@ import {
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
+import { Grid } from '@material-ui/core';
+import { history } from 'containers/App';
+import Loading from 'components/Loading';
 import {
   setServiceCategoriesAction,
   setServicesAction,
   setServiceProvidersAction,
   setServicesByNameAction,
 } from 'actionsReducers/home.actions';
-import { Grid } from '@material-ui/core';
-import { history } from 'containers/App';
-import Loading from 'components/Loading';
+import { cachedBookingData } from 'config/localStorage';
 import Maintenance from './home/footer/Maintenance';
 import Services from './home/Services';
 import Auth from './Auth';
@@ -113,11 +114,11 @@ export class Home extends React.PureComponent {
     this.setState({ searchResult, searchText: value });
   };
 
-  onChange = (value, key) => {
-    this.setState({ [key]: value });
+  handleBooking = (serviceId) => {
+    history.push(`/booking/${serviceId}`);
   };
 
-  onLoadServices = () => {
+  handleSearchServicesByName = () => {
     const { setServicesByNameAction: setServicesByName } = this.props;
     const { searchText } = this.state;
     setServicesByName(searchText);
@@ -125,7 +126,6 @@ export class Home extends React.PureComponent {
 
   getSearchedServices = (services, searchText) => services.filter(
     (service) => {
-      console.log('search Service', service);
       const lowerSearchText = searchText ? searchText.toLowerCase() : undefined;
       return searchText
         ? service.name.toLowerCase().includes(lowerSearchText)
@@ -133,10 +133,6 @@ export class Home extends React.PureComponent {
         : true;
     },
   );
-
-  handleCloseBookingDialog = () => {
-    history.push('/');
-  };
 
   openAuthModal = (key) => {
     this.setState({ [key]: true });
@@ -184,6 +180,11 @@ export class Home extends React.PureComponent {
 
   closeAdvancedSearch = () => {
     this.handleAdvancedSearch(false);
+  };
+
+  handleCachingBookingData = () => {
+    const { services, serviceProviders } = this.state;
+    cachedBookingData({ services, serviceProviders });
   };
 
   render() {
@@ -255,19 +256,12 @@ export class Home extends React.PureComponent {
             handleCloseProfile={this.handleCloseProfile}
           />)
         }
-        { /* <BookingDialog */ }
-        { /* initService={selectedService} */ }
-        { /* handleClose={this.handleCloseBookingDialog} */ }
-        { /* onSaveBooking={this.onSaveBooking} */ }
-        { /* openDialog={this.openAuthModal} */ }
-        { /* handleOpenProfile={this.handleOpenProfile} */ }
-        { /* /> */}
         <AppointmentDialog />
         <Grid container>
           <Grid item xs={12} className={s.landingPage}>
             <SlideShow
               services={combineServiceProviders}
-              onBooking={this.onChange}
+              onBooking={this.handleBooking}
             />
             {
               searchResult && (
@@ -280,8 +274,8 @@ export class Home extends React.PureComponent {
                   <Services
                     isLoading={isLoading}
                     services={searchResult}
-                    onChange={this.onChange}
-                    onLoadServices={this.onLoadServices}
+                    onBooking={this.handleBooking}
+                    onLoadServices={this.handleSearchServicesByName}
                     onCloseSearch={this.handleCloseSearch}
                   />
                 </Categorize>
@@ -298,8 +292,8 @@ export class Home extends React.PureComponent {
                   <Services
                     isLoading={isLoading}
                     services={serviceProviderNearByList}
-                    onChange={this.onChange}
-                    onLoadServices={this.onLoadServices}
+                    onBooking={this.handleBooking}
+                    onLoadServices={this.handleSearchServicesByName}
                     onCloseSearch={this.handleCloseSearch}
                   />
                 </Categorize>
@@ -309,9 +303,9 @@ export class Home extends React.PureComponent {
               <Categorize key={category.name} name={category.name} loading={isLoading}>
                 <Services
                   services={category.list}
-                  onChange={this.onChange}
-                  onLoadServices={this.onLoadServices}
+                  onLoadServices={this.handleSearchServicesByName}
                   isLoading={isLoading}
+                  cacheData={this.handleCachingBookingData}
                 />
               </Categorize>
             ))}
