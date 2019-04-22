@@ -1,11 +1,11 @@
 import React from 'react';
 import {
-  objectOf, any, func, arrayOf, object, string, bool,
+  objectOf, any, func, string, bool,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import moment from 'moment';
-import { noop } from 'lodash';
+import { noop, get } from 'lodash';
 import { withStyles } from '@material-ui/core/styles';
 import {
   AppBar, Toolbar, IconButton, InputBase, Badge, Avatar, Typography, Button,
@@ -16,27 +16,60 @@ import {
   Notifications as NotificationsIcon,
   Fingerprint, FindInPage,
 } from '@material-ui/icons';
-import { fetchCustomerEvents } from 'reduxModules/home.actions';
+import { findEventByCustomerIdAction } from 'actionsReducers/home.actions';
 import logo from 'images/quezone-logo.png';
 import styles from './PrimarySearchAppBarStyle';
 
 class PrimarySearchAppBar extends React.Component {
+  static getDerivedStateFromProps(props, state) {
+    const {
+      eventList,
+      loginSession,
+    } = props;
+    const {
+      eventList: cachedEventList,
+      loginSession: cachedLoginSession,
+    } = state;
+    console.log('props', props);
+    console.log('state', state);
+    const authenticated = get(loginSession, 'isAuthenticated');
+    const cachedAuthenticated = get(cachedLoginSession, 'isAuthenticated');
+    if (
+      eventList !== cachedEventList
+      || authenticated !== cachedAuthenticated
+    ) {
+      return {
+        eventList,
+        loginSession,
+      };
+    }
+    return null;
+  }
+
+  state = {
+    eventList: null,
+  };
+
   componentDidMount() {
-    const { loginSession, fetchCustomerEventsAction } = this.props;
+    const {
+      loginSession,
+      findEventByCustomerIdAction: findEventByCustomerId,
+    } = this.props;
     const [isAuthenticated, id] = loginSession
       ? [loginSession.isAuthenticated, loginSession.id] : [false, ''];
     if (isAuthenticated) {
-      fetchCustomerEventsAction(id);
+      findEventByCustomerId(id);
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { loginSession } = nextProps;
-    const { fetchCustomerEventsAction, loginSession: prevSession } = this.props;
-    const { isAuthenticated, id } = loginSession;
-    const { isAuthenticated: prevAuthenticated } = prevSession;
-    if (isAuthenticated && isAuthenticated !== prevAuthenticated) {
-      fetchCustomerEventsAction(id);
+  componentDidUpdate(prevProps) {
+    const { loginSession } = prevProps;
+    const {
+      loginSession: updatedLoginSession,
+      findEventByCustomerIdAction: findEventByCustomerId,
+    } = this.props;
+    if (loginSession.isAuthenticated !== updatedLoginSession.isAuthenticated) {
+      findEventByCustomerId(updatedLoginSession.id);
     }
   }
 
@@ -59,11 +92,12 @@ class PrimarySearchAppBar extends React.Component {
 
   render() {
     const {
-      classes, loginSession, onSearch, customerEventList, onSearchValue, maintenance,
+      classes, loginSession, onSearch, onSearchValue, maintenance,
     } = this.props;
+    const { eventList } = this.state;
     const currentTime = moment.now();
-    const eventCount = customerEventList
-      && customerEventList.filter(event => event.slot.startSec * 1000 > currentTime).length;
+    const eventCount = eventList
+      && eventList.filter(event => event.slot.startSec * 1000 > currentTime).length;
     const badgeStyle = eventCount > 0 ? 'text-margin-lr hover-pointer' : 'text-margin-lr';
     const isAuthenticated = loginSession ? loginSession.isAuthenticated : false;
     const [authLabel, openForm] = maintenance ? ['Sign Up', 'isRegisterOpen'] : ['Sign In', 'isLoginOpen'];
@@ -161,9 +195,8 @@ PrimarySearchAppBar.propTypes = {
   handleAuthenticate: func.isRequired,
   onSearch: func.isRequired,
   loginSession: objectOf(any).isRequired,
-  fetchCustomerEventsAction: func.isRequired,
+  findEventByCustomerIdAction: func.isRequired,
   handleOpenProfile: func.isRequired,
-  customerEventList: arrayOf(object).isRequired,
   onSearchValue: string,
   handleAdvancedSearch: func.isRequired,
   maintenance: bool.isRequired,
@@ -175,12 +208,12 @@ PrimarySearchAppBar.defaultProps = {
 
 const mapStateToProps = state => ({
   loginSession: state.auth.loginSession,
-  customerEventList: state.home.customerEventList,
+  ...state.home,
 });
 
 export default compose(
   connect(mapStateToProps, {
-    fetchCustomerEventsAction: fetchCustomerEvents,
+    findEventByCustomerIdAction,
   }),
   withStyles(styles),
 )(PrimarySearchAppBar);

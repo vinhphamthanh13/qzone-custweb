@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  arrayOf,
   bool,
   func,
   any,
@@ -12,17 +11,13 @@ import {
   setServiceCategoriesAction,
   setServicesAction,
   setServiceProvidersAction,
+  setServicesByNameAction,
 } from 'actionsReducers/home.actions';
 import { Grid } from '@material-ui/core';
-import {
-  getServicesByName,
-} from 'reduxModules/home.actions';
 import { history } from 'containers/App';
 import Loading from 'components/Loading';
-// import { matchType } from 'types/global';
 import Maintenance from './home/footer/Maintenance';
 import Services from './home/Services';
-import BookingDialog from './home/BookingDialog';
 import Auth from './Auth';
 import PrimarySearchAppBar from './home/appbar/PrimarySearchAppBar';
 import AppointmentDialog from './home/AppointmentDialog';
@@ -35,17 +30,34 @@ import s from './Home.module.scss';
 
 export class Home extends React.PureComponent {
   static getDerivedStateFromProps(props, state) {
-    const { categories, serviceProviders, services } = props;
+    const {
+      categories,
+      services,
+      serviceProviders,
+      serviceProviderNearByList,
+      eventList,
+    } = props;
     const {
       categories: cachedCategories,
-      serviceProviders: cachedServiceProviders,
       services: cachedServices,
+      serviceProviders: cachedServiceProviders,
+      serviceProviderNearByList: cachedServiceProviderNearByList,
+      eventList: cachedEventList,
     } = state;
-    if (categories !== cachedCategories
+    if (
+      categories !== cachedCategories
       || serviceProviders !== cachedServiceProviders
       || services !== cachedServices
+      || serviceProviderNearByList !== cachedServiceProviderNearByList
+      || eventList !== cachedEventList
     ) {
-      return { categories, serviceProviders, services };
+      return {
+        categories,
+        services,
+        serviceProviders,
+        serviceProviderNearByList,
+        eventList,
+      };
     }
     return null;
   }
@@ -58,16 +70,13 @@ export class Home extends React.PureComponent {
       serviceProviders: null,
       searchText: '',
       searchResult: null,
-
       isRegisterOpen: false,
       isLoginOpen: false,
-      selectedService: undefined,
       isOpenProfile: false,
       sessionTimeoutId: 0,
       isOpenAdvancedSearch: false,
       isShowingAdvancedSearch: false,
       isMaintenance: false,
-      // isSpecialBooking: false,
     };
   }
 
@@ -80,18 +89,6 @@ export class Home extends React.PureComponent {
     setServiceCategories();
     setServices();
     setServiceProviders();
-    // if (id) {
-    //   fetchServiceProviderById(id);
-    //   this.setState({ isSpecialBooking: true });
-    // }
-    // const [serviceCategories] = await handleRequest(getServiceCategories, [], []);
-    // if (serviceCategories && serviceCategories.length) {
-    //   setServiceCategoriesAction(serviceCategories);
-    //   getAllServicesAction();
-    //   fetchServiceProvidersAction();
-    // } else {
-    //   this.setState({ isMaintenance: true });
-    // }
   }
 
   getSessionTimeoutId = (id) => {
@@ -116,26 +113,14 @@ export class Home extends React.PureComponent {
     this.setState({ searchResult, searchText: value });
   };
 
-  // componentWillReceiveProps(nextProps) {
-  //   const { categories, serviceProviders } = nextProps;
-  //   const { isSpecialBooking } = this.state;
-  //   const {
-  //     serviceProviderById,
-  //     allServices,
-  //   } = nextProps;
-  //   const specialServiceId = get(serviceProviderById, 'serviceId');
-  //   const specialService = allServices.find(service => service.id === specialServiceId);
-  //   if (isSpecialBooking) this.onChange(specialService, 'selectedService');
-  // }
-
   onChange = (value, key) => {
     this.setState({ [key]: value });
   };
 
   onLoadServices = () => {
-    const { getServicesByNameAction } = this.props;
+    const { setServicesByNameAction: setServicesByName } = this.props;
     const { searchText } = this.state;
-    getServicesByNameAction(searchText);
+    setServicesByName(searchText);
   };
 
   getSearchedServices = (services, searchText) => services.filter(
@@ -150,11 +135,7 @@ export class Home extends React.PureComponent {
   );
 
   handleCloseBookingDialog = () => {
-    this.setState({
-      selectedService: undefined,
-      // isSpecialBooking: false,
-    },
-    () => history.push('/'));
+    history.push('/');
   };
 
   openAuthModal = (key) => {
@@ -209,12 +190,12 @@ export class Home extends React.PureComponent {
     const {
       loginSession: { isAuthenticated },
       isLoading,
-      serviceProviderNearByList,
     } = this.props;
     const {
       services,
       categories,
       serviceProviders,
+      serviceProviderNearByList,
       searchText,
       searchResult,
       isRegisterOpen,
@@ -223,7 +204,6 @@ export class Home extends React.PureComponent {
       isMaintenance,
       sessionTimeoutId,
       isShowingAdvancedSearch,
-      selectedService,
       isOpenProfile,
     } = this.state;
 
@@ -275,13 +255,13 @@ export class Home extends React.PureComponent {
             handleCloseProfile={this.handleCloseProfile}
           />)
         }
-        <BookingDialog
-          initService={selectedService}
-          handleClose={this.handleCloseBookingDialog}
-          onSaveBooking={this.onSaveBooking}
-          openDialog={this.openAuthModal}
-          handleOpenProfile={this.handleOpenProfile}
-        />
+        { /* <BookingDialog */ }
+        { /* initService={selectedService} */ }
+        { /* handleClose={this.handleCloseBookingDialog} */ }
+        { /* onSaveBooking={this.onSaveBooking} */ }
+        { /* openDialog={this.openAuthModal} */ }
+        { /* handleOpenProfile={this.handleOpenProfile} */ }
+        { /* /> */}
         <AppointmentDialog />
         <Grid container>
           <Grid item xs={12} className={s.landingPage}>
@@ -351,19 +331,13 @@ Home.propTypes = {
   setServiceCategoriesAction: func.isRequired,
   setServicesAction: func.isRequired,
   setServiceProvidersAction: func.isRequired,
-  getServicesByNameAction: func.isRequired,
-  serviceProviderNearByList: arrayOf(any),
-};
-
-Home.defaultProps = {
-  serviceProviderNearByList: [],
+  setServicesByNameAction: func.isRequired,
 };
 
 const mapStateToProps = state => ({
   ...state.common,
   ...state.home,
   loginSession: state.auth.loginSession,
-  // serviceProviderById: state.home.serviceProviderById,
 });
 
 export default connect(
@@ -372,6 +346,6 @@ export default connect(
     setServiceCategoriesAction,
     setServicesAction,
     setServiceProvidersAction,
-    getServicesByNameAction: getServicesByName,
+    setServicesByNameAction,
   },
 )(Home);

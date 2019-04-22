@@ -1,7 +1,9 @@
-import {
-  searchServicesByName, getCustomerEvents, fetchServiceProviderById,
-} from 'api/home';
-import { handleRequest } from 'utils/apiHelpers';
+// import {
+//   // searchServicesByName,
+//   // findEventByCustomerId,
+//   // fetchServiceProviderById,
+// } from 'api/home';
+// import { handleRequest } from 'utils/apiHelpers';
 
 export const SET_ALL_SERVICES = 'HOME.SET_ALL_SERVICES';
 export const SET_SERVICE_CATEGORIES = 'HOME.SET_SERVICE_CATEGORIES';
@@ -48,39 +50,32 @@ export const setOrgs = payload => ({
 //     dispatch(setLoading(false));
 //   }
 // };
+//
+// export const getServicesByName = name => async (dispatch) => {
+//   dispatch(setLoading(true));
+//   const [result] = await handleRequest(searchServicesByName, [name], []);
+//   dispatch(setLoading(false));
+//   dispatch(setServices(result));
+// };
 
-export const getServicesByName = name => async (dispatch) => {
-  dispatch(setLoading(true));
-  const [result] = await handleRequest(searchServicesByName, [name], []);
-  dispatch(setLoading(false));
-  dispatch(setServices(result));
-};
-
-
-const getCustomerEventList = payload => ({
-  type: GET_CUSTOMER_EVENT_LIST,
-  payload,
-});
-
-export const fetchCustomerEvents = id => async (dispatch) => {
-  dispatch(setLoading(true));
-  const [eventList] = await handleRequest(getCustomerEvents, [id], []);
-  dispatch(getCustomerEventList(eventList));
-  dispatch(setLoading(false));
-};
-
-const saveServiceProviderById = payload => ({
-  type: SET_SERVICE_PROVIDER_BY_ID,
-  payload,
-});
-
-export const fetchServiceProviderByIdAction = id => async (dispatch) => {
-  dispatch(setLoading(true));
-  const [serviceProvider] = await handleRequest(fetchServiceProviderById, [id], null);
-  if (!serviceProvider) {
-    console.log('error');
-  } else {
-    dispatch(saveServiceProviderById(serviceProvider));
-  }
-  dispatch(setLoading(false));
-};
+//
+// const getCustomerEventList = payload => ({
+//   type: GET_CUSTOMER_EVENT_LIST,
+//   payload,
+// });
+//
+// const saveServiceProviderById = payload => ({
+//   type: SET_SERVICE_PROVIDER_BY_ID,
+//   payload,
+// });
+//
+// export const fetchServiceProviderByIdAction = id => async (dispatch) => {
+//   dispatch(setLoading(true));
+//   const [serviceProvider] = await handleRequest(fetchServiceProviderById, [id], null);
+//   if (!serviceProvider) {
+//     console.log('error');
+//   } else {
+//     dispatch(saveServiceProviderById(serviceProvider));
+//   }
+//   dispatch(setLoading(false));
+// };
