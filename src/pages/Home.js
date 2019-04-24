@@ -52,12 +52,19 @@ export class Home extends React.PureComponent {
       || serviceProviderNearByList !== cachedServiceProviderNearByList
       || eventList !== cachedEventList
     ) {
+      const combineServiceProviders = services && services.map((service) => {
+        const linkedProvider = serviceProviders && serviceProviders
+          .filter(provider => provider.serviceId === service.id);
+        return { ...service, linkedProvider };
+      });
+
       return {
         categories,
         services,
         serviceProviders,
         serviceProviderNearByList,
         eventList,
+        combineServiceProviders,
       };
     }
     return null;
@@ -67,7 +74,6 @@ export class Home extends React.PureComponent {
     super(props);
     this.state = {
       categories: null,
-      services: null,
       serviceProviders: null,
       searchText: '',
       searchResult: null,
@@ -78,6 +84,7 @@ export class Home extends React.PureComponent {
       isOpenAdvancedSearch: false,
       isShowingAdvancedSearch: false,
       isMaintenance: false,
+      combineServiceProviders: null,
     };
   }
 
@@ -101,8 +108,8 @@ export class Home extends React.PureComponent {
     const { value } = event.target;
     let searchResult = null;
     if (value.length > 2) {
-      const { services } = this.state;
-      searchResult = services.filter((service) => {
+      const { combineServiceProviders } = this.state;
+      searchResult = combineServiceProviders.filter((service) => {
         const orgName = get(service, 'organizationEntity.name');
         const serviceName = get(service, 'name');
         return (
@@ -180,9 +187,7 @@ export class Home extends React.PureComponent {
       isLoading,
     } = this.props;
     const {
-      services,
       categories,
-      serviceProviders,
       isShowingAdvancedSearch,
       serviceProviderNearByList,
       searchText,
@@ -193,14 +198,10 @@ export class Home extends React.PureComponent {
       isMaintenance,
       sessionTimeoutId,
       isOpenProfile,
+      combineServiceProviders,
     } = this.state;
 
     const openAuthenticatedProfile = isAuthenticated && isOpenProfile;
-
-    const combineServiceProviders = services && services.map((service) => {
-      const linkedProvider = serviceProviders && serviceProviders.filter(provider => provider.serviceId === service.id);
-      return { ...service, linkedProvider };
-    });
 
     const categoriesServices = categories && categories.length > 0 && categories.map(category => ({
       name: category.name,
