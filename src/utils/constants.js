@@ -1,5 +1,9 @@
 export const defaultDateFormat = 'DD MMMM YYYY';
 
+export const BOOKING = {
+  CACHE_DATA: 'qz_booking_cached',
+};
+
 export const regExPattern = {
   /* eslint-disable-next-line */
   email: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -14,8 +18,6 @@ export const loginType = {
   GP: 'Google',
 };
 
-export const noop = () => {};
-
 export const registerPopoverPosition = {
   anchorOrigin: {
     vertical: 'bottom',
@@ -25,6 +27,24 @@ export const registerPopoverPosition = {
     vertical: 'top',
     horizontal: 'center',
   },
+};
+
+export const SESSION = {
+  TIMEOUT: 3600000, // millisecond
+  EXPIRED: {
+    title: 'Session has expired',
+    message: 'To maintain security, your session periodically expires.'
+      + 'To continue booking, please login again!',
+  },
+};
+
+export const READ_MORE_MAX = 180;
+
+export const DISTANCE = {
+  EQUATOR: 40075,
+  KM: 'KILOMETERS',
+  MI: 'MILES',
+  NU: 'NEUTRAL',
 };
 
 // There is dependency between TYPE attrs name and the following policies
@@ -52,22 +72,4 @@ export const telephonePolicy = {
     '+[country code][are code][phone number]',
     'Example: +61412345678',
   ],
-};
-
-export const SESSION = {
-  TIMEOUT: 3600000, // millisecond
-  EXPIRED: {
-    title: 'Session has expired',
-    message: 'To maintain security, your session periodically expires.'
-      + 'To continue booking, please login again!',
-  },
-};
-
-export const READ_MORE_MAX = 180;
-
-export const DISTANCE = {
-  EQUATOR: 40075,
-  KM: 'KILOMETERS',
-  MI: 'MILES',
-  NU: 'NEUTRAL',
 };

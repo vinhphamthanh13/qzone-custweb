@@ -16,7 +16,6 @@ import {
   setServiceProvidersAction,
   setServicesByNameAction,
 } from 'actionsReducers/home.actions';
-import { cachedBookingData } from 'config/localStorage';
 import Maintenance from './home/footer/Maintenance';
 import Services from './home/Services';
 import Auth from './Auth';
@@ -182,11 +181,6 @@ export class Home extends React.PureComponent {
     this.handleAdvancedSearch(false);
   };
 
-  handleCachingBookingData = () => {
-    const { services, serviceProviders } = this.state;
-    cachedBookingData({ services, serviceProviders });
-  };
-
   render() {
     const {
       loginSession: { isAuthenticated },
@@ -196,6 +190,7 @@ export class Home extends React.PureComponent {
       services,
       categories,
       serviceProviders,
+      isShowingAdvancedSearch,
       serviceProviderNearByList,
       searchText,
       searchResult,
@@ -204,7 +199,6 @@ export class Home extends React.PureComponent {
       isOpenAdvancedSearch,
       isMaintenance,
       sessionTimeoutId,
-      isShowingAdvancedSearch,
       isOpenProfile,
     } = this.state;
 
@@ -217,7 +211,7 @@ export class Home extends React.PureComponent {
 
     const categoriesServices = categories && categories.length > 0 && categories.map(category => ({
       name: category.name,
-      list: combineServiceProviders
+      services: combineServiceProviders
         && combineServiceProviders.filter(service => service.serviceCategoryId === category.id),
     }));
 
@@ -302,10 +296,9 @@ export class Home extends React.PureComponent {
             {categoriesServices && categoriesServices.map(category => (
               <Categorize key={category.name} name={category.name} loading={isLoading}>
                 <Services
-                  services={category.list}
-                  onLoadServices={this.handleSearchServicesByName}
                   isLoading={isLoading}
-                  cacheData={this.handleCachingBookingData}
+                  services={category.services}
+                  onLoadServices={this.handleSearchServicesByName}
                 />
               </Categorize>
             ))}

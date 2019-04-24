@@ -3,7 +3,7 @@ import {
   string, node, bool, func,
 } from 'prop-types';
 import { Typography, IconButton } from '@material-ui/core';
-import { noop } from 'utils/constants';
+import { noop } from 'lodash';
 import { Close } from '@material-ui/icons';
 import style from './Categorize.module.scss';
 

@@ -13,8 +13,15 @@ import styles from './ReadMore.module.scss';
 
 const ReadMore = (props) => {
   const {
-    isOpen, onClose, serviceName, orgName, orgDescription, orgId, instantBooking,
-    rating, reviews,
+    isOpen,
+    onClose,
+    serviceName,
+    orgName,
+    orgDescription,
+    orgId,
+    instantBooking,
+    rating,
+    reviews,
   } = props;
   return (
     <Dialog

@@ -31,8 +31,6 @@ export default function Services({
 
 Services.propTypes = {
   services: arrayOf(serviceType).isRequired,
-  onBooking: func.isRequired,
   isLoading: bool.isRequired,
   onLoadServices: func.isRequired,
-  onCloseSearch: func,
 };

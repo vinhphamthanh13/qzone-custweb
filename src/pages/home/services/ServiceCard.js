@@ -1,4 +1,6 @@
 import React, { PureComponent } from 'react';
+import { arrayOf, object } from 'prop-types';
+import { connect } from 'react-redux';
 import { get } from 'lodash';
 import serviceImg from 'images/service-provider.jpeg';
 import {
@@ -10,6 +12,8 @@ import {
 } from '@material-ui/core';
 import { serviceType } from 'types/global';
 import { history } from 'containers/App';
+import { cacheData, getCachedData } from 'config/localStorage';
+import { BOOKING } from 'utils/constants';
 import ServiceDetail from './serviceCard/ServiceDetail';
 import s from './ServiceCard.module.scss';
 
@@ -27,14 +31,14 @@ class ServiceCard extends PureComponent {
     this.setState({ imgSrc: serviceImg });
   };
 
-  handleHidingBookingButton = (value) => {
-    this.setState({ isHiddenBooking: value });
-  };
-
   handleBooking = () => {
-    const { service } = this.props;
+    const { service, serviceProviders } = this.props;
     const serviceId = get(service, 'id');
+    const providers = serviceProviders.filter(provider => provider.serviceId === serviceId);
     history.push(`/booking/${serviceId}`);
+    if (!getCachedData(BOOKING.CACHE_DATA)) {
+      cacheData(BOOKING.CACHE_DATA, { providers });
+    }
   };
 
   render() {
@@ -51,8 +55,6 @@ class ServiceCard extends PureComponent {
         <CardContent className={s.serviceContent}>
           <ServiceDetail
             service={service}
-            instantBooking={this.onSelectService}
-            handleHiddenBookingButton={this.handleHidingBookingButton}
           />
         </CardContent>
         {!isHiddenBooking && (
@@ -76,6 +78,11 @@ class ServiceCard extends PureComponent {
 
 ServiceCard.propTypes = {
   service: serviceType.isRequired,
+  serviceProviders: arrayOf(object).isRequired,
 };
 
-export default ServiceCard;
+const mapStateToProps = state => ({
+  ...state.home,
+});
+
+export default connect(mapStateToProps)(ServiceCard);
