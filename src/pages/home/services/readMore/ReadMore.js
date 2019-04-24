@@ -19,7 +19,7 @@ const ReadMore = (props) => {
     orgName,
     orgDescription,
     orgId,
-    instantBooking,
+    onBooking,
     rating,
     reviews,
   } = props;
@@ -47,7 +47,7 @@ const ReadMore = (props) => {
       </DialogContent>
       <DialogActions>
         <div className="flex full-width h-space-btw">
-          <Button variant="outlined" onClick={instantBooking} className="main-button">Book Now!</Button>
+          <Button variant="outlined" onClick={onBooking} className="main-button">Book Now!</Button>
           <Button variant="text" onClick={onClose} color="inherit" className="simple-button">Close</Button>
         </div>
       </DialogActions>
@@ -62,7 +62,7 @@ ReadMore.propTypes = {
   orgName: string.isRequired,
   orgId: string.isRequired,
   orgDescription: string.isRequired,
-  instantBooking: func.isRequired,
+  onBooking: func.isRequired,
   rating: number,
   reviews: number,
 };

@@ -14,7 +14,6 @@ import {
   setServiceCategoriesAction,
   setServicesAction,
   setServiceProvidersAction,
-  setServicesByNameAction,
 } from 'actionsReducers/home.actions';
 import Maintenance from './home/footer/Maintenance';
 import Services from './home/Services';
@@ -115,12 +114,6 @@ export class Home extends React.PureComponent {
 
   handleBooking = (serviceId) => {
     history.push(`/booking/${serviceId}`);
-  };
-
-  handleSearchServicesByName = () => {
-    const { setServicesByNameAction: setServicesByName } = this.props;
-    const { searchText } = this.state;
-    setServicesByName(searchText);
   };
 
   openAuthModal = (key) => {
@@ -259,7 +252,6 @@ export class Home extends React.PureComponent {
                     isLoading={isLoading}
                     services={searchResult}
                     onBooking={this.handleBooking}
-                    onLoadServices={this.handleSearchServicesByName}
                   />
                 </Categorize>
               )
@@ -276,7 +268,6 @@ export class Home extends React.PureComponent {
                     isLoading={isLoading}
                     services={serviceProviderNearByList}
                     onBooking={this.handleBooking}
-                    onLoadServices={this.handleSearchServicesByName}
                   />
                 </Categorize>
               )
@@ -286,7 +277,6 @@ export class Home extends React.PureComponent {
                 <Services
                   isLoading={isLoading}
                   services={category.services}
-                  onLoadServices={this.handleSearchServicesByName}
                   onBooking={this.handleBooking}
                 />
               </Categorize>
@@ -307,7 +297,6 @@ Home.propTypes = {
   setServiceCategoriesAction: func.isRequired,
   setServicesAction: func.isRequired,
   setServiceProvidersAction: func.isRequired,
-  setServicesByNameAction: func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -322,6 +311,5 @@ export default connect(
     setServiceCategoriesAction,
     setServicesAction,
     setServiceProvidersAction,
-    setServicesByNameAction,
   },
 )(Home);

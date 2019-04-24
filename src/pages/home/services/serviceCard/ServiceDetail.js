@@ -53,7 +53,7 @@ export default class ServiceDetail extends React.PureComponent {
           orgName={orgName}
           orgId={orgId}
           orgDescription={description || ''}
-          instantBooking={this.handleInstantBooking}
+          onBooking={this.handleInstantBooking}
           rating={rating}
           reviews={viewNum}
         />

@@ -2,7 +2,6 @@ import {
   serviceCategories,
   services,
   serviceProviders, serviceProvidersNearBy,
-  servicesSearchByName,
 } from 'actionsApi/home';
 import { setLoading, setError } from 'actionsReducers/common.actions';
 import { handleRequest } from 'utils/apiHelpers';
@@ -30,11 +29,6 @@ const setServiceProviders = payload => ({
 
 const setServiceProviderNearBy = payload => ({
   type: SET_SERVICE_PROVIDER_NEAR_BY,
-  payload,
-});
-
-const setServicesByName = payload => ({
-  type: SET_SERVICES_BY_NAME,
   payload,
 });
 
@@ -78,17 +72,6 @@ export const setServiceProviderNearByAction = data => async (dispatch) => {
     dispatch(setError(error));
   } else {
     dispatch(setServiceProviderNearBy(serviceProviderNearByList));
-  }
-  dispatch(setLoading(false));
-};
-
-export const setServicesByNameAction = data => async (dispatch) => {
-  dispatch(setLoading(true));
-  const [servicesByNameList, error] = await handleRequest(servicesSearchByName, [data]);
-  if (error) {
-    dispatch(setError(error));
-  } else {
-    dispatch(setServicesByName(servicesByNameList));
   }
   dispatch(setLoading(false));
 };

@@ -32,8 +32,15 @@ class Slide extends Component {
 
   render() {
     const {
-      imageUrl, name, description, rating, reviews, onBooking,
-      orgName, orgId, disabledBooking,
+      imageUrl,
+      name,
+      description,
+      rating,
+      reviews,
+      onBooking,
+      orgName,
+      orgId,
+      disabledBooking,
     } = this.props;
     const { isReadMoreOpen } = this.state;
 
@@ -46,7 +53,7 @@ class Slide extends Component {
           orgName={orgName}
           orgId={orgId}
           orgDescription={description}
-          instantBooking={this.handleReadMoreBooking}
+          onBooking={this.handleReadMoreBooking}
           rating={rating}
           reviews={reviews}
         />

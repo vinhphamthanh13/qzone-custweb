@@ -10,11 +10,6 @@ import 'slick-carousel/slick/slick-theme.css';
 import Slide from './Slide';
 
 class SlideShow extends Component {
-  static propTypes = {
-    services: arrayOf(object).isRequired,
-    onBooking: func.isRequired,
-  };
-
   static getDerivedStateFromProps(props, state) {
     const { services } = props;
     const { services: cachedServices } = state;
@@ -30,9 +25,9 @@ class SlideShow extends Component {
 
   topTenServices = list => list.sort((item1, item2) => item2.rating - item1.rating).slice(0, 10);
 
-  handleBooking = (service) => {
+  handleBooking = serviceId => () => {
     const { onBooking } = this.props;
-    onBooking(service, 'selectedService');
+    onBooking(serviceId);
   };
 
   render() {
@@ -58,7 +53,7 @@ class SlideShow extends Component {
             <div>
               <Slider {...slideSettings}>
                 {topServices.map((service) => {
-                  const id = get(service, 'id');
+                  const serviceId = get(service, 'id');
                   const fileUrl = get(service, 'image.fileUrl');
                   const name = get(service, 'name');
                   const description = get(service, 'description');
@@ -71,13 +66,13 @@ class SlideShow extends Component {
 
                   return (
                     <Slide
-                      key={id}
+                      key={serviceId}
                       imageUrl={fileUrl}
                       name={name}
                       description={description}
                       rating={rating}
                       reviews={viewNum}
-                      onBooking={() => this.handleBooking(service)}
+                      onBooking={this.handleBooking(serviceId)}
                       orgId={orgId}
                       orgName={orgName}
                       disabledBooking={!linkedProvider || linkedProvider.length < 1}
@@ -98,5 +93,15 @@ class SlideShow extends Component {
     );
   }
 }
+
+SlideShow.propTypes = {
+  services: arrayOf(object),
+  onBooking: func.isRequired,
+};
+
+SlideShow.defaultProps = {
+  services: [],
+};
+
 
 export default SlideShow;
