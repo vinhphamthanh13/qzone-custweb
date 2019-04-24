@@ -4,9 +4,9 @@ import {
   // searchProviderById,
   findAvailabilitiesByDateRange,
   findSpecialEvents,
-} from 'api/home/bookingDialog/selectProvider';
+} from 'actionsApi/home/bookingDialog/selectProvider';
 import moment from 'moment';
-// import { searchOrganizationById } from 'api/home';
+// import { searchOrganizationById } from 'actionsApi/home';
 // import { setOrgs } from 'reduxModules/home.actions';
 import { setLoading } from '../bookingDialog.actions';
 

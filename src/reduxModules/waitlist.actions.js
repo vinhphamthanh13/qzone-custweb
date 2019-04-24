@@ -1,6 +1,6 @@
 import { handleRequest } from 'utils/apiHelpers';
 import { setLoading } from 'actionsReducers/common.actions';
-import { registerWaitList, fetchWaitList } from 'api/waitlist';
+import { registerWaitList, fetchWaitList } from 'actionsApi/waitlist';
 
 
 export const REGISTER_WAITLIST = 'PROFILE.REGISTER_WAITLIST';

@@ -3,7 +3,7 @@ import {
   services,
   serviceProviders, serviceProvidersNearBy,
   servicesSearchByName,
-} from 'api/home';
+} from 'actionsApi/home';
 import { setLoading, setError } from 'actionsReducers/common.actions';
 import { handleRequest } from 'utils/apiHelpers';
 

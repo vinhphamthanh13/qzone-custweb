@@ -1,4 +1,4 @@
-import { postEvent } from 'api/home/bookingDialog';
+import { postEvent } from 'actionsApi/home/bookingDialog';
 import { handleRequest } from 'utils/apiHelpers';
 import { setAppointmentByCustomer } from 'reduxModules/appointments.actions';
 

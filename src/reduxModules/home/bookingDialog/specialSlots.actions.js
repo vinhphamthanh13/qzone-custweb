@@ -1,6 +1,6 @@
 import { setLoading } from 'actionsReducers/common.actions';
 import { handleRequest } from 'utils/apiHelpers';
-import { fetchAvailabilityBySpecialId } from 'api/home/bookingDialog/selectProvider';
+import { fetchAvailabilityBySpecialId } from 'actionsApi/home/bookingDialog/selectProvider';
 
 export const SET_SLOTS_BY_SPECIAL_ID = 'HOME.SET_SLOTS_BY_SPECIAL_ID';
 

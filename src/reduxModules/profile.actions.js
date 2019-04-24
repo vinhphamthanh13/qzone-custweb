@@ -1,6 +1,6 @@
 import { setLoading } from 'actionsReducers/common.actions';
 import { handleRequest } from 'utils/apiHelpers';
-import { updateProfile } from 'api/profile';
+import { updateProfile } from 'actionsApi/profile';
 import { getUserDetail } from 'authentication/actions/login';
 import { get } from 'lodash';
 

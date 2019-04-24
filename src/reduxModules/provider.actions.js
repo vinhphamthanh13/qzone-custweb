@@ -1,5 +1,5 @@
 import { setLoading } from 'actionsReducers/common.actions';
-import { getProviderServices, getProviderDetail } from 'api/provider';
+import { getProviderServices, getProviderDetail } from 'actionsApi/provider';
 import { handleRequest } from 'utils/apiHelpers';
 
 export const FETCH_PROVIDER_DETAIL = 'PROVIDER.FETCH_PROVIDER_DETAIL';

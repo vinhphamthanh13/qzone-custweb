@@ -1,6 +1,6 @@
 import { get } from 'lodash';
 import { handleRequest } from 'utils/apiHelpers';
-import { findAvailabilitiesByDateRange } from 'api/home/bookingDialog/selectProvider';
+import { findAvailabilitiesByDateRange } from 'actionsApi/home/bookingDialog/selectProvider';
 import { setLoading } from 'actionsReducers/common.actions';
 
 export const SET_PROVIDER_SLOTS = 'HOME.SET_PROVIDER_SLOTS';

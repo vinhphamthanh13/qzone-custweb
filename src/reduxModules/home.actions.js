@@ -2,7 +2,7 @@
 //   // searchServicesByName,
 //   // findEventByCustomerId,
 //   // fetchServiceProviderById,
-// } from 'api/home';
+// } from 'actionsApi/home';
 // import { handleRequest } from 'utils/apiHelpers';
 
 export const SET_ALL_SERVICES = 'HOME.SET_ALL_SERVICES';

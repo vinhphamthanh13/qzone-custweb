@@ -1,7 +1,7 @@
 
 import { setLoading } from 'actionsReducers/common.actions';
 import { handleRequest } from 'utils/apiHelpers';
-import { fetchOrganization } from 'api/organization';
+import { fetchOrganization } from 'actionsApi/organization';
 
 export const SET_ORGANIZATION = 'ORG.SET_ORGANIZATION';
 

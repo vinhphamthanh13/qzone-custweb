@@ -1,5 +1,5 @@
-import { serviceProvidersRating } from 'api/rating';
-import { getAppointmentsByUser } from 'api/appointment';
+import { serviceProvidersRating } from 'actionsApi/rating';
+import { getAppointmentsByUser } from 'actionsApi/appointment';
 import { handleRequest } from 'utils/apiHelpers';
 import { setLoading } from './home.actions';
 

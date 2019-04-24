@@ -1,6 +1,6 @@
 import { handleRequest } from 'utils/apiHelpers';
-import { findEventByCustomerId } from 'api/common';
-import { serviceProvidersRating } from 'api/rating';
+import { findEventByCustomerId } from 'actionsApi/common';
+import { serviceProvidersRating } from 'actionsApi/rating';
 
 export const SET_LOADING = 'COMMON.SET_LOADING';
 export const SET_ERROR = 'COMMON.SET_ERROR';
