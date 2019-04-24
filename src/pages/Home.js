@@ -123,16 +123,6 @@ export class Home extends React.PureComponent {
     setServicesByName(searchText);
   };
 
-  getSearchedServices = (services, searchText) => services.filter(
-    (service) => {
-      const lowerSearchText = searchText ? searchText.toLowerCase() : undefined;
-      return searchText
-        ? service.name.toLowerCase().includes(lowerSearchText)
-        || service.organization.name.toLowerCase().includes(lowerSearchText)
-        : true;
-    },
-  );
-
   openAuthModal = (key) => {
     this.setState({ [key]: true });
   };
@@ -270,7 +260,6 @@ export class Home extends React.PureComponent {
                     services={searchResult}
                     onBooking={this.handleBooking}
                     onLoadServices={this.handleSearchServicesByName}
-                    onCloseSearch={this.handleCloseSearch}
                   />
                 </Categorize>
               )
@@ -288,7 +277,6 @@ export class Home extends React.PureComponent {
                     services={serviceProviderNearByList}
                     onBooking={this.handleBooking}
                     onLoadServices={this.handleSearchServicesByName}
-                    onCloseSearch={this.handleCloseSearch}
                   />
                 </Categorize>
               )
@@ -299,6 +287,7 @@ export class Home extends React.PureComponent {
                   isLoading={isLoading}
                   services={category.services}
                   onLoadServices={this.handleSearchServicesByName}
+                  onBooking={this.handleBooking}
                 />
               </Categorize>
             ))}
