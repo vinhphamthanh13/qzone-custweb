@@ -15,14 +15,14 @@ import {
   setServicesAction,
   setServiceProvidersAction,
 } from 'actionsReducers/home.actions';
-import Maintenance from './home/footer/Maintenance';
+import Maintenance from './components/maintenance/Maintenance';
 import Services from './home/Services';
 import Auth from './Auth';
 import PrimarySearchAppBar from './home/appbar/PrimarySearchAppBar';
 import AppointmentDialog from './home/AppointmentDialog';
 import Categorize from './home/Categorize';
 import Profile from './profile/Profile';
-import Footer from './home/footer/Footer';
+import Footer from './components/footer/Footer';
 import SlideShow from './home/slideShow/SlideShow';
 import AdvancedSearch from './home/search/AdvancedSearch';
 import s from './Home.module.scss';

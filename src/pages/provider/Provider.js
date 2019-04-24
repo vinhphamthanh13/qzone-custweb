@@ -11,7 +11,7 @@ import Loading from 'components/Loading';
 import Header from './components/Header';
 import ProviderContent from './components/ProviderContent';
 import ProviderService from './components/ProviderService';
-import ProviderFooter from '../home/footer/Footer';
+import ProviderFooter from '../components/footer/Footer';
 import bgImage from './images/provider-bg.png';
 import s from './Provider.module.scss';
 

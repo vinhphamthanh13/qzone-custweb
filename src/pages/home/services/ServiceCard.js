@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { arrayOf, object } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
-import serviceImg from 'images/service-provider.jpeg';
+import serviceImg from 'images/default-service-card.png';
 import {
   Card,
   CardContent,
@@ -37,7 +37,7 @@ class ServiceCard extends PureComponent {
     const providers = serviceProviders.filter(provider => provider.serviceId === serviceId);
     history.push(`/booking/${serviceId}`);
     if (!getCachedData(BOOKING.CACHE_DATA)) {
-      cacheData(BOOKING.CACHE_DATA, { providers });
+      cacheData(BOOKING.CACHE_DATA, { service, providers });
     }
   };
 

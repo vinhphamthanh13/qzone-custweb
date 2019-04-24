@@ -7,8 +7,8 @@ import { history } from 'containers/App';
 import CustomLink from 'components/CustomLink';
 import { READ_MORE_MAX } from 'utils/constants';
 import RateStar from 'components/Rating/RateStar';
-import s from './ServiceDetail.module.scss';
 import ReadMore from '../readMore/ReadMore';
+import s from './ServiceDetail.module.scss';
 
 export default class ServiceDetail extends React.PureComponent {
   constructor(props) {
