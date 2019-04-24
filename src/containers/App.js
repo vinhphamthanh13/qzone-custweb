@@ -2,7 +2,7 @@ import React from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
-import rootRoutes from 'config/routing/app';
+import rootRoutes from 'config/routing';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import JssProvider from 'react-jss/lib/JssProvider';
 import { create } from 'jss';
