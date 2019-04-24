@@ -15,6 +15,8 @@ import {
   setServicesAction,
   setServiceProvidersAction,
 } from 'actionsReducers/home.actions';
+import { BOOKING } from 'utils/constants';
+import { cacheData, getCachedData } from 'config/localStorage';
 import Maintenance from './components/maintenance/Maintenance';
 import Services from './home/Services';
 import Auth from './Auth';
@@ -112,8 +114,16 @@ export class Home extends React.PureComponent {
     this.setState({ searchResult, searchText: value });
   };
 
-  handleBooking = (serviceId) => {
+  handleBooking = (service) => {
+    const { serviceProviders } = this.state;
+    const serviceId = get(service, 'id');
+    const providers = serviceProviders.filter(provider => provider.serviceId === serviceId);
     history.push(`/booking/${serviceId}`);
+    const cachedData = getCachedData(BOOKING.CACHE_DATA);
+    const cachedServiceId = get(cachedData, 'service.id');
+    if (!cachedData || cachedServiceId !== serviceId) {
+      cacheData(BOOKING.CACHE_DATA, { service, providers });
+    }
   };
 
   openAuthModal = (key) => {

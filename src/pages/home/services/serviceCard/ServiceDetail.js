@@ -1,9 +1,9 @@
 import React from 'react';
+import { func } from 'prop-types';
 import { Typography } from '@material-ui/core';
 import { Domain } from '@material-ui/icons';
 import { serviceType } from 'types/global';
 import { get } from 'lodash';
-import { history } from 'containers/App';
 import CustomLink from 'components/CustomLink';
 import { READ_MORE_MAX } from 'utils/constants';
 import RateStar from 'components/Rating/RateStar';
@@ -27,15 +27,8 @@ export default class ServiceDetail extends React.PureComponent {
     this.setState({ isOpenReadMore: true });
   };
 
-  handleInstantBooking = () => {
-    const { service } = this.props;
-    const serviceId = get(service, 'id');
-    this.handleClose();
-    history.push(`/booking/${serviceId}`);
-  };
-
   render() {
-    const { service } = this.props;
+    const { service, onBooking } = this.props;
     const { isOpenReadMore } = this.state;
     const serviceName = get(service, 'name');
     const description = get(service, 'description');
@@ -53,7 +46,7 @@ export default class ServiceDetail extends React.PureComponent {
           orgName={orgName}
           orgId={orgId}
           orgDescription={description || ''}
-          onBooking={this.handleInstantBooking}
+          onBooking={onBooking}
           rating={rating}
           reviews={viewNum}
         />
@@ -92,4 +85,5 @@ export default class ServiceDetail extends React.PureComponent {
 
 ServiceDetail.propTypes = {
   service: serviceType.isRequired,
+  onBooking: func.isRequired,
 };

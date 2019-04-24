@@ -1,5 +1,5 @@
 import React from 'react';
-import { bool, arrayOf } from 'prop-types';
+import { bool, arrayOf, func } from 'prop-types';
 import { Grid } from '@material-ui/core';
 import { serviceType } from 'types/global';
 import EmptyItem from 'components/EmptyItem';
@@ -9,6 +9,7 @@ import s from './Services.module.scss';
 export default function Services({
   services,
   isLoading,
+  onBooking,
 }) {
   return (
     <>
@@ -19,7 +20,7 @@ export default function Services({
         }
         {services && services.map(service => (
           <Grid item xs={10} sm={6} md={3} key={service.id}>
-            <ServiceCard service={service} />
+            <ServiceCard service={service} onBooking={onBooking} />
           </Grid>
         ))}
       </Grid>
@@ -30,4 +31,5 @@ export default function Services({
 Services.propTypes = {
   services: arrayOf(serviceType).isRequired,
   isLoading: bool.isRequired,
+  onBooking: func.isRequired,
 };

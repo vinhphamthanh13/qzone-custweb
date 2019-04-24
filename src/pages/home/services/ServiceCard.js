@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { arrayOf, object } from 'prop-types';
+import { func } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
 import serviceImg from 'images/default-service-card.png';
@@ -11,9 +11,6 @@ import {
   Button,
 } from '@material-ui/core';
 import { serviceType } from 'types/global';
-import { history } from 'containers/App';
-import { cacheData, getCachedData } from 'config/localStorage';
-import { BOOKING } from 'utils/constants';
 import ServiceDetail from './serviceCard/ServiceDetail';
 import s from './ServiceCard.module.scss';
 
@@ -32,13 +29,8 @@ class ServiceCard extends PureComponent {
   };
 
   handleBooking = () => {
-    const { service, serviceProviders } = this.props;
-    const serviceId = get(service, 'id');
-    const providers = serviceProviders.filter(provider => provider.serviceId === serviceId);
-    history.push(`/booking/${serviceId}`);
-    if (!getCachedData(BOOKING.CACHE_DATA)) {
-      cacheData(BOOKING.CACHE_DATA, { service, providers });
-    }
+    const { onBooking, service } = this.props;
+    onBooking(service);
   };
 
   render() {
@@ -55,6 +47,7 @@ class ServiceCard extends PureComponent {
         <CardContent className={s.serviceContent}>
           <ServiceDetail
             service={service}
+            onBooking={this.handleBooking}
           />
         </CardContent>
         {!isHiddenBooking && (
@@ -78,7 +71,7 @@ class ServiceCard extends PureComponent {
 
 ServiceCard.propTypes = {
   service: serviceType.isRequired,
-  serviceProviders: arrayOf(object).isRequired,
+  onBooking: func.isRequired,
 };
 
 const mapStateToProps = state => ({
