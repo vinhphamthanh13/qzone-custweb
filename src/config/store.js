@@ -6,6 +6,7 @@ import thunk from 'redux-thunk';
 import auth from 'authentication/actions/reducer';
 import common from 'actionsReducers/common.reducer';
 import home from 'actionsReducers/home.reducer';
+import booking from 'actionsReducers/booking.reducer';
 
 import appointments from 'reduxModules/appointments.reducer';
 import { loadSessionToState } from 'authentication/actions/session';
@@ -25,6 +26,8 @@ const rootReducer = combineReducers({
   auth,
   common,
   home,
+  booking,
+
   appointments,
   homeModules: combineReducers({
     bookingDialog,

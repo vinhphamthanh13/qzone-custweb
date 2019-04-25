@@ -25,9 +25,9 @@ class SlideShow extends Component {
 
   topTenServices = list => list.sort((item1, item2) => item2.rating - item1.rating).slice(0, 10);
 
-  handleBooking = serviceId => () => {
+  handleBooking = service => () => {
     const { onBooking } = this.props;
-    onBooking(serviceId);
+    onBooking(service);
   };
 
   render() {
@@ -72,7 +72,7 @@ class SlideShow extends Component {
                       description={description}
                       rating={rating}
                       reviews={viewNum}
-                      onBooking={this.handleBooking(serviceId)}
+                      onBooking={this.handleBooking(service)}
                       orgId={orgId}
                       orgName={orgName}
                       disabledBooking={!linkedProvider || linkedProvider.length < 1}

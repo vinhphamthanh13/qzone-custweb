@@ -6,11 +6,9 @@ import { Typography } from '@material-ui/core';
 import Calendar from './Calendar';
 import s from './DatePicker.module.scss';
 
-const today = moment();
-
 class DatePicker extends Component {
   state = {
-    selectedDate: new Date(today.year(), today.month(), today.date()),
+    selectedDate: moment(),
     isOpenCalendar: false,
   };
 
@@ -39,15 +37,11 @@ class DatePicker extends Component {
 
   render() {
     const { selectedDate, isOpenCalendar } = this.state;
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth();
-    const date = now.getDate();
     const renderCalendar = isOpenCalendar ? (
       <div className="cover-bg-black">
         <Calendar
-          minDate={new Date(year, month, date, 0, 0, 0)}
-          maxDate={new Date(year + 11, month, date, 0, 0, 0)}
+          minDate={moment(`${moment().format('YYYY-MM-DD')}T00:00:00`)}
+          maxDate={moment(`${moment().add(11, 'y').format('YYYY-MM-DD')}T00:00:00`)}
           date={selectedDate}
           onDateChanged={this.handleChangeDate}
           onClose={this.handleCloseCalendar}
@@ -66,21 +60,21 @@ class DatePicker extends Component {
           <div className={s.calendarTab}>
             <div className={s.calendarText}>
               <Typography variant="title" color="inherit" className={s.calendarFont}>
-                {moment(selectedDate).format('DD')}
+                {selectedDate.format('DD')}
               </Typography>
             </div>
           </div>
           <div className={s.calendarTab}>
             <div className={s.calendarText}>
               <Typography variant="title" color="inherit" className={s.calendarFont}>
-                {moment(selectedDate).format('MMMM')}
+                {selectedDate.format('MMMM')}
               </Typography>
             </div>
           </div>
           <div className={s.calendarTab}>
             <div className={s.calendarText}>
               <Typography variant="title" color="inherit" className={s.calendarFont}>
-                {moment(selectedDate).format('YYYY')}
+                {selectedDate.format('YYYY')}
               </Typography>
             </div>
           </div>

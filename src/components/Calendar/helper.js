@@ -31,15 +31,6 @@ export const isDate = (date) => {
   return isDateObject && isValidDate;
 };
 
-export const isSameMonth = (date, baseDate = new Date()) => {
-  if (!(isDate(date) && isDate(baseDate))) return false;
-  const baseDateMonth = +(baseDate.getMonth()) + 1;
-  const baseDateYear = baseDate.getFullYear();
-  const dateMonth = +(date.getMonth()) + 1;
-  const dateYear = date.getFullYear();
-  return baseDateMonth === dateMonth && baseDateYear === dateYear;
-};
-
 export const isSameDay = (date, baseDate = new Date()) => {
   if (!(isDate(date) && isDate(baseDate))) return false;
   const baseDateDate = baseDate.getDate();
@@ -49,26 +40,6 @@ export const isSameDay = (date, baseDate = new Date()) => {
   const dateMonth = +(date.getMonth()) + 1;
   const dateYear = date.getFullYear();
   return (baseDateDate === dateDate) && (baseDateMonth === dateMonth) && (baseDateYear === dateYear);
-};
-
-// Format the given date as DD/MM/YYYY
-// Months and days are zero padding
-export const getDateISO = (date = new Date()) => {
-  if (!isDate(date)) return null;
-  return [
-    date.getFullYear(),
-    zeroPad(+date.getMonth() + 1, 2),
-    zeroPad(+date.getDate(), 2),
-  ].join('/');
-};
-
-export const getLocaleDate = (date = new Date()) => {
-  if (!isDate(date)) return null;
-  return [
-    zeroPad(date.getDate(), 2),
-    zeroPad(+date.getMonth() + 1, 2),
-    date.getFullYear(),
-  ];
 };
 
 export const getPreviousMonth = (month, year) => {

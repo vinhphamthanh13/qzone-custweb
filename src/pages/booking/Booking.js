@@ -1,28 +1,39 @@
 import React, { PureComponent } from 'react';
 import {
-  string, func, shape,
+  string,
+  func,
+  shape,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import moment from 'moment';
+import {
+  get,
+  concat,
+  compact,
+} from 'lodash';
+import {
+  userDetailType,
+} from 'types/global';
 import {
   IconButton,
   Avatar,
-  Button, Typography,
+  Button,
+  Typography,
 } from '@material-ui/core';
-import moment from 'moment';
 import {
   Close,
   ChevronLeft,
   ChevronRight,
 } from '@material-ui/icons';
-import { get } from 'lodash';
 import logo from 'images/quezone-logo.png';
-import {
-  userDetailType,
-} from 'types/global';
 import CustomModal from 'components/Modal/CustomModal';
 import { history } from 'containers/App';
+import { getCachedData } from 'config/localStorage';
+import { BOOKING } from 'utils/constants';
 import { findEventByCustomerIdAction } from 'actionsReducers/common.actions';
+import { getServiceByIdAction } from 'actionsReducers/booking.actions';
+import { setServiceProvidersAction } from 'actionsReducers/home.actions';
 
 import { setProviders } from 'reduxModules/home/bookingDialog/selectProvider.actions';
 import { bookEvent, resetStatus } from 'reduxModules/home/bookingDialog.actions';
@@ -35,10 +46,39 @@ import s from './Booking.module.scss';
 const STEP_LABELS = ['Select provider', 'Book appointment', 'Complete booking'];
 
 class Booking extends PureComponent {
+  static getDerivedStateFromProps(props, state) {
+    const {
+      service,
+      serviceProviders,
+    } = props;
+    const {
+      service: cachedService,
+      serviceProviders: cachedServiceProviders,
+    } = state;
+    const cachedData = getCachedData(BOOKING.CACHE_DATA);
+    const onBookingService = get(cachedData, 'onBookingService');
+    const serviceProvidersList = get(cachedData, 'serviceProvidersList');
+    if (service !== onBookingService
+      || (service && service.id !== cachedService && cachedService.id)
+      || (serviceProviders && serviceProviders.length !== cachedServiceProviders && cachedServiceProviders.length)
+    ) {
+      return {
+        service: {
+          ...onBookingService,
+          ...Object.assign({}, service),
+        },
+        serviceProviders: compact(concat(serviceProvidersList, serviceProviders)),
+      };
+    }
+    return null;
+  }
+
   constructor(props) {
     super(props);
     this.stepComponents = [SelectProvider, BookingDetail, ViewAppointment];
     this.defaultState = {
+      service: null,
+      serviceProviders: null,
       step: 0,
       bookingDetail: {
         provider: undefined,
@@ -47,6 +87,26 @@ class Booking extends PureComponent {
       isConfirmDialogOpen: false,
     };
     this.state = { ...this.defaultState };
+  }
+
+  componentDidMount() {
+    const {
+      serviceId,
+      getServiceByIdAction: getServiceById,
+      setServiceProvidersAction: setServiceProviders,
+    } = this.props;
+    const cachedData = getCachedData(BOOKING.CACHE_DATA);
+    const cachedServiceId = get(cachedData, 'onBookingService.id');
+    const cachedService = get(cachedData, 'onBookingService');
+    const cachedServiceProvidersList = get(cachedData, 'serviceProvidersList');
+    if (
+      serviceId !== cachedServiceId
+      || !cachedService
+      || !cachedServiceProvidersList
+    ) {
+      getServiceById(serviceId);
+      setServiceProviders();
+    }
   }
 
   componentDidUpdate = (prevProps) => {
@@ -101,7 +161,6 @@ class Booking extends PureComponent {
     const duration = get(bookingDetail, 'time.duration');
     const customerId = get(userDetail, 'userSub');
     this.toggleConfirmDialog(false)();
-    console.log('bookingDetail', bookingDetail);
     bookEventAction({
       customerId,
       duration,
@@ -147,21 +206,35 @@ class Booking extends PureComponent {
       : <ChevronRight className={chevronStyle} />;
   };
 
+  handleDateChange = () => {
+    console.log('handleDateChange');
+  };
+
   render() {
     const {
       bookingStatus,
-      // initService,
       // userDetail,
-      // isLoading,
       // bookingEvent,
       // openDialog,
     } = this.props;
-    const { step, bookingDetail, isConfirmDialogOpen } = this.state;
+    const {
+      service,
+      serviceProviders,
+      step,
+      bookingDetail,
+      isConfirmDialogOpen,
+    } = this.state;
     const Step = this.stepComponents[step];
+    const stepProps = {
+      0: {
+        bookingService: service,
+        serviceProvidersList: serviceProviders,
+        onDateChange: this.handleDateChange,
+      },
+    };
     const isBackValid = !(step === 0 || step === STEP_LABELS.length - 1);
     const isNextValid = !(step === STEP_LABELS.length - 1 || !this.isStepCompleted());
-    console.log('select provider', this.props);
-
+    console.log('this.state', this.state);
     return (
       <>
         <CustomModal
@@ -211,13 +284,15 @@ class Booking extends PureComponent {
                 </Button>
               </div>
             </div>
-            <div className="closeBook">
+            <div className={s.goBack}>
               <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
                 <Close />
               </IconButton>
             </div>
           </div>
-          <Step />
+          <Step
+            {...stepProps[step]}
+          />
         </div>
       </>
     );
@@ -226,6 +301,9 @@ class Booking extends PureComponent {
 
 Booking.propTypes = {
   serviceId: string.isRequired,
+  getServiceByIdAction: func.isRequired,
+  setServiceProvidersAction: func.isRequired,
+
   setProvidersAction: func.isRequired,
   userDetail: userDetailType.isRequired,
   bookEventAction: func.isRequired,
@@ -238,9 +316,9 @@ Booking.propTypes = {
 
 const mapStateToProps = state => ({
   ...state.common,
+  ...state.home,
   userDetail: state.auth.userDetail,
   isAuthenticated: state.auth.loginSession.isAuthenticated,
-  isLoading: state.homeModules.bookingDialog.isLoading,
   bookingStatus: state.homeModules.bookingDialog.status,
   bookingEvent: state.appointments.appointments.slice(-1)[0],
 });
@@ -249,6 +327,9 @@ export default compose(
   connect(
     mapStateToProps,
     {
+      getServiceByIdAction,
+      setServiceProvidersAction,
+
       setProvidersAction: setProviders,
       bookEventAction: bookEvent,
       resetStatusAction: resetStatus,

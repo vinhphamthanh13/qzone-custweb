@@ -33,10 +33,11 @@ class ProviderContent extends React.PureComponent {
   }
 
   componentDidMount() {
+    // eslint-disable-next-line
     const { provider, fetchProviderDetail: fetchProviderDetailAction } = this.props;
     console.log('component did mount in provider condtent', provider);
     const providerId = get(provider, 'providerId');
-    fetchProviderDetailAction(providerId);
+    // fetchProviderDetailAction(providerId);
     this.setState({ providerId });
   }
 
@@ -59,6 +60,7 @@ class ProviderContent extends React.PureComponent {
       initService,
       bookingDetail,
       onTimeSelect,
+      // eslint-disable-next-line
       fetchAvailabilityBySpecialIdAction: fetchAvailabilityBySpecialId,
       providerDetail,
     } = this.props;
@@ -146,7 +148,7 @@ class ProviderContent extends React.PureComponent {
               bookingDetail={bookingDetail}
               providerDetail={provider}
               onChange={onTimeSelect}
-              fetchSlot={fetchAvailabilityBySpecialId}
+              // fetchSlot={fetchAvailabilityBySpecialId}
             />
           </div>
         </div>

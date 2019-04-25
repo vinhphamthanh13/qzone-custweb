@@ -8,7 +8,11 @@ import { connect } from 'react-redux';
 import { Typography, Button } from '@material-ui/core';
 import moment from 'moment';
 import uuidv1 from 'uuid/v1';
-import { get, chunk, noop } from 'lodash';
+import {
+  get,
+  chunk,
+  noop,
+} from 'lodash';
 import s from './SelectTime.module.scss';
 
 export class SelectTime extends React.PureComponent {
@@ -101,11 +105,12 @@ export class SelectTime extends React.PureComponent {
 SelectTime.propTypes = {
   specialSlots: objectOf(any),
   onChange: func.isRequired,
-  fetchSlot: func.isRequired,
+  fetchSlot: func,
   providerDetail: objectOf(any),
 };
 
 SelectTime.defaultProps = {
+  fetchSlot: noop,
   specialSlots: {},
   providerDetail: {},
 };

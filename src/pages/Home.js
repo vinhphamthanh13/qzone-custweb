@@ -57,8 +57,7 @@ export class Home extends React.PureComponent {
           .filter(provider => provider.serviceId === service.id);
         return { ...service, linkedProvider };
       });
-
-      return {
+      const savingCachedData = {
         categories,
         services,
         serviceProviders,
@@ -66,6 +65,8 @@ export class Home extends React.PureComponent {
         eventList,
         combineServiceProviders,
       };
+      cacheData(BOOKING.CACHE_DATA, savingCachedData);
+      return savingCachedData;
     }
     return null;
   }
@@ -124,12 +125,12 @@ export class Home extends React.PureComponent {
   handleBooking = (service) => {
     const { serviceProviders } = this.state;
     const serviceId = get(service, 'id');
-    const providers = serviceProviders.filter(provider => provider.serviceId === serviceId);
+    const serviceProvidersList = serviceProviders.filter(provider => provider.serviceId === serviceId);
     history.push(`/booking/${serviceId}`);
     const cachedData = getCachedData(BOOKING.CACHE_DATA);
     const cachedServiceId = get(cachedData, 'service.id');
     if (!cachedData || cachedServiceId !== serviceId) {
-      cacheData(BOOKING.CACHE_DATA, { service, providers });
+      cacheData(BOOKING.CACHE_DATA, { onBookingService: service, serviceProvidersList });
     }
   };
 
