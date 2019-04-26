@@ -33,6 +33,7 @@ import { setServiceProvidersAction } from 'actionsReducers/home.actions';
 import {
   getServiceByIdAction,
   setProvidersByServiceIdAction,
+  setAvailabilitiesBySpecialEventBulkAction,
 } from 'actionsReducers/booking.actions';
 
 import { setProviders } from 'reduxModules/home/bookingDialog/selectProvider.actions';
@@ -47,16 +48,17 @@ const STEP_LABELS = ['Select provider', 'Book appointment', 'Complete booking'];
 
 class Booking extends PureComponent {
   static getDerivedStateFromProps(props, state) {
-    console.log('getDerivedFromProps', props);
     const {
       service,
       serviceProviders,
       providersByServiceIdList,
+      availabilitiesBulk,
     } = props;
     const {
       service: cachedService,
       serviceProviders: cachedServiceProviders,
       providersByServiceIdList: cachedProvidersByServiceIdList,
+      availabilitiesBulk: cachedAvailabilitiesBulk,
     } = state;
 
     if (service !== cachedService) {
@@ -74,6 +76,11 @@ class Booking extends PureComponent {
         providersByServiceIdList,
       };
     }
+    if (availabilitiesBulk !== cachedAvailabilitiesBulk) {
+      return {
+        availabilitiesBulk,
+      };
+    }
     return null;
   }
 
@@ -84,6 +91,7 @@ class Booking extends PureComponent {
       service: null,
       serviceProviders: null,
       providersByServiceIdList: null,
+      availabilitiesBulk: null,
       step: 0,
       bookingDetail: {
         provider: undefined,
@@ -109,6 +117,18 @@ class Booking extends PureComponent {
   }
 
   componentDidUpdate = (prevProps) => {
+    const {
+      serviceProviders,
+      setAvailabilitiesBySpecialEventBulkAction: setAvailabilitiesBySpecialEventBulk,
+    } = prevProps;
+    const { serviceProviders: cachedServiceProviders } = this.props;
+    if (cachedServiceProviders && cachedServiceProviders !== serviceProviders) {
+      const specialEventIdList = cachedServiceProviders.map(serviceProvider => ({
+        specialEventId: serviceProvider.id,
+        customerTimezoneId: moment.tz.guess(),
+      }));
+      setAvailabilitiesBySpecialEventBulk(specialEventIdList);
+    }
     if (prevProps.bookingStatus.type === '' && this.props.bookingStatus.type === 'success') {
       this.handleNext();
     }
@@ -246,6 +266,7 @@ class Booking extends PureComponent {
       service,
       serviceProviders,
       providersByServiceIdList,
+      availabilitiesBulk,
       step,
       bookingDetail,
       isConfirmDialogOpen,
@@ -263,6 +284,8 @@ class Booking extends PureComponent {
         onDateChange: this.handleDateChange,
       },
     };
+
+    console.log('availabilitiesBulk', availabilitiesBulk);
     return (
       <>
         <Loading />
@@ -333,6 +356,7 @@ Booking.propTypes = {
   getServiceByIdAction: func.isRequired,
   setServiceProvidersAction: func.isRequired,
   setProvidersByServiceIdAction: func.isRequired,
+  setAvailabilitiesBySpecialEventBulkAction: func.isRequired,
 
   setProvidersAction: func.isRequired,
   userDetail: userDetailType.isRequired,
@@ -361,6 +385,7 @@ export default compose(
       getServiceByIdAction,
       setServiceProvidersAction,
       setProvidersByServiceIdAction,
+      setAvailabilitiesBySpecialEventBulkAction,
 
       setProvidersAction: setProviders,
       bookEventAction: bookEvent,

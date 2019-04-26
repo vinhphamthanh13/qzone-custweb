@@ -1,6 +1,8 @@
 import {
   serviceById,
   providersByServiceId,
+  availabilitiesBySpecialEventId,
+  availabilitiesBySpecialEventIdBulk,
 } from 'actionsApi/booking';
 import {
   setLoading,
@@ -10,6 +12,8 @@ import { handleRequest } from 'utils/apiHelpers';
 
 export const GET_SERVICE_BY_ID = 'BOOKING.GET_SERVICE_BY_ID';
 export const SET_PROVIDERS_BY_SERVICE_ID = 'BOOKING.SET_PROVIDERS_BY_SERVICE_ID';
+export const SET_AVAILABILITIES_BY_SPECIAL_EVENT_ID = 'BOOKING.SET_AVAILABILITIES_BY_SPECIAL_EVENT_ID';
+export const SET_AVAILABILITIES_BY_SPECIAL_EVENT_BULK = 'BOOKING.SET_AVAILABILITIES_BY_SPECIAL_EVENT_BULK';
 
 const getServiceById = payload => ({
   type: GET_SERVICE_BY_ID,
@@ -17,6 +21,14 @@ const getServiceById = payload => ({
 });
 const setProvidersByServiceId = payload => ({
   type: SET_PROVIDERS_BY_SERVICE_ID,
+  payload,
+});
+const setAvailabilitiesBySpecialEventId = payload => ({
+  type: SET_AVAILABILITIES_BY_SPECIAL_EVENT_ID,
+  payload,
+});
+const setAvailabilitiesBySpecialEventBulk = payload => ({
+  type: SET_AVAILABILITIES_BY_SPECIAL_EVENT_BULK,
   payload,
 });
 
@@ -38,6 +50,30 @@ export const setProvidersByServiceIdAction = data => async (dispatch) => {
     dispatch(setError(error));
   } else {
     dispatch(setProvidersByServiceId(providersById));
+  }
+  dispatch(setLoading(false));
+};
+
+export const setAvailabilitiesBySpecialEventIdAction = data => async (dispatch) => {
+  dispatch(setLoading(true));
+  const [availabilities, error] = await handleRequest(availabilitiesBySpecialEventId, [data]);
+  if (error) {
+    dispatch(setError(error));
+  } else {
+    dispatch(setAvailabilitiesBySpecialEventId(availabilities));
+  }
+  dispatch(setLoading(false));
+};
+
+export const setAvailabilitiesBySpecialEventBulkAction = data => async (dispatch) => {
+  dispatch(setLoading(true));
+  const availabilitiesBulk = await availabilitiesBySpecialEventIdBulk(data);
+  if (!availabilitiesBulk) {
+    dispatch(setError('Cannot fetch all availabilities'));
+  } else {
+    const responseBulk = [];
+    availabilitiesBulk.map(item => responseBulk.push(...item.data.objects));
+    dispatch(setAvailabilitiesBySpecialEventBulk(responseBulk));
   }
   dispatch(setLoading(false));
 };
