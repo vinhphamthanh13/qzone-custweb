@@ -1,5 +1,7 @@
 import React from 'react';
-import { func, objectOf, any } from 'prop-types';
+import {
+  func,
+} from 'prop-types';
 import { get } from 'lodash';
 import { Typography, Button } from '@material-ui/core';
 import moment from 'moment';
@@ -33,11 +35,8 @@ class ProviderContent extends React.PureComponent {
   }
 
   componentDidMount() {
-    // eslint-disable-next-line
-    const { provider, fetchProviderDetail: fetchProviderDetailAction } = this.props;
-    console.log('component did mount in provider condtent', provider);
+    const { provider } = this.props;
     const providerId = get(provider, 'providerId');
-    // fetchProviderDetailAction(providerId);
     this.setState({ providerId });
   }
 
@@ -56,22 +55,21 @@ class ProviderContent extends React.PureComponent {
   render() {
     const {
       provider,
-      initService,
+      service,
       bookingDetail,
       onTimeSelect,
       // eslint-disable-next-line
       fetchAvailabilityBySpecialIdAction: fetchAvailabilityBySpecialId,
-      providerDetail,
     } = this.props;
+    console.log('providers..', provider);
     const { providerId } = this.state;
-    const serviceName = get(initService, 'name');
-    const currentDetail = get(providerDetail, providerId);
-    const providerName = get(currentDetail, 'givenName');
-    const providerFamily = get(currentDetail, 'familyName');
-    const providerEmail = get(currentDetail, 'email');
-    const providerPhone = get(currentDetail, 'telephone');
-    const providerImage = get(currentDetail, 'providerInformation.image.fileUrl');
-    const providerTimeZone = get(currentDetail, 'providerInformation.timeZoneId');
+    const serviceName = get(service, 'name');
+    const providerName = get(provider, 'givenName');
+    const providerFamily = get(provider, 'familyName');
+    const providerEmail = get(provider, 'email');
+    const providerPhone = get(provider, 'telephone');
+    const providerImage = get(provider, 'providerInformation.image.fileUrl');
+    const providerTimeZone = get(provider, 'providerInformation.timeZoneId');
     const { isMapDialogOpen } = this.state;
     const duration = get(provider, 'avgServiceTime');
     const providerRating = get(provider, 'rating');
@@ -157,17 +155,15 @@ class ProviderContent extends React.PureComponent {
 }
 
 ProviderContent.propTypes = {
-  initService: serviceType,
+  service: serviceType,
   provider: providerType,
   bookingDetail: bookingDetailType.isRequired,
   onTimeSelect: func.isRequired,
   fetchAvailabilityBySpecialIdAction: func.isRequired,
-  fetchProviderDetail: func.isRequired,
-  providerDetail: objectOf(any).isRequired,
 };
 
 ProviderContent.defaultProps = {
-  initService: undefined,
+  service: undefined,
   provider: undefined,
 };
 

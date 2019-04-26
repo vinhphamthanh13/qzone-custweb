@@ -13,9 +13,6 @@ import {
 } from 'lodash';
 // import moment from 'moment';
 import { Typography } from '@material-ui/core';
-import {
-  bookingDetailType,
-} from 'types/global';
 import DatePicker from 'components/Calendar/DatePicker';
 
 import {
@@ -24,8 +21,6 @@ import {
 } from 'reduxModules/home/bookingDialog/selectProvider.actions';
 import ProviderContent from './selectProvider/ProviderContent';
 import s from './SelectProvider.module.scss';
-
-// const today = moment();
 
 class SelectProvider extends React.PureComponent {
   onSelectBooking = provider => (time) => {
@@ -58,10 +53,8 @@ class SelectProvider extends React.PureComponent {
   render() {
     const {
       bookingService,
-      serviceProvidersList,
+      providers,
       onDateChange,
-
-      bookingDetail,
       // specialEvents,
     } = this.props;
     return (
@@ -76,22 +69,23 @@ class SelectProvider extends React.PureComponent {
                 <DatePicker onChange={onDateChange} selectDate={noop} />
               </div>
             </div>
-            <div className={s.selectProviderList}>
-              {chunk(serviceProvidersList, Math.ceil(serviceProvidersList.length / 4)).map(list => (
-                <div key={Math.random()} className={s.providerRow}>
-                  {list.map(provider => (
-                    <div key={provider.id}>
-                      <ProviderContent
-                        service={bookingService}
-                        provider={provider}
-                        bookingDetail={bookingDetail}
-                        onTimeSelect={this.onSelectBooking(provider)}
-                      />
-                    </div>))
-                  }
-                </div>
-              ))}
-            </div>
+            {providers && (
+              <div className={s.selectProviderList}>
+                {chunk(providers, Math.ceil(providers.length / 4)).map(list => (
+                  <div key={Math.random()} className={s.providerRow}>
+                    {list.map(provider => (
+                      <div key={provider.id}>
+                        <ProviderContent
+                          service={bookingService}
+                          provider={provider}
+                          onTimeSelect={this.onSelectBooking(provider)}
+                        />
+                      </div>))
+                    }
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </>
@@ -101,7 +95,7 @@ class SelectProvider extends React.PureComponent {
 
 SelectProvider.propTypes = {
   bookingService: objectOf(object).isRequired,
-  serviceProvidersList: arrayOf(object).isRequired,
+  providers: arrayOf(object).isRequired,
   onDateChange: func.isRequired,
   // match: matchType.isRequired,
   // getServiceByIdAction: func.isRequired,
@@ -109,19 +103,19 @@ SelectProvider.propTypes = {
 
   // getProviderTimesAction: func.isRequired,
   // onChange: func.isRequired,
-  bookingDetail: bookingDetailType.isRequired,
+  // bookingDetail: bookingDetailType.isRequired,
   // handleNext: func.isRequired,
   // findSpecialEventsAction: func.isRequired,
   // specialEvents: arrayOf(providerType).isRequired,
 };
 
-const mapStateToProps = state => ({
-  // ...state.common,
-  // ...state.home,
-  ...state.homeModules.bookingDialogModules.selectProvider,
-});
+// const mapStateToProps = state => ({
+//   // ...state.common,
+//   // ...state.home,
+//   // ...state.homeModules.bookingDialogModules.selectProvider,
+// });
 
-export default connect(mapStateToProps, {
+export default connect(null, {
   getProviderTimesAction: getProviderTimes,
   findSpecialEventsAction,
 })(SelectProvider);

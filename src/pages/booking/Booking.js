@@ -9,8 +9,6 @@ import { compose } from 'redux';
 import moment from 'moment';
 import {
   get,
-  concat,
-  compact,
 } from 'lodash';
 import {
   userDetailType,
@@ -30,11 +28,12 @@ import logo from 'images/quezone-logo.png';
 import CustomModal from 'components/Modal/CustomModal';
 import Loading from 'components/Loading';
 import { history } from 'containers/App';
-import { getCachedData } from 'config/localStorage';
-import { BOOKING } from 'utils/constants';
 import { findEventByCustomerIdAction } from 'actionsReducers/common.actions';
-import { getServiceByIdAction } from 'actionsReducers/booking.actions';
 import { setServiceProvidersAction } from 'actionsReducers/home.actions';
+import {
+  getServiceByIdAction,
+  setProvidersByServiceIdAction,
+} from 'actionsReducers/booking.actions';
 
 import { setProviders } from 'reduxModules/home/bookingDialog/selectProvider.actions';
 import { bookEvent, resetStatus } from 'reduxModules/home/bookingDialog.actions';
@@ -47,25 +46,32 @@ import s from './Booking.module.scss';
 const STEP_LABELS = ['Select provider', 'Book appointment', 'Complete booking'];
 
 class Booking extends PureComponent {
-  static getDerivedStateFromProps(props) {
+  static getDerivedStateFromProps(props, state) {
+    console.log('getDerivedFromProps', props);
     const {
       service,
       serviceProviders,
+      providersByServiceIdList,
     } = props;
-    const cachedData = getCachedData(BOOKING.CACHE_DATA);
-    const onBookingService = get(cachedData, 'onBookingService');
-    const serviceProvidersList = get(cachedData, 'serviceProvidersList');
-    console.log('serviceProvidersList', serviceProvidersList);
-    console.log('service', service);
-    console.log('serviceProviders', serviceProviders);
-    console.log('onBookingService', onBookingService);
-    if (service !== onBookingService) {
+    const {
+      service: cachedService,
+      serviceProviders: cachedServiceProviders,
+      providersByServiceIdList: cachedProvidersByServiceIdList,
+    } = state;
+
+    if (service !== cachedService) {
       return {
-        service: {
-          ...onBookingService,
-          ...Object.assign({}, service),
-        },
-        serviceProviders: compact(concat(serviceProvidersList, serviceProviders)),
+        service,
+      };
+    }
+    if (serviceProviders !== cachedServiceProviders) {
+      return {
+        serviceProviders,
+      };
+    }
+    if (providersByServiceIdList !== cachedProvidersByServiceIdList) {
+      return {
+        providersByServiceIdList,
       };
     }
     return null;
@@ -77,6 +83,7 @@ class Booking extends PureComponent {
     this.defaultState = {
       service: null,
       serviceProviders: null,
+      providersByServiceIdList: null,
       step: 0,
       bookingDetail: {
         provider: undefined,
@@ -92,11 +99,11 @@ class Booking extends PureComponent {
       serviceId,
       getServiceByIdAction: getServiceById,
       setServiceProvidersAction: setServiceProviders,
+      setProvidersByServiceIdAction: setProvidersByServiceId,
     } = this.props;
-    const cachedData = getCachedData(BOOKING.CACHE_DATA);
-    const onBookingService = get(cachedData, 'onBookingService');
-    if (serviceId && !onBookingService) {
+    if (serviceId) {
       getServiceById(serviceId);
+      setProvidersByServiceId(serviceId);
       setServiceProviders();
     }
   }
@@ -202,8 +209,34 @@ class Booking extends PureComponent {
     console.log('handleDateChange');
   };
 
+  handleMergedProviderInfo = (serviceId, serviceProviders, providersByServiceId) => {
+    if (
+      serviceId
+      && serviceProviders
+      && serviceProviders.length
+      && providersByServiceId
+      && providersByServiceId.length
+    ) {
+      const providers = [];
+      providersByServiceId.forEach((providerDetail) => {
+        serviceProviders.map((serviceProvider) => {
+          if (serviceProvider.providerId === providerDetail.userSub && serviceProvider.serviceId === serviceId) {
+            providers.push({
+              ...serviceProvider,
+              ...providerDetail,
+            });
+          }
+          return null;
+        });
+      });
+      return providers;
+    }
+    return null;
+  };
+
   render() {
     const {
+      serviceId,
       bookingStatus,
       // userDetail,
       // bookingEvent,
@@ -212,21 +245,24 @@ class Booking extends PureComponent {
     const {
       service,
       serviceProviders,
+      providersByServiceIdList,
       step,
       bookingDetail,
       isConfirmDialogOpen,
     } = this.state;
     const Step = this.stepComponents[step];
+    const isBackValid = !(step === 0 || step === STEP_LABELS.length - 1);
+    const isNextValid = !(step === STEP_LABELS.length - 1 || !this.isStepCompleted());
+    console.log('this.state BOOKING', this.state);
+    const providers = this.handleMergedProviderInfo(serviceId, serviceProviders, providersByServiceIdList);
+
     const stepProps = {
       0: {
         bookingService: service,
-        serviceProvidersList: serviceProviders,
+        providers,
         onDateChange: this.handleDateChange,
       },
     };
-    const isBackValid = !(step === 0 || step === STEP_LABELS.length - 1);
-    const isNextValid = !(step === STEP_LABELS.length - 1 || !this.isStepCompleted());
-    console.log('this.state', this.state);
     return (
       <>
         <Loading />
@@ -296,6 +332,7 @@ Booking.propTypes = {
   serviceId: string.isRequired,
   getServiceByIdAction: func.isRequired,
   setServiceProvidersAction: func.isRequired,
+  setProvidersByServiceIdAction: func.isRequired,
 
   setProvidersAction: func.isRequired,
   userDetail: userDetailType.isRequired,
@@ -323,6 +360,7 @@ export default compose(
     {
       getServiceByIdAction,
       setServiceProvidersAction,
+      setProvidersByServiceIdAction,
 
       setProvidersAction: setProviders,
       bookEventAction: bookEvent,
