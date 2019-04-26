@@ -13,7 +13,13 @@ import calendar, {
   zeroPad,
 } from './helper';
 import {
-  WEEK_DAYS, MONTH_NAME, MONTH_INDEX, NUMBER_OF_MONTH_IN_ROW, NUMBER_OF_YEAR_IN_ROW,
+  WEEK_DAYS,
+  MONTH_NAME,
+  MONTH_INDEX,
+  NUMBER_OF_MONTH_IN_ROW,
+  NUMBER_OF_YEAR_IN_ROW,
+  DATE_FORMAT,
+  INITIAL_TIME, DISPLAY_FORMAT,
 } from './constants';
 import s from './Calendar.module.scss';
 
@@ -36,7 +42,7 @@ class Calendar extends Component {
     const { date, maxDate, minDate } = props;
     const resolveDate = date || minDate;
     this.initValues = {
-      today: moment(`${moment().format('YYYY-MM-DD')}T00:00:00`),
+      today: moment(`${moment().format(DATE_FORMAT)}${INITIAL_TIME}`),
       ...this.resolveStateFromDate(resolveDate),
       maxYear: maxDate.year(),
       minYear: minDate.year(),
@@ -55,7 +61,7 @@ class Calendar extends Component {
   }
 
   resolveStateFromDate = date => ({
-    current: moment(`${moment(date).format('YYYY-MM-DD')}T00:00:00`),
+    current: moment(`${moment(date).format(DATE_FORMAT)}${INITIAL_TIME}`),
     month: date.month(),
     selectedMonth: date.month(),
     year: date.year(),
@@ -107,7 +113,7 @@ class Calendar extends Component {
     return (
       <div className={s.calendarHeader}>
         <div className={s.headerToday}>
-          <Typography variant="h4" color="inherit">{date.format('ddd, DD MMM YYYY')}</Typography>
+          <Typography variant="h4" color="inherit">{date.format(DISPLAY_FORMAT)}</Typography>
         </div>
         <div className={s.monthYearSelection}>
           <div>
@@ -145,7 +151,7 @@ class Calendar extends Component {
     const {
       selectedMonth, selectedYear, today, current,
     } = this.state;
-    const $date = moment(`${date.join('-')}T00:00:00`);
+    const $date = moment(`${date.join('-')}${INITIAL_TIME}`);
     const sameDate = $date.isSame(current, 'day');
     const isToday = $date.isSame(today, 'day');
     const inMonth = selectedMonth && selectedYear
@@ -205,7 +211,7 @@ class Calendar extends Component {
       <div key={uuidv1()} className={s.monthRow}>
         {monthRow.map((month) => {
           const currentMonthDate = moment(
-            `${[selectedYear, zeroPad(MONTH_INDEX[month] + 1, 2), maxDate.date()].join('-')}T00:00:00`,
+            `${[selectedYear, zeroPad(MONTH_INDEX[month] + 1, 2), maxDate.date()].join('-')}${INITIAL_TIME}`,
           );
           const isValidMonth = currentMonthDate <= maxDate && currentMonthDate >= minDate;
           const currentMonthStyle = current.month() === MONTH_INDEX[month] ? s.currentMonthYear : '';
@@ -240,7 +246,7 @@ class Calendar extends Component {
   onMonthSelected = month => (event) => {
     event.preventDefault();
     const { selectedYear, current } = this.state;
-    this.gotoDate(moment(`${[selectedYear, zeroPad(month + 1, 2), current.date()].join('-')}T00:00:00`));
+    this.gotoDate(moment(`${[selectedYear, zeroPad(month + 1, 2), current.date()].join('-')}${INITIAL_TIME}`));
     this.setState(oldState => ({
       selectedMonth: month,
       isClickingMonth: !oldState.isClickingMonth,
@@ -285,7 +291,9 @@ class Calendar extends Component {
         // eslint-disable-next-line
         <div key={uuidv1()} className={s.yearRow}>
           {fullYearRow.map((year) => {
-            const currentYear = moment(`${[year, zeroPad(selectedMonth + 1, 2), maxDate.date()].join('-')}T00:00:00`);
+            const currentYear = moment(
+              `${[year, zeroPad(selectedMonth + 1, 2), maxDate.date()].join('-')}${INITIAL_TIME}`,
+            );
             const isValidYear = currentYear <= maxDate && currentYear >= minDate;
             const currentYearStyle = current.year() === year ? s.currentMonthYear : '';
             const className = isValidYear

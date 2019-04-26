@@ -8,9 +8,9 @@
   justify-content: flex-start;
   width: 100%;
   min-width: $smx;
-  height: 100vh;
   overflow: auto;
-  border: 1px solid red;
+  max-width: $max-width;
+  margin: 0 auto;
 }
 
 .selectProviderHeader {
@@ -30,8 +30,8 @@
 .selectProviderList {
   width: auto;
   display: flex;
-  justify-content: flex-start;
-  height: 100vh;
+  justify-content: center;
+  height: calc(100vh - 130px);
   overflow: auto;
 }
 

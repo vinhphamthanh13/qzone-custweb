@@ -22,12 +22,13 @@ import {
   Typography,
 } from '@material-ui/core';
 import {
-  Close,
+  Home,
   ChevronLeft,
   ChevronRight,
 } from '@material-ui/icons';
 import logo from 'images/quezone-logo.png';
 import CustomModal from 'components/Modal/CustomModal';
+import Loading from 'components/Loading';
 import { history } from 'containers/App';
 import { getCachedData } from 'config/localStorage';
 import { BOOKING } from 'utils/constants';
@@ -46,22 +47,19 @@ import s from './Booking.module.scss';
 const STEP_LABELS = ['Select provider', 'Book appointment', 'Complete booking'];
 
 class Booking extends PureComponent {
-  static getDerivedStateFromProps(props, state) {
+  static getDerivedStateFromProps(props) {
     const {
       service,
       serviceProviders,
     } = props;
-    const {
-      service: cachedService,
-      serviceProviders: cachedServiceProviders,
-    } = state;
     const cachedData = getCachedData(BOOKING.CACHE_DATA);
     const onBookingService = get(cachedData, 'onBookingService');
     const serviceProvidersList = get(cachedData, 'serviceProvidersList');
-    if (service !== onBookingService
-      || (service && service.id !== cachedService && cachedService.id)
-      || (serviceProviders && serviceProviders.length !== cachedServiceProviders && cachedServiceProviders.length)
-    ) {
+    console.log('serviceProvidersList', serviceProvidersList);
+    console.log('service', service);
+    console.log('serviceProviders', serviceProviders);
+    console.log('onBookingService', onBookingService);
+    if (service !== onBookingService) {
       return {
         service: {
           ...onBookingService,
@@ -96,14 +94,8 @@ class Booking extends PureComponent {
       setServiceProvidersAction: setServiceProviders,
     } = this.props;
     const cachedData = getCachedData(BOOKING.CACHE_DATA);
-    const cachedServiceId = get(cachedData, 'onBookingService.id');
-    const cachedService = get(cachedData, 'onBookingService');
-    const cachedServiceProvidersList = get(cachedData, 'serviceProvidersList');
-    if (
-      serviceId !== cachedServiceId
-      || !cachedService
-      || !cachedServiceProvidersList
-    ) {
+    const onBookingService = get(cachedData, 'onBookingService');
+    if (serviceId && !onBookingService) {
       getServiceById(serviceId);
       setServiceProviders();
     }
@@ -237,6 +229,7 @@ class Booking extends PureComponent {
     console.log('this.state', this.state);
     return (
       <>
+        <Loading />
         <CustomModal
           type={bookingStatus.type}
           title="Booking failed"
@@ -286,7 +279,7 @@ class Booking extends PureComponent {
             </div>
             <div className={s.goBack}>
               <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
-                <Close />
+                <Home />
               </IconButton>
             </div>
           </div>
@@ -317,6 +310,7 @@ Booking.propTypes = {
 const mapStateToProps = state => ({
   ...state.common,
   ...state.home,
+  ...state.booking,
   userDetail: state.auth.userDetail,
   isAuthenticated: state.auth.loginSession.isAuthenticated,
   bookingStatus: state.homeModules.bookingDialog.status,

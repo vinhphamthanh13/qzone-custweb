@@ -47,3 +47,6 @@ export const CALENDAR_WEEKS = 6;
 export const DAYS_OF_WEEK = 7;
 export const NUMBER_OF_YEAR_IN_ROW = 3;
 export const NUMBER_OF_MONTH_IN_ROW = 3;
+export const DATE_FORMAT = 'YYYY-MM-DD';
+export const DISPLAY_FORMAT = 'ddd, DD MMM YYYY';
+export const INITIAL_TIME = 'T00:00:00';

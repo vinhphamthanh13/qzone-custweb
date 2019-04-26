@@ -54,7 +54,7 @@ class DatePicker extends Component {
         <div className={s.calendarCabin} onClick={this.handleOpenCalendar}>
           <div>
             <div className="simple-button button-xs">
-              <DateRange className="icon-big icon-brand icon-shake info-color hover-pointer" />
+              <DateRange className="icon-big icon-brand icon-shake main-color hover-pointer" />
             </div>
           </div>
           <div className={s.calendarTab}>
