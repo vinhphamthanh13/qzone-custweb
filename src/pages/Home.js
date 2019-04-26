@@ -3,6 +3,7 @@ import {
   bool,
   func,
   any,
+  string,
   objectOf,
 } from 'prop-types';
 import { connect } from 'react-redux';
@@ -10,6 +11,7 @@ import { get } from 'lodash';
 import { Grid } from '@material-ui/core';
 import { history } from 'containers/App';
 import Loading from 'components/Loading';
+import { resetErrorMessage } from 'actionsReducers/common.actions';
 import {
   setServiceCategoriesAction,
   setServicesAction,
@@ -17,6 +19,7 @@ import {
 } from 'actionsReducers/home.actions';
 import { BOOKING } from 'utils/constants';
 import { cacheData, getCachedData } from 'config/localStorage';
+import CustomModal from 'components/Modal/CustomModal';
 import Maintenance from './components/maintenance/Maintenance';
 import Services from './home/Services';
 import Auth from './Auth';
@@ -182,10 +185,17 @@ export class Home extends React.PureComponent {
     this.handleAdvancedSearch(false);
   };
 
+  handleResetError = () => {
+    const { resetErrorMessage: resetErrorMessageAction } = this.props;
+    resetErrorMessageAction();
+  };
+
   render() {
     const {
       loginSession: { isAuthenticated },
       isLoading,
+      isError,
+      errorMessage,
     } = this.props;
     const {
       categories,
@@ -202,6 +212,7 @@ export class Home extends React.PureComponent {
       combineServiceProviders,
     } = this.state;
 
+    console.log('HOME props: ', this.props);
     const openAuthenticatedProfile = isAuthenticated && isOpenProfile;
 
     const categoriesServices = categories && categories.length > 0 && categories.map(category => ({
@@ -214,6 +225,17 @@ export class Home extends React.PureComponent {
 
     return (
       <>
+        {
+          isError && (
+            <CustomModal
+              isOpen
+              type="error"
+              title="Error occurs"
+              message={errorMessage}
+              onClose={this.handleResetError}
+            />
+          )
+        }
         <PrimarySearchAppBar
           handleAuthenticate={this.openAuthModal}
           onSearch={this.handleOnSearch}
@@ -305,10 +327,13 @@ export class Home extends React.PureComponent {
 
 Home.propTypes = {
   isLoading: bool.isRequired,
+  isError: bool.isRequired,
+  errorMessage: string.isRequired,
   loginSession: objectOf(any).isRequired,
   setServiceCategoriesAction: func.isRequired,
   setServicesAction: func.isRequired,
   setServiceProvidersAction: func.isRequired,
+  resetErrorMessage: func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -323,5 +348,6 @@ export default connect(
     setServiceCategoriesAction,
     setServicesAction,
     setServiceProvidersAction,
+    resetErrorMessage,
   },
 )(Home);

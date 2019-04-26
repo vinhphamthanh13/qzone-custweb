@@ -21,7 +21,7 @@ const reducer = (state = initState, action) => {
     case SET_ERROR:
       return {
         ...state,
-        isEError: true,
+        isError: true,
         errorMessage: action.payload,
       };
     case RESET_ERROR:
