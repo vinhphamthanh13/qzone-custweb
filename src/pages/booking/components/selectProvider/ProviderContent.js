@@ -53,7 +53,6 @@ class ProviderContent extends React.PureComponent {
     }));
   };
 
-
   render() {
     const {
       provider,
