@@ -234,6 +234,7 @@
   &-content {
     top: $app-bar-height;
   }
+  transition: all 0.3s ease;
 }
 
 .event-list {

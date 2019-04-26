@@ -3,12 +3,16 @@ import {
   func,
 } from 'prop-types';
 import { get } from 'lodash';
-import { Typography, Button } from '@material-ui/core';
-import moment from 'moment';
-import { connect } from 'react-redux';
 import {
-  PersonPin, Schedule,
-  EmailOutlined, CallOutlined,
+  Typography,
+  Button,
+} from '@material-ui/core';
+import moment from 'moment';
+import {
+  PersonPin,
+  Schedule,
+  EmailOutlined,
+  Call,
   Public,
 } from '@material-ui/icons';
 import {
@@ -18,8 +22,6 @@ import {
 } from 'types/global';
 import RateStar from 'components/Rating/RateStar';
 import CustomLink from 'components/CustomLink';
-import { fetchAvailabilityBySpecialIdAction } from 'reduxModules/home/bookingDialog/specialSlots.actions';
-import { fetchProviderDetail } from 'reduxModules/provider.actions';
 import SelectTime from './SelectTime';
 import MapDialog from './MapDialog';
 import s from './ProviderContent.module.scss';
@@ -113,7 +115,7 @@ class ProviderContent extends React.PureComponent {
                   </Typography>
                 </div>
                 <div className="icon-text">
-                  <CallOutlined className="icon-main icon-small" />
+                  <Call className="icon-main icon-small" />
                   <Typography variant="body1" color="inherit" noWrap>
                     {providerPhone}
                   </Typography>
@@ -145,7 +147,6 @@ class ProviderContent extends React.PureComponent {
               bookingDetail={bookingDetail}
               providerDetail={provider}
               onChange={onTimeSelect}
-              // fetchSlot={fetchAvailabilityBySpecialId}
             />
           </div>
         </div>
@@ -159,19 +160,11 @@ ProviderContent.propTypes = {
   provider: providerType,
   bookingDetail: bookingDetailType.isRequired,
   onTimeSelect: func.isRequired,
-  fetchAvailabilityBySpecialIdAction: func.isRequired,
 };
 
 ProviderContent.defaultProps = {
-  service: undefined,
-  provider: undefined,
+  service: null,
+  provider: null,
 };
 
-const mapStateToProps = state => ({
-  providerDetail: state.providerPage.providerDetail,
-});
-
-export default connect(mapStateToProps, {
-  fetchAvailabilityBySpecialIdAction,
-  fetchProviderDetail,
-})(ProviderContent);
+export default ProviderContent;

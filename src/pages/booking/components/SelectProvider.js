@@ -14,6 +14,7 @@ import {
 // import moment from 'moment';
 import { Typography } from '@material-ui/core';
 import DatePicker from 'components/Calendar/DatePicker';
+import SubLoading from 'components/SubLoading';
 
 import {
   getProviderTimes,
@@ -70,7 +71,7 @@ class SelectProvider extends React.PureComponent {
                 <DatePicker onChange={onDateChange} selectDate={noop} />
               </div>
             </div>
-            {providers && (
+            {providers ? (
               <div className={s.selectProviderList}>
                 {chunk(providers, Math.ceil(providers.length / 4)).map(list => (
                   <div key={Math.random()} className={s.providerRow}>
@@ -86,7 +87,7 @@ class SelectProvider extends React.PureComponent {
                   </div>
                 ))}
               </div>
-            )}
+            ) : <SubLoading loading={!providers} />}
           </div>
         )}
       </>
