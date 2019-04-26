@@ -254,6 +254,20 @@ class Booking extends PureComponent {
     return null;
   };
 
+  handleProviderAvailableSlots = (availabilitiesBulk, providers) => providers.map((provider) => {
+    const availableSlots = [];
+    availabilitiesBulk.map((slot) => {
+      if (slot.providerId === provider.userSub && slot.serviceId === provider.serviceId) {
+        availableSlots.push(slot);
+      }
+      return null;
+    });
+    return {
+      ...provider,
+      availableSlots,
+    };
+  });
+
   render() {
     const {
       serviceId,
@@ -275,17 +289,20 @@ class Booking extends PureComponent {
     const isBackValid = !(step === 0 || step === STEP_LABELS.length - 1);
     const isNextValid = !(step === STEP_LABELS.length - 1 || !this.isStepCompleted());
     console.log('this.state BOOKING', this.state);
-    const providers = this.handleMergedProviderInfo(serviceId, serviceProviders, providersByServiceIdList);
-
+    const providers = this.handleMergedProviderInfo(
+      serviceId,
+      serviceProviders,
+      providersByServiceIdList,
+    );
+    const providersWithSlot = availabilitiesBulk && this.handleProviderAvailableSlots(availabilitiesBulk, providers);
     const stepProps = {
       0: {
         bookingService: service,
-        providers,
+        providers: providersWithSlot,
         onDateChange: this.handleDateChange,
       },
     };
 
-    console.log('availabilitiesBulk', availabilitiesBulk);
     return (
       <>
         <Loading />
