@@ -3,26 +3,19 @@ import {
   func,
   objectOf,
   object,
+  any,
   arrayOf,
 } from 'prop-types';
-import { connect } from 'react-redux';
 import {
   chunk,
   // get,
   noop,
 } from 'lodash';
-// import moment from 'moment';
 import { Typography } from '@material-ui/core';
 import DatePicker from 'components/Calendar/DatePicker';
 import SubLoading from 'components/SubLoading';
-
-import {
-  getProviderTimes,
-  findSpecialEventsAction,
-} from 'reduxModules/home/bookingDialog/selectProvider.actions';
 import ProviderContent from './selectProvider/ProviderContent';
 import s from './SelectProvider.module.scss';
-
 
 class SelectProvider extends React.PureComponent {
   onSelectBooking = provider => (time) => {
@@ -57,7 +50,6 @@ class SelectProvider extends React.PureComponent {
       bookingService,
       providers,
       onDateChange,
-      // specialEvents,
     } = this.props;
     return (
       <>
@@ -96,28 +88,14 @@ class SelectProvider extends React.PureComponent {
 }
 
 SelectProvider.propTypes = {
-  bookingService: objectOf(object).isRequired,
-  providers: arrayOf(object).isRequired,
+  bookingService: objectOf(any),
+  providers: arrayOf(object),
   onDateChange: func.isRequired,
-  // match: matchType.isRequired,
-  // getServiceByIdAction: func.isRequired,
-  // setServiceProvidersAction: func.isRequired,
-
-  // getProviderTimesAction: func.isRequired,
-  // onChange: func.isRequired,
-  // bookingDetail: bookingDetailType.isRequired,
-  // handleNext: func.isRequired,
-  // findSpecialEventsAction: func.isRequired,
-  // specialEvents: arrayOf(providerType).isRequired,
 };
 
-// const mapStateToProps = state => ({
-//   // ...state.common,
-//   // ...state.home,
-//   // ...state.homeModules.bookingDialogModules.selectProvider,
-// });
+SelectProvider.defaultProps = {
+  bookingService: null,
+  providers: null,
+};
 
-export default connect(null, {
-  getProviderTimesAction: getProviderTimes,
-  findSpecialEventsAction,
-})(SelectProvider);
+export default SelectProvider;

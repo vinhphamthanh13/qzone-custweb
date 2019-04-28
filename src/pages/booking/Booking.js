@@ -9,6 +9,7 @@ import { compose } from 'redux';
 import moment from 'moment';
 import {
   get,
+  uniqBy,
 } from 'lodash';
 import {
   userDetailType,
@@ -207,17 +208,17 @@ class Booking extends PureComponent {
     this.setState({ isConfirmDialogOpen });
   };
 
-  handleViewAppointment = () => {
-    const {
-      handleOpenProfile,
-      findEventByCustomerIdAction: findEventByCustomerId,
-      userDetail: { userSub },
-      resetStatusAction,
-    } = this.props;
-    findEventByCustomerId(userSub);
-    handleOpenProfile();
-    resetStatusAction();
-  };
+  // handleViewAppointment = () => {
+  //   const {
+  //     handleOpenProfile,
+  //     findEventByCustomerIdAction: findEventByCustomerId,
+  //     userDetail: { userSub },
+  //     resetStatusAction,
+  //   } = this.props;
+  //   findEventByCustomerId(userSub);
+  //   handleOpenProfile();
+  //   resetStatusAction();
+  // };
 
   renderChevron = (valid, direction) => {
     const chevronStyle = valid ? 'icon-white icon-big icon-shake' : 'icon-transparent icon-big';
@@ -238,18 +239,19 @@ class Booking extends PureComponent {
       && providersByServiceId.length
     ) {
       const providers = [];
-      providersByServiceId.forEach((providerDetail) => {
-        serviceProviders.map((serviceProvider) => {
+      serviceProviders.forEach((serviceProvider) => {
+        providersByServiceId.map((providerDetail) => {
           if (serviceProvider.providerId === providerDetail.userSub && serviceProvider.serviceId === serviceId) {
             providers.push({
-              ...serviceProvider,
               ...providerDetail,
+              ...serviceProvider,
             });
           }
           return null;
         });
       });
-      return providers;
+      console.log('providers', providers);
+      return uniqBy(providers, item => item.id);
     }
     return null;
   };
@@ -301,6 +303,7 @@ class Booking extends PureComponent {
         onDateChange: this.handleDateChange,
       },
     };
+
 
     return (
       <>
@@ -380,7 +383,6 @@ Booking.propTypes = {
   bookingStatus: shape({ type: string, message: string }).isRequired,
   resetStatusAction: func.isRequired,
   toggleAppointmentAction: func.isRequired,
-  handleOpenProfile: func.isRequired,
   findEventByCustomerIdAction: func.isRequired,
 };
 

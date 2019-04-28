@@ -17,12 +17,11 @@ import {
 } from '@material-ui/icons';
 import {
   providerType,
-  bookingDetailType,
   serviceType,
 } from 'types/global';
 import RateStar from 'components/Rating/RateStar';
 import CustomLink from 'components/CustomLink';
-import SelectTime from './SelectTime';
+import TimeBoxes from './TimeBoxes';
 import MapDialog from './MapDialog';
 import s from './ProviderContent.module.scss';
 
@@ -58,12 +57,8 @@ class ProviderContent extends React.PureComponent {
     const {
       provider,
       service,
-      bookingDetail,
       onTimeSelect,
-      // eslint-disable-next-line
-      fetchAvailabilityBySpecialIdAction: fetchAvailabilityBySpecialId,
     } = this.props;
-    console.log('providers..', provider);
     const { providerId } = this.state;
     const serviceName = get(service, 'name');
     const providerName = get(provider, 'givenName');
@@ -143,10 +138,9 @@ class ProviderContent extends React.PureComponent {
                 Your current timezone: {moment.tz.guess()}
               </Typography>
             </div>
-            <SelectTime
-              bookingDetail={bookingDetail}
-              providerDetail={provider}
-              onChange={onTimeSelect}
+            <TimeBoxes
+              provider={provider}
+              onSelectSlot={onTimeSelect}
             />
           </div>
         </div>
@@ -158,7 +152,6 @@ class ProviderContent extends React.PureComponent {
 ProviderContent.propTypes = {
   service: serviceType,
   provider: providerType,
-  bookingDetail: bookingDetailType.isRequired,
   onTimeSelect: func.isRequired,
 };
 

@@ -1,7 +1,9 @@
 import {
   serviceCategories,
   services,
-  serviceProviders, serviceProvidersNearBy,
+  // serviceProviders,
+  serviceProvidersNearBy,
+  temporaryServices,
 } from 'actionsApi/home';
 import { setLoading, setError } from 'actionsReducers/common.actions';
 import { handleRequest } from 'utils/apiHelpers';
@@ -56,7 +58,7 @@ export const setServicesAction = () => async (dispatch) => {
 
 export const setServiceProvidersAction = () => async (dispatch) => {
   dispatch(setLoading(true));
-  const [serviceProviderList, error] = await handleRequest(serviceProviders, []);
+  const [serviceProviderList, error] = await handleRequest(temporaryServices, []);
   if (error) {
     dispatch(setError(error));
   } else {
