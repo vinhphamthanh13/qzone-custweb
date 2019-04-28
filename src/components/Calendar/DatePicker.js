@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import { func } from 'prop-types';
+import {
+  func,
+  bool,
+} from 'prop-types';
 import moment from 'moment';
 import { DateRange } from '@material-ui/icons';
 import { Typography } from '@material-ui/core';
@@ -36,8 +39,15 @@ class DatePicker extends Component {
   };
 
   render() {
-    const { selectedDate, isOpenCalendar } = this.state;
-    const renderCalendar = isOpenCalendar ? (
+    const {
+      selectedDate,
+      isOpenCalendar,
+    } = this.state;
+    const {
+      enableCalendar,
+    } = this.props;
+    const datePickerHover = enableCalendar ? 'hover-pointer' : '';
+    const renderCalendar = isOpenCalendar && enableCalendar ? (
       <div className="cover-bg-black">
         <Calendar
           minDate={moment(`${moment().format('YYYY-MM-DD')}T00:00:00`)}
@@ -54,10 +64,10 @@ class DatePicker extends Component {
         <div className={s.calendarCabin} onClick={this.handleOpenCalendar}>
           <div>
             <div className="simple-button button-xs">
-              <DateRange className="icon-big icon-brand icon-shake main-color hover-pointer" />
+              <DateRange className={`icon-big icon-brand main-color ${datePickerHover}`} />
             </div>
           </div>
-          <div className={s.calendarTab}>
+          <div className={`${s.calendarTab} ${datePickerHover}`}>
             <div className={s.calendarText}>
               <Typography variant="title" color="inherit" className={s.calendarFont}>
                 {selectedDate.format('DD')}
@@ -88,6 +98,7 @@ class DatePicker extends Component {
 DatePicker.propTypes = {
   onChange: func.isRequired,
   selectDate: func.isRequired,
+  enableCalendar: bool.isRequired,
 };
 
 export default DatePicker;

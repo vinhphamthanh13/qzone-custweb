@@ -8,7 +8,6 @@ import {
 } from 'prop-types';
 import {
   chunk,
-  // get,
   noop,
 } from 'lodash';
 import { Typography } from '@material-ui/core';
@@ -21,8 +20,6 @@ class SelectProvider extends React.PureComponent {
   onSelectBooking = provider => (time) => {
     console.log(provider);
     console.log(time);
-    // this.props.onChange(provider, 'provider');
-    // this.props.onChange(time, 'time', this.props.handleNext);
   };
   //
   // handleSelectDate = (date) => {
@@ -60,7 +57,7 @@ class SelectProvider extends React.PureComponent {
                 {bookingService.name}
               </Typography>
               <div className={s.selectDateOfBooking}>
-                <DatePicker onChange={onDateChange} selectDate={noop} />
+                <DatePicker onChange={onDateChange} selectDate={noop} enableCalendar={false} />
               </div>
             </div>
             {providers ? (
