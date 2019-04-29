@@ -3,6 +3,7 @@ import {
   providersByServiceId,
   availabilitiesBySpecialEventId,
   availabilitiesBySpecialEventIdBulk,
+  appointmentCustomerEvents,
 } from 'actionsApi/booking';
 import {
   setLoading,
@@ -14,6 +15,8 @@ export const GET_SERVICE_BY_ID = 'BOOKING.GET_SERVICE_BY_ID';
 export const SET_PROVIDERS_BY_SERVICE_ID = 'BOOKING.SET_PROVIDERS_BY_SERVICE_ID';
 export const SET_AVAILABILITIES_BY_SPECIAL_EVENT_ID = 'BOOKING.SET_AVAILABILITIES_BY_SPECIAL_EVENT_ID';
 export const SET_AVAILABILITIES_BY_SPECIAL_EVENT_BULK = 'BOOKING.SET_AVAILABILITIES_BY_SPECIAL_EVENT_BULK';
+export const SET_BOOKING_DETAIL = 'BOOKING.SET_BOOKING_DETAIL';
+export const SET_APPOINTMENT_CUSTOMER_EVENTS = 'BOOKING.SET_APPOINTMENT_CUSTOMER_EVENTS';
 export const SET_BOOKING_STEP = 'BOOKING.SET_BOOKING_STEP';
 
 const getServiceById = payload => ({
@@ -32,8 +35,17 @@ const setAvailabilitiesBySpecialEventBulk = payload => ({
   type: SET_AVAILABILITIES_BY_SPECIAL_EVENT_BULK,
   payload,
 });
+const setAppointmentCustomerEvents = payload => ({
+  type: SET_APPOINTMENT_CUSTOMER_EVENTS,
+  payload,
+});
 
-export const setBookingStepAction = payload => ({
+export const setBookingDetail = payload => ({
+  type: SET_BOOKING_DETAIL,
+  payload,
+});
+
+export const setBookingStep = payload => ({
   type: SET_BOOKING_STEP,
   payload,
 });
@@ -80,6 +92,17 @@ export const setAvailabilitiesBySpecialEventBulkAction = data => async (dispatch
     const responseBulk = [];
     availabilitiesBulk.map(item => responseBulk.push(...item.data.objects));
     dispatch(setAvailabilitiesBySpecialEventBulk(responseBulk));
+  }
+  dispatch(setLoading(false));
+};
+
+export const setAppointmentCustomerEventsAction = data => async (dispatch) => {
+  dispatch(setLoading(true));
+  const [appointmentEvent, error] = await handleRequest(appointmentCustomerEvents, [data]);
+  if (error) {
+    dispatch(setError(error));
+  } else {
+    dispatch(setAppointmentCustomerEvents(appointmentEvent));
   }
   dispatch(setLoading(false));
 };

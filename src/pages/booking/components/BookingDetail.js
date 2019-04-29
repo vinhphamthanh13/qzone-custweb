@@ -11,8 +11,11 @@ import {
 } from '@material-ui/icons';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
-import mtz from 'moment-timezone';
-import { bookingDetailType, serviceType, userDetailType } from 'types/global';
+import moment from 'moment';
+import {
+  serviceType,
+  userDetailType,
+} from 'types/global';
 import { defaultDateFormat } from 'utils/constants';
 import formatName from 'utils/formatName';
 import RateStar from 'components/Rating/RateStar';
@@ -20,11 +23,22 @@ import MapDialog from './selectProvider/MapDialog';
 import s from './BookingDetail.module.scss';
 
 class BookingDetail extends React.PureComponent {
+  static getDerivedStateFromProps(props, state) {
+    const { bookingDetail } = props;
+    const { bookingDetail: cachedBookingDetail } = state;
+    if (bookingDetail !== cachedBookingDetail) {
+      return {
+        bookingDetail,
+      };
+    }
+    return null;
+  }
+
   constructor(props) {
     super(props);
-
     this.state = {
       isMapDialogOpen: false,
+      bookingDetail: null,
     };
   }
 
@@ -43,35 +57,45 @@ class BookingDetail extends React.PureComponent {
 
   render() {
     const {
-      bookingDetail, initService, userDetail, isAuthenticated,
+      bookingService,
+      userDetail,
+      isAuthenticated,
     } = this.props;
-    console.log('bookingDetails', bookingDetail);
-    const serviceName = get(initService, 'name');
-    const localBookingStartTime = mtz(bookingDetail.time.start);
+    const {
+      bookingDetail,
+    } = this.state;
+    console.log('prop of booking details', this.props);
+    console.log('state of booking details', this.state);
+    const serviceName = get(bookingService, 'name');
+    const bookingTime = get(bookingDetail, 'time.start');
     const provider = get(bookingDetail, 'provider');
     const providerName = get(provider, 'providerName');
     const duration = get(provider, 'avgServiceTime');
     const providerRating = get(provider, 'rating');
+    const userGiven = get(userDetail, 'givenName');
+    const userFamily = get(userDetail, 'familyName');
+    const userEmail = get(userDetail, 'email');
+    const userPhone = get(userDetail, 'telephone');
 
     return (
       <div className={s.bookingAppointment}>
         <div className={s.bookingDetail}>
           <div className={s.bookingHeadInfo}>
             <div className={s.serviceTitle}>
-              <Typography variant="title" color="textSecondary" className="text-bold">{initService.name}</Typography>
+              <Typography variant="title" color="textSecondary" className="text-bold">{serviceName}</Typography>
             </div>
           </div>
           <div className={s.serviceItems}>
             <div className={s.bookingItems}>
               <DateRange className="icon-main" />
               <Typography variant="subtitle1" color="inherit">
-                {localBookingStartTime.format(defaultDateFormat)}
+                {bookingTime && moment(bookingTime * 1000).format(defaultDateFormat)}
               </Typography>
             </div>
             <div className={s.bookingItems}>
               <Schedule className="icon-main" />
               <Typography variant="subtitle1" color="inherit">
-                {localBookingStartTime.format('hh:mm A')}{' - '}{duration} minutes
+                {bookingTime && moment(bookingTime * 1000).format('hh:mm A')}{' - '}{duration} minutes
               </Typography>
             </div>
             <div className={s.bookingItems}>
@@ -115,21 +139,21 @@ class BookingDetail extends React.PureComponent {
                 disabled
                 fullWidth
                 label="Client name"
-                value={formatName({ givenName: userDetail.givenName, familyName: userDetail.familyName })}
+                value={formatName({ givenName: userGiven, familyName: userFamily })}
                 margin="dense"
               />
               <TextField
                 disabled
                 fullWidth
                 label="Email"
-                value={userDetail.email || ''}
+                value={userEmail || ''}
                 margin="dense"
               />
               <TextField
                 disabled
                 fullWidth
                 label="Phone number"
-                value={userDetail.telephone || ''}
+                value={userPhone || ''}
                 margin="dense"
               />
             </div>
@@ -139,7 +163,7 @@ class BookingDetail extends React.PureComponent {
           isOpen={this.state.isMapDialogOpen}
           toggle={this.toggleMapDialog}
           serviceName={serviceName}
-          provider={bookingDetail.provider}
+          provider={provider}
         />
       </div>
     );
@@ -147,8 +171,7 @@ class BookingDetail extends React.PureComponent {
 }
 
 BookingDetail.propTypes = {
-  bookingDetail: bookingDetailType.isRequired,
-  initService: serviceType,
+  bookingService: serviceType,
   userDetail: userDetailType.isRequired,
   onSaveBooking: func.isRequired,
   isAuthenticated: bool.isRequired,
@@ -156,12 +179,12 @@ BookingDetail.propTypes = {
 };
 
 BookingDetail.defaultProps = {
-  initService: undefined,
+  bookingService: null,
 };
 
 const mapStatToProps = state => ({
   isAuthenticated: state.auth.loginSession.isAuthenticated,
-  providerList: state.home.providerList,
+  ...state.booking,
 });
 
 export default connect(mapStatToProps)(React.memo(BookingDetail));

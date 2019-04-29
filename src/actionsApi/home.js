@@ -7,7 +7,6 @@ export const serviceCategories = () => axios.get('/service-categories');
 export const services = () => axios.get('/services');
 
 // service-provider-assignment-controller
-export const serviceProviders = () => axios.get('/service-providers');
 export const serviceProvidersNearBy = body => axios.post('/service-providers-near-by', body);
 
 // ***************** event-resource ********************* //

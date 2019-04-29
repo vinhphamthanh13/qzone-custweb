@@ -13,11 +13,21 @@ import {
 import { Typography } from '@material-ui/core';
 import DatePicker from 'components/Calendar/DatePicker';
 import SubLoading from 'components/SubLoading';
+import { BOOKING } from 'utils/constants';
 import ProviderContent from './selectProvider/ProviderContent';
 import s from './SelectProvider.module.scss';
 
 class SelectProvider extends React.PureComponent {
   onSelectBooking = provider => (time) => {
+    const {
+      setBookingDetail,
+      setBookingStep,
+    } = this.props;
+    setBookingDetail({
+      provider,
+      time,
+    });
+    setBookingStep(BOOKING.STEPS.CONFIRM_BOOKING);
     console.log(provider);
     console.log(time);
   };
@@ -87,6 +97,8 @@ class SelectProvider extends React.PureComponent {
 SelectProvider.propTypes = {
   bookingService: objectOf(any),
   providers: arrayOf(object),
+  setBookingDetail: func.isRequired,
+  setBookingStep: func.isRequired,
   onDateChange: func.isRequired,
 };
 

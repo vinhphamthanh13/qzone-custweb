@@ -30,13 +30,15 @@ import logo from 'images/quezone-logo.png';
 import CustomModal from 'components/Modal/CustomModal';
 import Loading from 'components/Loading';
 import { history } from 'containers/App';
+import { BOOKING } from 'utils/constants';
 import { findEventByCustomerIdAction } from 'actionsReducers/common.actions';
 import { setServiceProvidersAction } from 'actionsReducers/home.actions';
 import {
   getServiceByIdAction,
   setProvidersByServiceIdAction,
   setAvailabilitiesBySpecialEventBulkAction,
-  setBookingStepAction,
+  setBookingDetail,
+  setBookingStep,
 } from 'actionsReducers/booking.actions';
 
 import { setProviders } from 'reduxModules/home/bookingDialog/selectProvider.actions';
@@ -47,7 +49,7 @@ import BookingDetail from './components/BookingDetail';
 import ViewAppointment from './components/ViewAppointment';
 import s from './Booking.module.scss';
 
-const STEP_LABELS = ['Select provider', 'Book appointment', 'Complete booking'];
+const STEP_LABELS = ['Select Provider', 'Book Appointment', 'Complete Booking'];
 
 class Booking extends PureComponent {
   static getDerivedStateFromProps(props, state) {
@@ -57,6 +59,7 @@ class Booking extends PureComponent {
       providersByServiceIdList,
       availabilitiesBulk,
       bookingStep,
+      bookingDetail,
     } = props;
     const {
       service: cachedService,
@@ -64,52 +67,41 @@ class Booking extends PureComponent {
       providersByServiceIdList: cachedProvidersByServiceIdList,
       availabilitiesBulk: cachedAvailabilitiesBulk,
       bookingStep: cachedBookingStep,
+      bookingDetail: cachedBookingDetail,
     } = state;
-
-    if (service !== cachedService) {
+    if (
+      service !== cachedService
+      || serviceProviders !== cachedServiceProviders
+      || providersByServiceIdList !== cachedProvidersByServiceIdList
+      || availabilitiesBulk !== cachedAvailabilitiesBulk
+      || bookingStep !== cachedBookingStep
+      || bookingDetail !== cachedBookingDetail
+    ) {
       return {
         service,
-      };
-    }
-    if (serviceProviders !== cachedServiceProviders) {
-      return {
         serviceProviders,
-      };
-    }
-    if (providersByServiceIdList !== cachedProvidersByServiceIdList) {
-      return {
         providersByServiceIdList,
-      };
-    }
-    if (availabilitiesBulk !== cachedAvailabilitiesBulk) {
-      return {
         availabilitiesBulk,
-      };
-    }
-    if (bookingStep !== cachedBookingStep) {
-      return {
         bookingStep,
+        bookingDetail,
       };
     }
+
     return null;
   }
 
   constructor(props) {
     super(props);
     this.stepComponents = [SelectProvider, BookingDetail, ViewAppointment];
-    this.defaultState = {
+    this.state = {
       service: null,
       serviceProviders: null,
       providersByServiceIdList: null,
       availabilitiesBulk: null,
-      bookingStep: 0,
-      bookingDetail: {
-        provider: undefined,
-        time: undefined,
-      },
+      bookingStep: BOOKING.STEPS.SELECT_PROVIDER,
+      bookingDetail: null,
       isConfirmDialogOpen: false,
     };
-    this.state = { ...this.defaultState };
   }
 
   componentDidMount() {
@@ -144,42 +136,24 @@ class Booking extends PureComponent {
     }
   };
 
-  onStepChange = idx => () => {
-    this.setState({ step: idx });
-  };
-
-  handleBack = () => {
-    this.setState(oldState => ({ step: oldState.step - 1 }));
-  };
-
-  handleNext = () => {
-    this.setState(oldState => ({ step: oldState.step + 1 }));
-  };
-
-  isStepCompleted = () => {
-    const { step, bookingDetail } = this.state;
-    switch (step) {
-      case 0:
-        return !!bookingDetail.provider && !!bookingDetail.time;
-      default:
-        return false;
+  handleStepChange = dir => () => {
+    const {
+      setBookingStep: setBookingStepAction,
+    } = this.props;
+    const {
+      bookingStep,
+    } = this.state;
+    if (bookingStep > BOOKING.STEPS.SELECT_PROVIDER && dir < 0) {
+      setBookingStepAction(bookingStep - 1);
+    }
+    if (bookingStep < BOOKING.STEPS.VIEW_BOOKING && dir > 0) {
+      setBookingStepAction(bookingStep + 1);
     }
   };
 
-  onChangeBookingDetail = (value, key, cb) => {
-    this.setState(oldState => ({
-      bookingDetail: {
-        ...oldState.bookingDetail,
-        [key]: value,
-      },
-    }), cb);
-  };
-
-  handleClose = () => {
-    const { resetStatusAction, setProvidersAction } = this.props;
-    setProvidersAction([]);
+  goHome = () => {
+    const { resetStatusAction } = this.props;
     resetStatusAction();
-    this.setState(this.defaultState);
     history.push('/');
   };
 
@@ -205,7 +179,6 @@ class Booking extends PureComponent {
   };
 
   closeErrorModal = () => {
-    this.handleBack();
     this.props.resetStatusAction();
   };
 
@@ -259,7 +232,6 @@ class Booking extends PureComponent {
           return null;
         });
       });
-      console.log('providers', providers);
       return uniqBy(providers, item => item.id);
     }
     return null;
@@ -283,6 +255,8 @@ class Booking extends PureComponent {
     const {
       serviceId,
       bookingStatus,
+      setBookingDetail: setBookingDetailAction,
+      setBookingStep: setBookingStepAction,
       // userDetail,
       // bookingEvent,
       // openDialog,
@@ -297,8 +271,8 @@ class Booking extends PureComponent {
       isConfirmDialogOpen,
     } = this.state;
     const Step = this.stepComponents[bookingStep];
-    const isBackValid = !(bookingStep === 0 || bookingStep === STEP_LABELS.length - 1);
-    const isNextValid = !(bookingStep === STEP_LABELS.length - 1 || !this.isStepCompleted());
+    const isBackValid = bookingStep > BOOKING.STEPS.SELECT_PROVIDER;
+    const isNextValid = bookingStep < BOOKING.STEPS.VIEW_BOOKING && bookingDetail;
     const providers = this.handleMergedProviderInfo(
       serviceId,
       serviceProviders,
@@ -306,13 +280,21 @@ class Booking extends PureComponent {
     );
     const providersWithSlot = availabilitiesBulk && this.handleProviderAvailableSlots(availabilitiesBulk, providers);
     const stepProps = {
-      0: {
+      [BOOKING.STEPS.SELECT_PROVIDER]: {
         bookingService: service,
         providers: providersWithSlot,
         onDateChange: this.handleDateChange,
+        setBookingDetail: setBookingDetailAction,
+        setBookingStep: setBookingStepAction,
+      },
+      [BOOKING.STEPS.CONFIRM_BOOKING]: {
+        bookingService: service,
       },
     };
 
+    console.log('booking next button', isNextValid);
+    console.log('this.props BOOKING', this.props);
+    console.log('this.state BOOKING', this.state);
 
     return (
       <>
@@ -324,7 +306,7 @@ class Booking extends PureComponent {
           isOpen={bookingStatus.type === 'error'}
           onClose={this.closeErrorModal}
         />
-        {bookingDetail.provider && (
+        {bookingDetail && bookingDetail.provider && (
           <CustomModal
             type="info"
             title="Booking confirmation"
@@ -342,7 +324,7 @@ class Booking extends PureComponent {
             </div>
             <div>
               <div className={s.bookingStepsWrapper}>
-                <Button disabled={!isBackValid} onClick={this.handleBack} className="simple-button">
+                <Button disabled={!isBackValid} onClick={this.handleStepChange(-1)} className="simple-button">
                   {this.renderChevron(isBackValid, 'left')}
                 </Button>
                 <div className={s.stepper}>
@@ -359,13 +341,13 @@ class Booking extends PureComponent {
                     </div>
                   </div>
                 </div>
-                <Button disabled={!isNextValid} onClick={this.handleNext} className="simple-button">
+                <Button disabled={!isNextValid} onClick={this.handleStepChange(1)} className="simple-button">
                   {this.renderChevron(isNextValid, 'right')}
                 </Button>
               </div>
             </div>
             <div className={s.goBack}>
-              <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
+              <IconButton color="inherit" onClick={this.goHome} aria-label="Close">
                 <Home />
               </IconButton>
             </div>
@@ -381,11 +363,13 @@ class Booking extends PureComponent {
 
 Booking.propTypes = {
   serviceId: string.isRequired,
+  bookingStep: number.isRequired,
   getServiceByIdAction: func.isRequired,
   setServiceProvidersAction: func.isRequired,
   setProvidersByServiceIdAction: func.isRequired,
   setAvailabilitiesBySpecialEventBulkAction: func.isRequired,
-  bookingStep: number.isRequired,
+  setBookingDetail: func.isRequired,
+  setBookingStep: func.isRequired,
 
   setProvidersAction: func.isRequired,
   userDetail: userDetailType.isRequired,
@@ -394,7 +378,6 @@ Booking.propTypes = {
   resetStatusAction: func.isRequired,
   toggleAppointmentAction: func.isRequired,
   findEventByCustomerIdAction: func.isRequired,
-  setBookingStepAction: func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -415,7 +398,8 @@ export default compose(
       setServiceProvidersAction,
       setProvidersByServiceIdAction,
       setAvailabilitiesBySpecialEventBulkAction,
-      setBookingStepAction,
+      setBookingDetail,
+      setBookingStep,
 
       setProvidersAction: setProviders,
       bookEventAction: bookEvent,

@@ -5,6 +5,11 @@ export const defaultDateFormat = 'DD MMMM YYYY';
 
 export const BOOKING = {
   CACHE_DATA: 'qz_booking_cached',
+  STEPS: {
+    SELECT_PROVIDER: 0,
+    CONFIRM_BOOKING: 1,
+    VIEW_BOOKING: 2,
+  },
 };
 
 export const regExPattern = {
