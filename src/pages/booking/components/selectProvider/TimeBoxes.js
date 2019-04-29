@@ -8,8 +8,12 @@ import uuidv1 from 'uuid/v1';
 import {
   get,
   chunk,
-  noop,
 } from 'lodash';
+import {
+  dateFormatDash,
+  timeSlotFormat,
+  defaultDateFormat,
+} from 'utils/constants';
 import s from './SelectTime.module.scss';
 
 export class TimeBoxes extends React.PureComponent {
@@ -35,65 +39,71 @@ export class TimeBoxes extends React.PureComponent {
   };
 
   getHourBoxes = (slots) => {
-    if (!slots) return [];
+    if (!slots) return null;
     const slotTable = {};
-    const timeBoxes = slots
+    slots
       .filter((slot) => {
         const startSec = get(slot, 'providerStartSec');
         const spotsOpen = get(slot, 'spotsOpen');
         return !!spotsOpen && moment() < moment(startSec);
       })
       .sort((a, b) => a.startSec - b.startSec).map((slot) => {
-        console.log('filtered slots', slot);
         const startSec = get(slot, 'providerStartSec');
-        const spotsOpen = get(slot, 'spotsOpen');
-        startSec.replace(' ', '-');
-        slotTable[moment(startSec).format('DD-MM-YYYY')] = slotTable[moment(startSec).format('DD-MM-YYYY')]
-          ? [
-            ...slotTable[moment(startSec).format('DD-MM-YYYY')],
-            moment(startSec),
-          ] : [];
-        const time = moment(startSec);
         const duration = get(slot, 'durationSec');
-        const action = spotsOpen
-          ? this.onHourChange({ start: time, duration }) : noop;
-        return ({
-          key: uuidv1(),
-          time,
-          canBook: !!spotsOpen,
-          duration,
-          action,
-          display: moment(time).format('hh:mm a'),
-        });
+        startSec.replace(' ', '-');
+        slotTable[moment(startSec).format(dateFormatDash)] = slotTable[moment(startSec).format(dateFormatDash)]
+          ? [
+            ...slotTable[moment(startSec).format(dateFormatDash)],
+            {
+              time: moment(startSec),
+              duration,
+              action: this.onHourChange({ start: moment(startSec).unix(), duration }),
+            },
+          ] : [];
+        return null;
       });
-    console.log('slotTable', slotTable);
-    return chunk(timeBoxes, 3);
+    return slotTable;
   };
 
-  renderTimeBox = list => list.map(row => (
-    <div key={uuidv1()} className={s.timeRow}>
-      {row.map((slot) => {
-        const { display, action } = slot;
-        return (
-          <Button
-            key={uuidv1()}
-            className={s.timeSlot}
-            onClick={action}
-          >
-            <Typography variant="subheading" color="inherit">
-              {display}
-            </Typography>
-          </Button>
-        );
-      })}
-    </div>
-  ));
+  renderTimeBox = data => Object.keys(data).map(
+    date => (
+      <div key={uuidv1()} className={s.availableDateSlots}>
+        <div className={s.dateSlot}>
+          <Typography variant="subheading" color="inherit">
+            {moment(date.replace(/(\d+)-(\d+)-(\d+)/, '$3-$2-$1')).format(defaultDateFormat)}
+          </Typography>
+        </div>
+        <>
+          {
+            chunk(data[date], 3).map(row => (
+              <div key={uuidv1()} className={s.timeRow}>
+                {row.map((slot) => {
+                  const { time, action } = slot;
+                  return (
+                    <Button
+                      key={uuidv1()}
+                      className={s.timeSlot}
+                      onClick={action}
+                    >
+                      <Typography variant="subheading" color="inherit">
+                        {time.format(timeSlotFormat)}
+                      </Typography>
+                    </Button>
+                  );
+                })}
+              </div>
+            ))
+          }
+        </>
+      </div>
+    ),
+  );
 
   render() {
     const { provider } = this.state;
     const availableSlots = get(provider, 'availableSlots');
     const hourBoxes = this.getHourBoxes(availableSlots);
-    return hourBoxes.length > 0 ? this.renderTimeBox(hourBoxes) : (
+    return hourBoxes ? this.renderTimeBox(hourBoxes) : (
       <div className={s.noneSlot}>
         <Typography variant="subheading" color="inherit">
           There is no slot available from our provider! Please find more in the next day!

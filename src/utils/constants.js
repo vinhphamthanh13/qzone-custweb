@@ -1,4 +1,7 @@
+export const dateFormatDash = 'DD-MM-YYYY';
+export const timeSlotFormat = 'hh:mm a';
 export const defaultDateFormat = 'DD MMMM YYYY';
+
 
 export const BOOKING = {
   CACHE_DATA: 'qz_booking_cached',

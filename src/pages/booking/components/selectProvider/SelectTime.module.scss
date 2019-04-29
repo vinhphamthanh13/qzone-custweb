@@ -31,3 +31,17 @@
   color: $info;
   padding: 1.1rem 0.5rem;
 }
+
+.availableDateSlots {
+  width: 100%;
+}
+
+.dateSlot {
+  color: $white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.2rem 0;
+  background: $malibu;
+  width: 100%;
+}
