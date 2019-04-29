@@ -74,8 +74,8 @@ export class TimeBoxes extends React.PureComponent {
           </Typography>
         </div>
         <>
-          {
-            chunk(data[date], 3).map(row => (
+          { data[date] && data[date].length
+            ? chunk(data[date], 3).map(row => (
               <div key={uuidv1()} className={s.timeRow}>
                 {row.map((slot) => {
                   const { time, action } = slot;
@@ -92,8 +92,13 @@ export class TimeBoxes extends React.PureComponent {
                   );
                 })}
               </div>
-            ))
-          }
+            )) : (
+              <div className={s.noneSlot}>
+                <Typography variant="subheading" color="inherit">
+                  There is no slot available from our provider! Please find more in the next day!
+                </Typography>
+              </div>
+            )}
         </>
       </div>
     ),
@@ -103,13 +108,7 @@ export class TimeBoxes extends React.PureComponent {
     const { provider } = this.state;
     const availableSlots = get(provider, 'availableSlots');
     const hourBoxes = this.getHourBoxes(availableSlots);
-    return hourBoxes ? this.renderTimeBox(hourBoxes) : (
-      <div className={s.noneSlot}>
-        <Typography variant="subheading" color="inherit">
-          There is no slot available from our provider! Please find more in the next day!
-        </Typography>
-      </div>
-    );
+    return hourBoxes && this.renderTimeBox(hourBoxes);
   }
 }
 

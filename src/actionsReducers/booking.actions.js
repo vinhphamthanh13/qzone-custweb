@@ -14,6 +14,7 @@ export const GET_SERVICE_BY_ID = 'BOOKING.GET_SERVICE_BY_ID';
 export const SET_PROVIDERS_BY_SERVICE_ID = 'BOOKING.SET_PROVIDERS_BY_SERVICE_ID';
 export const SET_AVAILABILITIES_BY_SPECIAL_EVENT_ID = 'BOOKING.SET_AVAILABILITIES_BY_SPECIAL_EVENT_ID';
 export const SET_AVAILABILITIES_BY_SPECIAL_EVENT_BULK = 'BOOKING.SET_AVAILABILITIES_BY_SPECIAL_EVENT_BULK';
+export const SET_BOOKING_STEP = 'BOOKING.SET_BOOKING_STEP';
 
 const getServiceById = payload => ({
   type: GET_SERVICE_BY_ID,
@@ -29,6 +30,11 @@ const setAvailabilitiesBySpecialEventId = payload => ({
 });
 const setAvailabilitiesBySpecialEventBulk = payload => ({
   type: SET_AVAILABILITIES_BY_SPECIAL_EVENT_BULK,
+  payload,
+});
+
+export const setBookingStepAction = payload => ({
+  type: SET_BOOKING_STEP,
   payload,
 });
 

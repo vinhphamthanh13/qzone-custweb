@@ -3,6 +3,7 @@ import {
   SET_PROVIDERS_BY_SERVICE_ID,
   SET_AVAILABILITIES_BY_SPECIAL_EVENT_ID,
   SET_AVAILABILITIES_BY_SPECIAL_EVENT_BULK,
+  SET_BOOKING_STEP,
 } from 'actionsReducers/booking.actions';
 
 const initState = {
@@ -10,6 +11,7 @@ const initState = {
   providersByServiceIdList: null,
   availabilities: null,
   availabilitiesBulk: null,
+  bookingStep: 0,
 };
 
 const reducer = (state = initState, action) => {
@@ -33,6 +35,11 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         availabilitiesBulk: action.payload,
+      };
+    case SET_BOOKING_STEP:
+      return {
+        ...state,
+        bookingStep: action.payload,
       };
     default:
       return state;

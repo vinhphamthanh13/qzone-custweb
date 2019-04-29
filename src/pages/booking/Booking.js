@@ -3,6 +3,7 @@ import {
   string,
   func,
   shape,
+  number,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -35,6 +36,7 @@ import {
   getServiceByIdAction,
   setProvidersByServiceIdAction,
   setAvailabilitiesBySpecialEventBulkAction,
+  setBookingStepAction,
 } from 'actionsReducers/booking.actions';
 
 import { setProviders } from 'reduxModules/home/bookingDialog/selectProvider.actions';
@@ -54,12 +56,14 @@ class Booking extends PureComponent {
       serviceProviders,
       providersByServiceIdList,
       availabilitiesBulk,
+      bookingStep,
     } = props;
     const {
       service: cachedService,
       serviceProviders: cachedServiceProviders,
       providersByServiceIdList: cachedProvidersByServiceIdList,
       availabilitiesBulk: cachedAvailabilitiesBulk,
+      bookingStep: cachedBookingStep,
     } = state;
 
     if (service !== cachedService) {
@@ -82,6 +86,11 @@ class Booking extends PureComponent {
         availabilitiesBulk,
       };
     }
+    if (bookingStep !== cachedBookingStep) {
+      return {
+        bookingStep,
+      };
+    }
     return null;
   }
 
@@ -93,7 +102,7 @@ class Booking extends PureComponent {
       serviceProviders: null,
       providersByServiceIdList: null,
       availabilitiesBulk: null,
-      step: 0,
+      bookingStep: 0,
       bookingDetail: {
         provider: undefined,
         time: undefined,
@@ -283,13 +292,13 @@ class Booking extends PureComponent {
       serviceProviders,
       providersByServiceIdList,
       availabilitiesBulk,
-      step,
+      bookingStep,
       bookingDetail,
       isConfirmDialogOpen,
     } = this.state;
-    const Step = this.stepComponents[step];
-    const isBackValid = !(step === 0 || step === STEP_LABELS.length - 1);
-    const isNextValid = !(step === STEP_LABELS.length - 1 || !this.isStepCompleted());
+    const Step = this.stepComponents[bookingStep];
+    const isBackValid = !(bookingStep === 0 || bookingStep === STEP_LABELS.length - 1);
+    const isNextValid = !(bookingStep === STEP_LABELS.length - 1 || !this.isStepCompleted());
     const providers = this.handleMergedProviderInfo(
       serviceId,
       serviceProviders,
@@ -340,12 +349,12 @@ class Booking extends PureComponent {
                   <div className={s.step}>
                     <div className={s.stepNumber}>
                       <Typography variant="subtitle1" color="inherit">
-                        {step + 1}
+                        {bookingStep + 1}
                       </Typography>
                     </div>
                     <div className={s.stepLabel}>
                       <Typography variant="subtitle1" color="inherit">
-                        {STEP_LABELS[step]}
+                        {STEP_LABELS[bookingStep]}
                       </Typography>
                     </div>
                   </div>
@@ -362,7 +371,7 @@ class Booking extends PureComponent {
             </div>
           </div>
           <Step
-            {...stepProps[step]}
+            {...stepProps[bookingStep]}
           />
         </div>
       </>
@@ -376,6 +385,7 @@ Booking.propTypes = {
   setServiceProvidersAction: func.isRequired,
   setProvidersByServiceIdAction: func.isRequired,
   setAvailabilitiesBySpecialEventBulkAction: func.isRequired,
+  bookingStep: number.isRequired,
 
   setProvidersAction: func.isRequired,
   userDetail: userDetailType.isRequired,
@@ -384,6 +394,7 @@ Booking.propTypes = {
   resetStatusAction: func.isRequired,
   toggleAppointmentAction: func.isRequired,
   findEventByCustomerIdAction: func.isRequired,
+  setBookingStepAction: func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -404,6 +415,7 @@ export default compose(
       setServiceProvidersAction,
       setProvidersByServiceIdAction,
       setAvailabilitiesBySpecialEventBulkAction,
+      setBookingStepAction,
 
       setProvidersAction: setProviders,
       bookEventAction: bookEvent,
