@@ -36,10 +36,21 @@
 
 .stepLabel {
   color: $main;
+  font-weight: bold;
 }
 
 .stepNumber {
-
+  border: 1px solid $main;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: $main;
+  color: $white;
+  font-weight: bold;
+  margin: auto 0.5rem;
 }
 
 .bookingContent {

@@ -14,7 +14,7 @@ import {
   timeSlotFormat,
   defaultDateFormat,
 } from 'utils/constants';
-import s from './SelectTime.module.scss';
+import s from './TimeBoxes.module.scss';
 
 export class TimeBoxes extends React.PureComponent {
   static getDerivedStateFromProps(props, state) {
