@@ -272,7 +272,7 @@ class Booking extends PureComponent {
     } = this.state;
     const Step = this.stepComponents[bookingStep];
     const isBackValid = bookingStep > BOOKING.STEPS.SELECT_PROVIDER;
-    const isNextValid = bookingStep < BOOKING.STEPS.VIEW_BOOKING && bookingDetail;
+    const isNextValid = bookingStep < BOOKING.STEPS.CONFIRM_BOOKING && bookingDetail;
     const providers = this.handleMergedProviderInfo(
       serviceId,
       serviceProviders,
