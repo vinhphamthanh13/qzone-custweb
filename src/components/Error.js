@@ -16,7 +16,7 @@ const Error = (props) => {
     errorMessage,
     resetErrorMessage: resetErrorMessageAction,
   } = props;
-  console.log('this is the error modal', props);
+
   return error ? (
     <CustomModal
       type="error"

@@ -196,8 +196,8 @@ BookingDetail.defaultProps = {
 };
 
 const mapStatToProps = state => ({
-  ...state.booking,
   ...state.auth,
+  ...state.booking,
 });
 
 export default connect(mapStatToProps)(React.memo(BookingDetail));

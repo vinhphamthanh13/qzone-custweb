@@ -61,6 +61,8 @@ class Booking extends PureComponent {
       availabilitiesBulk,
       bookingStep,
       bookingDetail,
+      userDetail,
+      loginSession,
     } = props;
     const {
       service: cachedService,
@@ -69,6 +71,7 @@ class Booking extends PureComponent {
       availabilitiesBulk: cachedAvailabilitiesBulk,
       bookingStep: cachedBookingStep,
       bookingDetail: cachedBookingDetail,
+      userDetail: cachedUserDetail,
     } = state;
     if (
       service !== cachedService
@@ -77,6 +80,7 @@ class Booking extends PureComponent {
       || availabilitiesBulk !== cachedAvailabilitiesBulk
       || bookingStep !== cachedBookingStep
       || bookingDetail !== cachedBookingDetail
+      || userDetail !== cachedUserDetail
     ) {
       return {
         service,
@@ -85,6 +89,8 @@ class Booking extends PureComponent {
         availabilitiesBulk,
         bookingStep,
         bookingDetail,
+        userDetail,
+        loginSession,
       };
     }
 
@@ -102,6 +108,7 @@ class Booking extends PureComponent {
       bookingStep: BOOKING.STEPS.SELECT_PROVIDER,
       bookingDetail: null,
       isConfirmDialogOpen: false,
+      userDetail: null,
     };
   }
 
@@ -264,8 +271,6 @@ class Booking extends PureComponent {
       setBookingDetail: setBookingDetailAction,
       setBookingStep: setBookingStepAction,
       handleAuth,
-      // userDetail,
-      // bookingEvent,
     } = this.props;
     const {
       service,
@@ -299,8 +304,7 @@ class Booking extends PureComponent {
         handleConfirmDialog: this.toggleConfirmDialog(true),
       },
     };
-    console.log('props of BOOKING:---> ', this.props);
-    console.log('state of BOOKING:---> ', this.state);
+
     return (
       <>
         <Error />
@@ -388,11 +392,10 @@ Booking.propTypes = {
 };
 
 const mapStateToProps = state => ({
+  ...state.auth,
   ...state.common,
   ...state.home,
   ...state.booking,
-  userDetail: state.auth.userDetail,
-  isAuthenticated: state.auth.loginSession.isAuthenticated,
   bookingStatus: state.homeModules.bookingDialog.status,
   bookingEvent: state.appointments.appointments.slice(-1)[0],
 });
