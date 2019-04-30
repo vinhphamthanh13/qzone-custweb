@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
 import {
-  bool, func, string, objectOf, any,
+  bool,
+  func,
+  string,
+  objectOf,
+  any,
 } from 'prop-types';
 import { connect } from 'react-redux';
+import { noop } from 'lodash';
 import Register from 'authentication/Register';
 import Login from 'authentication/Login';
 import VerificationCode from 'authentication/components/VerificationCode';
@@ -233,7 +238,7 @@ Auth.propTypes = {
   autoLoginAction: func.isRequired,
   logoutAction: func.isRequired,
   loginSession: objectOf(any).isRequired,
-  getSessionTimeoutId: func.isRequired,
+  getSessionTimeoutId: func,
   isLogoutError: bool,
   logoutErrorMessage: string,
   clearLogoutErrorStatusAction: func.isRequired,
@@ -246,6 +251,7 @@ Auth.defaultProps = {
   resendVerificationCodeStatus: 'none',
   isLogoutError: false,
   logoutErrorMessage: '',
+  getSessionTimeoutId: noop,
 };
 
 const mapStateToProps = state => ({

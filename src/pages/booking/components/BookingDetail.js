@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   func,
-  bool,
 } from 'prop-types';
 import {
   Button, TextField, Typography,
@@ -14,7 +13,6 @@ import { get } from 'lodash';
 import moment from 'moment';
 import {
   serviceType,
-  userDetailType,
 } from 'types/global';
 import { defaultDateFormat } from 'utils/constants';
 import formatName from 'utils/formatName';
@@ -24,11 +22,25 @@ import s from './BookingDetail.module.scss';
 
 class BookingDetail extends React.PureComponent {
   static getDerivedStateFromProps(props, state) {
-    const { bookingDetail } = props;
-    const { bookingDetail: cachedBookingDetail } = state;
-    if (bookingDetail !== cachedBookingDetail) {
+    const {
+      bookingDetail,
+      userDetail,
+      loginSession,
+    } = props;
+    const {
+      bookingDetail: cachedBookingDetail,
+      userDetail: cachedUserDetail,
+      loginSession: cachedLoginSession,
+    } = state;
+    if (
+      bookingDetail !== cachedBookingDetail
+      || userDetail !== cachedUserDetail
+      || loginSession !== cachedLoginSession
+    ) {
       return {
         bookingDetail,
+        userDetail,
+        loginSession,
       };
     }
     return null;
@@ -39,6 +51,8 @@ class BookingDetail extends React.PureComponent {
     this.state = {
       isMapDialogOpen: false,
       bookingDetail: null,
+      userDetail: null,
+      loginSession: null,
     };
   }
 
@@ -46,23 +60,23 @@ class BookingDetail extends React.PureComponent {
     this.setState(oldState => ({ isMapDialogOpen: !oldState.isMapDialogOpen }));
   };
 
-  handleBooking = () => {
-    const { onSaveBooking, openDialog, isAuthenticated } = this.props;
+  handleBooking = isAuthenticated => () => {
+    const { onSaveBooking, handleAuth } = this.props;
     if (isAuthenticated) {
       onSaveBooking();
     } else {
-      openDialog('isLoginOpen');
+      handleAuth('isLoginOpen');
     }
   };
 
   render() {
     const {
       bookingService,
-      userDetail,
-      isAuthenticated,
     } = this.props;
     const {
       bookingDetail,
+      userDetail,
+      loginSession,
     } = this.state;
     console.log('prop of booking details', this.props);
     console.log('state of booking details', this.state);
@@ -76,6 +90,7 @@ class BookingDetail extends React.PureComponent {
     const userFamily = get(userDetail, 'familyName');
     const userEmail = get(userDetail, 'email');
     const userPhone = get(userDetail, 'telephone');
+    const isAuthenticated = get(loginSession, 'isAuthenticated');
 
     return (
       <div className={s.bookingAppointment}>
@@ -172,10 +187,8 @@ class BookingDetail extends React.PureComponent {
 
 BookingDetail.propTypes = {
   bookingService: serviceType,
-  userDetail: userDetailType.isRequired,
   onSaveBooking: func.isRequired,
-  isAuthenticated: bool.isRequired,
-  openDialog: func.isRequired,
+  handleAuth: func.isRequired,
 };
 
 BookingDetail.defaultProps = {
@@ -183,8 +196,8 @@ BookingDetail.defaultProps = {
 };
 
 const mapStatToProps = state => ({
-  isAuthenticated: state.auth.loginSession.isAuthenticated,
   ...state.booking,
+  ...state.auth,
 });
 
 export default connect(mapStatToProps)(React.memo(BookingDetail));

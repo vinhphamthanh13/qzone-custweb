@@ -41,7 +41,6 @@ import {
   setBookingStep,
 } from 'actionsReducers/booking.actions';
 
-import { setProviders } from 'reduxModules/home/bookingDialog/selectProvider.actions';
 import { bookEvent, resetStatus } from 'reduxModules/home/bookingDialog.actions';
 import { toggleAppointment } from 'reduxModules/appointments.actions';
 import SelectProvider from './components/SelectProvider';
@@ -257,9 +256,9 @@ class Booking extends PureComponent {
       bookingStatus,
       setBookingDetail: setBookingDetailAction,
       setBookingStep: setBookingStepAction,
+      handleAuth,
       // userDetail,
       // bookingEvent,
-      // openDialog,
     } = this.props;
     const {
       service,
@@ -289,12 +288,9 @@ class Booking extends PureComponent {
       },
       [BOOKING.STEPS.CONFIRM_BOOKING]: {
         bookingService: service,
+        handleAuth,
       },
     };
-
-    console.log('booking next button', isNextValid);
-    console.log('this.props BOOKING', this.props);
-    console.log('this.state BOOKING', this.state);
 
     return (
       <>
@@ -370,8 +366,8 @@ Booking.propTypes = {
   setAvailabilitiesBySpecialEventBulkAction: func.isRequired,
   setBookingDetail: func.isRequired,
   setBookingStep: func.isRequired,
+  handleAuth: func.isRequired,
 
-  setProvidersAction: func.isRequired,
   userDetail: userDetailType.isRequired,
   bookEventAction: func.isRequired,
   bookingStatus: shape({ type: string, message: string }).isRequired,
@@ -401,7 +397,6 @@ export default compose(
       setBookingDetail,
       setBookingStep,
 
-      setProvidersAction: setProviders,
       bookEventAction: bookEvent,
       resetStatusAction: resetStatus,
       toggleAppointmentAction: toggleAppointment,
