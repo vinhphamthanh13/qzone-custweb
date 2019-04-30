@@ -18,6 +18,7 @@ export const SET_AVAILABILITIES_BY_SPECIAL_EVENT_BULK = 'BOOKING.SET_AVAILABILIT
 export const SET_BOOKING_DETAIL = 'BOOKING.SET_BOOKING_DETAIL';
 export const SET_APPOINTMENT_CUSTOMER_EVENTS = 'BOOKING.SET_APPOINTMENT_CUSTOMER_EVENTS';
 export const SET_BOOKING_STEP = 'BOOKING.SET_BOOKING_STEP';
+export const RESET_BOOKING = 'BOOKING.RESET_BOOKING';
 
 const getServiceById = payload => ({
   type: GET_SERVICE_BY_ID,
@@ -48,6 +49,10 @@ export const setBookingDetail = payload => ({
 export const setBookingStep = payload => ({
   type: SET_BOOKING_STEP,
   payload,
+});
+
+export const resetBooking = () => ({
+  type: RESET_BOOKING,
 });
 
 export const getServiceByIdAction = data => async (dispatch) => {

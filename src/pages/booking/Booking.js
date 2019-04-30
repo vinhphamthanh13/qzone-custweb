@@ -31,7 +31,6 @@ import Loading from 'components/Loading';
 import Error from 'components/Error';
 import { history } from 'containers/App';
 import { BOOKING } from 'utils/constants';
-import { findEventByCustomerIdAction } from 'actionsReducers/common.actions';
 import { setServiceProvidersAction } from 'actionsReducers/home.actions';
 import {
   getServiceByIdAction,
@@ -40,10 +39,8 @@ import {
   setBookingDetail,
   setBookingStep,
   registerEventAction,
+  resetBooking,
 } from 'actionsReducers/booking.actions';
-
-import { resetStatus } from 'reduxModules/home/bookingDialog.actions';
-import { toggleAppointment } from 'reduxModules/appointments.actions';
 import SelectProvider from './components/SelectProvider';
 import BookingDetail from './components/BookingDetail';
 import ViewAppointment from './components/ViewAppointment';
@@ -171,8 +168,8 @@ class Booking extends PureComponent {
   };
 
   goHome = () => {
-    const { resetStatusAction } = this.props;
-    resetStatusAction();
+    const { resetBooking: resetBookingAction } = this.props;
+    resetBookingAction();
     history.push('/');
   };
 
@@ -201,14 +198,6 @@ class Booking extends PureComponent {
       status: 'BOOKING_STATUS_UNSPECIFIED',
       type: 'APPOINTMENT',
     });
-  };
-
-  closeErrorModal = () => {
-    this.props.resetStatusAction();
-  };
-
-  openAppointmentDialog = () => {
-    this.props.toggleAppointmentAction(true);
   };
 
   toggleConfirmDialog = isConfirmDialogOpen => () => {
@@ -269,6 +258,7 @@ class Booking extends PureComponent {
       setBookingDetail: setBookingDetailAction,
       setBookingStep: setBookingStepAction,
       handleAuth,
+      resetBooking: resetBookingAction,
     } = this.props;
     const {
       service,
@@ -305,6 +295,7 @@ class Booking extends PureComponent {
       [BOOKING.STEPS.VIEW_BOOKING]: {
         bookingService: service,
         appointmentEvent,
+        resetBooking: resetBookingAction,
       },
     };
 
@@ -377,7 +368,7 @@ Booking.propTypes = {
   registerEventAction: func.isRequired,
   handleAuth: func.isRequired,
   userDetail: userDetailType.isRequired,
-  resetStatusAction: func.isRequired,
+  resetBooking: func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -385,7 +376,6 @@ const mapStateToProps = state => ({
   ...state.common,
   ...state.home,
   ...state.booking,
-  bookingEvent: state.appointments.appointments.slice(-1)[0],
 });
 
 export default compose(
@@ -399,10 +389,7 @@ export default compose(
       setBookingDetail,
       setBookingStep,
       registerEventAction,
-
-      resetStatusAction: resetStatus,
-      toggleAppointmentAction: toggleAppointment,
-      findEventByCustomerIdAction,
+      resetBooking,
     },
   ),
 )(Booking);

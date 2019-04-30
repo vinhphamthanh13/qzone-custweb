@@ -6,6 +6,7 @@ import {
   SET_APPOINTMENT_CUSTOMER_EVENTS,
   SET_BOOKING_DETAIL,
   SET_BOOKING_STEP,
+  RESET_BOOKING,
 } from 'actionsReducers/booking.actions';
 
 const initState = {
@@ -55,6 +56,8 @@ const reducer = (state = initState, action) => {
         ...state,
         bookingDetail: action.payload,
       };
+    case RESET_BOOKING:
+      return initState;
     default:
       return state;
   }
