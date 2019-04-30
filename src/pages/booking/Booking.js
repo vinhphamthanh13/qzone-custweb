@@ -25,6 +25,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from '@material-ui/icons';
+import uuidv1 from 'uuid/v1';
 import logo from 'images/quezone-logo.png';
 import CustomModal from 'components/Modal/CustomModal';
 import Loading from 'components/Loading';
@@ -204,12 +205,6 @@ class Booking extends PureComponent {
     this.setState({ isConfirmDialogOpen });
   };
 
-  renderChevron = (valid, dir) => {
-    const chevronStyle = valid ? 'icon-white icon-big simple-button' : 'icon-transparent icon-big';
-    return dir < 0 ? <ChevronLeft className={chevronStyle} />
-      : <ChevronRight className={chevronStyle} />;
-  };
-
   // handle select date of provider slots
   handleDateChange = () => {};
 
@@ -251,6 +246,34 @@ class Booking extends PureComponent {
       availableSlots,
     };
   });
+
+  renderChevron = (valid, dir) => {
+    const chevronStyle = valid ? 'icon-white icon-big simple-button' : 'icon-disabled icon-big';
+    return dir < 0 ? <ChevronLeft className={chevronStyle} />
+      : <ChevronRight className={chevronStyle} />;
+  };
+
+  renderSteppers = () => STEP_LABELS.map((step, index) => {
+    const { bookingStep } = this.state;
+    const [numberStyle, labelStyle] = bookingStep >= index
+      ? [`${s.stepNumber} ${s.stepNumberActive}`, `${s.stepLabel} ${s.stepLabelActive}`]
+      : [s.stepNumber, s.stepLabel];
+    return (
+      <div key={uuidv1()} className={s.step}>
+        <div className={numberStyle}>
+          <Typography variant="subheading" color="inherit">
+            {index + 1}
+          </Typography>
+        </div>
+        <div className={labelStyle}>
+          <Typography variant="subheading" color="inherit" className="text-bold">
+            {step}
+          </Typography>
+        </div>
+      </div>
+    );
+  });
+
 
   render() {
     const {
@@ -324,18 +347,7 @@ class Booking extends PureComponent {
                 {this.renderChevron(isBackValid, -1)}
               </Button>
               <div className={s.stepper}>
-                <div className={s.step}>
-                  <div className={s.stepNumber}>
-                    <Typography variant="title" color="inherit">
-                      {bookingStep + 1}
-                    </Typography>
-                  </div>
-                  <div className={s.stepLabel}>
-                    <Typography variant="title" className="gallery-color">
-                      {STEP_LABELS[bookingStep]}
-                    </Typography>
-                  </div>
-                </div>
+                {this.renderSteppers()}
               </div>
               <Button disabled={!isNextValid} onClick={this.handleStepChange(1)} className="simple-button">
                 {this.renderChevron(isNextValid, 1)}

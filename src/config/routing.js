@@ -4,6 +4,7 @@ import PageNotFound from 'pages/PageNotFound';
 import AccessDenied from 'pages/AccessDenied';
 import Provider from 'pages/Provider';
 import Organization from 'pages/Organization';
+import Profile from 'pages/Profile';
 
 const rootRoutes = [
   {
@@ -37,9 +38,9 @@ const rootRoutes = [
   {
     exact: true,
     strict: true,
-    path: '/profile',
+    path: '/profile/:id',
     name: 'Profile',
-    component: Home,
+    component: Profile,
   },
   {
     exact: true,

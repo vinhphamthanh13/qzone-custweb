@@ -5,7 +5,7 @@ import {
 import { connect } from 'react-redux';
 import { get } from 'lodash';
 import { Dialog } from '@material-ui/core';
-import { postUpdatedProfile, updateProfileAction } from 'reduxModules/profile.actions';
+import { postUpdatedProfile, updateProfileAction } from 'actionsReducers/profile.actions';
 import CustomModal from 'components/Modal/CustomModal';
 import Header from './components/Header';
 import Content from './components/Content';

@@ -26,31 +26,45 @@
 }
 
 .stepper {
-  min-width: 230px;
+  border: 1.5px solid $gallery;
+  padding: 0.5rem;
+  border-radius: 0.4rem;
+  display: flex;
+  min-width: $sm;
+  justify-content: space-between;
 }
 
 .step {
   display: flex;
   justify-content: center;
   align-items: center;
-  color: chocolate;
-}
-
-.stepLabel {
-  color: $main;
-  font-weight: bold;
+  margin: auto 1rem;
 }
 
 .stepNumber {
-  border: 1px solid $main;
   border-radius: 50%;
   width: 30px;
   height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: $main;
-  color: $white;
+  background: $white;
+  color: $gray;
   font-weight: bold;
   margin: auto 0.5rem;
+}
+
+.stepNumberActive {
+  background: $main;
+  color: $white;
+  transition: color 0.5s ease-in;
+}
+
+.stepLabel {
+  color: $white;
+}
+
+.stepLabelActive {
+  color: $main;
+  transition: color 0.5s ease-in;
 }

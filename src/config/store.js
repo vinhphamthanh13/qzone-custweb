@@ -12,8 +12,8 @@ import provider from 'actionsReducers/provider.reducer';
 import appointments from 'reduxModules/appointments.reducer';
 import { loadSessionToState } from 'authentication/actions/session';
 import organization from 'reduxModules/organization.reducer';
-import profilePage from 'reduxModules/profile.reducer';
-import waitList from 'reduxModules/waitlist.reducer';
+import profilePage from 'actionsReducers/profile.reducer';
+import waitList from 'actionsReducers/waitlist.reducer';
 import { getUserDetail } from 'authentication/actions/login';
 import { loadSession } from './localStorage';
 
