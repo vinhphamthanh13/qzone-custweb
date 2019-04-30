@@ -1,4 +1,4 @@
-@import "styles/_settings.scss";
+@import "../../../styles/settings";
 
 .appointment {
   &Icon {
@@ -71,13 +71,13 @@
 
   &Icon {
     padding: 0;
-  
+
     &Face {
       color: $text-color;
       margin: 5px;
     }
   }
-  
+
   &Text {
     color: $fruitSalad;
     font-weight: bold;

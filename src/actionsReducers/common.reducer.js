@@ -3,12 +3,15 @@ import {
   SET_ERROR,
   RESET_ERROR,
   FIND_EVENT_BY_CUSTOMER_ID,
+  SET_SERVICE_PROVIDERS,
 } from 'actionsReducers/common.actions';
 
 const initState = {
   isLoading: false,
   isError: false,
   errorMessage: '',
+  eventList: null,
+  serviceProviders: null,
 };
 
 const reducer = (state = initState, action) => {
@@ -35,7 +38,11 @@ const reducer = (state = initState, action) => {
         ...state,
         eventList: action.payload,
       };
-
+    case SET_SERVICE_PROVIDERS:
+      return {
+        ...state,
+        serviceProviders: action.payload,
+      };
     default:
       return state;
   }

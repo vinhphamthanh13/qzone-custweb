@@ -1,4 +1,3 @@
-import { SET_LOADING } from 'actionsReducers/common.actions';
 import { UPDATE_PROFILE } from './profile.actions';
 
 const initState = {
@@ -6,13 +5,8 @@ const initState = {
   isLoading: false,
 };
 
-const profilePage = (state = initState, action) => {
+const reducer = (state = initState, action) => {
   switch (action.type) {
-    case SET_LOADING:
-      return {
-        ...state,
-        isLoading: action.payload,
-      };
     case UPDATE_PROFILE:
       return {
         ...state,
@@ -23,4 +17,4 @@ const profilePage = (state = initState, action) => {
   }
 };
 
-export default profilePage;
+export default reducer;

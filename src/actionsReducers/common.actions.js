@@ -1,11 +1,15 @@
 import { handleRequest } from 'utils/apiHelpers';
-import { findEventByCustomerId } from 'actionsApi/common';
+import {
+  findEventByCustomerId,
+  temporaryServices,
+} from 'actionsApi/common';
 import { serviceProvidersRating } from 'actionsApi/rating';
 
 export const SET_LOADING = 'COMMON.SET_LOADING';
 export const SET_ERROR = 'COMMON.SET_ERROR';
 export const RESET_ERROR = 'COMMON.RESET_ERROR';
 export const FIND_EVENT_BY_CUSTOMER_ID = 'HOME.FIND_EVENT_BY_CUSTOMER_ID';
+export const SET_SERVICE_PROVIDERS = 'HOME.SET_SERVICE_PROVIDERS';
 
 export const setLoading = payload => ({
   type: SET_LOADING,
@@ -19,6 +23,11 @@ export const setError = payload => ({
 
 export const resetErrorMessage = () => ({
   type: RESET_ERROR,
+});
+
+const setServiceProviders = payload => ({
+  type: SET_SERVICE_PROVIDERS,
+  payload,
 });
 
 const setEventByCustomerId = payload => ({
@@ -42,6 +51,17 @@ export const findEventByCustomerIdAction = id => async (dispatch) => {
     dispatch(setError(error));
   } else {
     dispatch(setEventByCustomerId(eventList));
+  }
+  dispatch(setLoading(false));
+};
+
+export const setServiceProvidersAction = () => async (dispatch) => {
+  dispatch(setLoading(true));
+  const [serviceProviderList, error] = await handleRequest(temporaryServices, []);
+  if (error) {
+    dispatch(setError(error));
+  } else {
+    dispatch(setServiceProviders(serviceProviderList));
   }
   dispatch(setLoading(false));
 };

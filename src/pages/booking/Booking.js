@@ -32,7 +32,7 @@ import Loading from 'components/Loading';
 import Error from 'components/Error';
 import { history } from 'containers/App';
 import { BOOKING } from 'utils/constants';
-import { setServiceProvidersAction } from 'actionsReducers/home.actions';
+import { setServiceProvidersAction } from 'actionsReducers/common.actions';
 import {
   getServiceByIdAction,
   setProvidersByServiceIdAction,
@@ -384,8 +384,8 @@ Booking.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  ...state.auth,
   ...state.common,
+  ...state.auth,
   ...state.home,
   ...state.booking,
 });

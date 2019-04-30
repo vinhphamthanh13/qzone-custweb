@@ -9,11 +9,13 @@ import {
 import { noop, get } from 'lodash';
 import { connect } from 'react-redux';
 import { Typography } from '@material-ui/core';
-import { setRatingService } from 'actionsReducers/common.actions';
+import {
+  setRatingService,
+  setServiceProvidersAction,
+} from 'actionsReducers/common.actions';
 import {
   setProviderDetailAction,
   setProviderServiceAction,
-  setServiceProviderAction,
 } from 'actionsReducers/provider.actions';
 import Loading from 'components/Loading';
 import Header from './components/Header';
@@ -62,7 +64,7 @@ class Provider extends Component {
     const {
       setProviderServiceAction: setProviderService,
       setProviderDetailAction: setProviderDetail,
-      setServiceProviderAction: setServiceProvider,
+      setServiceProvidersAction: setServiceProvider,
       id,
     } = this.props;
     setProviderService(id);
@@ -140,7 +142,7 @@ Provider.propTypes = {
   setProviderServiceAction: func.isRequired,
   setProviderDetailAction: func.isRequired,
   setRatingServiceAction: func.isRequired,
-  setServiceProviderAction: func.isRequired,
+  setServiceProvidersAction: func.isRequired,
 };
 
 Provider.defaultProps = {
@@ -156,6 +158,6 @@ const mapStateToProps = state => ({
 export default connect(mapStateToProps, {
   setProviderServiceAction,
   setProviderDetailAction,
-  setServiceProviderAction,
+  setServiceProvidersAction,
   setRatingServiceAction: setRatingService,
 })(Provider);

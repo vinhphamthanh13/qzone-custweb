@@ -10,13 +10,15 @@ import Loading from 'components/Loading';
 import {
   setServiceCategoriesAction,
   setServicesAction,
-  setServiceProvidersAction,
 } from 'actionsReducers/home.actions';
+import {
+  setServiceProvidersAction,
+} from 'actionsReducers/common.actions';
 import Error from 'components/Error';
 import Maintenance from './components/maintenance/Maintenance';
 import Services from './home/Services';
 import Auth from './Auth';
-import PrimarySearchAppBar from './home/appbar/PrimarySearchAppBar';
+import AppBar from './home/appBar/AppBar';
 import Categorize from './home/Categorize';
 import Footer from './components/footer/Footer';
 import SlideShow from './home/slideShow/SlideShow';
@@ -30,21 +32,18 @@ export class Home extends React.PureComponent {
       services,
       serviceProviders,
       serviceProviderNearByList,
-      eventList,
     } = props;
     const {
       categories: cachedCategories,
       services: cachedServices,
       serviceProviders: cachedServiceProviders,
       serviceProviderNearByList: cachedServiceProviderNearByList,
-      eventList: cachedEventList,
     } = state;
     if (
       categories !== cachedCategories
       || serviceProviders !== cachedServiceProviders
       || services !== cachedServices
       || serviceProviderNearByList !== cachedServiceProviderNearByList
-      || eventList !== cachedEventList
     ) {
       const combineServiceProviders = services && services.map((service) => {
         const linkedProvider = serviceProviders && serviceProviders
@@ -56,7 +55,6 @@ export class Home extends React.PureComponent {
         services,
         serviceProviders,
         serviceProviderNearByList,
-        eventList,
         combineServiceProviders,
       };
     }
@@ -190,14 +188,13 @@ export class Home extends React.PureComponent {
           handleAuthenticate={this.openAuthModal}
           getSessionTimeoutId={this.getSessionTimeoutId}
         />
-        <PrimarySearchAppBar
+        <AppBar
           handleAuthenticate={this.openAuthModal}
           onSearch={this.handleOnSearch}
           onSearchValue={searchText}
           handleAdvancedSearch={this.openAdvancedSearch}
           sessionTimeoutId={sessionTimeoutId}
           maintenance={isMaintenance}
-          handleOpenProfile={this.handleOpenProfile}
         />
         {isOpenAdvancedSearch && (
           <div className="flex auto-margin-horizontal cover-bg-black">

@@ -6,12 +6,10 @@ import { handleRequest } from 'utils/apiHelpers';
 import {
   users,
   serviceByProviderId,
-  temporaryServices,
 } from 'actionsApi/provider';
 
 export const SET_PROVIDER_DETAIL = 'PROVIDER.SET_PROVIDER_DETAIL';
 export const SET_PROVIDER_SERVICE = 'PROVIDER.SET_PROVIDER_SERVICE';
-export const SET_SERVICE_PROVIDER = 'PROVIDER.SET_SERVICE_PROVIDER';
 
 const setProviderDetail = payload => ({
   type: SET_PROVIDER_DETAIL,
@@ -20,11 +18,6 @@ const setProviderDetail = payload => ({
 
 const setProviderService = payload => ({
   type: SET_PROVIDER_SERVICE,
-  payload,
-});
-
-const setServiceProvider = payload => ({
-  type: SET_SERVICE_PROVIDER,
   payload,
 });
 
@@ -46,17 +39,6 @@ export const setProviderServiceAction = id => async (dispatch) => {
     dispatch(setError(error));
   } else {
     dispatch(setProviderService(services));
-  }
-  dispatch(setLoading(false));
-};
-
-export const setServiceProviderAction = () => async (dispatch) => {
-  dispatch(setLoading(true));
-  const [serviceProviderList, error] = await handleRequest(temporaryServices, []);
-  if (error) {
-    dispatch(setError(error));
-  } else {
-    dispatch(setServiceProvider(serviceProviderList));
   }
   dispatch(setLoading(false));
 };

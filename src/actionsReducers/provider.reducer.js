@@ -1,13 +1,11 @@
 import {
   SET_PROVIDER_DETAIL,
   SET_PROVIDER_SERVICE,
-  SET_SERVICE_PROVIDER,
 } from 'actionsReducers/provider.actions';
 
 const initState = {
   providerDetail: null,
   providerServices: null,
-  serviceProviders: null,
 };
 
 const reducer = (state = initState, action) => {
@@ -24,11 +22,6 @@ const reducer = (state = initState, action) => {
           ...state.providerDetail,
           ...action.payload,
         },
-      };
-    case SET_SERVICE_PROVIDER:
-      return {
-        ...state,
-        serviceProviders: action.payload,
       };
     default:
       return { ...state };

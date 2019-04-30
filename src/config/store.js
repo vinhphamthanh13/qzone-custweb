@@ -12,7 +12,7 @@ import provider from 'actionsReducers/provider.reducer';
 import appointments from 'reduxModules/appointments.reducer';
 import { loadSessionToState } from 'authentication/actions/session';
 import organization from 'reduxModules/organization.reducer';
-import profilePage from 'actionsReducers/profile.reducer';
+import profile from 'actionsReducers/profile.reducer';
 import waitList from 'actionsReducers/waitlist.reducer';
 import { getUserDetail } from 'authentication/actions/login';
 import { loadSession } from './localStorage';
@@ -27,7 +27,7 @@ const rootReducer = combineReducers({
   provider,
 
   appointments,
-  profilePage,
+  profile,
   waitList,
 });
 

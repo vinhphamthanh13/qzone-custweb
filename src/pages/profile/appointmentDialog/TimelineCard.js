@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import {
-  shape, string, number, objectOf, any, func, arrayOf,
+  shape,
+  string,
+  number,
+  objectOf,
+  any,
+  func,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
@@ -8,23 +13,47 @@ import moment from 'moment';
 import { IconButton, Typography } from '@material-ui/core';
 import { VerticalTimelineElement } from 'react-vertical-timeline-component';
 import {
-  DateRange, Schedule, AlarmOff, AlarmOn,
-  AirlineSeatReclineNormal, DoneAll,
-  Update, Timer,
+  DateRange,
+  Schedule,
+  AlarmOff,
+  AlarmOn,
+  AirlineSeatReclineNormal,
+  DoneAll,
+  Update,
+  Timer,
   PersonPin,
 } from '@material-ui/icons';
 import RateStar from 'components/Rating/RateStar';
 import MapDialog from 'components/Map/MapDialog';
 import { setRatingService } from 'actionsReducers/common.actions';
 import Rating from 'material-ui-rating';
-import styles from './TimelineCard.module.scss';
+import s from './TimelineCard.module.scss';
 import CountDownDisplay from './CountDownDisplay';
 import { STATUS } from './Appointment.constants';
 
 class TimelineCard extends Component {
-  state = {
-    isOpenMap: false,
-  };
+  static getDerivedStateFromProps(props, state) {
+    const {
+      serviceProviders,
+    } = props;
+    const {
+      serviceProviders: cachedServiceProviders,
+    } = state;
+    if (serviceProviders !== cachedServiceProviders) {
+      return {
+        serviceProviders,
+      };
+    }
+    return null;
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      isOpenMap: false,
+      serviceProviders: null,
+    };
+  }
 
   handleCustomerRating = (customerId, serviceProviderId) => (rating) => {
     const { rateAppointmentAction } = this.props;
@@ -53,11 +82,13 @@ class TimelineCard extends Component {
         streetAddress,
       },
       bookingCode,
-      providerList,
       customerId,
       geoLocation,
     } = this.props;
-    const { isOpenMap } = this.state;
+    const {
+      isOpenMap,
+      serviceProviders,
+    } = this.state;
     const toSecCalc = (toSec || startSec + duration * 60) * 1000;
     const current = new Date();
     const currentSec = current.getTime() / 1000;
@@ -68,13 +99,13 @@ class TimelineCard extends Component {
         <AlarmOff />,
         STATUS.EXPIRED,
         <DoneAll className="icon-main danger-color" />,
-        styles.eventStatusComplete,
+        s.eventStatusComplete,
       ] : [
         { background: 'rgb(87, 201, 249)', color: '#fff' },
         <AlarmOn />,
         STATUS.WAITING,
         <AirlineSeatReclineNormal className="icon-main" />,
-        styles.eventStatusWaiting,
+        s.eventStatusWaiting,
       ];
 
     const remainTimeHr = remainTimeSec < 0 ? Math.abs(remainTimeSec) / 3600 : 0;
@@ -83,7 +114,7 @@ class TimelineCard extends Component {
     const waitingDay = parseInt(remainDay, 0);
     const waitingHr = waitingDay ? parseInt((remainDay % 1) * 24, 0) : parseInt(remainTimeHr, 0);
     const waitingMn = parseInt(remainTimeMn, 0);
-    const serviceProvider = providerList
+    const serviceProvider = serviceProviders
       .filter(item => item.providerId === providerId && item.serviceId === serviceId);
     const serviceProviderId = get(serviceProvider, '0.id');
     const providerRating = get(serviceProvider, '0.rating');
@@ -101,7 +132,7 @@ class TimelineCard extends Component {
         <CountDownDisplay startTime={remainTimeMn} serviceName={serviceName} providerName={providerName} />
       );
       currentEventStyle = { background: 'rgb(255, 95, 87)', color: '#fff' };
-      currentStyleStatus = styles.eventStatusCountDown;
+      currentStyleStatus = s.eventStatusCountDown;
       currentIconTimeline = <Update />;
       currentEventStatus = STATUS.COMING;
       displayIconStatus = <Timer className="icon-danger" />;
@@ -123,7 +154,7 @@ class TimelineCard extends Component {
         <VerticalTimelineElement
           iconStyle={currentEventStyle}
           icon={currentIconTimeline}
-          className={styles.cardContainer}
+          className={s.cardContainer}
         >
           <div>
             <Typography variant="h6" color="primary" noWrap align="center">
@@ -136,36 +167,36 @@ class TimelineCard extends Component {
             </Typography>
           </div>
           {currentEventStatus === STATUS.EXPIRED && (
-            <div className={styles.ratingWrapper}>
-              <div className={styles.ratingInner}>
-                <Typography variant="subheading" classes={{ subheading: styles.ratingText }}>
+            <div className={s.ratingWrapper}>
+              <div className={s.ratingInner}>
+                <Typography variant="subheading" classes={{ subheading: s.ratingText }}>
                   {providerRating === 0 ? 'Rate our provider quality.' : 'Thank you for choosing us!'}
                 </Typography>
-                <div className={styles.appointmentRemainedTime}>
+                <div className={s.appointmentRemainedTime}>
                   <Rating
                     value={providerRating}
                     readOnly={!!providerRating}
                     onChange={this.handleCustomerRating(customerId, serviceProviderId)}
-                    classes={{ iconButton: styles.ratingIcon }}
+                    classes={{ iconButton: s.ratingIcon }}
                   />
                 </div>
               </div>
             </div>
           )}
-          <div className={styles.appointmentCode}>
-            <Typography variant="headline" color="secondary" align="center" classes={{ headline: styles.bookingCode }}>
+          <div className={s.appointmentCode}>
+            <Typography variant="headline" color="secondary" align="center" classes={{ headline: s.bookingCode }}>
               {bookingCode}
             </Typography>
           </div>
           <div>
-            <div className={styles.serviceTitleMap}>
+            <div className={s.serviceTitleMap}>
               <Typography variant="title" color="textSecondary" noWrap>{serviceName}</Typography>
               <IconButton className="button-sm simple-button" onClick={this.handleToggleMap}>
                 <PersonPin className="icon-main icon-shake icon-small danger-color" />
                 <Typography variant="caption" color="inherit" className="danger-color">View map</Typography>
               </IconButton>
             </div>
-            <div className={styles.providerRating}>
+            <div className={s.providerRating}>
               <Typography
                 variant="subheading"
                 color="textSecondary"
@@ -174,26 +205,26 @@ class TimelineCard extends Component {
               </Typography>
               <RateStar rating={providerRating} />
             </div>
-            <div className={styles.appointmentItem}>
+            <div className={s.appointmentItem}>
               <DateRange className="icon-main" />
               <Typography variant="subheading" color="primary" inline noWrap>
                 {moment(startSec * 1000).format('DD MMM YYYY')}
               </Typography>
             </div>
-            <div className={styles.appointmentItem}>
+            <div className={s.appointmentItem}>
               <Schedule className="icon-main" />
               <Typography variant="subheading" color="primary" inline noWrap>
                 {moment(startSec * 1000).format('LT')}{' - '}{moment(toSecCalc).format('LT')}
               </Typography>
             </div>
           </div>
-          <div className={styles.appointmentItem}>
+          <div className={s.appointmentItem}>
             {displayIconStatus}
             <Typography variant="subheading" className="danger-color">{currentEventStatus}</Typography>
           </div>
-          <div className={`${styles.appointmentRemainedTime} ${currentStyleStatus}`}>
+          <div className={`${s.appointmentRemainedTime} ${currentStyleStatus}`}>
             <AlarmOn className="icon-white" />
-            <Typography variant="subheading" classes={{ subheading: styles.remainedText }}>
+            <Typography variant="subheading" classes={{ subheading: s.remainedText }}>
               {displayTimeout}
             </Typography>
           </div>
@@ -217,11 +248,11 @@ TimelineCard.propTypes = {
   rateAppointmentAction: func.isRequired,
   bookingCode: string.isRequired,
   customerId: string.isRequired,
-  providerList: arrayOf(any).isRequired,
 };
 
 const mapStateToProps = state => ({
-  providerList: state.home.providerList,
+  ...state.common,
+  ...state.home,
 });
 
 export default connect(mapStateToProps, {
