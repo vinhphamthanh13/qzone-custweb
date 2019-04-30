@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import {
   string,
   func,
-  shape,
   number,
 } from 'prop-types';
 import { connect } from 'react-redux';
@@ -43,7 +42,7 @@ import {
   registerEventAction,
 } from 'actionsReducers/booking.actions';
 
-import { bookEvent, resetStatus } from 'reduxModules/home/bookingDialog.actions';
+import { resetStatus } from 'reduxModules/home/bookingDialog.actions';
 import { toggleAppointment } from 'reduxModules/appointments.actions';
 import SelectProvider from './components/SelectProvider';
 import BookingDetail from './components/BookingDetail';
@@ -63,6 +62,7 @@ class Booking extends PureComponent {
       bookingDetail,
       userDetail,
       loginSession,
+      appointmentEvent,
     } = props;
     const {
       service: cachedService,
@@ -72,6 +72,7 @@ class Booking extends PureComponent {
       bookingStep: cachedBookingStep,
       bookingDetail: cachedBookingDetail,
       userDetail: cachedUserDetail,
+      appointmentEvent: cachedAppointmentEvent,
     } = state;
     if (
       service !== cachedService
@@ -81,6 +82,7 @@ class Booking extends PureComponent {
       || bookingStep !== cachedBookingStep
       || bookingDetail !== cachedBookingDetail
       || userDetail !== cachedUserDetail
+      || appointmentEvent !== cachedAppointmentEvent
     ) {
       return {
         service,
@@ -91,6 +93,7 @@ class Booking extends PureComponent {
         bookingDetail,
         userDetail,
         loginSession,
+        appointmentEvent,
       };
     }
 
@@ -109,6 +112,7 @@ class Booking extends PureComponent {
       bookingDetail: null,
       isConfirmDialogOpen: false,
       userDetail: null,
+      appointmentEvent: null,
     };
   }
 
@@ -129,9 +133,14 @@ class Booking extends PureComponent {
   componentDidUpdate = (prevProps) => {
     const {
       serviceProviders,
+      appointmentEvent,
       setAvailabilitiesBySpecialEventBulkAction: setAvailabilitiesBySpecialEventBulk,
     } = prevProps;
-    const { serviceProviders: cachedServiceProviders } = this.props;
+    const {
+      serviceProviders: cachedServiceProviders,
+      appointmentEvent: cachedAppointmentEvent,
+      setBookingStep: setBookingStepAction,
+    } = this.props;
     if (cachedServiceProviders && cachedServiceProviders !== serviceProviders) {
       const specialEventIdList = cachedServiceProviders.map(serviceProvider => ({
         specialEventId: serviceProvider.id,
@@ -139,8 +148,10 @@ class Booking extends PureComponent {
       }));
       setAvailabilitiesBySpecialEventBulk(specialEventIdList);
     }
-    if (prevProps.bookingStatus.type === '' && this.props.bookingStatus.type === 'success') {
-      this.handleNext();
+    const bookedId = get(appointmentEvent, 'id');
+    const cachedId = get(cachedAppointmentEvent, 'id');
+    if (bookedId !== cachedId) {
+      setBookingStepAction(BOOKING.STEPS.VIEW_BOOKING);
     }
   };
 
@@ -204,18 +215,6 @@ class Booking extends PureComponent {
     this.setState({ isConfirmDialogOpen });
   };
 
-  // handleViewAppointment = () => {
-  //   const {
-  //     handleOpenProfile,
-  //     findEventByCustomerIdAction: findEventByCustomerId,
-  //     userDetail: { userSub },
-  //     resetStatusAction,
-  //   } = this.props;
-  //   findEventByCustomerId(userSub);
-  //   handleOpenProfile();
-  //   resetStatusAction();
-  // };
-
   renderChevron = (valid, direction) => {
     const chevronStyle = valid ? 'icon-white icon-big icon-shake' : 'icon-transparent icon-big';
     return direction === 'left' ? <ChevronLeft className={chevronStyle} />
@@ -267,7 +266,6 @@ class Booking extends PureComponent {
   render() {
     const {
       serviceId,
-      bookingStatus,
       setBookingDetail: setBookingDetailAction,
       setBookingStep: setBookingStepAction,
       handleAuth,
@@ -280,6 +278,7 @@ class Booking extends PureComponent {
       bookingStep,
       bookingDetail,
       isConfirmDialogOpen,
+      appointmentEvent,
     } = this.state;
     const Step = this.stepComponents[bookingStep];
     const isBackValid = bookingStep > BOOKING.STEPS.SELECT_PROVIDER;
@@ -303,19 +302,16 @@ class Booking extends PureComponent {
         handleAuth,
         handleConfirmDialog: this.toggleConfirmDialog(true),
       },
+      [BOOKING.STEPS.VIEW_BOOKING]: {
+        bookingService: service,
+        appointmentEvent,
+      },
     };
 
     return (
       <>
         <Error />
         <Loading />
-        <CustomModal
-          type={bookingStatus.type}
-          title="Booking failed"
-          message={bookingStatus.message}
-          isOpen={bookingStatus.type === 'error'}
-          onClose={this.closeErrorModal}
-        />
         {bookingDetail && bookingDetail.provider && (
           <CustomModal
             type="info"
@@ -382,13 +378,8 @@ Booking.propTypes = {
   setBookingStep: func.isRequired,
   registerEventAction: func.isRequired,
   handleAuth: func.isRequired,
-
   userDetail: userDetailType.isRequired,
-  bookEventAction: func.isRequired,
-  bookingStatus: shape({ type: string, message: string }).isRequired,
   resetStatusAction: func.isRequired,
-  toggleAppointmentAction: func.isRequired,
-  findEventByCustomerIdAction: func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -396,7 +387,6 @@ const mapStateToProps = state => ({
   ...state.common,
   ...state.home,
   ...state.booking,
-  bookingStatus: state.homeModules.bookingDialog.status,
   bookingEvent: state.appointments.appointments.slice(-1)[0],
 });
 
@@ -412,7 +402,6 @@ export default compose(
       setBookingStep,
       registerEventAction,
 
-      bookEventAction: bookEvent,
       resetStatusAction: resetStatus,
       toggleAppointmentAction: toggleAppointment,
       findEventByCustomerIdAction,

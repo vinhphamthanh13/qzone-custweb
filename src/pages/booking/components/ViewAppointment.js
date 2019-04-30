@@ -1,51 +1,70 @@
 import React from 'react';
 import {
-  func, arrayOf, objectOf, any,
+  objectOf,
+  any,
 } from 'prop-types';
-import { Typography, IconButton } from '@material-ui/core';
+import {
+  Typography,
+  IconButton,
+} from '@material-ui/core';
 import { connect } from 'react-redux';
 import {
-  DateRange, Schedule, ViewList, EmailOutlined, CallOutlined, PlaceOutlined,
-  CheckCircle, Event, Share,
+  DateRange,
+  Schedule,
+  ViewList,
+  EmailOutlined,
+  CallOutlined,
+  PlaceOutlined,
+  CheckCircle,
+  Event,
+  Share,
 } from '@material-ui/icons';
 import { get } from 'lodash';
 import mtz from 'moment-timezone';
 import moment from 'moment';
 import AddToCalendar from 'react-add-to-calendar';
+import { history } from 'containers/App';
 import RateStar from 'components/Rating/RateStar';
 import zeroPad from 'utils/zeroPad';
-import { eventType, serviceType, bookingDetailType } from 'types/global';
+import {
+  eventType,
+  serviceType,
+} from 'types/global';
 import { defaultDateFormat } from 'utils/constants';
 import s from './ViewAppointment.module.scss';
 
 const handleShareBooking = () => {
   console.log('sharing booking to friend');
 };
+const handleOpenProfile = (id) => {
+  history.push(`/profile/${id}`);
+};
 
 const accounts = [{ google: 'Google' }];
 
 const ViewAppointment = ({
-  bookingEvent, handleOpenProfile, initService, bookingDetail, providerList, userDetail,
+  appointmentEvent,
+  bookingService,
+  bookingDetail,
+  userDetail,
 }) => {
   const provider = get(bookingDetail, 'provider');
-  const bookingCode = get(bookingEvent, 'bookingCode');
-  const stateName = get(bookingEvent, 'geoLocation.state');
-  const city = get(bookingEvent, 'geoLocation.city');
-  const country = get(bookingEvent, 'geoLocation.country');
-  const district = get(bookingEvent, 'geoLocation.district');
-  const postCode = get(bookingEvent, 'geoLocation.postCode');
-  const streetAddress = get(bookingEvent, 'geoLocation.streetAddress');
+  const bookingCode = get(appointmentEvent, 'bookingCode');
+  const stateName = get(appointmentEvent, 'geoLocation.state');
+  const city = get(appointmentEvent, 'geoLocation.city');
+  const country = get(appointmentEvent, 'geoLocation.country');
+  const district = get(appointmentEvent, 'geoLocation.district');
+  const postCode = get(appointmentEvent, 'geoLocation.postCode');
+  const streetAddress = get(appointmentEvent, 'geoLocation.streetAddress');
   const providerEmail = get(provider, 'email');
   const providerPhone = get(provider, 'telephone');
   const providerWebsite = get(provider, 'website');
-  const serviceProvider = providerList
-    .filter(item => item.providerId === provider.id && item.serviceId === initService.id);
-  const providerRating = get(serviceProvider, '0.rating');
+  const providerRating = get(provider, 'rating');
   const email = get(userDetail, 'email');
-  const serviceName = get(bookingEvent, 'serviceName');
-  const serviceDescription = get(initService, 'description');
-  const startSec = get(bookingEvent, 'slot.startSec');
-  const duration = get(bookingEvent, 'duration');
+  const serviceName = get(appointmentEvent, 'serviceName');
+  const serviceDescription = get(bookingService, 'description');
+  const startSec = get(appointmentEvent, 'slot.startSec');
+  const duration = get(appointmentEvent, 'duration');
   const startTime = moment(startSec * 1000);
   const startYear = startTime.year();
   const startMonth = startTime.month() + 1;
@@ -79,13 +98,13 @@ const ViewAppointment = ({
       <div className={s.viewTitle}>
         <div className={s.serviceName}>
           <Typography variant="title" color="textSecondary" className="text-bold">
-            {bookingEvent.serviceName}
+            {appointmentEvent.serviceName}
           </Typography>
         </div>
         <div className={s.providerAddress}>
           <div className={s.providerName}>
             <Typography variant="title" color="inherit" className="text-bold text-margin-right">
-              {bookingEvent.providerName}
+              {appointmentEvent.providerName}
             </Typography>
             <RateStar rating={providerRating} />
           </div>
@@ -154,14 +173,14 @@ const ViewAppointment = ({
           <div className={s.viewItems}>
             <DateRange className="icon-main" />
             <Typography variant="body1" color="primary" inline noWrap>
-              {mtz(bookingEvent.slot.startSec * 1000).format(defaultDateFormat)}
+              {mtz(appointmentEvent.slot.startSec * 1000).format(defaultDateFormat)}
             </Typography>
           </div>
           <div className={s.viewItems}>
             <Schedule className="icon-main" />
             <Typography variant="body1" color="primary" inline noWrap>
-              {mtz(bookingEvent.slot.startSec * 1000).format('LT')}{' - '}
-              {mtz((bookingEvent.slot.startSec + bookingEvent.duration * 60) * 1000).format('LT')}
+              {mtz(appointmentEvent.slot.startSec * 1000).format('LT')}{' - '}
+              {mtz((appointmentEvent.slot.startSec + appointmentEvent.duration * 60) * 1000).format('LT')}
             </Typography>
           </div>
         </div>
@@ -210,21 +229,19 @@ const ViewAppointment = ({
 };
 
 ViewAppointment.propTypes = {
-  bookingEvent: eventType,
-  handleOpenProfile: func.isRequired,
-  initService: serviceType.isRequired,
-  bookingDetail: bookingDetailType.isRequired,
-  providerList: arrayOf(any).isRequired,
+  appointmentEvent: eventType,
+  bookingService: serviceType.isRequired,
+  bookingDetail: objectOf(any).isRequired,
   userDetail: objectOf(any).isRequired,
 };
 
 ViewAppointment.defaultProps = {
-  bookingEvent: undefined,
+  appointmentEvent: undefined,
 };
 
 const mapStateToProps = state => ({
-  providerList: state.home.providerList,
-  userDetail: state.auth.userDetail,
+  ...state.booking,
+  ...state.auth,
 });
 
 export default connect(mapStateToProps)(React.memo(ViewAppointment));
