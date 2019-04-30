@@ -1,7 +1,7 @@
+import { setLoading } from 'actionsReducers/common.actions';
 import { serviceProvidersRating } from 'actionsApi/rating';
 import { getAppointmentsByUser } from 'actionsApi/appointment';
 import { handleRequest } from 'utils/apiHelpers';
-import { setLoading } from './home.actions';
 
 export const TOGGLE_APPOINTMENT = 'APPOINTMENTS.TOGGLE_APPOINTMENTS_DIALOG';
 export const SET_APPOINTMENT_BY_CUSTOMER = 'SET_APPOINTMENT_BY_CUSTOMER';

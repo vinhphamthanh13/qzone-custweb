@@ -1,4 +1,9 @@
 import axios from 'axios';
 
+// *********** organization controller ********** //
+// organizations/{id}
 export const fetchOrganization = id => axios.get(`/organizations/${id}`);
-export const fetchProviders = businessId => axios.get(`/organizations-option-by-business-admin-id/${businessId}`);
+
+// ********** service-provider-assignment-controller ********** //
+// service-providers
+export const serviceProviders = () => axios.get('/service-providers');

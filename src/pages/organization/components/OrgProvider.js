@@ -9,13 +9,13 @@ import RateStar from 'components/Rating/RateStar';
 import { Typography } from '@material-ui/core';
 import { Schedule } from '@material-ui/icons';
 import Rating from 'material-ui-rating';
-import { fetchServiceProviders } from 'reduxModules/home.actions';
+import { setServiceProvidersAction } from 'actionsReducers/organization.actions';
 import s from './OrgProvider.module.scss';
 
 class ProviderContent extends Component {
   componentDidMount() {
-    const { fetchServiceProvidersAction } = this.props;
-    fetchServiceProvidersAction();
+    const { setServiceProvidersAction: setServiceProviders } = this.props;
+    setServiceProviders();
   }
 
   handleRating = (customerId, serviceProviderId, ratingService) => (value) => {
@@ -28,7 +28,7 @@ class ProviderContent extends Component {
 
   render() {
     const {
-      services, customerId, ratingService, providerId, providerList,
+      services, customerId, ratingService, providerId, serviceProviders,
     } = this.props;
 
     return (
@@ -41,7 +41,7 @@ class ProviderContent extends Component {
               const description = get(service, 'description');
               const duration = get(service, 'duration');
               const serviceId = get(service, 'id');
-              const serviceProvider = providerList
+              const serviceProvider = serviceProviders
                 .filter(item => item.providerId === providerId && item.serviceId === serviceId);
               const serviceProviderId = get(serviceProvider, '0.id');
               const providerRating = get(serviceProvider, '0.rating');
@@ -97,8 +97,8 @@ ProviderContent.propTypes = {
   ratingService: func.isRequired,
   customerId: string,
   providerId: string.isRequired,
-  providerList: arrayOf(any).isRequired,
-  fetchServiceProvidersAction: func.isRequired,
+  serviceProviders: arrayOf(any).isRequired,
+  setServiceProvidersAction: func.isRequired,
 };
 
 ProviderContent.defaultProps = {
@@ -106,9 +106,9 @@ ProviderContent.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  providerList: state.home.providerList,
+  ...state.organization,
 });
 
 export default connect(mapStateToProps, {
-  fetchServiceProvidersAction: fetchServiceProviders,
+  setServiceProvidersAction,
 })(ProviderContent);

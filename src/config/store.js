@@ -10,14 +10,10 @@ import booking from 'actionsReducers/booking.reducer';
 
 import appointments from 'reduxModules/appointments.reducer';
 import { loadSessionToState } from 'authentication/actions/session';
-import selectProvider from 'reduxModules/home/bookingDialog/selectProvider.reducer';
-import bookingDialog from 'reduxModules/home/bookingDialog.reducer';
 import organization from 'reduxModules/organization.reducer';
-import serviceCard from 'reduxModules/serviceCard.reducer';
 import providerPage from 'reduxModules/provider.reducer';
 import profilePage from 'reduxModules/profile.reducer';
 import waitList from 'reduxModules/waitlist.reducer';
-import specialSlots from 'reduxModules/home/bookingDialog/specialSlots.reducer';
 import { getUserDetail } from 'authentication/actions/login';
 import { loadSession } from './localStorage';
 
@@ -27,20 +23,12 @@ const rootReducer = combineReducers({
   common,
   home,
   booking,
+  organization,
 
   appointments,
-  homeModules: combineReducers({
-    bookingDialog,
-    bookingDialogModules: combineReducers({
-      selectProvider,
-    }),
-  }),
-  organization,
-  serviceCard,
   providerPage,
   profilePage,
   waitList,
-  specialSlots,
 });
 
 const store = createStore(

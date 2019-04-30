@@ -40,10 +40,13 @@ class ViewAppointment extends Component {
     console.log('sharing booking to friend');
   };
 
-  handleOpenProfile = (id) => {
-    const { resetBooking: resetBookingAction } = this.props;
+  handleViewAppointment = () => {
+    const {
+      resetBooking: resetBookingAction,
+      userDetail: { userSub },
+    } = this.props;
     resetBookingAction();
-    history.push(`/profile/${id}`);
+    history.push(`/profile/${userSub}`);
   };
 
   render() {
@@ -149,12 +152,12 @@ class ViewAppointment extends Component {
             </div>
           </div>
           <div className={s.viewAppointmentCta}>
-            <IconButton className="button-sm" onClick={this.handleOpenProfile}>
+            <IconButton className="button-sm" onClick={this.handleViewAppointment}>
               <ViewList className="icon-main" />
             </IconButton>
             <Typography
               className="hover-pointer"
-              onClick={this.handleOpenProfile}
+              onClick={this.handleViewAppointment}
               variant="subheading"
               color="inherit"
             >View appointment
