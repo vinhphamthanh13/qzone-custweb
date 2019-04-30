@@ -3,7 +3,7 @@ import {
   providersByServiceId,
   availabilitiesBySpecialEventId,
   availabilitiesBySpecialEventIdBulk,
-  appointmentCustomerEvents,
+  events,
 } from 'actionsApi/booking';
 import {
   setLoading,
@@ -96,13 +96,13 @@ export const setAvailabilitiesBySpecialEventBulkAction = data => async (dispatch
   dispatch(setLoading(false));
 };
 
-export const setAppointmentCustomerEventsAction = data => async (dispatch) => {
+export const registerEventAction = data => async (dispatch) => {
   dispatch(setLoading(true));
-  const [appointmentEvent, error] = await handleRequest(appointmentCustomerEvents, [data]);
+  const [registeredEvent, error] = await handleRequest(events, [data]);
   if (error) {
     dispatch(setError(error));
   } else {
-    dispatch(setAppointmentCustomerEvents(appointmentEvent));
+    dispatch(setAppointmentCustomerEvents(registeredEvent));
   }
   dispatch(setLoading(false));
 };

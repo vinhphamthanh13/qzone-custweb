@@ -29,6 +29,7 @@ import {
 import logo from 'images/quezone-logo.png';
 import CustomModal from 'components/Modal/CustomModal';
 import Loading from 'components/Loading';
+import Error from 'components/Error';
 import { history } from 'containers/App';
 import { BOOKING } from 'utils/constants';
 import { findEventByCustomerIdAction } from 'actionsReducers/common.actions';
@@ -39,6 +40,7 @@ import {
   setAvailabilitiesBySpecialEventBulkAction,
   setBookingDetail,
   setBookingStep,
+  registerEventAction,
 } from 'actionsReducers/booking.actions';
 
 import { bookEvent, resetStatus } from 'reduxModules/home/bookingDialog.actions';
@@ -156,21 +158,27 @@ class Booking extends PureComponent {
     history.push('/');
   };
 
-  onSaveBooking = () => {
-    const { userDetail, bookEventAction, serviceId } = this.props;
-    const { bookingDetail } = this.state;
+  handleRegisterEvent = () => {
+    const {
+      registerEventAction: registerEvent,
+      serviceId,
+    } = this.props;
+    const {
+      bookingDetail,
+      userDetail,
+    } = this.state;
     const providerId = get(bookingDetail, 'provider.providerId');
     const duration = get(bookingDetail, 'time.duration');
     const customerId = get(userDetail, 'userSub');
     this.toggleConfirmDialog(false)();
-    bookEventAction({
+    registerEvent({
       customerId,
       duration,
       slot: {
         customerTimezone: moment.tz.guess(),
         providerId,
         serviceId,
-        startSec: bookingDetail.time.start / 1000,
+        startSec: bookingDetail.time.start,
       },
       status: 'BOOKING_STATUS_UNSPECIFIED',
       type: 'APPOINTMENT',
@@ -207,9 +215,8 @@ class Booking extends PureComponent {
       : <ChevronRight className={chevronStyle} />;
   };
 
-  handleDateChange = () => {
-    console.log('handleDateChange');
-  };
+  // handle select date of provider slots
+  handleDateChange = () => {};
 
   handleMergedProviderInfo = (serviceId, serviceProviders, providersByServiceId) => {
     if (
@@ -289,11 +296,14 @@ class Booking extends PureComponent {
       [BOOKING.STEPS.CONFIRM_BOOKING]: {
         bookingService: service,
         handleAuth,
+        handleConfirmDialog: this.toggleConfirmDialog(true),
       },
     };
-
+    console.log('props of BOOKING:---> ', this.props);
+    console.log('state of BOOKING:---> ', this.state);
     return (
       <>
+        <Error />
         <Loading />
         <CustomModal
           type={bookingStatus.type}
@@ -309,7 +319,7 @@ class Booking extends PureComponent {
             message="Do you want to book the event?"
             isOpen={isConfirmDialogOpen}
             onClose={this.toggleConfirmDialog(false)}
-            okCallBack={this.onSaveBooking}
+            okCallBack={this.handleRegisterEvent}
             cancelCallBack={this.toggleConfirmDialog(false)}
           />
         )}
@@ -366,6 +376,7 @@ Booking.propTypes = {
   setAvailabilitiesBySpecialEventBulkAction: func.isRequired,
   setBookingDetail: func.isRequired,
   setBookingStep: func.isRequired,
+  registerEventAction: func.isRequired,
   handleAuth: func.isRequired,
 
   userDetail: userDetailType.isRequired,
@@ -396,6 +407,7 @@ export default compose(
       setAvailabilitiesBySpecialEventBulkAction,
       setBookingDetail,
       setBookingStep,
+      registerEventAction,
 
       bookEventAction: bookEvent,
       resetStatusAction: resetStatus,

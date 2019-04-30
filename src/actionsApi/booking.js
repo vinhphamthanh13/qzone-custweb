@@ -15,4 +15,4 @@ export const availabilitiesBySpecialEventIdBulk = eventList => axios.all(
 
 // ********** event-resource ********** //
 // appointment-customer-events
-export const appointmentCustomerEvents = data => axios.post('/appointment-customer-events', data);
+export const events = data => axios.post('/events', data);

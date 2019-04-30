@@ -60,10 +60,10 @@ class BookingDetail extends React.PureComponent {
     this.setState(oldState => ({ isMapDialogOpen: !oldState.isMapDialogOpen }));
   };
 
-  handleBooking = isAuthenticated => () => {
-    const { onSaveBooking, handleAuth } = this.props;
+  handleConfirmDialog = isAuthenticated => () => {
+    const { handleConfirmDialog, handleAuth } = this.props;
     if (isAuthenticated) {
-      onSaveBooking();
+      handleConfirmDialog();
     } else {
       handleAuth('isLoginOpen');
     }
@@ -136,9 +136,9 @@ class BookingDetail extends React.PureComponent {
           </div>
           <div className={s.bookingCta}>
             <Button
-              variant="contained"
+              variant="outlined"
               className="button-normal main-button"
-              onClick={this.handleBooking}
+              onClick={this.handleConfirmDialog(isAuthenticated)}
             >
               {isAuthenticated ? 'Book now!' : 'Sign in'}
             </Button>
@@ -187,7 +187,7 @@ class BookingDetail extends React.PureComponent {
 
 BookingDetail.propTypes = {
   bookingService: serviceType,
-  onSaveBooking: func.isRequired,
+  handleConfirmDialog: func.isRequired,
   handleAuth: func.isRequired,
 };
 

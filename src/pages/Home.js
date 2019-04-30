@@ -212,15 +212,12 @@ export class Home extends React.PureComponent {
       combineServiceProviders,
     } = this.state;
 
-    console.log('HOME state: ', this.state);
     const openAuthenticatedProfile = isAuthenticated && isOpenProfile;
-
     const categoriesServices = categories && categories.length > 0 && categories.map(category => ({
       name: category.name,
       services: combineServiceProviders
         && combineServiceProviders.filter(service => service.serviceCategoryId === category.id),
     }));
-
     const underInstruction = isMaintenance && (<Maintenance />);
 
     return (
