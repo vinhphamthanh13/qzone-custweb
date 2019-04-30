@@ -14,12 +14,12 @@ import {
   PersonPin,
 } from '@material-ui/icons';
 import RateStar from 'components/Rating/RateStar';
+import MapDialog from 'components/Map/MapDialog';
 import { setRatingService } from 'actionsReducers/common.actions';
 import Rating from 'material-ui-rating';
 import styles from './TimelineCard.module.scss';
 import CountDownDisplay from './CountDownDisplay';
 import { STATUS } from './Appointment.constants';
-import MapDialog from '../bookingDialog/selectProvider/MapDialog';
 
 class TimelineCard extends Component {
   state = {

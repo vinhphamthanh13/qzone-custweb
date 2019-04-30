@@ -1,12 +1,20 @@
 import React, { Component } from 'react';
 import {
-  arrayOf, func, string, object, bool, oneOfType, objectOf, any,
+  func,
+  string,
+  bool,
+  objectOf,
+  any,
 } from 'prop-types';
 import { noop, get } from 'lodash';
 import { connect } from 'react-redux';
 import { Typography } from '@material-ui/core';
 import { setRatingService } from 'actionsReducers/common.actions';
-import { fetchProviderService, fetchProviderDetail } from 'reduxModules/provider.actions';
+import {
+  setProviderDetailAction,
+  setProviderServiceAction,
+  setServiceProviderAction,
+} from 'actionsReducers/provider.actions';
 import Loading from 'components/Loading';
 import Header from './components/Header';
 import ProviderContent from './components/ProviderContent';
@@ -16,16 +24,64 @@ import bgImage from './images/provider-bg.png';
 import s from './Provider.module.scss';
 
 class Provider extends Component {
+  static getDerivedStateFromProps(props, state) {
+    const {
+      providerDetail,
+      providerServices,
+      serviceProviders,
+    } = props;
+    const {
+      providerDetail: cachedProviderDetail,
+      providerServices: cachedProviderServices,
+      serviceProviders: cachedServiceProviders,
+    } = state;
+    if (
+      providerDetail !== cachedProviderDetail
+      || providerServices !== cachedProviderServices
+      || serviceProviders !== cachedServiceProviders
+    ) {
+      return {
+        providerDetail,
+        providerServices,
+        serviceProviders,
+      };
+    }
+    return null;
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      providerDetail: null,
+      providerServices: null,
+      serviceProviders: null,
+    };
+  }
+
   componentDidMount() {
-    const { fetchProviderServiceAction, fetchProviderDetailAction, id } = this.props;
-    fetchProviderServiceAction(id);
-    fetchProviderDetailAction(id);
+    const {
+      setProviderServiceAction: setProviderService,
+      setProviderDetailAction: setProviderDetail,
+      setServiceProviderAction: setServiceProvider,
+      id,
+    } = this.props;
+    setProviderService(id);
+    setProviderDetail(id);
+    setServiceProvider();
   }
 
   render() {
     const {
-      providerDetail, providerServices, isLoading, setRatingServiceAction, userDetail,
+      isLoading,
+      setRatingServiceAction,
+      userDetail,
     } = this.props;
+    const {
+      providerDetail,
+      providerServices,
+      serviceProviders,
+    } = this.state;
+
     const providerName = get(providerDetail, 'givenName');
     const providerPhone = get(providerDetail, 'telephone');
     const providerEmail = get(providerDetail, 'email');
@@ -42,6 +98,8 @@ class Provider extends Component {
       logo: providerAvatar,
     };
 
+    console.log('providerServices', providerServices);
+    console.log('providerDetail', providerDetail);
     return (
       <>
         <Loading />
@@ -59,13 +117,13 @@ class Provider extends Component {
                   Our services
                 </Typography>
               </div>
-              {!isLoading && (
-                <ProviderService
-                  services={providerServices}
-                  ratingService={setRatingServiceAction}
-                  customerId={customerId}
-                  providerId={providerId}
-                />)}
+              <ProviderService
+                providerServices={providerServices}
+                serviceProviders={serviceProviders}
+                ratingService={setRatingServiceAction}
+                customerId={customerId}
+                providerId={providerId}
+              />
             </div>
           </div>
           <ProviderFooter loading={isLoading} />
@@ -76,14 +134,13 @@ class Provider extends Component {
 }
 
 Provider.propTypes = {
-  fetchProviderServiceAction: func.isRequired,
-  fetchProviderDetailAction: func.isRequired,
   id: string.isRequired,
-  providerDetail: oneOfType([object]).isRequired,
-  providerServices: arrayOf(object).isRequired,
   isLoading: bool.isRequired,
-  setRatingServiceAction: func.isRequired,
   userDetail: objectOf(any),
+  setProviderServiceAction: func.isRequired,
+  setProviderDetailAction: func.isRequired,
+  setRatingServiceAction: func.isRequired,
+  setServiceProviderAction: func.isRequired,
 };
 
 Provider.defaultProps = {
@@ -91,14 +148,14 @@ Provider.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  providerDetail: state.providerPage.providerDetail,
-  providerServices: state.providerPage.providerServices,
-  isLoading: state.providerPage.isLoading,
-  userDetail: state.auth.userDetail,
+  ...state.common,
+  ...state.auth,
+  ...state.provider,
 });
 
 export default connect(mapStateToProps, {
-  fetchProviderServiceAction: fetchProviderService,
-  fetchProviderDetailAction: fetchProviderDetail,
+  setProviderServiceAction,
+  setProviderDetailAction,
+  setServiceProviderAction,
   setRatingServiceAction: setRatingService,
 })(Provider);

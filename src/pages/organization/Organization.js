@@ -67,8 +67,8 @@ Organization.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  organization: state.organization.organization,
-  isLoading: state.organization.isLoading,
+  ...state.common,
+  ...state.organization,
 });
 
 export default connect(mapStateToProps, {

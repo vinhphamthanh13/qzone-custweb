@@ -13,7 +13,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import { toggleAppointment } from 'reduxModules/appointments.actions';
 import logo from 'images/logo.png';
 import AppointmentContainer from './appointmentDialog/Appointment';
-import BookingStyle from './BookingDialogStyle';
+import s from './AppointmentDialogStyle';
 
 class AppointmentDialog extends React.PureComponent {
   state = {};
@@ -89,5 +89,5 @@ const mapDispatchToProps = dispatch => ({
 export default compose(
   withRouter,
   connect(mapStateToProps, mapDispatchToProps),
-  withStyles(BookingStyle),
+  withStyles(s),
 )(AppointmentDialog);

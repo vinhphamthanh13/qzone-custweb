@@ -2,22 +2,15 @@ import React, { Component } from 'react';
 import {
   arrayOf, object, func, string, any,
 } from 'prop-types';
-import { connect } from 'react-redux';
 import { get, chunk } from 'lodash';
 import uuidv1 from 'uuid/v1';
 import RateStar from 'components/Rating/RateStar';
 import { Typography } from '@material-ui/core';
 import { Schedule } from '@material-ui/icons';
 import Rating from 'material-ui-rating';
-import { setServiceProvidersAction } from 'actionsReducers/home.actions';
 import s from './ProviderService.module.scss';
 
 class ProviderContent extends Component {
-  componentDidMount() {
-    const { setServiceProvidersAction: setServiceProviders } = this.props;
-    setServiceProviders();
-  }
-
   handleRating = (customerId, serviceProviderId, ratingService) => (value) => {
     ratingService({
       customerId,
@@ -28,16 +21,17 @@ class ProviderContent extends Component {
 
   render() {
     const {
-      services,
+      providerServices,
       customerId,
       ratingService,
       providerId,
       serviceProviders,
     } = this.props;
+    console.log('providerServices as services', this.props);
 
     return (
       <div className={s.services}>
-        {services.length > 0 && chunk(services, 2).map(chunked => (
+        {providerServices && providerServices.length > 0 && chunk(providerServices, 2).map(chunked => (
           <div key={uuidv1()} className={s.serviceChunked}>
             {chunked.map((service) => {
               const srvImg = get(service, 'image.fileUrl');
@@ -97,22 +91,15 @@ class ProviderContent extends Component {
 }
 
 ProviderContent.propTypes = {
-  services: arrayOf(object).isRequired,
+  providerServices: arrayOf(object).isRequired,
   ratingService: func.isRequired,
   customerId: string,
   providerId: string.isRequired,
   serviceProviders: arrayOf(any).isRequired,
-  setServiceProvidersAction: func.isRequired,
 };
 
 ProviderContent.defaultProps = {
   customerId: null,
 };
 
-const mapStateToProps = state => ({
-  ...state.homeNew,
-});
-
-export default connect(mapStateToProps, {
-  setServiceProvidersAction,
-})(ProviderContent);
+export default ProviderContent;

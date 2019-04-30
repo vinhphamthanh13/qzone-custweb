@@ -22,7 +22,7 @@ import {
 import RateStar from 'components/Rating/RateStar';
 import CustomLink from 'components/CustomLink';
 import TimeBoxes from './TimeBoxes';
-import MapDialog from './MapDialog';
+import MapDialog from '../../../../components/Map/MapDialog';
 import s from './ProviderContent.module.scss';
 
 class ProviderContent extends React.PureComponent {

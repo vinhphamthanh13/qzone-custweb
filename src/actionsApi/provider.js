@@ -1,4 +1,12 @@
 import axios from 'axios';
 
-export const getProviderServices = id => axios.get(`/services-by-provider-id/${id}`);
-export const getProviderDetail = id => axios.get(`/users/${id}`);
+// ********** user-controller *********** //
+// users/{id}
+export const users = id => axios.get(`/users/${id}`);
+
+// *********** service-controller ********** //
+export const serviceByProviderId = id => axios.get(`/services-by-provider-id/${id}`);
+
+// ********** event-resource ********** //
+// temporary-services
+export const temporaryServices = () => axios.get('/temporary-services');

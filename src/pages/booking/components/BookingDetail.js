@@ -17,7 +17,7 @@ import {
 import { defaultDateFormat } from 'utils/constants';
 import formatName from 'utils/formatName';
 import RateStar from 'components/Rating/RateStar';
-import MapDialog from './selectProvider/MapDialog';
+import MapDialog from '../../../components/Map/MapDialog';
 import s from './BookingDetail.module.scss';
 
 class BookingDetail extends React.PureComponent {
