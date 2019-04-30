@@ -1,6 +1,12 @@
-import { setLoading } from 'actionsReducers/common.actions';
+import {
+  setLoading,
+  setError,
+} from 'actionsReducers/common.actions';
 import { handleRequest } from 'utils/apiHelpers';
-import { updateProfile } from 'actionsApi/profile';
+import {
+  updateProfile,
+  // findUserById,
+} from 'actionsApi/profile';
 import { getUserDetail } from 'authentication/actions/login';
 import { get } from 'lodash';
 
@@ -14,13 +20,14 @@ export const updateProfileAction = payload => ({
 export const postUpdatedProfile = data => async (dispatch) => {
   dispatch(setLoading(true));
   const userSub = get(data, 'userSub');
-  const [response] = await handleRequest(updateProfile, [data], null);
-  if (response) {
+  const [profileUpdated, error] = await handleRequest(updateProfile, [data]);
+  if (error) {
+    dispatch(setError(error));
+    dispatch(updateProfileAction('error'));
+  } else {
     dispatch(updateProfileAction('success'));
     dispatch(getUserDetail(userSub));
-  } else {
-    dispatch(updateProfileAction('error'));
-    console.log(response);
+    console.log('profileUpdated', profileUpdated);
   }
   dispatch(setLoading(false));
 };

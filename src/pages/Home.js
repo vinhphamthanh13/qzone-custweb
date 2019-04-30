@@ -1,32 +1,23 @@
 import React from 'react';
 import {
-  bool,
   func,
-  any,
-  string,
-  objectOf,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
 import { Grid } from '@material-ui/core';
 import { history } from 'containers/App';
 import Loading from 'components/Loading';
-import { resetErrorMessage } from 'actionsReducers/common.actions';
 import {
   setServiceCategoriesAction,
   setServicesAction,
   setServiceProvidersAction,
 } from 'actionsReducers/home.actions';
-import { BOOKING } from 'utils/constants';
-import { cacheData, getCachedData } from 'config/localStorage';
-import CustomModal from 'components/Modal/CustomModal';
+import Error from 'components/Error';
 import Maintenance from './components/maintenance/Maintenance';
 import Services from './home/Services';
 import Auth from './Auth';
 import PrimarySearchAppBar from './home/appbar/PrimarySearchAppBar';
-import AppointmentDialog from './home/AppointmentDialog';
 import Categorize from './home/Categorize';
-import Profile from './profile/Profile';
 import Footer from './components/footer/Footer';
 import SlideShow from './home/slideShow/SlideShow';
 import AdvancedSearch from './home/search/AdvancedSearch';
@@ -60,7 +51,7 @@ export class Home extends React.PureComponent {
           .filter(provider => provider.serviceId === service.id);
         return { ...service, linkedProvider };
       });
-      const savingCachedData = {
+      return {
         categories,
         services,
         serviceProviders,
@@ -68,8 +59,6 @@ export class Home extends React.PureComponent {
         eventList,
         combineServiceProviders,
       };
-      cacheData(BOOKING.CACHE_DATA, savingCachedData);
-      return savingCachedData;
     }
     return null;
   }
@@ -78,12 +67,10 @@ export class Home extends React.PureComponent {
     super(props);
     this.state = {
       categories: null,
-      serviceProviders: null,
       searchText: '',
       searchResult: null,
       isRegisterOpen: false,
       isLoginOpen: false,
-      isOpenProfile: false,
       sessionTimeoutId: 0,
       isOpenAdvancedSearch: false,
       isShowingAdvancedSearch: false,
@@ -126,15 +113,8 @@ export class Home extends React.PureComponent {
   };
 
   handleBooking = (service) => {
-    const { serviceProviders } = this.state;
     const serviceId = get(service, 'id');
-    const serviceProvidersList = serviceProviders.filter(provider => provider.serviceId === serviceId);
     history.push(`/booking/${serviceId}`);
-    const cachedData = getCachedData(BOOKING.CACHE_DATA);
-    const cachedServiceId = get(cachedData, 'service.id');
-    if (!cachedData || cachedServiceId !== serviceId) {
-      cacheData(BOOKING.CACHE_DATA, { onBookingService: service, serviceProvidersList });
-    }
   };
 
   openAuthModal = (key) => {
@@ -143,14 +123,6 @@ export class Home extends React.PureComponent {
 
   closeDialog = (key) => {
     this.setState({ [key]: false });
-  };
-
-  handleOpenProfile = () => {
-    this.setState({ isOpenProfile: true });
-  };
-
-  handleCloseProfile = () => {
-    this.setState({ isOpenProfile: false }, () => history.push('/'));
   };
 
   handleCloseSearch = () => {
@@ -185,18 +157,7 @@ export class Home extends React.PureComponent {
     this.handleAdvancedSearch(false);
   };
 
-  handleResetError = () => {
-    const { resetErrorMessage: resetErrorMessageAction } = this.props;
-    resetErrorMessageAction();
-  };
-
   render() {
-    const {
-      loginSession: { isAuthenticated },
-      isLoading,
-      isError,
-      errorMessage,
-    } = this.props;
     const {
       categories,
       isShowingAdvancedSearch,
@@ -208,11 +169,9 @@ export class Home extends React.PureComponent {
       isOpenAdvancedSearch,
       isMaintenance,
       sessionTimeoutId,
-      isOpenProfile,
       combineServiceProviders,
     } = this.state;
 
-    const openAuthenticatedProfile = isAuthenticated && isOpenProfile;
     const categoriesServices = categories && categories.length > 0 && categories.map(category => ({
       name: category.name,
       services: combineServiceProviders
@@ -222,17 +181,15 @@ export class Home extends React.PureComponent {
 
     return (
       <>
-        {
-          isError && (
-            <CustomModal
-              isOpen
-              type="error"
-              title="Error occurs"
-              message={errorMessage}
-              onClose={this.handleResetError}
-            />
-          )
-        }
+        <Error />
+        <Loading />
+        <Auth
+          isRegisterOpen={isRegisterOpen}
+          isLoginOpen={isLoginOpen}
+          closeDialog={this.closeDialog}
+          handleAuthenticate={this.openAuthModal}
+          getSessionTimeoutId={this.getSessionTimeoutId}
+        />
         <PrimarySearchAppBar
           handleAuthenticate={this.openAuthModal}
           onSearch={this.handleOnSearch}
@@ -251,20 +208,6 @@ export class Home extends React.PureComponent {
             />
           </div>)
         }
-        <Auth
-          isRegisterOpen={isRegisterOpen}
-          isLoginOpen={isLoginOpen}
-          closeDialog={this.closeDialog}
-          handleAuthenticate={this.openAuthModal}
-          getSessionTimeoutId={this.getSessionTimeoutId}
-        />
-        {isAuthenticated && (
-          <Profile
-            isOpenProfile={openAuthenticatedProfile}
-            handleCloseProfile={this.handleCloseProfile}
-          />)
-        }
-        <AppointmentDialog />
         <Grid container>
           <Grid item xs={12} className={s.landingPage}>
             <SlideShow
@@ -275,12 +218,10 @@ export class Home extends React.PureComponent {
               searchResult && (
                 <Categorize
                   search
-                  loading={isLoading}
                   name="Search results"
                   onClose={this.handleCloseSearch}
                 >
                   <Services
-                    isLoading={isLoading}
                     services={searchResult}
                     onBooking={this.handleBooking}
                   />
@@ -291,12 +232,10 @@ export class Home extends React.PureComponent {
               isShowingAdvancedSearch && (
                 <Categorize
                   search
-                  loading={isLoading}
                   name="Advanced Search Results"
                   onClose={this.handleCloseSearch}
                 >
                   <Services
-                    isLoading={isLoading}
                     services={serviceProviderNearByList}
                     onBooking={this.handleBooking}
                   />
@@ -304,39 +243,32 @@ export class Home extends React.PureComponent {
               )
             }
             {categoriesServices && categoriesServices.map(category => (
-              <Categorize key={category.name} name={category.name} loading={isLoading}>
+              <Categorize key={category.name} name={category.name}>
                 <Services
-                  isLoading={isLoading}
                   services={category.services}
                   onBooking={this.handleBooking}
                 />
               </Categorize>
             ))}
             {underInstruction}
-            <Footer loading={isLoading} />
+            <Footer />
           </Grid>
         </Grid>
-        <Loading />
       </>
     );
   }
 }
 
 Home.propTypes = {
-  isLoading: bool.isRequired,
-  isError: bool.isRequired,
-  errorMessage: string.isRequired,
-  loginSession: objectOf(any).isRequired,
   setServiceCategoriesAction: func.isRequired,
   setServicesAction: func.isRequired,
   setServiceProvidersAction: func.isRequired,
-  resetErrorMessage: func.isRequired,
 };
 
 const mapStateToProps = state => ({
   ...state.common,
   ...state.home,
-  loginSession: state.auth.loginSession,
+  ...state.auth,
 });
 
 export default connect(
@@ -345,6 +277,5 @@ export default connect(
     setServiceCategoriesAction,
     setServicesAction,
     setServiceProvidersAction,
-    resetErrorMessage,
   },
 )(Home);

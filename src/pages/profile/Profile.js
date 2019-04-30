@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import {
-  bool, func, objectOf, any, string,
+  bool,
+  func,
+  objectOf,
+  any,
+  string,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
@@ -9,7 +13,7 @@ import { postUpdatedProfile, updateProfileAction } from 'actionsReducers/profile
 import CustomModal from 'components/Modal/CustomModal';
 import Header from './components/Header';
 import Content from './components/Content';
-import style from './Profile.module.scss';
+import s from './Profile.module.scss';
 
 class Profile extends Component {
   state = {
@@ -67,9 +71,9 @@ class Profile extends Component {
         {updateProfileMsgError}
         {updateProfileMsgSuccess}
         <Dialog fullScreen open={isOpenProfile}>
-          <div className={`${style.profile} column`}>
+          <div className={`${s.profile} column`}>
             <Header userDetail={{ givenName, email }} onClose={handleCloseProfile} onOpenAccount={this.handleAccount} />
-            <div className={`container-max auto-margin-horizontal ${style.contentAfooter}`}>
+            <div className={`container-max auto-margin-horizontal ${s.contentAfooter}`}>
               <Content
                 givenName={givenName}
                 onClose={handleCloseProfile}
@@ -85,6 +89,7 @@ class Profile extends Component {
 }
 
 Profile.propTypes = {
+  // customerId: string.isRequired,
   isOpenProfile: bool.isRequired,
   handleCloseProfile: func.isRequired,
   userDetail: objectOf(any).isRequired,

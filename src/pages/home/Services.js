@@ -1,5 +1,8 @@
 import React from 'react';
-import { bool, arrayOf, func } from 'prop-types';
+import {
+  arrayOf,
+  func,
+} from 'prop-types';
 import { Grid } from '@material-ui/core';
 import { serviceType } from 'types/global';
 import EmptyItem from 'components/EmptyItem';
@@ -30,6 +33,5 @@ export default function Services({
 
 Services.propTypes = {
   services: arrayOf(serviceType).isRequired,
-  isLoading: bool.isRequired,
   onBooking: func.isRequired,
 };
