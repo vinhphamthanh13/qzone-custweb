@@ -12,9 +12,9 @@ import {
   DateRange,
   Schedule,
   ViewList,
-  EmailOutlined,
-  CallOutlined,
-  PlaceOutlined,
+  Email,
+  Call,
+  Place,
   CheckCircle,
   Event,
   Share,
@@ -110,33 +110,33 @@ const ViewAppointment = ({
           </div>
           <div className={s.providerAddress}>
             <div className={s.addressItems}>
-              <EmailOutlined className="icon-small icon-brand" />
+              <Email className="icon-small icon-brand" />
               <Typography noWrap variant="body2" color="textSecondary">{providerEmail}</Typography>
             </div>
             <div className={s.addressItems}>
-              <CallOutlined className="icon-small icon-brand" />
+              <Call className="icon-small icon-brand" />
               <Typography noWrap variant="body2" color="textSecondary">{providerPhone}</Typography>
             </div>
             <div className={s.addressItems}>
-              <PlaceOutlined className="icon-small icon-brand" />
+              <Place className="icon-small icon-brand" />
               <Typography noWrap variant="body2" color="textSecondary">
                 {streetAddress}, {district}
               </Typography>
             </div>
             <div className={s.addressItems}>
-              <PlaceOutlined className="icon-small icon-transparent" />
+              <Place className="icon-small icon-transparent" />
               <Typography noWrap variant="body2" color="textSecondary">
                 {stateName}, {city}
               </Typography>
             </div>
             <div className={s.addressItems}>
-              <PlaceOutlined className="icon-small icon-transparent" />
+              <Place className="icon-small icon-transparent" />
               <Typography noWrap variant="body2" color="textSecondary">
                 {country}, {postCode}
               </Typography>
             </div>
             <div className={s.addressItems}>
-              <PlaceOutlined className="icon-small icon-transparent" />
+              <Place className="icon-small icon-transparent" />
               <Typography noWrap variant="body2" color="textSecondary">
                 {providerWebsite || 'https://info.quezone.com.au'}
               </Typography>
@@ -166,7 +166,7 @@ const ViewAppointment = ({
         <div className={s.appointmentInfo}>
           <div className={s.appointmentCode}>
             <Typography variant="subtitle2" color="primary" className="icon-main">Booking code:{' '}</Typography>
-            <Typography variant="subtitle2" color="secondary">
+            <Typography variant="title" className="danger-color">
               {bookingCode}
             </Typography>
           </div>

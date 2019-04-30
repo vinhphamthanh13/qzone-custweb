@@ -215,9 +215,9 @@ class Booking extends PureComponent {
     this.setState({ isConfirmDialogOpen });
   };
 
-  renderChevron = (valid, direction) => {
-    const chevronStyle = valid ? 'icon-white icon-big icon-shake' : 'icon-transparent icon-big';
-    return direction === 'left' ? <ChevronLeft className={chevronStyle} />
+  renderChevron = (valid, dir) => {
+    const chevronStyle = valid ? 'icon-white icon-big simple-button' : 'icon-transparent icon-big';
+    return dir < 0 ? <ChevronLeft className={chevronStyle} />
       : <ChevronRight className={chevronStyle} />;
   };
 
@@ -281,7 +281,7 @@ class Booking extends PureComponent {
       appointmentEvent,
     } = this.state;
     const Step = this.stepComponents[bookingStep];
-    const isBackValid = bookingStep > BOOKING.STEPS.SELECT_PROVIDER;
+    const isBackValid = bookingStep === BOOKING.STEPS.CONFIRM_BOOKING;
     const isNextValid = bookingStep < BOOKING.STEPS.CONFIRM_BOOKING && bookingDetail;
     const providers = this.handleMergedProviderInfo(
       serviceId,
@@ -328,29 +328,27 @@ class Booking extends PureComponent {
             <div className="brand-logo">
               <Avatar classes={{ img: s.logoImage }} src={logo} alt="Quezone Logo" className="brand-logo" />
             </div>
-            <div>
-              <div className={s.bookingStepsWrapper}>
-                <Button disabled={!isBackValid} onClick={this.handleStepChange(-1)} className="simple-button">
-                  {this.renderChevron(isBackValid, 'left')}
-                </Button>
-                <div className={s.stepper}>
-                  <div className={s.step}>
-                    <div className={s.stepNumber}>
-                      <Typography variant="subtitle1" color="inherit">
-                        {bookingStep + 1}
-                      </Typography>
-                    </div>
-                    <div className={s.stepLabel}>
-                      <Typography variant="subtitle1" color="inherit">
-                        {STEP_LABELS[bookingStep]}
-                      </Typography>
-                    </div>
+            <div className={s.bookingStepsWrapper}>
+              <Button disabled={!isBackValid} onClick={this.handleStepChange(-1)} className="simple-button">
+                {this.renderChevron(isBackValid, -1)}
+              </Button>
+              <div className={s.stepper}>
+                <div className={s.step}>
+                  <div className={s.stepNumber}>
+                    <Typography variant="title" color="inherit">
+                      {bookingStep + 1}
+                    </Typography>
+                  </div>
+                  <div className={s.stepLabel}>
+                    <Typography variant="title" className="gallery-color">
+                      {STEP_LABELS[bookingStep]}
+                    </Typography>
                   </div>
                 </div>
-                <Button disabled={!isNextValid} onClick={this.handleStepChange(1)} className="simple-button">
-                  {this.renderChevron(isNextValid, 'right')}
-                </Button>
               </div>
+              <Button disabled={!isNextValid} onClick={this.handleStepChange(1)} className="simple-button">
+                {this.renderChevron(isNextValid, 1)}
+              </Button>
             </div>
             <div className={s.goBack}>
               <IconButton color="inherit" onClick={this.goHome} aria-label="Close">
