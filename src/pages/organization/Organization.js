@@ -5,7 +5,7 @@ import {
 import { noop, get } from 'lodash';
 import { connect } from 'react-redux';
 import { Typography } from '@material-ui/core';
-import { getOrganization } from 'reduxModules/organization.actions';
+import { setOrganizationAction } from 'actionsReducers/organization.actions';
 import Loading from 'components/Loading';
 import Header from './components/Header';
 import OrgContent from './components/OrgContent';
@@ -16,8 +16,11 @@ import s from './Organization.module.scss';
 
 class Organization extends Component {
   componentDidMount() {
-    const { getOrganizationAction, id } = this.props;
-    getOrganizationAction(id);
+    const {
+      setOrganizationAction: setOrganization,
+      id,
+    } = this.props;
+    setOrganization(id);
   }
 
   render() {
@@ -62,7 +65,7 @@ class Organization extends Component {
 Organization.propTypes = {
   id: string.isRequired,
   organization: oneOfType([object]).isRequired,
-  getOrganizationAction: func.isRequired,
+  setOrganizationAction: func.isRequired,
   isLoading: bool.isRequired,
 };
 
@@ -72,5 +75,5 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, {
-  getOrganizationAction: getOrganization,
+  setOrganizationAction,
 })(Organization);
