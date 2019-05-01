@@ -15,6 +15,7 @@ import {
 } from 'actionsReducers/common.actions';
 import { history } from 'containers/App';
 import CustomModal from 'components/Modal/CustomModal';
+import { askForPermissioToReceiveNotifications } from 'utils/pushNotification';
 import Header from './components/Header';
 import Content from './components/Content';
 import s from './Profile.module.scss';
@@ -57,6 +58,9 @@ class Profile extends Component {
     } = this.props;
     setServiceProviders();
     findEventByCustomerId(customerId);
+    if (customerId) {
+      askForPermissioToReceiveNotifications();
+    }
   }
 
   handleAccount = (data) => {
