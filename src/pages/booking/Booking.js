@@ -369,7 +369,8 @@ class Booking extends PureComponent {
 }
 
 Booking.propTypes = {
-  serviceId: string.isRequired,
+  serviceId: string,
+  temporaryServiceId: string,
   bookingStep: number.isRequired,
   getServiceByIdAction: func.isRequired,
   setServiceProvidersAction: func.isRequired,
@@ -381,6 +382,11 @@ Booking.propTypes = {
   handleAuth: func.isRequired,
   userDetail: userDetailType.isRequired,
   resetBooking: func.isRequired,
+};
+
+Booking.defaultProps = {
+  serviceId: null,
+  temporaryServiceId: null,
 };
 
 const mapStateToProps = state => ({
