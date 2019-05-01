@@ -111,9 +111,20 @@ class Content extends Component {
   };
 
   render() {
-    const { givenName, handleAccount, updateProfileStatus } = this.props;
-    const { sidePanel: { eventList, myInfo, waitlist } } = this.state;
-    console.log('contetrn ', this.props);
+    const {
+      givenName,
+      handleAccount,
+      updateProfileStatus,
+      customerId,
+    } = this.props;
+    const {
+      sidePanel: {
+        eventList,
+        myInfo,
+        waitlist,
+      },
+      eventList: cachedEventList,
+    } = this.state;
     return (
       <div className={s.content}>
         <div className={s.sidebar}>
@@ -135,7 +146,7 @@ class Content extends Component {
         }
         {eventList && (
           <div className={s.profilePage}>
-            <EventList />
+            <EventList customerId={customerId} eventList={cachedEventList} />
           </div>)
         }
         {myInfo && (
@@ -149,6 +160,7 @@ class Content extends Component {
 }
 
 Content.propTypes = {
+  customerId: string.isRequired,
   onClose: func.isRequired,
   givenName: string.isRequired,
   logoutAction: func.isRequired,

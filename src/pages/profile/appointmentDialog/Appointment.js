@@ -1,59 +1,28 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
-  arrayOf, shape, func, string,
+  arrayOf,
+  any,
 } from 'prop-types';
-import { connect } from 'react-redux';
-
 import EmptyItem from 'components/EmptyItem';
-import {
-  getAppointmentByCustomer,
-  clearAppointments,
-} from 'reduxModules/appointments.actions';
 import AppointmentTimeline from './AppointmentTimeline';
-import styles from './Appointment.module.scss';
+import s from './Appointment.module.scss';
 
-const AppointmentContainer = ({
-  appointments, userId,
-  getAppointmentByCustomerAction, clearAppointmentsAction,
-}) => {
-  useEffect(() => {
-    if (appointments.length > 0 && appointments[0].customerId !== userId) {
-      clearAppointmentsAction();
-    }
-    getAppointmentByCustomerAction(userId);
-  }, []);
-  return (
-    appointments.length === 0
-      ? (<EmptyItem message="You don't have any appointment right now" />)
-      : (
-        <div className={`${styles.appointmentWrapper} container-max auto-margin-horizontal`}>
-          <AppointmentTimeline
-            items={appointments}
-          />
-        </div>
-      )
-  );
+const renderEventList = list => (list.length > 0 ? (
+  <div className={`${s.appointmentWrapper} container-max auto-margin-horizontal`}>
+    <AppointmentTimeline
+      items={list}
+    />
+  </div>
+) : <EmptyItem message="You have no event at the moment!" />);
+
+const Appointment = ({ eventList }) => eventList && renderEventList(eventList);
+
+Appointment.propTypes = {
+  eventList: arrayOf(any),
 };
 
-AppointmentContainer.propTypes = {
-  appointments: arrayOf(shape()).isRequired,
-  getAppointmentByCustomerAction: func.isRequired,
-  clearAppointmentsAction: func.isRequired,
-  userId: string,
+Appointment.defaultProps = {
+  eventList: null,
 };
 
-AppointmentContainer.defaultProps = {
-  userId: null,
-};
-
-const mapStateToProps = state => ({
-  appointments: state.appointments.appointments,
-  userId: state.auth.loginSession.id,
-});
-
-const mapDispatchToProps = {
-  getAppointmentByCustomerAction: getAppointmentByCustomer,
-  clearAppointmentsAction: clearAppointments,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(React.memo(AppointmentContainer));
+export default Appointment;

@@ -52,7 +52,6 @@ class Profile extends Component {
     super(props);
     this.state = {
       userDetail: null,
-      firebaseUserStored: null,
       isPopupWarning: '',
     };
   }
@@ -77,7 +76,6 @@ class Profile extends Component {
       const { userDetail } = this.state;
       const email = get(userDetail, 'email');
       const userToken = await askForPermissioToReceiveNotifications();
-      console.log('componentDidUpdate', userToken);
       storeFireBaseUser({
         email,
         userToken,
@@ -102,15 +100,13 @@ class Profile extends Component {
   render() {
     const {
       updateProfileStatus,
+      customerId,
     } = this.props;
     const {
       userDetail,
-      firebaseUserStored,
       isPopupWarning,
     } = this.state;
 
-    console.log('firebaseuserStore', firebaseUserStored);
-    console.log('profile lthislprops', this.props);
     const givenName = get(userDetail, 'givenName');
     const email = get(userDetail, 'email');
     const updateProfileMsgError = isPopupWarning === 'error' ? (
@@ -143,6 +139,7 @@ class Profile extends Component {
             <Header userDetail={{ givenName, email }} onClose={this.goBooking} onOpenAccount={this.handleAccount} />
             <div className={`container-max auto-margin-horizontal ${s.contentAfooter}`}>
               <Content
+                customerId={customerId}
                 givenName={givenName}
                 onClose={this.goBooking}
                 handleAccount={this.handleAccount}
