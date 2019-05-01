@@ -10,12 +10,13 @@ import {
 } from '@material-ui/icons';
 import { logout } from 'authentication/actions/logout';
 import EventList from 'pages/profile/appointmentDialog/Appointment';
+import WaitList from './WaitList';
 import Info from './Info';
 import s from './Content.module.scss';
 
 const EVENT_LIST = 'eventList';
 const MY_INFO = 'myInfo';
-const WAIT_LIST = 'waitLists';
+const WAIT_LIST = 'waitList';
 
 class Content extends Component {
   static getDerivedStateFromProps(props, state) {
@@ -111,7 +112,7 @@ class Content extends Component {
 
   render() {
     const { givenName, handleAccount, updateProfileStatus } = this.props;
-    const { sidePanel: { eventList, myInfo } } = this.state;
+    const { sidePanel: { eventList, myInfo, waitlist } } = this.state;
     console.log('contetrn ', this.props);
     return (
       <div className={s.content}>
@@ -125,6 +126,13 @@ class Content extends Component {
             {this.renderItems()}
           </div>
         </div>
+        {
+          waitlist && (
+            <div className={s.profilePage}>
+              <WaitList />
+            </div>
+          )
+        }
         {eventList && (
           <div className={s.profilePage}>
             <EventList />

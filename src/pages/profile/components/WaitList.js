@@ -1,27 +1,66 @@
-import React from 'react';
-import { arrayOf, any } from 'prop-types';
+import React, { Component } from 'react';
+import {
+  func,
+} from 'prop-types';
 import { connect } from 'react-redux';
+import {
+  setWaitListsAction,
+} from 'actionsReducers/waitlist.actions';
 import s from './WaitList.module.scss';
 
-const WaitList = (props) => {
-  const { waitList } = props;
-  return (
-    <div className={s.waitList}>
-      {waitList.map(slot => (
-        <div className={s.waitSlot}>
-          {slot.name}
-        </div>
-      ))}
-    </div>
-  );
-};
+class WaitList extends Component {
+  static getDerivedStateFromProps(props, state) {
+    const {
+      waitLists,
+    } = props;
+    const {
+      waitLists: cachedWaitLists,
+    } = state;
+    if (
+      waitLists !== cachedWaitLists
+    ) {
+      return {
+        waitLists,
+      };
+    }
+    return null;
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      waitLists: null,
+    };
+  }
+
+  componentDidMount() {
+    const { setWaitListsAction: setWaitLists } = this.props;
+    setWaitLists();
+  }
+
+
+  render() {
+    const { waitLists } = this.state;
+    return (
+      <div className={s.waitList}>
+        {waitLists && waitLists.map(slot => (
+          <div className={s.waitSlot}>
+            {slot.name}
+          </div>
+        ))}
+      </div>
+    );
+  }
+}
 
 WaitList.propTypes = {
-  waitList: arrayOf(any).isRequired,
+  setWaitListsAction: func.isRequired,
 };
 
 const mapStateToProps = state => ({
-  waitList: state.waitList.waitList,
+  ...state.waitLists,
 });
 
-export default connect(mapStateToProps)(WaitList);
+export default connect(mapStateToProps, {
+  setWaitListsAction,
+})(WaitList);

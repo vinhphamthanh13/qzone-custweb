@@ -1,42 +1,40 @@
 import { handleRequest } from 'utils/apiHelpers';
-import { setLoading } from 'actionsReducers/common.actions';
-import { registerWaitList, fetchWaitList } from 'actionsApi/waitlist';
+import { setLoading, setError } from 'actionsReducers/common.actions';
+import { registerWaitList, waitLists } from 'actionsApi/waitlist';
 
 
-export const REGISTER_WAITLIST = 'PROFILE.REGISTER_WAITLIST';
-export const FETCH_WAITLIST = 'PROFILE.FETCH_WAITLIST';
+export const REGISTER_WAIT_LIST = 'PROFILE.REGISTER_WAIT_LIST';
+export const SET_WAIT_LIST = 'PROFILE.SET_WAIT_LIST';
 
 export const setRegisterWaitListStatus = payload => ({
-  type: REGISTER_WAITLIST,
+  type: REGISTER_WAIT_LIST,
   payload,
 });
 
-export const setWaitList = payload => ({
-  type: FETCH_WAITLIST,
+export const setWaitLists = payload => ({
+  type: SET_WAIT_LIST,
   payload,
 });
 
 export const registerWaitListAction = data => (dispatch) => {
   dispatch(setLoading(true));
-  const [response] = handleRequest(registerWaitList, [data], null);
-  console.log('response after register waitlist', response);
-  if (response) {
-    dispatch(setRegisterWaitListStatus('success'));
+  const [regWaitList, error] = handleRequest(registerWaitList, [data]);
+  console.log('response after register waitlists', regWaitList);
+  if (error) {
+    dispatch(setError(error));
   } else {
-    dispatch(setRegisterWaitListStatus('error'));
+    dispatch(setRegisterWaitListStatus(regWaitList));
   }
   dispatch(setLoading(false));
 };
 
-export const fetchWaitListAction = () => (dispatch) => {
+export const setWaitListsAction = () => (dispatch) => {
   dispatch(setLoading(true));
-  const [response] = handleRequest(fetchWaitList, [], null);
-  console.log('fetchWaitList', response);
-  if (response) {
-    dispatch(setLoading(false));
-    dispatch(setWaitList(response));
+  const [waitlists, error] = handleRequest(waitLists, []);
+  if (error) {
+    dispatch(setError(error));
   } else {
-    console.log('error when getting waitlist');
+    dispatch(setWaitLists(waitlists));
   }
   dispatch(setLoading(false));
 };

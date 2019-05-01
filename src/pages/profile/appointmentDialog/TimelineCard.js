@@ -10,7 +10,11 @@ import {
 import { connect } from 'react-redux';
 import { get } from 'lodash';
 import moment from 'moment';
-import { IconButton, Typography } from '@material-ui/core';
+import {
+  IconButton,
+  Typography,
+  Button,
+} from '@material-ui/core';
 import { VerticalTimelineElement } from 'react-vertical-timeline-component';
 import {
   DateRange,
@@ -26,6 +30,9 @@ import {
 import RateStar from 'components/Rating/RateStar';
 import MapDialog from 'components/Map/MapDialog';
 import { setRatingService } from 'actionsReducers/common.actions';
+import {
+  registerWaitListAction,
+} from 'actionsReducers/waitlist.actions';
 import Rating from 'material-ui-rating';
 import s from './TimelineCard.module.scss';
 import CountDownDisplay from './CountDownDisplay';
@@ -70,9 +77,16 @@ class TimelineCard extends Component {
     }));
   };
 
+  handleRegisterWaitList = () => {
+    const { registerWaitListAction: registerWaitList } = this.props;
+    registerWaitList();
+  };
+
   render() {
     const {
-      serviceName, providerName, slot: {
+      serviceName,
+      providerName,
+      slot: {
         startSec, toSec, providerId, serviceId,
       },
       duration,
@@ -95,13 +109,19 @@ class TimelineCard extends Component {
     const remainTimeSec = currentSec - (+startSec);
     const [eventStyle, iconTimeline, eventStatus, iconStatus, styleStatus] = remainTimeSec > 0
       ? [
-        { background: 'rgb(61, 63, 66)', color: '#fff' },
+        {
+          background: 'rgb(61, 63, 66)',
+          color: '#fff',
+        },
         <AlarmOff />,
         STATUS.EXPIRED,
         <DoneAll className="icon-main danger-color" />,
         s.eventStatusComplete,
       ] : [
-        { background: 'rgb(87, 201, 249)', color: '#fff' },
+        {
+          background: 'rgb(87, 201, 249)',
+          color: '#fff',
+        },
         <AlarmOn />,
         STATUS.WAITING,
         <AirlineSeatReclineNormal className="icon-main" />,
@@ -116,6 +136,7 @@ class TimelineCard extends Component {
     const waitingMn = parseInt(remainTimeMn, 0);
     const serviceProvider = serviceProviders
       .filter(item => item.providerId === providerId && item.serviceId === serviceId);
+    console.log('serviceProvider', serviceProviders);
     const serviceProviderId = get(serviceProvider, '0.id');
     const providerRating = get(serviceProvider, '0.rating');
 
@@ -131,7 +152,16 @@ class TimelineCard extends Component {
       displayTimeout = (
         <CountDownDisplay startTime={remainTimeMn} serviceName={serviceName} providerName={providerName} />
       );
-      currentEventStyle = { background: 'rgb(255, 95, 87)', color: '#fff' };
+      currentEventStyle = {
+        background: 'rgb(255, 95, 87)',
+        color: '#fff',
+        transform: 'translate3d(0, 0, 0)',
+        backfaceVisibility: 'hidden',
+        animationName: 'shaking-up-down',
+        animationDuration: '6s',
+        animationIterationCount: 'infinite',
+        animationTimingFunction: 'ease-in',
+      };
       currentStyleStatus = s.eventStatusCountDown;
       currentIconTimeline = <Update />;
       currentEventStatus = STATUS.COMING;
@@ -187,6 +217,11 @@ class TimelineCard extends Component {
             <Typography variant="headline" color="secondary" align="center" classes={{ headline: s.bookingCode }}>
               {bookingCode}
             </Typography>
+            <div className={s.registerWaitList}>
+              <Button className="simple-button" variant="outlined">
+                join queue!
+              </Button>
+            </div>
           </div>
           <div>
             <div className={s.serviceTitleMap}>
@@ -248,13 +283,16 @@ TimelineCard.propTypes = {
   rateAppointmentAction: func.isRequired,
   bookingCode: string.isRequired,
   customerId: string.isRequired,
+  registerWaitListAction: func.isRequired,
 };
 
 const mapStateToProps = state => ({
   ...state.common,
   ...state.home,
+  ...state.waitlists,
 });
 
 export default connect(mapStateToProps, {
   rateAppointmentAction: setRatingService,
+  registerWaitListAction,
 })(TimelineCard);

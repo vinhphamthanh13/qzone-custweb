@@ -1,31 +1,25 @@
-import { SET_LOADING } from 'actionsReducers/common.actions';
-import { REGISTER_WAITLIST, FETCH_WAITLIST } from 'actionsReducers/waitlist.actions';
+import { REGISTER_WAIT_LIST, SET_WAIT_LIST } from 'actionsReducers/waitlist.actions';
 
 const initState = {
-  isLoading: false,
-  registerWaitListStatus: '',
+  registerWaitListStatus: null,
+  waitlists: null,
 };
 
-const waitList = (state = initState, action) => {
+const reducer = (state = initState, action) => {
   switch (action.type) {
-    case SET_LOADING:
+    case REGISTER_WAIT_LIST:
       return {
         ...state,
-        isLoading: action.payload,
+        registerWaitListStatus: action.payload,
       };
-    case REGISTER_WAITLIST:
+    case SET_WAIT_LIST:
       return {
         ...state,
-        waitListsStatus: action.payload,
-      };
-    case FETCH_WAITLIST:
-      return {
-        ...state,
-        waitList: action.payload,
+        waitlists: action.payload,
       };
     default:
       return state;
   }
 };
 
-export default waitList;
+export default reducer;

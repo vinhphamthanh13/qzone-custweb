@@ -18,24 +18,10 @@
 
 .shake-vertical {
   transform: translate3d(0, 0, 0);
-  -webkit-backface-visibility: hidden;
-  -moz-backface-visibility: hidden;
   backface-visibility: hidden;
-  -webkit-animation-name: 'shaking-up-down';
-  -moz-animation-name: 'shaking-up-down';
-  -o-animation-name: 'shaking-up-down';
   animation-name: 'shaking-up-down';
-  -webkit-animation-duration: 6s;
-  -moz-animation-duration: 6s;
-  -o-animation-duration: 6s;
   animation-duration: 6s;
-  -webkit-animation-iteration-count: infinite;
-  -moz-animation-iteration-count: infinite;
-  -o-animation-iteration-count: infinite;
   animation-iteration-count: infinite;
-  -webkit-animation-timing-function: ease-in;
-  -moz-animation-timing-function: ease-in;
-  -o-animation-timing-function: ease-in;
   animation-timing-function: ease-in;
 }
 

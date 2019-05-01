@@ -8,12 +8,12 @@ import common from 'actionsReducers/common.reducer';
 import home from 'actionsReducers/home.reducer';
 import booking from 'actionsReducers/booking.reducer';
 import provider from 'actionsReducers/provider.reducer';
+import profile from 'actionsReducers/profile.reducer';
+import waitLists from 'actionsReducers/waitlist.reducer';
 
 import appointments from 'reduxModules/appointments.reducer';
 import { loadSessionToState } from 'authentication/actions/session';
 import organization from 'reduxModules/organization.reducer';
-import profile from 'actionsReducers/profile.reducer';
-import waitList from 'actionsReducers/waitlist.reducer';
 import { getUserDetail } from 'authentication/actions/login';
 import { loadSession } from './localStorage';
 
@@ -25,10 +25,10 @@ const rootReducer = combineReducers({
   booking,
   organization,
   provider,
+  waitLists,
 
   appointments,
   profile,
-  waitList,
 });
 
 const store = createStore(

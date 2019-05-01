@@ -1,28 +1,26 @@
-@import "../../../styles/settings";
+@import "styles/_settings.scss";
 
-.appointment {
-  &Icon {
-    vertical-align: text-bottom;
-    margin-right: 8px;
-    color: $primary;
-  }
+.appointmentCode {
+  margin: 1em auto;
+  padding: 1em 0;
+  border-top: 2px solid rgba($grayNickel, 0.4);
+  border-bottom: 2px solid rgba($grayNickel, 0.4);
+}
 
-  &Code {
-    margin: 1em auto;
-    padding: 1em 0;
-    border-top: 2px solid rgba($grayNickel, 0.4);
-    border-bottom: 2px solid rgba($grayNickel, 0.4);
-  }
+.appointmentRemainedTime {
+  display: flex;
+  align-items: center;
+}
 
-  &RemainedTime {
-    display: flex;
-    align-items: center;
-  }
+.appointmentIcon {
+  vertical-align: text-bottom;
+  margin-right: 8px;
+  color: $primary;
+}
 
-  &Item {
-    display: flex;
-    align-items: center;
-  }
+.appointmentItem {
+  display: flex;
+  align-items: center;
 }
 
 .cardContainer {
@@ -53,36 +51,36 @@
   background: linear-gradient(to right, $persimnon, $white);
 }
 
+.ratingWrapper {
+  color: $fruitSalad;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.ratingInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ratingIcon {
+  padding: 0;
+}
+
+.ratingIconFace {
+  color: $fruitSalad;
+  margin: 5px;
+}
+
 .rating {
   $text-color: rgb(210, 105, 30);
+}
 
-  &Wrapper {
-    color: $fruitSalad;
-    display: flex;
-    justify-content: center;
-    text-align: center;
-  }
-
-  &Inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  &Icon {
-    padding: 0;
-
-    &Face {
-      color: $text-color;
-      margin: 5px;
-    }
-  }
-
-  &Text {
-    color: $fruitSalad;
-    font-weight: bold;
-    margin: 0.5rem;
-  }
+.ratingText {
+  color: $fruitSalad;
+  font-weight: bold;
+  margin: 0.5rem;
 }
 
 .providerRating {
@@ -93,4 +91,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.registerWaitList {
+  display: flex;
+  justify-content: center;
+  margin: 0.5rem auto 0;
 }
