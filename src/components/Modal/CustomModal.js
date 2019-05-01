@@ -6,7 +6,7 @@ import {
 } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import withStyles from '@material-ui/core/styles/withStyles';
-import { noop } from 'utils/constants';
+import { noop } from 'lodash';
 import logo from 'images/logo.png';
 import s from './ModalStyle';
 

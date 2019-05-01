@@ -1,51 +1,53 @@
 import React, { Component } from 'react';
 import {
-  instanceOf, oneOfType, string, func,
+  func,
+  objectOf,
+  any,
 } from 'prop-types';
 import { Button, Typography, IconButton } from '@material-ui/core';
 import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons';
 import { chunk, noop } from 'lodash';
 import moment from 'moment';
+import uuidv1 from 'uuid/v1';
 import calendar, {
   zeroPad,
-  isDate,
-  isSameDay,
-  isSameMonth,
-  getDateISO,
 } from './helper';
 import {
-  WEEK_DAYS, MONTH_NAME, MONTH_INDEX, NUMBER_OF_MONTH_IN_ROW, NUMBER_OF_YEAR_IN_ROW,
+  WEEK_DAYS,
+  MONTH_NAME,
+  MONTH_INDEX,
+  NUMBER_OF_MONTH_IN_ROW,
+  NUMBER_OF_YEAR_IN_ROW,
+  DATE_FORMAT,
+  INITIAL_TIME, DISPLAY_FORMAT,
 } from './constants';
 import s from './Calendar.module.scss';
 
 class Calendar extends Component {
   static propTypes = {
-    date: oneOfType([instanceOf(Date), string]),
-    maxDate: instanceOf(Date),
-    minDate: instanceOf(Date),
+    date: objectOf(any).isRequired,
+    maxDate: objectOf(any).isRequired,
+    minDate: objectOf(any).isRequired,
     onDateChanged: func,
     onClose: func,
   };
 
   static defaultProps = {
-    maxDate: null,
-    minDate: null,
-    date: null,
     onDateChanged: noop,
     onClose: noop,
   };
 
   constructor(props) {
     super(props);
-    const resolveDate = props.date || props.minDate;
-    const mm = moment();
+    const { date, maxDate, minDate } = props;
+    const resolveDate = date || minDate;
     this.initValues = {
+      today: moment(`${moment().format(DATE_FORMAT)}${INITIAL_TIME}`),
       ...this.resolveStateFromDate(resolveDate),
-      today: new Date(mm.year(), +mm.month(), mm.date(), 0, 0, 0, 0),
+      maxYear: maxDate.year(),
+      minYear: minDate.year(),
       isClickingYear: false,
       isClickingMonth: false,
-      maxYear: props.maxDate.getFullYear(),
-      minYear: props.minDate.getFullYear(),
       toggleMonthSelection: false,
       toggleYearSelection: false,
     };
@@ -58,23 +60,17 @@ class Calendar extends Component {
     onDateChanged(current);
   }
 
-  resolveStateFromDate = (date) => {
-    const isDateObject = isDate(date);
-    const $date = isDateObject ? date : new Date();
-    return {
-      current: isDateObject ? date : null,
-      month: +$date.getMonth() + 1,
-      year: $date.getFullYear(),
-      selectedYear: $date.getFullYear(),
-      selectedMonth: +$date.getMonth() + 1,
-    };
-  };
+  resolveStateFromDate = date => ({
+    current: moment(`${moment(date).format(DATE_FORMAT)}${INITIAL_TIME}`),
+    month: date.month(),
+    selectedMonth: date.month(),
+    year: date.year(),
+    selectedYear: date.year(),
+  });
 
   getCalendarDates = () => {
-    const { current, selectedMonth, selectedYear } = this.state;
-    const displayMonth = selectedMonth || +current.getMonth() + 1;
-    const displayYear = selectedYear || current.getFullYear();
-    return calendar(displayMonth, displayYear);
+    const { selectedMonth, selectedYear } = this.state;
+    return calendar(selectedMonth + 1, selectedYear);
   };
 
   onMonthClick = (event) => {
@@ -108,7 +104,7 @@ class Calendar extends Component {
       selectedMonth, selectedYear, toggleMonthSelection, toggleYearSelection,
     } = this.state;
     const nameOfMonth = MONTH_NAME[
-      Object.keys(MONTH_NAME)[Math.max(0, Math.min(+selectedMonth - 1, 11))]
+      Object.keys(MONTH_NAME)[Math.max(0, Math.min(selectedMonth, 11))]
     ];
     const ArrowMonth = toggleMonthSelection ? <KeyboardArrowUp className="icon-white icon-shake" />
       : <KeyboardArrowDown className="icon-white icon-shake" />;
@@ -117,7 +113,7 @@ class Calendar extends Component {
     return (
       <div className={s.calendarHeader}>
         <div className={s.headerToday}>
-          <Typography variant="h4" color="inherit">{moment(date).format('ddd, DD MMM YYYY')}</Typography>
+          <Typography variant="h4" color="inherit">{date.format(DISPLAY_FORMAT)}</Typography>
         </div>
         <div className={s.monthYearSelection}>
           <div>
@@ -155,15 +151,12 @@ class Calendar extends Component {
     const {
       selectedMonth, selectedYear, today, current,
     } = this.state;
-    const $date = new Date(`${date.join('-')} 00:00:00:00`);
-    const sameDate = isSameDay(current, $date);
-    const isToday = isSameDay($date, today);
-    const inMonth = selectedMonth && selectedYear && isSameMonth(
-      $date, new Date(`${[selectedYear, selectedMonth, 1].join('-')} 00:00:00:00`),
-    );
-    const shortMaxDate = new Date(`${maxDate}`);
-    const maxDateTime = shortMaxDate.getTime();
-    const isValidDate = $date < maxDateTime && $date >= minDate;
+    const $date = moment(`${date.join('-')}${INITIAL_TIME}`);
+    const sameDate = $date.isSame(current, 'day');
+    const isToday = $date.isSame(today, 'day');
+    const inMonth = selectedMonth && selectedYear
+      && $date.isSame(current, 'month');
+    const isValidDate = $date < maxDate && $date >= minDate;
     const onClick = isValidDate ? this.gotoDate($date) : noop;
     const props = {
       index,
@@ -177,11 +170,11 @@ class Calendar extends Component {
       : `${s.invalidDate}`;
     return (
       <div
-        key={getDateISO($date)}
+        key={uuidv1()}
         className={`${s.dateOfMonth} ${dateStyles} ${formatSameDay}`}
         {...props}
       >
-        <Typography variant="subtitle1" color="inherit">{zeroPad($date.getDate(), 2)}</Typography>
+        <Typography variant="subtitle1" color="inherit">{zeroPad($date.date(), 2)}</Typography>
       </div>
     );
   };
@@ -191,8 +184,8 @@ class Calendar extends Component {
     const { isClickingYear, isClickingMonth } = this.state;
     return (
       !isClickingYear && !isClickingMonth
-      && this.getCalendarDates().map((week, index) => (
-        <div className={s.week} key={week[index]}>
+      && this.getCalendarDates().map(week => (
+        <div className={s.week} key={uuidv1()}>
           {week.map((day, tInd) => this.renderCalendarDate(day, tInd))}
         </div>
       ))
@@ -213,14 +206,15 @@ class Calendar extends Component {
     const { maxDate, minDate } = this.props;
     const { selectedYear, current } = this.state;
     const quarter = chunk(Object.keys(MONTH_NAME), NUMBER_OF_MONTH_IN_ROW);
-    return quarter.map((monthRow, index) => (
+    return quarter.map(monthRow => (
       // eslint-disable-next-line
-      <div key={index} className={s.monthRow}>
+      <div key={uuidv1()} className={s.monthRow}>
         {monthRow.map((month) => {
-          const compareMaxDate = new Date(selectedYear, MONTH_INDEX[month], maxDate.getDate(), 0, 0, 0);
-          const compareMinDate = new Date(selectedYear, MONTH_INDEX[month], maxDate.getDate(), 0, 0, 1);
-          const isValidMonth = compareMaxDate <= maxDate && compareMinDate >= minDate;
-          const currentMonthStyle = +current.getMonth() === MONTH_INDEX[month] ? s.currentMonthYear : '';
+          const currentMonthDate = moment(
+            `${[selectedYear, zeroPad(MONTH_INDEX[month] + 1, 2), maxDate.date()].join('-')}${INITIAL_TIME}`,
+          );
+          const isValidMonth = currentMonthDate <= maxDate && currentMonthDate >= minDate;
+          const currentMonthStyle = current.month() === MONTH_INDEX[month] ? s.currentMonthYear : '';
 
           const className = isValidMonth
             ? `${s.monthCell} ${currentMonthStyle}` : `${s.monthCell} ${s.invalidMonth}`;
@@ -250,11 +244,11 @@ class Calendar extends Component {
   };
 
   onMonthSelected = month => (event) => {
-    const { selectedYear, current } = this.state;
-    this.gotoDate(new Date(selectedYear, month, current.getDate()));
     event.preventDefault();
+    const { selectedYear, current } = this.state;
+    this.gotoDate(moment(`${[selectedYear, zeroPad(month + 1, 2), current.date()].join('-')}${INITIAL_TIME}`));
     this.setState(oldState => ({
-      selectedMonth: +month + 1,
+      selectedMonth: month,
       isClickingMonth: !oldState.isClickingMonth,
       isClickingYear: false,
       toggleMonthSelection: !oldState.toggleMonthSelection,
@@ -286,7 +280,7 @@ class Calendar extends Component {
     const { minDate, maxDate } = this.props;
     const { selectedMonth, current } = this.state;
     const yearMatrix = this.parseYearRange();
-    return yearMatrix.map((yearRow, index) => {
+    return yearMatrix.map((yearRow) => {
       let fullYearRow = null;
       if (yearRow.length < NUMBER_OF_YEAR_IN_ROW) {
         fullYearRow = Array.from({ length: NUMBER_OF_YEAR_IN_ROW }, (value, tInd) => tInd + yearRow[0]);
@@ -295,12 +289,13 @@ class Calendar extends Component {
       }
       return (
         // eslint-disable-next-line
-        <div key={index} className={s.yearRow}>
+        <div key={uuidv1()} className={s.yearRow}>
           {fullYearRow.map((year) => {
-            const compareMaxDate = new Date(year, +selectedMonth - 1, maxDate.getDate(), 0, 0, 0);
-            const compareMinDate = new Date(year, +selectedMonth - 1, maxDate.getDate(), 0, 0, 1);
-            const isValidYear = compareMaxDate <= maxDate && compareMinDate >= minDate;
-            const currentYearStyle = current.getFullYear() === year ? s.currentMonthYear : '';
+            const currentYear = moment(
+              `${[year, zeroPad(selectedMonth + 1, 2), maxDate.date()].join('-')}${INITIAL_TIME}`,
+            );
+            const isValidYear = currentYear <= maxDate && currentYear >= minDate;
+            const currentYearStyle = current.year() === year ? s.currentMonthYear : '';
             const className = isValidYear
               ? `${s.yearCell}  ${currentYearStyle}` : `${s.yearCell} ${s.invalidYear}`;
             const onClick = isValidYear ? this.onYearSelected(year) : noop;

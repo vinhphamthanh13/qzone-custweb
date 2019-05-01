@@ -1,6 +1,6 @@
 import {
   objectOf, oneOfType, arrayOf, shape,
-  string, number, bool, func, object, any,
+  string, number, bool, func, object,
 } from 'prop-types';
 
 export const historyType = objectOf(oneOfType([
@@ -45,7 +45,6 @@ export const providerType = shape({
 export const bookingDetailType = shape({
   provider: object,
   time: object,
-  selectedDate: oneOfType([Date, string, any]),
 });
 
 export const providerDetailsType = shape({

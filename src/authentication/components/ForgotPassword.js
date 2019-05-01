@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { func, bool, string } from 'prop-types';
 import { connect } from 'react-redux';
 import { Formik } from 'formik';
+import { noop } from 'lodash';
 import {
   Typography, Modal, Paper, Avatar, Tooltip,
 } from '@material-ui/core';
 import logo from 'images/logo.png';
-import { regExPattern, noop } from 'utils/constants';
+import { regExPattern } from 'utils/constants';
 import { forgotPassword, forgotPasswordSubmit, toggleResetPassword } from 'authentication/actions/register';
 import FormPassword from './FormPassword';
 import { forgotPasswordSchema } from './schemas';

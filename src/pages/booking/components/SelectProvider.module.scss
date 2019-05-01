@@ -1,0 +1,40 @@
+@import "styles/_settings.scss";
+
+/* Select Provider */
+
+.selectProviderWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  min-width: $smx;
+  overflow: auto;
+  max-width: $max-width;
+  margin: 0 auto;
+}
+
+.selectProviderHeader {
+  margin: auto 0.5rem;
+  padding: 0.5rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid rgba($grayNickel, 0.5);
+}
+
+.providerRow {
+  display: flex;
+  flex-direction: column;
+}
+
+.selectProviderList {
+  width: auto;
+  display: flex;
+  justify-content: center;
+  height: calc(100vh - 130px);
+  overflow: auto;
+}
+
+.selectDateOfBooking {
+  height: 100%;
+}

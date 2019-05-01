@@ -3,7 +3,7 @@ import {
   number, string, func, bool,
 } from 'prop-types';
 import { Typography, Button } from '@material-ui/core';
-import { AccessTime, LocationOn } from '@material-ui/icons';
+import { Domain } from '@material-ui/icons';
 import CustomLink from 'components/CustomLink';
 import { READ_MORE_MAX } from 'utils/constants';
 import RateStar from 'components/Rating/RateStar';
@@ -32,8 +32,15 @@ class Slide extends Component {
 
   render() {
     const {
-      imageUrl, name, description, rating, reviews, onBooking,
-      duration, orgName, orgId, disabledBooking,
+      imageUrl,
+      name,
+      description,
+      rating,
+      reviews,
+      onBooking,
+      orgName,
+      orgId,
+      disabledBooking,
     } = this.props;
     const { isReadMoreOpen } = this.state;
 
@@ -43,11 +50,10 @@ class Slide extends Component {
           isOpen={isReadMoreOpen}
           onClose={this.handleCloseReadMore}
           serviceName={name}
-          duration={duration}
           orgName={orgName}
           orgId={orgId}
           orgDescription={description}
-          instantBooking={this.handleReadMoreBooking}
+          onBooking={this.handleReadMoreBooking}
           rating={rating}
           reviews={reviews}
         />
@@ -82,11 +88,7 @@ class Slide extends Component {
             <div className={style.cta}>
               <div className={style.blockItem}>
                 <div className={style.iconInfo}>
-                  <AccessTime className={style.icon} />
-                  <Typography variant="body1" color="primary">{duration} minutes</Typography>
-                </div>
-                <div className={style.iconInfo}>
-                  <LocationOn className={style.icon} />
+                  <Domain className={style.icon} />
                   <Typography variant="body1">
                     <CustomLink text={orgName} to={`/organization/${orgId}`} />
                   </Typography>
@@ -114,7 +116,6 @@ Slide.propTypes = {
   rating: number,
   reviews: number,
   onBooking: func.isRequired,
-  duration: number.isRequired,
   orgName: string.isRequired,
   orgId: string.isRequired,
   disabledBooking: bool.isRequired,

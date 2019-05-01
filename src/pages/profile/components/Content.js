@@ -3,18 +3,37 @@ import { string, func } from 'prop-types';
 import { connect } from 'react-redux';
 import { Typography } from '@material-ui/core';
 import {
-  Event, Settings, ExitToApp, AddToQueue,
+  Event,
+  Settings,
+  ExitToApp,
+  AddToQueue,
 } from '@material-ui/icons';
 import { logout } from 'authentication/actions/logout';
-import EventList from '../../home/appointmentDialog/Appointment';
+import EventList from 'pages/profile/appointmentDialog/Appointment';
+import WaitList from './WaitList';
 import Info from './Info';
 import s from './Content.module.scss';
 
 const EVENT_LIST = 'eventList';
 const MY_INFO = 'myInfo';
-const WAIT_LIST = 'waitLists';
+const WAIT_LIST = 'waitList';
 
 class Content extends Component {
+  static getDerivedStateFromProps(props, state) {
+    const {
+      eventList,
+    } = props;
+    const {
+      eventList: cachedEventList,
+    } = state;
+    if (eventList !== cachedEventList) {
+      return {
+        eventList,
+      };
+    }
+    return null;
+  }
+
   SIDE_PANEL = [
     {
       name: WAIT_LIST, icon: AddToQueue, text: 'My waiting list', isSelected: false,
@@ -39,9 +58,13 @@ class Content extends Component {
     [item.name]: item.isSelected,
   }), {});
 
-  state = {
-    sidePanel: { ...this.initState },
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      eventList: null,
+      sidePanel: { ...this.initState },
+    };
+  }
 
   componentDidMount() {
     this.setState({ sidePanel: { [EVENT_LIST]: true } });
@@ -64,7 +87,7 @@ class Content extends Component {
   };
 
   renderItems = () => {
-    const { customerEventList } = this.props;
+    const { eventList } = this.state;
 
     return this.SIDE_PANEL.map((panel) => {
       const { sidePanel } = this.state;
@@ -80,7 +103,7 @@ class Content extends Component {
           <panel.icon className="main-color qz-icon-padding-small" />
           <Typography variant="subheading" color={textColor}>
             {panel.text}{' '}
-            {panel.name === EVENT_LIST ? `(${(customerEventList && customerEventList.length) || 0})` : null}
+            {panel.name === EVENT_LIST ? `(${(eventList && eventList.length) || 0})` : null}
           </Typography>
         </div>
       );
@@ -89,7 +112,8 @@ class Content extends Component {
 
   render() {
     const { givenName, handleAccount, updateProfileStatus } = this.props;
-    const { sidePanel: { eventList, myInfo } } = this.state;
+    const { sidePanel: { eventList, myInfo, waitlist } } = this.state;
+    console.log('contetrn ', this.props);
     return (
       <div className={s.content}>
         <div className={s.sidebar}>
@@ -102,6 +126,13 @@ class Content extends Component {
             {this.renderItems()}
           </div>
         </div>
+        {
+          waitlist && (
+            <div className={s.profilePage}>
+              <WaitList />
+            </div>
+          )
+        }
         {eventList && (
           <div className={s.profilePage}>
             <EventList />
@@ -126,7 +157,7 @@ Content.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  customerEventList: state.home.customerEventList,
+  ...state.common,
 });
 
 export default connect(mapStateToProps, {

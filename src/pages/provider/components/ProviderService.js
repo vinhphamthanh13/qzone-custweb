@@ -2,22 +2,15 @@ import React, { Component } from 'react';
 import {
   arrayOf, object, func, string, any,
 } from 'prop-types';
-import { connect } from 'react-redux';
 import { get, chunk } from 'lodash';
 import uuidv1 from 'uuid/v1';
 import RateStar from 'components/Rating/RateStar';
 import { Typography } from '@material-ui/core';
 import { Schedule } from '@material-ui/icons';
 import Rating from 'material-ui-rating';
-import { fetchServiceProviders } from 'reduxModules/home.actions';
 import s from './ProviderService.module.scss';
 
 class ProviderContent extends Component {
-  componentDidMount() {
-    const { fetchServiceProvidersAction } = this.props;
-    fetchServiceProvidersAction();
-  }
-
   handleRating = (customerId, serviceProviderId, ratingService) => (value) => {
     ratingService({
       customerId,
@@ -28,12 +21,17 @@ class ProviderContent extends Component {
 
   render() {
     const {
-      services, customerId, ratingService, providerId, providerList,
+      providerServices,
+      customerId,
+      ratingService,
+      providerId,
+      serviceProviders,
     } = this.props;
+    console.log('providerServices as services', this.props);
 
     return (
       <div className={s.services}>
-        {services.length > 0 && chunk(services, 2).map(chunked => (
+        {providerServices && providerServices.length > 0 && chunk(providerServices, 2).map(chunked => (
           <div key={uuidv1()} className={s.serviceChunked}>
             {chunked.map((service) => {
               const srvImg = get(service, 'image.fileUrl');
@@ -41,7 +39,7 @@ class ProviderContent extends Component {
               const description = get(service, 'description');
               const duration = get(service, 'duration');
               const serviceId = get(service, 'id');
-              const serviceProvider = providerList
+              const serviceProvider = serviceProviders
                 .filter(item => item.providerId === providerId && item.serviceId === serviceId);
               const serviceProviderId = get(serviceProvider, '0.id');
               const providerRating = get(serviceProvider, '0.rating');
@@ -93,22 +91,15 @@ class ProviderContent extends Component {
 }
 
 ProviderContent.propTypes = {
-  services: arrayOf(object).isRequired,
+  providerServices: arrayOf(object).isRequired,
   ratingService: func.isRequired,
   customerId: string,
   providerId: string.isRequired,
-  providerList: arrayOf(any).isRequired,
-  fetchServiceProvidersAction: func.isRequired,
+  serviceProviders: arrayOf(any).isRequired,
 };
 
 ProviderContent.defaultProps = {
   customerId: null,
 };
 
-const mapStateToProps = state => ({
-  providerList: state.home.providerList,
-});
-
-export default connect(mapStateToProps, {
-  fetchServiceProvidersAction: fetchServiceProviders,
-})(ProviderContent);
+export default ProviderContent;

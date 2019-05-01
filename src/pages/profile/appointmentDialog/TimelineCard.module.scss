@@ -1,0 +1,100 @@
+@import "styles/_settings.scss";
+
+.appointmentCode {
+  margin: 1em auto;
+  padding: 1em 0;
+  border-top: 2px solid rgba($grayNickel, 0.4);
+  border-bottom: 2px solid rgba($grayNickel, 0.4);
+}
+
+.appointmentRemainedTime {
+  display: flex;
+  align-items: center;
+}
+
+.appointmentIcon {
+  vertical-align: text-bottom;
+  margin-right: 8px;
+  color: $primary;
+}
+
+.appointmentItem {
+  display: flex;
+  align-items: center;
+}
+
+.cardContainer {
+  width: auto;
+  & div[class*="vertical-timeline-element-content"] {
+    width: $event-card-width;
+  }
+}
+
+.remainedText {
+  font-weight: bold;
+  color: $white;
+}
+
+.bookingCode {
+  font-weight: bolder;
+}
+
+.eventStatusComplete {
+  background: linear-gradient(to right, $mako, $white);
+}
+
+.eventStatusWaiting {
+  background: linear-gradient(to right, $malibu, $white);
+}
+
+.eventStatusCountDown {
+  background: linear-gradient(to right, $persimnon, $white);
+}
+
+.ratingWrapper {
+  color: $fruitSalad;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.ratingInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ratingIcon {
+  padding: 0;
+}
+
+.ratingIconFace {
+  color: $fruitSalad;
+  margin: 5px;
+}
+
+.rating {
+  $text-color: rgb(210, 105, 30);
+}
+
+.ratingText {
+  color: $fruitSalad;
+  font-weight: bold;
+  margin: 0.5rem;
+}
+
+.providerRating {
+  display: flex;
+}
+
+.serviceTitleMap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.registerWaitList {
+  display: flex;
+  justify-content: center;
+  margin: 0.5rem auto 0;
+}

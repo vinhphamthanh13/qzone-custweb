@@ -17,12 +17,10 @@
 
 .serviceAction {
   margin: auto ($global-margin * 2);
-  color: $primary;
-  background: transparent;
-  transition: all 400ms;
   &:hover {
-    background: linear-gradient($malibu, $primary);
+    background: $main;
     color: $white;
+    border: 1px solid transparent;
   }
   @include breakpoint-up(lmd) {
     margin: auto $global-margin;

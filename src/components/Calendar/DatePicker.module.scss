@@ -18,14 +18,11 @@
   align-items: center;
   justify-content: center;
   color: $white;
-  background: linear-gradient(to top, $info, $gallery);
-  height: 4rem;
+  background: linear-gradient(to top, $main, $malibu);
+  height: 3rem;
   min-width: 5rem;
   border-right: 1px solid $white;
   padding: 0.5rem 1rem;
-  &:hover {
-    cursor: pointer;
-  }
 }
 
 .calendarFont {

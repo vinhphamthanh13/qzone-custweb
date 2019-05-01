@@ -6,7 +6,7 @@ import { Typography, TextField, Button } from '@material-ui/core';
 import { Search } from '@material-ui/icons';
 import Geocode from 'react-geocode';
 import { GOOGLE_GEO_API_KEY } from 'config/auth';
-import { searchProviderByDistance } from 'reduxModules/home.actions';
+import { setServiceProviderNearByAction } from 'actionsReducers/home.actions';
 import { DISTANCE } from 'utils/constants';
 
 export const SEARCH_KEY = {
@@ -48,7 +48,7 @@ class AdvancedSearch extends Component {
   };
 
   handleSearch = async () => {
-    const { searchProviderByDistanceAction } = this.props;
+    const { setServiceProviderNearByAction: setServiceProviderNearBy } = this.props;
     const { asAddress, asRadius } = this.state;
     const geoCode = await this.resolveAddressToLatLng(asAddress);
     const userLocation = get(geoCode, 'results.0.geometry.location');
@@ -64,7 +64,7 @@ class AdvancedSearch extends Component {
         value: asRadius,
       },
     };
-    searchProviderByDistanceAction(dataSearch);
+    setServiceProviderNearBy(dataSearch);
     this.handleOpenResult();
   };
 
@@ -129,9 +129,9 @@ AdvancedSearch.propTypes = {
   onClose: func.isRequired,
   onCloseResult: func.isRequired,
   onOpenResult: func.isRequired,
-  searchProviderByDistanceAction: func.isRequired,
+  setServiceProviderNearByAction: func.isRequired,
 };
 
 export default connect(null, {
-  searchProviderByDistanceAction: searchProviderByDistance,
+  setServiceProviderNearByAction,
 })(AdvancedSearch);

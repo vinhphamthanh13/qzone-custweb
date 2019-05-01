@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  arrayOf, object, func, string,
+  arrayOf, object, func,
 } from 'prop-types';
 import Slider from 'react-slick';
 import { Typography } from '@material-ui/core';
@@ -10,29 +10,24 @@ import 'slick-carousel/slick/slick-theme.css';
 import Slide from './Slide';
 
 class SlideShow extends Component {
-  static propTypes = {
-    services: arrayOf(object).isRequired,
-    onBooking: func.isRequired,
-    onSearch: func.isRequired,
-    onSearchValue: string,
-  };
-
-  static defaultProps = {
-    onSearchValue: '',
-  };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      topServices: this.topTenServices(props.services),
-    };
+  static getDerivedStateFromProps(props, state) {
+    const { services } = props;
+    const { services: cachedServices } = state;
+    if (services !== cachedServices) {
+      return { topServices: services };
+    }
+    return null;
   }
+
+  state = {
+    topServices: null,
+  };
 
   topTenServices = list => list.sort((item1, item2) => item2.rating - item1.rating).slice(0, 10);
 
-  handleBooking = (service) => {
+  handleBooking = service => () => {
     const { onBooking } = this.props;
-    onBooking(service, 'selectedService');
+    onBooking(service);
   };
 
   render() {
@@ -54,38 +49,39 @@ class SlideShow extends Component {
         </div>
         <div className="slider-wrapper">
           <div className="advertisers" />
-          <div>
-            <Slider {...slideSettings}>
-              {topServices.map((service) => {
-                const id = get(service, 'id');
-                const fileUrl = get(service, 'image.fileUrl');
-                const name = get(service, 'name');
-                const description = get(service, 'description');
-                const rating = get(service, 'rating');
-                const viewNum = get(service, 'viewNum');
-                const duration = get(service, 'duration');
-                const orgId = get(service, 'organization.id');
-                const orgName = get(service, 'organization.name');
-                const linkedProvider = get(service, 'linkedProvider');
+          {topServices ? (
+            <div>
+              <Slider {...slideSettings}>
+                {topServices.map((service) => {
+                  const serviceId = get(service, 'id');
+                  const fileUrl = get(service, 'image.fileUrl');
+                  const name = get(service, 'name');
+                  const description = get(service, 'description');
+                  const rating = get(service, 'rating');
+                  const viewNum = get(service, 'viewNum');
+                  const orgEntity = get(service, 'organizationEntity');
+                  const orgId = get(orgEntity, 'id');
+                  const orgName = get(orgEntity, 'name');
+                  const linkedProvider = get(service, 'linkedProvider');
 
-                return (
-                  <Slide
-                    key={id}
-                    imageUrl={fileUrl}
-                    name={name}
-                    description={description}
-                    rating={rating}
-                    reviews={viewNum}
-                    onBooking={() => this.handleBooking(service)}
-                    duration={duration}
-                    orgId={orgId}
-                    orgName={orgName}
-                    disabledBooking={linkedProvider.length < 1}
-                  />
-                );
-              })}
-            </Slider>
-          </div>
+                  return (
+                    <Slide
+                      key={serviceId}
+                      imageUrl={fileUrl}
+                      name={name}
+                      description={description}
+                      rating={rating}
+                      reviews={viewNum}
+                      onBooking={this.handleBooking(service)}
+                      orgId={orgId}
+                      orgName={orgName}
+                      disabledBooking={!linkedProvider || linkedProvider.length < 1}
+                    />
+                  );
+                })}
+              </Slider>
+            </div>
+          ) : <div className="advertisers" /> }
           <div className="advertisers">
             <Typography variant="subheading" color="textSecondary">
             For advertisement. Contact us at Quezone.com.au or
@@ -97,5 +93,15 @@ class SlideShow extends Component {
     );
   }
 }
+
+SlideShow.propTypes = {
+  services: arrayOf(object),
+  onBooking: func.isRequired,
+};
+
+SlideShow.defaultProps = {
+  services: [],
+};
+
 
 export default SlideShow;

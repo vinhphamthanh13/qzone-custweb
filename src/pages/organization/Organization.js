@@ -10,7 +10,7 @@ import Loading from 'components/Loading';
 import Header from './components/Header';
 import OrgContent from './components/OrgContent';
 // import OrgProvider from './components/OrgProvider';
-import OrgFooter from '../home/footer/Footer';
+import OrgFooter from '../components/footer/Footer';
 import bgImage from './images/organization-bg.png';
 import s from './Organization.module.scss';
 
@@ -67,8 +67,8 @@ Organization.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  organization: state.organization.organization,
-  isLoading: state.organization.isLoading,
+  ...state.common,
+  ...state.organization,
 });
 
 export default connect(mapStateToProps, {

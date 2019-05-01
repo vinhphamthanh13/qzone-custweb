@@ -1,7 +1,7 @@
 @import "styles/_settings.scss";
 
-.selectService {
-  margin: $app-bar-height auto;
+.landingPage {
+  margin: $app-bar-height auto !important;
   max-width: $max-width;
   min-width: $min-width;
   height: calc(100vh - 65px);

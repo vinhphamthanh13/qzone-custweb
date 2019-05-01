@@ -1,43 +1,36 @@
 import React from 'react';
 import { func } from 'prop-types';
 import { Typography } from '@material-ui/core';
-import { AccessTime, Domain } from '@material-ui/icons';
+import { Domain } from '@material-ui/icons';
 import { serviceType } from 'types/global';
 import { get } from 'lodash';
 import CustomLink from 'components/CustomLink';
 import { READ_MORE_MAX } from 'utils/constants';
 import RateStar from 'components/Rating/RateStar';
-import styles from './ServiceDetail.module.scss';
 import ReadMore from '../readMore/ReadMore';
+import s from './ServiceDetail.module.scss';
 
 export default class ServiceDetail extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      isDialogDescOpen: false,
+      isOpenReadMore: false,
     };
   }
 
   handleClose = () => {
-    this.setState({ isDialogDescOpen: false });
+    this.setState({ isOpenReadMore: false });
   };
 
   openDialog = (event) => {
     event.preventDefault();
-    this.setState({ isDialogDescOpen: true });
-  };
-
-  handleInstantBooking = () => {
-    const { instantBooking } = this.props;
-    this.handleClose();
-    instantBooking();
+    this.setState({ isOpenReadMore: true });
   };
 
   render() {
-    const { service } = this.props;
-    const { isDialogDescOpen } = this.state;
+    const { service, onBooking } = this.props;
+    const { isOpenReadMore } = this.state;
     const serviceName = get(service, 'name');
-    const duration = get(service, 'duration');
     const description = get(service, 'description');
     const rating = get(service, 'rating');
     const viewNum = get(service, 'viewNum');
@@ -47,27 +40,26 @@ export default class ServiceDetail extends React.PureComponent {
     return (
       <>
         <ReadMore
-          isOpen={isDialogDescOpen}
+          isOpen={isOpenReadMore}
           onClose={this.handleClose}
           serviceName={serviceName}
-          duration={duration}
           orgName={orgName}
           orgId={orgId}
           orgDescription={description || ''}
-          instantBooking={this.handleInstantBooking}
+          onBooking={onBooking}
           rating={rating}
           reviews={viewNum}
         />
         <Typography
           variant="subheading"
-          classes={{ subheading: styles.title }}
+          classes={{ subheading: s.title }}
           color="textSecondary"
           noWrap
         >
           {serviceName}
         </Typography>
         <RateStar rating={rating} reviews={viewNum} />
-        <div className={styles.serviceDetail}>
+        <div className={s.serviceDetail}>
           <Typography variant="body1" color="textSecondary">
             {(description || '').split('').length > READ_MORE_MAX
               ? (<>
@@ -78,13 +70,9 @@ export default class ServiceDetail extends React.PureComponent {
             }
           </Typography>
         </div>
-        <div className={styles.blockItem}>
-          <div className={styles.iconInfo}>
-            <AccessTime className={styles.icon} />
-            <Typography variant="body1" color="primary">{duration} minutes</Typography>
-          </div>
-          <div className={styles.iconInfo}>
-            <Domain className={styles.icon} />
+        <div className={s.blockItem}>
+          <div className={s.iconInfo}>
+            <Domain className={s.icon} />
             <Typography variant="body1">
               <CustomLink text={orgName} to={`/organization/${orgId}`} />
             </Typography>
@@ -97,5 +85,5 @@ export default class ServiceDetail extends React.PureComponent {
 
 ServiceDetail.propTypes = {
   service: serviceType.isRequired,
-  instantBooking: func.isRequired,
+  onBooking: func.isRequired,
 };

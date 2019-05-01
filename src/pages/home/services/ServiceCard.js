@@ -1,27 +1,20 @@
 import React, { PureComponent } from 'react';
 import { func } from 'prop-types';
-import noop from 'lodash/noop';
-import serviceImg from 'images/service-provider.jpeg';
+import { connect } from 'react-redux';
+import { get } from 'lodash';
+import serviceImg from 'images/default-service-card.png';
 import {
-  Card, CardContent, CardMedia, CardActions,
+  Card,
+  CardContent,
+  CardMedia,
+  CardActions,
   Button,
 } from '@material-ui/core';
-import { get } from 'lodash';
 import { serviceType } from 'types/global';
-import styles from './ServiceCard.module.scss';
 import ServiceDetail from './serviceCard/ServiceDetail';
+import s from './ServiceCard.module.scss';
 
-export default class ServiceCard extends PureComponent {
-  static propTypes = {
-    service: serviceType.isRequired,
-    onChange: func.isRequired,
-    onCloseSearch: func,
-  };
-
-  static defaultProps = {
-    onCloseSearch: noop,
-  };
-
+class ServiceCard extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,18 +24,13 @@ export default class ServiceCard extends PureComponent {
     };
   }
 
-  onSelectService = () => {
-    const { onChange, service, onCloseSearch } = this.props;
-    onChange(service, 'selectedService');
-    onCloseSearch();
-  };
-
   onError = () => {
     this.setState({ imgSrc: serviceImg });
   };
 
-  handleHidingBookingButton = (value) => {
-    this.setState({ isHiddenBooking: value });
+  handleBooking = () => {
+    const { onBooking, service } = this.props;
+    onBooking(service);
   };
 
   render() {
@@ -50,28 +38,27 @@ export default class ServiceCard extends PureComponent {
     const linkedProvider = get(service, 'linkedProvider');
     const { imgSrc, isHiddenBooking } = this.state;
     return (
-      <Card raised classes={{ root: styles.serviceCard }}>
+      <Card raised classes={{ root: s.serviceCard }}>
         <CardMedia
-          className={styles.image}
+          className={s.image}
           image={imgSrc}
           onError={this.onError}
         />
-        <CardContent className={styles.serviceContent}>
+        <CardContent className={s.serviceContent}>
           <ServiceDetail
             service={service}
-            instantBooking={this.onSelectService}
-            handleHiddenBookingButton={this.handleHidingBookingButton}
+            onBooking={this.handleBooking}
           />
         </CardContent>
         {!isHiddenBooking && (
           <CardActions>
             <Button
-              disabled={linkedProvider.length < 1}
-              color="primary"
-              variant="contained"
-              onClick={this.onSelectService}
               fullWidth
-              className={styles.serviceAction}
+              color="primary"
+              variant="outlined"
+              className={s.serviceAction}
+              disabled={!linkedProvider || linkedProvider.length < 1}
+              onClick={this.handleBooking}
             >
               Booking
             </Button>
@@ -81,3 +68,14 @@ export default class ServiceCard extends PureComponent {
     );
   }
 }
+
+ServiceCard.propTypes = {
+  service: serviceType.isRequired,
+  onBooking: func.isRequired,
+};
+
+const mapStateToProps = state => ({
+  ...state.home,
+});
+
+export default connect(mapStateToProps)(ServiceCard);

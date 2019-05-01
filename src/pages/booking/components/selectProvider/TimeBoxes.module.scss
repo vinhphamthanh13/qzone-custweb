@@ -1,0 +1,47 @@
+@import "../../../../styles/settings";
+
+.timeRow {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  border-bottom: 1px solid $gallery;
+  box-sizing: border-box;
+}
+
+.timeSlot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  border-radius: unset;
+  border-right: 1px solid $gallery;
+  width: 106px;
+  padding: 0.5rem 0;
+  box-sizing: border-box;
+  transition: all 0.25s ease;
+  color: $main;
+  &:hover {
+    background: rgba($main, 0.8);
+    color: $gallery;
+    border-right: 1px solid rgba($main, 0.8);
+  }
+}
+
+.noneSlot {
+  color: $info;
+  padding: 0.7rem 0.5rem;
+}
+
+.availableDateSlots {
+  width: 100%;
+}
+
+.dateSlot {
+  color: $white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.2rem 0;
+  background: $malibu;
+  width: 100%;
+}

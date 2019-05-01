@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Modal } from '@material-ui/core';
 import CustomModal from 'components/Modal/CustomModal';
 import { Formik } from 'formik';
-import { resetErrorMessage } from 'actions/common';
+import { resetErrorMessage } from 'actionsReducers/common.actions';
 import { loginType } from 'utils/constants';
 import Form from './components/Form';
 import {

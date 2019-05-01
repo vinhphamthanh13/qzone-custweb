@@ -1,0 +1,70 @@
+@import "styles/_settings.scss";
+
+.navBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(to bottom, $main, $white);
+  height: $app-bar-height;
+  padding: 0 1.25rem;
+}
+
+.logoImage {
+  width: auto;
+  height: 100%;
+}
+
+.goBack {
+  color: $main;
+}
+
+.bookingStepsWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.stepper {
+  border: 1.5px solid $gallery;
+  padding: 0.5rem;
+  border-radius: 0.4rem;
+  display: flex;
+  min-width: $sm;
+  justify-content: space-between;
+}
+
+.step {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto 1rem;
+}
+
+.stepNumber {
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: $white;
+  color: $gray;
+  font-weight: bold;
+  margin: auto 0.5rem;
+}
+
+.stepNumberActive {
+  background: $main;
+  color: $white;
+  transition: color 0.5s ease-in;
+}
+
+.stepLabel {
+  color: $white;
+}
+
+.stepLabelActive {
+  color: $main;
+  transition: color 0.5s ease-in;
+}

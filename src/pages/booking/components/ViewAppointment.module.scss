@@ -1,0 +1,222 @@
+@import "styles/_settings.scss";
+
+.viewAppointment {
+  margin: 1em auto;
+  display: flex;
+  justify-content: space-evenly;
+  min-width: $sm;
+  width: 60%;
+  border: 1px solid $malibu;
+  border-radius: 0.6rem;
+  box-sizing: border-box;
+  box-shadow: 1px 2px 2px $grayNickel;
+  overflow: hidden;
+}
+
+.viewTitle {
+  width: 100%;
+  background: linear-gradient(to bottom, $gallery, $white);
+}
+
+.viewAppointmentCta {
+  color: $main;
+  margin: 1em auto;
+  border-top: 1px solid $gallery;
+  padding-top: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bookedInfo {
+  color: $fruitSalad;
+  margin: 0.5em 0;
+  text-align: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid $gallery;
+}
+
+.viewItems {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.serviceName {
+  border-bottom: 1px solid $gallery;
+  padding: 2.25em 1em;
+  width: 100%;
+  text-align: center;
+  background: linear-gradient(to bottom, $malibu, $gallery)
+}
+
+.appointmentDetail {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  border-left-width: 4px;
+  border-left-style: solid;
+  border-image: linear-gradient(
+    to bottom,
+    $malibu,
+    rgba(0, 0, 0, 0)
+  ) 1 100%;
+}
+
+.providerName {
+  color: $main;
+  display: flex;
+  justify-content: space-between;
+}
+
+.addressItems {
+  color: $fruitSalad;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.providerAddress {
+  color: $malibu;
+  margin: 1rem 0.5rem;
+}
+
+.appointmentInfo {
+  color: $main;
+  border-bottom: 1px solid $gallery;
+  padding-bottom: 0.5em;
+}
+
+.appointmentCode {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wrapper {
+  width: 70%;
+  margin: 0 auto 32px;
+}
+
+.titleInner,
+.info {
+  padding: 32px;
+}
+
+.titleWrapper {
+  border-bottom: 1px solid $alto;
+}
+
+.titleInner {
+  display: flex;
+}
+
+.info {
+  display: flex;
+}
+
+.leftInfo,
+.rightInfo {
+  > * {
+    margin-bottom: 16px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.leftInfo {
+  flex-grow: 1;
+}
+
+.appointment {
+  &Icon {
+    vertical-align: text-bottom;
+    margin-right: 8px;
+    color: $primary;
+  }
+}
+
+.bookingConfirmedIcon {
+  color: $main;
+  display: flex;
+  justify-content: center;
+  margin-top: 1em;
+}
+
+.postCta {
+  color: $main;
+  margin-top: 1rem;
+}
+
+.addCalendar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.shareBooking {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.socialCta {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 1rem;
+}
+
+.postEmail {
+  text-align: center;
+}
+
+.buttonAddCalOpen {
+  color: $danger;
+}
+
+.buttonAddCalClosed {
+  user-select: none;
+  color: $main;
+  font-family: Roboto, Helvetica, 'Open Sans';
+  font-size: 0.8rem;
+  &:hover {
+    cursor: pointer;
+    font-weight: bold;
+  }
+}
+
+.buttonAddCalWrapper {
+  color: $grayNickel;
+}
+
+.buttonAddCalDropdown {
+  & > ul {
+    list-style-type: none;
+    margin: 0.5rem auto;
+    padding: 0;
+    text-align: center;
+    & > li {
+      padding: 0.2rem 0 0.1rem 1rem;
+      width: 100%;
+      text-align: left;
+      &:hover {
+        font-weight: bold;
+        cursor: pointer;
+      }
+    }
+    & > li a {
+      text-decoration: none;
+      color: $mako;
+      font-size: 0.9rem;
+      width: 100%;
+      font-family: Roboto, Helvetica, 'Open Sans';
+      border-bottom: 1px solid $grayNickel;
+    }
+  }
+}
+
+.addToCalendar {
+  color: $danger;
+}

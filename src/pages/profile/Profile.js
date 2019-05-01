@@ -1,28 +1,63 @@
 import React, { Component } from 'react';
 import {
-  bool, func, objectOf, any, string,
+  func,
+  string,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
-import { Dialog } from '@material-ui/core';
-import { postUpdatedProfile, updateProfileAction } from 'reduxModules/profile.actions';
+import {
+  postUpdatedProfile,
+  updateProfileAction,
+} from 'actionsReducers/profile.actions';
+import {
+  setServiceProvidersAction,
+  findEventByCustomerIdAction,
+} from 'actionsReducers/common.actions';
+import { history } from 'containers/App';
 import CustomModal from 'components/Modal/CustomModal';
 import Header from './components/Header';
 import Content from './components/Content';
-import style from './Profile.module.scss';
+import s from './Profile.module.scss';
 
 class Profile extends Component {
-  state = {
-    isPopupWarning: '',
-  };
-
-  componentWillReceiveProps(nextProps) {
-    const { updateProfileStatus } = nextProps;
-    this.setState({
-      isPopupWarning: updateProfileStatus,
-    });
+  static getDerivedStateFromProps(props, state) {
+    const {
+      userDetail,
+      updateProfileStatus,
+    } = props;
+    const {
+      userDetail: cachedUserDetail,
+      updateProfileStatus: cachedUpdateProfileStatus,
+    } = state;
+    if (
+      userDetail !== cachedUserDetail
+    || updateProfileStatus !== cachedUpdateProfileStatus
+    ) {
+      return {
+        userDetail,
+        updateProfileStatus,
+      };
+    }
+    return null;
   }
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      userDetail: null,
+      isPopupWarning: '',
+    };
+  }
+
+  componentDidMount() {
+    const {
+      setServiceProvidersAction: setServiceProviders,
+      findEventByCustomerIdAction: findEventByCustomerId,
+      customerId,
+    } = this.props;
+    setServiceProviders();
+    findEventByCustomerId(customerId);
+  }
 
   handleAccount = (data) => {
     const { postUpdatedProfile: postUpdatedProfileAction } = this.props;
@@ -34,11 +69,19 @@ class Profile extends Component {
     updateProfileStatus('');
   };
 
+  goBooking = () => {
+    history.push('/');
+  };
+
   render() {
     const {
-      isOpenProfile, handleCloseProfile, userDetail, updateProfileStatus,
+      updateProfileStatus,
     } = this.props;
-    const { isPopupWarning } = this.state;
+    const {
+      userDetail,
+      isPopupWarning,
+    } = this.state;
+
 
     const givenName = get(userDetail, 'givenName');
     const email = get(userDetail, 'email');
@@ -66,31 +109,31 @@ class Profile extends Component {
       <>
         {updateProfileMsgError}
         {updateProfileMsgSuccess}
-        <Dialog fullScreen open={isOpenProfile}>
-          <div className={`${style.profile} column`}>
-            <Header userDetail={{ givenName, email }} onClose={handleCloseProfile} onOpenAccount={this.handleAccount} />
-            <div className={`container-max auto-margin-horizontal ${style.contentAfooter}`}>
+        <div>
+          <div className={`${s.profile} column`}>
+            <Header userDetail={{ givenName, email }} onClose={this.goBooking} onOpenAccount={this.handleAccount} />
+            <div className={`container-max auto-margin-horizontal ${s.contentAfooter}`}>
               <Content
                 givenName={givenName}
-                onClose={handleCloseProfile}
+                onClose={this.goBooking}
                 handleAccount={this.handleAccount}
                 updateProfileStatus={updateProfileStatus}
               />
             </div>
           </div>
-        </Dialog>
+        </div>
       </>
     );
   }
 }
 
 Profile.propTypes = {
-  isOpenProfile: bool.isRequired,
-  handleCloseProfile: func.isRequired,
-  userDetail: objectOf(any).isRequired,
+  customerId: string.isRequired,
+  setServiceProvidersAction: func.isRequired,
   postUpdatedProfile: func.isRequired,
   updateProfileStatus: string,
   updateProfileAction: func.isRequired,
+  findEventByCustomerIdAction: func.isRequired,
 };
 
 Profile.defaultProps = {
@@ -98,12 +141,14 @@ Profile.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  userDetail: state.auth.userDetail,
-  isLoading: state.profilePage.isLoading,
-  updateProfileStatus: state.profilePage.updateProfileStatus,
+  ...state.common,
+  ...state.auth,
+  ...state.profile,
 });
 
 export default connect(mapStateToProps, {
   postUpdatedProfile,
   updateProfileAction,
+  setServiceProvidersAction,
+  findEventByCustomerIdAction,
 })(Profile);
