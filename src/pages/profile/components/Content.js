@@ -121,7 +121,7 @@ class Content extends Component {
       sidePanel: {
         eventList,
         myInfo,
-        waitlist,
+        waitList,
       },
       eventList: cachedEventList,
     } = this.state;
@@ -138,7 +138,7 @@ class Content extends Component {
           </div>
         </div>
         {
-          waitlist && (
+          waitList && (
             <div className={s.profilePage}>
               <WaitList />
             </div>

@@ -2,9 +2,16 @@ import React, { Component } from 'react';
 import {
   func,
 } from 'prop-types';
+import { compose } from 'redux';
 import { connect } from 'react-redux';
+import uuidv1 from 'uuid/v1';
+import { withFormik } from 'formik';
+import {
+  Typography,
+} from '@material-ui/core';
 import {
   setWaitListsAction,
+  registerWaitListAction,
 } from 'actionsReducers/waitlist.actions';
 import s from './WaitList.module.scss';
 
@@ -38,14 +45,21 @@ class WaitList extends Component {
     setWaitLists();
   }
 
+  handleRegisterWaitList = () => {
+    const { registerWaitListAction: registerWaitList } = this.props;
+    registerWaitList();
+  };
 
   render() {
     const { waitLists } = this.state;
+    console.log('props of formik', this.props);
     return (
       <div className={s.waitList}>
-        {waitLists && waitLists.map(slot => (
-          <div className={s.waitSlot}>
-            {slot.name}
+        {waitLists && waitLists.map(item => (
+          <div key={uuidv1()} className={s.waitSlot}>
+            <Typography variant="title" color="inherit">
+              {item.slot.sstartSec}
+            </Typography>
           </div>
         ))}
       </div>
@@ -55,12 +69,19 @@ class WaitList extends Component {
 
 WaitList.propTypes = {
   setWaitListsAction: func.isRequired,
+  registerWaitListAction: func.isRequired,
 };
 
 const mapStateToProps = state => ({
   ...state.waitLists,
 });
 
-export default connect(mapStateToProps, {
-  setWaitListsAction,
-})(WaitList);
+export default compose(
+  withFormik({
+    enableReinitialize: true,
+  }),
+  connect(mapStateToProps, {
+    setWaitListsAction,
+    registerWaitListAction,
+  }),
+)(WaitList);

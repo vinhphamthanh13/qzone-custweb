@@ -28,29 +28,7 @@ class SelectProvider extends React.PureComponent {
       time,
     });
     setBookingStep(BOOKING.STEPS.CONFIRM_BOOKING);
-    console.log(provider);
-    console.log(time);
   };
-  //
-  // handleSelectDate = (date) => {
-  //   const { getProviderTimesAction } = this.props;
-  //   const {
-  //     service,
-  //     serviceProviders,
-  //   } = this.state;
-  //   const availabilityData = {
-  //     serviceId: service.id,
-  //     serviceProviders,
-  //     startSec: date.getTime() / 1000,
-  //     toSec: date.getTime() / 1000,
-  //   };
-  //   if (date.getTime() === today.getTime()) {
-  //     // Add the search time slot to 3 minutes in case the request timeout
-  //     availabilityData.startSec = (moment.now() + 180000) / 1000;
-  //     availabilityData.toSec = (moment.now() + 180000) / 1000;
-  //   }
-  //   getProviderTimesAction(availabilityData);
-  // };
 
   render() {
     const {

@@ -13,7 +13,6 @@ import moment from 'moment';
 import {
   IconButton,
   Typography,
-  Button,
 } from '@material-ui/core';
 import { VerticalTimelineElement } from 'react-vertical-timeline-component';
 import {
@@ -30,9 +29,6 @@ import {
 import RateStar from 'components/Rating/RateStar';
 import MapDialog from 'components/Map/MapDialog';
 import { setRatingService } from 'actionsReducers/common.actions';
-import {
-  registerWaitListAction,
-} from 'actionsReducers/waitlist.actions';
 import Rating from 'material-ui-rating';
 import s from './TimelineCard.module.scss';
 import CountDownDisplay from './CountDownDisplay';
@@ -64,9 +60,6 @@ class TimelineCard extends Component {
 
   handleCustomerRating = (customerId, serviceProviderId) => (rating) => {
     const { rateAppointmentAction } = this.props;
-    console.log('rating is customer', customerId);
-    console.log('rating is serviceProviderId', serviceProviderId);
-    console.log('rating is ', rating);
     rateAppointmentAction({
       customerId,
       serviceProviderId,
@@ -80,13 +73,7 @@ class TimelineCard extends Component {
     }));
   };
 
-  handleRegisterWaitList = () => {
-    const { registerWaitListAction: registerWaitList } = this.props;
-    registerWaitList();
-  };
-
   render() {
-    console.log('this props from timelinecard', this.props);
     const {
       serviceName,
       providerName,
@@ -138,11 +125,9 @@ class TimelineCard extends Component {
     const waitingDay = parseInt(remainDay, 0);
     const waitingHr = waitingDay ? parseInt((remainDay % 1) * 24, 0) : parseInt(remainTimeHr, 0);
     const waitingMn = parseInt(remainTimeMn, 0);
-    const serviceProviderList = serviceProviders
+    const serviceProviderList = serviceProviders && serviceProviders
       .filter(item => item.providerId === providerId && item.serviceId === serviceId);
     const serviceProviderId = get(serviceProviderList, '0.id');
-    console.log('serviceProviderId', serviceProviderId);
-    console.log('serviceProviderList', serviceProviderList);
     const providerRating = get(serviceProviderList, '0.rating');
 
     let displayTimeout = null;
@@ -222,15 +207,6 @@ class TimelineCard extends Component {
             <Typography variant="headline" color="secondary" align="center" classes={{ headline: s.bookingCode }}>
               {bookingCode}
             </Typography>
-            <div className={s.registerWaitList}>
-              <Button
-                className="simple-button"
-                variant="outlined"
-                disabled={currentEventStatus === STATUS.EXPIRED}
-              >
-                join queue!
-              </Button>
-            </div>
           </div>
           <div>
             <div className={s.serviceTitleMap}>
@@ -282,17 +258,18 @@ TimelineCard.propTypes = {
   serviceName: string.isRequired,
   providerName: string.isRequired,
   slot: shape({
-    startSec: number.isRequired,
-    toSec: number,
+    customerTimezone: string.isRequired,
     providerId: string,
     serviceId: string,
+    sstartSec: string.isRequired,
+    startSec: number.isRequired,
+    toSec: number,
   }).isRequired,
   duration: number.isRequired,
   geoLocation: objectOf(any).isRequired,
   rateAppointmentAction: func.isRequired,
   bookingCode: string.isRequired,
   customerId: string.isRequired,
-  registerWaitListAction: func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -303,5 +280,4 @@ const mapStateToProps = state => ({
 
 export default connect(mapStateToProps, {
   rateAppointmentAction: setRatingService,
-  registerWaitListAction,
 })(TimelineCard);

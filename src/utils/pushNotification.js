@@ -7,7 +7,7 @@ export const initializeFirebase = () => {
     databaseURL: 'https://fir-bce15.firebaseio.com',
     projectId: 'fir-bce15',
     storageBucket: 'fir-bce15.appspot.com',
-    messagingSenderId: '988018388150', // troque pelo seu sender id
+    messagingSenderId: '988018388150',
   });
 
   // use other service worker
@@ -18,14 +18,12 @@ export const initializeFirebase = () => {
   //   });
 };
 
-export const askForPermissioToReceiveNotifications = async () => {
+export const askForPermissionToReceiveNotifications = async () => {
   try {
     const messaging = firebase.messaging();
     await messaging.requestPermission();
-    const token = await messaging.getToken();
-    console.log('user token: ', token);
 
-    return token;
+    return await messaging.getToken();
   } catch (error) {
     console.error(error);
   }

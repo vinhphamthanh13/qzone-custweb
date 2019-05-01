@@ -27,7 +27,6 @@ class ProviderContent extends Component {
       providerId,
       serviceProviders,
     } = this.props;
-    console.log('providerServices as services', this.props);
 
     return (
       <div className={s.services}>

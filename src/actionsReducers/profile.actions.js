@@ -30,9 +30,8 @@ export const postUpdatedProfile = data => async (dispatch) => {
     dispatch(setError(error));
     dispatch(updateProfileAction('error'));
   } else {
-    dispatch(updateProfileAction('success'));
+    dispatch(updateProfileAction(profileUpdated || 'success'));
     dispatch(getUserDetail(userSub));
-    console.log('profileUpdated', profileUpdated);
   }
   dispatch(setLoading(false));
 };

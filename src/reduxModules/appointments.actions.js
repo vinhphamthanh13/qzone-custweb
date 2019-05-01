@@ -1,5 +1,4 @@
 import { setLoading } from 'actionsReducers/common.actions';
-import { serviceProvidersRating } from 'actionsApi/rating';
 import { getAppointmentsByUser } from 'actionsApi/appointment';
 import { handleRequest } from 'utils/apiHelpers';
 
@@ -32,13 +31,4 @@ export const getAppointmentByCustomer = customerId => async (dispatch) => {
   const [result] = await handleRequest(getAppointmentsByUser, [customerId], []);
   dispatch(setLoading(false));
   dispatch(setAppointmentByCustomer(result || []));
-};
-
-export const rateAppointmentByCustomer = ({
-  customerId, id, rating, serviceId,
-}) => (dispatch) => {
-  dispatch(updateAppointmentRating({ id, rating }));
-  handleRequest(serviceProvidersRating, [{
-    customerId, id, rating, serviceProviderId: serviceId,
-  }]);
 };

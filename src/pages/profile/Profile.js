@@ -17,7 +17,7 @@ import {
 import { history } from 'containers/App';
 import CustomModal from 'components/Modal/CustomModal';
 import Error from 'components/Error';
-import { askForPermissioToReceiveNotifications } from 'utils/pushNotification';
+import { askForPermissionToReceiveNotifications } from 'utils/pushNotification';
 import Header from './components/Header';
 import Content from './components/Content';
 import s from './Profile.module.scss';
@@ -75,7 +75,7 @@ class Profile extends Component {
     if (serviceProviders !== updatedServiceProviders) {
       const { userDetail } = this.state;
       const email = get(userDetail, 'email');
-      const userToken = await askForPermissioToReceiveNotifications();
+      const userToken = await askForPermissionToReceiveNotifications();
       storeFireBaseUser({
         email,
         userToken,
