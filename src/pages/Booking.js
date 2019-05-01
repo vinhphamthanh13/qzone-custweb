@@ -23,12 +23,9 @@ class BookingPage extends Component {
 
   render() {
     const { match: { params: { id }, path } } = this.props;
-    console.log('booking props', this.props);
     const { isRegisterOpen, isLoginOpen } = this.state;
     const sId = BOOKING.PATH.NORMAL.test(path) ? id : null;
     const tId = BOOKING.PATH.INSTANT.test(path) ? id : null;
-    console.log('sId', sId);
-    console.log('tId', tId);
     return (
       <>
         <Auth

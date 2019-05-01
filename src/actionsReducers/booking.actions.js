@@ -4,6 +4,7 @@ import {
   availabilitiesBySpecialEventId,
   availabilitiesBySpecialEventIdBulk,
   events,
+  temporaryServicesById,
 } from 'actionsApi/booking';
 import {
   setLoading,
@@ -19,6 +20,7 @@ export const SET_BOOKING_DETAIL = 'BOOKING.SET_BOOKING_DETAIL';
 export const SET_APPOINTMENT_CUSTOMER_EVENTS = 'BOOKING.SET_APPOINTMENT_CUSTOMER_EVENTS';
 export const SET_BOOKING_STEP = 'BOOKING.SET_BOOKING_STEP';
 export const RESET_BOOKING = 'BOOKING.RESET_BOOKING';
+export const SET_TEMPORARY_SERVICES_BY_ID = 'BOOKING.SET_TEMPORARY_SERVICES_BY_ID';
 
 const getServiceById = payload => ({
   type: GET_SERVICE_BY_ID,
@@ -38,6 +40,10 @@ const setAvailabilitiesBySpecialEventBulk = payload => ({
 });
 const setAppointmentCustomerEvents = payload => ({
   type: SET_APPOINTMENT_CUSTOMER_EVENTS,
+  payload,
+});
+const setTemporaryServicesById = payload => ({
+  type: SET_TEMPORARY_SERVICES_BY_ID,
   payload,
 });
 
@@ -108,6 +114,17 @@ export const registerEventAction = data => async (dispatch) => {
     dispatch(setError(error));
   } else {
     dispatch(setAppointmentCustomerEvents(registeredEvent));
+  }
+  dispatch(setLoading(false));
+};
+
+export const setTemporaryServicesByIdAction = data => async (dispatch) => {
+  dispatch(setLoading(true));
+  const [temporaryServiceById, error] = await handleRequest(temporaryServicesById, [data]);
+  if (error) {
+    dispatch(setError(error));
+  } else {
+    dispatch(setTemporaryServicesById(temporaryServiceById));
   }
   dispatch(setLoading(false));
 };

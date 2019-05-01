@@ -14,5 +14,5 @@ export const availabilitiesBySpecialEventIdBulk = eventList => axios.all(
 ).then(axios.spread((...responses) => responses));
 
 // ********** event-resource ********** //
-// appointment-customer-events
 export const events = data => axios.post('/events', data);
+export const temporaryServicesById = data => axios.get(`/temporary-services/${data}`);
