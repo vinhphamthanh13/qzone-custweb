@@ -8,6 +8,7 @@ import { get } from 'lodash';
 import {
   postUpdatedProfile,
   updateProfileAction,
+  storeFireBaseUserAction,
 } from 'actionsReducers/profile.actions';
 import {
   setServiceProvidersAction,
@@ -15,6 +16,7 @@ import {
 } from 'actionsReducers/common.actions';
 import { history } from 'containers/App';
 import CustomModal from 'components/Modal/CustomModal';
+import Error from 'components/Error';
 import { askForPermissioToReceiveNotifications } from 'utils/pushNotification';
 import Header from './components/Header';
 import Content from './components/Content';
@@ -25,18 +27,22 @@ class Profile extends Component {
     const {
       userDetail,
       updateProfileStatus,
+      firebaseUserStored,
     } = props;
     const {
       userDetail: cachedUserDetail,
       updateProfileStatus: cachedUpdateProfileStatus,
+      firebaseUserStored: cachedFirebaseUserStored,
     } = state;
     if (
       userDetail !== cachedUserDetail
     || updateProfileStatus !== cachedUpdateProfileStatus
+    || firebaseUserStored !== cachedFirebaseUserStored
     ) {
       return {
         userDetail,
         updateProfileStatus,
+        firebaseUserStored,
       };
     }
     return null;
@@ -46,6 +52,7 @@ class Profile extends Component {
     super(props);
     this.state = {
       userDetail: null,
+      firebaseUserStored: null,
       isPopupWarning: '',
     };
   }
@@ -58,8 +65,23 @@ class Profile extends Component {
     } = this.props;
     setServiceProviders();
     findEventByCustomerId(customerId);
-    if (customerId) {
-      askForPermissioToReceiveNotifications();
+  }
+
+  async componentDidUpdate(prevProps) {
+    const { serviceProviders } = prevProps;
+    const {
+      serviceProviders: updatedServiceProviders,
+      storeFireBaseUserAction: storeFireBaseUser,
+    } = this.props;
+    if (serviceProviders !== updatedServiceProviders) {
+      const { userDetail } = this.state;
+      const email = get(userDetail, 'email');
+      const userToken = await askForPermissioToReceiveNotifications();
+      console.log('componentDidUpdate', userToken);
+      storeFireBaseUser({
+        email,
+        userToken,
+      });
     }
   }
 
@@ -83,10 +105,12 @@ class Profile extends Component {
     } = this.props;
     const {
       userDetail,
+      firebaseUserStored,
       isPopupWarning,
     } = this.state;
 
-
+    console.log('firebaseuserStore', firebaseUserStored);
+    console.log('profile lthislprops', this.props);
     const givenName = get(userDetail, 'givenName');
     const email = get(userDetail, 'email');
     const updateProfileMsgError = isPopupWarning === 'error' ? (
@@ -113,6 +137,7 @@ class Profile extends Component {
       <>
         {updateProfileMsgError}
         {updateProfileMsgSuccess}
+        <Error />
         <div>
           <div className={`${s.profile} column`}>
             <Header userDetail={{ givenName, email }} onClose={this.goBooking} onOpenAccount={this.handleAccount} />
@@ -134,6 +159,7 @@ class Profile extends Component {
 Profile.propTypes = {
   customerId: string.isRequired,
   setServiceProvidersAction: func.isRequired,
+  storeFireBaseUserAction: func.isRequired,
   postUpdatedProfile: func.isRequired,
   updateProfileStatus: string,
   updateProfileAction: func.isRequired,
@@ -155,4 +181,5 @@ export default connect(mapStateToProps, {
   updateProfileAction,
   setServiceProvidersAction,
   findEventByCustomerIdAction,
+  storeFireBaseUserAction,
 })(Profile);

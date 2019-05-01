@@ -10,7 +10,6 @@ export const initializeFirebase = () => {
     messagingSenderId: '988018388150', // troque pelo seu sender id
   });
 
-  console.log('init FIREBASE', Date.now());
   // use other service worker
   // navigator.serviceWorker
   //   .register('/my-sw.js')

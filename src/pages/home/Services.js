@@ -32,6 +32,10 @@ export default function Services({
 }
 
 Services.propTypes = {
-  services: arrayOf(serviceType).isRequired,
+  services: arrayOf(serviceType),
   onBooking: func.isRequired,
+};
+
+Services.defaultProps = {
+  services: null,
 };
