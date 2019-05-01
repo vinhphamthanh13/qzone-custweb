@@ -64,6 +64,9 @@ class TimelineCard extends Component {
 
   handleCustomerRating = (customerId, serviceProviderId) => (rating) => {
     const { rateAppointmentAction } = this.props;
+    console.log('rating is customer', customerId);
+    console.log('rating is serviceProviderId', serviceProviderId);
+    console.log('rating is ', rating);
     rateAppointmentAction({
       customerId,
       serviceProviderId,
@@ -83,6 +86,7 @@ class TimelineCard extends Component {
   };
 
   render() {
+    console.log('this props from timelinecard', this.props);
     const {
       serviceName,
       providerName,
@@ -134,11 +138,12 @@ class TimelineCard extends Component {
     const waitingDay = parseInt(remainDay, 0);
     const waitingHr = waitingDay ? parseInt((remainDay % 1) * 24, 0) : parseInt(remainTimeHr, 0);
     const waitingMn = parseInt(remainTimeMn, 0);
-    const serviceProvider = serviceProviders
+    const serviceProviderList = serviceProviders
       .filter(item => item.providerId === providerId && item.serviceId === serviceId);
-    console.log('serviceProvider', serviceProviders);
-    const serviceProviderId = get(serviceProvider, '0.id');
-    const providerRating = get(serviceProvider, '0.rating');
+    const serviceProviderId = get(serviceProviderList, '0.id');
+    console.log('serviceProviderId', serviceProviderId);
+    console.log('serviceProviderList', serviceProviderList);
+    const providerRating = get(serviceProviderList, '0.rating');
 
     let displayTimeout = null;
     let currentEventStyle = eventStyle;
@@ -205,7 +210,7 @@ class TimelineCard extends Component {
                 <div className={s.appointmentRemainedTime}>
                   <Rating
                     value={providerRating}
-                    readOnly={!!providerRating}
+                    readOnly={!!providerRating || !serviceProviderId}
                     onChange={this.handleCustomerRating(customerId, serviceProviderId)}
                     classes={{ iconButton: s.ratingIcon }}
                   />
@@ -218,7 +223,11 @@ class TimelineCard extends Component {
               {bookingCode}
             </Typography>
             <div className={s.registerWaitList}>
-              <Button className="simple-button" variant="outlined">
+              <Button
+                className="simple-button"
+                variant="outlined"
+                disabled={currentEventStatus === STATUS.EXPIRED}
+              >
                 join queue!
               </Button>
             </div>

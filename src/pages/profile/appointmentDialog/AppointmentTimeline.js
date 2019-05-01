@@ -3,7 +3,6 @@ import {
   arrayOf, shape, string, number,
 } from 'prop-types';
 import { VerticalTimeline } from 'react-vertical-timeline-component';
-
 import TimelineCard from './TimelineCard';
 
 const AppointmentTimeline = ({ items }) => (
@@ -28,6 +27,8 @@ AppointmentTimeline.propTypes = {
       serviceName: string.isRequired,
       providerName: string.isRequired,
       slot: shape({
+        providerId: string.isRequired,
+        serviceId: string.isRequired,
         startSec: number.isRequired,
         toSec: number,
       }).isRequired,
