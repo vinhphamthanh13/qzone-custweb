@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { matchType } from 'types/global';
+import { BOOKING } from 'utils/constants';
 import Auth from './Auth';
 import Booking from './booking/Booking';
 
@@ -21,8 +22,10 @@ class BookingPage extends Component {
   };
 
   render() {
-    const { match: { params: { id } } } = this.props;
+    const { match: { params: { id }, path } } = this.props;
     const { isRegisterOpen, isLoginOpen } = this.state;
+    const sId = BOOKING.PATH.NORMAL.test(path) ? id : null;
+    const tId = BOOKING.PATH.INSTANT.test(path) ? id : null;
     return (
       <>
         <Auth
@@ -32,7 +35,7 @@ class BookingPage extends Component {
           handleAuthenticate={this.openAuthModal}
           getSessionTimeoutId={this.getSessionTimeoutId}
         />
-        <Booking serviceId={id} handleAuth={this.openAuthModal} />
+        <Booking serviceId={sId} temporaryServiceId={tId} handleAuth={this.openAuthModal} />
       </>
     );
   }

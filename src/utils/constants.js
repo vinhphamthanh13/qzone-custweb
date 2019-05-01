@@ -10,6 +10,10 @@ export const BOOKING = {
     CONFIRM_BOOKING: 1,
     VIEW_BOOKING: 2,
   },
+  PATH: {
+    NORMAL: /booking\/:id/,
+    INSTANT: /booking\/instant\/:id/,
+  },
 };
 
 export const regExPattern = {

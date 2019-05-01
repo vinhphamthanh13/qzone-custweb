@@ -25,7 +25,14 @@ const rootRoutes = [
     exact: true,
     strict: true,
     path: '/booking/:id',
-    name: 'Booking Flow',
+    name: 'Normal Booking',
+    component: Booking,
+  },
+  {
+    exact: true,
+    strict: true,
+    path: '/booking/instant/:id',
+    name: 'Instant Booking',
     component: Booking,
   },
   {

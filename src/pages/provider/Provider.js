@@ -100,8 +100,6 @@ class Provider extends Component {
       logo: providerAvatar,
     };
 
-    console.log('providerServices', providerServices);
-    console.log('providerDetail', providerDetail);
     return (
       <>
         <Loading />

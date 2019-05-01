@@ -13,7 +13,6 @@ import moment from 'moment';
 import {
   IconButton,
   Typography,
-  Button,
 } from '@material-ui/core';
 import { VerticalTimelineElement } from 'react-vertical-timeline-component';
 import {
@@ -30,9 +29,6 @@ import {
 import RateStar from 'components/Rating/RateStar';
 import MapDialog from 'components/Map/MapDialog';
 import { setRatingService } from 'actionsReducers/common.actions';
-import {
-  registerWaitListAction,
-} from 'actionsReducers/waitlist.actions';
 import Rating from 'material-ui-rating';
 import s from './TimelineCard.module.scss';
 import CountDownDisplay from './CountDownDisplay';
@@ -75,11 +71,6 @@ class TimelineCard extends Component {
     this.setState(oldState => ({
       isOpenMap: !oldState.isOpenMap,
     }));
-  };
-
-  handleRegisterWaitList = () => {
-    const { registerWaitListAction: registerWaitList } = this.props;
-    registerWaitList();
   };
 
   render() {
@@ -134,11 +125,10 @@ class TimelineCard extends Component {
     const waitingDay = parseInt(remainDay, 0);
     const waitingHr = waitingDay ? parseInt((remainDay % 1) * 24, 0) : parseInt(remainTimeHr, 0);
     const waitingMn = parseInt(remainTimeMn, 0);
-    const serviceProvider = serviceProviders
+    const serviceProviderList = serviceProviders && serviceProviders
       .filter(item => item.providerId === providerId && item.serviceId === serviceId);
-    console.log('serviceProvider', serviceProviders);
-    const serviceProviderId = get(serviceProvider, '0.id');
-    const providerRating = get(serviceProvider, '0.rating');
+    const serviceProviderId = get(serviceProviderList, '0.id');
+    const providerRating = get(serviceProviderList, '0.rating');
 
     let displayTimeout = null;
     let currentEventStyle = eventStyle;
@@ -205,7 +195,7 @@ class TimelineCard extends Component {
                 <div className={s.appointmentRemainedTime}>
                   <Rating
                     value={providerRating}
-                    readOnly={!!providerRating}
+                    readOnly={!!providerRating || !serviceProviderId}
                     onChange={this.handleCustomerRating(customerId, serviceProviderId)}
                     classes={{ iconButton: s.ratingIcon }}
                   />
@@ -217,11 +207,6 @@ class TimelineCard extends Component {
             <Typography variant="headline" color="secondary" align="center" classes={{ headline: s.bookingCode }}>
               {bookingCode}
             </Typography>
-            <div className={s.registerWaitList}>
-              <Button className="simple-button" variant="outlined">
-                join queue!
-              </Button>
-            </div>
           </div>
           <div>
             <div className={s.serviceTitleMap}>
@@ -273,17 +258,18 @@ TimelineCard.propTypes = {
   serviceName: string.isRequired,
   providerName: string.isRequired,
   slot: shape({
-    startSec: number.isRequired,
-    toSec: number,
+    customerTimezone: string.isRequired,
     providerId: string,
     serviceId: string,
+    sstartSec: string.isRequired,
+    startSec: number.isRequired,
+    toSec: number,
   }).isRequired,
   duration: number.isRequired,
   geoLocation: objectOf(any).isRequired,
   rateAppointmentAction: func.isRequired,
   bookingCode: string.isRequired,
   customerId: string.isRequired,
-  registerWaitListAction: func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -294,5 +280,4 @@ const mapStateToProps = state => ({
 
 export default connect(mapStateToProps, {
   rateAppointmentAction: setRatingService,
-  registerWaitListAction,
 })(TimelineCard);

@@ -7,6 +7,7 @@ import {
   SET_BOOKING_DETAIL,
   SET_BOOKING_STEP,
   RESET_BOOKING,
+  SET_TEMPORARY_SERVICES_BY_ID,
 } from 'actionsReducers/booking.actions';
 
 const initState = {
@@ -55,6 +56,13 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         bookingDetail: action.payload,
+      };
+    // instant booking will change the flow
+    // by mutating the serviceProviders list
+    case SET_TEMPORARY_SERVICES_BY_ID:
+      return {
+        ...state,
+        serviceProviders: [action.payload],
       };
     case RESET_BOOKING:
       return initState;
