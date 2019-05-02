@@ -135,10 +135,10 @@ class BookingDetail extends React.PureComponent {
           <div className={s.bookingCta}>
             <Button
               variant="outlined"
-              className="button-normal main-button"
+              className="main-button"
               onClick={this.handleConfirmDialog(isAuthenticated)}
             >
-              {isAuthenticated ? 'Book now!' : 'Sign in'}
+              {isAuthenticated ? 'Book now' : 'Sign in'}
             </Button>
           </div>
         </div>

@@ -49,8 +49,8 @@
     color: $we_peep;
   }
   &:hover {
-    background: linear-gradient($malibu, $primary);
-    color: $we_peep;
+    background: $main;
+    color: $main_01;
     border: 1px solid $we_peep_rgba;
   }
 }

@@ -68,6 +68,14 @@ export class TimeBoxes extends React.PureComponent {
     return slotTable;
   };
 
+  renderNoneSlot = () => (
+    <div className={s.noneSlot}>
+      <Typography variant="subheading" color="inherit">
+        There is no slot available from our provider! Please find more in the next day!
+      </Typography>
+    </div>
+  );
+
   renderTimeBox = (data) => {
     const timeBox = Object.keys(data);
     return timeBox.length ? timeBox.map(
@@ -97,17 +105,11 @@ export class TimeBoxes extends React.PureComponent {
                     );
                   })}
                 </div>
-              )) : null}
+              )) : this.renderNoneSlot()}
           </>
         </div>
       ),
-    ) : (
-      <div className={s.noneSlot}>
-        <Typography variant="subheading" color="inherit">
-          There is no slot available from our provider! Please find more in the next day!
-        </Typography>
-      </div>
-    );
+    ) : this.renderNoneSlot();
   };
 
   render() {
