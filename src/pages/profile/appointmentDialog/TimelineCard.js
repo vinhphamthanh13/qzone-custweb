@@ -17,7 +17,7 @@ import {
 import { VerticalTimelineElement } from 'react-vertical-timeline-component';
 import {
   DateRange,
-  Schedule,
+  AvTimer,
   AlarmOff,
   AlarmOn,
   AirlineSeatReclineNormal,
@@ -232,7 +232,7 @@ class TimelineCard extends Component {
               </Typography>
             </div>
             <div className={s.appointmentItem}>
-              <Schedule className="icon-main" />
+              <AvTimer className="icon-main" />
               <Typography variant="subheading" color="primary" inline noWrap>
                 {moment(startSec * 1000).format('LT')}{' - '}{moment(toSecCalc).format('LT')}
               </Typography>

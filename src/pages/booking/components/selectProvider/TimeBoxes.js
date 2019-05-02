@@ -12,7 +12,7 @@ import {
 import {
   dateFormatDash,
   timeSlotFormat,
-  defaultDateFormat,
+  longDateFormat,
 } from 'utils/constants';
 import s from './TimeBoxes.module.scss';
 
@@ -74,8 +74,8 @@ export class TimeBoxes extends React.PureComponent {
       date => (
         <div key={uuidv1()} className={s.availableDateSlots}>
           <div className={s.dateSlot}>
-            <Typography variant="subheading" color="inherit">
-              {moment(date.replace(/(\d+)-(\d+)-(\d+)/, '$3-$2-$1')).format(defaultDateFormat)}
+            <Typography variant="subheading" color="inherit" className="label">
+              {moment(date.replace(/(\d+)-(\d+)-(\d+)/, '$3-$2-$1')).format(longDateFormat)}
             </Typography>
           </div>
           <>

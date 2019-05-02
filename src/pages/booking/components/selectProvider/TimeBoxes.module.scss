@@ -1,4 +1,4 @@
-@import "../../../../styles/settings";
+@import "styles/_settings.scss";
 
 .timeRow {
   width: 100%;
@@ -14,16 +14,16 @@
   justify-content: center;
   user-select: none;
   border-radius: unset;
-  border-right: 1px solid $gallery;
+  border-right: 1px solid $main_03;
   width: 106px;
-  padding: 0.5rem 0;
+  padding: 1.5rem 0;
   box-sizing: border-box;
-  transition: all 0.25s ease;
-  color: $main;
+  transition: all 0.35s ease;
+  color: $main_04;
   &:hover {
-    background: rgba($main, 0.8);
-    color: $gallery;
-    border-right: 1px solid rgba($main, 0.8);
+    background: $main_04;
+    color: $main_01;
+    border-right: 1px solid $main_03;
   }
 }
 
@@ -37,11 +37,11 @@
 }
 
 .dateSlot {
-  color: $white;
+  color: $main_04;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0.2rem 0;
-  background: $malibu;
+  padding: 1.35rem 0;
+  background: linear-gradient(to bottom, $white, $main_03);
   width: 100%;
 }

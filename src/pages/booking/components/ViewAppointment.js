@@ -10,7 +10,7 @@ import {
 import { connect } from 'react-redux';
 import {
   DateRange,
-  Schedule,
+  AvTimer,
   ViewList,
   Email,
   Call,
@@ -185,7 +185,7 @@ class ViewAppointment extends Component {
               </Typography>
             </div>
             <div className={s.viewItems}>
-              <Schedule className="icon-main" />
+              <AvTimer className="icon-main" />
               <Typography variant="body1" color="primary" inline noWrap>
                 {mtz(appointmentEvent.slot.startSec * 1000).format('LT')}{' - '}
                 {mtz((appointmentEvent.slot.startSec + appointmentEvent.duration * 60) * 1000).format('LT')}

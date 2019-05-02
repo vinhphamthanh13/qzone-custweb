@@ -1,6 +1,7 @@
 export const dateFormatDash = 'DD-MM-YYYY';
 export const timeSlotFormat = 'hh:mm a';
 export const defaultDateFormat = 'DD MMMM YYYY';
+export const longDateFormat = 'dddd, DD MMMM YYYY';
 
 
 export const BOOKING = {
