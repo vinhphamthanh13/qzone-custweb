@@ -5,6 +5,7 @@ import AccessDenied from 'pages/AccessDenied';
 import Provider from 'pages/Provider';
 import Organization from 'pages/Organization';
 import Profile from 'pages/Profile';
+import Maintenance from 'pages/Maintenance';
 
 const rootRoutes = [
   {
@@ -62,6 +63,13 @@ const rootRoutes = [
     path: '/organization/:id',
     name: 'Organization',
     component: Organization,
+  },
+  {
+    exact: true,
+    strict: true,
+    path: '/maintenance',
+    name: 'Maintenance',
+    component: Maintenance,
   },
   {
     exact: true,
