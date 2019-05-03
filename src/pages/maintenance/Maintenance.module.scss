@@ -2,7 +2,7 @@
 
 .maintenance {
   width: 100%;
-  height: calc(100vh - 65px);
+  height: 100vh;
 }
 
 .contents {
@@ -23,7 +23,7 @@
 }
 
 .body {
-  color: $mako;
+  color: $main_03;
   text-transform: uppercase;
 }
 
