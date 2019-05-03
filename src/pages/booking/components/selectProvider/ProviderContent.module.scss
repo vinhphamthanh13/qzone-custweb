@@ -1,22 +1,21 @@
 @import "styles/_settings.scss";
 
 .providerListCard {
-  color: $crimson;
   margin: 0.6rem 0.5rem;
-  border: 1px solid $malibu;
+  border: 1px solid $main_03;
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
+  border-radius: 0.3rem;
   overflow: hidden;
   width: 320px;
+  display: flex;
+  flex-direction: column;
   box-shadow: 3px 4px 3px $gallery;
-  border-radius: 5px;
 }
 
 .providerListCardContent {
   display: flex;
   flex-direction: column;
-  color: $main;
+  color: $main_04;
   box-sizing: border-box;
 }
 
@@ -26,19 +25,18 @@
   align-items: flex-start;
   justify-content: flex-start;
   padding: 0.5rem;
-  background: linear-gradient(to bottom, $white, $malibu);
+  background: $main_01;
 }
 
 .providerImageWrapper {
   display: flex;
   width: 100%;
-  height: 200px;
+  height: 230px;
 }
 
 .providerImage {
   width: 100%;
-  border-top-right-radius: 5px;
-  border-top-left-radius: 5px;
+  border-radius: 0.5rem;
 }
 
 .providerListCardTitle {
@@ -51,6 +49,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  color: $main_04;
 }
 
 .providerContentSearchSlot {
@@ -88,19 +87,9 @@
   width: 100%;
 }
 
-.providerListCardService {
-  color: $success;
-  display: flex;
-  justify-content: space-between;
-  box-sizing: border-box;
-  width: 100%;
-  padding: 0.5rem;
-  background: linear-gradient(to bottom, $malibu, $gallery);
-}
-
 .providerListCardDescriptionBottom {
-  color: $main;
-  background: $gallery;
+  color: $main_04;
+  background: linear-gradient(to bottom, $gallery, $white);
   text-align: center;
   padding: 0.5rem 0.5rem;
   width: 100%;

@@ -7,7 +7,7 @@ $we_peep_rgba: rgba(250, 235, 235, 0.7);
 $alto: #e0e0e0;
 $mercury: #e3e3e3;
 $tiara: #CDD5D8;
-$primary: #3f51b5;
+$primary: #3F52B5;
 $secondary: #f50057;
 $malibu: #88D4FC; // RGB: 136, 212, 252
 $fruitSalad: #4CAF50;
@@ -19,7 +19,12 @@ $grayNickel: #BBBCB9;
 $persimnon: #FF5F57; // 255, 95, 87
 $lavender: #B57EDC;
 
-$main: $primary;
+$main: #3F52B5;
+$main_01: #FFFFFF;
+$main_02: #C8CAD6;
+$main_03: #C3C9ED;
+$main_04: #4E536E;
+
 $danger: #F44336;
 $success: #4CAF50; // 76, 175, 80
 $info: #00ACC1;
@@ -29,6 +34,22 @@ $goldTips: $malibu;
 
 .main-color {
   color: $main !important;
+}
+
+.main-color-01 {
+  color: $main_01 !important;
+}
+
+.main-color-02 {
+  color: $main_02 !important;
+}
+
+.main-color-03 {
+  color: $main_03 !important;
+}
+
+.main-color-04 {
+  color: $main_04 !important;
 }
 
 .danger-color {

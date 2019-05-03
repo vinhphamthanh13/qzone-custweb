@@ -6,7 +6,7 @@ import {
   Button, TextField, Typography,
 } from '@material-ui/core';
 import {
-  Schedule, DateRange, LocationOn, PersonPin,
+  AvTimer, DateRange, LocationOn, PersonPin,
 } from '@material-ui/icons';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
@@ -106,7 +106,7 @@ class BookingDetail extends React.PureComponent {
               </Typography>
             </div>
             <div className={s.bookingItems}>
-              <Schedule className="icon-main" />
+              <AvTimer className="icon-main" />
               <Typography variant="subtitle1" color="inherit">
                 {bookingTime && moment(bookingTime * 1000).format('hh:mm A')}{' - '}{duration} minutes
               </Typography>
@@ -135,10 +135,10 @@ class BookingDetail extends React.PureComponent {
           <div className={s.bookingCta}>
             <Button
               variant="outlined"
-              className="button-normal main-button"
+              className="main-button"
               onClick={this.handleConfirmDialog(isAuthenticated)}
             >
-              {isAuthenticated ? 'Book now!' : 'Sign in'}
+              {isAuthenticated ? 'Book now' : 'Sign in'}
             </Button>
           </div>
         </div>

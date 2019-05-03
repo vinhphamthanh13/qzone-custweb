@@ -10,7 +10,7 @@ import {
 import { connect } from 'react-redux';
 import {
   DateRange,
-  Schedule,
+  AvTimer,
   ViewList,
   Email,
   Call,
@@ -24,6 +24,7 @@ import mtz from 'moment-timezone';
 import moment from 'moment';
 import AddToCalendar from 'react-add-to-calendar';
 import { history } from 'containers/App';
+import CustomLink from 'components/CustomLink';
 import RateStar from 'components/Rating/RateStar';
 import zeroPad from 'utils/zeroPad';
 import {
@@ -68,6 +69,9 @@ class ViewAppointment extends Component {
     const providerPhone = get(provider, 'telephone');
     const providerWebsite = get(provider, 'website');
     const providerRating = get(provider, 'rating');
+    const providerGivenName = get(provider, 'givenName');
+    const providerFamilyName = get(provider, 'familyName');
+    const providerId = get(provider, 'userSub');
     const email = get(userDetail, 'email');
     const serviceName = get(appointmentEvent, 'serviceName');
     const serviceDescription = get(bookingService, 'description');
@@ -105,15 +109,32 @@ class ViewAppointment extends Component {
       <div className={s.viewAppointment}>
         <div className={s.viewTitle}>
           <div className={s.serviceName}>
-            <Typography variant="title" color="textSecondary" className="text-bold">
+            <Typography
+              variant="title"
+              color="textSecondary"
+              className="text-bold"
+              noWrap
+            >
               {appointmentEvent.serviceName}
             </Typography>
           </div>
           <div className={s.providerAddress}>
-            <div className={s.providerName}>
-              <Typography variant="title" color="inherit" className="text-bold text-margin-right">
-                {appointmentEvent.providerName}
-              </Typography>
+            <div className={s.providerNameRating}>
+              <div className={s.providerName}>
+                <Typography
+                  variant="title"
+                  color="inherit"
+                  className="text-bold"
+                  noWrap
+                >
+                  <CustomLink
+                    text={`${providerGivenName} ${providerFamilyName}`}
+                    to={`/provider/${providerId}`}
+                    className="main-color-04"
+                    big
+                  />
+                </Typography>
+              </div>
               <RateStar rating={providerRating} />
             </div>
             <div className={s.providerAddress}>
@@ -185,7 +206,7 @@ class ViewAppointment extends Component {
               </Typography>
             </div>
             <div className={s.viewItems}>
-              <Schedule className="icon-main" />
+              <AvTimer className="icon-main" />
               <Typography variant="body1" color="primary" inline noWrap>
                 {mtz(appointmentEvent.slot.startSec * 1000).format('LT')}{' - '}
                 {mtz((appointmentEvent.slot.startSec + appointmentEvent.duration * 60) * 1000).format('LT')}

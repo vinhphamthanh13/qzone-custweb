@@ -12,7 +12,7 @@ import {
 import {
   dateFormatDash,
   timeSlotFormat,
-  defaultDateFormat,
+  longDateFormat,
 } from 'utils/constants';
 import s from './TimeBoxes.module.scss';
 
@@ -68,14 +68,22 @@ export class TimeBoxes extends React.PureComponent {
     return slotTable;
   };
 
+  renderNoneSlot = () => (
+    <div className={s.noneSlot}>
+      <Typography variant="subheading" color="inherit">
+        There is no slot available from our provider! Please find more in the next day!
+      </Typography>
+    </div>
+  );
+
   renderTimeBox = (data) => {
     const timeBox = Object.keys(data);
     return timeBox.length ? timeBox.map(
       date => (
         <div key={uuidv1()} className={s.availableDateSlots}>
           <div className={s.dateSlot}>
-            <Typography variant="subheading" color="inherit">
-              {moment(date.replace(/(\d+)-(\d+)-(\d+)/, '$3-$2-$1')).format(defaultDateFormat)}
+            <Typography variant="subheading" color="inherit" className="label">
+              {moment(date.replace(/(\d+)-(\d+)-(\d+)/, '$3-$2-$1')).format(longDateFormat)}
             </Typography>
           </div>
           <>
@@ -97,17 +105,11 @@ export class TimeBoxes extends React.PureComponent {
                     );
                   })}
                 </div>
-              )) : null}
+              )) : this.renderNoneSlot()}
           </>
         </div>
       ),
-    ) : (
-      <div className={s.noneSlot}>
-        <Typography variant="subheading" color="inherit">
-          There is no slot available from our provider! Please find more in the next day!
-        </Typography>
-      </div>
-    );
+    ) : this.renderNoneSlot();
   };
 
   render() {

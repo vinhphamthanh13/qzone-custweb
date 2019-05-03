@@ -6,7 +6,7 @@ import { get, chunk } from 'lodash';
 import uuidv1 from 'uuid/v1';
 import RateStar from 'components/Rating/RateStar';
 import { Typography } from '@material-ui/core';
-import { Schedule } from '@material-ui/icons';
+import { AvTimer } from '@material-ui/icons';
 import Rating from 'material-ui-rating';
 import s from './ProviderService.module.scss';
 
@@ -53,7 +53,7 @@ class ProviderContent extends Component {
                       <RateStar />
                     </div>
                     <div className={s.servingTime}>
-                      <Schedule className="icon-small icon-main" />
+                      <AvTimer className="icon-small icon-main" />
                       <Typography variant="body1" color="inherit">{duration} minutes</Typography>
                     </div>
                   </div>

@@ -31,7 +31,10 @@ import CustomModal from 'components/Modal/CustomModal';
 import Loading from 'components/Loading';
 import Error from 'components/Error';
 import { history } from 'containers/App';
-import { BOOKING } from 'utils/constants';
+import {
+  BOOKING,
+  regExPattern,
+} from 'utils/constants';
 import { setServiceProvidersAction } from 'actionsReducers/common.actions';
 import {
   getServiceByIdAction,
@@ -149,23 +152,27 @@ class Booking extends PureComponent {
 
   componentDidUpdate = (prevProps, prevState) => {
     const {
+      isError,
+      errorMessage,
       serviceProviders,
       appointmentEvent,
       setAvailabilitiesBySpecialEventBulkAction: setAvailabilitiesBySpecialEventBulk,
     } = prevProps;
     const {
-      serviceId: cachedServiceId,
-    } = prevState;
-    const {
-      serviceId,
-    } = this.state;
-    const {
+      isError: cachedIsError,
+      errorMessage: cachedErrorMessage,
       serviceProviders: cachedServiceProviders,
       appointmentEvent: cachedAppointmentEvent,
       setBookingStep: setBookingStepAction,
       getServiceByIdAction: getServiceById,
       setProvidersByServiceIdAction: setProvidersByServiceId,
     } = this.props;
+    const {
+      serviceId: cachedServiceId,
+    } = prevState;
+    const {
+      serviceId,
+    } = this.state;
     if (cachedServiceProviders && cachedServiceProviders !== serviceProviders) {
       const specialEventIdList = cachedServiceProviders.map(serviceProvider => ({
         specialEventId: serviceProvider.id,
@@ -181,6 +188,12 @@ class Booking extends PureComponent {
     const cachedId = get(cachedAppointmentEvent, 'id');
     if (bookedId !== cachedId) {
       setBookingStepAction(BOOKING.STEPS.VIEW_BOOKING);
+    }
+    if (
+      isError !== cachedIsError
+      && errorMessage !== cachedErrorMessage
+      && regExPattern.connectError.test(cachedErrorMessage)) {
+      history.push('/');
     }
   };
 

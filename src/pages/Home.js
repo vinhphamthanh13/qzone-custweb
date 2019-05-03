@@ -1,12 +1,16 @@
 import React from 'react';
 import {
   func,
+  bool,
+  string,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
 import { Grid } from '@material-ui/core';
 import { history } from 'containers/App';
 import Loading from 'components/Loading';
+import Error from 'components/Error';
+import EmptyItem from 'components/EmptyItem';
 import {
   setServiceCategoriesAction,
   setServicesAction,
@@ -14,8 +18,7 @@ import {
 import {
   setServiceProvidersAction,
 } from 'actionsReducers/common.actions';
-import Error from 'components/Error';
-import Maintenance from './components/maintenance/Maintenance';
+import { regExPattern } from 'utils/constants';
 import Services from './home/Services';
 import Auth from './Auth';
 import AppBar from './home/appBar/AppBar';
@@ -72,7 +75,6 @@ export class Home extends React.PureComponent {
       sessionTimeoutId: 0,
       isOpenAdvancedSearch: false,
       isShowingAdvancedSearch: false,
-      isMaintenance: false,
       combineServiceProviders: null,
     };
   }
@@ -86,6 +88,24 @@ export class Home extends React.PureComponent {
     setServiceCategories();
     setServices();
     setServiceProviders();
+  }
+
+  componentDidUpdate(prevProps) {
+    const {
+      isError,
+      errorMessage,
+    } = prevProps;
+    const {
+      isError: cachedIsError,
+      errorMessage: cachedErrorMessage,
+    } = this.props;
+    if (
+      isError !== cachedIsError
+      && errorMessage !== cachedErrorMessage
+      && regExPattern.connectError.test(cachedErrorMessage)
+    ) {
+      history.replace('/maintenance');
+    }
   }
 
   getSessionTimeoutId = (id) => {
@@ -165,7 +185,6 @@ export class Home extends React.PureComponent {
       isRegisterOpen,
       isLoginOpen,
       isOpenAdvancedSearch,
-      isMaintenance,
       sessionTimeoutId,
       combineServiceProviders,
     } = this.state;
@@ -175,8 +194,8 @@ export class Home extends React.PureComponent {
       services: combineServiceProviders
         && combineServiceProviders.filter(service => service.serviceCategoryId === category.id),
     }));
-    const underInstruction = isMaintenance && (<Maintenance />);
-
+    const systemMaintenance = !combineServiceProviders
+      || (combineServiceProviders && combineServiceProviders.lenght === 0);
     return (
       <>
         <Error />
@@ -194,7 +213,7 @@ export class Home extends React.PureComponent {
           onSearchValue={searchText}
           handleAdvancedSearch={this.openAdvancedSearch}
           sessionTimeoutId={sessionTimeoutId}
-          maintenance={isMaintenance}
+          maintenance={systemMaintenance}
         />
         {isOpenAdvancedSearch && (
           <div className="flex auto-margin-horizontal cover-bg-black">
@@ -207,47 +226,52 @@ export class Home extends React.PureComponent {
         }
         <Grid container>
           <Grid item xs={12} className={s.landingPage}>
-            <SlideShow
-              services={combineServiceProviders}
-              onBooking={this.handleBooking}
-            />
             {
-              searchResult && (
-                <Categorize
-                  search
-                  name="Search results"
-                  onClose={this.handleCloseSearch}
-                >
-                  <Services
-                    services={searchResult}
+              systemMaintenance ? <EmptyItem message="There is no service available at the moment" /> : (
+                <>
+                  <SlideShow
+                    services={combineServiceProviders}
                     onBooking={this.handleBooking}
                   />
-                </Categorize>
+                  {
+                    searchResult && (
+                      <Categorize
+                        search
+                        name="Search results"
+                        onClose={this.handleCloseSearch}
+                      >
+                        <Services
+                          services={searchResult}
+                          onBooking={this.handleBooking}
+                        />
+                      </Categorize>
+                    )
+                  }
+                  {
+                    isShowingAdvancedSearch && (
+                      <Categorize
+                        search
+                        name="Advanced Search Results"
+                        onClose={this.handleCloseSearch}
+                      >
+                        <Services
+                          services={serviceProviderNearByList}
+                          onBooking={this.handleBooking}
+                        />
+                      </Categorize>
+                    )
+                  }
+                  {categoriesServices && categoriesServices.map(category => (
+                    <Categorize key={category.name} name={category.name}>
+                      <Services
+                        services={category.services}
+                        onBooking={this.handleBooking}
+                      />
+                    </Categorize>
+                  ))}
+                </>
               )
             }
-            {
-              isShowingAdvancedSearch && (
-                <Categorize
-                  search
-                  name="Advanced Search Results"
-                  onClose={this.handleCloseSearch}
-                >
-                  <Services
-                    services={serviceProviderNearByList}
-                    onBooking={this.handleBooking}
-                  />
-                </Categorize>
-              )
-            }
-            {categoriesServices && categoriesServices.map(category => (
-              <Categorize key={category.name} name={category.name}>
-                <Services
-                  services={category.services}
-                  onBooking={this.handleBooking}
-                />
-              </Categorize>
-            ))}
-            {underInstruction}
             <Footer />
           </Grid>
         </Grid>
@@ -257,9 +281,16 @@ export class Home extends React.PureComponent {
 }
 
 Home.propTypes = {
+  isError: bool,
+  errorMessage: string,
   setServiceCategoriesAction: func.isRequired,
   setServicesAction: func.isRequired,
   setServiceProvidersAction: func.isRequired,
+};
+
+Home.defaultProps = {
+  isError: false,
+  errorMessage: '',
 };
 
 const mapStateToProps = state => ({

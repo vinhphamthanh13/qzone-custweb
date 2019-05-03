@@ -1,13 +1,13 @@
 import React from 'react';
 import { string, bool } from 'prop-types';
 import { Link } from 'react-router-dom';
-import styles from './CustomLink.module.scss';
+import s from './CustomLink.module.scss';
 
 export default function CustomLink({
   text, className, small, big, ...linkProps
 }) {
-  const mixedStyle = small ? `${styles.customLink} ${styles.small} ${className}` : `${styles.customLink} ${className}`;
-  const linkStyle = big ? `${mixedStyle} ${styles.big}` : mixedStyle;
+  const mixedStyle = small ? `${s.customLink} ${s.small} ${className}` : `${s.customLink} ${className}`;
+  const linkStyle = big ? `${mixedStyle} ${s.big}` : mixedStyle;
   return (
     <Link className={linkStyle} {...linkProps}>{text}</Link>
   );

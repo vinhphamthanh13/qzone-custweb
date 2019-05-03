@@ -5,13 +5,12 @@ import {
 import { get } from 'lodash';
 import {
   Typography,
-  Button,
 } from '@material-ui/core';
 import moment from 'moment';
 import {
   PersonPin,
-  Schedule,
-  EmailOutlined,
+  AvTimer,
+  Email,
   Call,
   Public,
 } from '@material-ui/icons';
@@ -89,22 +88,34 @@ class ProviderContent extends React.PureComponent {
                   <CustomLink
                     text={`${providerName} ${providerFamily}`}
                     to={`/provider/${providerId}`}
+                    className="main-color-04"
                     big
                   />
                 </Typography>
                 <div className={s.providerListCardMap}>
                   <RateStar rating={providerRating} />
                   <div className={s.geoLocation}>
-                    <Button onClick={this.toggleMapDialog} className="simple-button">
-                      <PersonPin className="icon-brand icon-small" />
+                    <PersonPin className="icon-brand icon-small" />
+                    <Typography
+                      variant="body1"
+                      color="inherit"
+                      className="hover-pointer"
+                      onClick={this.toggleMapDialog}
+                    >
                       View map
-                    </Button>
+                    </Typography>
                   </div>
                 </div>
               </div>
               <div className={s.providerListCardContent}>
                 <div className="icon-text">
-                  <EmailOutlined className="icon-main icon-small" />
+                  <AvTimer className="icon-main icon-small" />
+                  <Typography variant="body1" color="inherit" noWrap>
+                    {duration} minutes
+                  </Typography>
+                </div>
+                <div className="icon-text">
+                  <Email className="icon-main icon-small" />
                   <Typography variant="body1" color="inherit" noWrap>
                     {providerEmail}
                   </Typography>
@@ -125,17 +136,9 @@ class ProviderContent extends React.PureComponent {
             </div>
           </div>
           <div className={s.calendarTime}>
-            <div className={s.providerListCardService}>
-              <div className={s.contentItem}>
-                <Schedule className="icon-main" />
-                <Typography variant="subheading" color="primary">
-                  {duration} minutes
-                </Typography>
-              </div>
-            </div>
             <div className={s.providerListCardDescriptionBottom}>
               <Typography variant="body1" color="inherit">
-                Your current timezone: {moment.tz.guess()}
+                Local timezone: {moment.tz.guess()}
               </Typography>
             </div>
             <TimeBoxes
