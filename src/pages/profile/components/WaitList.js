@@ -11,7 +11,6 @@ import {
 } from '@material-ui/core';
 import {
   setWaitListsAction,
-  registerWaitListAction,
 } from 'actionsReducers/waitlist.actions';
 import s from './WaitList.module.scss';
 
@@ -45,11 +44,6 @@ class WaitList extends Component {
     setWaitLists();
   }
 
-  handleRegisterWaitList = () => {
-    const { registerWaitListAction: registerWaitList } = this.props;
-    registerWaitList();
-  };
-
   render() {
     const { waitLists } = this.state;
     console.log('props of formik', this.props);
@@ -69,7 +63,6 @@ class WaitList extends Component {
 
 WaitList.propTypes = {
   setWaitListsAction: func.isRequired,
-  registerWaitListAction: func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -82,6 +75,5 @@ export default compose(
   }),
   connect(mapStateToProps, {
     setWaitListsAction,
-    registerWaitListAction,
   }),
 )(WaitList);
