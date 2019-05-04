@@ -1,0 +1,45 @@
+@import "styles/_settings.scss";
+
+.joinWaitLists {
+  border: 1px solid $gallery;
+  padding: 0.7rem 1rem;
+  background: linear-gradient(to bottom, $malibu, $main);
+  transition: all 0.2s ease-in;
+  &:hover {
+    cursor: pointer;
+    background: linear-gradient(to top, $malibu, $main_04);
+  }
+}
+
+.waitListForm {
+  color: $main;
+  background: $main_01;
+}
+
+.waitListForm .title {
+  color: $main_03;
+}
+
+.serviceInfo {
+  color: $main_04;
+}
+
+.serviceImage {
+  width: 100%;
+}
+
+.dateRange {
+  color: $main;
+}
+
+.dateStart {
+  color: $main;
+}
+
+.timeRange {
+  color: $main;
+}
+
+.footerCta {
+  color: $main_04;
+}

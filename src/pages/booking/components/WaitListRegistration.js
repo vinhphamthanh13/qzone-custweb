@@ -1,19 +1,28 @@
 import React, { Component } from 'react';
 import {
   func,
-  // bool,
-  // objectOf,
+  bool,
+  objectOf,
   // object,
-  // any,
+  any,
 } from 'prop-types';
-import { Typography } from '@material-ui/core';
+import {
+  Typography,
+  TextField,
+  RadioGroup,
+  Radio,
+  FormControlLabel,
+  Button,
+} from '@material-ui/core';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withFormik } from 'formik';
+import DatePicker from 'components/Calendar/DatePicker';
 import {
   registerWaitListAction,
 } from 'actionsReducers/waitlist.actions';
-import s from 'pages/booking/components/SelectProvider.module.scss';
+import defaultImage from 'images/default-service-card.png';
+import s from './WaitListRegistration.module.scss';
 
 class WaitListRegistration extends Component {
   state = {
@@ -31,19 +40,93 @@ class WaitListRegistration extends Component {
     registerWaitList();
   };
 
+  handleChange = (event) => {
+    event.preventDefault();
+    const { setFieldValue } = this.props;
+    const { name, value } = event.target;
+    setFieldValue(name, value);
+  };
+
+  handleChangeDate = (date) => {
+    console.log('date on Change', date);
+  };
+
+  handleSelectDate = (date) => {
+    console.log('date selected', date);
+  };
+
   render() {
     const { isRegisterWaitLists } = this.state;
     console.log('waitlist component props: ', this.props);
+    const {
+      values,
+      isValid,
+    } = this.props;
     return (
       <>
         {isRegisterWaitLists && (
           <div className="cover-bg-black ">
-            <Typography
-              variant="title"
-              color="inherit"
-              onClick={this.handleToggleRegister}
-            >Join waitList
-            </Typography>
+            <div className={s.waitListForm}>
+              <div className={s.title}>
+                <Typography variant="headline" className="danger-color">
+                  Join Waited Lists
+                </Typography>
+              </div>
+              <div className={s.serviceInfo}>
+                <div className={s.serviceImage}>
+                  <img src={defaultImage} alt="Service" />
+                </div>
+                <Typography variant="title" className="main-color-04 text-bold">
+                  Vital Veda
+                </Typography>
+                <Typography variant="body1" className="main-color">
+                  185 Old South Head Road Junction New South Wales 2022
+                </Typography>
+                <div className={s.dateRange}>
+                  <div className={s.dateStart}>
+                    <DatePicker
+                      onChange={this.handleChangeDate}
+                      selectDate={this.handleSelectDate}
+                      enableCalendar
+                      type="date"
+                    />
+                  </div>
+                </div>
+                <div className={s.timeRange}>
+                  <TextField
+                    id="startTime"
+                    label="Start"
+                    name="startTime"
+                    value={0}
+                  />
+                  <TextField
+                    label="Start"
+                    name="endTime"
+                    value={0}
+                  />
+                </div>
+              </div>
+              <RadioGroup
+                name="waitlistregistration"
+                value={values.waitlistregistration}
+                onChange={this.handleChange}
+              >
+                <FormControlLabel value="provider" control={<Radio />} label="provider" />
+                <FormControlLabel value="customer" control={<Radio />} label="customer" />
+              </RadioGroup>
+              <div className={s.footerCta}>
+                <Button variant="outlined" onClick={this.handleToggleRegister}>
+                  Cancel
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={this.handleRegisterWaitList}
+                  disabled={!isValid}
+                >
+                  Join List
+                </Button>
+              </div>
+            </div>
           </div>
         )}
         <div className={s.joinWaitLists}>
@@ -62,10 +145,15 @@ class WaitListRegistration extends Component {
 
 WaitListRegistration.propTypes = {
   registerWaitListAction: func.isRequired,
+  values: objectOf(any).isRequired,
+  setFieldValue: func.isRequired,
+  isValid: bool.isRequired,
 };
 
 const mapStateToProps = state => ({
+  ...state.common,
   ...state.booking,
+  ...state.auth,
 });
 
 export default compose(

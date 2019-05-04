@@ -38,15 +38,3 @@
 .selectDateOfBooking {
   height: 100%;
 }
-
-.joinWaitLists {
-  border: 1px solid $gallery;
-  padding: 0.7rem 1rem;
-  background: linear-gradient(to bottom, $malibu, $main);
-  transition: all 0.2s ease-in;
-  &:hover {
-    cursor: pointer;
-    background: linear-gradient(to top, $malibu, $main_04);
-    border-radius: 0.5rem;
-  }
-}

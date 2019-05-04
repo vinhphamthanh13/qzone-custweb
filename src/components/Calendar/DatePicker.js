@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
   func,
   bool,
+  string,
 } from 'prop-types';
 import moment from 'moment';
 import { Typography } from '@material-ui/core';
@@ -44,6 +45,7 @@ class DatePicker extends Component {
     } = this.state;
     const {
       enableCalendar,
+      type,
     } = this.props;
     const datePickerHover = enableCalendar ? 'hover-pointer' : '';
     const renderCalendar = isOpenCalendar && enableCalendar ? (
@@ -57,27 +59,29 @@ class DatePicker extends Component {
         />
       </div>
     ) : null;
+    const tabStyle = type === 'theme' ? s.calendarTab : s.normalDatePicker;
+    const fontStyle = type === 'theme' ? s.calendarFont : '';
     return (
       <div className={s.datePicker}>
         {/* eslint-disable-next-line */}
         <div className={s.calendarCabin} onClick={this.handleOpenCalendar}>
-          <div className={`${s.calendarTab} ${datePickerHover}`}>
+          <div className={`${tabStyle} ${datePickerHover}`}>
             <div className={s.calendarText}>
-              <Typography variant="title" color="inherit" className={s.calendarFont}>
+              <Typography variant="body1" color="inherit" className={fontStyle}>
                 {selectedDate.format('DD')}
               </Typography>
             </div>
           </div>
-          <div className={s.calendarTab}>
+          <div className={tabStyle}>
             <div className={s.calendarText}>
-              <Typography variant="title" color="inherit" className={s.calendarFont}>
+              <Typography variant="body1" color="inherit" className={fontStyle}>
                 {selectedDate.format('MMMM')}
               </Typography>
             </div>
           </div>
-          <div className={s.calendarTab}>
+          <div className={tabStyle}>
             <div className={s.calendarText}>
-              <Typography variant="title" color="inherit" className={s.calendarFont}>
+              <Typography variant="body1" color="inherit" className={fontStyle}>
                 {selectedDate.format('YYYY')}
               </Typography>
             </div>
@@ -93,6 +97,11 @@ DatePicker.propTypes = {
   onChange: func.isRequired,
   selectDate: func.isRequired,
   enableCalendar: bool.isRequired,
+  type: string, // theme, date
+};
+
+DatePicker.defaultProps = {
+  type: 'theme',
 };
 
 export default DatePicker;

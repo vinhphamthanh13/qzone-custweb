@@ -260,7 +260,7 @@ class Form extends Component {
             { formType === LOGIN ? (
               <div className="text-center flex h-center">
                 <Typography variant="body2" color="secondary">
-                  Do not have an account yet?
+                  Do not have an account?
                 </Typography>
                 <Typography
                   onClick={() => this.handleAuth('isRegisterOpen')}
@@ -268,7 +268,7 @@ class Form extends Component {
                   color="primary"
                   className="hover-pointer fit-button button-text-center"
                 >
-                  Register
+                  Register Now!
                 </Typography>
               </div>
             ) : (
