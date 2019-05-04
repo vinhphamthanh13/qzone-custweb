@@ -69,7 +69,7 @@ class MainAppBar extends React.Component {
     } = this.props;
     const isAuthenticated = get(loginSession, 'isAuthenticated');
     const customerId = get(loginSession, 'id');
-    if (isAuthenticated) {
+    if (isAuthenticated && customerId) {
       findEventByCustomerId(customerId);
     }
   }
@@ -80,7 +80,10 @@ class MainAppBar extends React.Component {
       loginSession: updatedLoginSession,
       findEventByCustomerIdAction: findEventByCustomerId,
     } = this.props;
-    if (loginSession.isAuthenticated !== updatedLoginSession.isAuthenticated) {
+    if (
+      loginSession.isAuthenticated !== updatedLoginSession.isAuthenticated
+      && updatedLoginSession.id
+    ) {
       findEventByCustomerId(updatedLoginSession.id);
     }
   }

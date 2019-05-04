@@ -148,9 +148,7 @@ export const storeFireBaseUserAction = async (data, dispatch) => {
   dispatch(setLoading(false));
 };
 
-const askFireBaseUserToken = async () => {
-  await askForPermissionToReceiveNotifications();
-};
+const askFireBaseUserToken = async () => askForPermissionToReceiveNotifications();
 
 // Q-customer
 export const login = (value) => {
@@ -176,11 +174,13 @@ export const login = (value) => {
                     expiration: exp * 1000, // AWS exp counted in second
                     isAuthenticated: response.data.isAuthenticated,
                   };
-                  const userToken = askFireBaseUserToken();
-                  storeFireBaseUserAction({
-                    email,
-                    userToken,
-                  }, dispatch);
+                  askFireBaseUserToken().then((userToken) => {
+                    console.log('userToken', userToken);
+                    return storeFireBaseUserAction({
+                      email,
+                      userToken,
+                    }, dispatch);
+                  });
                   dispatch(storeUserSessionLogin(session));
                   dispatch(setUserDetails(userDetail));
                   saveSession(session);
