@@ -47,6 +47,11 @@ class SelectProvider extends React.PureComponent {
               <div className={s.selectDateOfBooking}>
                 <DatePicker onChange={onDateChange} selectDate={noop} enableCalendar={false} />
               </div>
+              <div className={s.joinWaitLists}>
+                <Typography variant="subheading" className="white-color text-bold">
+                  Join Queue
+                </Typography>
+              </div>
             </div>
             {providers ? (
               <div className={s.selectProviderList}>

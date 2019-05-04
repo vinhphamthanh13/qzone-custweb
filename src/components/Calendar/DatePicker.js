@@ -4,7 +4,6 @@ import {
   bool,
 } from 'prop-types';
 import moment from 'moment';
-import { DateRange } from '@material-ui/icons';
 import { Typography } from '@material-ui/core';
 import Calendar from './Calendar';
 import s from './DatePicker.module.scss';
@@ -62,11 +61,6 @@ class DatePicker extends Component {
       <div className={s.datePicker}>
         {/* eslint-disable-next-line */}
         <div className={s.calendarCabin} onClick={this.handleOpenCalendar}>
-          <div>
-            <div className="simple-button button-xs">
-              <DateRange className={`icon-big icon-brand main-color ${datePickerHover}`} />
-            </div>
-          </div>
           <div className={`${s.calendarTab} ${datePickerHover}`}>
             <div className={s.calendarText}>
               <Typography variant="title" color="inherit" className={s.calendarFont}>
