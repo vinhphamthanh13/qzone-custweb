@@ -18,6 +18,7 @@ import {
   RESET_PASSWORD_STATUS,
   LOAD_SESSION_TO_STATE,
   SET_USER_DETAILS, LOGOUT_ERROR_RST,
+  FIRE_BASE_STORE_USER,
 } from './constants';
 
 const authInitialize = {
@@ -156,6 +157,11 @@ const auth = (state = authInitialize, action) => {
       return {
         ...state,
         userDetail: action.payload,
+      };
+    case FIRE_BASE_STORE_USER:
+      return {
+        ...state,
+        firebaseUserStored: action.payload,
       };
     default:
       return state;

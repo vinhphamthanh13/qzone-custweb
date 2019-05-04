@@ -30,7 +30,13 @@ const CustomModal = (props) => {
           <Typography className="text-capitalize" variant="h5" color={headingColor}>
             {title}
           </Typography>
-          <Typography variant="subheading" color="textSecondary">{message}</Typography>
+          <Typography
+            variant="subheading"
+            color="textSecondary"
+          >{
+            message.length > 100 ? `${message.substring(0, 100)}...` : message
+          }
+          </Typography>
           {(okCallBack || cancelCallBack) && (
             <div className={classes.modalActions}>
               {cancelCallBack && (
