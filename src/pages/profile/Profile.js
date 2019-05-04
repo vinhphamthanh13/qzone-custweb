@@ -53,6 +53,7 @@ class Profile extends Component {
     this.state = {
       userDetail: null,
       isPopupWarning: '',
+      firebaseUserStored: null,
     };
   }
 
@@ -66,13 +67,14 @@ class Profile extends Component {
     findEventByCustomerId(customerId);
   }
 
-  async componentDidUpdate(prevProps) {
-    const { serviceProviders } = prevProps;
+  async componentDidUpdate(prevProps, prevState) {
     const {
-      serviceProviders: updatedServiceProviders,
       storeFireBaseUserAction: storeFireBaseUser,
     } = this.props;
-    if (serviceProviders !== updatedServiceProviders) {
+    const {
+      firebaseUserStored: cachedFirebaseUserStored,
+    } = prevState;
+    if (!cachedFirebaseUserStored) {
       const { userDetail } = this.state;
       const email = get(userDetail, 'email');
       const userToken = await askForPermissionToReceiveNotifications();
@@ -107,6 +109,8 @@ class Profile extends Component {
       isPopupWarning,
     } = this.state;
 
+    console.log('props', this.props);
+    console.log('state', this.state);
     const givenName = get(userDetail, 'givenName');
     const email = get(userDetail, 'email');
     const updateProfileMsgError = isPopupWarning === 'error' ? (

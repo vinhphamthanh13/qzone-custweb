@@ -13,6 +13,7 @@ import { get } from 'lodash';
 export const UPDATE_PROFILE = 'PROFILE.UPDATE_PROFILE';
 export const FIRE_BASE_STORE_USER = 'PROFILE.FIRE_BASE_STORE_USER';
 
+
 export const updateProfileAction = payload => ({
   type: UPDATE_PROFILE,
   payload,

@@ -6,6 +6,7 @@ import {
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
+import uuidv1 from 'uuid/v1';
 import { Grid } from '@material-ui/core';
 import { history } from 'containers/App';
 import Loading from 'components/Loading';
@@ -104,7 +105,7 @@ export class Home extends React.PureComponent {
       && errorMessage !== cachedErrorMessage
       && regExPattern.connectError.test(cachedErrorMessage)
     ) {
-      history.replace('/maintenance');
+      history.replace(`/maintenance/${uuidv1()}`);
     }
   }
 

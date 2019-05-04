@@ -94,6 +94,7 @@ class TimelineCard extends Component {
       isOpenMap,
       serviceProviders,
     } = this.state;
+    console.log('card ', this.props);
     const toSecCalc = (toSec || startSec + duration * 60) * 1000;
     const current = new Date();
     const currentSec = current.getTime() / 1000;
