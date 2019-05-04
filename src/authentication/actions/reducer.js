@@ -53,6 +53,7 @@ const authInitialize = {
   resetPasswordStatus: 'none', // success, error, none
   resetPasswordMessage: '',
   isLogoutError: false,
+  firebaseUserStored: null,
 };
 
 const auth = (state = authInitialize, action) => {

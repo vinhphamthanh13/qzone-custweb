@@ -16,7 +16,6 @@ import {
 import { history } from 'containers/App';
 import CustomModal from 'components/Modal/CustomModal';
 import Error from 'components/Error';
-// import { askForPermissionToReceiveNotifications } from 'utils/pushNotification';
 import Header from './components/Header';
 import Content from './components/Content';
 import s from './Profile.module.scss';
@@ -26,22 +25,18 @@ class Profile extends Component {
     const {
       userDetail,
       updateProfileStatus,
-      firebaseUserStored,
     } = props;
     const {
       userDetail: cachedUserDetail,
       updateProfileStatus: cachedUpdateProfileStatus,
-      firebaseUserStored: cachedFirebaseUserStored,
     } = state;
     if (
       userDetail !== cachedUserDetail
     || updateProfileStatus !== cachedUpdateProfileStatus
-    || firebaseUserStored !== cachedFirebaseUserStored
     ) {
       return {
         userDetail,
         updateProfileStatus,
-        firebaseUserStored,
       };
     }
     return null;
@@ -52,7 +47,6 @@ class Profile extends Component {
     this.state = {
       userDetail: null,
       isPopupWarning: '',
-      firebaseUserStored: null,
     };
   }
 
@@ -65,24 +59,6 @@ class Profile extends Component {
     setServiceProviders();
     findEventByCustomerId(customerId);
   }
-  //
-  // async componentDidUpdate(prevProps, prevState) {
-  //   const {
-  //     storeFireBaseUserAction: storeFireBaseUser,
-  //   } = this.props;
-  //   const {
-  //     firebaseUserStored: cachedFirebaseUserStored,
-  //   } = prevState;
-  //   if (!cachedFirebaseUserStored) {
-  //     const { userDetail } = this.state;
-  //     const email = get(userDetail, 'email');
-  //     const userToken = await askForPermissionToReceiveNotifications();
-  //     storeFireBaseUser({
-  //       email,
-  //       userToken,
-  //     });
-  //   }
-  // }
 
   handleAccount = (data) => {
     const { postUpdatedProfile: postUpdatedProfileAction } = this.props;

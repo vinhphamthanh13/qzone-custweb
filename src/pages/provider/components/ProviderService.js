@@ -38,7 +38,7 @@ class ProviderContent extends Component {
               const description = get(service, 'description');
               const duration = get(service, 'duration');
               const serviceId = get(service, 'id');
-              const serviceProvider = serviceProviders
+              const serviceProvider = serviceProviders && serviceProviders
                 .filter(item => item.providerId === providerId && item.serviceId === serviceId);
               const serviceProviderId = get(serviceProvider, '0.id');
               const providerRating = get(serviceProvider, '0.rating');
