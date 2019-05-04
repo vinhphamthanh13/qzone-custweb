@@ -1,6 +1,5 @@
 import {
   UPDATE_PROFILE,
-  FIRE_BASE_STORE_USER,
 } from './profile.actions';
 
 const initState = {
@@ -14,11 +13,6 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         updateProfileStatus: action.payload,
-      };
-    case FIRE_BASE_STORE_USER:
-      return {
-        ...state,
-        firebaseUserStored: action.payload,
       };
     default:
       return state;

@@ -1,10 +1,21 @@
 import { Auth } from 'aws-amplify';
 import { GOOGLE_ID, AUTH_METHOD, PROVIDER } from 'config/auth';
-import { setLoading } from 'actionsReducers/common.actions';
-import { getCustomerByEmail as loginApi, saveSocialEmail as socialLoginApi, fetchUserDetail } from 'actionsApi/auth';
+import { setError, setLoading } from 'actionsReducers/common.actions';
+import {
+  getCustomerByEmail as loginApi,
+  saveSocialEmail as socialLoginApi,
+  fetchUserDetail,
+  firebaseStoreUser,
+} from 'actionsApi/auth';
 import { saveSession } from 'config/localStorage';
+import { askForPermissionToReceiveNotifications } from 'utils/pushNotification';
 import { handleResponse, handleRequest } from 'utils/apiHelpers';
-import { STORE_USER_SESSION_LOGIN, STORE_USER_SESSION_ERROR, SET_USER_DETAILS } from './constants';
+import {
+  STORE_USER_SESSION_LOGIN,
+  STORE_USER_SESSION_ERROR,
+  SET_USER_DETAILS,
+  FIRE_BASE_STORE_USER,
+} from './constants';
 
 // Redux
 const storeUserSessionLogin = payload => ({
@@ -19,6 +30,11 @@ const storeUserSessionError = payload => ({
 
 const setUserDetails = payload => ({
   type: SET_USER_DETAILS,
+  payload,
+});
+
+export const storeFireBaseUser = payload => ({
+  type: FIRE_BASE_STORE_USER,
   payload,
 });
 
@@ -120,6 +136,20 @@ export const googleLogIn = () => (dispatch) => {
     );
 };
 
+// receive Push Notification
+export const storeFireBaseUserAction = async (data, dispatch) => {
+  dispatch(setLoading(true));
+  const [firebaseUserStored, error] = await handleRequest(firebaseStoreUser, [data]);
+  if (error) {
+    dispatch(setError(error));
+  } else {
+    dispatch(storeFireBaseUser(firebaseUserStored || 'success'));
+  }
+  dispatch(setLoading(false));
+};
+
+const askFireBaseUserToken = async () => askForPermissionToReceiveNotifications();
+
 // Q-customer
 export const login = (value) => {
   const { email, password } = value;
@@ -144,6 +174,13 @@ export const login = (value) => {
                     expiration: exp * 1000, // AWS exp counted in second
                     isAuthenticated: response.data.isAuthenticated,
                   };
+                  askFireBaseUserToken().then((userToken) => {
+                    console.log('userToken', userToken);
+                    return storeFireBaseUserAction({
+                      email,
+                      userToken,
+                    }, dispatch);
+                  });
                   dispatch(storeUserSessionLogin(session));
                   dispatch(setUserDetails(userDetail));
                   saveSession(session);

@@ -67,7 +67,7 @@ const rootRoutes = [
   {
     exact: true,
     strict: true,
-    path: '/maintenance',
+    path: '/maintenance/:id',
     name: 'Maintenance',
     component: Maintenance,
   },
