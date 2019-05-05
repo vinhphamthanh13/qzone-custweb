@@ -20,7 +20,7 @@ import {
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withFormik } from 'formik';
-// import moment from 'moment';
+import moment from 'moment';
 import { get } from 'lodash';
 import DatePicker from 'components/Calendar/DatePicker';
 import {
@@ -57,7 +57,7 @@ class WaitListRegistration extends Component {
       const isAuthenticated = get(loginSession, 'isAuthenticated');
       const customerId = get(userDetail, 'userSub');
       const serviceId = get(serviceProviders, '0.serviceId');
-      const providerId = get(serviceProviders, '0.id');
+      const providerId = get(serviceProviders, '0.providerId');
       return {
         service,
         serviceProviders,
@@ -68,12 +68,16 @@ class WaitListRegistration extends Component {
         isAuthenticated,
         customerId,
         serviceId,
+        loginSession,
+        userDetail,
       };
     }
     return null;
   }
 
   state = {
+    dateFrom: moment().unix(),
+    dateTo: moment().unix(),
     service: null,
     serviceProviders: null,
     isRegisterWaitLists: false,
@@ -103,6 +107,8 @@ class WaitListRegistration extends Component {
       customerId,
       timezoneId,
       serviceId,
+      dateFrom,
+      dateTo,
     } = this.state;
     registerWaitList({
       customerId,
@@ -113,10 +119,9 @@ class WaitListRegistration extends Component {
         providerId,
         serviceId,
         sstartSec: '',
-        startSec: 0,
-        toSec: 0,
+        startSec: dateFrom,
+        toSec: dateTo,
       },
-      specialId: providerId,
     });
     this.handleToggleRegister();
   };
@@ -129,7 +134,7 @@ class WaitListRegistration extends Component {
   };
 
   handleChangeDate = key => (date) => {
-    this.setState({ [key]: date.format('DD/MM/YYYY') });
+    this.setState({ [key]: date.unix() });
   };
 
   handleSelectDate = key => (date) => {
@@ -151,7 +156,7 @@ class WaitListRegistration extends Component {
     const providerName = get(provider, 'providerName');
     const geoLocation = get(provider, 'geoLocation');
     const timezoneId = get(provider, 'timezoneId');
-    const providerId = get(provider, 'id');
+    const providerId = get(provider, 'providerId');
     this.setState({
       providerName,
       geoLocation,
