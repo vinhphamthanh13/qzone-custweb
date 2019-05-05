@@ -105,16 +105,30 @@ class WaitListRegistration extends Component {
     this.setState({ isOpenProviderList: false });
   };
 
+  handleSelectProvider = provider => () => {
+    const providerName = get(provider, 'providerName');
+    const geoLocation = get(provider, 'geoLocation');
+    const timezoneId = get(provider, 'timezoneId');
+    this.setState({
+      providerName,
+      geoLocation,
+      timezoneId,
+    });
+  };
+
   renderProviderList = (list) => {
     console.log('in the render serivce providers list', list);
     return (
       <ul className={s.dropdownProviders}>
         {list && list.map(provider => (
-          <li className={s.providerItem}>
-            <Typography variant="body1" color="inherit" className="text-bold">
-              {provider.providerName}
-            </Typography>
-          </li>
+          <>
+            {/* eslint-disable-next-line */}
+            <li className={s.providerItem} onClick={this.handleSelectProvider(provider)}>
+              <Typography variant="body1" color="inherit" className="text-bold">
+                {provider.providerName}
+              </Typography>
+            </li>
+          </>
         ))}
       </ul>
     );
@@ -130,7 +144,6 @@ class WaitListRegistration extends Component {
       geoLocation,
       timezoneId,
     } = this.state;
-    console.log('waitList component props: ', this.props);
     const {
       values,
       isValid,
@@ -138,9 +151,8 @@ class WaitListRegistration extends Component {
     const serviceName = get(service, 'name');
     const serviceImg = get(service, 'image.fileUrl') || defaultImage;
     const fullAddress = get(geoLocation, 'fullAddress');
-    // const serviceDes = get(service, 'description');
-    // const serviceDur = get(service, 'duration');
     console.log('values', values);
+    console.log('waitList component props: ', this.props);
 
     return (
       <>
