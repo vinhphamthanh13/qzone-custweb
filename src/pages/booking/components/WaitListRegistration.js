@@ -71,6 +71,7 @@ class WaitListRegistration extends Component {
   handleToggleRegister = () => {
     this.setState(oldState => ({
       isRegisterWaitLists: !oldState.isRegisterWaitLists,
+      isOpenProviderList: false,
     }));
   };
 
@@ -100,13 +101,19 @@ class WaitListRegistration extends Component {
     }));
   };
 
+  handleCloseDropdownProviders = () => {
+    this.setState({ isOpenProviderList: false });
+  };
+
   renderProviderList = (list) => {
     console.log('in the render serivce providers list', list);
     return (
       <ul className={s.dropdownProviders}>
         {list && list.map(provider => (
           <li className={s.providerItem}>
-            {provider.providerName}
+            <Typography variant="body1" color="inherit" className="text-bold">
+              {provider.providerName}
+            </Typography>
           </li>
         ))}
       </ul>
@@ -159,6 +166,8 @@ class WaitListRegistration extends Component {
                         <Typography variant="body1" className="main-color">
                           Appointment with:
                         </Typography>
+                        {/* eslint-disable-next-line */}
+                        {isOpenProviderList && <div className={s.dropdownBackdrop} onClick={this.handleCloseDropdownProviders} />}
                         {/* eslint-disable-next-line */}
                         <div className={s.selectProviderDropdown} onClick={this.handleToggleDropdownProviders}>
                           <Typography
