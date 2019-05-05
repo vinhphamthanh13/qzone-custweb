@@ -35,24 +35,39 @@ class WaitListRegistration extends Component {
     const {
       service,
       serviceProviders,
+      loginSession,
+      userDetail,
     } = props;
     const {
       service: cachedService,
       serviceProviders: cachedServiceProviders,
+      loginSession: cachedLoginSession,
+      userDetail: cachedUserDetail,
     } = state;
     if (
       service !== cachedService
       || serviceProviders !== cachedServiceProviders
+      || loginSession !== cachedLoginSession
+      || userDetail !== cachedUserDetail
     ) {
+      console.log('state is derived from props', state);
       const providerName = get(serviceProviders, '0.providerName');
       const geoLocation = get(serviceProviders, '0.geoLocation');
       const timezoneId = get(serviceProviders, '0.timezoneId');
+      const isAuthenticated = get(loginSession, 'isAuthenticated');
+      const customerId = get(userDetail, 'userSub');
+      const serviceId = get(serviceProviders, '0.serviceId');
+      const providerId = get(serviceProviders, '0.id');
       return {
         service,
         serviceProviders,
         providerName,
         geoLocation,
         timezoneId,
+        providerId,
+        isAuthenticated,
+        customerId,
+        serviceId,
       };
     }
     return null;
@@ -66,6 +81,12 @@ class WaitListRegistration extends Component {
     geoLocation: null,
     isOpenProviderList: false,
     timezoneId: null,
+    providerId: null,
+    serviceId: null,
+    isAuthenticated: null,
+    customerId: null,
+    loginSession: null,
+    userDetail: null,
   };
 
   handleToggleRegister = () => {
@@ -77,11 +98,31 @@ class WaitListRegistration extends Component {
 
   handleRegisterWaitList = () => {
     const { registerWaitListAction: registerWaitList } = this.props;
-    registerWaitList();
+    const {
+      providerId,
+      customerId,
+      timezoneId,
+      serviceId,
+    } = this.state;
+    registerWaitList({
+      customerId,
+      isMakeAppointment: true,
+      isNotify: true,
+      slot: {
+        customerTimezone: timezoneId,
+        providerId,
+        serviceId,
+        sstartSec: '',
+        startSec: 0,
+        toSec: 0,
+      },
+      specialId: providerId,
+    });
     this.handleToggleRegister();
   };
 
-  handleChange = (event) => {
+  handleChangeOption = (event) => {
+    event.preventDefault();
     const { setFieldValue } = this.props;
     const { name, value } = event.target;
     setFieldValue(name, value);
@@ -91,8 +132,8 @@ class WaitListRegistration extends Component {
     this.setState({ [key]: date.format('DD/MM/YYYY') });
   };
 
-  handleSelectDate = (date) => {
-    console.log('date selected', date);
+  handleSelectDate = key => (date) => {
+    this.setState({ [key]: date.unix() });
   };
 
   handleToggleDropdownProviders = () => {
@@ -106,13 +147,16 @@ class WaitListRegistration extends Component {
   };
 
   handleSelectProvider = provider => () => {
+    console.log('provider in selected', provider);
     const providerName = get(provider, 'providerName');
     const geoLocation = get(provider, 'geoLocation');
     const timezoneId = get(provider, 'timezoneId');
+    const providerId = get(provider, 'id');
     this.setState({
       providerName,
       geoLocation,
       timezoneId,
+      providerId,
     });
   };
 
@@ -143,6 +187,7 @@ class WaitListRegistration extends Component {
       providerName,
       geoLocation,
       timezoneId,
+      isAuthenticated,
     } = this.state;
     const {
       values,
@@ -151,7 +196,8 @@ class WaitListRegistration extends Component {
     const serviceName = get(service, 'name');
     const serviceImg = get(service, 'image.fileUrl') || defaultImage;
     const fullAddress = get(geoLocation, 'fullAddress');
-    console.log('values', values);
+    const joinListLabel = isAuthenticated ? 'Join List' : 'Sign In';
+    console.log('state', this.state);
     console.log('waitList component props: ', this.props);
 
     return (
@@ -251,9 +297,9 @@ class WaitListRegistration extends Component {
                   <div className={s.selectOption}>
                     <div className={s.bookingOption}>
                       <RadioGroup
-                        name="enrolOption"
+                        name="enrollOption"
                         value={values.enrollOption}
-                        onChange={this.handleChange}
+                        onChange={this.handleChangeOption}
                       >
                         <FormControlLabel
                           value="automatically"
@@ -294,7 +340,7 @@ class WaitListRegistration extends Component {
                   disabled={!isValid}
                   className="main-button"
                 >
-                  Join List
+                  {joinListLabel}
                 </Button>
               </div>
             </div>

@@ -9,7 +9,10 @@ import {
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import moment from 'moment';
-import { noop, get } from 'lodash';
+import {
+  noop,
+  get,
+} from 'lodash';
 import { withStyles } from '@material-ui/core/styles';
 import {
   AppBar,
@@ -75,16 +78,20 @@ class MainAppBar extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { loginSession } = prevProps;
+    const {
+      loginSession,
+    } = prevProps;
     const {
       loginSession: updatedLoginSession,
       findEventByCustomerIdAction: findEventByCustomerId,
     } = this.props;
     if (
-      loginSession.isAuthenticated !== updatedLoginSession.isAuthenticated
-      && updatedLoginSession.id
+      loginSession !== updatedLoginSession
     ) {
-      findEventByCustomerId(updatedLoginSession.id);
+      const id = get(updatedLoginSession, 'id');
+      if (id) {
+        findEventByCustomerId(updatedLoginSession.id);
+      }
     }
   }
 

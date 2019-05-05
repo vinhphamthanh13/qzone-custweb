@@ -3,11 +3,9 @@ import {
   bool,
   func,
   string,
-  objectOf,
-  any,
 } from 'prop-types';
 import { connect } from 'react-redux';
-import { noop } from 'lodash';
+import { noop, get } from 'lodash';
 import Register from 'authentication/Register';
 import Login from 'authentication/Login';
 import VerificationCode from 'authentication/components/VerificationCode';
@@ -21,15 +19,40 @@ import { login as autoLogin } from 'authentication/actions/login';
 import { SESSION } from 'utils/constants';
 
 class Auth extends Component {
+  static getDerivedStateFromProps(props, state) {
+    const {
+      loginSession,
+      userDetail,
+    } = props;
+    const {
+      loginSession: cachedLoginSession,
+      userDetail: cachedUserDetail,
+    } = state;
+    if (
+      loginSession !== cachedLoginSession
+      || userDetail !== cachedUserDetail
+    ) {
+      return {
+        loginSession,
+        userDetail,
+      };
+    }
+    return null;
+  }
+
   state = {
     isSessionTimeout: false,
+    loginSession: null,
+    userDetail: null,
   };
 
   sessionTimeout = 0;
 
   componentWillMount() {
-    const { loginSession, getSessionTimeoutId } = this.props;
-    if (loginSession && loginSession.isAuthenticated) {
+    const { getSessionTimeoutId } = this.props;
+    const { loginSession } = this.state;
+    const isAuthenticated = get(loginSession, 'isAuthenticated');
+    if (isAuthenticated) {
       const startSession = loginSession.start_session;
       const currentTime = new Date().getTime();
       const sessionLive = currentTime - startSession;
@@ -43,11 +66,15 @@ class Auth extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { loginSession: prevLoginSession, getSessionTimeoutId } = this.props;
-    const { loginSession: { isAuthenticated } } = nextProps;
-    const { isAuthenticated: prevAuthenticated } = prevLoginSession;
-    if (isAuthenticated && isAuthenticated !== prevAuthenticated) {
+  componentDidUpdate(prevProps) {
+    const {
+      loginSession,
+      getSessionTimeoutId,
+    } = prevProps;
+    const {
+      loginSession: cachedLoginSession,
+    } = this.state;
+    if (loginSession !== cachedLoginSession) {
       this.sessionTimeout = setTimeout(this.endSession, SESSION.TIMEOUT);
       getSessionTimeoutId(this.sessionTimeout);
     }
@@ -68,7 +95,13 @@ class Auth extends Component {
   };
 
   handleCloseRegisterSuccessModal = () => {
-    const { closeRegisterSuccessModalAction, autoLoginAction, userDetail: { email, password } } = this.props;
+    const {
+      closeRegisterSuccessModalAction,
+      autoLoginAction,
+    } = this.props;
+    const { userDetail } = this.state;
+    const email = get(userDetail, 'email');
+    const password = get(userDetail, 'password');
     closeRegisterSuccessModalAction();
     autoLoginAction({ email, password });
   };
@@ -102,12 +135,24 @@ class Auth extends Component {
 
   render() {
     const {
-      isRegisterOpen, isLoginOpen, closeDialog, isVerificationCode,
-      verificationErrorMessage, iSignUpSuccessModal, userDetail: { email },
-      resendVerificationCodeStatus, handleAuthenticate, resetPasswordStatus,
-      resetPasswordMessage, isLogoutError, logoutErrorMessage,
+      isRegisterOpen,
+      isLoginOpen,
+      closeDialog,
+      isVerificationCode,
+      verificationErrorMessage,
+      iSignUpSuccessModal,
+      resendVerificationCodeStatus,
+      handleAuthenticate,
+      resetPasswordStatus,
+      resetPasswordMessage,
+      isLogoutError,
+      logoutErrorMessage,
     } = this.props;
-    const { isSessionTimeout } = this.state;
+    const {
+      isSessionTimeout,
+      userDetail,
+    } = this.state;
+    const email = get(userDetail, 'email');
     const renderSessionTimeout = isSessionTimeout
       ? (
         <CustomModal
@@ -228,7 +273,6 @@ Auth.propTypes = {
   closeRegisterSuccessModalAction: func.isRequired,
   iSignUpSuccessModal: bool,
   verificationErrorMessage: string,
-  userDetail: objectOf(any).isRequired,
   resendVerificationCodeStatus: string,
   closeResendStatusModal: func.isRequired,
   handleAuthenticate: func.isRequired,
@@ -237,7 +281,6 @@ Auth.propTypes = {
   clearResetPasswordStatusAction: func.isRequired,
   autoLoginAction: func.isRequired,
   logoutAction: func.isRequired,
-  loginSession: objectOf(any).isRequired,
   getSessionTimeoutId: func,
   isLogoutError: bool,
   logoutErrorMessage: string,
@@ -255,16 +298,7 @@ Auth.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  isVerificationCode: state.auth.isVerificationCode,
-  iSignUpSuccessModal: state.auth.iSignUpSuccessModal,
-  userDetail: state.auth.userDetail,
-  loginSession: state.auth.loginSession,
-  verificationErrorMessage: state.auth.verificationErrorMessage,
-  resendVerificationCodeStatus: state.auth.resendVerificationCodeStatus,
-  resetPasswordStatus: state.auth.resetPasswordStatus,
-  resetPasswordMessage: state.auth.resetPasswordMessage,
-  isLogoutError: state.auth.isLogoutError,
-  logoutErrorMessage: state.auth.logoutErrorMessage,
+  ...state.auth,
 });
 
 export default connect(
