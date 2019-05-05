@@ -13,6 +13,10 @@ import {
   FormControlLabel,
   Button,
 } from '@material-ui/core';
+import {
+  ChevronRight,
+  LocationOn,
+} from '@material-ui/icons';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withFormik } from 'formik';
@@ -30,13 +34,25 @@ class WaitListRegistration extends Component {
   static getDerivedStateFromProps(props, state) {
     const {
       service,
+      serviceProviders,
     } = props;
     const {
       service: cachedService,
+      serviceProviders: cachedServiceProviders,
     } = state;
-    if (service !== cachedService) {
+    if (
+      service !== cachedService
+      || serviceProviders !== cachedServiceProviders
+    ) {
+      const providerName = get(serviceProviders, '0.providerName');
+      const geoLocation = get(serviceProviders, '0.geoLocation');
+      const timezoneId = get(serviceProviders, '0.timezoneId');
       return {
         service,
+        serviceProviders,
+        providerName,
+        geoLocation,
+        timezoneId,
       };
     }
     return null;
@@ -44,7 +60,12 @@ class WaitListRegistration extends Component {
 
   state = {
     service: null,
+    serviceProviders: null,
     isRegisterWaitLists: false,
+    providerName: null,
+    geoLocation: null,
+    isOpenProviderList: false,
+    timezoneId: null,
   };
 
   handleToggleRegister = () => {
@@ -73,10 +94,34 @@ class WaitListRegistration extends Component {
     console.log('date selected', date);
   };
 
+  handleToggleDropdownProviders = () => {
+    this.setState(oldState => ({
+      isOpenProviderList: !oldState.isOpenProviderList,
+    }));
+  };
+
+  renderProviderList = (list) => {
+    console.log('in the render serivce providers list', list);
+    return (
+      <ul className={s.dropdownProviders}>
+        {list && list.map(provider => (
+          <li className={s.providerItem}>
+            {provider.providerName}
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
   render() {
     const {
       service,
+      serviceProviders,
       isRegisterWaitLists,
+      isOpenProviderList,
+      providerName,
+      geoLocation,
+      timezoneId,
     } = this.state;
     console.log('waitList component props: ', this.props);
     const {
@@ -85,6 +130,7 @@ class WaitListRegistration extends Component {
     } = this.props;
     const serviceName = get(service, 'name');
     const serviceImg = get(service, 'image.fileUrl') || defaultImage;
+    const fullAddress = get(geoLocation, 'fullAddress');
     // const serviceDes = get(service, 'description');
     // const serviceDur = get(service, 'duration');
     console.log('values', values);
@@ -96,7 +142,7 @@ class WaitListRegistration extends Component {
             <div className={s.waitListForm}>
               <div className={s.title}>
                 <Typography variant="headline" color="inherit" className="text-bold">
-                  Enrol to Waitlist
+                  Enroll to Waitlist
                 </Typography>
               </div>
               <div className={s.serviceInfo}>
@@ -107,15 +153,45 @@ class WaitListRegistration extends Component {
                   <Typography variant="title" className="main-color-04 text-bold">
                     {serviceName}
                   </Typography>
-                  <Typography variant="body1" className="main-color">
-                    185 Old South Head Road Junction New South Wales 2022
-                  </Typography>
+                  <div className={s.selectProvider}>
+                    {serviceProviders && (
+                      <>
+                        <Typography variant="body1" className="main-color">
+                          Appointment with:
+                        </Typography>
+                        {/* eslint-disable-next-line */}
+                        <div className={s.selectProviderDropdown} onClick={this.handleToggleDropdownProviders}>
+                          <Typography
+                            variant="subheading"
+                            color="inherit"
+                            className={`${s.limitWidth} text-bold`}
+                            noWrap
+                          >
+                            {providerName}
+                          </Typography>
+                          <ChevronRight className="icon-normal" />
+                          {isOpenProviderList && this.renderProviderList(serviceProviders)}
+                        </div>
+                        <div className="icon-text">
+                          <LocationOn className="icon-normal" />
+                          <Typography variant="body1" color="inherit">
+                            {fullAddress}
+                          </Typography>
+                        </div>
+                      </>
+                    )}
+                  </div>
                 </div>
                 <div className={s.bookWaitList}>
                   <div className={s.availabilityDate}>
-                    <Typography variant="body1" color="inherit" className="text-bold">
-                      Date
-                    </Typography>
+                    <div className={s.availabilityLabel}>
+                      <Typography variant="body1" color="inherit" className="text-bold">
+                        Date:
+                      </Typography>
+                      <Typography variant="body1" className="danger-color">
+                        ({timezoneId})
+                      </Typography>
+                    </div>
                     <div className={s.dateRange}>
                       <div className={s.datePicker}>
                         <div className={s.pickerLabel}>
@@ -155,7 +231,7 @@ class WaitListRegistration extends Component {
                     <div className={s.bookingOption}>
                       <RadioGroup
                         name="enrolOption"
-                        value={values.enrolOption}
+                        value={values.enrollOption}
                         onChange={this.handleChange}
                       >
                         <FormControlLabel
@@ -168,7 +244,7 @@ class WaitListRegistration extends Component {
                               }
                             }
                             />)}
-                          label="Allowing Quezone making your appointment automatically."
+                          label="Make your appointment automatically."
                         />
                         <FormControlLabel
                           value="manually"
@@ -237,7 +313,7 @@ export default compose(
     enableReinitialize: true,
     isInitialValid: true,
     mapPropsToValues: () => ({
-      enrolOption: 'automatically',
+      enrollOption: 'automatically',
     }),
   }),
   connect(mapStateToProps, {

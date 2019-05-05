@@ -16,6 +16,7 @@
   color: $main;
   background: $main_01;
   padding: 0.5rem 1rem;
+  max-width: 410px;
 }
 
 .title {
@@ -36,16 +37,64 @@
 
 .serviceDescription {
   color: $main_03;
-  margin: 1rem auto;
+  margin-top: 1rem;
+}
+
+.selectProvider {
+  color: $main;
+  margin: 0.5rem auto;
+}
+
+.selectProviderDropdown {
+  color: $main;
+  position: relative;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid $main_03;
+  border-radius: 0.5rem;
+  margin: 0.2rem auto;
+}
+
+.limitWidth {
+  width: 85%;
+}
+
+.dropdownProviders {
+  color: $main;
+  position: absolute;
+  background: $main_01;
+  width: 100%;
+  list-style-type: none;
+  padding: 1rem 0.5rem;
+  z-index: 100;
+  border-radius: 0.5rem;
+  box-shadow: 1px 1px 2px $main_03;
+}
+
+.providerItem {
+  color: $main;
 }
 
 .bookWaitList {
   color: $main_04;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .availabilityDate {
   display: flex;
   flex-direction: column;
+}
+
+.availabilityLabel {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
 }
 
 .dateRange {
@@ -57,7 +106,7 @@
 
 .datePicker {
   position: relative;
-  margin: 0.5rem auto;
+  margin: auto;
 }
 
 .pickerLabel {
@@ -83,12 +132,12 @@
 }
 
 .bookingOptionChecked {
-  color: $main_04 !important;
+  color: $main !important;
 }
 
 .footerCta {
   color: $main_04;
   display: flex;
   justify-content: space-between;
-  margin: 0.5rem 1rem;
+  margin: 0.5rem 1rem 0.2rem;
 }
