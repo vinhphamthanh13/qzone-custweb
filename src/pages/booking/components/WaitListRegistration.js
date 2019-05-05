@@ -271,6 +271,7 @@ class WaitListRegistration extends Component {
                   variant="outlined"
                   onClick={this.handleRegisterWaitList}
                   disabled={!isValid}
+                  className="main-button"
                 >
                   Join List
                 </Button>
