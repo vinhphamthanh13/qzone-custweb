@@ -22,23 +22,7 @@ import {
 } from './constants';
 
 const authInitialize = {
-  userDetail: {
-    givenName: '',
-    familyName: '',
-    telephone: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    address: {
-      city: '',
-      country: '',
-      district: '',
-      postCode: '',
-      state: '',
-      streetAddress: '',
-    },
-    userStatus: 'UNKNOWN',
-  },
+  userDetail: null,
   cognitoToken: '',
   registerErrorMessage: '',
   loginErrorMessage: '',
@@ -46,9 +30,7 @@ const authInitialize = {
   isVerificationCode: false,
   resendVerificationCodeStatus: 'none', // success, error, none
   iSignUpSuccess: false,
-  loginSession: {
-    isAuthenticated: false,
-  },
+  loginSession: null,
   isForgotPassword: false,
   resetPasswordStatus: 'none', // success, error, none
   resetPasswordMessage: '',

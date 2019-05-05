@@ -71,7 +71,7 @@ export class TimeBoxes extends React.PureComponent {
   renderNoneSlot = () => (
     <div className={s.noneSlot}>
       <Typography variant="subheading" color="inherit">
-        There is no slot available from our provider! Please find more in the next day!
+        All appointments has been booked! Please find more in the next day!
       </Typography>
     </div>
   );

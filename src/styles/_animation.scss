@@ -20,29 +20,29 @@
   transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
   animation-name: 'shaking-up-down';
-  animation-duration: 6s;
+  animation-duration: 3s;
   animation-iteration-count: infinite;
   animation-timing-function: ease-in;
 }
 
 @keyframes shaking-up-down {
-  2%, 18% {
-    transform: translate3d(0, -5px, 0);
+  5%, 18% {
+    transform: translate3d(0, -3px, 0);
   }
 
-  4%, 16% {
-    transform: translate3d(0, 5px, 0);
+  10%, 16% {
+    transform: translate3d(0, 3px, 0);
   }
 
-  6%, 10%, 14% {
-    transform: translate3d(0, -5px, 0);
+  15%, 20%, 15% {
+    transform: translate3d(0, -3px, 0);
   }
 
-  8%, 12% {
-    transform: translate3d(0, 5px, 0);
+  20%, 12% {
+    transform: translate3d(0, 3px, 0);
   }
 
-  18.1% {
+  21% {
     transform: translate3d(0px, 0, 0);
   }
 }

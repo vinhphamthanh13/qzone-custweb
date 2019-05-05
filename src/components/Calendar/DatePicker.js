@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import {
   func,
   bool,
+  string,
 } from 'prop-types';
 import moment from 'moment';
-import { DateRange } from '@material-ui/icons';
 import { Typography } from '@material-ui/core';
+import { DateRange } from '@material-ui/icons';
 import Calendar from './Calendar';
 import s from './DatePicker.module.scss';
 
@@ -45,6 +46,10 @@ class DatePicker extends Component {
     } = this.state;
     const {
       enableCalendar,
+      type,
+      isIcon,
+      iconClassName,
+      dateFormat,
     } = this.props;
     const datePickerHover = enableCalendar ? 'hover-pointer' : '';
     const renderCalendar = isOpenCalendar && enableCalendar ? (
@@ -58,36 +63,45 @@ class DatePicker extends Component {
         />
       </div>
     ) : null;
+    const tabStyle = type === 'theme' ? s.calendarTab : s.normalDatePicker;
+    const fontStyle = type === 'theme' ? s.calendarFont : '';
     return (
       <div className={s.datePicker}>
         {/* eslint-disable-next-line */}
         <div className={s.calendarCabin} onClick={this.handleOpenCalendar}>
-          <div>
-            <div className="simple-button button-xs">
-              <DateRange className={`icon-big icon-brand main-color ${datePickerHover}`} />
-            </div>
-          </div>
-          <div className={`${s.calendarTab} ${datePickerHover}`}>
-            <div className={s.calendarText}>
-              <Typography variant="title" color="inherit" className={s.calendarFont}>
-                {selectedDate.format('DD')}
+          { isIcon ? (
+            <div className={`${s.datePickerIcon} hover-pointer ${iconClassName}`}>
+              <DateRange className="icon-normal" />
+              <Typography variant="body1" color="inherit">
+                {selectedDate.format(dateFormat)}
               </Typography>
             </div>
-          </div>
-          <div className={s.calendarTab}>
-            <div className={s.calendarText}>
-              <Typography variant="title" color="inherit" className={s.calendarFont}>
-                {selectedDate.format('MMMM')}
-              </Typography>
-            </div>
-          </div>
-          <div className={s.calendarTab}>
-            <div className={s.calendarText}>
-              <Typography variant="title" color="inherit" className={s.calendarFont}>
-                {selectedDate.format('YYYY')}
-              </Typography>
-            </div>
-          </div>
+          )
+            : (
+            <>
+              <div className={`${tabStyle} ${datePickerHover}`}>
+                <div className={s.calendarText}>
+                  <Typography variant="body1" color="inherit" className={fontStyle}>
+                    {selectedDate.format('DD')}
+                  </Typography>
+                </div>
+              </div>
+              <div className={tabStyle}>
+                <div className={s.calendarText}>
+                  <Typography variant="body1" color="inherit" className={fontStyle}>
+                    {selectedDate.format('MMMM')}
+                  </Typography>
+                </div>
+              </div>
+              <div className={tabStyle}>
+                <div className={s.calendarText}>
+                  <Typography variant="body1" color="inherit" className={fontStyle}>
+                    {selectedDate.format('YYYY')}
+                  </Typography>
+                </div>
+              </div>
+            </>
+            )}
         </div>
         {renderCalendar}
       </div>
@@ -99,6 +113,17 @@ DatePicker.propTypes = {
   onChange: func.isRequired,
   selectDate: func.isRequired,
   enableCalendar: bool.isRequired,
+  type: string, // theme, date
+  isIcon: bool,
+  iconClassName: string,
+  dateFormat: string,
+};
+
+DatePicker.defaultProps = {
+  type: 'theme',
+  isIcon: false,
+  iconClassName: '',
+  dateFormat: 'DD/MM/YYYY',
 };
 
 export default DatePicker;
