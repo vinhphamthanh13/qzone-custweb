@@ -7,6 +7,12 @@
   justify-content: space-between;
 }
 
+.datePickerIcon {
+  display: flex;
+  border-bottom: 1px solid $main_03;
+  align-items: center;
+}
+
 .calendarCabin {
   display: flex;
   justify-content: center;

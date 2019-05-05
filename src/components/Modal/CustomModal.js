@@ -34,7 +34,7 @@ const CustomModal = (props) => {
             variant="subheading"
             color="textSecondary"
           >{
-            message.length > 100 ? `${message.substring(0, 100)}...` : message
+            message.length > 100 ? `${message.replace(/\./g, ' ').substring(0, 100)}...` : message
           }
           </Typography>
           {(okCallBack || cancelCallBack) && (
