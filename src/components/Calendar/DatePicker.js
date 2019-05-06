@@ -11,10 +11,24 @@ import Calendar from './Calendar';
 import s from './DatePicker.module.scss';
 
 class DatePicker extends Component {
-  state = {
-    selectedDate: moment(),
-    isOpenCalendar: false,
-  };
+  static getDerivedStateFromProps(props, state) {
+    const { date } = props;
+    const { selectedDate } = state;
+    if (date !== selectedDate) {
+      return {
+        selectedDate: date || selectedDate,
+      };
+    }
+    return null;
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedDate: moment(),
+      isOpenCalendar: false,
+    };
+  }
 
   componentDidMount() {
     const { selectDate } = this.props;

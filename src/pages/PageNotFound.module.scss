@@ -1,13 +1,13 @@
 @import "styles/_settings.scss";
 
 .wrapper {
-  max-width: $max-width;
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   background: linear-gradient(to bottom, $main, $main_03);
+  margin: 0 auto;
 }
  .header {
    color: $main;

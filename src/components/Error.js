@@ -24,6 +24,7 @@ const Error = (props) => {
       message={errorMessage}
       isOpen
       onClose={resetErrorMessageAction}
+      className="z-index-highest"
     />
   ) : null;
 };

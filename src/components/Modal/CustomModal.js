@@ -1,5 +1,9 @@
 import React from 'react';
-import { string, func, bool } from 'prop-types';
+import {
+  string,
+  func,
+  bool,
+} from 'prop-types';
 import { classesType } from 'types/global';
 import {
   Modal, Typography, Button, Avatar,
@@ -14,13 +18,14 @@ const CustomModal = (props) => {
   const {
     classes, message, title, isOpen, onClose, type,
     okText, okCallBack, cancelText, cancelCallBack,
+    className,
   } = props;
   const headingColor = type === 'error' ? 'secondary' : 'primary';
   return (
     <Modal
       open={isOpen}
       onClose={onClose}
-      className={classes.modalRoot}
+      className={`${classes.modalRoot} ${className}`}
     >
       <Paper className="verification-modal">
         <div className="verification-modal-logo">
@@ -76,6 +81,7 @@ CustomModal.propTypes = {
   okText: string,
   cancelCallBack: func,
   cancelText: string,
+  className: string,
 };
 
 CustomModal.defaultProps = {
@@ -84,6 +90,7 @@ CustomModal.defaultProps = {
   okText: 'Ok',
   cancelCallBack: undefined,
   cancelText: 'Cancel',
+  className: '',
 };
 
 export default withStyles(s)(CustomModal);

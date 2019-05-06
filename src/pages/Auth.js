@@ -53,7 +53,7 @@ class Auth extends Component {
     const { loginSession } = this.state;
     const isAuthenticated = get(loginSession, 'isAuthenticated');
     if (isAuthenticated) {
-      const startSession = loginSession.start_session;
+      const startSession = get(loginSession, 'start_session');
       const currentTime = new Date().getTime();
       const sessionLive = currentTime - startSession;
       if (sessionLive > SESSION.TIMEOUT) {
@@ -74,6 +74,12 @@ class Auth extends Component {
     const {
       loginSession: cachedLoginSession,
     } = this.state;
+    const startSession = get(cachedLoginSession, 'start_session');
+    const currentTime = new Date().getTime();
+    const sessionLive = currentTime - startSession;
+    if (sessionLive > SESSION.TIMEOUT) {
+      this.handleLogout();
+    }
     if (loginSession !== cachedLoginSession) {
       this.sessionTimeout = setTimeout(this.endSession, SESSION.TIMEOUT);
       getSessionTimeoutId(this.sessionTimeout);
