@@ -7,6 +7,7 @@ import {
 import moment from 'moment';
 import { Typography } from '@material-ui/core';
 import { DateRange } from '@material-ui/icons';
+import { DATE_FORMAT, INITIAL_TIME } from './constants';
 import Calendar from './Calendar';
 import s from './DatePicker.module.scss';
 
@@ -69,8 +70,8 @@ class DatePicker extends Component {
     const renderCalendar = isOpenCalendar && enableCalendar ? (
       <div className="cover-bg-black">
         <Calendar
-          minDate={moment(`${moment().format('YYYY-MM-DD')}T00:00:00`)}
-          maxDate={moment(`${moment().add(11, 'y').format('YYYY-MM-DD')}T00:00:00`)}
+          minDate={moment(`${moment().format(DATE_FORMAT)}${INITIAL_TIME}`)}
+          maxDate={moment(`${moment().add(11, 'y').format(DATE_FORMAT)}${INITIAL_TIME}`)}
           date={selectedDate}
           onDateChanged={this.handleChangeDate}
           onClose={this.handleCloseCalendar}

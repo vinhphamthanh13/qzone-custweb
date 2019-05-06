@@ -246,9 +246,11 @@ class WaitListRegistration extends Component {
                   <img src={serviceImg} alt="Service" className={s.serviceImage} />
                 </div>
                 <div className={s.serviceDescription}>
-                  <Typography variant="title" className="main-color-04 text-bold">
-                    {serviceName}
-                  </Typography>
+                  <div className={s.enrollServiceName}>
+                    <Typography variant="title" className="main-color-04 text-bold" noWrap>
+                      {serviceName}
+                    </Typography>
+                  </div>
                   <div className={s.selectProvider}>
                     {serviceProviders && (
                       <>

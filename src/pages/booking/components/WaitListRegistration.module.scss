@@ -17,7 +17,9 @@
   background: $main_01;
   padding: 0.5rem 1rem;
   max-width: 410px;
+  max-height: calc(100vh - 10px);
   position: relative;
+  overflow: auto;
 }
 
 .title {
@@ -39,6 +41,11 @@
 .serviceDescription {
   color: $main_03;
   margin-top: 1rem;
+}
+
+.enrollServiceName {
+  width: 100%;
+  margin: 0;
 }
 
 .selectProvider {
@@ -140,6 +147,7 @@
 
 .selectOption {
   color: $main;
+  margin: 0 auto;
 }
 
 .bookingOption {
