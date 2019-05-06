@@ -152,7 +152,7 @@ class WaitListRegistration extends Component {
     let newDate = null;
     if (key === 'dateFrom' && moment(date) > moment(dateTo * 1000)) {
       newDate = date;
-    } else if (key === 'dateTo' && moment(date) > moment(dateFrom * 1000)) {
+    } else if (key === 'dateTo' && moment(date) < moment(dateFrom * 1000)) {
       newDate = date;
     }
     this.setState(oldState => ({
