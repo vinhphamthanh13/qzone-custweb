@@ -12,9 +12,6 @@ import {
   uniqBy,
 } from 'lodash';
 import {
-  userDetailType,
-} from 'types/global';
-import {
   IconButton,
   Avatar,
   Button,
@@ -354,6 +351,7 @@ class Booking extends PureComponent {
         onDateChange: this.handleDateChange,
         setBookingDetail: setBookingDetailAction,
         setBookingStep: setBookingStepAction,
+        handleAuth,
       },
       [BOOKING.STEPS.CONFIRM_BOOKING]: {
         bookingService: service,
@@ -425,7 +423,6 @@ Booking.propTypes = {
   setBookingStep: func.isRequired,
   registerEventAction: func.isRequired,
   handleAuth: func.isRequired,
-  userDetail: userDetailType.isRequired,
   resetBooking: func.isRequired,
   setTemporaryServicesByIdAction: func.isRequired,
 };

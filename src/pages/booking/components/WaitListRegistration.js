@@ -30,6 +30,11 @@ import defaultImage from 'images/default-service-card.png';
 import { defaultDateFormat } from 'utils/constants';
 import s from './WaitListRegistration.module.scss';
 
+const DATE_RANGE_INVERT = {
+  dateFrom: 'dateTo',
+  dateTo: 'dateFrom',
+};
+
 class WaitListRegistration extends Component {
   static getDerivedStateFromProps(props, state) {
     const {
@@ -101,7 +106,10 @@ class WaitListRegistration extends Component {
   };
 
   handleRegisterWaitList = () => {
-    const { registerWaitListAction: registerWaitList } = this.props;
+    const {
+      registerWaitListAction: registerWaitList,
+      handleAuth,
+    } = this.props;
     const {
       providerId,
       customerId,
@@ -109,21 +117,26 @@ class WaitListRegistration extends Component {
       serviceId,
       dateFrom,
       dateTo,
+      isAuthenticated,
     } = this.state;
-    registerWaitList({
-      customerId,
-      isMakeAppointment: true,
-      isNotify: true,
-      slot: {
-        customerTimezone: timezoneId,
-        providerId,
-        serviceId,
-        sstartSec: '',
-        startSec: dateFrom,
-        toSec: dateTo,
-      },
-    });
-    this.handleToggleRegister();
+    if (isAuthenticated) {
+      registerWaitList({
+        customerId,
+        isMakeAppointment: true,
+        isNotify: true,
+        slot: {
+          customerTimezone: timezoneId,
+          providerId,
+          serviceId,
+          sstartSec: '',
+          startSec: dateFrom,
+          toSec: dateTo,
+        },
+      });
+      this.handleToggleRegister();
+    } else {
+      handleAuth('isLoginOpen');
+    }
   };
 
   handleChangeOption = (event) => {
@@ -134,7 +147,18 @@ class WaitListRegistration extends Component {
   };
 
   handleChangeDate = key => (date) => {
-    this.setState({ [key]: date.unix() });
+    const { dateFrom, dateTo } = this.state;
+    console.log('handle chnage date', this.state);
+    let newDate = null;
+    if (key === 'dateFrom' && moment(date) > moment(dateTo * 1000)) {
+      newDate = date;
+    } else if (key === 'dateTo' && moment(date) > moment(dateFrom * 1000)) {
+      newDate = date;
+    }
+    this.setState(oldState => ({
+      [key]: date.unix(),
+      [DATE_RANGE_INVERT[key]]: newDate ? newDate.unix() : oldState[DATE_RANGE_INVERT[key]],
+    }));
   };
 
   handleSelectDate = key => (date) => {
@@ -193,6 +217,8 @@ class WaitListRegistration extends Component {
       geoLocation,
       timezoneId,
       isAuthenticated,
+      dateFrom,
+      dateTo,
     } = this.state;
     const {
       values,
@@ -208,7 +234,7 @@ class WaitListRegistration extends Component {
     return (
       <>
         {isRegisterWaitLists && (
-          <div className="cover-bg-black ">
+          <div className="cover-bg-black z-index-high">
             <div className={s.waitListForm}>
               <div className={s.title}>
                 <Typography variant="headline" color="inherit" className="text-bold">
@@ -274,6 +300,7 @@ class WaitListRegistration extends Component {
                         <DatePicker
                           onChange={this.handleChangeDate('dateFrom')}
                           selectDate={this.handleSelectDate}
+                          date={moment(dateFrom * 1000)}
                           enableCalendar
                           type="date"
                           isIcon
@@ -290,6 +317,7 @@ class WaitListRegistration extends Component {
                         <DatePicker
                           onChange={this.handleChangeDate('dateTo')}
                           selectDate={this.handleSelectDate}
+                          date={moment(dateTo * 1000)}
                           enableCalendar
                           type="date"
                           isIcon
@@ -373,6 +401,7 @@ WaitListRegistration.propTypes = {
   values: objectOf(any).isRequired,
   setFieldValue: func.isRequired,
   isValid: bool.isRequired,
+  handleAuth: func.isRequired,
 };
 
 const mapStateToProps = state => ({

@@ -36,6 +36,7 @@ class SelectProvider extends React.PureComponent {
       bookingService,
       providers,
       onDateChange,
+      handleAuth,
     } = this.props;
     return (
       <>
@@ -48,7 +49,7 @@ class SelectProvider extends React.PureComponent {
               <div className={s.selectDateOfBooking}>
                 <DatePicker onChange={onDateChange} selectDate={noop} enableCalendar={false} />
               </div>
-              <WaitListRegistration />
+              <WaitListRegistration handleAuth={handleAuth} />
             </div>
             {providers ? (
               <div className={s.selectProviderList}>
@@ -80,6 +81,7 @@ SelectProvider.propTypes = {
   setBookingDetail: func.isRequired,
   setBookingStep: func.isRequired,
   onDateChange: func.isRequired,
+  handleAuth: func.isRequired,
 };
 
 SelectProvider.defaultProps = {

@@ -1,7 +1,6 @@
 import React from 'react';
 import { string, bool, func } from 'prop-types';
 import { connect } from 'react-redux';
-import { Modal } from '@material-ui/core';
 import CustomModal from 'components/Modal/CustomModal';
 import { Formik } from 'formik';
 import { resetErrorMessage } from 'actionsReducers/common.actions';
@@ -86,22 +85,24 @@ class Login extends React.Component {
     return (
       <>
         {errorModal}
-        <Modal open={isOpen} className="flex item-center">
-          <Formik
-            initialValues={loginInit}
-            validationSchema={loginSchema}
-            enableReinitialize
-            onSubmit={this.onLogin}
-            render={props => (
-              <Form
-                {...props}
-                onClose={this.onClose}
-                socialActions={socialActions}
-                handleAuthenticate={handleAuthenticate}
-              />
-            )}
-          />
-        </Modal>
+        {isOpen && (
+          <div className="flex item-center cover-bg-black z-index-higher">
+            <Formik
+              initialValues={loginInit}
+              validationSchema={loginSchema}
+              enableReinitialize
+              onSubmit={this.onLogin}
+              render={props => (
+                <Form
+                  {...props}
+                  onClose={this.onClose}
+                  socialActions={socialActions}
+                  handleAuthenticate={handleAuthenticate}
+                />
+              )}
+            />
+          </div>
+        )}
       </>
     );
   }
