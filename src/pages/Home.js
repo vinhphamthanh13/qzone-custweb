@@ -190,7 +190,6 @@ export class Home extends React.PureComponent {
       combineServiceProviders,
     } = this.state;
 
-    console.log('this.props', this.props);
     const categoriesServices = categories && categories.length > 0 && categories.map(category => ({
       name: category.name,
       services: combineServiceProviders
@@ -198,6 +197,7 @@ export class Home extends React.PureComponent {
     }));
     const systemMaintenance = !combineServiceProviders
       || (combineServiceProviders && combineServiceProviders.length === 0);
+
     return (
       <>
         <Error />

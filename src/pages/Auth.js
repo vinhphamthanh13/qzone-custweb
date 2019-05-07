@@ -28,6 +28,15 @@ class Auth extends Component {
       loginSession: cachedLoginSession,
       userDetail: cachedUserDetail,
     } = state;
+    let sessionLiveTime = null;
+    if (loginSession !== cachedLoginSession) {
+      const isAuthenticated = get(loginSession, 'isAuthenticated');
+      if (isAuthenticated) {
+        const startSession = get(loginSession, 'start_session');
+        const currentTime = new Date().getTime();
+        sessionLiveTime = currentTime - startSession;
+      }
+    }
     if (
       loginSession !== cachedLoginSession
       || userDetail !== cachedUserDetail
@@ -35,6 +44,7 @@ class Auth extends Component {
       return {
         loginSession,
         userDetail,
+        sessionLiveTime,
       };
     }
     return null;
@@ -44,27 +54,10 @@ class Auth extends Component {
     isSessionTimeout: false,
     loginSession: null,
     userDetail: null,
+    sessionLiveTime: null,
   };
 
-  sessionTimeout = 0;
-
-  componentWillMount() {
-    const { getSessionTimeoutId } = this.props;
-    const { loginSession } = this.state;
-    const isAuthenticated = get(loginSession, 'isAuthenticated');
-    if (isAuthenticated) {
-      const startSession = get(loginSession, 'start_session');
-      const currentTime = new Date().getTime();
-      const sessionLive = currentTime - startSession;
-      if (sessionLive > SESSION.TIMEOUT) {
-        this.handleLogout();
-      } else {
-        const startTimeout = SESSION.TIMEOUT - parseInt(sessionLive, 0);
-        this.sessionTimeout = setTimeout(this.endSession, startTimeout);
-        getSessionTimeoutId(this.sessionTimeout);
-      }
-    }
-  }
+  sessionTimeoutId = 0;
 
   componentDidUpdate(prevProps) {
     const {
@@ -73,21 +66,19 @@ class Auth extends Component {
     } = prevProps;
     const {
       loginSession: cachedLoginSession,
+      sessionLiveTime,
     } = this.state;
-    const startSession = get(cachedLoginSession, 'start_session');
-    const currentTime = new Date().getTime();
-    const sessionLive = currentTime - startSession;
-    if (sessionLive > SESSION.TIMEOUT) {
+    if (sessionLiveTime > SESSION.TIMEOUT) {
       this.handleLogout();
     }
     if (loginSession !== cachedLoginSession) {
-      this.sessionTimeout = setTimeout(this.endSession, SESSION.TIMEOUT);
-      getSessionTimeoutId(this.sessionTimeout);
+      this.sessionTimeoutId = setTimeout(this.endSession, SESSION.TIMEOUT);
+      getSessionTimeoutId(this.sessionTimeoutId);
     }
   }
 
   componentWillUnmount() {
-    clearTimeout(this.sessionTimeout);
+    clearTimeout(this.sessionTimeoutId);
   }
 
   endSession = () => {
@@ -124,7 +115,7 @@ class Auth extends Component {
 
   handleLogout = () => {
     const { logoutAction } = this.props;
-    clearTimeout(this.sessionTimeout);
+    clearTimeout(this.sessionTimeoutId);
     logoutAction();
   };
 
