@@ -2,12 +2,18 @@
 
 .joinWaitLists {
   border: 1px solid $gallery;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 0.7rem 1rem;
-  background: linear-gradient(to bottom, $malibu, $main);
   transition: all 0.2s ease-in;
+  color: $main_04;
+  box-sizing: border-box;
   &:hover {
     cursor: pointer;
-    background: linear-gradient(to top, $malibu, $main_04);
+    color: $main;
+    border: 1px solid $main_03;
   }
 }
 
@@ -17,7 +23,9 @@
   background: $main_01;
   padding: 0.5rem 1rem;
   max-width: 410px;
+  max-height: calc(100vh - 10px);
   position: relative;
+  overflow: auto;
 }
 
 .title {
@@ -39,6 +47,11 @@
 .serviceDescription {
   color: $main_03;
   margin-top: 1rem;
+}
+
+.enrollServiceName {
+  width: 100%;
+  margin: 0;
 }
 
 .selectProvider {
@@ -140,6 +153,7 @@
 
 .selectOption {
   color: $main;
+  margin: 0 auto;
 }
 
 .bookingOption {

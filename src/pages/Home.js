@@ -197,7 +197,7 @@ export class Home extends React.PureComponent {
         && combineServiceProviders.filter(service => service.serviceCategoryId === category.id),
     }));
     const systemMaintenance = !combineServiceProviders
-      || (combineServiceProviders && combineServiceProviders.lenght === 0);
+      || (combineServiceProviders && combineServiceProviders.length === 0);
     return (
       <>
         <Error />
