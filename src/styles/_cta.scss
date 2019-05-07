@@ -51,7 +51,18 @@
   &:hover {
     background: $main;
     color: $main_01;
-    border: 1px solid $we_peep_rgba;
+    border: 1px solid $we_peep;
+  }
+}
+
+.secondary-button {
+  background: transparent;
+  color: $danger;
+  transition: all 0.1s;
+  &:hover {
+    background: $danger;
+    color: $main_01;
+    border: 1px solid $we_peep;
   }
 }
 

@@ -3,7 +3,6 @@ import {
   func,
   bool,
   objectOf,
-  // object,
   any,
 } from 'prop-types';
 import {
@@ -16,6 +15,9 @@ import {
 import {
   ChevronRight,
   LocationOn,
+  Queue,
+  Cancel,
+  Fingerprint,
 } from '@material-ui/icons';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -120,6 +122,10 @@ class WaitListRegistration extends Component {
       isAuthenticated,
     } = this.state;
     if (isAuthenticated) {
+      let toSec = dateTo;
+      if (dateTo === dateFrom) {
+        toSec = dateTo + 3600 * 24; // Plus one day
+      }
       registerWaitList({
         customerId,
         isMakeAppointment: true,
@@ -130,7 +136,7 @@ class WaitListRegistration extends Component {
           serviceId,
           sstartSec: '',
           startSec: dateFrom,
-          toSec: dateTo,
+          toSec,
         },
       });
       this.handleToggleRegister();
@@ -207,6 +213,22 @@ class WaitListRegistration extends Component {
     );
   };
 
+  renderEnrollButton = isAuthenticated => (isAuthenticated ? (
+    <>
+      <Queue color="inherit" className="icon-small" />
+      <Typography variant="body1" color="inherit">
+        Enroll
+      </Typography>
+    </>
+  ) : (
+    <>
+      <Fingerprint color="inherit" className="icon-small" />
+      <Typography variant="body1" color="inherit">
+        Sign in
+      </Typography>
+    </>
+  ));
+
   render() {
     const {
       service,
@@ -227,7 +249,6 @@ class WaitListRegistration extends Component {
     const serviceName = get(service, 'name');
     const serviceImg = get(service, 'image.fileUrl') || defaultImage;
     const fullAddress = get(geoLocation, 'fullAddress');
-    const joinListLabel = isAuthenticated ? 'Join List' : 'Sign In';
     console.log('state', this.state);
     console.log('waitList component props: ', this.props);
 
@@ -366,16 +387,22 @@ class WaitListRegistration extends Component {
                 </div>
               </div>
               <div className={s.footerCta}>
-                <Button variant="outlined" onClick={this.handleToggleRegister}>
-                  Cancel
+                <Button
+                  variant="outlined"
+                  onClick={this.handleToggleRegister}
+                  className="secondary-button"
+                >
+                  <Cancel color="inherit" className="icon-small" />
+                  <Typography variant="body2" color="inherit">
+                    Cancel
+                  </Typography>
                 </Button>
                 <Button
                   variant="outlined"
                   onClick={this.handleRegisterWaitList}
                   disabled={!isValid}
                   className="main-button"
-                >
-                  {joinListLabel}
+                >{this.renderEnrollButton(isAuthenticated)}
                 </Button>
               </div>
             </div>
@@ -386,9 +413,11 @@ class WaitListRegistration extends Component {
           className={s.joinWaitLists}
           onClick={this.handleToggleRegister}
         >
+          <Queue color="inherit" className="icon-normal" />
           <Typography
             variant="subheading"
-            className="white-color text-bold"
+            className="text-bold"
+            color="inherit"
           >
             Join Queue
           </Typography>
