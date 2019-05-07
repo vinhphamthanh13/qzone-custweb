@@ -269,7 +269,7 @@ class Booking extends PureComponent {
           return null;
         });
       });
-      return uniqBy(providers, item => item.id);
+      return uniqBy(providers, item => item.userSub);
     }
     return null;
   };
@@ -314,7 +314,6 @@ class Booking extends PureComponent {
       </div>
     );
   });
-
 
   render() {
     const {

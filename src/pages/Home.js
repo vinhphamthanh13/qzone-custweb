@@ -197,7 +197,6 @@ export class Home extends React.PureComponent {
     }));
     const systemMaintenance = !combineServiceProviders
       || (combineServiceProviders && combineServiceProviders.length === 0);
-    console.log('this.props', this.props);
 
     return (
       <>
