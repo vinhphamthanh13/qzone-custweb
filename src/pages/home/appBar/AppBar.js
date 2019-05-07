@@ -222,7 +222,7 @@ MainAppBar.propTypes = {
   classes: objectOf(any).isRequired,
   handleAuthenticate: func.isRequired,
   onSearch: func.isRequired,
-  loginSession: objectOf(any).isRequired,
+  loginSession: objectOf(any),
   findEventByCustomerIdAction: func.isRequired,
   onSearchValue: string,
   handleAdvancedSearch: func.isRequired,
@@ -231,6 +231,7 @@ MainAppBar.propTypes = {
 
 MainAppBar.defaultProps = {
   onSearchValue: '',
+  loginSession: null,
 };
 
 const mapStateToProps = state => ({

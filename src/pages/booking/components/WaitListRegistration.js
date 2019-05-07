@@ -57,7 +57,6 @@ class WaitListRegistration extends Component {
       || loginSession !== cachedLoginSession
       || userDetail !== cachedUserDetail
     ) {
-      console.log('state is derived from props', state);
       const providerName = get(serviceProviders, '0.providerName');
       const geoLocation = get(serviceProviders, '0.geoLocation');
       const timezoneId = get(serviceProviders, '0.timezoneId');
@@ -249,8 +248,6 @@ class WaitListRegistration extends Component {
     const serviceName = get(service, 'name');
     const serviceImg = get(service, 'image.fileUrl') || defaultImage;
     const fullAddress = get(geoLocation, 'fullAddress');
-    console.log('state', this.state);
-    console.log('waitList component props: ', this.props);
 
     return (
       <>
