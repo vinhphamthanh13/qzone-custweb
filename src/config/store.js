@@ -2,7 +2,7 @@ import {
   createStore, applyMiddleware, compose, combineReducers,
 } from 'redux';
 import thunk from 'redux-thunk';
-
+import { AUTHENTICATED_KEY } from 'utils/constants';
 import auth from 'authentication/actions/reducer';
 import common from 'actionsReducers/common.reducer';
 import home from 'actionsReducers/home.reducer';
@@ -38,7 +38,7 @@ const store = createStore(
 );
 
 // loading session from local storage to redux store
-if (persistedSession && (persistedSession.isAuthenticated || persistedSession.qz_token)) {
+if (persistedSession && persistedSession[AUTHENTICATED_KEY]) {
   store.dispatch(getUserDetail(persistedSession.id));
   store.dispatch(loadSessionToState(persistedSession));
 }

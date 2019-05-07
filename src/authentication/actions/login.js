@@ -1,4 +1,5 @@
 import { Auth } from 'aws-amplify';
+import { get } from 'lodash';
 import { GOOGLE_ID, AUTH_METHOD, PROVIDER } from 'config/auth';
 import { setError, setLoading } from 'actionsReducers/common.actions';
 import {
@@ -15,6 +16,7 @@ import {
   STORE_USER_SESSION_ERROR,
   SET_USER_DETAILS,
   FIRE_BASE_STORE_USER,
+  AUTHENTICATED_KEY,
 } from './constants';
 
 // Redux
@@ -92,7 +94,7 @@ const getAWSCredentials = (googleUser, dispatch) => {
                 qz_token: sessionToken,
                 qz_refresh_token: null,
                 expiration: expires_in,
-                isAuthenticated: response.data.isAuthenticated,
+                isAuthenticated: get(response, `data.${AUTHENTICATED_KEY}`),
               };
               dispatch(setLoading(false));
               dispatch(storeUserSessionLogin(session));
@@ -172,7 +174,7 @@ export const login = (value) => {
                     qz_token: jwtToken,
                     qz_refresh_token: token,
                     expiration: exp * 1000, // AWS exp counted in second
-                    isAuthenticated: response.data.isAuthenticated,
+                    isAuthenticated: get(response, `data.${AUTHENTICATED_KEY}`),
                   };
                   askFireBaseUserToken().then((userToken) => {
                     console.log('userToken', userToken);

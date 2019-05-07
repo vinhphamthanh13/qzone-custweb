@@ -75,7 +75,7 @@ class ViewAppointment extends Component {
     const email = get(userDetail, 'email');
     const serviceName = get(appointmentEvent, 'serviceName');
     const serviceDescription = get(bookingService, 'description');
-    const startSec = get(appointmentEvent, 'slot.startSec');
+    const startSec = get(appointmentEvent, 'startSec');
     const duration = get(appointmentEvent, 'duration');
     const startTime = moment(startSec * 1000);
     const startYear = startTime.year();
@@ -202,14 +202,14 @@ class ViewAppointment extends Component {
             <div className={s.viewItems}>
               <DateRange className="icon-main" />
               <Typography variant="body1" color="primary" inline noWrap>
-                {mtz(appointmentEvent.slot.startSec * 1000).format(defaultDateFormat)}
+                {mtz(startSec * 1000).format(defaultDateFormat)}
               </Typography>
             </div>
             <div className={s.viewItems}>
               <AvTimer className="icon-main" />
               <Typography variant="body1" color="primary" inline noWrap>
-                {mtz(appointmentEvent.slot.startSec * 1000).format('LT')}{' - '}
-                {mtz((appointmentEvent.slot.startSec + appointmentEvent.duration * 60) * 1000).format('LT')}
+                {mtz(startSec * 1000).format('LT')}{' - '}
+                {mtz((startSec + appointmentEvent.duration * 60) * 1000).format('LT')}
               </Typography>
             </div>
           </div>

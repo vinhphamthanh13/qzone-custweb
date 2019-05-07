@@ -29,7 +29,10 @@ import {
   registerWaitListAction,
 } from 'actionsReducers/waitlist.actions';
 import defaultImage from 'images/default-service-card.png';
-import { defaultDateFormat } from 'utils/constants';
+import {
+  defaultDateFormat,
+  AUTHENTICATED_KEY,
+} from 'utils/constants';
 import s from './WaitListRegistration.module.scss';
 
 const DATE_RANGE_INVERT = {
@@ -60,7 +63,7 @@ class WaitListRegistration extends Component {
       const providerName = get(serviceProviders, '0.providerName');
       const geoLocation = get(serviceProviders, '0.geoLocation');
       const timezoneId = get(serviceProviders, '0.timezoneId');
-      const isAuthenticated = get(loginSession, 'isAuthenticated');
+      const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
       const customerId = get(userDetail, 'userSub');
       const serviceId = get(serviceProviders, '0.serviceId');
       const providerId = get(serviceProviders, '0.providerId');

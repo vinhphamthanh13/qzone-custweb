@@ -30,9 +30,10 @@ export class TimeBoxes extends React.PureComponent {
     provider: null,
   };
 
-  onHourChange = ({ start, duration }) => (event) => {
+  onHourChange = ({ slotId, start, duration }) => (event) => {
     event.preventDefault();
     this.props.onSelectSlot({
+      slotId,
       start: start.valueOf(),
       duration,
     });
@@ -52,15 +53,21 @@ export class TimeBoxes extends React.PureComponent {
         const startSec = get(slot, 'providerStartSec');
         const duration = get(slot, 'durationSec');
         const spotsOpen = get(slot, 'spotsOpen');
+        const slotId = get(slot, 'id');
         startSec.replace(' ', '-');
         slotTable[moment(startSec).format(dateFormatDash)] = slotTable[moment(startSec).format(dateFormatDash)]
           ? [
             ...slotTable[moment(startSec).format(dateFormatDash)],
             {
+              slotId,
               time: moment(startSec),
               duration,
               spotsOpen,
-              action: this.onHourChange({ start: moment(startSec).unix(), duration }),
+              action: this.onHourChange({
+                slotId,
+                start: moment(startSec).unix(),
+                duration,
+              }),
             },
           ] : [];
         return null;

@@ -16,7 +16,10 @@ import {
   clearResetPasswordStatus,
 } from 'authentication/actions/register';
 import { login as autoLogin } from 'authentication/actions/login';
-import { SESSION } from 'utils/constants';
+import {
+  SESSION,
+  AUTHENTICATED_KEY,
+} from 'utils/constants';
 
 class Auth extends Component {
   static getDerivedStateFromProps(props, state) {
@@ -30,7 +33,7 @@ class Auth extends Component {
     } = state;
     let sessionLiveTime = null;
     if (loginSession !== cachedLoginSession) {
-      const isAuthenticated = get(loginSession, 'isAuthenticated');
+      const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
       if (isAuthenticated) {
         const startSession = get(loginSession, 'start_session');
         const currentTime = new Date().getTime();
@@ -236,6 +239,8 @@ class Auth extends Component {
         message={logoutErrorMessage}
         onClose={this.handleLogoutError}
       />) : null;
+
+    console.log('state in Auth', this.state);
 
     return (
       <>

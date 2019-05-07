@@ -220,23 +220,19 @@ class Booking extends PureComponent {
       registerEventAction: registerEvent,
     } = this.props;
     const {
-      serviceId,
       bookingDetail,
       userDetail,
     } = this.state;
-    const providerId = get(bookingDetail, 'provider.providerId');
+    const slotId = get(bookingDetail, 'time.slotId');
     const duration = get(bookingDetail, 'time.duration');
     const customerId = get(userDetail, 'userSub');
+    const startSec = get(bookingDetail, 'time.start');
     this.toggleConfirmDialog(false)();
     registerEvent({
       customerId,
       duration,
-      slot: {
-        customerTimezone: moment.tz.guess(),
-        providerId,
-        serviceId,
-        startSec: bookingDetail.time.start,
-      },
+      slotId,
+      startSec,
       status: 'BOOKING_STATUS_UNSPECIFIED',
       type: 'APPOINTMENT',
     });
@@ -364,6 +360,7 @@ class Booking extends PureComponent {
       },
     };
 
+    console.log('booking details slot', this.state);
     return (
       <>
         <Error />

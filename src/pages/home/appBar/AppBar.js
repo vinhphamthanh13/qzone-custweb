@@ -32,6 +32,7 @@ import {
 } from '@material-ui/icons';
 import { findEventByCustomerIdAction } from 'actionsReducers/common.actions';
 import { history } from 'containers/App';
+import { AUTHENTICATED_KEY } from 'utils/constants';
 import logo from 'images/quezone-logo.png';
 import styles from './AppBarStyle';
 
@@ -70,7 +71,7 @@ class MainAppBar extends React.Component {
       loginSession,
       findEventByCustomerIdAction: findEventByCustomerId,
     } = this.props;
-    const isAuthenticated = get(loginSession, 'isAuthenticated');
+    const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
     const customerId = get(loginSession, 'id');
     if (isAuthenticated && customerId) {
       findEventByCustomerId(customerId);
@@ -127,7 +128,7 @@ class MainAppBar extends React.Component {
     const eventCount = eventList
       && eventList.filter(event => moment(event.slot.startSec * 1000) > currentTime).length;
     const badgeStyle = eventCount > 0 ? 'text-margin-lr hover-pointer' : 'text-margin-lr';
-    const isAuthenticated = get(loginSession, 'isAuthenticated');
+    const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
     const [authLabel, openForm] = maintenance ? ['Sign Up', 'isRegisterOpen'] : ['Sign In', 'isLoginOpen'];
     const customUser = isAuthenticated ? (
       <>

@@ -19,6 +19,7 @@ import {
   LOAD_SESSION_TO_STATE,
   SET_USER_DETAILS, LOGOUT_ERROR_RST,
   FIRE_BASE_STORE_USER,
+  AUTHENTICATED_KEY,
 } from './constants';
 
 const authInitialize = {
@@ -93,7 +94,7 @@ const auth = (state = authInitialize, action) => {
       return {
         ...state,
         loginSession: {
-          isAuthenticated: false,
+          [AUTHENTICATED_KEY]: false,
         },
         loginErrorMessage: action.payload.message,
       };

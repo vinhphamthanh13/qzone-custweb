@@ -3,7 +3,11 @@ export const timeSlotFormat = 'hh:mm a';
 export const defaultDateFormat = 'DD MMMM YYYY';
 export const longDateFormat = 'dddd, DD MMMM YYYY';
 
+// Auth
+export const AUTHENTICATED_KEY = 'qz_token';
 
+
+// Booking flow
 export const BOOKING = {
   CACHE_DATA: 'qz_booking_cached',
   STEPS: {
