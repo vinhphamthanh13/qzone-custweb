@@ -14,7 +14,10 @@ import moment from 'moment';
 import {
   serviceType,
 } from 'types/global';
-import { defaultDateFormat } from 'utils/constants';
+import {
+  defaultDateFormat,
+  AUTHENTICATED_KEY,
+} from 'utils/constants';
 import formatName from 'utils/formatName';
 import RateStar from 'components/Rating/RateStar';
 import MapDialog from '../../../components/Map/MapDialog';
@@ -88,7 +91,7 @@ class BookingDetail extends React.PureComponent {
     const userFamily = get(userDetail, 'familyName');
     const userEmail = get(userDetail, 'email');
     const userPhone = get(userDetail, 'telephone');
-    const isAuthenticated = get(loginSession, 'isAuthenticated');
+    const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
 
     return (
       <div className={s.bookingAppointment}>

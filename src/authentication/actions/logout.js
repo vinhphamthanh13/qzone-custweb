@@ -4,7 +4,12 @@ import { Auth } from 'aws-amplify';
 import { saveSession, loadSession } from 'config/localStorage';
 import { setLoading } from 'actionsReducers/common.actions';
 import { AUTH_METHOD, PROVIDER } from 'config/auth';
-import { LOGOUT_ERROR, LOGOUT_SUCCESS, LOGOUT_ERROR_RST } from './constants';
+import {
+  LOGOUT_ERROR,
+  LOGOUT_SUCCESS,
+  LOGOUT_ERROR_RST,
+  AUTHENTICATED_KEY,
+} from './constants';
 
 const initSession = {};
 
@@ -26,7 +31,7 @@ const logoutError = payload => ({
 
 export const logout = () => (dispatch) => {
   const currentSession = loadSession();
-  if (currentSession && (currentSession.isAuthenticated || currentSession.qz_token)) {
+  if (currentSession && currentSession[AUTHENTICATED_KEY]) {
     const { provider } = currentSession;
     dispatch(setLoading(true));
     if (provider && provider === PROVIDER.GOOGLE) {
