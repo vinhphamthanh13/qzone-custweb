@@ -113,10 +113,7 @@ export const registerEventAction = data => async (dispatch) => {
   if (error) {
     dispatch(setError(error));
   } else {
-    dispatch(setAppointmentCustomerEvents({
-      ...data,
-      ...registeredEvent,
-    }));
+    dispatch(setAppointmentCustomerEvents(registeredEvent));
   }
   dispatch(setLoading(false));
 };

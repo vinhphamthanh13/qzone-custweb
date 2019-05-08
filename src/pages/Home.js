@@ -100,12 +100,17 @@ export class Home extends React.PureComponent {
       isError: cachedIsError,
       errorMessage: cachedErrorMessage,
     } = this.props;
+    const {
+      serviceProviders,
+    } = this.state;
+
     if (
-      isError !== cachedIsError
+      (isError !== cachedIsError
       && errorMessage !== cachedErrorMessage
-      && regExPattern.connectError.test(cachedErrorMessage)
+      && regExPattern.connectError.test(cachedErrorMessage))
+      || (serviceProviders && serviceProviders.length === 0)
     ) {
-      history.replace(`/maintenance/${uuidv1()}`);
+      history.replace(`/in-maintenance/${uuidv1()}`);
     }
   }
 

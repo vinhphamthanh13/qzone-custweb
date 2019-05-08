@@ -75,7 +75,7 @@ class ViewAppointment extends Component {
     const email = get(userDetail, 'email');
     const serviceName = get(appointmentEvent, 'serviceName');
     const serviceDescription = get(bookingService, 'description');
-    const startSec = get(appointmentEvent, 'startSec');
+    const startSec = get(appointmentEvent, 'start');
     const duration = get(appointmentEvent, 'duration');
     const startTime = moment(startSec * 1000);
     const startYear = startTime.year();
