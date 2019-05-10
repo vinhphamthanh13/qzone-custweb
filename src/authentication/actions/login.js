@@ -9,7 +9,7 @@ import {
   firebaseStoreUser,
 } from 'actionsApi/auth';
 import { saveSession } from 'config/localStorage';
-import { askForPermissionToReceiveNotifications } from 'utils/pushNotification';
+// import { askForPermissionToReceiveNotifications } from 'utils/pushNotification';
 import { handleResponse, handleRequest } from 'utils/apiHelpers';
 import {
   STORE_USER_SESSION_LOGIN,
@@ -150,7 +150,7 @@ export const storeFireBaseUserAction = async (data, dispatch) => {
   dispatch(setLoading(false));
 };
 
-const askFireBaseUserToken = async () => askForPermissionToReceiveNotifications();
+// const askFireBaseUserToken = async () => askForPermissionToReceiveNotifications();
 
 // Q-customer
 export const login = (value) => {
@@ -176,10 +176,10 @@ export const login = (value) => {
                     expiration: exp * 1000, // AWS exp counted in second
                     isAuthenticated: get(response, `data.${AUTHENTICATED_KEY}`),
                   };
-                  askFireBaseUserToken().then(userToken => storeFireBaseUserAction({
-                    email,
-                    userToken,
-                  }, dispatch));
+                  // askFireBaseUserToken().then(userToken => storeFireBaseUserAction({
+                  //   email,
+                  //   userToken,
+                  // }, dispatch));
                   dispatch(storeUserSessionLogin(session));
                   dispatch(setUserDetails(userDetail));
                   saveSession(session);
