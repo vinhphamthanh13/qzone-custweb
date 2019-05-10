@@ -6,7 +6,7 @@ import {
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import {
   get,
   uniqBy,
