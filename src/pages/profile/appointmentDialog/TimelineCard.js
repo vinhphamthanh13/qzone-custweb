@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  shape,
   string,
   number,
   objectOf,
@@ -25,6 +24,7 @@ import {
   Update,
   Timer,
   PersonPin,
+  Public,
 } from '@material-ui/icons';
 import RateStar from 'components/Rating/RateStar';
 import MapDialog from 'components/Map/MapDialog';
@@ -54,7 +54,6 @@ class TimelineCard extends Component {
     super(props);
     this.state = {
       isOpenMap: false,
-      serviceProviders: null,
     };
   }
 
@@ -75,30 +74,24 @@ class TimelineCard extends Component {
 
   render() {
     const {
-      serviceName,
-      providerName,
-      slot: {
-        startSec, toSec, providerId, serviceId,
-      },
-      duration,
-      geoLocation: {
-        city, country,
-        district, postCode, state,
-        streetAddress,
-      },
       bookingCode,
       customerId,
+      duration,
+      providerStartSec,
+      providerName,
+      serviceName,
+      timezone,
       geoLocation,
     } = this.props;
     const {
       isOpenMap,
-      serviceProviders,
     } = this.state;
-    console.log('card ', this.props);
-    const toSecCalc = (toSec || startSec + duration * 60) * 1000;
-    const current = new Date();
-    const currentSec = current.getTime() / 1000;
-    const remainTimeSec = currentSec - (+startSec);
+    const serviceProviderId = 'abc';
+    const providerRating = 1;
+    const bookedTime = moment(providerStartSec.replace(' ', 'T'));
+    const endTimeSec = bookedTime.add(duration, 'm').unix() * 1000;
+    const currentSec = moment().unix() * 1000;
+    const remainTimeSec = currentSec - endTimeSec;
     const [eventStyle, iconTimeline, eventStatus, iconStatus, styleStatus] = remainTimeSec > 0
       ? [
         {
@@ -126,10 +119,6 @@ class TimelineCard extends Component {
     const waitingDay = parseInt(remainDay, 0);
     const waitingHr = waitingDay ? parseInt((remainDay % 1) * 24, 0) : parseInt(remainTimeHr, 0);
     const waitingMn = parseInt(remainTimeMn, 0);
-    const serviceProviderList = serviceProviders && serviceProviders
-      .filter(item => item.providerId === providerId && item.serviceId === serviceId);
-    const serviceProviderId = get(serviceProviderList, '0.id');
-    const providerRating = get(serviceProviderList, '0.rating');
 
     let displayTimeout = null;
     let currentEventStyle = eventStyle;
@@ -160,6 +149,12 @@ class TimelineCard extends Component {
     } else {
       displayTimeout = `${waitingHr} hr, ${waitingMn} min`;
     }
+    const streetAddress = get(geoLocation, 'streetAddress');
+    const district = get(geoLocation, 'district');
+    const state = get(geoLocation, 'state');
+    const postCode = get(geoLocation, 'postCode');
+    const city = get(geoLocation, 'city');
+    const country = get(geoLocation, 'country');
     const mapProvider = { geoLocation };
 
     return (
@@ -229,13 +224,19 @@ class TimelineCard extends Component {
             <div className={s.appointmentItem}>
               <DateRange className="icon-main" />
               <Typography variant="subheading" color="primary" inline noWrap>
-                {moment(startSec * 1000).format('DD MMM YYYY')}
+                {moment(providerStartSec).format('DD MMM YYYY')}
               </Typography>
             </div>
             <div className={s.appointmentItem}>
               <AvTimer className="icon-main" />
               <Typography variant="subheading" color="primary" inline noWrap>
-                {moment(startSec * 1000).format('LT')}{' - '}{moment(toSecCalc).format('LT')}
+                {moment(providerStartSec).format('LT')}{' - '}{moment(providerStartSec).add(duration, 'm').format('LT')}
+              </Typography>
+            </div>
+            <div className={s.appointmentItem}>
+              <Public className="icon-main" />
+              <Typography variant="subheading" color="primary" inline noWrap>
+                {timezone}
               </Typography>
             </div>
           </div>
@@ -258,14 +259,8 @@ class TimelineCard extends Component {
 TimelineCard.propTypes = {
   serviceName: string.isRequired,
   providerName: string.isRequired,
-  slot: shape({
-    customerTimezone: string.isRequired,
-    providerId: string,
-    serviceId: string,
-    sstartSec: string.isRequired,
-    startSec: number.isRequired,
-    toSec: number,
-  }).isRequired,
+  providerStartSec: string.isRequired,
+  timezone: string.isRequired,
   duration: number.isRequired,
   geoLocation: objectOf(any).isRequired,
   rateAppointmentAction: func.isRequired,
@@ -276,7 +271,7 @@ TimelineCard.propTypes = {
 const mapStateToProps = state => ({
   ...state.common,
   ...state.home,
-  ...state.waitlists,
+  ...state.waitLists,
 });
 
 export default connect(mapStateToProps, {

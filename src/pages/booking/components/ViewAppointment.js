@@ -20,13 +20,11 @@ import {
   Share,
 } from '@material-ui/icons';
 import { get } from 'lodash';
-import mtz from 'moment-timezone';
 import moment from 'moment';
 import AddToCalendar from 'react-add-to-calendar';
 import { history } from 'containers/App';
 import CustomLink from 'components/CustomLink';
 import RateStar from 'components/Rating/RateStar';
-import zeroPad from 'utils/zeroPad';
 import {
   eventType,
   serviceType,
@@ -75,34 +73,17 @@ class ViewAppointment extends Component {
     const email = get(userDetail, 'email');
     const serviceName = get(appointmentEvent, 'serviceName');
     const serviceDescription = get(bookingService, 'description');
-    const startSec = get(appointmentEvent, 'start');
+    const providerStartSec = get(appointmentEvent, 'providerStartSec');
+    const startTimeSec = moment(providerStartSec.replace(/\..*/, '')).unix();
     const duration = get(appointmentEvent, 'duration');
-    const startTime = moment(startSec * 1000);
-    const startYear = startTime.year();
-    const startMonth = startTime.month() + 1;
-    const startDate = startTime.date();
-    const startHour = startTime.hour();
-    const startMin = startTime.minutes();
-    const startSecond = startTime.seconds();
-    // eslint-disable-next-line
-    const startString = `${startYear}-${zeroPad(startMonth, 2)}-${zeroPad(startDate, 2)}T${zeroPad(startHour, 2)}:${zeroPad(startMin, 2)}:${zeroPad(startSecond, 2)}`;
-    const endTime = moment(startSec * 1000 + duration * 60000);
-    const endYear = endTime.year();
-    const endMonth = endTime.month() + 1;
-    const endDate = endTime.date();
-    const endHour = endTime.hour();
-    const endMin = endTime.minutes();
-    const endSecond = endTime.seconds();
-    const timeZoneId = moment.tz.guess();
-    // eslint-disable-next-line
-    const endString = `${endYear}-${zeroPad(endMonth, 2)}-${zeroPad(endDate, 2)}T${zeroPad(endHour, 2)}:${zeroPad(endMin, 2)}:${zeroPad(endSecond, 2)}`;
-    const addToCalendarTZ = moment(startString).tz(timeZoneId).format('z');
+    const timeZoneId = get(appointmentEvent, 'timezone');
+    const addToCalendarTZ = moment(startTimeSec * 1000).tz(timeZoneId).format('z');
     const bookedEvent = {
       title: serviceName,
       description: serviceDescription,
       location: `${streetAddress}, ${district}, ${stateName}, ${city}, ${country}`,
-      startTime: `${startString}${addToCalendarTZ}:00`,
-      endTime: `${endString}${addToCalendarTZ}:00`,
+      startTime: `${moment(startTimeSec * 1000).format('YYYY-MM-DDThh:mm:ss')}${addToCalendarTZ}:00`,
+      endTime: `${moment(startTimeSec * 1000).add(duration, 'm').format('YYYY-MM-DDThh:mm:ss')}${addToCalendarTZ}:00`,
     };
 
     return (
@@ -202,14 +183,14 @@ class ViewAppointment extends Component {
             <div className={s.viewItems}>
               <DateRange className="icon-main" />
               <Typography variant="body1" color="primary" inline noWrap>
-                {mtz(startSec * 1000).format(defaultDateFormat)}
+                {moment(providerStartSec * 1000).format(defaultDateFormat)}
               </Typography>
             </div>
             <div className={s.viewItems}>
               <AvTimer className="icon-main" />
               <Typography variant="body1" color="primary" inline noWrap>
-                {mtz(startSec * 1000).format('LT')}{' - '}
-                {mtz((startSec + appointmentEvent.duration * 60) * 1000).format('LT')}
+                {moment(providerStartSec * 1000).format(defaultDateFormat)}{' - '}
+                {moment(providerStartSec * 1000).add(duration, 'm').format(defaultDateFormat)}
               </Typography>
             </div>
           </div>
