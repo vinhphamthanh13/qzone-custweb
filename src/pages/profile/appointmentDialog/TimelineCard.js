@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  shape,
   string,
   number,
   objectOf,
@@ -54,7 +53,6 @@ class TimelineCard extends Component {
     super(props);
     this.state = {
       isOpenMap: false,
-      serviceProviders: null,
     };
   }
 
@@ -75,30 +73,27 @@ class TimelineCard extends Component {
 
   render() {
     const {
-      serviceName,
-      providerName,
-      slot: {
-        startSec, toSec, providerId, serviceId,
-      },
-      duration,
-      geoLocation: {
-        city, country,
-        district, postCode, state,
-        streetAddress,
-      },
       bookingCode,
       customerId,
+      duration,
+      provderStartSec,
+      providerName,
+      serviceName,
+      timezone,
       geoLocation,
     } = this.props;
     const {
       isOpenMap,
-      serviceProviders,
     } = this.state;
+    const serviceProviderId = 'abc';
     console.log('card ', this.props);
-    const toSecCalc = (toSec || startSec + duration * 60) * 1000;
-    const current = new Date();
-    const currentSec = current.getTime() / 1000;
-    const remainTimeSec = currentSec - (+startSec);
+    console.log('timezone ', timezone);
+    const providerRating = 1;
+    const bookedTime = moment(provderStartSec.replace(' ', 'T'));
+    const endTimeSec = bookedTime.add(duration, 'm').unix();
+    // const toSecCalc = (toSec || startSec + duration * 60) * 1000;
+    const currentSec = moment().unix();
+    const remainTimeSec = currentSec - endTimeSec;
     const [eventStyle, iconTimeline, eventStatus, iconStatus, styleStatus] = remainTimeSec > 0
       ? [
         {
@@ -126,10 +121,6 @@ class TimelineCard extends Component {
     const waitingDay = parseInt(remainDay, 0);
     const waitingHr = waitingDay ? parseInt((remainDay % 1) * 24, 0) : parseInt(remainTimeHr, 0);
     const waitingMn = parseInt(remainTimeMn, 0);
-    const serviceProviderList = serviceProviders && serviceProviders
-      .filter(item => item.providerId === providerId && item.serviceId === serviceId);
-    const serviceProviderId = get(serviceProviderList, '0.id');
-    const providerRating = get(serviceProviderList, '0.rating');
 
     let displayTimeout = null;
     let currentEventStyle = eventStyle;
@@ -160,6 +151,12 @@ class TimelineCard extends Component {
     } else {
       displayTimeout = `${waitingHr} hr, ${waitingMn} min`;
     }
+    const streetAddress = get(geoLocation, 'streetAddress');
+    const district = get(geoLocation, 'district');
+    const state = get(geoLocation, 'state');
+    const postCode = get(geoLocation, 'postCode');
+    const city = get(geoLocation, 'city');
+    const country = get(geoLocation, 'country');
     const mapProvider = { geoLocation };
 
     return (
@@ -229,13 +226,13 @@ class TimelineCard extends Component {
             <div className={s.appointmentItem}>
               <DateRange className="icon-main" />
               <Typography variant="subheading" color="primary" inline noWrap>
-                {moment(startSec * 1000).format('DD MMM YYYY')}
+                {moment(provderStartSec).format('DD MMM YYYY')}
               </Typography>
             </div>
             <div className={s.appointmentItem}>
               <AvTimer className="icon-main" />
               <Typography variant="subheading" color="primary" inline noWrap>
-                {moment(startSec * 1000).format('LT')}{' - '}{moment(toSecCalc).format('LT')}
+                {moment(provderStartSec).format('LT')}{' - '}{moment(endTimeSec).format('LT')}
               </Typography>
             </div>
           </div>
@@ -258,14 +255,8 @@ class TimelineCard extends Component {
 TimelineCard.propTypes = {
   serviceName: string.isRequired,
   providerName: string.isRequired,
-  slot: shape({
-    customerTimezone: string.isRequired,
-    providerId: string,
-    serviceId: string,
-    sstartSec: string.isRequired,
-    startSec: number.isRequired,
-    toSec: number,
-  }).isRequired,
+  provderStartSec: string.isRequired,
+  timezone: string.isRequired,
   duration: number.isRequired,
   geoLocation: objectOf(any).isRequired,
   rateAppointmentAction: func.isRequired,

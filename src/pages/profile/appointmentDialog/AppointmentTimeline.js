@@ -8,7 +8,7 @@ import TimelineCard from './TimelineCard';
 const AppointmentTimeline = ({ items }) => (
   <VerticalTimeline>
     <div>
-      {items.sort((a, b) => b.slot.startSec - a.slot.startSec)
+      {items.sort((a, b) => b.startSec - a.startSec)
         .map(item => (
           <TimelineCard
             key={item.id}
