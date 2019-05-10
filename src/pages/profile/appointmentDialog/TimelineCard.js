@@ -24,6 +24,7 @@ import {
   Update,
   Timer,
   PersonPin,
+  Public,
 } from '@material-ui/icons';
 import RateStar from 'components/Rating/RateStar';
 import MapDialog from 'components/Map/MapDialog';
@@ -76,7 +77,7 @@ class TimelineCard extends Component {
       bookingCode,
       customerId,
       duration,
-      provderStartSec,
+      providerStartSec,
       providerName,
       serviceName,
       timezone,
@@ -86,13 +87,10 @@ class TimelineCard extends Component {
       isOpenMap,
     } = this.state;
     const serviceProviderId = 'abc';
-    console.log('card ', this.props);
-    console.log('timezone ', timezone);
     const providerRating = 1;
-    const bookedTime = moment(provderStartSec.replace(' ', 'T'));
-    const endTimeSec = bookedTime.add(duration, 'm').unix();
-    // const toSecCalc = (toSec || startSec + duration * 60) * 1000;
-    const currentSec = moment().unix();
+    const bookedTime = moment(providerStartSec.replace(' ', 'T'));
+    const endTimeSec = bookedTime.add(duration, 'm').unix() * 1000;
+    const currentSec = moment().unix() * 1000;
     const remainTimeSec = currentSec - endTimeSec;
     const [eventStyle, iconTimeline, eventStatus, iconStatus, styleStatus] = remainTimeSec > 0
       ? [
@@ -226,13 +224,19 @@ class TimelineCard extends Component {
             <div className={s.appointmentItem}>
               <DateRange className="icon-main" />
               <Typography variant="subheading" color="primary" inline noWrap>
-                {moment(provderStartSec).format('DD MMM YYYY')}
+                {moment(providerStartSec).format('DD MMM YYYY')}
               </Typography>
             </div>
             <div className={s.appointmentItem}>
               <AvTimer className="icon-main" />
               <Typography variant="subheading" color="primary" inline noWrap>
-                {moment(provderStartSec).format('LT')}{' - '}{moment(endTimeSec).format('LT')}
+                {moment(providerStartSec).format('LT')}{' - '}{moment(providerStartSec).add(duration, 'm').format('LT')}
+              </Typography>
+            </div>
+            <div className={s.appointmentItem}>
+              <Public className="icon-main" />
+              <Typography variant="subheading" color="primary" inline noWrap>
+                {timezone}
               </Typography>
             </div>
           </div>
@@ -255,7 +259,7 @@ class TimelineCard extends Component {
 TimelineCard.propTypes = {
   serviceName: string.isRequired,
   providerName: string.isRequired,
-  provderStartSec: string.isRequired,
+  providerStartSec: string.isRequired,
   timezone: string.isRequired,
   duration: number.isRequired,
   geoLocation: objectOf(any).isRequired,
@@ -267,7 +271,7 @@ TimelineCard.propTypes = {
 const mapStateToProps = state => ({
   ...state.common,
   ...state.home,
-  ...state.waitlists,
+  ...state.waitLists,
 });
 
 export default connect(mapStateToProps, {
