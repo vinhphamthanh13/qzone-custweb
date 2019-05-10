@@ -84,8 +84,6 @@ class Profile extends Component {
       isPopupWarning,
     } = this.state;
 
-    console.log('props', this.props);
-    console.log('state', this.state);
     const givenName = get(userDetail, 'givenName');
     const email = get(userDetail, 'email');
     const updateProfileMsgError = isPopupWarning === 'error' ? (

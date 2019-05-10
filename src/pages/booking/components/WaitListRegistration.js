@@ -98,8 +98,8 @@ class WaitListRegistration extends Component {
     serviceId: null,
     isAuthenticated: null,
     customerId: null,
-    loginSession: null,
-    userDetail: null,
+    // loginSession: null,
+    // userDetail: null,
   };
 
   handleToggleRegister = () => {
@@ -149,7 +149,6 @@ class WaitListRegistration extends Component {
 
   handleChangeDate = key => (date) => {
     const { dateFrom, dateTo } = this.state;
-    console.log('handle chnage date', this.state);
     let newDate = null;
     if (key === 'dateFrom' && moment(date) > moment(dateTo * 1000)) {
       newDate = date;
@@ -190,23 +189,20 @@ class WaitListRegistration extends Component {
     });
   };
 
-  renderProviderList = (list) => {
-    console.log('in the render serivce providers list', list);
-    return (
-      <ul className={s.dropdownProviders}>
-        {list && list.map(provider => (
-          <>
-            {/* eslint-disable-next-line */}
-            <li className={s.providerItem} onClick={this.handleSelectProvider(provider)}>
-              <Typography variant="body1" color="inherit" className="text-bold">
-                {provider.providerName}
-              </Typography>
-            </li>
-          </>
-        ))}
-      </ul>
-    );
-  };
+  renderProviderList = list => (
+    <ul className={s.dropdownProviders}>
+      {list && list.map(provider => (
+        <>
+          {/* eslint-disable-next-line */}
+          <li className={s.providerItem} onClick={this.handleSelectProvider(provider)}>
+            <Typography variant="body1" color="inherit" className="text-bold">
+              {provider.providerName}
+            </Typography>
+          </li>
+        </>
+      ))}
+    </ul>
+  );
 
   renderEnrollButton = isAuthenticated => (isAuthenticated ? (
     <>

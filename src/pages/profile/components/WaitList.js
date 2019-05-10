@@ -46,7 +46,6 @@ class WaitList extends Component {
 
   render() {
     const { waitLists } = this.state;
-    console.log('props of formik', this.props);
     return (
       <div className={s.waitList}>
         {waitLists && waitLists.map(item => (

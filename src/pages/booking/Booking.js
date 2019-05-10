@@ -329,6 +329,8 @@ class Booking extends PureComponent {
       isConfirmDialogOpen,
       appointmentEvent,
     } = this.state;
+    console.log('service provider: ', serviceProviders);
+
     const Step = this.stepComponents[bookingStep];
     const isBackValid = bookingStep === BOOKING.STEPS.CONFIRM_BOOKING;
     const isNextValid = bookingStep < BOOKING.STEPS.CONFIRM_BOOKING && bookingDetail;
@@ -360,7 +362,6 @@ class Booking extends PureComponent {
       },
     };
 
-    console.log('booking details slot', this.state);
     return (
       <>
         <Error />

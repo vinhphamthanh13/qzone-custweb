@@ -125,7 +125,6 @@ class MainAppBar extends React.Component {
       loginSession,
     } = this.state;
     const currentTime = moment.now();
-    console.log('eventlist', eventList);
     const eventCount = eventList
       && eventList.filter(event => moment(event.startSec * 1000) > currentTime).length;
     const badgeStyle = eventCount > 0 ? 'text-margin-lr hover-pointer' : 'text-margin-lr';
