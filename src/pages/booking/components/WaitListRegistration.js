@@ -117,7 +117,6 @@ class WaitListRegistration extends Component {
     const {
       providerId,
       customerId,
-      timezoneId,
       serviceId,
       dateFrom,
       dateTo,
@@ -130,16 +129,10 @@ class WaitListRegistration extends Component {
       }
       registerWaitList({
         customerId,
-        isMakeAppointment: true,
-        isNotify: true,
-        slot: {
-          customerTimezone: timezoneId,
-          providerId,
-          serviceId,
-          sstartSec: '',
-          startSec: dateFrom,
-          toSec,
-        },
+        providerId,
+        serviceId,
+        startSec: dateFrom,
+        toSec,
       });
       this.handleToggleRegister();
     } else {
