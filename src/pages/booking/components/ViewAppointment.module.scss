@@ -46,6 +46,19 @@
   padding: 2.25em 1em;
   width: 100%;
   text-align: center;
+  background: $main_03;
+  color: $main_04;
+}
+
+.detailWrapper {
+  margin: 0 auto;
+}
+
+.bookedDetail {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
 }
 
 .appointmentDetail {

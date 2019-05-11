@@ -93,6 +93,10 @@ class Booking extends PureComponent {
       if (temporaryServiceId && serviceProviders && serviceProviders.length === 1) {
         resolvedServiceId = resolvedServiceId || get(serviceProviders, '0.serviceId');
       }
+      if (providersByServiceIdList && providersByServiceIdList.length === 0) {
+        history.push('/');
+      }
+
       return {
         serviceId: resolvedServiceId,
         temporaryServiceId,
@@ -362,6 +366,7 @@ class Booking extends PureComponent {
       },
     };
 
+    console.log('this.props', this.props);
     return (
       <>
         <Error />
