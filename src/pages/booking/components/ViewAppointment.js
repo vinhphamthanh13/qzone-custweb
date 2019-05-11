@@ -194,7 +194,7 @@ class ViewAppointment extends Component {
                   </Typography>
                 </div>
                 <div className={s.viewItems}>
-                  <AvTimer className="icon-smal" />
+                  <AvTimer className="icon-small" />
                   <Typography variant="body1" color="primary" inline noWrap>
                     {moment(startTimeSec * 1000).format(timeSlotFormat)}{' - '}
                     {moment(startTimeSec * 1000).add(duration, 'm').format(timeSlotFormat)}
