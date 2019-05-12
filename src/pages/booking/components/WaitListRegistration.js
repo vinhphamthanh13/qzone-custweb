@@ -19,6 +19,7 @@ import {
   Cancel,
   Fingerprint,
 } from '@material-ui/icons';
+import uuidv1 from 'uuid/v1';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withFormik } from 'formik';
@@ -60,13 +61,18 @@ class WaitListRegistration extends Component {
       || loginSession !== cachedLoginSession
       || userDetail !== cachedUserDetail
     ) {
-      const providerName = get(serviceProviders, '0.providerName');
-      const geoLocation = get(serviceProviders, '0.geoLocation');
-      const timezoneId = get(serviceProviders, '0.timezoneId');
+      const serviceId = get(service, 'id');
+      const providers = serviceProviders && serviceProviders.filter(provider => provider.serviceId === serviceId);
+      const queuedProviders = (providers && providers.filter(provider => provider.mode === 'QUEUE'));
+      const tempServiceId = get(queuedProviders, '0.id');
+      const providerName = get(queuedProviders, '0.providerName');
+      const geoLocation = get(queuedProviders, '0.geoLocation');
+      const timezoneId = get(queuedProviders, '0.timezoneId');
       const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
       const customerId = get(userDetail, 'userSub');
-      const serviceId = get(serviceProviders, '0.serviceId');
-      const providerId = get(serviceProviders, '0.providerId');
+      const providerId = get(queuedProviders, '0.providerId');
+      const isQueuing = queuedProviders && !!queuedProviders.length;
+
       return {
         service,
         serviceProviders,
@@ -79,6 +85,9 @@ class WaitListRegistration extends Component {
         serviceId,
         loginSession,
         userDetail,
+        queuedProviders,
+        isQueuing,
+        tempServiceId,
       };
     }
     return null;
@@ -88,7 +97,6 @@ class WaitListRegistration extends Component {
     dateFrom: moment().unix(),
     dateTo: moment().unix(),
     service: null,
-    serviceProviders: null,
     isRegisterWaitLists: false,
     providerName: null,
     geoLocation: null,
@@ -98,8 +106,9 @@ class WaitListRegistration extends Component {
     serviceId: null,
     isAuthenticated: null,
     customerId: null,
-    // loginSession: null,
-    // userDetail: null,
+    tempServiceId: null,
+    queuedProviders: null,
+    isQueuing: null,
   };
 
   handleToggleRegister = () => {
@@ -121,6 +130,7 @@ class WaitListRegistration extends Component {
       dateFrom,
       dateTo,
       isAuthenticated,
+      tempServiceId,
     } = this.state;
     if (isAuthenticated) {
       let toSec = dateTo;
@@ -133,6 +143,7 @@ class WaitListRegistration extends Component {
         serviceId,
         startSec: dateFrom,
         toSec,
+        tempServiceId,
       });
       this.handleToggleRegister();
     } else {
@@ -181,11 +192,13 @@ class WaitListRegistration extends Component {
     const geoLocation = get(provider, 'geoLocation');
     const timezoneId = get(provider, 'timezoneId');
     const providerId = get(provider, 'providerId');
+    const tempServiceId = get(provider, 'id');
     this.setState({
       providerName,
       geoLocation,
       timezoneId,
       providerId,
+      tempServiceId,
     });
   };
 
@@ -194,7 +207,11 @@ class WaitListRegistration extends Component {
       {list && list.map(provider => (
         <>
           {/* eslint-disable-next-line */}
-          <li className={s.providerItem} onClick={this.handleSelectProvider(provider)}>
+          <li
+            className={s.providerItem}
+            onClick={this.handleSelectProvider(provider)}
+            key={uuidv1()}
+          >
             <Typography variant="body1" color="inherit" className="text-bold">
               {provider.providerName}
             </Typography>
@@ -223,7 +240,6 @@ class WaitListRegistration extends Component {
   render() {
     const {
       service,
-      serviceProviders,
       isRegisterWaitLists,
       isOpenProviderList,
       providerName,
@@ -232,6 +248,8 @@ class WaitListRegistration extends Component {
       isAuthenticated,
       dateFrom,
       dateTo,
+      queuedProviders,
+      isQueuing,
     } = this.state;
     const {
       values,
@@ -262,7 +280,7 @@ class WaitListRegistration extends Component {
                     </Typography>
                   </div>
                   <div className={s.selectProvider}>
-                    {serviceProviders && (
+                    {isQueuing && (
                       <>
                         <Typography variant="body1" className="main-color">
                           Appointment with:
@@ -280,7 +298,7 @@ class WaitListRegistration extends Component {
                             {providerName}
                           </Typography>
                           <ChevronRight className="icon-normal" />
-                          {isOpenProviderList && this.renderProviderList(serviceProviders)}
+                          {isOpenProviderList && this.renderProviderList(queuedProviders)}
                         </div>
                         <div className="icon-text">
                           <LocationOn className="icon-normal" />
@@ -397,10 +415,11 @@ class WaitListRegistration extends Component {
             </div>
           </div>
         )}
-        {/* eslint-disable-next-line */}
-        <div
-          className={s.joinWaitLists}
+        <Button
+          className={`${s.joinWaitLists} simple-button`}
           onClick={this.handleToggleRegister}
+          disabled={!isQueuing}
+          variant="outlined"
         >
           <Queue color="inherit" className="icon-normal" />
           <Typography
@@ -410,7 +429,7 @@ class WaitListRegistration extends Component {
           >
             Join Queue
           </Typography>
-        </div>
+        </Button>
       </>
     );
   }

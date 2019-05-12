@@ -38,6 +38,7 @@ class SelectProvider extends React.PureComponent {
       onDateChange,
       handleAuth,
     } = this.props;
+
     return (
       <>
         { bookingService && (
