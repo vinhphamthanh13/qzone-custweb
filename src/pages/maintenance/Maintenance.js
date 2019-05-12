@@ -1,5 +1,9 @@
 import React from 'react';
-import { Typography } from '@material-ui/core';
+import {
+  Typography,
+  Button,
+} from '@material-ui/core';
+import { history } from 'containers/App';
 import s from './Maintenance.module.scss';
 
 const Maintenance = () => (
@@ -16,6 +20,12 @@ const Maintenance = () => (
           We are sure this new upgrade will completely blow your mind!
         </Typography>
       </div>
+      <Button
+        variant="outlined"
+        color="inherit"
+        onClick={() => history.push('/')}
+      >HOME
+      </Button>
     </div>
   </div>
 );

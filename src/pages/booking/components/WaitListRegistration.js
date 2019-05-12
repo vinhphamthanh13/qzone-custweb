@@ -142,11 +142,12 @@ class WaitListRegistration extends Component {
       if (dateTo === dateFrom) {
         toSec = dateTo + 3600 * 24; // Plus one day
       }
+      const startSec = dateFrom + 3601; // Plus one hour for startSec
       registerWaitList({
         customerId,
         providerId,
         serviceId,
-        startSec: dateFrom,
+        startSec,
         toSec,
         tempServiceId,
       });

@@ -17,6 +17,7 @@ const Success = (props) => {
     resetSuccessMessage: resetSuccessMessageAction,
   } = props;
 
+  console.log('in the success modal', props);
   return success ? (
     <CustomModal
       type="success"
