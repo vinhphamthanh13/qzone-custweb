@@ -10,7 +10,7 @@ class CountDownDisplay extends Component {
     this.state = {
       isStartingCountDown: false,
       isStoppingCountDown: false,
-      startCountDown: props.startTime * 60 * 1000,
+      startCountDown: props.startTime,
     };
   }
 
@@ -54,7 +54,7 @@ class CountDownDisplay extends Component {
           title="Coming Booking!"
           message={
             `Your booking for ${serviceName} is coming soon,\
-             please arrange your time to check in! ${moment(startCountDown).format('m')} minutes to go.`
+             please arrange your time to check in! ${moment(Math.abs(startCountDown)).format('m')} minutes to go.`
           }
           onClose={this.handleCloseStartPopUp}
         />
@@ -74,7 +74,7 @@ class CountDownDisplay extends Component {
         {startCountDownPopup}
         {stopCountDownPopUP}
         <CountDown
-          date={Date.now() + startCountDown}
+          date={Date.now() + Math.abs(startCountDown)}
           renderer={({ hours, minutes, seconds }) => (
             <span className="gallery-color">
               {hours} hr, {minutes} min, {seconds} sec

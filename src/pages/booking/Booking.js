@@ -333,7 +333,6 @@ class Booking extends PureComponent {
       isConfirmDialogOpen,
       appointmentEvent,
     } = this.state;
-    console.log('service provider: ', serviceProviders);
 
     const Step = this.stepComponents[bookingStep];
     const isBackValid = bookingStep === BOOKING.STEPS.CONFIRM_BOOKING;
@@ -366,7 +365,6 @@ class Booking extends PureComponent {
       },
     };
 
-    console.log('this.props', this.props);
     return (
       <>
         <Error />
