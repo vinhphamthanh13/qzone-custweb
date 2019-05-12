@@ -18,6 +18,7 @@ import {
   CheckCircle,
   Event,
   Share,
+  Public,
 } from '@material-ui/icons';
 import { get } from 'lodash';
 import moment from 'moment';
@@ -29,7 +30,10 @@ import {
   eventType,
   serviceType,
 } from 'types/global';
-import { defaultDateFormat } from 'utils/constants';
+import {
+  defaultDateFormat,
+  timeSlotFormat,
+} from 'utils/constants';
 import s from './ViewAppointment.module.scss';
 
 const accounts = [{ google: 'Google' }];
@@ -76,16 +80,17 @@ class ViewAppointment extends Component {
     const providerStartSec = get(appointmentEvent, 'providerStartSec');
     const startTimeSec = moment(providerStartSec.replace(/\..*/, '')).unix();
     const duration = get(appointmentEvent, 'duration');
-    const timeZoneId = get(appointmentEvent, 'timezone');
-    const addToCalendarTZ = moment(startTimeSec * 1000).tz(timeZoneId).format('z');
+    const providerTimezoneId = get(appointmentEvent, 'timezone');
+    const timeZoneId = moment.tz.guess();
+    const addToCalendarTZ = moment(startTimeSec * 1000).tz(timeZoneId).format('Z');
     const bookedEvent = {
       title: serviceName,
       description: serviceDescription,
       location: `${streetAddress}, ${district}, ${stateName}, ${city}, ${country}`,
-      startTime: `${moment(startTimeSec * 1000).format('YYYY-MM-DDThh:mm:ss')}${addToCalendarTZ}:00`,
-      endTime: `${moment(startTimeSec * 1000).add(duration, 'm').format('YYYY-MM-DDThh:mm:ss')}${addToCalendarTZ}:00`,
+      startTime: `${moment(startTimeSec * 1000).format('YYYY-MM-DDTHH:mm:ss')}${addToCalendarTZ}`,
+      endTime: `${moment(startTimeSec * 1000).add(duration, 'm').format('YYYY-MM-DDTHH:mm:ss')}${addToCalendarTZ}`,
     };
-
+    console.log('appointment event', appointmentEvent);
     return (
       <div className={s.viewAppointment}>
         <div className={s.viewTitle}>
@@ -176,22 +181,32 @@ class ViewAppointment extends Component {
           <div className={s.appointmentInfo}>
             <div className={s.appointmentCode}>
               <Typography variant="subtitle2" color="primary" className="icon-main">Booking code:{' '}</Typography>
-              <Typography variant="title" className="danger-color">
+              <Typography variant="subtitle1" className="danger-color text-bold">
                 {bookingCode}
               </Typography>
             </div>
-            <div className={s.viewItems}>
-              <DateRange className="icon-main" />
-              <Typography variant="body1" color="primary" inline noWrap>
-                {moment(providerStartSec * 1000).format(defaultDateFormat)}
-              </Typography>
-            </div>
-            <div className={s.viewItems}>
-              <AvTimer className="icon-main" />
-              <Typography variant="body1" color="primary" inline noWrap>
-                {moment(providerStartSec * 1000).format(defaultDateFormat)}{' - '}
-                {moment(providerStartSec * 1000).add(duration, 'm').format(defaultDateFormat)}
-              </Typography>
+            <div className={s.detailWrapper}>
+              <div className={s.bookedDetail}>
+                <div className={s.viewItems}>
+                  <DateRange className="icon-small" />
+                  <Typography variant="body1" color="primary" inline noWrap>
+                    {moment(startTimeSec * 1000).format(defaultDateFormat)}
+                  </Typography>
+                </div>
+                <div className={s.viewItems}>
+                  <AvTimer className="icon-small" />
+                  <Typography variant="body1" color="primary" inline noWrap>
+                    {moment(startTimeSec * 1000).format(timeSlotFormat)}{' - '}
+                    {moment(startTimeSec * 1000).add(duration, 'm').format(timeSlotFormat)}
+                  </Typography>
+                </div>
+                <div className={s.viewItems}>
+                  <Public className="icon-small" />
+                  <Typography variant="body1" className="danger-color" inline noWrap>
+                    {providerTimezoneId}
+                  </Typography>
+                </div>
+              </div>
             </div>
           </div>
           {email && (

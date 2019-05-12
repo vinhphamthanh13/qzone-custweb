@@ -24,6 +24,7 @@
 }
 
 .cardContainer {
+  color: $main_04;
   width: auto;
   & div[class*="vertical-timeline-element-content"] {
     width: $event-card-width;

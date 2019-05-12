@@ -93,6 +93,10 @@ class Booking extends PureComponent {
       if (temporaryServiceId && serviceProviders && serviceProviders.length === 1) {
         resolvedServiceId = resolvedServiceId || get(serviceProviders, '0.serviceId');
       }
+      if (providersByServiceIdList && providersByServiceIdList.length === 0) {
+        history.push('/');
+      }
+
       return {
         serviceId: resolvedServiceId,
         temporaryServiceId,
@@ -329,6 +333,7 @@ class Booking extends PureComponent {
       isConfirmDialogOpen,
       appointmentEvent,
     } = this.state;
+
     const Step = this.stepComponents[bookingStep];
     const isBackValid = bookingStep === BOOKING.STEPS.CONFIRM_BOOKING;
     const isNextValid = bookingStep < BOOKING.STEPS.CONFIRM_BOOKING && bookingDetail;
@@ -360,7 +365,6 @@ class Booking extends PureComponent {
       },
     };
 
-    console.log('booking details slot', this.state);
     return (
       <>
         <Error />

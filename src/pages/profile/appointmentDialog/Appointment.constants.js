@@ -1,5 +1,5 @@
 export const STATUS = {
-  WAITING: 'Waiting',
-  COMING: 'Coming soon ...',
-  EXPIRED: 'Expired',
+  WAITING: 'In Queuing ...',
+  COMING: 'Coming Soon ...',
+  EXPIRED: 'Expired!!!',
 };

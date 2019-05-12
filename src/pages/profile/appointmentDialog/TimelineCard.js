@@ -19,7 +19,8 @@ import {
   AvTimer,
   AlarmOff,
   AlarmOn,
-  AirlineSeatReclineNormal,
+  Reorder,
+  AlarmAdd,
   DoneAll,
   Update,
   Timer,
@@ -86,8 +87,8 @@ class TimelineCard extends Component {
     const {
       isOpenMap,
     } = this.state;
-    const serviceProviderId = 'abc';
-    const providerRating = 1;
+    const serviceProviderId = '//TODO';
+    const providerRating = 5;
     const bookedTime = moment(providerStartSec.replace(' ', 'T'));
     const endTimeSec = bookedTime.add(duration, 'm').unix() * 1000;
     const currentSec = moment().unix() * 1000;
@@ -109,16 +110,9 @@ class TimelineCard extends Component {
         },
         <AlarmOn />,
         STATUS.WAITING,
-        <AirlineSeatReclineNormal className="icon-main" />,
+        <Reorder className="icon-main" />,
         s.eventStatusWaiting,
       ];
-
-    const remainTimeHr = remainTimeSec < 0 ? Math.abs(remainTimeSec) / 3600 : 0;
-    const remainDay = remainTimeHr > 24 ? remainTimeHr / 24 : 0;
-    const remainTimeMn = (remainTimeHr % 1) * 60;
-    const waitingDay = parseInt(remainDay, 0);
-    const waitingHr = waitingDay ? parseInt((remainDay % 1) * 24, 0) : parseInt(remainTimeHr, 0);
-    const waitingMn = parseInt(remainTimeMn, 0);
 
     let displayTimeout = null;
     let currentEventStyle = eventStyle;
@@ -126,11 +120,12 @@ class TimelineCard extends Component {
     let currentIconTimeline = iconTimeline;
     let currentEventStatus = eventStatus;
     let displayIconStatus = iconStatus;
-    if (waitingDay) {
-      displayTimeout = `${waitingDay} day, ${waitingHr} hr, ${waitingMn} min`;
-    } else if (remainTimeHr < 1 && remainTimeMn > 0) {
+    console.log('remainTimeSec', remainTimeSec);
+    if (remainTimeSec < -3600) {
+      displayTimeout = moment(bookedTime).fromNow(true);
+    } else {
       displayTimeout = (
-        <CountDownDisplay startTime={remainTimeMn} serviceName={serviceName} providerName={providerName} />
+        <CountDownDisplay startTime={remainTimeSec} serviceName={serviceName} providerName={providerName} />
       );
       currentEventStyle = {
         background: 'rgb(255, 95, 87)',
@@ -146,8 +141,6 @@ class TimelineCard extends Component {
       currentIconTimeline = <Update />;
       currentEventStatus = STATUS.COMING;
       displayIconStatus = <Timer className="icon-danger" />;
-    } else {
-      displayTimeout = `${waitingHr} hr, ${waitingMn} min`;
     }
     const streetAddress = get(geoLocation, 'streetAddress');
     const district = get(geoLocation, 'district');
@@ -173,7 +166,7 @@ class TimelineCard extends Component {
           className={s.cardContainer}
         >
           <div>
-            <Typography variant="h6" color="primary" noWrap align="center">
+            <Typography variant="headline" color="inherit" className="text-bold" noWrap align="center">
               {streetAddress}
             </Typography>
           </div>
@@ -223,19 +216,19 @@ class TimelineCard extends Component {
             </div>
             <div className={s.appointmentItem}>
               <DateRange className="icon-main" />
-              <Typography variant="subheading" color="primary" inline noWrap>
+              <Typography variant="subheading" color="inherit" inline noWrap>
                 {moment(providerStartSec).format('DD MMM YYYY')}
               </Typography>
             </div>
             <div className={s.appointmentItem}>
               <AvTimer className="icon-main" />
-              <Typography variant="subheading" color="primary" inline noWrap>
+              <Typography variant="subheading" color="inherit" inline noWrap>
                 {moment(providerStartSec).format('LT')}{' - '}{moment(providerStartSec).add(duration, 'm').format('LT')}
               </Typography>
             </div>
             <div className={s.appointmentItem}>
               <Public className="icon-main" />
-              <Typography variant="subheading" color="primary" inline noWrap>
+              <Typography variant="subheading" color="inherit" inline noWrap>
                 {timezone}
               </Typography>
             </div>
@@ -245,7 +238,7 @@ class TimelineCard extends Component {
             <Typography variant="subheading" className="danger-color">{currentEventStatus}</Typography>
           </div>
           <div className={`${s.appointmentRemainedTime} ${currentStyleStatus}`}>
-            <AlarmOn className="icon-white" />
+            <AlarmAdd className="icon-white" />
             <Typography variant="subheading" classes={{ subheading: s.remainedText }}>
               {displayTimeout}
             </Typography>

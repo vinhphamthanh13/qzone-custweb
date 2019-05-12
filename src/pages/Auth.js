@@ -240,8 +240,6 @@ class Auth extends Component {
         onClose={this.handleLogoutError}
       />) : null;
 
-    console.log('state in Auth', this.state);
-
     return (
       <>
         {renderLogoutError}

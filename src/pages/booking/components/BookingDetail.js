@@ -6,7 +6,12 @@ import {
   Button, TextField, Typography,
 } from '@material-ui/core';
 import {
-  AvTimer, DateRange, LocationOn, PersonPin,
+  AvTimer,
+  DateRange,
+  LocationOn,
+  PersonPin,
+  Book,
+  Fingerprint,
 } from '@material-ui/icons';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
@@ -71,6 +76,18 @@ class BookingDetail extends React.PureComponent {
       handleAuth('isLoginOpen');
     }
   };
+
+  renderBookingButton = auth => (auth ? (
+    <>
+      <Book color="inherit" className="icon-small icon-in-button-left" />
+      <Typography variant="body1" color="inherit">Book Now</Typography>
+    </>
+  ) : (
+    <>
+      <Fingerprint color="inherit" className="icon-small icon-in-button-left" />
+      <Typography variant="body1" color="inherit">Sign In</Typography>
+    </>
+  ));
 
   render() {
     const {
@@ -141,7 +158,7 @@ class BookingDetail extends React.PureComponent {
               className="main-button"
               onClick={this.handleConfirmDialog(isAuthenticated)}
             >
-              {isAuthenticated ? 'Book now' : 'Sign in'}
+              {this.renderBookingButton(isAuthenticated)}
             </Button>
           </div>
         </div>

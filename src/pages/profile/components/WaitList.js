@@ -46,13 +46,12 @@ class WaitList extends Component {
 
   render() {
     const { waitLists } = this.state;
-    console.log('props of formik', this.props);
     return (
       <div className={s.waitList}>
-        {waitLists && waitLists.map(item => (
+        {false && waitLists && waitLists.map(item => (
           <div key={uuidv1()} className={s.waitSlot}>
             <Typography variant="title" color="inherit">
-              {item.slot.sstartSec}
+              {item.startSec}
             </Typography>
           </div>
         ))}
