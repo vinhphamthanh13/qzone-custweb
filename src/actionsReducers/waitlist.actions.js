@@ -1,5 +1,9 @@
 import { handleRequest } from 'utils/apiHelpers';
-import { setLoading, setError } from 'actionsReducers/common.actions';
+import {
+  setLoading,
+  setError,
+  setSucceed,
+} from 'actionsReducers/common.actions';
 import { registerWaitList, waitLists } from 'actionsApi/waitlist';
 
 
@@ -24,6 +28,7 @@ export const registerWaitListAction = data => async (dispatch) => {
     dispatch(setError(error));
   } else {
     dispatch(setRegisterWaitListStatus(regWaitList));
+    dispatch(setSucceed('You have been registered the waitlist successfully.'));
   }
   dispatch(setLoading(false));
 };

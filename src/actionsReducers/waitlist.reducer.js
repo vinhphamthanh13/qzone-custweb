@@ -8,11 +8,8 @@ const initState = {
 const reducer = (state = initState, action) => {
   switch (action.type) {
     case REGISTER_WAIT_LIST:
-      console.log('registered WaitList ', action.payload);
       return {
         ...state,
-        isSuccess: true,
-        successMessage: 'You have been registered in our Waitlists successfully',
         waitListRegistered: action.payload,
       };
     case SET_WAIT_LIST:

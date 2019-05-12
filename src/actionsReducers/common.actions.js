@@ -7,6 +7,7 @@ import { serviceProvidersRating } from 'actionsApi/rating';
 
 export const SET_LOADING = 'COMMON.SET_LOADING';
 export const SET_ERROR = 'COMMON.SET_ERROR';
+export const SET_SUCCEED = 'COMMON.SET_SUCCEED';
 export const RESET_MODAL_STATUS = 'COMMON.RESET_MODAL_STATUS';
 export const FIND_EVENT_BY_CUSTOMER_ID = 'HOME.FIND_EVENT_BY_CUSTOMER_ID';
 export const SET_SERVICE_PROVIDERS = 'HOME.SET_SERVICE_PROVIDERS';
@@ -18,6 +19,11 @@ export const setLoading = payload => ({
 
 export const setError = payload => ({
   type: SET_ERROR,
+  payload,
+});
+
+export const setSucceed = payload => ({
+  type: SET_SUCCEED,
   payload,
 });
 

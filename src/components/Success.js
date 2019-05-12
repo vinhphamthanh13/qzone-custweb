@@ -13,16 +13,15 @@ import { resetModalStatus } from 'actionsReducers/common.actions';
 const Success = (props) => {
   const {
     success,
-    successMessage,
+    succeedMessage,
     resetModalStatus: resetModalStatusAction,
   } = props;
 
-  console.log('in the success modal', props);
   return success ? (
     <CustomModal
-      type="success"
+      type="info"
       title="Success!"
-      message={successMessage}
+      message={succeedMessage}
       isOpen
       onClose={resetModalStatusAction}
       className="z-index-highest"
@@ -32,18 +31,18 @@ const Success = (props) => {
 
 Success.propTypes = {
   success: bool.isRequired,
-  successMessage: string.isRequired,
+  succeedMessage: string.isRequired,
   resetModalStatus: func.isRequired,
 };
 
 const mapStateToProps = (state) => {
   const success = [];
-  const successMessage = [];
-  findValueByKey(state, 'isSuccess', success);
-  findValueByKey(state, 'successMessage', successMessage);
+  const succeedMessage = [];
+  findValueByKey(state, 'isSucceed', success);
+  findValueByKey(state, 'succeedMessage', succeedMessage);
   return ({
     success: success.reduce((final, current) => (final || current), false),
-    successMessage: successMessage.reduce((final, current) => (final || current), ''),
+    succeedMessage: succeedMessage.reduce((final, current) => (final || current), ''),
   });
 };
 

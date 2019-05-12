@@ -1,6 +1,7 @@
 import {
   SET_LOADING,
   SET_ERROR,
+  SET_SUCCEED,
   RESET_MODAL_STATUS,
   FIND_EVENT_BY_CUSTOMER_ID,
   SET_SERVICE_PROVIDERS,
@@ -9,9 +10,9 @@ import {
 const initState = {
   isLoading: false,
   isError: false,
-  isSuccess: false,
+  isSucceed: false,
   errorMessage: '',
-  successMessage: '',
+  succeedMessage: '',
   eventList: null,
   serviceProviders: null,
 };
@@ -29,13 +30,19 @@ const reducer = (state = initState, action) => {
         isError: true,
         errorMessage: action.payload,
       };
+    case SET_SUCCEED:
+      return {
+        ...state,
+        isSucceed: true,
+        succeedMessage: action.payload,
+      };
     case RESET_MODAL_STATUS:
       return {
         ...state,
         isError: false,
         errorMessage: '',
-        isSuccess: false,
-        successMessage: '',
+        isSucceed: false,
+        succeedMessage: '',
       };
     case FIND_EVENT_BY_CUSTOMER_ID:
       return {
