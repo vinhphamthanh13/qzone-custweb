@@ -1,7 +1,7 @@
 import {
   SET_LOADING,
   SET_ERROR,
-  RESET_ERROR,
+  RESET_MODAL_STATUS,
   FIND_EVENT_BY_CUSTOMER_ID,
   SET_SERVICE_PROVIDERS,
 } from 'actionsReducers/common.actions';
@@ -9,6 +9,7 @@ import {
 const initState = {
   isLoading: false,
   isError: false,
+  isSuccess: false,
   errorMessage: '',
   eventList: null,
   serviceProviders: null,
@@ -27,11 +28,13 @@ const reducer = (state = initState, action) => {
         isError: true,
         errorMessage: action.payload,
       };
-    case RESET_ERROR:
+    case RESET_MODAL_STATUS:
       return {
         ...state,
         isError: false,
         errorMessage: '',
+        isSuccess: false,
+        successMessage: '',
       };
     case FIND_EVENT_BY_CUSTOMER_ID:
       return {

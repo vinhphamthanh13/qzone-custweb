@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { Formik } from 'formik';
 import { Modal } from '@material-ui/core';
 import CustomModal from 'components/Modal/CustomModal';
-import { resetErrorMessage } from 'actionsReducers/common.actions';
+import { resetModalStatus } from 'actionsReducers/common.actions';
 import { register } from './actions/register';
 import Form from './components/Form';
 import { registerSchema } from './components/schemas';
@@ -38,8 +38,8 @@ class Register extends React.Component {
   };
 
   closeCustomModal = () => {
-    const { resetErrorMessageAction } = this.props;
-    resetErrorMessageAction();
+    const { resetModalStatusAction } = this.props;
+    resetModalStatusAction();
   };
 
   render() {
@@ -106,7 +106,7 @@ Register.propTypes = {
   onClose: func.isRequired,
   errorMessage: string,
   registerPayload: objectOf(any),
-  resetErrorMessageAction: func.isRequired,
+  resetModalStatusAction: func.isRequired,
   handleAuthenticate: func.isRequired,
 };
 
@@ -123,5 +123,5 @@ const mapStateToProps = state => ({
 
 export default connect(mapStateToProps, {
   registerAction: register,
-  resetErrorMessageAction: resetErrorMessage,
+  resetModalStatusAction: resetModalStatus,
 })(Register);

@@ -11,6 +11,7 @@ import { Grid } from '@material-ui/core';
 import { history } from 'containers/App';
 import Loading from 'components/Loading';
 import Error from 'components/Error';
+import Success from 'components/Success';
 import EmptyItem from 'components/EmptyItem';
 import {
   setServiceCategoriesAction,
@@ -208,6 +209,7 @@ export class Home extends React.PureComponent {
     return (
       <>
         <Error />
+        <Success />
         <Loading />
         <Auth
           isRegisterOpen={isRegisterOpen}

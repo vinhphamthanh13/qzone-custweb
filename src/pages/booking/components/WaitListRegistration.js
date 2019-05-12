@@ -48,18 +48,21 @@ class WaitListRegistration extends Component {
       serviceProviders,
       loginSession,
       userDetail,
+      waitListRegistered,
     } = props;
     const {
       service: cachedService,
       serviceProviders: cachedServiceProviders,
       loginSession: cachedLoginSession,
       userDetail: cachedUserDetail,
+      waitListRegistered: cachedWaitListRegistered,
     } = state;
     if (
       service !== cachedService
       || serviceProviders !== cachedServiceProviders
       || loginSession !== cachedLoginSession
       || userDetail !== cachedUserDetail
+      || waitListRegistered !== cachedWaitListRegistered
     ) {
       const serviceId = get(service, 'id');
       const providers = serviceProviders && serviceProviders.filter(provider => provider.serviceId === serviceId);
@@ -88,6 +91,7 @@ class WaitListRegistration extends Component {
         queuedProviders,
         isQueuing,
         tempServiceId,
+        waitListRegistered,
       };
     }
     return null;
@@ -109,6 +113,7 @@ class WaitListRegistration extends Component {
     tempServiceId: null,
     queuedProviders: null,
     isQueuing: null,
+    waitListRegistered: null,
   };
 
   handleToggleRegister = () => {
@@ -250,6 +255,7 @@ class WaitListRegistration extends Component {
       dateTo,
       queuedProviders,
       isQueuing,
+      waitListRegistered,
     } = this.state;
     const {
       values,
@@ -258,6 +264,7 @@ class WaitListRegistration extends Component {
     const serviceName = get(service, 'name');
     const serviceImg = get(service, 'image.fileUrl') || defaultImage;
     const fullAddress = get(geoLocation, 'fullAddress');
+    console.log('waitListRegistered', waitListRegistered);
 
     return (
       <>

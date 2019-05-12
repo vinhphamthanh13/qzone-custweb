@@ -11,6 +11,8 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         waitListRegistered: action.payload,
+        isSuccess: true,
+        successMessage: 'You have been registered in our wait list successfully',
       };
     case SET_WAIT_LIST:
       return {

@@ -7,14 +7,14 @@ import {
 import { connect } from 'react-redux';
 import findValueByKey from 'utils/findValueByKey';
 import CustomModal from 'components/Modal/CustomModal';
-import { resetErrorMessage } from 'actionsReducers/common.actions';
+import { resetModalStatus } from 'actionsReducers/common.actions';
 
 
 const Error = (props) => {
   const {
     error,
     errorMessage,
-    resetErrorMessage: resetErrorMessageAction,
+    resetModalStatus: resetModalStatusAction,
   } = props;
 
   return error ? (
@@ -23,7 +23,7 @@ const Error = (props) => {
       title="Error occurs!"
       message={errorMessage}
       isOpen
-      onClose={resetErrorMessageAction}
+      onClose={resetModalStatusAction}
       className="z-index-highest"
     />
   ) : null;
@@ -32,7 +32,7 @@ const Error = (props) => {
 Error.propTypes = {
   error: bool.isRequired,
   errorMessage: string.isRequired,
-  resetErrorMessage: func.isRequired,
+  resetModalStatus: func.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -47,5 +47,5 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
-  resetErrorMessage,
+  resetModalStatus,
 })(Error);

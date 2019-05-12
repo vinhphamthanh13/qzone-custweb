@@ -1,6 +1,6 @@
 import {
   SET_LOADING,
-  RESET_ERROR,
+  RESET_MODAL_STATUS,
 } from 'actionsReducers/common.actions';
 import {
   STORE_USER_SESSION_LOGIN,
@@ -98,7 +98,7 @@ const auth = (state = authInitialize, action) => {
         },
         loginErrorMessage: action.payload.message,
       };
-    case RESET_ERROR:
+    case RESET_MODAL_STATUS:
       return {
         ...state,
         registerErrorMessage: '',
