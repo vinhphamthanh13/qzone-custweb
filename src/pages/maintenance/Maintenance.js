@@ -21,7 +21,7 @@ const Maintenance = () => (
         </Typography>
       </div>
       <Button
-        variant="outlined"
+        variant="contained"
         color="inherit"
         onClick={() => history.push('/')}
       >HOME

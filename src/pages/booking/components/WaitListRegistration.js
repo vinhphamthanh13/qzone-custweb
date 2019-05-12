@@ -27,7 +27,7 @@ import moment from 'moment';
 import { get } from 'lodash';
 import DatePicker from 'components/Calendar/DatePicker';
 import {
-  registerWaitListAction,
+  registerWaitListsAction,
 } from 'actionsReducers/waitlist.actions';
 import defaultImage from 'images/default-service-card.png';
 import {
@@ -120,7 +120,7 @@ class WaitListRegistration extends Component {
 
   handleRegisterWaitList = () => {
     const {
-      registerWaitListAction: registerWaitList,
+      registerWaitListsAction: registerWaitLists,
       handleAuth,
     } = this.props;
     const {
@@ -138,7 +138,7 @@ class WaitListRegistration extends Component {
         toSec = dateTo + 3600 * 24; // Plus one day
       }
       const startSec = dateFrom + 3601; // Plus one hour for startSec
-      registerWaitList({
+      registerWaitLists({
         customerId,
         providerId,
         serviceId,
@@ -436,7 +436,7 @@ class WaitListRegistration extends Component {
 }
 
 WaitListRegistration.propTypes = {
-  registerWaitListAction: func.isRequired,
+  registerWaitListsAction: func.isRequired,
   values: objectOf(any).isRequired,
   setFieldValue: func.isRequired,
   isValid: bool.isRequired,
@@ -459,6 +459,6 @@ export default compose(
     }),
   }),
   connect(mapStateToProps, {
-    registerWaitListAction,
+    registerWaitListsAction,
   }),
 )(WaitListRegistration);

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {
   func,
+  string,
 } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -40,8 +41,11 @@ class WaitList extends Component {
   }
 
   componentDidMount() {
-    const { setWaitListsAction: setWaitLists } = this.props;
-    setWaitLists();
+    const {
+      setWaitListsAction: setWaitLists,
+      customerId,
+    } = this.props;
+    setWaitLists(customerId);
   }
 
   render() {
@@ -62,6 +66,7 @@ class WaitList extends Component {
 
 WaitList.propTypes = {
   setWaitListsAction: func.isRequired,
+  customerId: string.isRequired,
 };
 
 const mapStateToProps = state => ({

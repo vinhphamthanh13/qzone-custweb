@@ -237,7 +237,7 @@ class Booking extends PureComponent {
       bookingDetail,
       userDetail,
     } = this.state;
-    const slotId = get(bookingDetail, 'time.slotId');
+    const availabilityId = get(bookingDetail, 'time.availabilityId');
     const duration = get(bookingDetail, 'time.duration');
     const customerId = get(userDetail, 'userSub');
     const startSec = get(bookingDetail, 'time.start');
@@ -245,7 +245,7 @@ class Booking extends PureComponent {
     registerEvent({
       customerId,
       duration,
-      slotId,
+      availabilityId,
       startSec,
       status: 'BOOKING_STATUS_UNSPECIFIED',
       type: 'APPOINTMENT',

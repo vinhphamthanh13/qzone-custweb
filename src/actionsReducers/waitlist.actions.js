@@ -4,7 +4,10 @@ import {
   setError,
   setSucceed,
 } from 'actionsReducers/common.actions';
-import { registerWaitList, waitLists } from 'actionsApi/waitlist';
+import {
+  registerWaitLists,
+  waitListsByCustomerId,
+} from 'actionsApi/waitlist';
 
 
 export const REGISTER_WAIT_LIST = 'PROFILE.REGISTER_WAIT_LIST';
@@ -20,9 +23,9 @@ export const setWaitLists = payload => ({
   payload,
 });
 
-export const registerWaitListAction = data => async (dispatch) => {
+export const registerWaitListsAction = data => async (dispatch) => {
   dispatch(setLoading(true));
-  const [regWaitList, error] = await handleRequest(registerWaitList, [data]);
+  const [regWaitList, error] = await handleRequest(registerWaitLists, [data]);
   console.log('register waitlist response', regWaitList);
   if (error) {
     dispatch(setError(error));
@@ -33,9 +36,9 @@ export const registerWaitListAction = data => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
-export const setWaitListsAction = () => async (dispatch) => {
+export const setWaitListsAction = data => async (dispatch) => {
   dispatch(setLoading(true));
-  const [waitlists, error] = await handleRequest(waitLists, []);
+  const [waitlists, error] = await handleRequest(waitListsByCustomerId, [data]);
   if (error) {
     dispatch(setError(error));
   } else {

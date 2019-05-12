@@ -140,7 +140,7 @@ class Content extends Component {
         {
           waitList && (
             <div className={s.profilePage}>
-              <WaitList />
+              <WaitList customerId={customerId} />
             </div>
           )
         }
