@@ -28,7 +28,8 @@ import {
   Search as SearchIcon,
   AssignmentInd,
   Notifications as NotificationsIcon,
-  Fingerprint, FindInPage,
+  Fingerprint,
+  FindInPage,
 } from '@material-ui/icons';
 import { findEventByCustomerIdAction } from 'actionsReducers/common.actions';
 import { history } from 'containers/App';

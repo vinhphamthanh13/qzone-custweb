@@ -19,7 +19,7 @@ export const setWaitLists = payload => ({
 export const registerWaitListAction = data => async (dispatch) => {
   dispatch(setLoading(true));
   const [regWaitList, error] = await handleRequest(registerWaitList, [data]);
-  console.log('register waitlist response');
+  console.log('register waitlist response', regWaitList);
   if (error) {
     dispatch(setError(error));
   } else {

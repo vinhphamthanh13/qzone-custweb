@@ -11,7 +11,6 @@ import { Grid } from '@material-ui/core';
 import { history } from 'containers/App';
 import Loading from 'components/Loading';
 import Error from 'components/Error';
-import Success from 'components/Success';
 import EmptyItem from 'components/EmptyItem';
 import {
   setServiceCategoriesAction,
@@ -96,6 +95,7 @@ export class Home extends React.PureComponent {
     const {
       isError,
       errorMessage,
+      categories,
     } = prevProps;
     const {
       isError: cachedIsError,
@@ -103,6 +103,7 @@ export class Home extends React.PureComponent {
     } = this.props;
     const {
       serviceProviders,
+      categories: cachedCategories,
     } = this.state;
 
     if (
@@ -110,6 +111,7 @@ export class Home extends React.PureComponent {
       && errorMessage !== cachedErrorMessage
       && regExPattern.connectError.test(cachedErrorMessage))
       || (serviceProviders && serviceProviders.length === 0)
+      || ((categories !== cachedCategories) && (!cachedCategories))
     ) {
       history.replace(`/in-maintenance/${uuidv1()}`);
     }
@@ -209,7 +211,6 @@ export class Home extends React.PureComponent {
     return (
       <>
         <Error />
-        <Success />
         <Loading />
         <Auth
           isRegisterOpen={isRegisterOpen}

@@ -7,24 +7,24 @@ import {
 import { connect } from 'react-redux';
 import findValueByKey from 'utils/findValueByKey';
 import CustomModal from 'components/Modal/CustomModal';
-// import { resetSuccessMessage } from 'actionsReducers/common.actions';
+import { resetModalStatus } from 'actionsReducers/common.actions';
 
 
 const Success = (props) => {
   const {
     success,
     successMessage,
-    resetSuccessMessage: resetSuccessMessageAction,
+    resetModalStatus: resetModalStatusAction,
   } = props;
 
   console.log('in the success modal', props);
   return success ? (
     <CustomModal
       type="success"
-      title="Success occurs!"
+      title="Success!"
       message={successMessage}
       isOpen
-      onClose={resetSuccessMessageAction}
+      onClose={resetModalStatusAction}
       className="z-index-highest"
     />
   ) : null;
@@ -33,7 +33,7 @@ const Success = (props) => {
 Success.propTypes = {
   success: bool.isRequired,
   successMessage: string.isRequired,
-  resetSuccessMessage: func.isRequired,
+  resetModalStatus: func.isRequired,
 };
 
 const mapStateToProps = (state) => {
@@ -48,5 +48,5 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
-  // resetSuccessMessage,
+  resetModalStatus,
 })(Success);

@@ -11,6 +11,7 @@ const initState = {
   isError: false,
   isSuccess: false,
   errorMessage: '',
+  successMessage: '',
   eventList: null,
   serviceProviders: null,
 };

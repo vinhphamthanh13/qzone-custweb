@@ -193,7 +193,6 @@ class WaitListRegistration extends Component {
   };
 
   handleSelectProvider = provider => () => {
-    console.log('provider in selected', provider);
     const providerName = get(provider, 'providerName');
     const geoLocation = get(provider, 'geoLocation');
     const timezoneId = get(provider, 'timezoneId');
@@ -265,7 +264,7 @@ class WaitListRegistration extends Component {
     const serviceName = get(service, 'name');
     const serviceImg = get(service, 'image.fileUrl') || defaultImage;
     const fullAddress = get(geoLocation, 'fullAddress');
-    console.log('waitListRegistered', waitListRegistered);
+    console.log('waitListRegistered in waitlist module', waitListRegistered);
 
     return (
       <>
@@ -455,6 +454,7 @@ const mapStateToProps = state => ({
   ...state.common,
   ...state.booking,
   ...state.auth,
+  ...state.waitLists,
 });
 
 export default compose(

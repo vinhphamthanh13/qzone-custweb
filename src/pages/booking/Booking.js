@@ -19,6 +19,7 @@ import {
 } from '@material-ui/core';
 import {
   Home,
+  AssignmentInd,
   ChevronLeft,
   ChevronRight,
 } from '@material-ui/icons';
@@ -28,6 +29,7 @@ import CustomModal from 'components/Modal/CustomModal';
 import Loading from 'components/Loading';
 import Error from 'components/Error';
 import { history } from 'containers/App';
+import Success from 'components/Success';
 import {
   BOOKING,
   regExPattern,
@@ -96,6 +98,7 @@ class Booking extends PureComponent {
       if (providersByServiceIdList && providersByServiceIdList.length === 0) {
         history.push('/');
       }
+      const customerId = get(userDetail, 'userSub');
 
       return {
         serviceId: resolvedServiceId,
@@ -109,6 +112,7 @@ class Booking extends PureComponent {
         userDetail,
         loginSession,
         appointmentEvent,
+        customerId,
       };
     }
 
@@ -129,6 +133,7 @@ class Booking extends PureComponent {
       isConfirmDialogOpen: false,
       userDetail: null,
       appointmentEvent: null,
+      customerId: null,
     };
   }
 
@@ -217,6 +222,11 @@ class Booking extends PureComponent {
     const { resetBooking: resetBookingAction } = this.props;
     resetBookingAction();
     history.push('/');
+  };
+
+  goProfile = () => {
+    const { customerId } = this.state;
+    history.push(`/profile/${customerId}`);
   };
 
   handleRegisterEvent = () => {
@@ -332,6 +342,7 @@ class Booking extends PureComponent {
       bookingDetail,
       isConfirmDialogOpen,
       appointmentEvent,
+      customerId,
     } = this.state;
 
     const Step = this.stepComponents[bookingStep];
@@ -367,6 +378,7 @@ class Booking extends PureComponent {
 
     return (
       <>
+        <Success />
         <Error />
         <Loading />
         {bookingDetail && bookingDetail.provider && (
@@ -400,6 +412,11 @@ class Booking extends PureComponent {
               <IconButton color="inherit" onClick={this.goHome} aria-label="Close">
                 <Home />
               </IconButton>
+              {customerId && (
+                <IconButton color="inherit" onClick={this.goProfile} aria-label="Profile">
+                  <AssignmentInd />
+                </IconButton>
+              )}
             </div>
           </div>
           <Step

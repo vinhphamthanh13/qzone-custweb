@@ -44,12 +44,12 @@ class SelectProvider extends React.PureComponent {
         { bookingService && (
           <div className={s.selectProviderWrapper}>
             <div className={s.selectProviderHeader}>
-              <Typography color="textSecondary" variant="title" className="text-bold">
-                {bookingService.name}
-              </Typography>
               <div className={s.selectDateOfBooking}>
                 <DatePicker onChange={onDateChange} selectDate={noop} enableCalendar={false} />
               </div>
+              <Typography color="inherit" variant="title" className="text-bold">
+                {bookingService.name}
+              </Typography>
               <WaitListRegistration handleAuth={handleAuth} />
             </div>
             {providers ? (
