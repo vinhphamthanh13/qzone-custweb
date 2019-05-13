@@ -26,12 +26,6 @@ AppointmentTimeline.propTypes = {
       id: string.isRequired,
       serviceName: string.isRequired,
       providerName: string.isRequired,
-      slot: shape({
-        providerId: string.isRequired,
-        serviceId: string.isRequired,
-        startSec: number.isRequired,
-        toSec: number,
-      }).isRequired,
       status: string.isRequired,
       duration: number.isRequired,
     }).isRequired,

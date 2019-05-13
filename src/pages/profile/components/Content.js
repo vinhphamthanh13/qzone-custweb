@@ -162,10 +162,14 @@ class Content extends Component {
 Content.propTypes = {
   customerId: string.isRequired,
   onClose: func.isRequired,
-  givenName: string.isRequired,
+  givenName: string,
   logoutAction: func.isRequired,
   handleAccount: func.isRequired,
   updateProfileStatus: string.isRequired,
+};
+
+Content.defaultProps = {
+  givenName: '',
 };
 
 const mapStateToProps = state => ({
