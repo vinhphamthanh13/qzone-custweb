@@ -7,6 +7,7 @@ import {
 import {
   registerWaitLists,
   waitListsByCustomerId,
+  // cancelWaitLists,
 } from 'actionsApi/waitlist';
 
 
