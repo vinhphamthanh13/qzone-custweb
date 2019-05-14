@@ -67,7 +67,7 @@ class Content extends Component {
   }
 
   componentDidMount() {
-    this.setState({ sidePanel: { [EVENT_LIST]: true } });
+    this.setState({ sidePanel: { [WAIT_LIST]: true } });
   }
 
   handleSignOut = () => {
