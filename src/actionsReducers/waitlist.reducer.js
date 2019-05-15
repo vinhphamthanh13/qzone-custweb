@@ -1,8 +1,13 @@
-import { REGISTER_WAIT_LIST, SET_WAIT_LIST } from 'actionsReducers/waitlist.actions';
+import {
+  REGISTER_WAIT_LIST,
+  SET_WAIT_LIST,
+  CANCEL_WAIT_LIST,
+} from 'actionsReducers/waitlist.actions';
 
 const initState = {
   waitListRegistered: null,
   waitLists: null,
+  cancelWaitLists: null,
 };
 
 const reducer = (state = initState, action) => {
@@ -16,6 +21,11 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         waitLists: action.payload,
+      };
+    case CANCEL_WAIT_LIST:
+      return {
+        ...state,
+        cancelWaitLists: action.payload,
       };
     default:
       return state;

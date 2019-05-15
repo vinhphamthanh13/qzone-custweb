@@ -62,8 +62,9 @@ class WaitListRegistration extends Component {
       || userDetail !== cachedUserDetail
     ) {
       const serviceId = get(service, 'id');
-      const providers = serviceProviders && serviceProviders.filter(provider => provider.serviceId === serviceId);
-      const queuedProviders = (providers && providers.filter(provider => provider.mode === 'QUEUE'));
+      // const queuedProviders = (providers && providers.filter(provider => provider.mode === 'QUEUE'));
+      // const queuedProviders = providers;
+      const queuedProviders = serviceProviders && serviceProviders.filter(provider => provider.serviceId === serviceId);
       const tempServiceId = get(queuedProviders, '0.id');
       const providerName = get(queuedProviders, '0.providerName');
       const geoLocation = get(queuedProviders, '0.geoLocation');

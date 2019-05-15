@@ -16,8 +16,10 @@ import {
   CheckCircle,
   Cancel,
 } from '@material-ui/icons';
+import EmptyItem from 'components/EmptyItem';
 import {
   setWaitListsAction,
+  setCancelWaitListsAction,
 } from 'actionsReducers/waitlist.actions';
 import { setServiceProvidersAction } from 'actionsReducers/common.actions';
 import s from './WaitList.module.scss';
@@ -27,18 +29,22 @@ class WaitList extends Component {
     const {
       waitLists,
       serviceProviders,
+      cancelWaitLists,
     } = props;
     const {
       waitLists: cachedWaitLists,
       serviceProviders: cachedServiceProviders,
+      cancelWaitLists: cachedCancelWaitLists,
     } = state;
     if (
       waitLists !== cachedWaitLists
       || serviceProviders !== cachedServiceProviders
+      || cancelWaitLists !== cachedCancelWaitLists
     ) {
       return {
         waitLists,
         serviceProviders,
+        cancelWaitLists,
       };
     }
     return null;
@@ -62,8 +68,23 @@ class WaitList extends Component {
     setServiceProviders();
   }
 
-  handleCancelQueue = () => {
-    console.log('cancel Q');
+  componentDidUpdate(prevProps) {
+    const {
+      cancelWaitLists,
+      setWaitListsAction: setWaitLists,
+      customerId,
+    } = prevProps;
+    const {
+      cancelWaitLists: cachedCancelWaitLists,
+    } = this.state;
+    if (cancelWaitLists !== cachedCancelWaitLists) {
+      setWaitLists(customerId);
+    }
+  }
+
+  handleCancelQueue = waitListId => () => {
+    const { setCancelWaitListsAction: setCancelWaitLists } = this.props;
+    setCancelWaitLists(waitListId);
   };
 
   handleConfirmQueue = () => {
@@ -78,7 +99,7 @@ class WaitList extends Component {
 
     return (
       <div className={s.waitList}>
-        {waitLists && chunk(waitLists, Math.ceil(waitLists.length / 3)).map(row => (
+        {waitLists && waitLists.length > 0 ? chunk(waitLists, Math.ceil(waitLists.length / 3)).map(row => (
           <div key={uuidv1()} className={s.waitSlotRow}>
             {row.map((item) => {
               const tempService = serviceProviders && serviceProviders.find(
@@ -116,10 +137,10 @@ class WaitList extends Component {
                   </div>
                   <div className={s.queueCta}>
                     <Button
-                      variant="text"
+                      variant="outlined"
                       color="inherit"
-                      className="simple-button danger-color"
-                      onClick={this.handleCancelQueue}
+                      className="secondary-button"
+                      onClick={this.handleCancelQueue(get(item, 'waitListId'))}
                     >
                       <Cancel color="inherit" className="icon-normal" />
                       Cancel
@@ -127,7 +148,7 @@ class WaitList extends Component {
                     <Button
                       variant="outlined"
                       color="inherit"
-                      className="simple-button"
+                      className="main-button"
                       onClick={this.handleConfirmQueue}
                     >
                       <CheckCircle color="inherit" className="icon-normal" />
@@ -137,7 +158,11 @@ class WaitList extends Component {
                 </div>
               );
             })}
-          </div>))}
+          </div>)) : (
+            <EmptyItem
+              message="You have not enrolled in any waitlist at the moment!"
+            />
+        )}
       </div>
     );
   }
@@ -147,6 +172,7 @@ WaitList.propTypes = {
   setWaitListsAction: func.isRequired,
   setServiceProvidersAction: func.isRequired,
   customerId: string.isRequired,
+  setCancelWaitListsAction: func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -162,5 +188,6 @@ export default compose(
   connect(mapStateToProps, {
     setWaitListsAction,
     setServiceProvidersAction,
+    setCancelWaitListsAction,
   }),
 )(WaitList);
