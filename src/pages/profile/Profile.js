@@ -15,8 +15,6 @@ import {
 } from 'actionsReducers/common.actions';
 import { history } from 'containers/App';
 import CustomModal from 'components/Modal/CustomModal';
-import Error from 'components/Error';
-import Success from 'components/Success';
 import Header from './components/Header';
 import Content from './components/Content';
 import s from './Profile.module.scss';
@@ -111,8 +109,6 @@ class Profile extends Component {
       <>
         {updateProfileMsgError}
         {updateProfileMsgSuccess}
-        <Error />
-        <Success />
         <div>
           <div className={`${s.profile} column`}>
             <Header userDetail={{ givenName, email }} onClose={this.goBooking} onOpenAccount={this.handleAccount} />
