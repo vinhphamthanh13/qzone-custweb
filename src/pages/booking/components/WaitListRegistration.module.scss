@@ -3,10 +3,11 @@
 .joinWaitLists {
   border: 1px solid $gallery;
   border-radius: 0.2rem;
+  margin: 0.2rem auto 0.7rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.7rem 1rem;
+  padding: 0.5rem 1rem;
   transition: all 0.2s ease-in;
   color: $main;
   box-sizing: border-box;

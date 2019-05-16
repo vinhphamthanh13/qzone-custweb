@@ -19,10 +19,11 @@ import {
   serviceType,
 } from 'types/global';
 import RateStar from 'components/Rating/RateStar';
+import MapDialog from 'components/Map/MapDialog';
 import CustomLink from 'components/CustomLink';
 import defaultImage from 'images/default-service-card.png';
+import WaitListRegistration from '../WaitListRegistration';
 import TimeBoxes from './TimeBoxes';
-import MapDialog from '../../../../components/Map/MapDialog';
 import s from './ProviderContent.module.scss';
 
 class ProviderContent extends React.PureComponent {
@@ -53,11 +54,25 @@ class ProviderContent extends React.PureComponent {
     }));
   };
 
-  render() {
+  renderTimeBox = (mode) => {
     const {
       provider,
-      service,
       onTimeSelect,
+      handleAuth,
+    } = this.props;
+    return (mode === 'QUEUE' ? (
+      <WaitListRegistration handleAuth={handleAuth} />
+    ) : (
+      <TimeBoxes
+        provider={provider}
+        onSelectSlot={onTimeSelect}
+      />));
+  };
+
+  render() {
+    const {
+      service,
+      provider,
     } = this.props;
     const { providerId } = this.state;
     const serviceName = get(service, 'name');
@@ -70,6 +85,8 @@ class ProviderContent extends React.PureComponent {
     const { isMapDialogOpen } = this.state;
     const duration = get(provider, 'avgServiceTime');
     const providerRating = get(provider, 'rating');
+    const providerMode = get(provider, 'mode');
+
     return (
       <>
         <MapDialog
@@ -142,10 +159,7 @@ class ProviderContent extends React.PureComponent {
                 Local timezone: {moment.tz.guess()}
               </Typography>
             </div>
-            <TimeBoxes
-              provider={provider}
-              onSelectSlot={onTimeSelect}
-            />
+            {this.renderTimeBox(providerMode)}
           </div>
         </div>
       </>
@@ -157,6 +171,7 @@ ProviderContent.propTypes = {
   service: serviceType,
   provider: providerType,
   onTimeSelect: func.isRequired,
+  handleAuth: func.isRequired,
 };
 
 ProviderContent.defaultProps = {

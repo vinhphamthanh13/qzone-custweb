@@ -417,7 +417,7 @@ class WaitListRegistration extends Component {
           </div>
         )}
         <Button
-          className={`${s.joinWaitLists} simple-button`}
+          className={`${s.joinWaitLists} simple-button main-button`}
           onClick={this.handleToggleRegister}
           disabled={!isQueuing}
           variant="outlined"

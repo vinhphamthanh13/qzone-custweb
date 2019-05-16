@@ -127,7 +127,7 @@ class WaitList extends Component {
                       Your queueing order
                     </Typography>
                     <Typography variant="headline" color="inherit" className="text-bold text-medium text-center">
-                      {`${get(item, 'position')}`.padStart(4, '0')}
+                      {`${get(item, 'position')}`.padStart(3, '0')}
                     </Typography>
                   </div>
                   <div className={s.serviceName}>
