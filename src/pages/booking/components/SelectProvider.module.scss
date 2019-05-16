@@ -15,12 +15,13 @@
 
 .selectProviderHeader {
   margin: auto 0;
-  padding: 0.5rem;
+  padding: 0.5rem 0 1rem;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   border-bottom: 2px solid rgba($grayNickel, 0.5);
   color: $main_04;
+  position: relative;
 }
 
 .providerRow {
@@ -38,4 +39,6 @@
 
 .selectDateOfBooking {
   height: 100%;
+  position: absolute;
+  left: 1.7rem
 }

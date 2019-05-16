@@ -422,7 +422,7 @@ class WaitListRegistration extends Component {
           disabled={!isQueuing}
           variant="outlined"
         >
-          <Queue color="inherit" className="icon-normal" />
+          <Queue color="inherit" className="icon-normal icon-in-button-left" />
           <Typography
             variant="subheading"
             className="text-bold"
