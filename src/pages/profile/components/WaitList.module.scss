@@ -1,7 +1,8 @@
 @import "styles/_settings.scss";
 
 .waitList {
-  color: $main;
+  max-height: calc(100% - 65px);
+  overflow: auto;
 }
 
 .waitSlotRow {
@@ -10,7 +11,6 @@
 }
 
 .waitSlot {
-  color: $main_04;
   border: 1px solid $main_03;
   width: 22rem;
   display: flex;
@@ -22,12 +22,28 @@
   box-shadow: 2px 2px 4px $main_04;
 }
 
+.waitSlotExpired {
+  color: $grayNickel;
+}
+
 .serviceProviderInfo {
   color: $main;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 1rem auto;
+}
+
+.bookedTime {
+  border: 1px solid $main_03;
+  border-radius: 0.4rem;
+  color: $main_04;
+  padding: 0 1rem;
+}
+
+.schedule {
+  display: flex;
+  justify-content: center !important;
 }
 
 .queueOrder {

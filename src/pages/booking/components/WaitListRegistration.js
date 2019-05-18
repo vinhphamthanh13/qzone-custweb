@@ -301,6 +301,8 @@ class WaitListRegistration extends Component {
     const serviceName = get(service, 'name');
     const serviceImg = get(service, 'image.fileUrl') || defaultImage;
     const fullAddress = get(geoLocation, 'fullAddress');
+    console.log('render state waitlist ', this.state);
+    console.log('waitListsValidation', waitListsValidation);
 
     return (
       <>
