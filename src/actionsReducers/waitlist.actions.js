@@ -8,12 +8,13 @@ import {
   registerWaitLists,
   waitListsByCustomerId,
   cancelWaitLists,
+  validateWaitListsBulk,
 } from 'actionsApi/waitlist';
 
-
-export const REGISTER_WAIT_LIST = 'PROFILE.REGISTER_WAIT_LIST';
+export const REGISTER_WAIT_LIST = 'BOOKING.REGISTER_WAIT_LIST';
 export const SET_WAIT_LIST = 'PROFILE.SET_WAIT_LIST';
 export const CANCEL_WAIT_LIST = 'PROFILE.CANCEL_WAIT_LIST';
+export const VALIDATE_WAIT_LIST = 'BOOKING.VALIDATE_WAIT_LIST';
 
 const setRegisterWaitListStatus = payload => ({
   type: REGISTER_WAIT_LIST,
@@ -27,6 +28,11 @@ const setWaitLists = payload => ({
 
 const setCancelWaitLists = payload => ({
   type: CANCEL_WAIT_LIST,
+  payload,
+});
+
+const setWaitListsValidation = payload => ({
+  type: VALIDATE_WAIT_LIST,
   payload,
 });
 
@@ -63,6 +69,19 @@ export const setCancelWaitListsAction = data => async (dispatch) => {
   } else {
     dispatch(setCancelWaitLists(cancelResult));
     dispatch(setSucceed('Your waitlist is cancelled.'));
+  }
+  dispatch(setLoading(false));
+};
+
+export const setWaitListsValidationAction = data => async (dispatch) => {
+  dispatch(setLoading(true));
+  const validations = await validateWaitListsBulk(data);
+  if (!validations) {
+    dispatch(setError('There this error when validate temporary services QUEUE'));
+  } else {
+    const waitListValidation = [];
+    validations.map(validation => waitListValidation.push(validation.data));
+    dispatch(setWaitListsValidation(waitListValidation));
   }
   dispatch(setLoading(false));
 };

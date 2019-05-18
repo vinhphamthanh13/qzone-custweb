@@ -28,6 +28,7 @@ import { get } from 'lodash';
 import DatePicker from 'components/Calendar/DatePicker';
 import {
   registerWaitListsAction,
+  setWaitListsValidationAction,
 } from 'actionsReducers/waitlist.actions';
 import defaultImage from 'images/default-service-card.png';
 import {
@@ -48,23 +49,27 @@ class WaitListRegistration extends Component {
       serviceProviders,
       loginSession,
       userDetail,
+      waitListsValidation,
     } = props;
     const {
       service: cachedService,
       serviceProviders: cachedServiceProviders,
       loginSession: cachedLoginSession,
       userDetail: cachedUserDetail,
+      waitListsValidation: cachedWaitListsValidation,
     } = state;
     if (
       service !== cachedService
       || serviceProviders !== cachedServiceProviders
       || loginSession !== cachedLoginSession
       || userDetail !== cachedUserDetail
+      || waitListsValidation !== cachedWaitListsValidation
     ) {
       const serviceId = get(service, 'id');
       // const queuedProviders = (providers && providers.filter(provider => provider.mode === 'QUEUE'));
       // const queuedProviders = providers;
       const queuedProviders = serviceProviders && serviceProviders.filter(provider => provider.serviceId === serviceId);
+      const temporaryServiceIds = queuedProviders && queuedProviders.map(tempService => tempService.id);
       const tempServiceId = get(queuedProviders, '0.id');
       const providerName = get(queuedProviders, '0.providerName');
       const geoLocation = get(queuedProviders, '0.geoLocation');
@@ -89,6 +94,8 @@ class WaitListRegistration extends Component {
         queuedProviders,
         isQueuing,
         tempServiceId,
+        temporaryServiceIds,
+        waitListsValidation,
       };
     }
     return null;
@@ -110,19 +117,53 @@ class WaitListRegistration extends Component {
     tempServiceId: null,
     queuedProviders: null,
     isQueuing: null,
+    temporaryServiceIds: null,
+    waitListsValidation: null,
   };
 
+  // componentDidMount() {
+  //   const {
+  //     setWaitListsValidationAction: setWaitListsValidation,
+  //   } = this.props;
+  //   const {
+  //     temporaryServiceIds,
+  //   } = this.state;
+  //
+  //   if (temporaryServiceIds && temporaryServiceIds.length) {
+  //     setWaitListsValidation(temporaryServiceIds);
+  //   }
+  // }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { setWaitListsValidationAction: setWaitListsValidation } = prevProps;
+    const { temporaryServiceIds } = prevState;
+    console.log('prevState', prevState);
+    const { temporaryServiceIds: cachedTemporaryServiceIds } = this.state;
+    console.log('this.state', this.state);
+    const tempIdsSize = temporaryServiceIds && temporaryServiceIds.length;
+    const cachedTempIdsSize = cachedTemporaryServiceIds && cachedTemporaryServiceIds.length;
+    if (cachedTempIdsSize !== tempIdsSize) {
+      setWaitListsValidation(cachedTemporaryServiceIds);
+    }
+  }
+
   handleToggleRegister = () => {
-    this.setState(oldState => ({
-      isRegisterWaitLists: !oldState.isRegisterWaitLists,
-      isOpenProviderList: false,
-    }));
+    const { handleAuth } = this.props;
+    const { isAuthenticated } = this.state;
+    if (isAuthenticated) {
+      this.setState(oldState => ({
+        isRegisterWaitLists: !oldState.isRegisterWaitLists,
+        isOpenProviderList: false,
+      }));
+    } else {
+      handleAuth('isLoginOpen');
+    }
   };
 
   handleRegisterWaitList = () => {
     const {
       registerWaitListsAction: registerWaitLists,
-      handleAuth,
+      // handleAuth,
     } = this.props;
     const {
       providerId,
@@ -130,27 +171,27 @@ class WaitListRegistration extends Component {
       serviceId,
       dateFrom,
       dateTo,
-      isAuthenticated,
+      // isAuthenticated,
       tempServiceId,
     } = this.state;
-    if (isAuthenticated) {
-      let toSec = dateTo;
-      if (dateTo === dateFrom) {
-        toSec = dateTo + 3600 * 24; // Plus one day
-      }
-      const startSec = dateFrom + 3601; // Plus one hour for startSec
-      registerWaitLists({
-        customerId,
-        providerId,
-        serviceId,
-        startSec,
-        toSec,
-        tempServiceId,
-      });
-      this.handleToggleRegister();
-    } else {
-      handleAuth('isLoginOpen');
+    // if (isAuthenticated) {
+    let toSec = dateTo;
+    if (dateTo === dateFrom) {
+      toSec = dateTo + 3600 * 24; // Plus one day
     }
+    const startSec = dateFrom + 3601; // Plus one hour for startSec
+    registerWaitLists({
+      customerId,
+      providerId,
+      serviceId,
+      startSec,
+      toSec,
+      tempServiceId,
+    });
+    this.handleToggleRegister();
+    // } else {
+    //   handleAuth('isLoginOpen');
+    // }
   };
 
   handleChangeOption = (event) => {
@@ -226,7 +267,7 @@ class WaitListRegistration extends Component {
     <>
       <Queue color="inherit" className="icon-small" />
       <Typography variant="body1" color="inherit">
-        Enroll
+        Join Queue
       </Typography>
     </>
   ) : (
@@ -251,6 +292,7 @@ class WaitListRegistration extends Component {
       dateTo,
       queuedProviders,
       isQueuing,
+      waitListsValidation,
     } = this.state;
     const {
       values,
@@ -410,7 +452,11 @@ class WaitListRegistration extends Component {
                   onClick={this.handleRegisterWaitList}
                   disabled={!isValid}
                   className="main-button"
-                >{this.renderEnrollButton(isAuthenticated)}
+                >
+                  <Queue color="inherit" className="icon-small" />
+                  <Typography variant="body1" color="inherit">
+                    Enroll
+                  </Typography>
                 </Button>
               </div>
             </div>
@@ -422,14 +468,7 @@ class WaitListRegistration extends Component {
           disabled={!isQueuing}
           variant="outlined"
         >
-          <Queue color="inherit" className="icon-normal icon-in-button-left" />
-          <Typography
-            variant="subheading"
-            className="text-bold"
-            color="inherit"
-          >
-            Join Queue
-          </Typography>
+          {this.renderEnrollButton(isAuthenticated)}
         </Button>
       </>
     );
@@ -442,6 +481,7 @@ WaitListRegistration.propTypes = {
   setFieldValue: func.isRequired,
   isValid: bool.isRequired,
   handleAuth: func.isRequired,
+  setWaitListsValidationAction: func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -461,5 +501,6 @@ export default compose(
   }),
   connect(mapStateToProps, {
     registerWaitListsAction,
+    setWaitListsValidationAction,
   }),
 )(WaitListRegistration);

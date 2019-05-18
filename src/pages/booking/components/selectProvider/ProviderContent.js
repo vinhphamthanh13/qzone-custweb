@@ -86,7 +86,7 @@ class ProviderContent extends React.PureComponent {
     const duration = get(provider, 'avgServiceTime');
     const providerRating = get(provider, 'rating');
     const providerMode = get(provider, 'mode');
-
+    console.log('provider content state', this.state);
     return (
       <>
         <MapDialog
