@@ -121,31 +121,18 @@ class WaitListRegistration extends Component {
     waitListsValidation: null,
   };
 
-  // componentDidMount() {
-  //   const {
-  //     setWaitListsValidationAction: setWaitListsValidation,
-  //   } = this.props;
-  //   const {
-  //     temporaryServiceIds,
-  //   } = this.state;
-  //
-  //   if (temporaryServiceIds && temporaryServiceIds.length) {
-  //     setWaitListsValidation(temporaryServiceIds);
+  // componentDidUpdate(prevProps, prevState) {
+  //   const { setWaitListsValidationAction: setWaitListsValidation } = prevProps;
+  //   const { temporaryServiceIds } = prevState;
+  //   console.log('prevState', prevState);
+  //   const { temporaryServiceIds: cachedTemporaryServiceIds } = this.state;
+  //   console.log('this.state', this.state);
+  //   const tempIdsSize = temporaryServiceIds && temporaryServiceIds.length;
+  //   const cachedTempIdsSize = cachedTemporaryServiceIds && cachedTemporaryServiceIds.length;
+  //   if (cachedTempIdsSize !== tempIdsSize) {
+  //     setWaitListsValidation(cachedTemporaryServiceIds);
   //   }
   // }
-
-  componentDidUpdate(prevProps, prevState) {
-    const { setWaitListsValidationAction: setWaitListsValidation } = prevProps;
-    const { temporaryServiceIds } = prevState;
-    console.log('prevState', prevState);
-    const { temporaryServiceIds: cachedTemporaryServiceIds } = this.state;
-    console.log('this.state', this.state);
-    const tempIdsSize = temporaryServiceIds && temporaryServiceIds.length;
-    const cachedTempIdsSize = cachedTemporaryServiceIds && cachedTemporaryServiceIds.length;
-    if (cachedTempIdsSize !== tempIdsSize) {
-      setWaitListsValidation(cachedTemporaryServiceIds);
-    }
-  }
 
   handleToggleRegister = () => {
     const { handleAuth } = this.props;
@@ -164,6 +151,7 @@ class WaitListRegistration extends Component {
     const {
       registerWaitListsAction: registerWaitLists,
       // handleAuth,
+      setWaitListsValidationAction: setWaitListsValidation,
     } = this.props;
     const {
       providerId,
@@ -174,20 +162,30 @@ class WaitListRegistration extends Component {
       // isAuthenticated,
       tempServiceId,
     } = this.state;
+
     // if (isAuthenticated) {
     let toSec = dateTo;
     if (dateTo === dateFrom) {
       toSec = dateTo + 3600 * 24; // Plus one day
     }
     const startSec = dateFrom + 3601; // Plus one hour for startSec
-    registerWaitLists({
+    const validateData = {
       customerId,
-      providerId,
-      serviceId,
       startSec,
-      toSec,
       tempServiceId,
-    });
+      toSec,
+    };
+    setWaitListsValidation(validateData);
+    if (false) {
+      registerWaitLists({
+        customerId,
+        providerId,
+        serviceId,
+        startSec,
+        toSec,
+        tempServiceId,
+      });
+    }
     this.handleToggleRegister();
     // } else {
     //   handleAuth('isLoginOpen');

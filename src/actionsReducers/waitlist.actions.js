@@ -8,7 +8,8 @@ import {
   registerWaitLists,
   waitListsByCustomerId,
   cancelWaitLists,
-  validateWaitListsBulk,
+  // validateWaitListsBulk,
+  validateWaitLists,
 } from 'actionsApi/waitlist';
 
 export const REGISTER_WAIT_LIST = 'BOOKING.REGISTER_WAIT_LIST';
@@ -75,13 +76,17 @@ export const setCancelWaitListsAction = data => async (dispatch) => {
 
 export const setWaitListsValidationAction = data => async (dispatch) => {
   dispatch(setLoading(true));
-  const validations = await validateWaitListsBulk(data);
-  if (!validations) {
-    dispatch(setError('There this error when validate temporary services QUEUE'));
+  const [validation, error] = await handleRequest(validateWaitLists, [data]);
+  if (error) {
+    dispatch(setError(error));
   } else {
-    const waitListValidation = [];
-    validations.map(validation => waitListValidation.push(validation.data));
-    dispatch(setWaitListsValidation(waitListValidation));
+    const { message, status } = validation;
+    if (!status) {
+      dispatch(setError(message));
+    } else {
+      dispatch(setWaitListsValidation(validation));
+    }
+    dispatch(setWaitListsValidation(validation));
   }
   dispatch(setLoading(false));
 };

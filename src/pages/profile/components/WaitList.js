@@ -133,6 +133,9 @@ class WaitList extends Component {
                     </div>
                     <div className={s.bookedTime}>
                       <div className={`full-width icon-text ${s.schedule}`}>
+                        <Typography variant="subtitle2" color="inherit">
+                          Start:
+                        </Typography>
                         <DateRange className="icon-small" />
                         <Typography variant="subtitle2" color="inherit">
                           {moment(startTime).format(defaultDateFormat)}
@@ -169,7 +172,7 @@ class WaitList extends Component {
                       color="inherit"
                       className="secondary-button"
                       onClick={this.handleCancelQueue(get(item, 'waitListId'))}
-                      disabled={isExpired}
+                      // disabled={isExpired}
                     >
                       <Cancel color="inherit" className="icon-normal" />
                       Cancel
