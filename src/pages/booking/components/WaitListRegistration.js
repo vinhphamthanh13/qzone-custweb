@@ -121,7 +121,7 @@ class WaitListRegistration extends Component {
     tempServiceId: null,
     queuedProviders: null,
     isQueuing: null,
-    temporaryServiceIds: null,
+    // temporaryServiceIds: null,
     waitListsValidation: null,
   };
 
@@ -235,6 +235,7 @@ class WaitListRegistration extends Component {
     const timezoneId = get(provider, 'timezoneId');
     const providerId = get(provider, 'providerId');
     const tempServiceId = get(provider, 'id');
+    console.log('provider', provider);
     this.setState({
       providerName,
       geoLocation,
@@ -245,16 +246,19 @@ class WaitListRegistration extends Component {
   };
 
   renderProviderList = list => (
-    <ul className={s.dropdownProviders}>
+    <div className={s.dropdownProviders}>
       {list && list.map(provider => (
         /* eslint-disable-next-line */
-        <li key={uuidv1()} className={s.providerItem} onClick={this.handleSelectProvider(provider)}>
+        <div key={uuidv1()} className={s.providerItem} onClick={this.handleSelectProvider(provider)}>
           <Typography variant="body1" color="inherit" className="text-bold">
             {provider.providerName}
           </Typography>
-        </li>
+          <Typography variant="body2" color="inherit">
+            {provider.geoLocation.fullAddress}
+          </Typography>
+        </div>
       ))}
-    </ul>
+    </div>
   );
 
   renderEnrollButton = isAuthenticated => (isAuthenticated ? (
@@ -295,7 +299,6 @@ class WaitListRegistration extends Component {
     const serviceName = get(service, 'name');
     const serviceImg = get(service, 'image.fileUrl') || defaultImage;
     const fullAddress = get(geoLocation, 'fullAddress');
-    console.log('render state waitlist ', this.state);
     console.log('waitListsValidation', waitListsValidation);
 
     return (
