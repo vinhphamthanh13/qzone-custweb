@@ -7,16 +7,19 @@ import {
   Settings,
   ExitToApp,
   AddToQueue,
+  Assessment,
 } from '@material-ui/icons';
 import { logout } from 'authentication/actions/logout';
 import EventList from 'pages/profile/appointmentDialog/Appointment';
 import WaitList from './WaitList';
 import Info from './Info';
+import Survey from './Survey';
 import s from './Content.module.scss';
 
 const EVENT_LIST = 'eventList';
 const MY_INFO = 'myInfo';
 const WAIT_LIST = 'waitList';
+const SURVEY = 'surveyList';
 
 class Content extends Component {
   static getDerivedStateFromProps(props, state) {
@@ -40,6 +43,9 @@ class Content extends Component {
     },
     {
       name: EVENT_LIST, icon: Event, text: 'My event list', isSelected: false,
+    },
+    {
+      name: SURVEY, icon: Assessment, text: 'My assessment list', isSelected: false,
     },
     {
       name: MY_INFO, icon: Settings, text: 'My information', isSelected: false,
@@ -122,6 +128,7 @@ class Content extends Component {
         eventList,
         myInfo,
         waitList,
+        surveyList,
       },
       eventList: cachedEventList,
     } = this.state;
@@ -152,6 +159,11 @@ class Content extends Component {
         {myInfo && (
           <div className={s.profilePage}>
             <Info handleAccount={handleAccount} updateProfileStatus={updateProfileStatus} />
+          </div>)
+        }
+        {surveyList && (
+          <div className={s.profilePage}>
+            <Survey customerId={customerId} eventList={cachedEventList} />
           </div>)
         }
       </div>

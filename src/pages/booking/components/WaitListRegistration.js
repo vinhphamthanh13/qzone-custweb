@@ -24,7 +24,11 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withFormik } from 'formik';
 import moment from 'moment';
-import { get } from 'lodash';
+import {
+  get,
+  uniqBy,
+  sortBy,
+} from 'lodash';
 import DatePicker from 'components/Calendar/DatePicker';
 import {
   registerWaitListsAction,
@@ -91,7 +95,7 @@ class WaitListRegistration extends Component {
         serviceId,
         loginSession,
         userDetail,
-        queuedProviders,
+        queuedProviders: sortBy(uniqBy(queuedProviders, item => item.providerId), item => item.providerName),
         isQueuing,
         tempServiceId,
         temporaryServiceIds,
@@ -164,11 +168,9 @@ class WaitListRegistration extends Component {
     } = this.state;
 
     // if (isAuthenticated) {
-    let toSec = dateTo;
-    if (dateTo === dateFrom) {
-      toSec = dateTo + 3600 * 24; // Plus one day
-    }
-    const startSec = dateFrom + 3601; // Plus one hour for startSec
+    // }
+    const startSec = dateFrom + 1; // Plus one second for startSec
+    const toSec = dateTo + 3600 * 24; // Plus one day
     const validateData = {
       customerId,
       startSec,
@@ -245,18 +247,12 @@ class WaitListRegistration extends Component {
   renderProviderList = list => (
     <ul className={s.dropdownProviders}>
       {list && list.map(provider => (
-        <>
-          {/* eslint-disable-next-line */}
-          <li
-            className={s.providerItem}
-            onClick={this.handleSelectProvider(provider)}
-            key={uuidv1()}
-          >
-            <Typography variant="body1" color="inherit" className="text-bold">
-              {provider.providerName}
-            </Typography>
-          </li>
-        </>
+        /* eslint-disable-next-line */
+        <li key={uuidv1()} className={s.providerItem} onClick={this.handleSelectProvider(provider)}>
+          <Typography variant="body1" color="inherit" className="text-bold">
+            {provider.providerName}
+          </Typography>
+        </li>
       ))}
     </ul>
   );
