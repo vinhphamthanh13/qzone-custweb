@@ -30,60 +30,62 @@ class ProviderContent extends Component {
 
     return (
       <div className={s.services}>
-        {providerServices && providerServices.length > 0 && chunk(providerServices, 2).map(chunked => (
-          <div key={uuidv1()} className={s.serviceChunked}>
-            {chunked.map((service) => {
-              const srvImg = get(service, 'image.fileUrl');
-              const name = get(service, 'name');
-              const description = get(service, 'description');
-              const duration = get(service, 'duration');
-              const serviceId = get(service, 'id');
-              const serviceProvider = serviceProviders && serviceProviders
-                .filter(item => item.providerId === providerId && item.serviceId === serviceId);
-              const serviceProviderId = get(serviceProvider, '0.id');
-              const providerRating = get(serviceProvider, '0.rating');
-              return (
-                <div key={uuidv1()} className={s.serviceCard}>
-                  <div className={s.serviceCardHeader}>
-                    <div className={s.serviceImage}>
-                      <img src={srvImg} alt={name} className="full-width" />
-                    </div>
-                    <div className={s.serviceTitle}>
-                      <Typography variant="title" color="inherit">{name}</Typography>
-                      <RateStar />
-                    </div>
-                    <div className={s.servingTime}>
-                      <AvTimer className="icon-small icon-main" />
-                      <Typography variant="body1" color="inherit">{duration} minutes</Typography>
-                    </div>
-                  </div>
-                  <div className={s.serviceCardBody}>
-                    <Typography variant="body1" color="inherit">{description}</Typography>
-                  </div>
-                  { customerId ? (
-                    <div className={s.ratingService}>
-                      <div className={s.ratingLabel}>
-                        <Typography
-                          variant="subtitle2"
-                          color="inherit"
-                          className="text-bold"
-                        >
-                          {providerRating ? 'Thanks for rating our quality!' : 'Rate our quality on this service!'}
-                        </Typography>
+        {providerServices && providerServices.length > 0
+        && chunk(providerServices, Math.ceil(providerServices.length / 4))
+          .map(chunked => (
+            <div key={uuidv1()} className={s.serviceChunked}>
+              {chunked.map((service) => {
+                const srvImg = get(service, 'image.fileUrl');
+                const name = get(service, 'name');
+                const description = get(service, 'description');
+                const duration = get(service, 'duration');
+                const serviceId = get(service, 'id');
+                const serviceProvider = serviceProviders && serviceProviders
+                  .filter(item => item.providerId === providerId && item.serviceId === serviceId);
+                const serviceProviderId = get(serviceProvider, '0.id');
+                const providerRating = get(serviceProvider, '0.rating');
+                return (
+                  <div key={uuidv1()} className={s.serviceCard}>
+                    <div className={s.serviceCardHeader}>
+                      <div className={s.serviceImage}>
+                        <img src={srvImg} alt={name} className="full-width" />
                       </div>
-                      <Rating
-                        readOnly={!!providerRating}
-                        max={5}
-                        onChange={this.handleRating(customerId, serviceProviderId, ratingService)}
-                        value={providerRating}
-                      />
+                      <div className={s.serviceTitle}>
+                        <Typography variant="title" color="inherit">{name}</Typography>
+                        <RateStar />
+                      </div>
+                      <div className={s.servingTime}>
+                        <AvTimer className="icon-small icon-main" />
+                        <Typography variant="body1" color="inherit">{duration} minutes</Typography>
+                      </div>
                     </div>
-                  ) : null}
-                </div>
-              );
-            })}
-          </div>
-        ))}
+                    <div className={s.serviceCardBody}>
+                      <Typography variant="body1" color="inherit">{description}</Typography>
+                    </div>
+                    { customerId ? (
+                      <div className={s.ratingService}>
+                        <div className={s.ratingLabel}>
+                          <Typography
+                            variant="subtitle2"
+                            color="inherit"
+                            className="text-bold"
+                          >
+                            {providerRating ? 'Thanks for rating our quality!' : 'Rate our quality on this service!'}
+                          </Typography>
+                        </div>
+                        <Rating
+                          readOnly={!!providerRating}
+                          max={5}
+                          onChange={this.handleRating(customerId, serviceProviderId, ratingService)}
+                          value={providerRating}
+                        />
+                      </div>
+                    ) : null}
+                  </div>
+                );
+              })}
+            </div>
+          ))}
       </div>
     );
   }

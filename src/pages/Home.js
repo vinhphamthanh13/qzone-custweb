@@ -95,6 +95,7 @@ export class Home extends React.PureComponent {
     const {
       isError,
       errorMessage,
+      categories,
     } = prevProps;
     const {
       isError: cachedIsError,
@@ -102,6 +103,7 @@ export class Home extends React.PureComponent {
     } = this.props;
     const {
       serviceProviders,
+      categories: cachedCategories,
     } = this.state;
 
     if (
@@ -109,6 +111,7 @@ export class Home extends React.PureComponent {
       && errorMessage !== cachedErrorMessage
       && regExPattern.connectError.test(cachedErrorMessage))
       || (serviceProviders && serviceProviders.length === 0)
+      || ((categories !== cachedCategories) && (!cachedCategories))
     ) {
       history.replace(`/in-maintenance/${uuidv1()}`);
     }
@@ -202,8 +205,6 @@ export class Home extends React.PureComponent {
     }));
     const systemMaintenance = !combineServiceProviders
       || (combineServiceProviders && combineServiceProviders.length === 0);
-    console.log(' home state', this.state);
-    console.log(' home state categoriesServices', categoriesServices);
 
     return (
       <>

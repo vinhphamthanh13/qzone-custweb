@@ -33,7 +33,7 @@ class ProviderContent extends Component {
 
     return (
       <div className={s.services}>
-        {services.length > 0 && chunk(services, 2).map(chunked => (
+        {services.length > 0 && chunk(services, Math.ceil(services.length / 4)).map(chunked => (
           <div key={uuidv1()} className={s.serviceChunked}>
             {chunked.map((service) => {
               const srvImg = get(service, 'image.fileUrl');

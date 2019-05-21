@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { matchType } from 'types/global';
+import SessionManagement from 'components/SessionManagement';
+import Error from 'components/Error';
+import Success from 'components/Success';
 import Profile from './profile/Profile';
 
 class ProfilePage extends Component {
@@ -12,7 +15,12 @@ class ProfilePage extends Component {
   render() {
     const { match: { params: { id } } } = this.props;
     return (
-      <Profile customerId={id} />
+      <>
+        <Error />
+        <Success />
+        <SessionManagement />
+        <Profile customerId={id} />
+      </>
     );
   }
 }

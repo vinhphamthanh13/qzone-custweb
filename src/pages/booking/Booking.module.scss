@@ -16,6 +16,9 @@
 
 .goBack {
   color: $main;
+  display: flex;
+  width: 20rem;
+  justify-content: flex-end;
 }
 
 .bookingStepsWrapper {

@@ -21,6 +21,7 @@ import {
   AlarmOn,
   Reorder,
   AlarmAdd,
+  NotInterested,
   DoneAll,
   Update,
   Timer,
@@ -90,10 +91,9 @@ class TimelineCard extends Component {
     const serviceProviderId = '//TODO';
     const providerRating = 5;
     const bookedTime = moment(providerStartSec.replace(' ', 'T'));
-    const endTimeSec = bookedTime.add(duration, 'm').unix() * 1000;
     const currentSec = moment().unix() * 1000;
-    const remainTimeSec = currentSec - endTimeSec;
-    const [eventStyle, iconTimeline, eventStatus, iconStatus, styleStatus] = remainTimeSec > 0
+    const remainTimeSec = currentSec - bookedTime;
+    const [eventStyle, iconTimeline, eventStatus, iconStatus, styleStatus, countDownPreIcon] = remainTimeSec > 0
       ? [
         {
           background: 'rgb(61, 63, 66)',
@@ -103,6 +103,7 @@ class TimelineCard extends Component {
         STATUS.EXPIRED,
         <DoneAll className="icon-main danger-color" />,
         s.eventStatusComplete,
+        <NotInterested className="icon-white" />,
       ] : [
         {
           background: 'rgb(87, 201, 249)',
@@ -112,18 +113,19 @@ class TimelineCard extends Component {
         STATUS.WAITING,
         <Reorder className="icon-main" />,
         s.eventStatusWaiting,
+        <AlarmAdd className="icon-white" />,
       ];
 
-    let displayTimeout = null;
+    let displayTimeout = 'Slot is not valid anymore!';
     let currentEventStyle = eventStyle;
     let currentStyleStatus = styleStatus;
     let currentIconTimeline = iconTimeline;
     let currentEventStatus = eventStatus;
     let displayIconStatus = iconStatus;
-    console.log('remainTimeSec', remainTimeSec);
-    if (remainTimeSec < -3600) {
+
+    if (remainTimeSec < -3600000) {
       displayTimeout = moment(bookedTime).fromNow(true);
-    } else {
+    } else if (remainTimeSec > -36000000 && remainTimeSec < 0) {
       displayTimeout = (
         <CountDownDisplay startTime={remainTimeSec} serviceName={serviceName} providerName={providerName} />
       );
@@ -238,7 +240,7 @@ class TimelineCard extends Component {
             <Typography variant="subheading" className="danger-color">{currentEventStatus}</Typography>
           </div>
           <div className={`${s.appointmentRemainedTime} ${currentStyleStatus}`}>
-            <AlarmAdd className="icon-white" />
+            {countDownPreIcon}
             <Typography variant="subheading" classes={{ subheading: s.remainedText }}>
               {displayTimeout}
             </Typography>

@@ -62,6 +62,7 @@ class CountDownDisplay extends Component {
     const stopCountDownPopUP = isStoppingCountDown
       ? (
         <CustomModal
+          type="info"
           isOpen
           title="Booking Serving!"
           message={`Your booking is available now! Enjoy your booking at ${providerName}`}

@@ -28,7 +28,8 @@ import {
   Search as SearchIcon,
   AssignmentInd,
   Notifications as NotificationsIcon,
-  Fingerprint, FindInPage,
+  Fingerprint,
+  FindInPage,
 } from '@material-ui/icons';
 import { findEventByCustomerIdAction } from 'actionsReducers/common.actions';
 import { history } from 'containers/App';
@@ -159,11 +160,11 @@ class MainAppBar extends React.Component {
             color="inherit"
             variant="subtitle1"
             onClick={() => this.handleAuthenticateUser(openForm)}
-            className="hover-pointer hover-bright text-margin-right"
+            className="hover-pointer hover-bright"
           >
             {authLabel}
           </Typography>
-          <Fingerprint />
+          <Fingerprint color="inherit" className="icon-normal" />
         </div>
         <div className={classes.mobileView}>
           <IconButton aria-haspopup="true" onClick={() => this.handleAuthenticateUser(openForm)} color="inherit">

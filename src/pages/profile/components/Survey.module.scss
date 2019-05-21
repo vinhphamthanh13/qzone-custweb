@@ -1,0 +1,8 @@
+.container {
+  border: 1px solid red;
+  margin: 1rem auto;
+  max-height: calc(100% - 65px);
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}

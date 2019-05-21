@@ -3,7 +3,7 @@ import { string, bool, func } from 'prop-types';
 import { connect } from 'react-redux';
 import CustomModal from 'components/Modal/CustomModal';
 import { Formik } from 'formik';
-import { resetErrorMessage } from 'actionsReducers/common.actions';
+import { resetModalStatus } from 'actionsReducers/common.actions';
 import { loginType } from 'utils/constants';
 import Form from './components/Form';
 import {
@@ -57,8 +57,8 @@ class Login extends React.Component {
   };
 
   closeCustomModal = () => {
-    const { resetErrorMessageAction } = this.props;
-    resetErrorMessageAction();
+    const { resetModalStatusAction } = this.props;
+    resetModalStatusAction();
   };
 
   render() {
@@ -114,7 +114,7 @@ Login.propTypes = {
   facebookSignInAction: func.isRequired,
   onClose: func.isRequired,
   isOpen: bool,
-  resetErrorMessageAction: func.isRequired,
+  resetModalStatusAction: func.isRequired,
   errorMessage: string,
   handleAuthenticate: func.isRequired,
   isForgotPassword: bool.isRequired,
@@ -134,5 +134,5 @@ export default connect(mapStateToProps, {
   googleLogInAction: googleLogIn,
   facebookSignInAction: () => {},
   logInAction: login,
-  resetErrorMessageAction: resetErrorMessage,
+  resetModalStatusAction: resetModalStatus,
 })(Login);

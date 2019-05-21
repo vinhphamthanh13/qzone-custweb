@@ -15,7 +15,6 @@ import DatePicker from 'components/Calendar/DatePicker';
 import SubLoading from 'components/SubLoading';
 import { BOOKING } from 'utils/constants';
 import ProviderContent from './selectProvider/ProviderContent';
-import WaitListRegistration from './WaitListRegistration';
 import s from './SelectProvider.module.scss';
 
 class SelectProvider extends React.PureComponent {
@@ -44,13 +43,12 @@ class SelectProvider extends React.PureComponent {
         { bookingService && (
           <div className={s.selectProviderWrapper}>
             <div className={s.selectProviderHeader}>
-              <Typography color="textSecondary" variant="title" className="text-bold">
-                {bookingService.name}
-              </Typography>
               <div className={s.selectDateOfBooking}>
                 <DatePicker onChange={onDateChange} selectDate={noop} enableCalendar={false} />
               </div>
-              <WaitListRegistration handleAuth={handleAuth} />
+              <Typography color="inherit" variant="title" className="text-bold">
+                {bookingService.name}
+              </Typography>
             </div>
             {providers ? (
               <div className={s.selectProviderList}>
@@ -62,6 +60,7 @@ class SelectProvider extends React.PureComponent {
                           service={bookingService}
                           provider={provider}
                           onTimeSelect={this.onSelectBooking(provider)}
+                          handleAuth={handleAuth}
                         />
                       </div>))
                     }

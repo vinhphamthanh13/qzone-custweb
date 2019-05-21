@@ -24,10 +24,15 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withFormik } from 'formik';
 import moment from 'moment';
-import { get } from 'lodash';
+import {
+  get,
+  uniqBy,
+  sortBy,
+} from 'lodash';
 import DatePicker from 'components/Calendar/DatePicker';
 import {
-  registerWaitListAction,
+  registerWaitListsAction,
+  setWaitListsValidationAction,
 } from 'actionsReducers/waitlist.actions';
 import defaultImage from 'images/default-service-card.png';
 import {
@@ -48,22 +53,27 @@ class WaitListRegistration extends Component {
       serviceProviders,
       loginSession,
       userDetail,
+      waitListsValidation,
     } = props;
     const {
       service: cachedService,
       serviceProviders: cachedServiceProviders,
       loginSession: cachedLoginSession,
       userDetail: cachedUserDetail,
+      waitListsValidation: cachedWaitListsValidation,
     } = state;
     if (
       service !== cachedService
       || serviceProviders !== cachedServiceProviders
       || loginSession !== cachedLoginSession
       || userDetail !== cachedUserDetail
+      || waitListsValidation !== cachedWaitListsValidation
     ) {
       const serviceId = get(service, 'id');
-      const providers = serviceProviders && serviceProviders.filter(provider => provider.serviceId === serviceId);
-      const queuedProviders = (providers && providers.filter(provider => provider.mode === 'QUEUE'));
+      // const queuedProviders = (providers && providers.filter(provider => provider.mode === 'QUEUE'));
+      // const queuedProviders = providers;
+      const queuedProviders = serviceProviders && serviceProviders.filter(provider => provider.serviceId === serviceId);
+      const temporaryServiceIds = queuedProviders && queuedProviders.map(tempService => tempService.id);
       const tempServiceId = get(queuedProviders, '0.id');
       const providerName = get(queuedProviders, '0.providerName');
       const geoLocation = get(queuedProviders, '0.geoLocation');
@@ -85,9 +95,11 @@ class WaitListRegistration extends Component {
         serviceId,
         loginSession,
         userDetail,
-        queuedProviders,
+        queuedProviders: sortBy(uniqBy(queuedProviders, item => item.providerId), item => item.providerName),
         isQueuing,
         tempServiceId,
+        temporaryServiceIds,
+        waitListsValidation,
       };
     }
     return null;
@@ -109,19 +121,41 @@ class WaitListRegistration extends Component {
     tempServiceId: null,
     queuedProviders: null,
     isQueuing: null,
+    // temporaryServiceIds: null,
+    waitListsValidation: null,
   };
 
+  // componentDidUpdate(prevProps, prevState) {
+  //   const { setWaitListsValidationAction: setWaitListsValidation } = prevProps;
+  //   const { temporaryServiceIds } = prevState;
+  //   console.log('prevState', prevState);
+  //   const { temporaryServiceIds: cachedTemporaryServiceIds } = this.state;
+  //   console.log('this.state', this.state);
+  //   const tempIdsSize = temporaryServiceIds && temporaryServiceIds.length;
+  //   const cachedTempIdsSize = cachedTemporaryServiceIds && cachedTemporaryServiceIds.length;
+  //   if (cachedTempIdsSize !== tempIdsSize) {
+  //     setWaitListsValidation(cachedTemporaryServiceIds);
+  //   }
+  // }
+
   handleToggleRegister = () => {
-    this.setState(oldState => ({
-      isRegisterWaitLists: !oldState.isRegisterWaitLists,
-      isOpenProviderList: false,
-    }));
+    const { handleAuth } = this.props;
+    const { isAuthenticated } = this.state;
+    if (isAuthenticated) {
+      this.setState(oldState => ({
+        isRegisterWaitLists: !oldState.isRegisterWaitLists,
+        isOpenProviderList: false,
+      }));
+    } else {
+      handleAuth('isLoginOpen');
+    }
   };
 
   handleRegisterWaitList = () => {
     const {
-      registerWaitListAction: registerWaitList,
-      handleAuth,
+      registerWaitListsAction: registerWaitLists,
+      // handleAuth,
+      setWaitListsValidationAction: setWaitListsValidation,
     } = this.props;
     const {
       providerId,
@@ -129,26 +163,35 @@ class WaitListRegistration extends Component {
       serviceId,
       dateFrom,
       dateTo,
-      isAuthenticated,
+      // isAuthenticated,
       tempServiceId,
     } = this.state;
-    if (isAuthenticated) {
-      let toSec = dateTo;
-      if (dateTo === dateFrom) {
-        toSec = dateTo + 3600 * 24; // Plus one day
-      }
-      registerWaitList({
+
+    // if (isAuthenticated) {
+    // }
+    const startSec = dateFrom + 1; // Plus one second for startSec
+    const toSec = dateTo + 3600 * 24; // Plus one day
+    const validateData = {
+      customerId,
+      startSec,
+      tempServiceId,
+      toSec,
+    };
+    setWaitListsValidation(validateData);
+    if (false) {
+      registerWaitLists({
         customerId,
         providerId,
         serviceId,
-        startSec: dateFrom,
+        startSec,
         toSec,
         tempServiceId,
       });
-      this.handleToggleRegister();
-    } else {
-      handleAuth('isLoginOpen');
     }
+    this.handleToggleRegister();
+    // } else {
+    //   handleAuth('isLoginOpen');
+    // }
   };
 
   handleChangeOption = (event) => {
@@ -187,12 +230,12 @@ class WaitListRegistration extends Component {
   };
 
   handleSelectProvider = provider => () => {
-    console.log('provider in selected', provider);
     const providerName = get(provider, 'providerName');
     const geoLocation = get(provider, 'geoLocation');
     const timezoneId = get(provider, 'timezoneId');
     const providerId = get(provider, 'providerId');
     const tempServiceId = get(provider, 'id');
+    console.log('provider', provider);
     this.setState({
       providerName,
       geoLocation,
@@ -203,29 +246,26 @@ class WaitListRegistration extends Component {
   };
 
   renderProviderList = list => (
-    <ul className={s.dropdownProviders}>
+    <div className={s.dropdownProviders}>
       {list && list.map(provider => (
-        <>
-          {/* eslint-disable-next-line */}
-          <li
-            className={s.providerItem}
-            onClick={this.handleSelectProvider(provider)}
-            key={uuidv1()}
-          >
-            <Typography variant="body1" color="inherit" className="text-bold">
-              {provider.providerName}
-            </Typography>
-          </li>
-        </>
+        /* eslint-disable-next-line */
+        <div key={uuidv1()} className={s.providerItem} onClick={this.handleSelectProvider(provider)}>
+          <Typography variant="body1" color="inherit" className="text-bold">
+            {provider.providerName}
+          </Typography>
+          <Typography variant="body2" color="inherit">
+            {provider.geoLocation.fullAddress}
+          </Typography>
+        </div>
       ))}
-    </ul>
+    </div>
   );
 
   renderEnrollButton = isAuthenticated => (isAuthenticated ? (
     <>
       <Queue color="inherit" className="icon-small" />
       <Typography variant="body1" color="inherit">
-        Enroll
+        Join Queue
       </Typography>
     </>
   ) : (
@@ -250,6 +290,7 @@ class WaitListRegistration extends Component {
       dateTo,
       queuedProviders,
       isQueuing,
+      waitListsValidation,
     } = this.state;
     const {
       values,
@@ -258,6 +299,7 @@ class WaitListRegistration extends Component {
     const serviceName = get(service, 'name');
     const serviceImg = get(service, 'image.fileUrl') || defaultImage;
     const fullAddress = get(geoLocation, 'fullAddress');
+    console.log('waitListsValidation', waitListsValidation);
 
     return (
       <>
@@ -409,26 +451,23 @@ class WaitListRegistration extends Component {
                   onClick={this.handleRegisterWaitList}
                   disabled={!isValid}
                   className="main-button"
-                >{this.renderEnrollButton(isAuthenticated)}
+                >
+                  <Queue color="inherit" className="icon-small" />
+                  <Typography variant="body1" color="inherit">
+                    Enroll
+                  </Typography>
                 </Button>
               </div>
             </div>
           </div>
         )}
         <Button
-          className={`${s.joinWaitLists} simple-button`}
+          className={`${s.joinWaitLists} simple-button main-button`}
           onClick={this.handleToggleRegister}
           disabled={!isQueuing}
           variant="outlined"
         >
-          <Queue color="inherit" className="icon-normal" />
-          <Typography
-            variant="subheading"
-            className="text-bold"
-            color="inherit"
-          >
-            Join Queue
-          </Typography>
+          {this.renderEnrollButton(isAuthenticated)}
         </Button>
       </>
     );
@@ -436,17 +475,19 @@ class WaitListRegistration extends Component {
 }
 
 WaitListRegistration.propTypes = {
-  registerWaitListAction: func.isRequired,
+  registerWaitListsAction: func.isRequired,
   values: objectOf(any).isRequired,
   setFieldValue: func.isRequired,
   isValid: bool.isRequired,
   handleAuth: func.isRequired,
+  setWaitListsValidationAction: func.isRequired,
 };
 
 const mapStateToProps = state => ({
   ...state.common,
   ...state.booking,
   ...state.auth,
+  ...state.waitLists,
 });
 
 export default compose(
@@ -458,6 +499,7 @@ export default compose(
     }),
   }),
   connect(mapStateToProps, {
-    registerWaitListAction,
+    registerWaitListsAction,
+    setWaitListsValidationAction,
   }),
 )(WaitListRegistration);
