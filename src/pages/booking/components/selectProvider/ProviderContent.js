@@ -1,6 +1,8 @@
 import React from 'react';
 import {
   func,
+  arrayOf,
+  any,
 } from 'prop-types';
 import { get } from 'lodash';
 import {
@@ -56,12 +58,13 @@ class ProviderContent extends React.PureComponent {
 
   renderTimeBox = (mode) => {
     const {
+      providers,
       provider,
       onTimeSelect,
       handleAuth,
     } = this.props;
     return (mode === 'QUEUE' ? (
-      <WaitListRegistration handleAuth={handleAuth} />
+      <WaitListRegistration handleAuth={handleAuth} providers={providers} />
     ) : (
       <TimeBoxes
         provider={provider}
@@ -168,6 +171,7 @@ class ProviderContent extends React.PureComponent {
 
 ProviderContent.propTypes = {
   service: serviceType,
+  providers: arrayOf(any).isRequired,
   provider: providerType,
   onTimeSelect: func.isRequired,
   handleAuth: func.isRequired,

@@ -1,3 +1,4 @@
+import { get } from 'lodash';
 import { handleRequest } from 'utils/apiHelpers';
 import {
   setLoading,
@@ -8,8 +9,7 @@ import {
   registerWaitLists,
   waitListsByCustomerId,
   cancelWaitLists,
-  // validateWaitListsBulk,
-  validateWaitLists,
+  validateWaitListsBulk,
 } from 'actionsApi/waitlist';
 
 export const REGISTER_WAIT_LIST = 'BOOKING.REGISTER_WAIT_LIST';
@@ -76,17 +76,33 @@ export const setCancelWaitListsAction = data => async (dispatch) => {
 
 export const setWaitListsValidationAction = data => async (dispatch) => {
   dispatch(setLoading(true));
-  const [validation, error] = await handleRequest(validateWaitLists, [data]);
-  if (error) {
-    dispatch(setError(error));
+  const [validations, allError] = await validateWaitListsBulk(data);
+  if (allError) {
+    dispatch(setError(get(JSON.parse(allError), 'response.data.message')));
+    dispatch(setLoading(false));
   } else {
-    const { message, status } = validation;
+    let message = '';
+    let status = true;
+    validations.map(async (validation, index) => {
+      status = get(validation, 'data.object.status');
+      message = get(validation, 'data.object.message');
+      if (status) {
+        dispatch(setWaitListsValidation(message));
+        const [registerWaitList, error] = await handleRequest(registerWaitLists, [data[index]]);
+        if (error) {
+          dispatch(setError(error));
+        } else {
+          dispatch(setRegisterWaitListStatus(registerWaitList));
+          dispatch(setSucceed('Congratulation! Your waitlist is enrolled!'));
+        }
+        dispatch(setLoading(false));
+        return null;
+      }
+      return null;
+    });
     if (!status) {
       dispatch(setError(message));
-    } else {
-      dispatch(setWaitListsValidation(validation));
+      dispatch(setLoading(false));
     }
-    dispatch(setWaitListsValidation(validation));
   }
-  dispatch(setLoading(false));
 };

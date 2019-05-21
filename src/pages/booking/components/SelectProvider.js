@@ -38,6 +38,7 @@ class SelectProvider extends React.PureComponent {
       handleAuth,
     } = this.props;
 
+    console.log('provider in selectprvider', providers);
     return (
       <>
         { bookingService && (
@@ -58,6 +59,7 @@ class SelectProvider extends React.PureComponent {
                       <div key={provider.id}>
                         <ProviderContent
                           service={bookingService}
+                          providers={providers}
                           provider={provider}
                           onTimeSelect={this.onSelectBooking(provider)}
                           handleAuth={handleAuth}
