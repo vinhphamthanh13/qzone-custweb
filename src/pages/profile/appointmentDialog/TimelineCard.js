@@ -196,7 +196,7 @@ class TimelineCard extends Component {
           )}
           <div className={s.appointmentCode}>
             <Typography variant="headline" color="secondary" align="center" classes={{ headline: s.bookingCode }}>
-              {bookingCode}
+              {bookingCode.toUpperCase()}
             </Typography>
           </div>
           <div>
