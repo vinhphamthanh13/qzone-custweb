@@ -11,7 +11,8 @@ export const availabilitiesBySpecialEventId = data => axios.post('/availabilitie
 
 export const availabilitiesBySpecialEventIdBulk = eventList => axios.all(
   eventList.map(data => availabilitiesBySpecialEventId(data)),
-).then(axios.spread((...responses) => responses));
+).then(axios.spread((...responses) => [responses, null]))
+  .catch(error => [null, JSON.stringify(error)]);
 
 // ********** event-resource ********** //
 export const events = data => axios.post('/events', data);

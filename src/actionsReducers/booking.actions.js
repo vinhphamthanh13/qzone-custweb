@@ -1,3 +1,4 @@
+import { get } from 'lodash';
 import {
   serviceById,
   providersByServiceId,
@@ -96,15 +97,16 @@ export const setAvailabilitiesBySpecialEventIdAction = data => async (dispatch) 
 
 export const setAvailabilitiesBySpecialEventBulkAction = data => async (dispatch) => {
   dispatch(setLoading(true));
-  const availabilitiesBulk = await availabilitiesBySpecialEventIdBulk(data);
-  if (!availabilitiesBulk) {
-    dispatch(setError('Cannot fetch all availabilities'));
+  const [availabilitiesBulk, allError] = await availabilitiesBySpecialEventIdBulk(data);
+  if (allError) {
+    dispatch(setError(get(JSON.parse(allError), 'response.data.message')));
+    dispatch(setLoading(false));
   } else {
     const responseBulk = [];
     availabilitiesBulk.map(item => responseBulk.push(...item.data.objects));
     dispatch(setAvailabilitiesBySpecialEventBulk(responseBulk));
+    dispatch(setLoading(false));
   }
-  dispatch(setLoading(false));
 };
 
 export const registerEventAction = data => async (dispatch) => {

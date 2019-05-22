@@ -38,7 +38,6 @@ class SelectProvider extends React.PureComponent {
       handleAuth,
     } = this.props;
 
-    console.log('provider in selectprvider', providers);
     return (
       <>
         { bookingService && (

@@ -146,9 +146,7 @@ class Booking extends PureComponent {
       setProvidersByServiceIdAction: setProvidersByServiceId,
       setTemporaryServicesByIdAction: setTemporaryServicesById,
     } = this.props;
-    console.log('component didmount', serviceId);
     if (serviceId) {
-      console.log('should fetch the provider service', serviceId);
       getServiceById(serviceId);
       setProvidersByServiceId(serviceId);
       setServiceProviders();
@@ -275,7 +273,6 @@ class Booking extends PureComponent {
       && providersByServiceId.length
     ) {
       const providers = [];
-      console.log('provider by service ID', providersByServiceId);
       uniqBy(providersByServiceId, provider => provider.id).forEach((provider) => {
         const temporaryServiceIds = [];
         let uniqProvider = {};
