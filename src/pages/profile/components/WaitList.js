@@ -95,7 +95,7 @@ class WaitList extends Component {
 
   handleConfirmQueue = waitList => () => {
     const tempServiceId = get(waitList, 'tempServiceId');
-    history.push(`/booking/${tempServiceId}`);
+    history.push(`/booking/waitlist/${tempServiceId}`);
     console.log('confirm Q', tempServiceId);
   };
 
