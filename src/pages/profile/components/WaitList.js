@@ -21,6 +21,7 @@ import {
   AlarmAdd,
 } from '@material-ui/icons';
 import EmptyItem from 'components/EmptyItem';
+import SubLoading from 'components/SubLoading';
 import {
   setWaitListsAction,
   setCancelWaitListsAction,
@@ -94,9 +95,9 @@ class WaitList extends Component {
   };
 
   handleConfirmQueue = waitList => () => {
-    const tempServiceId = get(waitList, 'tempServiceId');
-    history.push(`/booking/${tempServiceId}`);
-    console.log('confirm Q', tempServiceId);
+    const waitListId = get(waitList, 'waitListId');
+    history.push(`/booking/waitlist/${waitListId}`);
+    console.log('confirm Q', waitListId);
   };
 
   render() {
@@ -194,11 +195,13 @@ class WaitList extends Component {
                 </div>
               );
             })}
-          </div>)) : (
-            <EmptyItem
-              message="You have not enrolled in any waitlist at the moment!"
-            />
+          </div>)) : null}
+        {waitLists && waitLists.length === 0 && (
+          <EmptyItem
+            message="You have not enrolled in any waitlist at the moment!"
+          />
         )}
+        {!waitLists ? <SubLoading loading /> : null}
       </div>
     );
   }

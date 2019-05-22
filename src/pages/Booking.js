@@ -26,6 +26,7 @@ class BookingPage extends Component {
     const { isRegisterOpen, isLoginOpen } = this.state;
     const sId = BOOKING.PATH.NORMAL.test(path) ? id : null;
     const tId = BOOKING.PATH.INSTANT.test(path) ? id : null;
+    const wId = BOOKING.PATH.WAITLIST.test(path) ? id : null;
     return (
       <>
         <Auth
@@ -35,7 +36,12 @@ class BookingPage extends Component {
           handleAuthenticate={this.openAuthModal}
           getSessionTimeoutId={this.getSessionTimeoutId}
         />
-        <Booking serviceId={sId} temporaryServiceId={tId} handleAuth={this.openAuthModal} />
+        <Booking
+          serviceId={sId}
+          temporaryServiceId={tId}
+          handleAuth={this.openAuthModal}
+          waitListId={wId}
+        />
       </>
     );
   }

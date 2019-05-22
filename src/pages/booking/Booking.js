@@ -273,7 +273,7 @@ class Booking extends PureComponent {
       && providersByServiceId.length
     ) {
       const providers = [];
-      uniqBy(providersByServiceId, provider => provider.id).forEach((provider) => {
+      uniqBy(providersByServiceId, provider => provider.userSub).forEach((provider) => {
         const temporaryServiceIds = [];
         let uniqProvider = {};
         serviceProviders.map((tempService) => {
@@ -287,8 +287,10 @@ class Booking extends PureComponent {
           }
           return null;
         });
-        uniqProvider.temporaryServiceIds = temporaryServiceIds;
-        providers.push(uniqProvider);
+        if (uniqProvider.id) {
+          uniqProvider.temporaryServiceIds = temporaryServiceIds;
+          providers.push(uniqProvider);
+        }
       });
       return providers;
     }
@@ -366,6 +368,8 @@ class Booking extends PureComponent {
     );
     const providersWithSlot = availabilitiesBulk && providers
       && this.handleProviderAvailableSlots(availabilitiesBulk, providers);
+    console.log('providers', providers);
+    console.log('providers with Slots', providersWithSlot);
     const stepProps = {
       [BOOKING.STEPS.SELECT_PROVIDER]: {
         bookingService: service,
