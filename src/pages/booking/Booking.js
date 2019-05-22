@@ -218,14 +218,19 @@ class Booking extends PureComponent {
     }
   };
 
-  goHome = () => {
+  handleResetBooking = () => {
     const { resetBooking: resetBookingAction } = this.props;
     resetBookingAction();
+  };
+
+  goHome = () => {
+    this.handleResetBooking();
     history.push('/');
   };
 
   goProfile = () => {
     const { customerId } = this.state;
+    this.handleResetBooking();
     history.push(`/profile/${customerId}`);
   };
 
@@ -268,18 +273,24 @@ class Booking extends PureComponent {
       && providersByServiceId.length
     ) {
       const providers = [];
-      serviceProviders.forEach((serviceProvider) => {
-        providersByServiceId.map((providerDetail) => {
-          if (serviceProvider.providerId === providerDetail.userSub && serviceProvider.serviceId === serviceId) {
-            providers.push({
-              ...providerDetail,
-              ...serviceProvider,
-            });
+      uniqBy(providersByServiceId, provider => provider.id).forEach((provider) => {
+        const temporaryServiceIds = [];
+        let uniqProvider = {};
+        serviceProviders.map((tempService) => {
+          if (tempService.providerId === provider.userSub && tempService.serviceId === serviceId) {
+            temporaryServiceIds.push(tempService.id);
+            uniqProvider = {
+              ...uniqProvider,
+              ...provider,
+              ...tempService,
+            };
           }
           return null;
         });
+        uniqProvider.temporaryServiceIds = temporaryServiceIds;
+        providers.push(uniqProvider);
       });
-      return uniqBy(providers, item => item.userSub);
+      return providers;
     }
     return null;
   };
@@ -409,14 +420,14 @@ class Booking extends PureComponent {
               </Button>
             </div>
             <div className={s.goBack}>
-              <IconButton color="inherit" onClick={this.goHome} aria-label="Close">
-                <Home />
-              </IconButton>
               {customerId && (
                 <IconButton color="inherit" onClick={this.goProfile} aria-label="Profile">
                   <AssignmentInd />
                 </IconButton>
               )}
+              <IconButton color="inherit" onClick={this.goHome} aria-label="Close">
+                <Home />
+              </IconButton>
             </div>
           </div>
           <Step

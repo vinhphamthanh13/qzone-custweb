@@ -26,6 +26,7 @@ import {
   setCancelWaitListsAction,
 } from 'actionsReducers/waitlist.actions';
 import { defaultDateFormat, timeSlotFormat } from 'utils/constants';
+import { history } from 'containers/App';
 import { setServiceProvidersAction } from 'actionsReducers/common.actions';
 import s from './WaitList.module.scss';
 
@@ -92,8 +93,10 @@ class WaitList extends Component {
     setCancelWaitLists(waitListId);
   };
 
-  handleConfirmQueue = () => {
-    console.log('confirm Q');
+  handleConfirmQueue = waitList => () => {
+    const tempServiceId = get(waitList, 'tempServiceId');
+    history.push(`/booking/${tempServiceId}`);
+    console.log('confirm Q', tempServiceId);
   };
 
   render() {
@@ -126,7 +129,7 @@ class WaitList extends Component {
                         {get(tempService, 'providerName')}
                       </Typography>
                     </div>
-                    <div className="full-width">
+                    <div className="full-width text-center">
                       <Typography variant="subtitle2" color="inherit">
                         {get(tempService, 'geoLocation.fullAddress')}
                       </Typography>
@@ -168,9 +171,9 @@ class WaitList extends Component {
                   </div>
                   <div className={s.queueCta}>
                     <Button
-                      variant="outlined"
+                      variant="text"
                       color="inherit"
-                      className="secondary-button"
+                      className="secondary-button trans-border-button"
                       onClick={this.handleCancelQueue(get(item, 'waitListId'))}
                       // disabled={isExpired}
                     >
@@ -181,7 +184,7 @@ class WaitList extends Component {
                       variant="outlined"
                       color="inherit"
                       className="main-button"
-                      onClick={this.handleConfirmQueue}
+                      onClick={this.handleConfirmQueue(item)}
                       disabled={isExpired}
                     >
                       <CheckCircle color="inherit" className="icon-normal" />

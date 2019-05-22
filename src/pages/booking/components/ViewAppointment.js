@@ -6,6 +6,7 @@ import {
 import {
   Typography,
   IconButton,
+  Button,
 } from '@material-ui/core';
 import { connect } from 'react-redux';
 import {
@@ -158,18 +159,19 @@ class ViewAppointment extends Component {
               </div>
             </div>
           </div>
-          <div className={s.viewAppointmentCta}>
-            <IconButton className="button-sm" onClick={this.handleViewAppointment}>
-              <ViewList className="icon-main" />
-            </IconButton>
+          <Button
+            className={`${s.viewAppointmentCta} main-button`}
+            variant="outlined"
+            onClick={this.handleViewAppointment}
+          >
+            <ViewList className="icon-in-button-left" />
             <Typography
               className="hover-pointer"
-              onClick={this.handleViewAppointment}
               variant="subheading"
               color="inherit"
             >View appointment
             </Typography>
-          </div>
+          </Button>
         </div>
         <div className={s.appointmentDetail}>
           <div className={s.bookingConfirmedIcon}>

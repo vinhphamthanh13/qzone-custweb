@@ -26,12 +26,9 @@ import { withFormik } from 'formik';
 import moment from 'moment';
 import {
   get,
-  uniqBy,
-  sortBy,
 } from 'lodash';
 import DatePicker from 'components/Calendar/DatePicker';
 import {
-  registerWaitListsAction,
   setWaitListsValidationAction,
 } from 'actionsReducers/waitlist.actions';
 import defaultImage from 'images/default-service-card.png';
@@ -49,32 +46,30 @@ const DATE_RANGE_INVERT = {
 class WaitListRegistration extends Component {
   static getDerivedStateFromProps(props, state) {
     const {
+      providers,
       service,
-      serviceProviders,
       loginSession,
       userDetail,
       waitListsValidation,
     } = props;
     const {
+      providers: cachedProviders,
       service: cachedService,
-      serviceProviders: cachedServiceProviders,
       loginSession: cachedLoginSession,
       userDetail: cachedUserDetail,
       waitListsValidation: cachedWaitListsValidation,
     } = state;
     if (
       service !== cachedService
-      || serviceProviders !== cachedServiceProviders
+      || providers !== cachedProviders
       || loginSession !== cachedLoginSession
       || userDetail !== cachedUserDetail
       || waitListsValidation !== cachedWaitListsValidation
     ) {
       const serviceId = get(service, 'id');
-      // const queuedProviders = (providers && providers.filter(provider => provider.mode === 'QUEUE'));
-      // const queuedProviders = providers;
-      const queuedProviders = serviceProviders && serviceProviders.filter(provider => provider.serviceId === serviceId);
-      const temporaryServiceIds = queuedProviders && queuedProviders.map(tempService => tempService.id);
+      const queuedProviders = providers && providers.filter(provider => provider.mode === 'QUEUE');
       const tempServiceId = get(queuedProviders, '0.id');
+      const temporaryServiceIds = get(queuedProviders, '0.temporaryServiceIds');
       const providerName = get(queuedProviders, '0.providerName');
       const geoLocation = get(queuedProviders, '0.geoLocation');
       const timezoneId = get(queuedProviders, '0.timezoneId');
@@ -85,7 +80,7 @@ class WaitListRegistration extends Component {
 
       return {
         service,
-        serviceProviders,
+        queuedProviders,
         providerName,
         geoLocation,
         timezoneId,
@@ -95,7 +90,6 @@ class WaitListRegistration extends Component {
         serviceId,
         loginSession,
         userDetail,
-        queuedProviders: sortBy(uniqBy(queuedProviders, item => item.providerId), item => item.providerName),
         isQueuing,
         tempServiceId,
         temporaryServiceIds,
@@ -114,29 +108,13 @@ class WaitListRegistration extends Component {
     geoLocation: null,
     isOpenProviderList: false,
     timezoneId: null,
-    providerId: null,
-    serviceId: null,
     isAuthenticated: null,
     customerId: null,
-    tempServiceId: null,
     queuedProviders: null,
     isQueuing: null,
-    // temporaryServiceIds: null,
+    temporaryServiceIds: null,
     waitListsValidation: null,
   };
-
-  // componentDidUpdate(prevProps, prevState) {
-  //   const { setWaitListsValidationAction: setWaitListsValidation } = prevProps;
-  //   const { temporaryServiceIds } = prevState;
-  //   console.log('prevState', prevState);
-  //   const { temporaryServiceIds: cachedTemporaryServiceIds } = this.state;
-  //   console.log('this.state', this.state);
-  //   const tempIdsSize = temporaryServiceIds && temporaryServiceIds.length;
-  //   const cachedTempIdsSize = cachedTemporaryServiceIds && cachedTemporaryServiceIds.length;
-  //   if (cachedTempIdsSize !== tempIdsSize) {
-  //     setWaitListsValidation(cachedTemporaryServiceIds);
-  //   }
-  // }
 
   handleToggleRegister = () => {
     const { handleAuth } = this.props;
@@ -153,45 +131,25 @@ class WaitListRegistration extends Component {
 
   handleRegisterWaitList = () => {
     const {
-      registerWaitListsAction: registerWaitLists,
-      // handleAuth,
       setWaitListsValidationAction: setWaitListsValidation,
     } = this.props;
     const {
-      providerId,
       customerId,
-      serviceId,
       dateFrom,
       dateTo,
-      // isAuthenticated,
-      tempServiceId,
+      temporaryServiceIds,
     } = this.state;
 
-    // if (isAuthenticated) {
-    // }
     const startSec = dateFrom + 1; // Plus one second for startSec
     const toSec = dateTo + 3600 * 24; // Plus one day
-    const validateData = {
+    const validateData = temporaryServiceIds.map(id => ({
       customerId,
       startSec,
-      tempServiceId,
+      tempServiceId: id,
       toSec,
-    };
+    }));
     setWaitListsValidation(validateData);
-    if (false) {
-      registerWaitLists({
-        customerId,
-        providerId,
-        serviceId,
-        startSec,
-        toSec,
-        tempServiceId,
-      });
-    }
     this.handleToggleRegister();
-    // } else {
-    //   handleAuth('isLoginOpen');
-    // }
   };
 
   handleChangeOption = (event) => {
@@ -233,15 +191,12 @@ class WaitListRegistration extends Component {
     const providerName = get(provider, 'providerName');
     const geoLocation = get(provider, 'geoLocation');
     const timezoneId = get(provider, 'timezoneId');
-    const providerId = get(provider, 'providerId');
-    const tempServiceId = get(provider, 'id');
-    console.log('provider', provider);
+    const temporaryServiceIds = get(provider, 'temporaryServiceIds');
     this.setState({
       providerName,
       geoLocation,
       timezoneId,
-      providerId,
-      tempServiceId,
+      temporaryServiceIds,
     });
   };
 
@@ -475,7 +430,6 @@ class WaitListRegistration extends Component {
 }
 
 WaitListRegistration.propTypes = {
-  registerWaitListsAction: func.isRequired,
   values: objectOf(any).isRequired,
   setFieldValue: func.isRequired,
   isValid: bool.isRequired,
@@ -499,7 +453,6 @@ export default compose(
     }),
   }),
   connect(mapStateToProps, {
-    registerWaitListsAction,
     setWaitListsValidationAction,
   }),
 )(WaitListRegistration);

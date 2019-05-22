@@ -98,6 +98,8 @@ class BookingDetail extends React.PureComponent {
       userDetail,
       loginSession,
     } = this.state;
+    console.log('booking detail props', this.props);
+    console.log('booking detail state', this.state);
     const serviceName = get(bookingService, 'name');
     const bookingTime = get(bookingDetail, 'time.start');
     const provider = get(bookingDetail, 'provider');

@@ -111,6 +111,8 @@
   align-items: flex-start;
   &:hover {
     background: $main_03;
+    color: $main;
+    border-radius: 0.25rem;
   }
 }
 

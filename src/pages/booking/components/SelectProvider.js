@@ -58,6 +58,7 @@ class SelectProvider extends React.PureComponent {
                       <div key={provider.id}>
                         <ProviderContent
                           service={bookingService}
+                          providers={providers}
                           provider={provider}
                           onTimeSelect={this.onSelectBooking(provider)}
                           handleAuth={handleAuth}

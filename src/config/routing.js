@@ -18,13 +18,6 @@ const rootRoutes = [
   {
     exact: true,
     strict: true,
-    path: '/appointments',
-    name: 'Home',
-    component: Home,
-  },
-  {
-    exact: true,
-    strict: true,
     path: '/booking/:id',
     name: 'Normal Booking',
     component: Booking,
@@ -34,6 +27,13 @@ const rootRoutes = [
     strict: true,
     path: '/booking/instant/:id',
     name: 'Instant Booking',
+    component: Booking,
+  },
+  {
+    exact: true,
+    strict: true,
+    path: '/booking/waitlist/:id',
+    name: 'Enroll WaitLists',
     component: Booking,
   },
   {
