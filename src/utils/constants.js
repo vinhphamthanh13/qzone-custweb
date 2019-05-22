@@ -18,6 +18,7 @@ export const BOOKING = {
   PATH: {
     NORMAL: /booking\/:id/,
     INSTANT: /booking\/instant\/:id/,
+    WAITLIST: /booking\/waitlist\/:id/,
   },
 };
 
