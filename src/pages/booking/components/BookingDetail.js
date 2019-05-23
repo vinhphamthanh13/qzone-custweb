@@ -40,6 +40,9 @@ class BookingDetail extends React.PureComponent {
       userDetail: cachedUserDetail,
       loginSession: cachedLoginSession,
     } = state;
+
+    console.log('booking detail', bookingDetail);
+
     if (
       bookingDetail !== cachedBookingDetail
       || userDetail !== cachedUserDetail

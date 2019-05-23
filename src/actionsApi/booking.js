@@ -8,6 +8,7 @@ export const providersByServiceId = data => axios.get(`/providers-by-service-id/
 
 // appointment-resource
 export const availabilitiesBySpecialEventId = data => axios.post('/availabilities/temporary/service/filter', data);
+export const availabilitiesById = data => axios.get(`/availabilities/${data}`);
 
 export const availabilitiesBySpecialEventIdBulk = eventList => axios.all(
   eventList.map(data => availabilitiesBySpecialEventId(data)),

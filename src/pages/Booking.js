@@ -38,9 +38,9 @@ class BookingPage extends Component {
         />
         <Booking
           serviceId={sId}
+          waitListId={wId}
           temporaryServiceId={tId}
           handleAuth={this.openAuthModal}
-          waitListId={wId}
         />
       </>
     );
