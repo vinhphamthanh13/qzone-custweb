@@ -109,7 +109,6 @@ class WaitListRegistration extends Component {
       customerId: null,
       queuedProviders: null,
       isQueuing: null,
-      waitListsValidation: null,
     };
   }
 
@@ -243,7 +242,6 @@ class WaitListRegistration extends Component {
       dateTo,
       queuedProviders,
       isQueuing,
-      waitListsValidation,
     } = this.state;
     const {
       values,
@@ -252,8 +250,6 @@ class WaitListRegistration extends Component {
     const serviceName = get(service, 'name');
     const serviceImg = get(service, 'image.fileUrl') || defaultImage;
     const fullAddress = get(geoLocation, 'fullAddress');
-    console.log('waitListsValidation', waitListsValidation);
-    console.log('waitlist prps 1st registration', this.props);
     return (
       <>
         {isRegisterWaitLists && (

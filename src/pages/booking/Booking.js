@@ -57,8 +57,6 @@ const STEP_LABELS = ['Select Provider', 'Book Appointment', 'Complete Booking'];
 
 class Booking extends PureComponent {
   static getDerivedStateFromProps(props, state) {
-    console.log('derived from props', props);
-    console.log('derived from state', state);
     const {
       serviceId,
       temporaryServiceId,
