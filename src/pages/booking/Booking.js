@@ -3,6 +3,8 @@ import {
   string,
   func,
   number,
+  objectOf,
+  any,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -45,6 +47,7 @@ import {
   resetBooking,
   setTemporaryServicesByIdAction,
 } from 'actionsReducers/booking.actions';
+import { setWaitListsByIdAction } from 'actionsReducers/waitlist.actions';
 import SelectProvider from './components/SelectProvider';
 import BookingDetail from './components/BookingDetail';
 import ViewAppointment from './components/ViewAppointment';
@@ -54,6 +57,8 @@ const STEP_LABELS = ['Select Provider', 'Book Appointment', 'Complete Booking'];
 
 class Booking extends PureComponent {
   static getDerivedStateFromProps(props, state) {
+    console.log('derived from props', props);
+    console.log('derived from state', state);
     const {
       serviceId,
       temporaryServiceId,
@@ -66,6 +71,7 @@ class Booking extends PureComponent {
       userDetail,
       loginSession,
       appointmentEvent,
+      waitListId,
     } = props;
     const {
       serviceId: cachedServiceId,
@@ -78,6 +84,7 @@ class Booking extends PureComponent {
       bookingDetail: cachedBookingDetail,
       userDetail: cachedUserDetail,
       appointmentEvent: cachedAppointmentEvent,
+      waitListId: cachedWaitListId,
     } = state;
     if (
       serviceId !== cachedServiceId
@@ -90,6 +97,7 @@ class Booking extends PureComponent {
       || bookingDetail !== cachedBookingDetail
       || userDetail !== cachedUserDetail
       || appointmentEvent !== cachedAppointmentEvent
+      || waitListId !== cachedWaitListId
     ) {
       let resolvedServiceId = serviceId;
       if (temporaryServiceId && serviceProviders && serviceProviders.length === 1) {
@@ -113,6 +121,7 @@ class Booking extends PureComponent {
         loginSession,
         appointmentEvent,
         customerId,
+        waitListId,
       };
     }
 
@@ -134,6 +143,7 @@ class Booking extends PureComponent {
       userDetail: null,
       appointmentEvent: null,
       customerId: null,
+      waitListId: null,
     };
   }
 
@@ -163,6 +173,8 @@ class Booking extends PureComponent {
       serviceProviders,
       appointmentEvent,
       setAvailabilitiesBySpecialEventBulkAction: setAvailabilitiesBySpecialEventBulk,
+      setWaitListsByIdAction: setWaitListsById,
+      waitListId,
     } = prevProps;
     const {
       isError: cachedIsError,
@@ -178,6 +190,7 @@ class Booking extends PureComponent {
     } = prevState;
     const {
       serviceId,
+      waitListId: cachedWaitListId,
     } = this.state;
     if (cachedServiceProviders && cachedServiceProviders !== serviceProviders) {
       const specialEventIdList = cachedServiceProviders.map(serviceProvider => ({
@@ -194,6 +207,9 @@ class Booking extends PureComponent {
     const cachedId = get(cachedAppointmentEvent, 'id');
     if (bookedId !== cachedId) {
       setBookingStepAction(BOOKING.STEPS.VIEW_BOOKING);
+    }
+    if (waitListId !== cachedWaitListId) {
+      setWaitListsById(cachedWaitListId);
     }
     if (
       isError !== cachedIsError
@@ -457,11 +473,13 @@ Booking.propTypes = {
   handleAuth: func.isRequired,
   resetBooking: func.isRequired,
   setTemporaryServicesByIdAction: func.isRequired,
+  waitListsById: objectOf(any),
 };
 
 Booking.defaultProps = {
   serviceId: null,
   temporaryServiceId: null,
+  waitListsById: null,
 };
 
 const mapStateToProps = state => ({
@@ -469,6 +487,7 @@ const mapStateToProps = state => ({
   ...state.auth,
   ...state.home,
   ...state.booking,
+  ...state.waitLists,
 });
 
 export default compose(
@@ -484,6 +503,7 @@ export default compose(
       registerEventAction,
       resetBooking,
       setTemporaryServicesByIdAction,
+      setWaitListsByIdAction,
     },
   ),
 )(Booking);

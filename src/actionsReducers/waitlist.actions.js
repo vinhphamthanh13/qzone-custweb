@@ -10,10 +10,12 @@ import {
   waitListsByCustomerId,
   cancelWaitLists,
   validateWaitListsBulk,
+  waitListsById,
 } from 'actionsApi/waitlist';
 
 export const REGISTER_WAIT_LIST = 'BOOKING.REGISTER_WAIT_LIST';
 export const SET_WAIT_LIST = 'PROFILE.SET_WAIT_LIST';
+export const SET_WAIT_LIST_BY_ID = 'BOOKING.SET_WAIT_LIST_BY_ID';
 export const CANCEL_WAIT_LIST = 'PROFILE.CANCEL_WAIT_LIST';
 export const VALIDATE_WAIT_LIST = 'BOOKING.VALIDATE_WAIT_LIST';
 
@@ -24,6 +26,11 @@ const setRegisterWaitListStatus = payload => ({
 
 const setWaitLists = payload => ({
   type: SET_WAIT_LIST,
+  payload,
+});
+
+const setWaitListsById = payload => ({
+  type: SET_WAIT_LIST_BY_ID,
   payload,
 });
 
@@ -57,6 +64,17 @@ export const setWaitListsAction = data => async (dispatch) => {
     dispatch(setError(error));
   } else {
     dispatch(setWaitLists(waitlists));
+  }
+  dispatch(setLoading(false));
+};
+
+export const setWaitListsByIdAction = data => async (dispatch) => {
+  dispatch(setLoading(true));
+  const [waitListData, error] = await handleRequest(waitListsById, [data]);
+  if (error) {
+    dispatch(setError(error));
+  } else {
+    dispatch(setWaitListsById(waitListData));
   }
   dispatch(setLoading(false));
 };

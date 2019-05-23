@@ -3,6 +3,7 @@ import {
   SET_WAIT_LIST,
   CANCEL_WAIT_LIST,
   VALIDATE_WAIT_LIST,
+  SET_WAIT_LIST_BY_ID,
 } from 'actionsReducers/waitlist.actions';
 
 const initState = {
@@ -10,6 +11,7 @@ const initState = {
   waitLists: null,
   cancelWaitLists: null,
   waitListsValidation: null,
+  waitListsById: null,
 };
 
 const reducer = (state = initState, action) => {
@@ -33,6 +35,11 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         waitListsValidation: action.payload,
+      };
+    case SET_WAIT_LIST_BY_ID:
+      return {
+        ...state,
+        waitListsById: action.payload,
       };
     default:
       return state;
