@@ -68,53 +68,50 @@ class WaitListRegistration extends Component {
     ) {
       const serviceId = get(service, 'id');
       const queuedProviders = providers && providers.filter(provider => provider.mode === 'QUEUE');
-      const tempServiceId = get(queuedProviders, '0.id');
-      const temporaryServiceIds = get(queuedProviders, '0.temporaryServiceIds');
-      const providerName = get(queuedProviders, '0.providerName');
-      const geoLocation = get(queuedProviders, '0.geoLocation');
-      const timezoneId = get(queuedProviders, '0.timezoneId');
       const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
       const customerId = get(userDetail, 'userSub');
-      const providerId = get(queuedProviders, '0.providerId');
       const isQueuing = queuedProviders && !!queuedProviders.length;
 
       return {
         service,
         queuedProviders,
-        providerName,
-        geoLocation,
-        timezoneId,
-        providerId,
         isAuthenticated,
         customerId,
         serviceId,
         loginSession,
         userDetail,
         isQueuing,
-        tempServiceId,
-        temporaryServiceIds,
         waitListsValidation,
       };
     }
     return null;
   }
 
-  state = {
-    dateFrom: moment().unix(),
-    dateTo: moment().unix(),
-    service: null,
-    isRegisterWaitLists: false,
-    providerName: null,
-    geoLocation: null,
-    isOpenProviderList: false,
-    timezoneId: null,
-    isAuthenticated: null,
-    customerId: null,
-    queuedProviders: null,
-    isQueuing: null,
-    temporaryServiceIds: null,
-    waitListsValidation: null,
-  };
+  constructor(props) {
+    super(props);
+    const initProvider = get(props, 'initProvider');
+    const temporaryServiceIds = get(initProvider, 'temporaryServiceIds');
+    const providerName = get(initProvider, 'providerName');
+    const geoLocation = get(initProvider, 'geoLocation');
+    const timezoneId = get(initProvider, 'timezoneId');
+
+    this.state = {
+      dateFrom: moment().unix(),
+      dateTo: moment().unix(),
+      service: null,
+      isRegisterWaitLists: false,
+      temporaryServiceIds,
+      providerName,
+      geoLocation,
+      timezoneId,
+      isOpenProviderList: false,
+      isAuthenticated: null,
+      customerId: null,
+      queuedProviders: null,
+      isQueuing: null,
+      waitListsValidation: null,
+    };
+  }
 
   handleToggleRegister = () => {
     const { handleAuth } = this.props;
@@ -192,6 +189,7 @@ class WaitListRegistration extends Component {
     const geoLocation = get(provider, 'geoLocation');
     const timezoneId = get(provider, 'timezoneId');
     const temporaryServiceIds = get(provider, 'temporaryServiceIds');
+    console.log('provider', provider);
     this.setState({
       providerName,
       geoLocation,
@@ -255,7 +253,7 @@ class WaitListRegistration extends Component {
     const serviceImg = get(service, 'image.fileUrl') || defaultImage;
     const fullAddress = get(geoLocation, 'fullAddress');
     console.log('waitListsValidation', waitListsValidation);
-
+    console.log('waitlist prps 1st registration', this.props);
     return (
       <>
         {isRegisterWaitLists && (
@@ -435,6 +433,7 @@ WaitListRegistration.propTypes = {
   isValid: bool.isRequired,
   handleAuth: func.isRequired,
   setWaitListsValidationAction: func.isRequired,
+  // initProvider: objectOf(any).isRequired,
 };
 
 const mapStateToProps = state => ({

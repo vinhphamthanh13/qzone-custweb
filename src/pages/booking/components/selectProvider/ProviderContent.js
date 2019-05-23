@@ -64,7 +64,7 @@ class ProviderContent extends React.PureComponent {
       handleAuth,
     } = this.props;
     return (mode === 'QUEUE' ? (
-      <WaitListRegistration handleAuth={handleAuth} providers={providers} />
+      <WaitListRegistration handleAuth={handleAuth} providers={providers} initProvider={provider} />
     ) : (
       <TimeBoxes
         provider={provider}
