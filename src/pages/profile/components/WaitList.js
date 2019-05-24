@@ -134,7 +134,7 @@ class WaitList extends Component {
                         {get(tempService, 'providerName')}
                       </Typography>
                     </div>
-                    <div className="full-width text-center">
+                    <div className={`full-width text-center ${s.queueAddress}`}>
                       <Typography variant="subtitle2" color="inherit">
                         {get(tempService, 'geoLocation.fullAddress')}
                       </Typography>

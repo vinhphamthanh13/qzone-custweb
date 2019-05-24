@@ -536,7 +536,10 @@ class Booking extends PureComponent {
               </Button>
             </div>
             <div className={s.goBack}>
-              {isProfile && <Person className="icon-normal" onClick={this.goProfile} />}
+              {isProfile && (
+                <IconButton color="inherit" onClick={this.goProfile}>
+                  <Person />
+                </IconButton>)}
               <IconButton color="inherit" onClick={this.goHome} aria-label="Close">
                 <Home />
               </IconButton>
