@@ -37,7 +37,10 @@ import {
   BOOKING,
   regExPattern,
 } from 'utils/constants';
-import { setServiceProvidersAction } from 'actionsReducers/common.actions';
+import {
+  setServiceProvidersAction,
+  setError,
+} from 'actionsReducers/common.actions';
 import {
   getServiceByIdAction,
   setProvidersByServiceIdAction,
@@ -76,6 +79,7 @@ class Booking extends PureComponent {
       availabilitiesById,
       setBookingDetail: setBookingDetailAction,
       setBookingStep: setBookingStepAction,
+      waitListRegistered,
     } = props;
     const {
       serviceId: cachedServiceId,
@@ -91,6 +95,7 @@ class Booking extends PureComponent {
       waitListId: cachedWaitListId,
       waitListsById: cachedWaitListsById,
       availabilitiesById: cachedAvailabilitiesById,
+      waitListRegistered: cachedWaitListRegistered,
     } = state;
     if (
       serviceId !== cachedServiceId
@@ -106,6 +111,7 @@ class Booking extends PureComponent {
       || waitListId !== cachedWaitListId
       || waitListsById !== cachedWaitListsById
       || availabilitiesById !== cachedAvailabilitiesById
+      || waitListRegistered !== cachedWaitListRegistered
     ) {
       let availabilityId = null;
       let cachedAvailabilityId = null;
@@ -158,7 +164,13 @@ class Booking extends PureComponent {
           start: startSec,
         };
         console.log('time in the hook', time);
-        if (bookingStep === 0 && waitListId && postProvider.geoLocation && availabilityId && startSec && duration) {
+        if (
+          bookingStep === 0
+          && postProvider.userSub
+          && postProvider.geoLocation
+          && waitListId
+          && availabilityId
+        ) {
           setBookingDetailAction({
             provider: postProvider,
             time,
@@ -188,31 +200,30 @@ class Booking extends PureComponent {
         waitListsById,
         availabilitiesById,
         waitListStatus,
+        waitListRegistered,
       };
     }
 
     return null;
   }
 
-  initState = {
-    serviceId: null,
-    service: null,
-    serviceProviders: null,
-    providersByServiceIdList: null,
-    availabilitiesBulk: null,
-    bookingStep: BOOKING.STEPS.SELECT_PROVIDER,
-    bookingDetail: null,
-    isConfirmDialogOpen: false,
-    userDetail: null,
-    appointmentEvent: null,
-    customerId: null,
-    waitListId: null,
-  };
-
   constructor(props) {
     super(props);
     this.stepComponents = [SelectProvider, BookingDetail, ViewAppointment];
-    this.state = this.initState;
+    this.state = {
+      serviceId: null,
+      service: null,
+      serviceProviders: null,
+      providersByServiceIdList: null,
+      availabilitiesBulk: null,
+      bookingStep: BOOKING.STEPS.SELECT_PROVIDER,
+      bookingDetail: null,
+      isConfirmDialogOpen: false,
+      userDetail: null,
+      appointmentEvent: null,
+      customerId: null,
+      waitListId: null,
+    };
   }
 
   componentDidMount() {
@@ -248,6 +259,7 @@ class Booking extends PureComponent {
       setAvailabilitiesBySpecialEventBulkAction: setAvailabilitiesBySpecialEventBulk,
       waitListsById,
       // availabilityId,
+      waitListRegistered,
     } = prevProps;
     const {
       isError: cachedIsError,
@@ -261,6 +273,8 @@ class Booking extends PureComponent {
       // availabilityId: cachedAvailabilityId,
       setAvailabilitiesByIdAction: setAvailabilitiesById,
       setServiceProvidersAction: setServiceProviders,
+      waitListRegistered: cachedWaitListRegistered,
+      setError: setErrorAction,
     } = this.props;
     const {
       serviceId,
@@ -302,13 +316,11 @@ class Booking extends PureComponent {
       && regExPattern.connectError.test(cachedErrorMessage)) {
       history.push('/');
     }
-  };
 
-  componentWillUnmount() {
-    this.setState({
-      ...this.initState,
-    });
-  }
+    if (cachedWaitListRegistered && cachedWaitListRegistered !== waitListRegistered) {
+      setErrorAction(cachedWaitListRegistered);
+    }
+  };
 
   handleStepChange = dir => () => {
     const {
@@ -467,13 +479,13 @@ class Booking extends PureComponent {
       bookingDetail,
       isConfirmDialogOpen,
       appointmentEvent,
-      customerId,
       waitListId,
     } = this.state;
 
     const Step = this.stepComponents[bookingStep];
     const isBackValid = bookingStep === BOOKING.STEPS.CONFIRM_BOOKING && !waitListId;
     const isNextValid = bookingStep < BOOKING.STEPS.CONFIRM_BOOKING && bookingDetail;
+    const isProfile = bookingStep !== BOOKING.STEPS.CONFIRM_BOOKING;
     const providers = this.handleMergedProviderInfo(
       serviceId,
       serviceProviders,
@@ -537,7 +549,7 @@ class Booking extends PureComponent {
               </Button>
             </div>
             <div className={s.goBack}>
-              {customerId && <Person className="icon-normal" />}
+              {isProfile && <Person className="icon-normal" onClick={this.goProfile} />}
               <IconButton color="inherit" onClick={this.goHome} aria-label="Close">
                 <Home />
               </IconButton>
@@ -568,6 +580,7 @@ Booking.propTypes = {
   resetBooking: func.isRequired,
   setTemporaryServicesByIdAction: func.isRequired,
   waitListsById: objectOf(any),
+  setError: func.isRequired,
 };
 
 Booking.defaultProps = {
@@ -599,6 +612,7 @@ export default compose(
       resetBooking,
       setTemporaryServicesByIdAction,
       setWaitListsByIdAction,
+      setError,
     },
   ),
 )(Booking);
