@@ -5,17 +5,23 @@ import {
   func,
 } from 'prop-types';
 import { connect } from 'react-redux';
+import { noop } from 'lodash';
 import findValueByKey from 'utils/findValueByKey';
 import CustomModal from 'components/Modal/CustomModal';
 import { resetModalStatus } from 'actionsReducers/common.actions';
-
 
 const Error = (props) => {
   const {
     error,
     errorMessage,
     resetModalStatus: resetModalStatusAction,
+    resetOtherStatus,
   } = props;
+
+  const resetStatus = () => {
+    resetModalStatusAction();
+    resetOtherStatus();
+  };
 
   return error ? (
     <CustomModal
@@ -23,8 +29,10 @@ const Error = (props) => {
       title="Error occurs!"
       message={errorMessage}
       isOpen
-      onClose={resetModalStatusAction}
+      // onClose={resetStatus}
       className="z-index-highest"
+      isBackDropClickDisabled
+      cancelCallBack={resetStatus}
     />
   ) : null;
 };
@@ -33,6 +41,11 @@ Error.propTypes = {
   error: bool.isRequired,
   errorMessage: string.isRequired,
   resetModalStatus: func.isRequired,
+  resetOtherStatus: func,
+};
+
+Error.defaultProps = {
+  resetOtherStatus: noop,
 };
 
 const mapStateToProps = (state) => {
