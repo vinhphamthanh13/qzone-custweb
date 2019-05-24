@@ -10,8 +10,8 @@ import { getUserDetail } from 'authentication/actions/login';
 import { get } from 'lodash';
 
 export const UPDATE_PROFILE = 'PROFILE.UPDATE_PROFILE';
-export const FIRE_BASE_STORE_USER = 'PROFILE.FIRE_BASE_STORE_USER';
-
+// export const FIRE_BASE_STORE_USER = 'PROFILE.FIRE_BASE_STORE_USER';
+export const PROFILE_PAGE = 'PROFILE.PROFILE_PAGE';
 
 export const updateProfileAction = payload => ({
   type: UPDATE_PROFILE,
@@ -31,3 +31,8 @@ export const postUpdatedProfile = data => async (dispatch) => {
   }
   dispatch(setLoading(false));
 };
+
+export const goProfilePage = payload => ({
+  type: PROFILE_PAGE,
+  payload,
+});

@@ -11,27 +11,29 @@ import {
 } from '@material-ui/icons';
 import { logout } from 'authentication/actions/logout';
 import EventList from 'pages/profile/appointmentDialog/Appointment';
+import { PROFILE } from 'utils/constants';
 import WaitList from './WaitList';
 import Info from './Info';
 import Survey from './Survey';
 import s from './Content.module.scss';
 
-const EVENT_LIST = 'eventList';
-const MY_INFO = 'myInfo';
-const WAIT_LIST = 'waitList';
-const SURVEY = 'surveyList';
-
 class Content extends Component {
   static getDerivedStateFromProps(props, state) {
     const {
       eventList,
+      profilePage,
     } = props;
     const {
       eventList: cachedEventList,
+      profilePage: cachedProfilePage,
     } = state;
-    if (eventList !== cachedEventList) {
+    if (
+      eventList !== cachedEventList
+      || (profilePage && profilePage !== cachedProfilePage)
+    ) {
       return {
         eventList,
+        profilePage,
       };
     }
     return null;
@@ -39,16 +41,16 @@ class Content extends Component {
 
   SIDE_PANEL = [
     {
-      name: WAIT_LIST, icon: AddToQueue, text: 'My waiting list', isSelected: false,
+      name: PROFILE.PAGE.WAIT_LIST, icon: AddToQueue, text: 'My waiting list', isSelected: false,
     },
     {
-      name: EVENT_LIST, icon: Event, text: 'My event list', isSelected: false,
+      name: PROFILE.PAGE.EVENT_LIST, icon: Event, text: 'My event list', isSelected: false,
     },
     {
-      name: SURVEY, icon: Assessment, text: 'My assessment list', isSelected: false,
+      name: PROFILE.PAGE.SURVEY, icon: Assessment, text: 'My assessment list', isSelected: false,
     },
     {
-      name: MY_INFO, icon: Settings, text: 'My information', isSelected: false,
+      name: PROFILE.PAGE.MY_INFO, icon: Settings, text: 'My information', isSelected: false,
     },
     {
       name: 'signOut',
@@ -73,7 +75,8 @@ class Content extends Component {
   }
 
   componentDidMount() {
-    this.setState({ sidePanel: { [WAIT_LIST]: true } });
+    const { profilePage } = this.props;
+    this.setState({ sidePanel: { [profilePage]: true } });
   }
 
   handleSignOut = () => {
@@ -109,7 +112,7 @@ class Content extends Component {
           <panel.icon className="main-color qz-icon-padding-small" />
           <Typography variant="subheading" color={textColor}>
             {panel.text}{' '}
-            {panel.name === EVENT_LIST ? `(${(eventList && eventList.length) || 0})` : null}
+            {panel.name === PROFILE.PAGE.EVENT_LIST ? `(${(eventList && eventList.length) || 0})` : null}
           </Typography>
         </div>
       );
@@ -178,6 +181,7 @@ Content.propTypes = {
   logoutAction: func.isRequired,
   handleAccount: func.isRequired,
   updateProfileStatus: string.isRequired,
+  profilePage: string.isRequired,
 };
 
 Content.defaultProps = {
@@ -186,6 +190,7 @@ Content.defaultProps = {
 
 const mapStateToProps = state => ({
   ...state.common,
+  ...state.profile,
 });
 
 export default connect(mapStateToProps, {
