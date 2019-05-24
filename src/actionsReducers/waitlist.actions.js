@@ -46,9 +46,7 @@ const setWaitListsValidation = payload => ({
 
 export const registerWaitListsAction = data => async (dispatch) => {
   dispatch(setLoading(true));
-  console.log('waitList list data', data);
-  const allError = [];
-  data.map(async (waitList) => {
+  data.some(async (waitList) => {
     const [enrolled, error] = await handleRequest(registerWaitLists, [waitList]);
     if (error) {
       dispatch(setRegisterWaitListStatus(error));
@@ -57,15 +55,11 @@ export const registerWaitListsAction = data => async (dispatch) => {
       dispatch(setRegisterWaitListStatus(null));
       dispatch(setSucceed('Congratulation! Your waitlist is enrolled!'));
       dispatch(setLoading(false));
-      return null;
+      return true;
     }
     dispatch(setLoading(false));
     return null;
   });
-  console.log('allError', allError);
-  if (allError.length) {
-    dispatch(setError(allError.join('; ')));
-  }
 };
 
 export const setWaitListsAction = data => async (dispatch) => {
@@ -93,7 +87,6 @@ export const setWaitListsByIdAction = data => async (dispatch) => {
 export const setCancelWaitListsAction = data => async (dispatch) => {
   dispatch(setLoading(true));
   const [cancelResult, error] = await handleRequest(cancelWaitLists, [data]);
-  console.log('cancelResult', cancelResult);
   if (error) {
     dispatch(setError(error));
   } else {

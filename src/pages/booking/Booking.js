@@ -9,7 +9,7 @@ import {
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import moment from 'moment';
-import momentz from 'moment-timezone';
+import momentum from 'moment-timezone';
 import {
   get,
   uniqBy,
@@ -114,7 +114,6 @@ class Booking extends PureComponent {
       || waitListRegistered !== cachedWaitListRegistered
     ) {
       let availabilityId = null;
-      let cachedAvailabilityId = null;
       let waitListStatus = '';
       let resolvedServiceId = serviceId;
       let resolvedTemporaryServiceId = temporaryServiceId;
@@ -124,10 +123,6 @@ class Booking extends PureComponent {
         resolvedServiceId = resolvedServiceId || get(serviceProviders, '0.serviceId');
       }
 
-      if (cachedWaitListsById) {
-        cachedAvailabilityId = get(cachedWaitListsById, 'availabilityId');
-      }
-
       if (waitListsById) {
         resolvedTemporaryServiceId = resolvedTemporaryServiceId || get(waitListsById, 'tempServiceId');
         waitListStatus = get(waitListsById, 'status');
@@ -135,13 +130,10 @@ class Booking extends PureComponent {
       }
 
       if (availabilitiesById) {
-        console.log('availabilityId', availabilityId);
-        console.log('cachedAvailabilityId', cachedAvailabilityId);
         resolvedServiceId = resolvedServiceId || get(availabilitiesById, 'serviceId');
         const duration = get(availabilitiesById, 'durationSec');
         const waitListTemporaryServiceId = get(availabilitiesById, 'specialServiceId'); // TODO change the path name
         const providerStartSec = get(availabilitiesById, 'providerStartSec');
-        console.log('providerStartSec in waitlist confirm', providerStartSec);
         const startSec = moment(providerStartSec.replace(' ', 'T')).unix();
         const providerId = get(availabilitiesById, 'providerId');
         let provider = {};
@@ -152,8 +144,6 @@ class Booking extends PureComponent {
         if (serviceProviders && serviceProviders.length) {
           providerDetail = serviceProviders.find(item => item.id === waitListTemporaryServiceId);
         }
-        console.log('provider in the hook', provider);
-        console.log('providerDetail in the hook', providerDetail);
         const postProvider = {
           ...provider,
           ...providerDetail,
@@ -163,7 +153,6 @@ class Booking extends PureComponent {
           duration,
           start: startSec,
         };
-        console.log('time in the hook', time);
         if (
           bookingStep === 0
           && postProvider.userSub
@@ -295,7 +284,7 @@ class Booking extends PureComponent {
     if (cachedServiceProviders && cachedServiceProviders !== serviceProviders) {
       const specialEventIdList = cachedServiceProviders.map(serviceProvider => ({
         specialEventId: serviceProvider.id,
-        customerTimezoneId: momentz.tz.guess(),
+        customerTimezoneId: momentum.tz.guess(),
       }));
       setAvailabilitiesBySpecialEventBulk(specialEventIdList);
     }
@@ -514,8 +503,6 @@ class Booking extends PureComponent {
       },
     };
 
-    console.log('booking/Booking state: ', this.state);
-    console.log('booking/Booking props: ', this.props);
     return (
       <>
         <Success />
