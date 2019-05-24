@@ -3,6 +3,7 @@ import {
   SET_PROVIDERS_BY_SERVICE_ID,
   SET_AVAILABILITIES_BY_SPECIAL_EVENT_ID,
   SET_AVAILABILITIES_BY_SPECIAL_EVENT_BULK,
+  SET_AVAILABILITIES_BY_ID,
   SET_APPOINTMENT_CUSTOMER_EVENTS,
   SET_BOOKING_DETAIL,
   SET_BOOKING_STEP,
@@ -18,6 +19,7 @@ const initState = {
   bookingStep: 0,
   appointmentEvent: null,
   bookingDetail: null,
+  availabilitiesById: null,
 };
 
 const reducer = (state = initState, action) => {
@@ -41,6 +43,11 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         availabilitiesBulk: action.payload,
+      };
+    case SET_AVAILABILITIES_BY_ID:
+      return {
+        ...state,
+        availabilitiesById: action.payload,
       };
     case SET_BOOKING_STEP:
       return {

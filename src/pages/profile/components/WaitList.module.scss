@@ -3,16 +3,20 @@
 .waitList {
   max-height: calc(100% - 65px);
   overflow: auto;
+  display: flex;
 }
 
 .waitSlotRow {
   color: $main;
   margin: 1rem 1rem 1rem 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .waitSlot {
+  margin: 0.5rem 0;
   border: 1px solid $main_03;
-  width: 22rem;
+  width: 21rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -20,6 +24,14 @@
   padding: 1rem 0;
   border-radius: 0.2rem;
   box-shadow: 2px 2px 4px $main_04;
+}
+
+.waitSlotCONFIRMED {
+  color: $fruitSalad;
+}
+
+.waitSlotOPEN {
+  color: $main;
 }
 
 .waitSlotExpired {

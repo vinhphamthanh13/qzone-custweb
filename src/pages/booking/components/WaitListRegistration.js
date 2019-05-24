@@ -29,7 +29,8 @@ import {
 } from 'lodash';
 import DatePicker from 'components/Calendar/DatePicker';
 import {
-  setWaitListsValidationAction,
+  // setWaitListsValidationAction,
+  registerWaitListsAction,
 } from 'actionsReducers/waitlist.actions';
 import defaultImage from 'images/default-service-card.png';
 import {
@@ -109,7 +110,6 @@ class WaitListRegistration extends Component {
       customerId: null,
       queuedProviders: null,
       isQueuing: null,
-      waitListsValidation: null,
     };
   }
 
@@ -128,7 +128,8 @@ class WaitListRegistration extends Component {
 
   handleRegisterWaitList = () => {
     const {
-      setWaitListsValidationAction: setWaitListsValidation,
+      // setWaitListsValidationAction: setWaitListsValidation,
+      registerWaitListsAction: registerWaitLists,
     } = this.props;
     const {
       customerId,
@@ -139,13 +140,14 @@ class WaitListRegistration extends Component {
 
     const startSec = dateFrom + 1; // Plus one second for startSec
     const toSec = dateTo + 3600 * 24; // Plus one day
-    const validateData = temporaryServiceIds.map(id => ({
+    const waitListData = temporaryServiceIds.map(id => ({
       customerId,
       startSec,
       tempServiceId: id,
       toSec,
     }));
-    setWaitListsValidation(validateData);
+    // setWaitListsValidation(validateData);
+    registerWaitLists(waitListData);
     this.handleToggleRegister();
   };
 
@@ -243,7 +245,6 @@ class WaitListRegistration extends Component {
       dateTo,
       queuedProviders,
       isQueuing,
-      waitListsValidation,
     } = this.state;
     const {
       values,
@@ -252,8 +253,6 @@ class WaitListRegistration extends Component {
     const serviceName = get(service, 'name');
     const serviceImg = get(service, 'image.fileUrl') || defaultImage;
     const fullAddress = get(geoLocation, 'fullAddress');
-    console.log('waitListsValidation', waitListsValidation);
-    console.log('waitlist prps 1st registration', this.props);
     return (
       <>
         {isRegisterWaitLists && (
@@ -432,8 +431,8 @@ WaitListRegistration.propTypes = {
   setFieldValue: func.isRequired,
   isValid: bool.isRequired,
   handleAuth: func.isRequired,
-  setWaitListsValidationAction: func.isRequired,
-  // initProvider: objectOf(any).isRequired,
+  // setWaitListsValidationAction: func.isRequired,
+  registerWaitListsAction: func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -452,6 +451,7 @@ export default compose(
     }),
   }),
   connect(mapStateToProps, {
-    setWaitListsValidationAction,
+    // setWaitListsValidationAction,
+    registerWaitListsAction,
   }),
 )(WaitListRegistration);

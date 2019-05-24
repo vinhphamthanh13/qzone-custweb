@@ -26,7 +26,7 @@ import {
   setWaitListsAction,
   setCancelWaitListsAction,
 } from 'actionsReducers/waitlist.actions';
-import { defaultDateFormat, timeSlotFormat } from 'utils/constants';
+import { defaultDateFormat, regExPattern, timeSlotFormat } from 'utils/constants';
 import { history } from 'containers/App';
 import { setServiceProvidersAction } from 'actionsReducers/common.actions';
 import s from './WaitList.module.scss';
@@ -115,13 +115,17 @@ class WaitList extends Component {
                 serviceProvider => serviceProvider.id === item.tempServiceId,
               );
               const startTime = get(item, 'sstartTime');
+              const queueStatus = get(item, 'status');
+              const removedTimeZone = startTime.replace(regExPattern.removedTimeZone, '');
               const isExpired = moment.now() > moment(startTime);
               const [queueTitle, waitSlotStyle] = isExpired
                 ? ['WaitList Expired!', `${s.waitSlot} ${s.waitSlotExpired}`]
-                : ['You are currently in WaitLists', s.waitSlot];
+                : [`WaitList is ${queueStatus}`, `${s.waitSlot}`];
+              const activeStyle = isExpired ? '' : `waitSlot${queueStatus}`;
+
               return (
                 <div key={uuidv1()} className={waitSlotStyle}>
-                  <Typography variant="title" color="inherit" className="text-bold">
+                  <Typography variant="title" color="inherit" className={`text-bold ${s[activeStyle]}`}>
                     {queueTitle}
                   </Typography>
                   <div className={s.serviceProviderInfo}>
@@ -142,11 +146,11 @@ class WaitList extends Component {
                         </Typography>
                         <DateRange className="icon-small" />
                         <Typography variant="subtitle2" color="inherit">
-                          {moment(startTime).format(defaultDateFormat)}
+                          {moment(removedTimeZone).format(defaultDateFormat)}
                         </Typography>
                         <AlarmAdd className="icon-small" />
                         <Typography variant="subtitle2" color="inherit">
-                          {moment(startTime).format(timeSlotFormat)}
+                          {moment(removedTimeZone).format(timeSlotFormat)}
                         </Typography>
                       </div>
                       <div className={`full-width icon-text ${s.schedule}`}>
@@ -176,7 +180,7 @@ class WaitList extends Component {
                       color="inherit"
                       className="secondary-button trans-border-button"
                       onClick={this.handleCancelQueue(get(item, 'waitListId'))}
-                      // disabled={isExpired}
+                      disabled={queueStatus === 'CONFIRMED'}
                     >
                       <Cancel color="inherit" className="icon-normal" />
                       Cancel
@@ -186,7 +190,7 @@ class WaitList extends Component {
                       color="inherit"
                       className="main-button"
                       onClick={this.handleConfirmQueue(item)}
-                      disabled={isExpired}
+                      disabled={isExpired || queueStatus === 'CONFIRMED'}
                     >
                       <CheckCircle color="inherit" className="icon-normal" />
                       Confirm

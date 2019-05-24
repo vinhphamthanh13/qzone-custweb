@@ -46,15 +46,20 @@ const setWaitListsValidation = payload => ({
 
 export const registerWaitListsAction = data => async (dispatch) => {
   dispatch(setLoading(true));
-  const [regWaitList, error] = await handleRequest(registerWaitLists, [data]);
-  console.log('register waitlist response', regWaitList);
-  if (error) {
-    dispatch(setError(error));
-  } else {
-    dispatch(setRegisterWaitListStatus(regWaitList));
-    dispatch(setSucceed('Congratulation! Your waitlist is enrolled!'));
-  }
-  dispatch(setLoading(false));
+  data.some(async (waitList) => {
+    const [enrolled, error] = await handleRequest(registerWaitLists, [waitList]);
+    if (error) {
+      dispatch(setRegisterWaitListStatus(error));
+    } else {
+      console.log('enrolled', enrolled);
+      dispatch(setRegisterWaitListStatus(null));
+      dispatch(setSucceed('Congratulation! Your waitlist is enrolled!'));
+      dispatch(setLoading(false));
+      return true;
+    }
+    dispatch(setLoading(false));
+    return null;
+  });
 };
 
 export const setWaitListsAction = data => async (dispatch) => {
@@ -82,7 +87,6 @@ export const setWaitListsByIdAction = data => async (dispatch) => {
 export const setCancelWaitListsAction = data => async (dispatch) => {
   dispatch(setLoading(true));
   const [cancelResult, error] = await handleRequest(cancelWaitLists, [data]);
-  console.log('cancelResult', cancelResult);
   if (error) {
     dispatch(setError(error));
   } else {
