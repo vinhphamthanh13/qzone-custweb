@@ -184,7 +184,7 @@ class ViewAppointment extends Component {
             <div className={s.appointmentCode}>
               <Typography variant="subtitle2" color="primary" className="icon-main">Booking code:{' '}</Typography>
               <Typography variant="subtitle1" className="danger-color text-bold">
-                {bookingCode}
+                {bookingCode.toUpperCase()}
               </Typography>
             </div>
             <div className={s.detailWrapper}>

@@ -33,8 +33,9 @@ import {
 } from '@material-ui/icons';
 import { findEventByCustomerIdAction } from 'actionsReducers/common.actions';
 import { history } from 'containers/App';
-import { AUTHENTICATED_KEY } from 'utils/constants';
+import { AUTHENTICATED_KEY, PROFILE } from 'utils/constants';
 import logo from 'images/quezone-logo.png';
+import { goProfilePage } from 'actionsReducers/profile.actions';
 import styles from './AppBarStyle';
 
 class MainAppBar extends React.Component {
@@ -109,8 +110,10 @@ class MainAppBar extends React.Component {
     }
   };
 
-  navigatingProfile = () => {
+  navigatingProfile = page => () => {
+    const { goProfilePage: goProfilePageAction } = this.props;
     const { loginSession } = this.state;
+    goProfilePageAction(page);
     history.push(`/profile/${loginSession.id}`);
   };
 
@@ -142,14 +145,14 @@ class MainAppBar extends React.Component {
           Hello {loginSession.username}!
         </Typography>
         <Badge
-          onClick={eventCount > 0 ? this.navigatingProfile : noop}
+          onClick={eventCount > 0 ? this.navigatingProfile(PROFILE.PAGE.EVENT_LIST) : noop}
           badgeContent={eventCount}
           color="secondary"
           className={badgeStyle}
         >
           <NotificationsIcon />
         </Badge>
-        <IconButton onClick={this.navigatingProfile} color="inherit">
+        <IconButton onClick={this.navigatingProfile(PROFILE.PAGE.WAIT_LIST)} color="inherit">
           <AssignmentInd />
         </IconButton>
       </>
@@ -229,6 +232,7 @@ MainAppBar.propTypes = {
   onSearchValue: string,
   handleAdvancedSearch: func.isRequired,
   maintenance: bool.isRequired,
+  goProfilePage: func.isRequired,
 };
 
 MainAppBar.defaultProps = {
@@ -245,6 +249,7 @@ const mapStateToProps = state => ({
 export default compose(
   connect(mapStateToProps, {
     findEventByCustomerIdAction,
+    goProfilePage,
   }),
   withStyles(styles),
 )(MainAppBar);

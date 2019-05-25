@@ -18,13 +18,14 @@ const CustomModal = (props) => {
   const {
     classes, message, title, isOpen, onClose, type,
     okText, okCallBack, cancelText, cancelCallBack,
-    className,
+    className, isBackDropClickDisabled,
   } = props;
   const headingColor = type === 'error' ? 'secondary' : 'primary';
   return (
     <Modal
       open={isOpen}
       onClose={onClose}
+      disableBackdropClick={isBackDropClickDisabled}
       className={`${classes.modalRoot} ${className}`}
     >
       <Paper className="verification-modal">
@@ -82,6 +83,7 @@ CustomModal.propTypes = {
   cancelCallBack: func,
   cancelText: string,
   className: string,
+  isBackDropClickDisabled: bool,
 };
 
 CustomModal.defaultProps = {
@@ -91,6 +93,7 @@ CustomModal.defaultProps = {
   cancelCallBack: undefined,
   cancelText: 'Cancel',
   className: '',
+  isBackDropClickDisabled: false,
 };
 
 export default withStyles(s)(CustomModal);
