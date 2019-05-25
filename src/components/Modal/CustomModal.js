@@ -105,7 +105,7 @@ CustomModal.defaultProps = {
   okText: 'Ok',
   cancelCallBack: undefined,
   className: '',
-  isBackDropClickDisabled: true,
+  isBackDropClickDisabled: false,
 };
 
 export default CustomModal;

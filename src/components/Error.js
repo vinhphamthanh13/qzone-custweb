@@ -29,7 +29,6 @@ const Error = (props) => {
       title="Error occurs!"
       message={errorMessage}
       isOpen
-      // onClose={resetStatus}
       className="z-index-highest"
       isBackDropClickDisabled
       cancelCallBack={resetStatus}

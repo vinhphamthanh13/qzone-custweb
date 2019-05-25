@@ -1,14 +1,27 @@
 @import "styles/_settings.scss";
 
 .appointmentCode {
-  margin: 1em auto;
-  padding: 1em 0;
+  margin: 0.2rem auto 0.5rem;
+  padding: 0.5rem 0;
   border-top: 2px solid rgba($grayNickel, 0.4);
   border-bottom: 2px solid rgba($grayNickel, 0.4);
 }
 
 .appointmentRemainedTime {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.eventFullAddress{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.remainedDisplay {
+  display: flex;
+  justify-content: center;
   align-items: center;
 }
 
@@ -46,12 +59,12 @@
 
 .eventStatusComplete {
   background: $main_04;
-  border-radius: 0.2rem;
+  border-radius: 0.3rem;
 }
 
 .eventStatusWaiting {
   background: $main;
-  border-radius: 0.2rem;
+  border-radius: 0.28rem;
 }
 
 .eventStatusCountDown {
@@ -63,6 +76,7 @@
   display: flex;
   justify-content: center;
   text-align: center;
+  margin-bottom: 0.7rem;
 }
 
 .ratingInner {
@@ -101,9 +115,22 @@
   color: $main;
 }
 
-.cardCta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 1rem auto 0;
+.cancelEvent {
+  color: $main_01;
+  border-radius: unset;
+  border: unset;
+  &:hover {
+    background: $main_02;
+    color: $main;
+  }
+}
+
+.cancelEventHidden {
+  color: transparent !important;
+  background: transparent !important;
+  border: unset !important;
+  &:hover {
+    cursor: unset;
+    background: transparent;
+  }
 }

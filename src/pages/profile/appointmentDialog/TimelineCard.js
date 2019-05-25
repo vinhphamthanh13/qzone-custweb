@@ -25,7 +25,7 @@ import {
   AssignmentLate,
   Update,
   Timer,
-  PersonPin,
+  LocationOn,
   Public,
   Cancel,
 } from '@material-ui/icons';
@@ -33,6 +33,7 @@ import RateStar from 'components/Rating/RateStar';
 import MapDialog from 'components/Map/MapDialog';
 import { setRatingService } from 'actionsReducers/common.actions';
 import Rating from 'material-ui-rating';
+import CustomModal from 'components/Modal/CustomModal';
 import s from './TimelineCard.module.scss';
 import CountDownDisplay from './CountDownDisplay';
 import { STATUS } from './Appointment.constants';
@@ -57,6 +58,7 @@ class TimelineCard extends Component {
     super(props);
     this.state = {
       isOpenMap: false,
+      isCancelEvent: false,
     };
   }
 
@@ -75,6 +77,16 @@ class TimelineCard extends Component {
     }));
   };
 
+  handleCancelEventConfirmation = value => () => {
+    this.setState({
+      isCancelEvent: value,
+    });
+  };
+
+  handleCancelEventAction = () => {
+    this.handleCancelEventConfirmation(false)();
+  };
+
   render() {
     const {
       bookingCode,
@@ -88,6 +100,7 @@ class TimelineCard extends Component {
     } = this.props;
     const {
       isOpenMap,
+      isCancelEvent,
     } = this.state;
     const serviceProviderId = '//TODO';
     const providerRating = 5;
@@ -156,6 +169,14 @@ class TimelineCard extends Component {
 
     return (
       <>
+        <CustomModal
+          message={`Are your sure to cancel this event? Code ${bookingCode.toUpperCase()}`}
+          title="Event Confirmation"
+          isOpen={isCancelEvent}
+          type="info"
+          cancelCallBack={this.handleCancelEventConfirmation(false)}
+          okCallBack={this.handleCancelEventAction}
+        />
         {isOpenMap && (
           <MapDialog
             toggle={this.handleToggleMap}
@@ -174,12 +195,17 @@ class TimelineCard extends Component {
               {streetAddress}
             </Typography>
           </div>
-          <div>
+          <div className={s.eventFullAddress}>
             <Typography variant="subtitle1" color="textSecondary" align="center">
               {district} {state} {postCode} - {city} {country}
             </Typography>
+            {!eventExpired && (
+              <Button color="inherit" className="simple-button" onClick={this.handleToggleMap}>
+                <LocationOn color="inherit" className="icon-main" />
+                View map
+              </Button>)}
           </div>
-          {currentEventStatus === eventExpired && (
+          {eventExpired && (
             <div className={s.ratingWrapper}>
               <div className={s.ratingInner}>
                 <Typography variant="subheading" classes={{ subheading: s.ratingText }}>
@@ -204,10 +230,6 @@ class TimelineCard extends Component {
           <div className={s.cardDetail}>
             <div className={s.serviceTitleMap}>
               <Typography variant="title" color="inherit" className="text-bold" noWrap>{serviceName}</Typography>
-              <Button color="inherit" className="simple-button" onClick={this.handleToggleMap}>
-                <PersonPin color="inherit" className="icon-main icon-normal" />
-                View map
-              </Button>
             </div>
             <div className={s.providerRating}>
               <Typography
@@ -242,16 +264,17 @@ class TimelineCard extends Component {
             <Typography variant="subheading" className="danger-color">{currentEventStatus}</Typography>
           </div>
           <div className={`${s.appointmentRemainedTime} ${currentStyleStatus}`}>
-            {countDownPreIcon}
-            <Typography variant="subheading" classes={{ subheading: s.remainedText }}>
-              {displayTimeout}
-            </Typography>
-          </div>
-          <div className={s.cardCta}>
+            <div className={s.remainedDisplay}>
+              {countDownPreIcon}
+              <Typography variant="subheading" classes={{ subheading: s.remainedText }}>
+                {displayTimeout}
+              </Typography>
+            </div>
             <Button
               color="inherit"
               variant="outlined"
-              className="secondary-button"
+              className={!eventExpired ? s.cancelEvent : s.cancelEventHidden}
+              onClick={this.handleCancelEventConfirmation(true)}
               disabled={eventExpired}
             >
               <Cancel color="inherit" className="icon-in-button-left" />
