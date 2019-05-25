@@ -49,6 +49,7 @@ const CustomModal = (props) => {
                 <Button
                   classes={{ root: okCallBack ? classes.cancelButton : undefined }}
                   onClick={cancelCallBack}
+                  variant="outlined"
                 >
                   {cancelText}
                 </Button>
