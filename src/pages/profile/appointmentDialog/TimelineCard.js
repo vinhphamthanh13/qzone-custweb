@@ -204,7 +204,7 @@ class TimelineCard extends Component {
               <Typography variant="title" color="textSecondary" noWrap>{serviceName}</Typography>
               <IconButton className="button-sm simple-button" onClick={this.handleToggleMap}>
                 <PersonPin className="icon-main icon-shake icon-small danger-color" />
-                <Typography variant="caption" color="inherit" className="danger-color">View map</Typography>
+                <Typography variant="caption" color="inherit" className="danger-color text-bold">View map</Typography>
               </IconButton>
             </div>
             <div className={s.providerRating}>
