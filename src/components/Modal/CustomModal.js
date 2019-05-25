@@ -46,7 +46,7 @@ const CustomModal = (props) => {
           <Avatar className={s.wrapperAvatar} src={logo} />
         </div>
         <div className={s.content}>
-          <Typography className="text-capitalize text-bold" variant="title" color={headingColor}>
+          <Typography className={`text-capitalize text-bold ${s.titleMessage}`} variant="title" color={headingColor}>
             {title}
           </Typography>
           <Typography
@@ -73,7 +73,7 @@ const CustomModal = (props) => {
                     variant="outlined"
                     color="inherit"
                     onClick={okCallBack}
-                    className="main-button"
+                    className={`main-button ${s.okButton}`}
                   >
                     <CheckCircle color="inherit" className="icon-normal icon-in-button-left" />
                     {okText}
