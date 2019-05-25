@@ -40,12 +40,18 @@
   font-weight: bolder;
 }
 
+.cardDetail {
+  color: $main_04;
+}
+
 .eventStatusComplete {
-  background: linear-gradient(to right, $mako, $white);
+  background: $main_04;
+  border-radius: 0.2rem;
 }
 
 .eventStatusWaiting {
-  background: linear-gradient(to right, $malibu, $white);
+  background: $main;
+  border-radius: 0.2rem;
 }
 
 .eventStatusCountDown {
@@ -92,4 +98,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: $main;
+}
+
+.cardCta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem auto 0;
 }

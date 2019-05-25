@@ -10,8 +10,8 @@ import { connect } from 'react-redux';
 import { get } from 'lodash';
 import moment from 'moment';
 import {
-  IconButton,
   Typography,
+  Button,
 } from '@material-ui/core';
 import { VerticalTimelineElement } from 'react-vertical-timeline-component';
 import {
@@ -22,11 +22,12 @@ import {
   Reorder,
   AlarmAdd,
   NotInterested,
-  DoneAll,
+  AssignmentLate,
   Update,
   Timer,
   PersonPin,
   Public,
+  Cancel,
 } from '@material-ui/icons';
 import RateStar from 'components/Rating/RateStar';
 import MapDialog from 'components/Map/MapDialog';
@@ -101,7 +102,7 @@ class TimelineCard extends Component {
         },
         <AlarmOff />,
         STATUS.EXPIRED,
-        <DoneAll className="icon-main danger-color" />,
+        <AssignmentLate className="icon-main danger-color" />,
         s.eventStatusComplete,
         <NotInterested className="icon-white" />,
       ] : [
@@ -151,6 +152,7 @@ class TimelineCard extends Component {
     const city = get(geoLocation, 'city');
     const country = get(geoLocation, 'country');
     const mapProvider = { geoLocation };
+    const eventExpired = eventStatus === STATUS.EXPIRED;
 
     return (
       <>
@@ -177,7 +179,7 @@ class TimelineCard extends Component {
               {district} {state} {postCode} - {city} {country}
             </Typography>
           </div>
-          {currentEventStatus === STATUS.EXPIRED && (
+          {currentEventStatus === eventExpired && (
             <div className={s.ratingWrapper}>
               <div className={s.ratingInner}>
                 <Typography variant="subheading" classes={{ subheading: s.ratingText }}>
@@ -199,13 +201,13 @@ class TimelineCard extends Component {
               {bookingCode.toUpperCase()}
             </Typography>
           </div>
-          <div>
+          <div className={s.cardDetail}>
             <div className={s.serviceTitleMap}>
-              <Typography variant="title" color="textSecondary" noWrap>{serviceName}</Typography>
-              <IconButton className="button-sm simple-button" onClick={this.handleToggleMap}>
-                <PersonPin className="icon-main icon-shake icon-small danger-color" />
-                <Typography variant="caption" color="inherit" className="danger-color text-bold">View map</Typography>
-              </IconButton>
+              <Typography variant="title" color="inherit" className="text-bold" noWrap>{serviceName}</Typography>
+              <Button color="inherit" className="simple-button" onClick={this.handleToggleMap}>
+                <PersonPin color="inherit" className="icon-main icon-normal" />
+                View map
+              </Button>
             </div>
             <div className={s.providerRating}>
               <Typography
@@ -244,6 +246,17 @@ class TimelineCard extends Component {
             <Typography variant="subheading" classes={{ subheading: s.remainedText }}>
               {displayTimeout}
             </Typography>
+          </div>
+          <div className={s.cardCta}>
+            <Button
+              color="inherit"
+              variant="outlined"
+              className="secondary-button"
+              disabled={eventExpired}
+            >
+              <Cancel color="inherit" className="icon-in-button-left" />
+              Cancel
+            </Button>
           </div>
         </VerticalTimelineElement>
       </>

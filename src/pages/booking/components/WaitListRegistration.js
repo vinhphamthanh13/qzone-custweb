@@ -394,9 +394,7 @@ class WaitListRegistration extends Component {
                   className="secondary-button"
                 >
                   <Cancel color="inherit" className="icon-small" />
-                  <Typography variant="body2" color="inherit">
-                    Cancel
-                  </Typography>
+                  Cancel
                 </Button>
                 <Button
                   variant="outlined"
@@ -405,9 +403,7 @@ class WaitListRegistration extends Component {
                   className="main-button"
                 >
                   <Queue color="inherit" className="icon-small" />
-                  <Typography variant="body1" color="inherit">
-                    Enroll
-                  </Typography>
+                  Enroll
                 </Button>
               </div>
             </div>

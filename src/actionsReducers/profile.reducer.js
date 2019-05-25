@@ -2,12 +2,14 @@ import { PROFILE } from 'utils/constants';
 import {
   UPDATE_PROFILE,
   PROFILE_PAGE,
+  CANCEL_EVENT_BY_ID,
 } from './profile.actions';
 
 const initState = {
   updateProfileStatus: '',
   firebaseUserStored: null,
   profilePage: PROFILE.PAGE.WAIT_LIST,
+  eventsCancelById: null,
 };
 
 const reducer = (state = initState, action) => {
@@ -21,6 +23,11 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         profilePage: action.payload,
+      };
+    case CANCEL_EVENT_BY_ID:
+      return {
+        ...state,
+        eventsCancelById: action.payload,
       };
     default:
       return state;
