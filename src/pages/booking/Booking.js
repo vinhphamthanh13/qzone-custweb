@@ -52,7 +52,10 @@ import {
   setTemporaryServicesByIdAction,
   setAvailabilitiesByIdAction,
 } from 'actionsReducers/booking.actions';
-import { setWaitListsByIdAction } from 'actionsReducers/waitlist.actions';
+import {
+  setWaitListsByIdAction,
+  resetRegisterWaitListStatus,
+} from 'actionsReducers/waitlist.actions';
 import SelectProvider from './components/SelectProvider';
 import BookingDetail from './components/BookingDetail';
 import ViewAppointment from './components/ViewAppointment';
@@ -454,6 +457,11 @@ class Booking extends PureComponent {
     );
   });
 
+  handleResetWaitListStatus = () => {
+    const { resetRegisterWaitListStatus: resetRegisterWaitListStatusAction } = this.props;
+    resetRegisterWaitListStatusAction();
+  };
+
   render() {
     const {
       setBookingDetail: setBookingDetailAction,
@@ -472,12 +480,13 @@ class Booking extends PureComponent {
       isConfirmDialogOpen,
       appointmentEvent,
       waitListId,
+      customerId,
     } = this.state;
 
     const Step = this.stepComponents[bookingStep];
     const isBackValid = bookingStep === BOOKING.STEPS.CONFIRM_BOOKING && !waitListId;
     const isNextValid = bookingStep < BOOKING.STEPS.CONFIRM_BOOKING && bookingDetail;
-    const isProfile = bookingStep !== BOOKING.STEPS.CONFIRM_BOOKING;
+    const isProfile = customerId && bookingStep !== BOOKING.STEPS.CONFIRM_BOOKING;
     const providers = this.handleMergedProviderInfo(
       serviceId,
       serviceProviders,
@@ -509,7 +518,7 @@ class Booking extends PureComponent {
     return (
       <>
         <Success />
-        <Error />
+        <Error resetOtherStatus={this.handleResetWaitListStatus} />
         <Loading />
         {bookingDetail && bookingDetail.provider && (
           <CustomModal
@@ -574,6 +583,7 @@ Booking.propTypes = {
   setTemporaryServicesByIdAction: func.isRequired,
   waitListsById: objectOf(any),
   setError: func.isRequired,
+  resetRegisterWaitListStatus: func.isRequired,
 };
 
 Booking.defaultProps = {
@@ -606,6 +616,7 @@ export default compose(
       setTemporaryServicesByIdAction,
       setWaitListsByIdAction,
       setError,
+      resetRegisterWaitListStatus,
     },
   ),
 )(Booking);

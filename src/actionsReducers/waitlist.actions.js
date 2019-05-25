@@ -18,10 +18,15 @@ export const SET_WAIT_LIST = 'PROFILE.SET_WAIT_LIST';
 export const SET_WAIT_LIST_BY_ID = 'BOOKING.SET_WAIT_LIST_BY_ID';
 export const CANCEL_WAIT_LIST = 'PROFILE.CANCEL_WAIT_LIST';
 export const VALIDATE_WAIT_LIST = 'BOOKING.VALIDATE_WAIT_LIST';
+export const RESET_REGISTER_WAITLIST_STATUS = 'BOOKING.RESET_REGISTER_WAITLIST_STATUS';
 
 const setRegisterWaitListStatus = payload => ({
   type: REGISTER_WAIT_LIST,
   payload,
+});
+
+export const resetRegisterWaitListStatus = () => ({
+  type: RESET_REGISTER_WAITLIST_STATUS,
 });
 
 const setWaitLists = payload => ({

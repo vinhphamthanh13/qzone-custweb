@@ -4,6 +4,7 @@ import {
   CANCEL_WAIT_LIST,
   VALIDATE_WAIT_LIST,
   SET_WAIT_LIST_BY_ID,
+  RESET_REGISTER_WAITLIST_STATUS,
 } from 'actionsReducers/waitlist.actions';
 
 const initState = {
@@ -20,6 +21,11 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         waitListRegistered: action.payload,
+      };
+    case RESET_REGISTER_WAITLIST_STATUS:
+      return {
+        ...state,
+        waitListRegistered: null,
       };
     case SET_WAIT_LIST:
       return {
