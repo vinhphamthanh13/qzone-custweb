@@ -51,7 +51,7 @@ export const cancelEventByIdAction = data => async (dispatch) => {
   if (error) {
     dispatch(setError(error));
   } else {
-    dispatch(cancelEventById(canceledResult || 200));
+    dispatch(cancelEventById(200 || canceledResult));
     dispatch(setSucceed('Your cancellation is completed!'));
   }
   dispatch(setLoading(false));

@@ -99,9 +99,8 @@ class Content extends Component {
     const {
       cancelEventByIdStatus: cachedCancelEventByIdStatus,
     } = this.state;
-    console.log('compoinente did  update ', prevProps);
-    console.log('compoinente did  update state', this.state);
-    if (cancelEventByIdStatus !== cachedCancelEventByIdStatus && cancelEventByIdStatus === 200) {
+    if (cancelEventByIdStatus !== cachedCancelEventByIdStatus && cachedCancelEventByIdStatus === 200) {
+      console.log('should update the event list', this.state);
       findEventByCustomerId(customerId);
       cancelEventByIdAction(null);
     }
