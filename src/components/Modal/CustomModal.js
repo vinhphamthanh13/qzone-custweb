@@ -87,7 +87,7 @@ const CustomModal = (props) => {
 };
 
 CustomModal.propTypes = {
-  message: string.isRequired,
+  message: string,
   title: string.isRequired,
   isOpen: bool.isRequired,
   onClose: func,
@@ -106,6 +106,7 @@ CustomModal.defaultProps = {
   cancelCallBack: undefined,
   className: '',
   isBackDropClickDisabled: false,
+  message: 'Something wrong happening! Try again later',
 };
 
 export default CustomModal;

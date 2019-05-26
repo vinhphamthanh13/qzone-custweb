@@ -371,7 +371,7 @@ class Booking extends PureComponent {
       duration,
       availabilityId,
       startSec,
-      status: 'BOOKING_STATUS_UNSPECIFIED',
+      status: 'UNSPECIFIED',
       type: 'APPOINTMENT',
     });
   };

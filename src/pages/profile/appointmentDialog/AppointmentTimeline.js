@@ -4,11 +4,13 @@ import {
 } from 'prop-types';
 import { VerticalTimeline } from 'react-vertical-timeline-component';
 import TimelineCard from './TimelineCard';
+import { STATUS } from './Appointment.constants';
 
 const AppointmentTimeline = ({ items }) => (
   <VerticalTimeline>
     <div>
       {items.sort((a, b) => b.startSec - a.startSec)
+        .filter(item => item.status !== STATUS.CANCELED)
         .map(item => (
           <TimelineCard
             key={item.id}

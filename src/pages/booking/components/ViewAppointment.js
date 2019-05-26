@@ -31,9 +31,11 @@ import {
   eventType,
   serviceType,
 } from 'types/global';
+import { goProfilePage } from 'actionsReducers/profile.actions';
 import {
   defaultDateFormat,
   timeSlotFormat,
+  PROFILE,
 } from 'utils/constants';
 import s from './ViewAppointment.module.scss';
 
@@ -48,8 +50,10 @@ class ViewAppointment extends Component {
     const {
       resetBooking: resetBookingAction,
       userDetail: { userSub },
+      goProfilePage: goProfilePageAction,
     } = this.props;
     resetBookingAction();
+    goProfilePageAction(PROFILE.PAGE.EVENT_LIST);
     history.push(`/profile/${userSub}`);
   };
 
@@ -91,7 +95,7 @@ class ViewAppointment extends Component {
       startTime: `${moment(startTimeSec * 1000).format('YYYY-MM-DDTHH:mm:ss')}${addToCalendarTZ}`,
       endTime: `${moment(startTimeSec * 1000).add(duration, 'm').format('YYYY-MM-DDTHH:mm:ss')}${addToCalendarTZ}`,
     };
-    console.log('appointment event', appointmentEvent);
+
     return (
       <div className={s.viewAppointment}>
         <div className={s.viewTitle}>
@@ -262,6 +266,7 @@ ViewAppointment.propTypes = {
   bookingDetail: objectOf(any).isRequired,
   userDetail: objectOf(any).isRequired,
   resetBooking: func.isRequired,
+  goProfilePage: func.isRequired,
 };
 
 ViewAppointment.defaultProps = {
@@ -273,4 +278,6 @@ const mapStateToProps = state => ({
   ...state.auth,
 });
 
-export default connect(mapStateToProps)(ViewAppointment);
+export default connect(mapStateToProps, {
+  goProfilePage,
+})(ViewAppointment);

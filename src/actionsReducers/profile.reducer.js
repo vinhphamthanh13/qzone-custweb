@@ -9,7 +9,7 @@ const initState = {
   updateProfileStatus: '',
   firebaseUserStored: null,
   profilePage: PROFILE.PAGE.WAIT_LIST,
-  eventsCancelById: null,
+  cancelEventByIdStatus: null,
 };
 
 const reducer = (state = initState, action) => {
@@ -25,9 +25,10 @@ const reducer = (state = initState, action) => {
         profilePage: action.payload,
       };
     case CANCEL_EVENT_BY_ID:
+      console.log('reducer in event cancel', action.payload);
       return {
         ...state,
-        eventsCancelById: action.payload,
+        cancelEventByIdStatus: action.payload,
       };
     default:
       return state;

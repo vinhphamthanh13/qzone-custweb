@@ -43,6 +43,9 @@
     background: linear-gradient($malibu, $primary);
     color: $main_03;
     border: none;
+    &:hover {
+      color: $main_01;
+    }
   }
   &-disabled {
     background: $grayNickel;

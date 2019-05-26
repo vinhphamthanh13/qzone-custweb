@@ -40,7 +40,7 @@ export const goProfilePage = payload => ({
   payload,
 });
 
-const cancelEventById = payload => ({
+export const cancelEventById = payload => ({
   type: CANCEL_EVENT_BY_ID,
   payload,
 });
@@ -51,7 +51,7 @@ export const cancelEventByIdAction = data => async (dispatch) => {
   if (error) {
     dispatch(setError(error));
   } else {
-    dispatch(cancelEventById(canceledResult));
+    dispatch(cancelEventById(canceledResult || 200));
     dispatch(setSucceed('Your cancellation is completed!'));
   }
   dispatch(setLoading(false));
