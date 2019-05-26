@@ -22,7 +22,7 @@ import {
 } from '@material-ui/core';
 import {
   Home,
-  Person,
+  AccountBox,
   ChevronLeft,
   ChevronRight,
 } from '@material-ui/icons';
@@ -371,7 +371,7 @@ class Booking extends PureComponent {
       duration,
       availabilityId,
       startSec,
-      status: 'BOOKING_STATUS_UNSPECIFIED',
+      status: 'UNSPECIFIED',
       type: 'APPOINTMENT',
     });
   };
@@ -550,7 +550,7 @@ class Booking extends PureComponent {
             <div className={s.goBack}>
               {isProfile && (
                 <IconButton color="inherit" onClick={this.goProfile}>
-                  <Person />
+                  <AccountBox />
                 </IconButton>)}
               <IconButton color="inherit" onClick={this.goHome} aria-label="Close">
                 <Home />

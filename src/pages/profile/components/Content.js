@@ -10,30 +10,38 @@ import {
   Assessment,
 } from '@material-ui/icons';
 import { logout } from 'authentication/actions/logout';
-import EventList from 'pages/profile/appointmentDialog/Appointment';
+import { findEventByCustomerIdAction } from 'actionsReducers/common.actions';
+import { cancelEventById } from 'actionsReducers/profile.actions';
 import { PROFILE } from 'utils/constants';
 import WaitList from './WaitList';
 import Info from './Info';
 import Survey from './Survey';
+import EventList from '../appointmentDialog/Appointment';
 import s from './Content.module.scss';
 
 class Content extends Component {
   static getDerivedStateFromProps(props, state) {
+    console.log('get derived from props content', props);
+    console.log('get derived from state content', state);
     const {
       eventList,
       profilePage,
+      cancelEventByIdStatus,
     } = props;
     const {
       eventList: cachedEventList,
       profilePage: cachedProfilePage,
+      cancelEventByIdStatus: cachedCancelEventByIdStatus,
     } = state;
     if (
       eventList !== cachedEventList
       || (profilePage && profilePage !== cachedProfilePage)
+      || cancelEventByIdStatus !== cachedCancelEventByIdStatus
     ) {
       return {
         eventList,
         profilePage,
+        cancelEventByIdStatus,
       };
     }
     return null;
@@ -77,6 +85,25 @@ class Content extends Component {
   componentDidMount() {
     const { profilePage } = this.props;
     this.setState({ sidePanel: { [profilePage]: true } });
+  }
+
+  componentDidUpdate(prevProps) {
+    const {
+      findEventByCustomerIdAction: findEventByCustomerId,
+      cancelEventById: cancelEventByIdAction,
+      customerId,
+    } = this.props;
+    const {
+      cancelEventByIdStatus,
+    } = prevProps;
+    const {
+      cancelEventByIdStatus: cachedCancelEventByIdStatus,
+    } = this.state;
+    if (cancelEventByIdStatus !== cachedCancelEventByIdStatus && cachedCancelEventByIdStatus === 200) {
+      console.log('should update the event list', this.state);
+      findEventByCustomerId(customerId);
+      cancelEventByIdAction(null);
+    }
   }
 
   handleSignOut = () => {
@@ -182,6 +209,8 @@ Content.propTypes = {
   handleAccount: func.isRequired,
   updateProfileStatus: string.isRequired,
   profilePage: string.isRequired,
+  findEventByCustomerIdAction: func.isRequired,
+  cancelEventById: func.isRequired,
 };
 
 Content.defaultProps = {
@@ -195,4 +224,6 @@ const mapStateToProps = state => ({
 
 export default connect(mapStateToProps, {
   logoutAction: logout,
+  findEventByCustomerIdAction,
+  cancelEventById,
 })(Content);

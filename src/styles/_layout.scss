@@ -96,6 +96,14 @@
   color: $we_peep;
 }
 
+.bg-danger {
+  background: $danger;
+}
+
+.bg-success {
+  background: $fruitSalad;
+}
+
 .modal-wrapper {
   display: flex;
   justify-content: center;
@@ -140,6 +148,10 @@
   font-size: 62px;
 }
 
+.icon-lg {
+  font-size: 40px;
+}
+
 .icon-transparent {
   color: transparent;
 }
@@ -177,31 +189,6 @@
 .avatar-big64 {
   width: 64px;
   height: 64px;
-}
-
-.verification-modal {
-  max-width: 1rem * 24;
-  min-width: 1rem * 23;
-  display: flex;
-  padding: (1rem * 1.5) 1rem;
-  &-logo {
-    margin: auto 1rem auto 0;
-  }
-  &-avatar {
-    width: 1rem * 4;
-    height: 1rem * 4;
-  }
-  &-content {
-    padding-left: 1rem;
-    border-left-width: 4px;
-    border-left-style: solid;
-    border-image:
-      linear-gradient(
-          to bottom,
-          $primary,
-          rgba(0, 0, 0, 0)
-      ) 1 100%;
-  }
 }
 
 .form-control-holder {
@@ -389,4 +376,23 @@
 
 .z-index-high {
   z-index: 1000;
+}
+
+.trackingList {
+  position: absolute;
+  top: $app-bar-height;
+  left: 0;
+  height: calc(100vh - 4rem);
+  width: 100vw;
+  background: rgba($main_03, 0.7);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.trackingContent {
+  margin: 1rem;
+  background: $main_03;
+  height: 100%;
 }

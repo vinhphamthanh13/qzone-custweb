@@ -4,21 +4,34 @@ import {
   func,
   bool,
 } from 'prop-types';
-import { classesType } from 'types/global';
 import {
-  Modal, Typography, Button, Avatar,
+  Cancel,
+  CheckCircle,
+} from '@material-ui/icons';
+import {
+  Modal,
+  Typography,
+  IconButton,
+  Button,
+  Avatar,
 } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
-import withStyles from '@material-ui/core/styles/withStyles';
 import { noop } from 'lodash';
 import logo from 'images/logo.png';
-import s from './ModalStyle';
+import s from './CustomModal.module.scss';
 
 const CustomModal = (props) => {
   const {
-    classes, message, title, isOpen, onClose, type,
-    okText, okCallBack, cancelText, cancelCallBack,
-    className, isBackDropClickDisabled,
+    message,
+    title,
+    isOpen,
+    onClose,
+    type,
+    okText,
+    okCallBack,
+    cancelCallBack,
+    className,
+    isBackDropClickDisabled,
   } = props;
   const headingColor = type === 'error' ? 'secondary' : 'primary';
   return (
@@ -26,14 +39,14 @@ const CustomModal = (props) => {
       open={isOpen}
       onClose={onClose}
       disableBackdropClick={isBackDropClickDisabled}
-      className={`${classes.modalRoot} ${className}`}
+      className={`${s.modalRoot} ${className}`}
     >
-      <Paper className="verification-modal">
-        <div className="verification-modal-logo">
-          <Avatar className="verification-modal-avatar" src={logo} />
+      <Paper className={s.wrapper}>
+        <div className={s.wrapperLogo}>
+          <Avatar className={s.wrapperAvatar} src={logo} />
         </div>
-        <div className="verification-modal-content">
-          <Typography className="text-capitalize text-bold" variant="title" color={headingColor}>
+        <div className={s.content}>
+          <Typography className={`text-capitalize text-bold ${s.titleMessage}`} variant="title" color={headingColor}>
             {title}
           </Typography>
           <Typography
@@ -44,24 +57,25 @@ const CustomModal = (props) => {
           }
           </Typography>
           {(okCallBack || cancelCallBack) && (
-            <div className={classes.modalActions}>
+            <div className={s.modalActions}>
               {cancelCallBack && (
-                <Button
-                  classes={{ root: okCallBack ? classes.cancelButton : undefined }}
+                <IconButton
+                  className={s.cancelButton}
                   onClick={cancelCallBack}
-                  variant="outlined"
                 >
-                  {cancelText}
-                </Button>
+                  <Cancel color="inherit" className="icon-lg" />
+                </IconButton>
               )}
               {okCallBack
                 && (
                   <Button
                     fullWidth={!cancelCallBack}
                     variant="outlined"
-                    color="primary"
+                    color="inherit"
                     onClick={okCallBack}
+                    className={`main-button ${s.okButton}`}
                   >
+                    <CheckCircle color="inherit" className="icon-normal icon-in-button-left" />
                     {okText}
                   </Button>
                 )}
@@ -73,8 +87,7 @@ const CustomModal = (props) => {
 };
 
 CustomModal.propTypes = {
-  classes: classesType.isRequired,
-  message: string.isRequired,
+  message: string,
   title: string.isRequired,
   isOpen: bool.isRequired,
   onClose: func,
@@ -82,7 +95,6 @@ CustomModal.propTypes = {
   okCallBack: func,
   okText: string,
   cancelCallBack: func,
-  cancelText: string,
   className: string,
   isBackDropClickDisabled: bool,
 };
@@ -92,9 +104,9 @@ CustomModal.defaultProps = {
   okCallBack: undefined,
   okText: 'Ok',
   cancelCallBack: undefined,
-  cancelText: 'Cancel',
   className: '',
   isBackDropClickDisabled: false,
+  message: 'Something wrong happening! Try again later',
 };
 
-export default withStyles(s)(CustomModal);
+export default CustomModal;

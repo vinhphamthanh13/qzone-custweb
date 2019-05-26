@@ -1,14 +1,35 @@
 @import "styles/_settings.scss";
 
 .appointmentCode {
-  margin: 1em auto;
-  padding: 1em 0;
+  margin: 0.2rem auto 0.5rem;
+  padding: 0.5rem 0;
   border-top: 2px solid rgba($grayNickel, 0.4);
   border-bottom: 2px solid rgba($grayNickel, 0.4);
 }
 
 .appointmentRemainedTime {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.eventStatus {
+  color: $main_01;
+  padding: 0.63rem;
+  background: $main_02;
+  border-top-right-radius: 0.3rem;
+  border-bottom-right-radius: 0.3rem;
+}
+
+.eventFullAddress{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.remainedDisplay {
+  display: flex;
+  justify-content: center;
   align-items: center;
 }
 
@@ -40,12 +61,18 @@
   font-weight: bolder;
 }
 
+.cardDetail {
+  color: $main_04;
+}
+
 .eventStatusComplete {
-  background: linear-gradient(to right, $mako, $white);
+  background: $main_04;
+  border-radius: 0.3rem;
 }
 
 .eventStatusWaiting {
-  background: linear-gradient(to right, $malibu, $white);
+  background: $main;
+  border-radius: 0.28rem;
 }
 
 .eventStatusCountDown {
@@ -57,6 +84,7 @@
   display: flex;
   justify-content: center;
   text-align: center;
+  margin-bottom: 0.7rem;
 }
 
 .ratingInner {
@@ -92,4 +120,25 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: $main;
+}
+
+.cancelEvent {
+  color: $main_01;
+  border-radius: unset;
+  border: unset;
+  &:hover {
+    background: $main_02;
+    color: $main;
+  }
+}
+
+.cancelEventHidden {
+  color: transparent !important;
+  background: transparent !important;
+  border: unset !important;
+  &:hover {
+    cursor: unset;
+    background: transparent;
+  }
 }

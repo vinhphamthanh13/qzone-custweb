@@ -10,8 +10,8 @@ import { connect } from 'react-redux';
 import { get } from 'lodash';
 import moment from 'moment';
 import {
-  IconButton,
   Typography,
+  Button,
 } from '@material-ui/core';
 import { VerticalTimelineElement } from 'react-vertical-timeline-component';
 import {
@@ -22,16 +22,19 @@ import {
   Reorder,
   AlarmAdd,
   NotInterested,
-  DoneAll,
+  AssignmentLate,
   Update,
   Timer,
-  PersonPin,
+  LocationOn,
   Public,
+  Cancel,
 } from '@material-ui/icons';
 import RateStar from 'components/Rating/RateStar';
 import MapDialog from 'components/Map/MapDialog';
 import { setRatingService } from 'actionsReducers/common.actions';
+import { cancelEventByIdAction } from 'actionsReducers/profile.actions';
 import Rating from 'material-ui-rating';
+import CustomModal from 'components/Modal/CustomModal';
 import s from './TimelineCard.module.scss';
 import CountDownDisplay from './CountDownDisplay';
 import { STATUS } from './Appointment.constants';
@@ -56,11 +59,13 @@ class TimelineCard extends Component {
     super(props);
     this.state = {
       isOpenMap: false,
+      isCancelEvent: false,
+      eventId: null,
     };
   }
 
   handleCustomerRating = (customerId, serviceProviderId) => (rating) => {
-    const { rateAppointmentAction } = this.props;
+    const { setRatingService: rateAppointmentAction } = this.props;
     rateAppointmentAction({
       customerId,
       serviceProviderId,
@@ -74,6 +79,23 @@ class TimelineCard extends Component {
     }));
   };
 
+  handleCancelEventConfirmation = (value, eventId) => () => {
+    this.setState({
+      isCancelEvent: value,
+      eventId,
+    });
+  };
+
+  handleCancelEventAction = () => {
+    const { cancelEventByIdAction: cancelEventById } = this.props;
+    const { eventId } = this.state;
+    this.handleCancelEventConfirmation(false)();
+    this.setState({
+      eventId: null,
+    });
+    cancelEventById(eventId);
+  };
+
   render() {
     const {
       bookingCode,
@@ -84,9 +106,12 @@ class TimelineCard extends Component {
       serviceName,
       timezone,
       geoLocation,
+      id,
+      status,
     } = this.props;
     const {
       isOpenMap,
+      isCancelEvent,
     } = this.state;
     const serviceProviderId = '//TODO';
     const providerRating = 5;
@@ -101,7 +126,7 @@ class TimelineCard extends Component {
         },
         <AlarmOff />,
         STATUS.EXPIRED,
-        <DoneAll className="icon-main danger-color" />,
+        <AssignmentLate className="icon-main danger-color" />,
         s.eventStatusComplete,
         <NotInterested className="icon-white" />,
       ] : [
@@ -126,9 +151,9 @@ class TimelineCard extends Component {
     if (remainTimeSec < -3600000) {
       displayTimeout = moment(bookedTime).fromNow(true);
     } else if (remainTimeSec > -36000000 && remainTimeSec < 0) {
-      displayTimeout = (
+      displayTimeout = status === STATUS.UNSPECIFIED ? (
         <CountDownDisplay startTime={remainTimeSec} serviceName={serviceName} providerName={providerName} />
-      );
+      ) : displayTimeout;
       currentEventStyle = {
         background: 'rgb(255, 95, 87)',
         color: '#fff',
@@ -151,9 +176,19 @@ class TimelineCard extends Component {
     const city = get(geoLocation, 'city');
     const country = get(geoLocation, 'country');
     const mapProvider = { geoLocation };
+    const eventExpired = eventStatus === STATUS.EXPIRED;
+    const statusStyle = status === STATUS.CANCELED ? 'bg-danger' : 'bg-success';
 
     return (
       <>
+        <CustomModal
+          message={`Are your sure to cancel this event? Code ${bookingCode.toUpperCase()}`}
+          title="Event Confirmation"
+          isOpen={isCancelEvent}
+          type="info"
+          cancelCallBack={this.handleCancelEventConfirmation(false)}
+          okCallBack={this.handleCancelEventAction}
+        />
         {isOpenMap && (
           <MapDialog
             toggle={this.handleToggleMap}
@@ -172,12 +207,17 @@ class TimelineCard extends Component {
               {streetAddress}
             </Typography>
           </div>
-          <div>
+          <div className={s.eventFullAddress}>
             <Typography variant="subtitle1" color="textSecondary" align="center">
               {district} {state} {postCode} - {city} {country}
             </Typography>
+            {!eventExpired && (
+              <Button color="inherit" className="simple-button" onClick={this.handleToggleMap}>
+                <LocationOn color="inherit" className="icon-main" />
+                View map
+              </Button>)}
           </div>
-          {currentEventStatus === STATUS.EXPIRED && (
+          {eventExpired && (
             <div className={s.ratingWrapper}>
               <div className={s.ratingInner}>
                 <Typography variant="subheading" classes={{ subheading: s.ratingText }}>
@@ -199,13 +239,9 @@ class TimelineCard extends Component {
               {bookingCode.toUpperCase()}
             </Typography>
           </div>
-          <div>
+          <div className={s.cardDetail}>
             <div className={s.serviceTitleMap}>
-              <Typography variant="title" color="textSecondary" noWrap>{serviceName}</Typography>
-              <IconButton className="button-sm simple-button" onClick={this.handleToggleMap}>
-                <PersonPin className="icon-main icon-shake icon-small danger-color" />
-                <Typography variant="caption" color="inherit" className="danger-color">View map</Typography>
-              </IconButton>
+              <Typography variant="title" color="inherit" className="text-bold" noWrap>{serviceName}</Typography>
             </div>
             <div className={s.providerRating}>
               <Typography
@@ -240,10 +276,32 @@ class TimelineCard extends Component {
             <Typography variant="subheading" className="danger-color">{currentEventStatus}</Typography>
           </div>
           <div className={`${s.appointmentRemainedTime} ${currentStyleStatus}`}>
-            {countDownPreIcon}
-            <Typography variant="subheading" classes={{ subheading: s.remainedText }}>
-              {displayTimeout}
-            </Typography>
+            <div className={s.remainedDisplay}>
+              {countDownPreIcon}
+              <Typography variant="subheading" classes={{ subheading: s.remainedText }}>
+                {displayTimeout}
+              </Typography>
+            </div>
+            {status === STATUS.UNSPECIFIED ? (
+              <Button
+                color="inherit"
+                variant="outlined"
+                className={!eventExpired ? s.cancelEvent : s.cancelEventHidden}
+                onClick={this.handleCancelEventConfirmation(true, id)}
+                disabled={eventExpired}
+              >
+                <Cancel color="inherit" className="icon-in-button-left" />
+                Cancel
+              </Button>
+            ) : (
+              <Typography
+                variant="subheading"
+                className={`${statusStyle} ${s.eventStatus} text-bold`}
+              >
+                {status}
+              </Typography>
+            )}
+            {}
           </div>
         </VerticalTimelineElement>
       </>
@@ -252,15 +310,18 @@ class TimelineCard extends Component {
 }
 
 TimelineCard.propTypes = {
+  id: string.isRequired,
   serviceName: string.isRequired,
   providerName: string.isRequired,
   providerStartSec: string.isRequired,
   timezone: string.isRequired,
   duration: number.isRequired,
   geoLocation: objectOf(any).isRequired,
-  rateAppointmentAction: func.isRequired,
+  setRatingService: func.isRequired,
   bookingCode: string.isRequired,
   customerId: string.isRequired,
+  cancelEventByIdAction: func.isRequired,
+  status: string.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -270,5 +331,6 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, {
-  rateAppointmentAction: setRatingService,
+  setRatingService,
+  cancelEventByIdAction,
 })(TimelineCard);
