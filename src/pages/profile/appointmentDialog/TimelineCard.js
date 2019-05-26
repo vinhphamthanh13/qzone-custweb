@@ -107,6 +107,7 @@ class TimelineCard extends Component {
       timezone,
       geoLocation,
       id,
+      status,
     } = this.props;
     const {
       isOpenMap,
@@ -150,9 +151,9 @@ class TimelineCard extends Component {
     if (remainTimeSec < -3600000) {
       displayTimeout = moment(bookedTime).fromNow(true);
     } else if (remainTimeSec > -36000000 && remainTimeSec < 0) {
-      displayTimeout = (
+      displayTimeout = status === STATUS.UNSPECIFIED ? (
         <CountDownDisplay startTime={remainTimeSec} serviceName={serviceName} providerName={providerName} />
-      );
+      ) : displayTimeout;
       currentEventStyle = {
         background: 'rgb(255, 95, 87)',
         color: '#fff',
@@ -176,6 +177,7 @@ class TimelineCard extends Component {
     const country = get(geoLocation, 'country');
     const mapProvider = { geoLocation };
     const eventExpired = eventStatus === STATUS.EXPIRED;
+    const statusStyle = status === STATUS.CANCELED ? 'bg-danger' : 'bg-success';
 
     return (
       <>
@@ -280,16 +282,26 @@ class TimelineCard extends Component {
                 {displayTimeout}
               </Typography>
             </div>
-            <Button
-              color="inherit"
-              variant="outlined"
-              className={!eventExpired ? s.cancelEvent : s.cancelEventHidden}
-              onClick={this.handleCancelEventConfirmation(true, id)}
-              disabled={eventExpired}
-            >
-              <Cancel color="inherit" className="icon-in-button-left" />
-              Cancel
-            </Button>
+            {status === STATUS.UNSPECIFIED ? (
+              <Button
+                color="inherit"
+                variant="outlined"
+                className={!eventExpired ? s.cancelEvent : s.cancelEventHidden}
+                onClick={this.handleCancelEventConfirmation(true, id)}
+                disabled={eventExpired}
+              >
+                <Cancel color="inherit" className="icon-in-button-left" />
+                Cancel
+              </Button>
+            ) : (
+              <Typography
+                variant="subheading"
+                className={`${statusStyle} ${s.eventStatus} text-bold`}
+              >
+                {status}
+              </Typography>
+            )}
+            {}
           </div>
         </VerticalTimelineElement>
       </>
@@ -309,6 +321,7 @@ TimelineCard.propTypes = {
   bookingCode: string.isRequired,
   customerId: string.isRequired,
   cancelEventByIdAction: func.isRequired,
+  status: string.isRequired,
 };
 
 const mapStateToProps = state => ({

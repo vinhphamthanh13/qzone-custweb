@@ -17,7 +17,6 @@ import WaitList from './WaitList';
 import Info from './Info';
 import Survey from './Survey';
 import EventList from '../appointmentDialog/Appointment';
-import { STATUS } from '../appointmentDialog/Appointment.constants';
 import s from './Content.module.scss';
 
 class Content extends Component {
@@ -39,9 +38,8 @@ class Content extends Component {
       || (profilePage && profilePage !== cachedProfilePage)
       || cancelEventByIdStatus !== cachedCancelEventByIdStatus
     ) {
-      const filterEventList = eventList && eventList.filter(item => item.status !== STATUS.CANCELED);
       return {
-        eventList: filterEventList,
+        eventList,
         profilePage,
         cancelEventByIdStatus,
       };

@@ -13,6 +13,14 @@
   justify-content: space-between;
 }
 
+.eventStatus {
+  color: $main_01;
+  padding: 0.63rem;
+  background: $main_02;
+  border-top-right-radius: 0.3rem;
+  border-bottom-right-radius: 0.3rem;
+}
+
 .eventFullAddress{
   display: flex;
   flex-direction: column;

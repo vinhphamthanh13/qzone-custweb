@@ -3,4 +3,6 @@ export const STATUS = {
   COMING: 'Coming Soon',
   EXPIRED: 'Expired',
   CANCELED: 'CANCELED',
+  COMPLETED: 'COMPLETED',
+  UNSPECIFIED: 'UNSPECIFIED',
 };
