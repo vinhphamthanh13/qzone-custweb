@@ -32,6 +32,7 @@ import {
 import RateStar from 'components/Rating/RateStar';
 import MapDialog from 'components/Map/MapDialog';
 import { setRatingService } from 'actionsReducers/common.actions';
+import { cancelEventByIdAction } from 'actionsReducers/profile.actions';
 import Rating from 'material-ui-rating';
 import CustomModal from 'components/Modal/CustomModal';
 import s from './TimelineCard.module.scss';
@@ -59,11 +60,12 @@ class TimelineCard extends Component {
     this.state = {
       isOpenMap: false,
       isCancelEvent: false,
+      eventId: null,
     };
   }
 
   handleCustomerRating = (customerId, serviceProviderId) => (rating) => {
-    const { rateAppointmentAction } = this.props;
+    const { setRatingService: rateAppointmentAction } = this.props;
     rateAppointmentAction({
       customerId,
       serviceProviderId,
@@ -77,14 +79,21 @@ class TimelineCard extends Component {
     }));
   };
 
-  handleCancelEventConfirmation = value => () => {
+  handleCancelEventConfirmation = (value, eventId) => () => {
     this.setState({
       isCancelEvent: value,
+      eventId,
     });
   };
 
   handleCancelEventAction = () => {
+    const { cancelEventByIdAction: cancelEventById } = this.props;
+    const { eventId } = this.state;
     this.handleCancelEventConfirmation(false)();
+    this.setState({
+      eventId: null,
+    });
+    cancelEventById(eventId);
   };
 
   render() {
@@ -97,6 +106,7 @@ class TimelineCard extends Component {
       serviceName,
       timezone,
       geoLocation,
+      id,
     } = this.props;
     const {
       isOpenMap,
@@ -274,7 +284,7 @@ class TimelineCard extends Component {
               color="inherit"
               variant="outlined"
               className={!eventExpired ? s.cancelEvent : s.cancelEventHidden}
-              onClick={this.handleCancelEventConfirmation(true)}
+              onClick={this.handleCancelEventConfirmation(true, id)}
               disabled={eventExpired}
             >
               <Cancel color="inherit" className="icon-in-button-left" />
@@ -288,15 +298,17 @@ class TimelineCard extends Component {
 }
 
 TimelineCard.propTypes = {
+  id: string.isRequired,
   serviceName: string.isRequired,
   providerName: string.isRequired,
   providerStartSec: string.isRequired,
   timezone: string.isRequired,
   duration: number.isRequired,
   geoLocation: objectOf(any).isRequired,
-  rateAppointmentAction: func.isRequired,
+  setRatingService: func.isRequired,
   bookingCode: string.isRequired,
   customerId: string.isRequired,
+  cancelEventByIdAction: func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -306,5 +318,6 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, {
-  rateAppointmentAction: setRatingService,
+  setRatingService,
+  cancelEventByIdAction,
 })(TimelineCard);

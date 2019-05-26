@@ -1,6 +1,7 @@
 import {
   setLoading,
   setError,
+  setSucceed,
 } from 'actionsReducers/common.actions';
 import { handleRequest } from 'utils/apiHelpers';
 import {
@@ -51,6 +52,7 @@ export const cancelEventByIdAction = data => async (dispatch) => {
     dispatch(setError(error));
   } else {
     dispatch(cancelEventById(canceledResult));
+    dispatch(setSucceed('Your cancellation is completed!'));
   }
   dispatch(setLoading(false));
 };

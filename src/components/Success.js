@@ -23,8 +23,9 @@ const Success = (props) => {
       title="Success!"
       message={succeedMessage}
       isOpen
-      onClose={resetModalStatusAction}
+      cancelCallBack={resetModalStatusAction}
       className="z-index-highest"
+      isBackDropClickDisabled
     />
   ) : null;
 };
