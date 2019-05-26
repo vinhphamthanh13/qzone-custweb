@@ -11,6 +11,7 @@ import provider from 'actionsReducers/provider.reducer';
 import profile from 'actionsReducers/profile.reducer';
 import waitLists from 'actionsReducers/waitlist.reducer';
 import organization from 'actionsReducers/organization.reducer';
+import customer from 'actionsReducers/customer.reducer';
 
 import { loadSessionToState } from 'authentication/actions/session';
 import { getUserDetail } from 'authentication/actions/login';
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   provider,
   waitLists,
   profile,
+  customer,
 });
 
 const store = createStore(

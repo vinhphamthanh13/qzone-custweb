@@ -12,6 +12,7 @@ import moment from 'moment';
 import {
   noop,
   get,
+  compact,
 } from 'lodash';
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -30,8 +31,10 @@ import {
   Notifications as NotificationsIcon,
   Fingerprint,
   FindInPage,
+  Assignment,
 } from '@material-ui/icons';
 import { findEventByCustomerIdAction } from 'actionsReducers/common.actions';
+import { trackingAppointmentByIdsAction } from 'actionsReducers/customer.actions';
 import { history } from 'containers/App';
 import { AUTHENTICATED_KEY, PROFILE } from 'utils/constants';
 import logo from 'images/quezone-logo.png';
@@ -43,18 +46,27 @@ class MainAppBar extends React.Component {
     const {
       eventList,
       loginSession,
+      trackingAppointmentById,
     } = props;
     const {
       eventList: cachedEventList,
       loginSession: cachedLoginSession,
+      trackingAppointmentById: cachedTrackingAppointmentById,
     } = state;
     if (
       eventList !== cachedEventList
       || loginSession !== cachedLoginSession
+      || trackingAppointmentById !== cachedTrackingAppointmentById
     ) {
+      const eventListIds = eventList && eventList.map(item => item.id);
+      const trackingCount = (
+        trackingAppointmentById && trackingAppointmentById.filter(item => item && item.confirmedTime)) || [];
       return {
         eventList,
         loginSession,
+        eventListIds,
+        trackingAppointmentById: compact(trackingAppointmentById),
+        trackingCount,
       };
     }
     return null;
@@ -64,7 +76,11 @@ class MainAppBar extends React.Component {
     super(props);
     this.state = {
       eventList: null,
+      eventListIds: null,
       loginSession: null,
+      trackingCount: 0,
+      trackingAppointmentById: null,
+      isShowingTrackingList: false,
     };
   }
 
@@ -80,14 +96,25 @@ class MainAppBar extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     const {
       loginSession,
     } = prevProps;
     const {
       loginSession: updatedLoginSession,
       findEventByCustomerIdAction: findEventByCustomerId,
+      trackingAppointmentByIdsAction: trackingAppointmentByIds,
     } = this.props;
+    const {
+      eventListIds,
+    } = prevState;
+    const {
+      eventListIds: cachedEventListId,
+    } = this.state;
+
+    const trackingLength = eventListIds && eventListIds.length;
+    const cachedTrackingLength = cachedEventListId && cachedEventListId.length;
+
     if (
       loginSession !== updatedLoginSession
     ) {
@@ -95,6 +122,10 @@ class MainAppBar extends React.Component {
       if (id) {
         findEventByCustomerId(updatedLoginSession.id);
       }
+    }
+
+    if (trackingLength !== cachedTrackingLength) {
+      trackingAppointmentByIds(cachedEventListId);
     }
   }
 
@@ -117,6 +148,12 @@ class MainAppBar extends React.Component {
     history.push(`/profile/${loginSession.id}`);
   };
 
+  toggleTrackingList = () => {
+    this.setState(oldState => ({
+      isShowingTrackingList: !oldState.isShowingTrackingList,
+    }));
+  };
+
   render() {
     const {
       classes,
@@ -127,6 +164,9 @@ class MainAppBar extends React.Component {
     const {
       eventList,
       loginSession,
+      trackingCount,
+      trackingAppointmentById,
+      isShowingTrackingList,
     } = this.state;
     const currentTime = moment.now();
     const eventCount = eventList
@@ -136,6 +176,22 @@ class MainAppBar extends React.Component {
     const [authLabel, openForm] = maintenance ? ['Sign Up', 'isRegisterOpen'] : ['Sign In', 'isLoginOpen'];
     const customUser = isAuthenticated ? (
       <>
+        {false && isShowingTrackingList && (
+          <div className="trackingList">
+            <div className="trackingContent">
+              <div className="trackingTitle">
+                <Typography variant="title" color="inherit" className="text-bold">
+                  Tracking Event
+                </Typography>
+              </div>
+              {trackingAppointmentById.map(item => (
+                <div className="trackingItem">
+                  {item.id}
+                </div>))
+              }
+            </div>
+          </div>
+        )}
         <Typography
           aria-haspopup="true"
           color="inherit"
@@ -144,6 +200,14 @@ class MainAppBar extends React.Component {
         >
           Hello {loginSession.username}!
         </Typography>
+        <Badge
+          onClick={this.toggleTrackingList}
+          badgeContent={trackingCount}
+          color="secondary"
+          className={badgeStyle}
+        >
+          <Assignment />
+        </Badge>
         <Badge
           onClick={eventCount > 0 ? this.navigatingProfile(PROFILE.PAGE.EVENT_LIST) : noop}
           badgeContent={eventCount}
@@ -233,6 +297,7 @@ MainAppBar.propTypes = {
   handleAdvancedSearch: func.isRequired,
   maintenance: bool.isRequired,
   goProfilePage: func.isRequired,
+  trackingAppointmentByIdsAction: func.isRequired,
 };
 
 MainAppBar.defaultProps = {
@@ -244,12 +309,14 @@ const mapStateToProps = state => ({
   ...state.common,
   ...state.auth,
   ...state.home,
+  ...state.customer,
 });
 
 export default compose(
   connect(mapStateToProps, {
     findEventByCustomerIdAction,
     goProfilePage,
+    trackingAppointmentByIdsAction,
   }),
   withStyles(styles),
 )(MainAppBar);

@@ -25,3 +25,5 @@ export const handleRequest = async (requestFunc, args, defaultResponse) => {
     ];
   }
 };
+
+export const handleResponseBulk = response => (Array.isArray(response) ? response.map(item => item.data.object) : []);
