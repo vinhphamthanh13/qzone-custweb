@@ -133,8 +133,8 @@ class Content extends Component {
     return this.SIDE_PANEL.map((panel) => {
       const { sidePanel } = this.state;
       const onClick = this.handleSelectSideMenu(panel);
-      const [className, textColor] = sidePanel[panel.name]
-        ? [`${s.item} ${s.selected}`, 'textPrimary'] : [`${s.item}`, 'textSecondary'];
+      const className = sidePanel[panel.name]
+        ? `${s.item} ${s.selected}` : s.item;
       const props = {
         onClick,
         className,
@@ -142,11 +142,15 @@ class Content extends Component {
       return (
         <div {...props} key={panel.name}>
           <panel.icon className="main-color qz-icon-padding-small" />
-          <Typography variant="subheading" color={textColor}>
-            {panel.text}{' '}
-            {panel.name === PROFILE.PAGE.EVENT_LIST ? `(${(eventList && eventList.length) || 0})` : null}
-            {panel.name === PROFILE.PAGE.WAIT_LIST ? `(${(waitLists && waitLists.length) || 0})` : null}
-          </Typography>
+          <div className={s.itemCount}>
+            <Typography variant="subheading" color="inherit">
+              {panel.text}
+            </Typography>
+            <Typography variant="subheading" color="inherit">
+              {panel.name === PROFILE.PAGE.EVENT_LIST ? `(${(eventList && eventList.length) || 0})` : null}
+              {panel.name === PROFILE.PAGE.WAIT_LIST ? `(${(waitLists && waitLists.length) || 0})` : null}
+            </Typography>
+          </div>
         </div>
       );
     });
