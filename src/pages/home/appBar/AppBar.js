@@ -14,6 +14,7 @@ import {
   get,
   compact,
 } from 'lodash';
+import uuidv1 from 'uuid/v1';
 import { withStyles } from '@material-ui/core/styles';
 import {
   AppBar,
@@ -59,14 +60,22 @@ class MainAppBar extends React.Component {
       || trackingAppointmentById !== cachedTrackingAppointmentById
     ) {
       const eventListIds = eventList && eventList.map(item => item.id);
-      const trackingCount = (
-        trackingAppointmentById && trackingAppointmentById.filter(item => item && item.confirmedTime)) || [];
+      const trackingCount = [];
+      if (eventList && eventList.length && trackingAppointmentById && compact(trackingAppointmentById).length) {
+        eventList
+          .map(event => trackingAppointmentById
+            .map(tracking => (tracking && event.id === tracking.eventId ? trackingCount.push({
+              ...event,
+              ...tracking,
+            }) : null)));
+      }
+
       return {
         eventList,
         loginSession,
         eventListIds,
         trackingAppointmentById: compact(trackingAppointmentById),
-        trackingCount,
+        trackingCount: trackingCount.filter(item => item && item.confirmedTime !== null),
       };
     }
     return null;
@@ -78,8 +87,8 @@ class MainAppBar extends React.Component {
       eventList: null,
       eventListIds: null,
       loginSession: null,
-      trackingCount: 0,
-      trackingAppointmentById: null,
+      trackingCount: [],
+      // trackingAppointmentById: null,
       isShowingTrackingList: false,
     };
   }
@@ -165,9 +174,9 @@ class MainAppBar extends React.Component {
       eventList,
       loginSession,
       trackingCount,
-      trackingAppointmentById,
       isShowingTrackingList,
     } = this.state;
+    console.log('tracking count ', trackingCount);
     const currentTime = moment.now();
     const eventCount = eventList
       && eventList.filter(event => moment(event.startSec * 1000) > currentTime).length;
@@ -176,7 +185,7 @@ class MainAppBar extends React.Component {
     const [authLabel, openForm] = maintenance ? ['Sign Up', 'isRegisterOpen'] : ['Sign In', 'isLoginOpen'];
     const customUser = isAuthenticated ? (
       <>
-        {false && isShowingTrackingList && (
+        {isShowingTrackingList && (
           <div className="trackingList">
             <div className="trackingContent">
               <div className="trackingTitle">
@@ -184,8 +193,8 @@ class MainAppBar extends React.Component {
                   Tracking Event
                 </Typography>
               </div>
-              {trackingAppointmentById.map(item => (
-                <div className="trackingItem">
+              {trackingCount.map(item => (
+                <div key={uuidv1()} className="trackingItem">
                   {item.id}
                 </div>))
               }
@@ -202,7 +211,7 @@ class MainAppBar extends React.Component {
         </Typography>
         <Badge
           onClick={this.toggleTrackingList}
-          badgeContent={trackingCount}
+          badgeContent={trackingCount && trackingCount.length}
           color="secondary"
           className={badgeStyle}
         >
