@@ -21,27 +21,29 @@ import s from './Content.module.scss';
 
 class Content extends Component {
   static getDerivedStateFromProps(props, state) {
-    console.log('get derived from props content', props);
-    console.log('get derived from state content', state);
     const {
       eventList,
       profilePage,
       cancelEventByIdStatus,
+      waitLists,
     } = props;
     const {
       eventList: cachedEventList,
       profilePage: cachedProfilePage,
       cancelEventByIdStatus: cachedCancelEventByIdStatus,
+      waitLists: cachedWaitLists,
     } = state;
     if (
       eventList !== cachedEventList
       || (profilePage && profilePage !== cachedProfilePage)
       || cancelEventByIdStatus !== cachedCancelEventByIdStatus
+      || waitLists !== cachedWaitLists
     ) {
       return {
         eventList,
         profilePage,
         cancelEventByIdStatus,
+        waitLists,
       };
     }
     return null;
@@ -78,6 +80,7 @@ class Content extends Component {
     super(props);
     this.state = {
       eventList: null,
+      waitLists: null,
       sidePanel: { ...this.initState },
     };
   }
@@ -100,7 +103,6 @@ class Content extends Component {
       cancelEventByIdStatus: cachedCancelEventByIdStatus,
     } = this.state;
     if (cancelEventByIdStatus !== cachedCancelEventByIdStatus && cachedCancelEventByIdStatus === 200) {
-      console.log('should update the event list', this.state);
       findEventByCustomerId(customerId);
       cancelEventByIdAction(null);
     }
@@ -123,7 +125,10 @@ class Content extends Component {
   };
 
   renderItems = () => {
-    const { eventList } = this.state;
+    const {
+      eventList,
+      waitLists,
+    } = this.state;
 
     return this.SIDE_PANEL.map((panel) => {
       const { sidePanel } = this.state;
@@ -140,6 +145,7 @@ class Content extends Component {
           <Typography variant="subheading" color={textColor}>
             {panel.text}{' '}
             {panel.name === PROFILE.PAGE.EVENT_LIST ? `(${(eventList && eventList.length) || 0})` : null}
+            {panel.name === PROFILE.PAGE.WAIT_LIST ? `(${(waitLists && waitLists.length) || 0})` : null}
           </Typography>
         </div>
       );
@@ -220,6 +226,7 @@ Content.defaultProps = {
 const mapStateToProps = state => ({
   ...state.common,
   ...state.profile,
+  ...state.waitLists,
 });
 
 export default connect(mapStateToProps, {

@@ -105,7 +105,6 @@ class WaitList extends Component {
       waitLists,
       serviceProviders,
     } = this.state;
-    console.log('waitlist State', this.state);
     return (
       <div className={s.waitList}>
         {waitLists && waitLists.length > 0
