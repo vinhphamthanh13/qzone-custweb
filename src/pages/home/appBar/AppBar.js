@@ -33,11 +33,17 @@ import {
   Fingerprint,
   FindInPage,
   Assignment,
+  Cancel,
 } from '@material-ui/icons';
 import { findEventByCustomerIdAction } from 'actionsReducers/common.actions';
 import { trackingAppointmentByIdsAction } from 'actionsReducers/customer.actions';
 import { history } from 'containers/App';
-import { AUTHENTICATED_KEY, PROFILE } from 'utils/constants';
+import {
+  AUTHENTICATED_KEY,
+  PROFILE,
+  defaultDateFormat,
+  timeSlotFormat,
+} from 'utils/constants';
 import logo from 'images/quezone-logo.png';
 import { goProfilePage } from 'actionsReducers/profile.actions';
 import styles from './AppBarStyle';
@@ -190,12 +196,36 @@ class MainAppBar extends React.Component {
             <div className="trackingContent">
               <div className="trackingTitle">
                 <Typography variant="title" color="inherit" className="text-bold">
-                  Tracking Event
+                  Tracking Events
                 </Typography>
+                <IconButton onClick={this.toggleTrackingList}>
+                  <Cancel color="inherit" className="icon-big" />
+                </IconButton>
               </div>
-              {trackingCount.map(item => (
+              {trackingCount.sort((a, b) => a.checkedInTime - b.checkedInTime).map(item => (
                 <div key={uuidv1()} className="trackingItem">
-                  {item.id}
+                  <div className="trackingItemTitle">
+                    <Typography variant="subheading" color="inherit" className="text-bold">
+                      {item.serviceName}
+                    </Typography>
+                  </div>
+                  <div className="trackingItemContent">
+                    <Typography variant="body1" color="inherit">
+                      Start: {moment(item.checkedInTime * 1000).format(`${defaultDateFormat} - ${timeSlotFormat}`)}
+                    </Typography>
+                    <Typography variant="body1" color="inherit">
+                      End: {moment(item.completedTime * 1000).format(`${defaultDateFormat} - ${timeSlotFormat}`)}
+                    </Typography>
+                    <Typography variant="body1" color="inherit" className="text-bold">
+                      Confirmed at: {moment(item.confirmedTime * 1000)
+                      .format(`${defaultDateFormat} - ${timeSlotFormat}`)}
+                    </Typography>
+                    <div className="trackingItemStatus">
+                      <Typography variant="subheading" className="text-bold">
+                        Status: {item.status}
+                      </Typography>
+                    </div>
+                  </div>
                 </div>))
               }
             </div>

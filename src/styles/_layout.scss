@@ -389,10 +389,39 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow: auto;
 }
 
 .trackingContent {
   margin: 1rem;
-  background: $main_03;
+  background: rgba($main_04, 0.7);
   height: 100%;
+  width: 100vw;
+  padding: 1rem;
+}
+
+.trackingTitle {
+  border-bottom: 2px solid $main_02;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.trackingItem {
+  border-bottom: 1px solid $main_02;
+  padding-bottom: 0.2rem;
+}
+
+.trackingItemTitle {
+  padding: 0.2rem 0;
+}
+
+.trackingItemContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.trackingItemStatus {
+  color: $main_01;
+  width: 100%;
 }
