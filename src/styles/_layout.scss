@@ -275,7 +275,7 @@
 }
 
 .qz-icon-padding-small {
-  margin: auto 5px auto 0;
+  margin: auto 0.5rem auto 0;
 }
 
 .copyright {
@@ -376,52 +376,4 @@
 
 .z-index-high {
   z-index: 1000;
-}
-
-.trackingList {
-  position: absolute;
-  top: $app-bar-height;
-  left: 0;
-  height: calc(100vh - 4rem);
-  width: 100vw;
-  background: rgba($main_03, 0.7);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  overflow: auto;
-}
-
-.trackingContent {
-  margin: 1rem;
-  background: rgba($main_04, 0.7);
-  height: 100%;
-  width: 100vw;
-  padding: 1rem;
-}
-
-.trackingTitle {
-  border-bottom: 2px solid $main_02;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.trackingItem {
-  border-bottom: 1px solid $main_02;
-  padding-bottom: 0.2rem;
-}
-
-.trackingItemTitle {
-  padding: 0.2rem 0;
-}
-
-.trackingItemContent {
-  display: flex;
-  flex-direction: column;
-}
-
-.trackingItemStatus {
-  color: $main_01;
-  width: 100%;
 }

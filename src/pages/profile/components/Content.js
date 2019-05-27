@@ -12,6 +12,7 @@ import {
 import { logout } from 'authentication/actions/logout';
 import { findEventByCustomerIdAction } from 'actionsReducers/common.actions';
 import { cancelEventById } from 'actionsReducers/profile.actions';
+import { trackingAppointmentByIdsAction } from 'actionsReducers/customer.actions';
 import { PROFILE } from 'utils/constants';
 import WaitList from './WaitList';
 import Info from './Info';
@@ -21,27 +22,32 @@ import s from './Content.module.scss';
 
 class Content extends Component {
   static getDerivedStateFromProps(props, state) {
-    console.log('get derived from props content', props);
-    console.log('get derived from state content', state);
     const {
       eventList,
       profilePage,
       cancelEventByIdStatus,
+      waitLists,
     } = props;
     const {
       eventList: cachedEventList,
       profilePage: cachedProfilePage,
       cancelEventByIdStatus: cachedCancelEventByIdStatus,
+      waitLists: cachedWaitLists,
     } = state;
     if (
       eventList !== cachedEventList
       || (profilePage && profilePage !== cachedProfilePage)
       || cancelEventByIdStatus !== cachedCancelEventByIdStatus
+      || waitLists !== cachedWaitLists
     ) {
+      const eventListIds = eventList && eventList.map(item => item.id);
+
       return {
         eventList,
+        eventListIds,
         profilePage,
         cancelEventByIdStatus,
+        waitLists,
       };
     }
     return null;
@@ -78,6 +84,7 @@ class Content extends Component {
     super(props);
     this.state = {
       eventList: null,
+      waitLists: null,
       sidePanel: { ...this.initState },
     };
   }
@@ -89,20 +96,31 @@ class Content extends Component {
 
   componentDidUpdate(prevProps) {
     const {
+      cancelEventByIdStatus,
+      eventList,
+    } = prevProps;
+    const {
       findEventByCustomerIdAction: findEventByCustomerId,
       cancelEventById: cancelEventByIdAction,
       customerId,
+      eventList: cachedEventList,
+      trackingAppointmentByIdsAction: trackingAppointmentByIds,
     } = this.props;
     const {
-      cancelEventByIdStatus,
-    } = prevProps;
-    const {
       cancelEventByIdStatus: cachedCancelEventByIdStatus,
+      eventListIds,
     } = this.state;
+
+    const trackingList = eventList && eventList.length;
+    const cachedTrackingList = cachedEventList && cachedEventList.length;
+
     if (cancelEventByIdStatus !== cachedCancelEventByIdStatus && cachedCancelEventByIdStatus === 200) {
-      console.log('should update the event list', this.state);
       findEventByCustomerId(customerId);
       cancelEventByIdAction(null);
+    }
+
+    if (trackingList !== cachedTrackingList) {
+      trackingAppointmentByIds(eventListIds);
     }
   }
 
@@ -123,13 +141,16 @@ class Content extends Component {
   };
 
   renderItems = () => {
-    const { eventList } = this.state;
+    const {
+      eventList,
+      waitLists,
+    } = this.state;
 
     return this.SIDE_PANEL.map((panel) => {
       const { sidePanel } = this.state;
       const onClick = this.handleSelectSideMenu(panel);
-      const [className, textColor] = sidePanel[panel.name]
-        ? [`${s.item} ${s.selected}`, 'textPrimary'] : [`${s.item}`, 'textSecondary'];
+      const className = sidePanel[panel.name]
+        ? `${s.item} ${s.selected}` : s.item;
       const props = {
         onClick,
         className,
@@ -137,10 +158,15 @@ class Content extends Component {
       return (
         <div {...props} key={panel.name}>
           <panel.icon className="main-color qz-icon-padding-small" />
-          <Typography variant="subheading" color={textColor}>
-            {panel.text}{' '}
-            {panel.name === PROFILE.PAGE.EVENT_LIST ? `(${(eventList && eventList.length) || 0})` : null}
-          </Typography>
+          <div className={s.itemCount}>
+            <Typography variant="subheading" color="inherit">
+              {panel.text}
+            </Typography>
+            <Typography variant="subheading" color="inherit">
+              {panel.name === PROFILE.PAGE.EVENT_LIST ? `(${(eventList && eventList.length) || 0})` : null}
+              {panel.name === PROFILE.PAGE.WAIT_LIST ? `(${(waitLists && waitLists.length) || 0})` : null}
+            </Typography>
+          </div>
         </div>
       );
     });
@@ -211,6 +237,7 @@ Content.propTypes = {
   profilePage: string.isRequired,
   findEventByCustomerIdAction: func.isRequired,
   cancelEventById: func.isRequired,
+  trackingAppointmentByIdsAction: func.isRequired,
 };
 
 Content.defaultProps = {
@@ -220,10 +247,12 @@ Content.defaultProps = {
 const mapStateToProps = state => ({
   ...state.common,
   ...state.profile,
+  ...state.waitLists,
 });
 
 export default connect(mapStateToProps, {
   logoutAction: logout,
   findEventByCustomerIdAction,
   cancelEventById,
+  trackingAppointmentByIdsAction,
 })(Content);

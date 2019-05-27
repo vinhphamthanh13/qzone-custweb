@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import EmptyItem from 'components/EmptyItem';
+import { Typography } from '@material-ui/core';
 import s from './Survey.module.scss';
 
 class Survey extends Component {
@@ -32,7 +33,13 @@ class Survey extends Component {
             <EmptyItem
               message="There is no Assessment in your list!"
             />)
-          : <div className={s.container}>Your survey list</div>
+          : (
+            <div className={s.container}>
+              <Typography variant="title" color="inherit" className="text-bold">
+                Survey List is under integration!
+              </Typography>
+            </div>
+          )
         }
       </>
     );
