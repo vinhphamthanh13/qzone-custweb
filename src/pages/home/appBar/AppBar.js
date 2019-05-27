@@ -14,7 +14,6 @@ import {
   get,
   compact,
 } from 'lodash';
-import uuidv1 from 'uuid/v1';
 import { withStyles } from '@material-ui/core/styles';
 import {
   AppBar,
@@ -33,7 +32,6 @@ import {
   Fingerprint,
   FindInPage,
   Assignment,
-  Cancel,
 } from '@material-ui/icons';
 import { findEventByCustomerIdAction } from 'actionsReducers/common.actions';
 import { trackingAppointmentByIdsAction } from 'actionsReducers/customer.actions';
@@ -41,11 +39,10 @@ import { history } from 'containers/App';
 import {
   AUTHENTICATED_KEY,
   PROFILE,
-  defaultDateFormat,
-  timeSlotFormat,
 } from 'utils/constants';
 import logo from 'images/quezone-logo.png';
 import { goProfilePage } from 'actionsReducers/profile.actions';
+import TrackingEvents from './TrackingEvents';
 import styles from './AppBarStyle';
 
 class MainAppBar extends React.Component {
@@ -66,22 +63,12 @@ class MainAppBar extends React.Component {
       || trackingAppointmentById !== cachedTrackingAppointmentById
     ) {
       const eventListIds = eventList && eventList.map(item => item.id);
-      const trackingCount = [];
-      if (eventList && eventList.length && trackingAppointmentById && compact(trackingAppointmentById).length) {
-        eventList
-          .map(event => trackingAppointmentById
-            .map(tracking => (tracking && event.id === tracking.eventId ? trackingCount.push({
-              ...event,
-              ...tracking,
-            }) : null)));
-      }
 
       return {
         eventList,
         loginSession,
         eventListIds,
         trackingAppointmentById: compact(trackingAppointmentById),
-        trackingCount: trackingCount.filter(item => item && item.confirmedTime !== null),
       };
     }
     return null;
@@ -93,8 +80,7 @@ class MainAppBar extends React.Component {
       eventList: null,
       eventListIds: null,
       loginSession: null,
-      trackingCount: [],
-      // trackingAppointmentById: null,
+      trackingAppointmentById: null,
       isShowingTrackingList: false,
     };
   }
@@ -179,10 +165,20 @@ class MainAppBar extends React.Component {
     const {
       eventList,
       loginSession,
-      trackingCount,
       isShowingTrackingList,
+      trackingAppointmentById,
     } = this.state;
-    console.log('tracking count ', trackingCount);
+    const trackingList = [];
+    if (eventList && eventList.length && trackingAppointmentById && compact(trackingAppointmentById).length) {
+      eventList
+        .map(event => trackingAppointmentById
+          .map(tracking => (tracking && event.id === tracking.eventId ? trackingList.push({
+            ...event,
+            ...tracking,
+          }) : null)));
+    }
+    const eventTracked = trackingList.filter(item => item && item.confirmedTime !== null);
+    console.log('tracking count ', trackingList);
     const currentTime = moment.now();
     const eventCount = eventList
       && eventList.filter(event => moment(event.startSec * 1000) > currentTime).length;
@@ -192,44 +188,10 @@ class MainAppBar extends React.Component {
     const customUser = isAuthenticated ? (
       <>
         {isShowingTrackingList && (
-          <div className="trackingList">
-            <div className="trackingContent">
-              <div className="trackingTitle">
-                <Typography variant="title" color="inherit" className="text-bold">
-                  Tracking Events
-                </Typography>
-                <IconButton onClick={this.toggleTrackingList}>
-                  <Cancel color="inherit" className="icon-big" />
-                </IconButton>
-              </div>
-              {trackingCount.sort((a, b) => a.checkedInTime - b.checkedInTime).map(item => (
-                <div key={uuidv1()} className="trackingItem">
-                  <div className="trackingItemTitle">
-                    <Typography variant="subheading" color="inherit" className="text-bold">
-                      {item.serviceName}
-                    </Typography>
-                  </div>
-                  <div className="trackingItemContent">
-                    <Typography variant="body1" color="inherit">
-                      Start: {moment(item.checkedInTime * 1000).format(`${defaultDateFormat} - ${timeSlotFormat}`)}
-                    </Typography>
-                    <Typography variant="body1" color="inherit">
-                      End: {moment(item.completedTime * 1000).format(`${defaultDateFormat} - ${timeSlotFormat}`)}
-                    </Typography>
-                    <Typography variant="body1" color="inherit" className="text-bold">
-                      Confirmed at: {moment(item.confirmedTime * 1000)
-                      .format(`${defaultDateFormat} - ${timeSlotFormat}`)}
-                    </Typography>
-                    <div className="trackingItemStatus">
-                      <Typography variant="subheading" className="text-bold">
-                        Status: {item.status}
-                      </Typography>
-                    </div>
-                  </div>
-                </div>))
-              }
-            </div>
-          </div>
+          <TrackingEvents
+            trackingList={eventTracked}
+            onClose={this.toggleTrackingList}
+          />
         )}
         <Typography
           aria-haspopup="true"
@@ -241,7 +203,7 @@ class MainAppBar extends React.Component {
         </Typography>
         <Badge
           onClick={this.toggleTrackingList}
-          badgeContent={trackingCount && trackingCount.length}
+          badgeContent={eventTracked && eventTracked.length}
           color="secondary"
           className={badgeStyle}
         >

@@ -1,0 +1,54 @@
+@import "styles/_settings.scss";
+
+.trackingList {
+  position: absolute;
+  top: $app-bar-height;
+  left: 0;
+  height: calc(100vh - 4rem);
+  width: 100vw;
+  background: rgba($main_03, 0.7);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.trackingContent {
+  background: rgba($main_04, 0.7);
+  height: 100%;
+  width: 100vw;
+  padding: 1rem;
+  overflow: auto;
+}
+
+.trackingTitle {
+  border-bottom: 2px solid $main_02;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.trackingItem {
+  width: 20rem;
+  border-bottom: 1px solid $main_02;
+  padding-bottom: 0.2rem;
+}
+
+.trackingItemTitle {
+  padding: 0.2rem 0;
+}
+
+.itemSchedule {
+  display: flex;
+  justify-content: space-between;
+}
+
+.trackingItemContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.trackingItemStatus {
+  color: $main_01;
+  width: 100%;
+}
