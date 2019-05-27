@@ -12,6 +12,7 @@ import {
 import { logout } from 'authentication/actions/logout';
 import { findEventByCustomerIdAction } from 'actionsReducers/common.actions';
 import { cancelEventById } from 'actionsReducers/profile.actions';
+import { trackingAppointmentByIdsAction } from 'actionsReducers/customer.actions';
 import { PROFILE } from 'utils/constants';
 import WaitList from './WaitList';
 import Info from './Info';
@@ -39,8 +40,11 @@ class Content extends Component {
       || cancelEventByIdStatus !== cachedCancelEventByIdStatus
       || waitLists !== cachedWaitLists
     ) {
+      const eventListIds = eventList && eventList.map(item => item.id);
+
       return {
         eventList,
+        eventListIds,
         profilePage,
         cancelEventByIdStatus,
         waitLists,
@@ -92,19 +96,31 @@ class Content extends Component {
 
   componentDidUpdate(prevProps) {
     const {
+      cancelEventByIdStatus,
+      eventList,
+    } = prevProps;
+    const {
       findEventByCustomerIdAction: findEventByCustomerId,
       cancelEventById: cancelEventByIdAction,
       customerId,
+      eventList: cachedEventList,
+      trackingAppointmentByIdsAction: trackingAppointmentByIds,
     } = this.props;
     const {
-      cancelEventByIdStatus,
-    } = prevProps;
-    const {
       cancelEventByIdStatus: cachedCancelEventByIdStatus,
+      eventListIds,
     } = this.state;
+
+    const trackingList = eventList && eventList.length;
+    const cachedTrackingList = cachedEventList && cachedEventList.length;
+
     if (cancelEventByIdStatus !== cachedCancelEventByIdStatus && cachedCancelEventByIdStatus === 200) {
       findEventByCustomerId(customerId);
       cancelEventByIdAction(null);
+    }
+
+    if (trackingList !== cachedTrackingList) {
+      trackingAppointmentByIds(eventListIds);
     }
   }
 
@@ -221,6 +237,7 @@ Content.propTypes = {
   profilePage: string.isRequired,
   findEventByCustomerIdAction: func.isRequired,
   cancelEventById: func.isRequired,
+  trackingAppointmentByIdsAction: func.isRequired,
 };
 
 Content.defaultProps = {
@@ -237,4 +254,5 @@ export default connect(mapStateToProps, {
   logoutAction: logout,
   findEventByCustomerIdAction,
   cancelEventById,
+  trackingAppointmentByIdsAction,
 })(Content);

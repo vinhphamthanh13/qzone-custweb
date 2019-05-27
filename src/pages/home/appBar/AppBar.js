@@ -111,6 +111,7 @@ class MainAppBar extends React.Component {
     } = prevState;
     const {
       eventListIds: cachedEventListId,
+      // trackingAppointmentById,
     } = this.state;
 
     const trackingLength = eventListIds && eventListIds.length;
@@ -125,6 +126,7 @@ class MainAppBar extends React.Component {
       }
     }
 
+    console.log('did update appbar', this.state);
     if (trackingLength !== cachedTrackingLength) {
       trackingAppointmentByIds(cachedEventListId);
     }
@@ -168,6 +170,7 @@ class MainAppBar extends React.Component {
       isShowingTrackingList,
       trackingAppointmentById,
     } = this.state;
+    console.log('appbar state', this.state);
     const trackingList = [];
     if (eventList && eventList.length && trackingAppointmentById && compact(trackingAppointmentById).length) {
       eventList

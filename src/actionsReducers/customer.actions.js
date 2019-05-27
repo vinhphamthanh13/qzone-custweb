@@ -19,7 +19,6 @@ export const trackingAppointmentByIdsAction = data => async (dispatch) => {
   if (error) {
     dispatch(setError(get(JSON.parse(error), 'response.data.message')));
   } else {
-    console.log('tracking result', trackingResult);
     dispatch(trackingAppointmentByIds(handleResponseBulk(trackingResult)));
   }
   dispatch(setLoading(false));
