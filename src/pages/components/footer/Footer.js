@@ -1,4 +1,5 @@
 import React from 'react';
+import { bool } from 'prop-types';
 import { Typography, Icon } from '@material-ui/core';
 import logo from 'images/quezone-logo.png';
 import s from './Footer.module.scss';
@@ -21,8 +22,8 @@ const following = [
   { name: 'instagram', icon: 'instagram' },
 ];
 
-const Footer = () => (
-  <div className={s.footer}>
+const Footer = props => (
+  <div className={props.maintenance ? `${s.footer} ${s.footerMaintenance}` : s.footer}>
     <div className={s.info}>
       <div className={s.infoDetail}>
         <Typography variant="subtitle1" color="primary">
@@ -74,5 +75,9 @@ const Footer = () => (
     </div>
   </div>
 );
+
+Footer.propTypes = {
+  maintenance: bool.isRequired,
+};
 
 export default Footer;

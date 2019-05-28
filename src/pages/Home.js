@@ -282,7 +282,7 @@ export class Home extends React.PureComponent {
                 </>
               )
             }
-            <Footer />
+            <Footer maintenance={systemMaintenance} />
           </Grid>
         </Grid>
       </>
