@@ -126,7 +126,6 @@ class MainAppBar extends React.Component {
       }
     }
 
-    console.log('did update appbar', this.state);
     if (trackingLength !== cachedTrackingLength) {
       trackingAppointmentByIds(cachedEventListId);
     }
@@ -181,7 +180,6 @@ class MainAppBar extends React.Component {
           }) : null)));
     }
     const eventTracked = trackingList.filter(item => item && item.confirmedTime !== null);
-    console.log('tracking count ', trackingList);
     const currentTime = moment.now();
     const eventCount = eventList
       && eventList.filter(event => moment(event.startSec * 1000) > currentTime).length;

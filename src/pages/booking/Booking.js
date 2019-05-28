@@ -309,9 +309,6 @@ class Booking extends PureComponent {
       history.push('/');
     }
 
-    console.log('component did update cachedWaitListRegistered', cachedWaitListRegistered);
-    console.log('component did update waitListRegistered', waitListRegistered);
-
     if (cachedWaitListRegistered && cachedWaitListRegistered !== waitListRegistered) {
       setErrorAction(cachedWaitListRegistered);
     }

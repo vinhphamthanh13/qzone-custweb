@@ -1,4 +1,5 @@
 import { get } from 'lodash';
+import moment from 'moment';
 import { handleRequest } from 'utils/apiHelpers';
 import {
   setLoading,
@@ -12,6 +13,10 @@ import {
   validateWaitListsBulk,
   waitListsById,
 } from 'actionsApi/waitlist';
+import {
+  defaultDateFormat,
+  regExPattern, timeSlotFormat,
+} from 'utils/constants';
 
 export const REGISTER_WAIT_LIST = 'BOOKING.REGISTER_WAIT_LIST';
 export const SET_WAIT_LIST = 'PROFILE.SET_WAIT_LIST';
@@ -56,9 +61,12 @@ export const registerWaitListsAction = data => async (dispatch) => {
     if (error) {
       dispatch(setRegisterWaitListStatus(error));
     } else {
-      console.log('enrolled', enrolled);
       dispatch(setRegisterWaitListStatus(null));
-      dispatch(setSucceed('Congratulation! Your waitlist is enrolled!'));
+      const enrolledDate = get(enrolled, 'sstartTime').replace(regExPattern.removedTimeZone, '');
+      dispatch(setSucceed(
+      // eslint-disable-next-line max-len
+        `Congratulation! You have been enrolled successfully on ${moment(enrolledDate).format(defaultDateFormat)} at ${moment(enrolledDate).format(timeSlotFormat)}!`,
+      ));
       dispatch(setLoading(false));
       return true;
     }
