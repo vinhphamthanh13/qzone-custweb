@@ -163,8 +163,8 @@ class Content extends Component {
               {panel.text}
             </Typography>
             <Typography variant="subheading" color="inherit">
-              {panel.name === PROFILE.PAGE.EVENT_LIST ? `(${(eventList && eventList.length) || 0})` : null}
-              {panel.name === PROFILE.PAGE.WAIT_LIST ? `(${(waitLists && waitLists.length) || 0})` : null}
+              {panel.name === PROFILE.PAGE.EVENT_LIST ? eventList && eventList.length : null}
+              {panel.name === PROFILE.PAGE.WAIT_LIST ? waitLists && waitLists.length : null}
             </Typography>
           </div>
         </div>

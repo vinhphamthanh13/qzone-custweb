@@ -191,7 +191,6 @@ class WaitListRegistration extends Component {
     const geoLocation = get(provider, 'geoLocation');
     const timezoneId = get(provider, 'timezoneId');
     const temporaryServiceIds = get(provider, 'temporaryServiceIds');
-    console.log('provider', provider);
     this.setState({
       providerName,
       geoLocation,
