@@ -62,10 +62,11 @@ export const registerWaitListsAction = data => async (dispatch) => {
       dispatch(setRegisterWaitListStatus(error));
     } else {
       dispatch(setRegisterWaitListStatus(null));
+      const timezoneId = get(enrolled, 'timezoneId');
       const enrolledDate = get(enrolled, 'sstartTime').replace(regExPattern.removedTimeZone, '');
       dispatch(setSucceed(
       // eslint-disable-next-line max-len
-        `Congratulation! You have been enrolled successfully on ${moment(enrolledDate).format(defaultDateFormat)} at ${moment(enrolledDate).format(timeSlotFormat)}!`,
+        `You have been enrolled the event on ${moment(enrolledDate).format(defaultDateFormat)} at ${moment(enrolledDate).format(timeSlotFormat)}! (${timezoneId})`,
       ));
       dispatch(setLoading(false));
       return true;
