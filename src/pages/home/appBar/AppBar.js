@@ -169,7 +169,6 @@ class MainAppBar extends React.Component {
       isShowingTrackingList,
       trackingAppointmentById,
     } = this.state;
-    console.log('appbar state', this.state);
     const trackingList = [];
     if (eventList && eventList.length && trackingAppointmentById && compact(trackingAppointmentById).length) {
       eventList

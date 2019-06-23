@@ -138,6 +138,15 @@ export const googleLogIn = () => (dispatch) => {
     );
 };
 
+// Facebook login
+export const facebookLogIn = () => (dispatch) => {
+  dispatch(setLoading(true));
+  setTimeout(() => {
+    alert('Login FaceBook');
+    dispatch(setLoading(false));
+  }, 3000);
+};
+
 // receive Push Notification
 export const storeFireBaseUserAction = async (data, dispatch) => {
   dispatch(setLoading(true));

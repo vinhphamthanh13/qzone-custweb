@@ -20,6 +20,7 @@ import {
   SET_USER_DETAILS, LOGOUT_ERROR_RST,
   FIRE_BASE_STORE_USER,
   AUTHENTICATED_KEY,
+  LOGIN_FACEBOOK_USER,
 } from './constants';
 
 const authInitialize = {
@@ -37,6 +38,7 @@ const authInitialize = {
   resetPasswordMessage: '',
   isLogoutError: false,
   firebaseUserStored: null,
+  facebookUser: null,
 };
 
 const auth = (state = authInitialize, action) => {
@@ -146,6 +148,11 @@ const auth = (state = authInitialize, action) => {
       return {
         ...state,
         firebaseUserStored: action.payload,
+      };
+    case LOGIN_FACEBOOK_USER:
+      return {
+        ...state,
+        facebookUser: action.payload,
       };
     default:
       return state;

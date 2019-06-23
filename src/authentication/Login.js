@@ -1,13 +1,19 @@
+/* eslint-disable no-undef, func-names */
 import React from 'react';
 import { string, bool, func } from 'prop-types';
 import { connect } from 'react-redux';
+import { get } from 'lodash';
 import CustomModal from 'components/Modal/CustomModal';
 import { Formik } from 'formik';
 import { resetModalStatus } from 'actionsReducers/common.actions';
-import { loginType } from 'utils/constants';
+import { loginType, FACEBOOK } from 'utils/constants';
+import {
+  FB_APP_ID,
+  FB_API_VERSION,
+} from 'config/auth';
 import Form from './components/Form';
 import {
-  login, createGoogleScript, googleLogIn,
+  login, createGoogleScript, googleLogIn, facebookLogIn,
 } from './actions/login';
 import { loginSchema } from './components/schemas';
 
@@ -19,9 +25,41 @@ class Login extends React.Component {
   componentDidMount() {
     const ga = window.gapi && window.gapi.auth2
       ? window.gapi.auth2.getAuthInstance() : null;
+
     if (!ga) {
       createGoogleScript();
     }
+
+    window.fbAsyncInit = () => {
+      FB.init({
+        appId: FB_APP_ID,
+        cookie: true,
+        xfbml: true,
+        version: FB_API_VERSION,
+      });
+
+      FB.AppEvents.logPageView();
+      FB.getLoginStatus((response) => {
+        const status = get(response, 'status');
+        const authResponse = get(response, 'authResponse');
+        console.log('facebook', authResponse);
+        if (status === FACEBOOK.STATUS.CONNECTED) {
+          // this.redirectToDashboard();
+          // this.handleFacebookUserData(authResponse);
+        }
+      });
+    };
+
+    (function (document, script, id) {
+      const fjs = document.getElementsByTagName(script)[0];
+      if (document.getElementById(id)) {
+        return;
+      }
+      const js = document.createElement(script);
+      js.id = id;
+      js.src = 'https://connect.facebook.net/en_US/sdk.js';
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
   }
 
   componentWillReceiveProps(nextProps) {
@@ -37,11 +75,15 @@ class Login extends React.Component {
 
   onLogin = (values, name) => {
     const {
-      logInAction, facebookSignInAction, googleLogInAction, isForgotPassword,
+      logInAction,
+      facebookLogIn: facebookLogInAction,
+      googleLogIn: googleLogInAction,
+      isForgotPassword,
     } = this.props;
+
     switch (name) {
       case loginType.FB:
-        facebookSignInAction();
+        facebookLogInAction();
         break;
       case loginType.GP:
         googleLogInAction();
@@ -109,9 +151,9 @@ class Login extends React.Component {
 }
 
 Login.propTypes = {
-  googleLogInAction: func.isRequired,
+  googleLogIn: func.isRequired,
   logInAction: func.isRequired,
-  facebookSignInAction: func.isRequired,
+  facebookLogIn: func.isRequired,
   onClose: func.isRequired,
   isOpen: bool,
   resetModalStatusAction: func.isRequired,
@@ -131,8 +173,8 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, {
-  googleLogInAction: googleLogIn,
-  facebookSignInAction: () => {},
+  googleLogIn,
+  facebookLogIn,
   logInAction: login,
   resetModalStatusAction: resetModalStatus,
 })(Login);

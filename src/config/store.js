@@ -2,6 +2,7 @@ import {
   createStore, applyMiddleware, compose, combineReducers,
 } from 'redux';
 import thunk from 'redux-thunk';
+import logger from 'redux-logger';
 import { AUTHENTICATED_KEY } from 'utils/constants';
 import auth from 'authentication/actions/reducer';
 import common from 'actionsReducers/common.reducer';
@@ -33,7 +34,7 @@ const rootReducer = combineReducers({
 const store = createStore(
   rootReducer,
   compose(
-    applyMiddleware(thunk),
+    applyMiddleware(thunk, logger),
     // eslint-disable-next-line no-underscore-dangle
     window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__() : f => f,
   ),

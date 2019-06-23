@@ -6,6 +6,14 @@ export const longDateFormat = 'dddd, DD MMMM YYYY';
 // Auth
 export const AUTHENTICATED_KEY = 'qz_token';
 
+// FaceBook
+export const FACEBOOK = {
+  STATUS: {
+    CONNECTED: 'connected',
+    NOT_AUTHORIZED: 'not_authorized',
+    UNKNOWN: 'unknown',
+  },
+};
 
 // Booking flow
 export const BOOKING = {

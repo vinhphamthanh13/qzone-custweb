@@ -5,7 +5,11 @@ export const GOOGLE_ID = '166981643559-r54fbu1evv6cpfpphqjtlo4j950vdmvn.apps.goo
 export const GOOGLE_GEO_API_KEY = 'AIzaSyATIXiytQDXMl_QyQWWD4t5L7JNgh6Eq_c';
 export const PROVIDER = {
   GOOGLE: 'google',
+  FACEBOOK: 'facebook',
 };
+export const FB_APP_ID = '458142654731250';
+export const FB_APP_SECRET = '17de2efb733e98dd23e680842bf44ec4';
+export const FB_API_VERSION = 'v3.3';
 
 export const AWS_CONFIG = {
   Auth: {
