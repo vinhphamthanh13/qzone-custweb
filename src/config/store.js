@@ -3,6 +3,9 @@ import {
 } from 'redux';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
+import { persistReducer, persistStore } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+
 import { AUTHENTICATED_KEY } from 'utils/constants';
 import auth from 'authentication/actions/reducer';
 import common from 'actionsReducers/common.reducer';
@@ -18,6 +21,11 @@ import { loadSessionToState } from 'authentication/actions/session';
 import { getUserDetail } from 'authentication/actions/login';
 import { loadSession } from './localStorage';
 
+const rootPersistConfig = {
+  key: 'qz_custweb',
+  storage,
+};
+
 const persistedSession = loadSession();
 const rootReducer = combineReducers({
   auth,
@@ -31,8 +39,10 @@ const rootReducer = combineReducers({
   customer,
 });
 
+const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
+
 const store = createStore(
-  rootReducer,
+  persistedReducer,
   compose(
     applyMiddleware(thunk, logger),
     // eslint-disable-next-line no-underscore-dangle
@@ -40,10 +50,12 @@ const store = createStore(
   ),
 );
 
+const persistor = persistStore(store);
+
 // loading session from local storage to redux store
 if (persistedSession && persistedSession[AUTHENTICATED_KEY]) {
   store.dispatch(getUserDetail(persistedSession.id));
   store.dispatch(loadSessionToState(persistedSession));
 }
 
-export default store;
+export default { store, persistor };

@@ -3,6 +3,7 @@ import { Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
 import rootRoutes from 'config/routing';
+import { PersistGate } from 'redux-persist/lib/integration/react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import JssProvider from 'react-jss/lib/JssProvider';
 import { create } from 'jss';
@@ -27,12 +28,14 @@ Amplify.configure(AWS_CONFIG);
 const App = () => (
   <JssProvider jss={jss} generateClassName={generateClassName}>
     <React.Fragment>
-      <Provider store={store}>
-        <Router history={history}>
-          <Switch>
-            {rootRoutes.map(route => (<Route key={route.name || route.path} {...route} />))}
-          </Switch>
-        </Router>
+      <Provider store={store.store}>
+        <PersistGate loading={null} persistor={store.persistor}>
+          <Router history={history}>
+            <Switch>
+              {rootRoutes.map(route => (<Route key={route.name || route.path} {...route} />))}
+            </Switch>
+          </Router>
+        </PersistGate>
       </Provider>
       <CssBaseline />
     </React.Fragment>
