@@ -5,6 +5,7 @@ import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import autoMergeLevel1 from 'redux-persist/es/stateReconciler/autoMergeLevel1';
 
 import { AUTHENTICATED_KEY } from 'utils/constants';
 import auth from 'authentication/actions/reducer';
@@ -16,6 +17,7 @@ import profile from 'actionsReducers/profile.reducer';
 import waitLists from 'actionsReducers/waitlist.reducer';
 import organization from 'actionsReducers/organization.reducer';
 import customer from 'actionsReducers/customer.reducer';
+import surveys from 'actionsReducers/surveys.reducer';
 
 import { loadSessionToState } from 'authentication/actions/session';
 import { getUserDetail } from 'authentication/actions/login';
@@ -24,6 +26,7 @@ import { loadSession } from './localStorage';
 const rootPersistConfig = {
   key: 'qz_custweb',
   storage,
+  stateReconciler: autoMergeLevel1,
 };
 
 const persistedSession = loadSession();
@@ -37,6 +40,7 @@ const rootReducer = combineReducers({
   waitLists,
   profile,
   customer,
+  surveys,
 });
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
