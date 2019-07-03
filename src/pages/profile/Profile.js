@@ -5,6 +5,8 @@ import {
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
+import moment from 'moment';
+import { logout } from 'authentication/actions/logout';
 import {
   postUpdatedProfile,
   updateProfileAction,
@@ -14,6 +16,7 @@ import {
   findEventByCustomerIdAction,
 } from 'actionsReducers/common.actions';
 import { history } from 'containers/App';
+import { AUTHENTICATED_KEY } from 'utils/constants';
 import CustomModal from 'components/Modal/CustomModal';
 import Header from './components/Header';
 import Content from './components/Content';
@@ -23,31 +26,33 @@ class Profile extends Component {
   static getDerivedStateFromProps(props, state) {
     const {
       userDetail,
+      loginSession,
       updateProfileStatus,
     } = props;
     const {
       userDetail: cachedUserDetail,
+      loginSession: cachedLoginSession,
       updateProfileStatus: cachedUpdateProfileStatus,
     } = state;
     if (
       userDetail !== cachedUserDetail
-    || updateProfileStatus !== cachedUpdateProfileStatus
+      || updateProfileStatus !== cachedUpdateProfileStatus
+      || loginSession !== cachedLoginSession
     ) {
       return {
         userDetail,
+        loginSession,
         updateProfileStatus,
       };
     }
     return null;
   }
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      userDetail: null,
-      isPopupWarning: '',
-    };
-  }
+  state = {
+    userDetail: null,
+    loginSession: null,
+    isPopupWarning: '',
+  };
 
   componentDidMount() {
     const {
@@ -58,6 +63,27 @@ class Profile extends Component {
     setServiceProviders();
     findEventByCustomerId(customerId);
   }
+
+  componentDidUpdate() {
+    const { loginSession } = this.state;
+    const expired = get(loginSession, 'expiration');
+    if (moment().isAfter(moment(expired))) {
+      this.handleLogout();
+    }
+  }
+
+  handleLogout = () => {
+    const { logout: logoutAction } = this.props;
+    const { loginSession } = this.state;
+    const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
+    const authProvider = get(loginSession, 'authProvider');
+
+    history.push('/');
+    logoutAction({
+      isAuthenticated,
+      authProvider,
+    });
+  };
 
   handleAccount = (data) => {
     const { postUpdatedProfile: postUpdatedProfileAction } = this.props;
@@ -119,6 +145,7 @@ class Profile extends Component {
                 onClose={this.goBooking}
                 handleAccount={this.handleAccount}
                 updateProfileStatus={updateProfileStatus}
+                handleLogout={this.handleLogout}
               />
             </div>
           </div>
@@ -135,6 +162,7 @@ Profile.propTypes = {
   updateProfileStatus: string,
   updateProfileAction: func.isRequired,
   findEventByCustomerIdAction: func.isRequired,
+  logout: func.isRequired,
 };
 
 Profile.defaultProps = {
@@ -152,4 +180,5 @@ export default connect(mapStateToProps, {
   updateProfileAction,
   setServiceProvidersAction,
   findEventByCustomerIdAction,
+  logout,
 })(Profile);

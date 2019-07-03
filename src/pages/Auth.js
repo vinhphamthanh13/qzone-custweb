@@ -5,7 +5,8 @@ import {
   string,
 } from 'prop-types';
 import { connect } from 'react-redux';
-import { noop, get } from 'lodash';
+import { get } from 'lodash';
+import moment from 'moment';
 import Register from 'authentication/Register';
 import Login from 'authentication/Login';
 import VerificationCode from 'authentication/components/VerificationCode';
@@ -18,7 +19,6 @@ import {
 import { login as autoLogin } from 'authentication/actions/login';
 import {
   SESSION,
-  AUTHENTICATED_KEY,
 } from 'utils/constants';
 
 class Auth extends Component {
@@ -31,15 +31,6 @@ class Auth extends Component {
       loginSession: cachedLoginSession,
       userDetail: cachedUserDetail,
     } = state;
-    let sessionLiveTime = null;
-    if (loginSession !== cachedLoginSession) {
-      const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
-      if (isAuthenticated) {
-        const startSession = get(loginSession, 'start_session');
-        const currentTime = new Date().getTime();
-        sessionLiveTime = currentTime - startSession;
-      }
-    }
     if (
       loginSession !== cachedLoginSession
       || userDetail !== cachedUserDetail
@@ -47,7 +38,6 @@ class Auth extends Component {
       return {
         loginSession,
         userDetail,
-        sessionLiveTime,
       };
     }
     return null;
@@ -57,37 +47,19 @@ class Auth extends Component {
     isSessionTimeout: false,
     loginSession: null,
     userDetail: null,
-    sessionLiveTime: null,
   };
 
   sessionTimeoutId = 0;
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate() {
     const {
       loginSession,
-      getSessionTimeoutId,
-    } = prevProps;
-    const {
-      loginSession: cachedLoginSession,
-      sessionLiveTime,
     } = this.state;
-    if (sessionLiveTime > SESSION.TIMEOUT) {
+    const expiration = get(loginSession, 'expiration');
+    if (moment().isAfter(moment(expiration))) {
       this.handleLogout();
     }
-    if (loginSession !== cachedLoginSession) {
-      this.sessionTimeoutId = setTimeout(this.endSession, SESSION.TIMEOUT);
-      getSessionTimeoutId(this.sessionTimeoutId);
-    }
   }
-
-  componentWillUnmount() {
-    clearTimeout(this.sessionTimeoutId);
-  }
-
-  endSession = () => {
-    this.handleLogout();
-    this.setState({ isSessionTimeout: true });
-  };
 
   handleReEnterVerificationCode = () => {
     const { reEnterVerificationCodeAction } = this.props;
@@ -118,8 +90,13 @@ class Auth extends Component {
 
   handleLogout = () => {
     const { logoutAction } = this.props;
-    clearTimeout(this.sessionTimeoutId);
-    logoutAction();
+    const { loginSession } = this.state;
+    const { isAuthenticated, authProvider } = loginSession;
+    this.setState({ isSessionTimeout: true });
+    logoutAction({
+      isAuthenticated,
+      authProvider,
+    });
   };
 
   handlePopupLogin = () => {
@@ -281,7 +258,6 @@ Auth.propTypes = {
   clearResetPasswordStatusAction: func.isRequired,
   autoLoginAction: func.isRequired,
   logoutAction: func.isRequired,
-  getSessionTimeoutId: func,
   isLogoutError: bool,
   logoutErrorMessage: string,
   clearLogoutErrorStatusAction: func.isRequired,
@@ -294,7 +270,6 @@ Auth.defaultProps = {
   resendVerificationCodeStatus: 'none',
   isLogoutError: false,
   logoutErrorMessage: '',
-  getSessionTimeoutId: noop,
 };
 
 const mapStateToProps = state => ({

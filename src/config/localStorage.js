@@ -20,22 +20,3 @@ export const saveSession = (session) => {
     // ignore when writing localStorage error
   }
 };
-
-// Caching data
-export const cacheData = (key, data) => {
-  try {
-    const serializeData = JSON.stringify(data);
-    localStorage.setItem(key, serializeData);
-  } catch (e) {
-    // ignore when writing localStorage error
-  }
-};
-
-export const getCachedData = (key) => {
-  try {
-    const cachedData = localStorage.getItem(key);
-    return JSON.parse(cachedData);
-  } catch (e) {
-    return undefined;
-  }
-};

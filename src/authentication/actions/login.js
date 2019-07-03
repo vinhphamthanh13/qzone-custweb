@@ -1,5 +1,6 @@
 import { Auth } from 'aws-amplify';
 import { get } from 'lodash';
+import moment from 'moment';
 import { GOOGLE_ID, AUTH_METHOD, PROVIDER } from 'config/auth';
 import { setError, setLoading } from 'actionsReducers/common.actions';
 import {
@@ -8,8 +9,6 @@ import {
   fetchUserDetail,
   firebaseStoreUser,
 } from 'actionsApi/auth';
-import { saveSession } from 'config/localStorage';
-// import { askForPermissionToReceiveNotifications } from 'utils/pushNotification';
 import { handleResponse, handleRequest } from 'utils/apiHelpers';
 import {
   STORE_USER_SESSION_LOGIN,
@@ -20,7 +19,7 @@ import {
 } from './constants';
 
 // Redux
-const storeUserSessionLogin = payload => ({
+export const storeUserSessionLogin = payload => ({
   type: STORE_USER_SESSION_LOGIN,
   payload,
 });
@@ -84,11 +83,12 @@ const getAWSCredentials = (googleUser, dispatch) => {
         socialLoginApi(socialAcc)
           .then((response) => {
             if (response && response.status === 200) {
+              console.log('loging custweb', response);
               const userDetail = handleResponse(response);
               const { sessionToken } = credentials;
               const session = {
-                provider: PROVIDER.GOOGLE,
-                start_session: new Date().getTime(),
+                authProvider: PROVIDER.GOOGLE,
+                start_session: moment().unix() * 1000,
                 id: userDetail.id,
                 username: name,
                 qz_token: sessionToken,
@@ -99,7 +99,7 @@ const getAWSCredentials = (googleUser, dispatch) => {
               dispatch(setLoading(false));
               dispatch(storeUserSessionLogin(session));
               dispatch(setUserDetails(userDetail));
-              saveSession(session);
+              // saveSession(session);
             }
           })
           .catch(() => {
@@ -177,13 +177,14 @@ export const login = (value) => {
                 if (response.data.object) {
                   const userDetail = handleResponse(response);
                   const session = {
+                    authProvider: PROVIDER.QUEZONE,
                     id: userDetail.id,
-                    start_session: new Date().getTime(),
+                    start_session: moment().unix() * 1000,
                     username: userDetail.givenName,
                     qz_token: jwtToken,
                     qz_refresh_token: token,
                     expiration: exp * 1000, // AWS exp counted in second
-                    isAuthenticated: get(response, `data.${AUTHENTICATED_KEY}`),
+                    isAuthenticated: !!get(response, 'data.object.userSub'),
                   };
                   // askFireBaseUserToken().then(userToken => storeFireBaseUserAction({
                   //   email,
@@ -191,7 +192,7 @@ export const login = (value) => {
                   // }, dispatch));
                   dispatch(storeUserSessionLogin(session));
                   dispatch(setUserDetails(userDetail));
-                  saveSession(session);
+                  // saveSession(session);
                 }
                 dispatch(setLoading(false));
               })

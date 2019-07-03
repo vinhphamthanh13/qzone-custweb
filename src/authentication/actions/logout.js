@@ -1,15 +1,14 @@
 // Logout
 
 import { Auth } from 'aws-amplify';
-import { saveSession, loadSession } from 'config/localStorage';
 import { setLoading } from 'actionsReducers/common.actions';
 import { AUTH_METHOD, PROVIDER } from 'config/auth';
 import {
   LOGOUT_ERROR,
   LOGOUT_SUCCESS,
   LOGOUT_ERROR_RST,
-  AUTHENTICATED_KEY,
 } from './constants';
+import { storeUserSessionLogin } from './login';
 
 const initSession = {};
 
@@ -29,25 +28,27 @@ const logoutError = payload => ({
   payload,
 });
 
-export const logout = () => (dispatch) => {
-  const currentSession = loadSession();
-  if (currentSession && currentSession[AUTHENTICATED_KEY]) {
-    const { provider } = currentSession;
+export const logout = authenticator => (dispatch) => {
+  const { isAuthenticated, authProvider } = authenticator;
+  console.log('logout dispatah huh??????');
+  if (isAuthenticated) {
     dispatch(setLoading(true));
-    if (provider && provider === PROVIDER.GOOGLE) {
+    if (authProvider && authProvider === PROVIDER.GOOGLE) {
       const ga = window.gapi[AUTH_METHOD].getAuthInstance();
       ga.signOut().then(() => {
         ga.disconnect();
         dispatch(logoutSuccess());
         dispatch(setLoading(false));
-        saveSession(initSession);
+        dispatch(storeUserSessionLogin(initSession));
+        // saveSession(initSession);
       });
     } else {
       Auth.signOut({ global: true })
         .then((data) => {
           dispatch(logoutSuccess(data));
           dispatch(setLoading(false));
-          saveSession(initSession);
+          dispatch(storeUserSessionLogin(initSession));
+          // saveSession(initSession);
         })
         .catch((error) => {
           dispatch(logoutError(error));

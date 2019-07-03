@@ -4,6 +4,12 @@ import { find } from 'lodash';
 import { connect } from 'react-redux';
 import EmptyItem from 'components/EmptyItem';
 import { Typography } from '@material-ui/core';
+import {
+  Edit,
+  Visibility,
+  Check,
+  NotInterested,
+} from '@material-ui/icons';
 import { setSurveys } from 'actionsReducers/surveys.action';
 import s from './Survey.module.scss';
 
@@ -49,7 +55,8 @@ class Survey extends Component {
     } = this.state;
     const custSurveys = [];
     eventList.map((event) => {
-      const targetSurvey = find(surveyList, event.id);
+      const targetSurvey = find(surveyList, survey => survey.tempServiceId === event.tempServiceId);
+      console.log('abcd', targetSurvey);
       if (targetSurvey) custSurveys.push(targetSurvey);
       return event;
     });
@@ -57,18 +64,44 @@ class Survey extends Component {
 
     return (
       <>
-        {surveyList && surveyList.length === 0
+        {surveyList && surveyList.length !== 0
           ? (
+            <div className={s.container}>
+              <Typography variant="title" color="inherit" className="text-bold">
+                Assessment of services
+              </Typography>
+              <div className={s.surveyList}>
+                {custSurveys.map((survey, index) => (
+                  <div key={survey.id} className={s.surveyItem}>
+                    <div className={s.surveyNo}>
+                      {index + 1}
+                    </div>
+                    <div className={s.surveyTitleAndDesc}>
+                      <div className={s.title}>
+                        {survey.title}
+                      </div>
+                      <div className={s.description}>
+                        <Typography color="inherit" noWrap>
+                          {survey.description}
+                        </Typography>
+                      </div>
+                    </div>
+                    <div className={s.action}>
+                      <Edit className="icon-small hover-pointer" />
+                      <Visibility className="icon-small hover-pointer" />
+                      <Check className="icon-small hover-pointer" />
+                      <NotInterested className="icon-small hover-pointer" />
+                    </div>
+                  </div>
+                ))}
+
+              </div>
+            </div>
+          )
+          : (
             <EmptyItem
               message="There is no Assessment in your list!"
             />)
-          : (
-            <div className={s.container}>
-              <Typography variant="title" color="inherit" className="text-bold">
-                Survey List is under integration!
-              </Typography>
-            </div>
-          )
         }
       </>
     );

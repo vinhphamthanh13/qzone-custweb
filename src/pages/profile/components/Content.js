@@ -9,7 +9,6 @@ import {
   AddToQueue,
   Assessment,
 } from '@material-ui/icons';
-import { logout } from 'authentication/actions/logout';
 import { findEventByCustomerIdAction } from 'actionsReducers/common.actions';
 import { cancelEventById } from 'actionsReducers/profile.actions';
 import { trackingAppointmentByIdsAction } from 'actionsReducers/customer.actions';
@@ -125,9 +124,9 @@ class Content extends Component {
   }
 
   handleSignOut = () => {
-    const { onClose, logoutAction } = this.props;
+    const { onClose, handleLogout } = this.props;
     onClose();
-    logoutAction();
+    handleLogout();
   };
 
   handleSelectSideMenu = panel => (event) => {
@@ -231,13 +230,13 @@ Content.propTypes = {
   customerId: string.isRequired,
   onClose: func.isRequired,
   givenName: string,
-  logoutAction: func.isRequired,
   handleAccount: func.isRequired,
   updateProfileStatus: string.isRequired,
   profilePage: string.isRequired,
   findEventByCustomerIdAction: func.isRequired,
   cancelEventById: func.isRequired,
   trackingAppointmentByIdsAction: func.isRequired,
+  handleLogout: func.isRequired,
 };
 
 Content.defaultProps = {
@@ -251,7 +250,6 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, {
-  logoutAction: logout,
   findEventByCustomerIdAction,
   cancelEventById,
   trackingAppointmentByIdsAction,

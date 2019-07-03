@@ -4,7 +4,7 @@ export const defaultDateFormat = 'DD MMMM YYYY';
 export const longDateFormat = 'dddd, DD MMMM YYYY';
 
 // Auth
-export const AUTHENTICATED_KEY = 'qz_token';
+export const AUTHENTICATED_KEY = 'isAuthenticated';
 
 // FaceBook
 export const FACEBOOK = {

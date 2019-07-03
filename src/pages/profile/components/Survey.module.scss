@@ -1,4 +1,4 @@
-@import "styles/_settings.scss";
+@import 'styles/_settings.scss';
 
 .container {
   margin: 1rem auto;
@@ -7,4 +7,43 @@
   display: flex;
   flex-direction: column;
   color: $main_04;
+}
+
+.surveyList {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0;
+}
+
+.surveyItem {
+  padding: 1rem;
+  border: 1px solid $main_03;
+  display: flex;
+  justify-content: space-between;
+}
+
+.surveyNo {
+  width: 1.5rem;
+  text-align: center;
+}
+
+.surveyTitleAndDesc {
+  color: $main_04;
+  width: 70%;
+  text-align: left;
+}
+
+.title {
+  font-weight: bold;
+}
+
+.description {
+  font-style: italic;
+  width: 100%;
+  color: $main_03;
+}
+
+.action {
+  display: flex;
+  align-items: center;
 }

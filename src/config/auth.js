@@ -6,6 +6,7 @@ export const GOOGLE_GEO_API_KEY = 'AIzaSyATIXiytQDXMl_QyQWWD4t5L7JNgh6Eq_c';
 export const PROVIDER = {
   GOOGLE: 'google',
   FACEBOOK: 'facebook',
+  QUEZONE: 'quezone',
 };
 export const FB_APP_ID = '458142654731250';
 export const FB_APP_SECRET = '17de2efb733e98dd23e680842bf44ec4';
