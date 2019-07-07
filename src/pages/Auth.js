@@ -92,7 +92,7 @@ class Auth extends Component {
     const { logoutAction } = this.props;
     const { loginSession } = this.state;
     const { isAuthenticated, authProvider } = loginSession;
-    this.setState({ isSessionTimeout: true });
+    // this.setState({ isSessionTimeout: true });
     logoutAction({
       isAuthenticated,
       authProvider,

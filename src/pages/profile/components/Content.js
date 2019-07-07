@@ -39,7 +39,7 @@ class Content extends Component {
       || cancelEventByIdStatus !== cachedCancelEventByIdStatus
       || waitLists !== cachedWaitLists
     ) {
-      const eventListIds = eventList && eventList.map(item => item.id);
+      const eventListIds = eventList && eventList.length && eventList.map(item => item.id);
 
       return {
         eventList,
@@ -206,7 +206,7 @@ class Content extends Component {
             </div>
           )
         }
-        {eventList && (
+        {eventList && eventList.length && (
           <div className={s.profilePage}>
             <EventList customerId={customerId} eventList={cachedEventList} />
           </div>)

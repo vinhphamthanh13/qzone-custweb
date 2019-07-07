@@ -29,8 +29,8 @@ const setServiceProviderNearBy = payload => ({
 export const setServiceCategoriesAction = () => async (dispatch) => {
   dispatch(setLoading(true));
   const [categoryList, error] = await handleRequest(serviceCategories, []);
-  if (error) {
-    dispatch(setError(error));
+  if ((categoryList && !categoryList.success) || error) {
+    dispatch(setError(categoryList.message || error));
   } else {
     dispatch(setServiceCategories(categoryList));
   }
@@ -40,8 +40,8 @@ export const setServiceCategoriesAction = () => async (dispatch) => {
 export const setServicesAction = () => async (dispatch) => {
   dispatch(setLoading(true));
   const [serviceList, error] = await handleRequest(services, []);
-  if (error) {
-    dispatch(setError(error));
+  if ((serviceList && !serviceList.success) || error) {
+    dispatch(setError(serviceList.message || error));
   } else {
     dispatch(setServices(serviceList));
   }
@@ -51,8 +51,8 @@ export const setServicesAction = () => async (dispatch) => {
 export const setServiceProviderNearByAction = data => async (dispatch) => {
   dispatch(setLoading(true));
   const [serviceProviderNearByList, error] = await handleRequest(serviceProvidersNearBy, [data]);
-  if (error) {
-    dispatch(setError(error));
+  if ((serviceProviderNearByList && !serviceProviderNearByList.success) || error) {
+    dispatch(setError(serviceProviderNearByList.message || error));
   } else {
     dispatch(setServiceProviderNearBy(serviceProviderNearByList));
   }

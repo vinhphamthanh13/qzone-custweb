@@ -24,8 +24,8 @@ const setProviderService = payload => ({
 export const setProviderDetailAction = id => async (dispatch) => {
   dispatch(setLoading(true));
   const [userDetail, error] = await handleRequest(users, [id]);
-  if (error) {
-    dispatch(setError(error));
+  if ((userDetail && !userDetail.success) || error) {
+    dispatch(setError(userDetail.message || error));
   } else {
     dispatch(setProviderDetail(userDetail));
   }
@@ -35,8 +35,8 @@ export const setProviderDetailAction = id => async (dispatch) => {
 export const setProviderServiceAction = id => async (dispatch) => {
   dispatch(setLoading(true));
   const [services, error] = await handleRequest(serviceByProviderId, [id]);
-  if (error) {
-    dispatch(setError(error));
+  if ((services && !services.success) || error) {
+    dispatch(setError(services.message || error));
   } else {
     dispatch(setProviderService(services));
   }

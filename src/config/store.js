@@ -27,6 +27,7 @@ const rootPersistConfig = {
   key: 'qz_custweb',
   storage,
   stateReconciler: autoMergeLevel1,
+  blacklist: ['common'],
 };
 
 // const persistedSession = loadSession();

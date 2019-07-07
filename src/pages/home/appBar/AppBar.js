@@ -62,7 +62,7 @@ class MainAppBar extends React.Component {
       || loginSession !== cachedLoginSession
       || trackingAppointmentById !== cachedTrackingAppointmentById
     ) {
-      const eventListIds = eventList && eventList.map(item => item.id);
+      const eventListIds = eventList && eventList.length && eventList.map(item => item.id);
 
       return {
         eventList,
@@ -111,7 +111,6 @@ class MainAppBar extends React.Component {
     } = prevState;
     const {
       eventListIds: cachedEventListId,
-      // trackingAppointmentById,
     } = this.state;
 
     const trackingLength = eventListIds && eventListIds.length;
@@ -180,7 +179,7 @@ class MainAppBar extends React.Component {
     }
     const eventTracked = trackingList.filter(item => item && item.confirmedTime !== null);
     const currentTime = moment.now();
-    const eventCount = eventList
+    const eventCount = eventList && eventList.length
       && eventList.filter(event => moment(event.startSec * 1000) > currentTime).length;
     const badgeStyle = eventCount > 0 ? 'text-margin-lr hover-pointer' : 'text-margin-lr';
     const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
@@ -210,7 +209,7 @@ class MainAppBar extends React.Component {
           <Assignment />
         </Badge>
         <Badge
-          onClick={eventCount > 0 ? this.navigatingProfile(PROFILE.PAGE.EVENT_LIST) : noop}
+          onClick={eventCount && eventCount > 0 ? this.navigatingProfile(PROFILE.PAGE.EVENT_LIST) : noop}
           badgeContent={eventCount}
           color="secondary"
           className={badgeStyle}

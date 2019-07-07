@@ -54,13 +54,12 @@ class Survey extends Component {
       eventList,
     } = this.state;
     const custSurveys = [];
-    eventList.map((event) => {
+    // eslint-disable-next-line
+    eventList && eventList.length && eventList.map((event) => {
       const targetSurvey = find(surveyList, survey => survey.tempServiceId === event.tempServiceId);
-      console.log('abcd', targetSurvey);
       if (targetSurvey) custSurveys.push(targetSurvey);
       return event;
     });
-    console.log('custsurvey', custSurveys);
 
     return (
       <>

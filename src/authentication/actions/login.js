@@ -151,8 +151,8 @@ export const facebookLogIn = () => (dispatch) => {
 export const storeFireBaseUserAction = async (data, dispatch) => {
   dispatch(setLoading(true));
   const [firebaseUserStored, error] = await handleRequest(firebaseStoreUser, [data]);
-  if (error) {
-    dispatch(setError(error));
+  if ((firebaseUserStored && !firebaseUserStored.success) || error) {
+    dispatch(setError(firebaseUserStored.message || error));
   } else {
     dispatch(storeFireBaseUser(firebaseUserStored || 'success'));
   }
@@ -216,6 +216,10 @@ export const login = (value) => {
 export const getUserDetail = userId => async (dispatch) => {
   dispatch(setLoading(true));
   const [userDetail] = await handleRequest(fetchUserDetail, [userId], [{}]);
-  dispatch(setUserDetails(userDetail));
+  if (userDetail && !userDetail.success) {
+    dispatch(setError(userDetail.message));
+  } else {
+    dispatch(setUserDetails(userDetail));
+  }
   dispatch(setLoading(false));
 };
