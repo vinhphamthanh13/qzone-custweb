@@ -63,7 +63,7 @@ const CustomModal = (props) => {
                   className={s.cancelButton}
                   onClick={cancelCallBack}
                 >
-                  <Cancel color="inherit" className="icon-lg" />
+                  <Cancel color="inherit" className="icon-big" />
                 </IconButton>
               )}
               {okCallBack

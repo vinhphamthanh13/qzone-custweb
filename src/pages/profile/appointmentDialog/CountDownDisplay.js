@@ -55,7 +55,7 @@ class CountDownDisplay extends Component {
           title="Coming Booking!"
           message={
             `Your booking for ${serviceName} is coming soon,\
-             please arrange your time to check in! ${moment(Math.abs(startCountDown)).format('m')} minutes to go.`
+             please arrange your time to check in. ${moment(Math.abs(startCountDown)).format('m')} minutes to go.`
           }
           cancelCallBack={this.handleCloseStartPopUp}
         />

@@ -83,8 +83,9 @@ const getAWSCredentials = (googleUser, dispatch) => {
         socialLoginApi(socialAcc)
           .then((response) => {
             if (response && response.status === 200) {
-              console.log('loging custweb', response);
-              const userDetail = handleResponse(response);
+              const resp = handleResponse(response);
+              const { objects, object } = resp;
+              const userDetail = objects || object;
               const { sessionToken } = credentials;
               const session = {
                 authProvider: PROVIDER.GOOGLE,
@@ -175,7 +176,9 @@ export const login = (value) => {
             loginApi({ email })
               .then((response) => {
                 if (response.data.object) {
-                  const userDetail = handleResponse(response);
+                  const resp = handleResponse(response);
+                  const { objects, object } = resp;
+                  const userDetail = objects || object;
                   const session = {
                     authProvider: PROVIDER.QUEZONE,
                     id: userDetail.id,
