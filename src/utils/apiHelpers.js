@@ -1,6 +1,7 @@
 export const handleResponse = (response, defaultResponse) => {
   if (response && response.status === 200) {
-    return response.data.objects || response.data.object || response.data;
+    console.log('response in handle response', response);
+    return response.data;
   }
   return defaultResponse;
 };
@@ -14,10 +15,22 @@ export const handleError = (response) => {
 
 export const handleRequest = async (requestFunc, args, defaultResponse) => {
   try {
-    return [
-      handleResponse(await requestFunc(...args), defaultResponse),
-      null,
-    ];
+    const resp = handleResponse(await requestFunc(...args), defaultResponse);
+    const {
+      success,
+      message,
+      objects,
+      object,
+    } = resp;
+    const resolvedResponse = objects || object;
+    if (success) {
+      return [
+        resolvedResponse,
+        null,
+      ];
+    }
+    console.info('HANDLE REQUEST API::', resp);
+    return [null, message];
   } catch (e) {
     return [
       null,

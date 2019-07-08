@@ -53,8 +53,8 @@ export const setRatingService = data => async (dispatch) => {
 export const findEventByCustomerIdAction = id => async (dispatch) => {
   dispatch(setLoading(true));
   const [eventList, error] = await handleRequest(findEventByCustomerId, [id]);
-  if ((eventList && !eventList.success) || error) {
-    dispatch(setError(eventList.message || error));
+  if (error) {
+    dispatch(setError(error));
   } else {
     dispatch(setEventByCustomerId(eventList));
   }

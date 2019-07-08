@@ -25,8 +25,8 @@ export const postUpdatedProfile = data => async (dispatch) => {
   dispatch(setLoading(true));
   const userSub = get(data, 'userSub');
   const [profileUpdated, error] = await handleRequest(updateProfile, [data]);
-  if ((profileUpdated && !profileUpdated.success) || error) {
-    dispatch(setError(profileUpdated.message || error));
+  if (error) {
+    dispatch(setError(error));
     dispatch(updateProfileAction('error'));
   } else {
     dispatch(updateProfileAction(profileUpdated || 'success'));
@@ -48,8 +48,8 @@ export const cancelEventById = payload => ({
 export const cancelEventByIdAction = data => async (dispatch) => {
   dispatch(setLoading(true));
   const [canceledResult, error] = await handleRequest(eventsCancelById, [data]);
-  if ((canceledResult && !canceledResult.success) || error) {
-    dispatch(setError(canceledResult.message || error));
+  if (error) {
+    dispatch(setError(error));
   } else {
     dispatch(cancelEventById(200 || canceledResult));
     dispatch(setSucceed('Your cancellation is completed!'));

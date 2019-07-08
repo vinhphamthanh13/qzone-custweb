@@ -180,7 +180,8 @@ class MainAppBar extends React.Component {
     const eventTracked = trackingList.filter(item => item && item.confirmedTime !== null);
     const currentTime = moment.now();
     const eventCount = eventList && eventList.length
-      && eventList.filter(event => moment(event.startSec * 1000) > currentTime).length;
+      && eventList.filter(event => moment(event.providerStartSec) > currentTime).length;
+    console.info('event count', eventCount);
     const badgeStyle = eventCount > 0 ? 'text-margin-lr hover-pointer' : 'text-margin-lr';
     const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
     const [authLabel, openForm] = maintenance ? ['Sign Up', 'isRegisterOpen'] : ['Sign In', 'isLoginOpen'];

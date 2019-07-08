@@ -206,7 +206,7 @@ class Content extends Component {
             </div>
           )
         }
-        {eventList && eventList.length && (
+        {eventList && (
           <div className={s.profilePage}>
             <EventList customerId={customerId} eventList={cachedEventList} />
           </div>)

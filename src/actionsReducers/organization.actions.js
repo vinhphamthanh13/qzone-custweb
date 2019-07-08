@@ -24,8 +24,8 @@ const setServiceProviders = payload => ({
 export const setServiceProvidersAction = () => async (dispatch) => {
   dispatch(setLoading(true));
   const [serviceProviderList, error] = await handleRequest(serviceProviders, []);
-  if ((serviceProviderList && !serviceProviderList.success) || error) {
-    dispatch(setError(serviceProviderList.message || error));
+  if (error) {
+    dispatch(setError(error));
   } else {
     dispatch(setServiceProviders(serviceProviderList));
   }
@@ -35,8 +35,8 @@ export const setServiceProvidersAction = () => async (dispatch) => {
 export const setOrganizationAction = id => async (dispatch) => {
   dispatch(setLoading(true));
   const [organization, error] = await handleRequest(fetchOrganization, [id]);
-  if ((organization && !organization.success) || error) {
-    dispatch(setError(organization.message || error));
+  if (error) {
+    dispatch(setError(error));
   } else {
     dispatch(setOrganization(organization));
   }

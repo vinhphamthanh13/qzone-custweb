@@ -4,7 +4,7 @@ import {
   string,
 } from 'prop-types';
 import { connect } from 'react-redux';
-import { get } from 'lodash';
+import { get, noop } from 'lodash';
 import moment from 'moment';
 import { logout } from 'authentication/actions/logout';
 import {
@@ -137,7 +137,7 @@ class Profile extends Component {
         {updateProfileMsgSuccess}
         <div>
           <div className={`${s.profile} column`}>
-            <Header userDetail={{ givenName, email }} onClose={this.goBooking} onOpenAccount={this.handleAccount} />
+            <Header userDetail={{ givenName, email }} onClose={this.goBooking} onOpenAccount={noop} />
             <div className={`container-max auto-margin-horizontal ${s.contentAfooter}`}>
               <Content
                 customerId={customerId}

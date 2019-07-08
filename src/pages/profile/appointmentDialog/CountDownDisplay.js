@@ -51,12 +51,13 @@ class CountDownDisplay extends Component {
         <CustomModal
           type="info"
           isOpen
+          isBackDropClickDisabled
           title="Coming Booking!"
           message={
             `Your booking for ${serviceName} is coming soon,\
              please arrange your time to check in! ${moment(Math.abs(startCountDown)).format('m')} minutes to go.`
           }
-          onClose={this.handleCloseStartPopUp}
+          cancelCallBack={this.handleCloseStartPopUp}
         />
       ) : null;
     const stopCountDownPopUP = isStoppingCountDown
@@ -64,9 +65,10 @@ class CountDownDisplay extends Component {
         <CustomModal
           type="info"
           isOpen
+          isBackDropClickDisabled
           title="Booking Serving!"
           message={`Your booking is available now! Enjoy your booking at ${providerName}`}
-          onClose={this.handleCloseStopPopUp}
+          cancelCallBack={this.handleCloseStopPopUp}
         />
       ) : null;
 

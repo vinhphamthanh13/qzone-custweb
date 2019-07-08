@@ -15,8 +15,8 @@ const setSurveyAction = payload => ({
 export const setSurveys = () => async (dispatch) => {
   dispatch(setLoading(true));
   const [result, error] = await handleRequest(surveys, []);
-  if ((result && !result.success) || error) {
-    dispatch(setError(result.message || error));
+  if (error) {
+    dispatch(setError(error));
   } else {
     dispatch(setSurveyAction(result));
   }
