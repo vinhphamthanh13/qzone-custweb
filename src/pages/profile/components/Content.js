@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { string, func } from 'prop-types';
 import { connect } from 'react-redux';
+import { find, uniqBy } from 'lodash';
 import { Typography } from '@material-ui/core';
 import {
   Event,
@@ -12,6 +13,10 @@ import {
 import { findEventByCustomerIdAction } from 'actionsReducers/common.actions';
 import { cancelEventById } from 'actionsReducers/profile.actions';
 import { trackingAppointmentByIdsAction } from 'actionsReducers/customer.actions';
+import {
+  setSurveys,
+  setAssessmentAction,
+} from 'actionsReducers/surveys.action';
 import { PROFILE } from 'utils/constants';
 import WaitList from './WaitList';
 import Info from './Info';
@@ -26,18 +31,24 @@ class Content extends Component {
       profilePage,
       cancelEventByIdStatus,
       waitLists,
+      surveyList,
+      customerAssessment,
     } = props;
     const {
       eventList: cachedEventList,
       profilePage: cachedProfilePage,
       cancelEventByIdStatus: cachedCancelEventByIdStatus,
       waitLists: cachedWaitLists,
+      surveyList: cachedSurveyList,
+      customerAssessment: cachedCustomerAssessment,
     } = state;
     if (
       eventList !== cachedEventList
       || (profilePage && profilePage !== cachedProfilePage)
       || cancelEventByIdStatus !== cachedCancelEventByIdStatus
       || waitLists !== cachedWaitLists
+      || surveyList !== cachedSurveyList
+      || customerAssessment !== cachedCustomerAssessment
     ) {
       const eventListIds = eventList && eventList.length && eventList.map(item => item.id);
 
@@ -47,6 +58,8 @@ class Content extends Component {
         profilePage,
         cancelEventByIdStatus,
         waitLists,
+        surveyList,
+        customerAssessment,
       };
     }
     return null;
@@ -84,18 +97,25 @@ class Content extends Component {
     this.state = {
       eventList: null,
       waitLists: null,
+      surveyList: null,
       sidePanel: { ...this.initState },
     };
   }
 
   componentDidMount() {
-    const { profilePage } = this.props;
+    const {
+      profilePage,
+      setSurveys: setSurveyAction,
+    } = this.props;
+
+    setSurveyAction();
     this.setState({ sidePanel: { [profilePage]: true } });
   }
 
   componentDidUpdate(prevProps) {
     const {
       cancelEventByIdStatus,
+      setAssessmentAction: setAssessments,
       eventList,
     } = prevProps;
     const {
@@ -104,10 +124,12 @@ class Content extends Component {
       customerId,
       eventList: cachedEventList,
       trackingAppointmentByIdsAction: trackingAppointmentByIds,
+      customerAssessment,
     } = this.props;
     const {
       cancelEventByIdStatus: cachedCancelEventByIdStatus,
       eventListIds,
+      surveyList,
     } = this.state;
 
     const trackingList = eventList && eventList.length;
@@ -120,6 +142,16 @@ class Content extends Component {
 
     if (trackingList !== cachedTrackingList) {
       trackingAppointmentByIds(eventListIds);
+    }
+    const surveys = [];
+    // eslint-disable-next-line
+    eventList && eventList.length && eventList.map((event) => {
+      const targetSurvey = find(surveyList, survey => survey.tempServiceId === event.tempServiceId);
+      if (targetSurvey) surveys.push(targetSurvey);
+      return event;
+    });
+    if (surveys.length !== customerAssessment.length) {
+      setAssessments(uniqBy(surveys, 'id'));
     }
   }
 
@@ -143,8 +175,10 @@ class Content extends Component {
     const {
       eventList,
       waitLists,
+      customerAssessment,
     } = this.state;
 
+    const assessmentCount = customerAssessment && uniqBy(customerAssessment, 'id').length;
     return this.SIDE_PANEL.map((panel) => {
       const { sidePanel } = this.state;
       const onClick = this.handleSelectSideMenu(panel);
@@ -164,6 +198,7 @@ class Content extends Component {
             <Typography variant="subheading" color="inherit">
               {panel.name === PROFILE.PAGE.EVENT_LIST ? eventList && eventList.length : null}
               {panel.name === PROFILE.PAGE.WAIT_LIST ? waitLists && waitLists.length : null}
+              {panel.name === PROFILE.PAGE.SURVEY ? assessmentCount : null}
             </Typography>
           </div>
         </div>
@@ -247,10 +282,13 @@ const mapStateToProps = state => ({
   ...state.common,
   ...state.profile,
   ...state.waitLists,
+  ...state.surveys,
 });
 
 export default connect(mapStateToProps, {
   findEventByCustomerIdAction,
   cancelEventById,
   trackingAppointmentByIdsAction,
+  setSurveys,
+  setAssessmentAction,
 })(Content);

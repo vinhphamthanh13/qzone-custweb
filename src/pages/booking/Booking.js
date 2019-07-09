@@ -526,6 +526,7 @@ class Booking extends PureComponent {
             onClose={this.toggleConfirmDialog(false)}
             okCallBack={this.handleRegisterEvent}
             cancelCallBack={this.toggleConfirmDialog(false)}
+            isBackDropClickDisabled
           />
         )}
         <div>

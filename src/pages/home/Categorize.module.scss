@@ -20,7 +20,7 @@
   left: 0;
   right: 0;
   background: rgba($gallery, 0.95);
-  position: absolute;
+  position: fixed;
   z-index: 1000;
   max-width: $max-width;
 }
