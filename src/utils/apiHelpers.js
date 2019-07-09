@@ -7,6 +7,7 @@ export const handleResponse = (response, defaultResponse) => {
 };
 
 export const handleError = (response) => {
+  console.info('HANDLE ERROR API', response);
   if (response && response.data) {
     return response.data.message;
   }
@@ -22,14 +23,15 @@ export const handleRequest = async (requestFunc, args, defaultResponse) => {
       objects,
       object,
     } = resp;
-    const resolvedResponse = objects || object;
-    if (success) {
+    console.info('HANDLE REQUEST API::', resp);
+    const resolvedResponse = objects || object || resp;
+    if (success || resp.length) {
       return [
         resolvedResponse,
         null,
       ];
     }
-    console.info('HANDLE REQUEST API::', resp);
+    console.info('HANDLE REQUEST API 1::', resp);
     return [null, message];
   } catch (e) {
     return [

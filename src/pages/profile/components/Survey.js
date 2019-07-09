@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { func } from 'prop-types';
-import { find } from 'lodash';
+import { find, uniqBy } from 'lodash';
 import { connect } from 'react-redux';
 import EmptyItem from 'components/EmptyItem';
 import { Typography } from '@material-ui/core';
@@ -70,7 +70,7 @@ class Survey extends Component {
                 Assessment of services
               </Typography>
               <div className={s.surveyList}>
-                {custSurveys.map((survey, index) => (
+                {custSurveys.length > 0 && uniqBy(custSurveys, 'id').map((survey, index) => (
                   <div key={survey.id} className={s.surveyItem}>
                     <div className={s.surveyNo}>
                       {index + 1}
@@ -93,7 +93,6 @@ class Survey extends Component {
                     </div>
                   </div>
                 ))}
-
               </div>
             </div>
           )

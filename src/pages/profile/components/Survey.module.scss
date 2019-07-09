@@ -12,12 +12,13 @@
 .surveyList {
   display: flex;
   flex-direction: column;
-  padding: 1rem 0;
+  padding: 1rem 1rem 0 0;
 }
 
 .surveyItem {
   padding: 1rem;
   border: 1px solid $main_03;
+  border-bottom: 0.5px solid $main_03;
   display: flex;
   justify-content: space-between;
 }
