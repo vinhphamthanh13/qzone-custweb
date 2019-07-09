@@ -1,7 +1,11 @@
-import { SET_SURVEYS } from 'actionsReducers/surveys.action';
+import {
+  SET_SURVEYS,
+  SET_ASSESSMENTS,
+} from 'actionsReducers/surveys.action';
 
 const initState = {
   surveyList: null,
+  customerAssessment: [],
 };
 
 const reducer = (state = initState, action) => {
@@ -10,6 +14,11 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         surveyList: action.payload,
+      };
+    case SET_ASSESSMENTS:
+      return {
+        ...state,
+        customerAssessment: action.payload,
       };
     default:
       return state;

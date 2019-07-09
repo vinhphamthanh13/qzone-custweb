@@ -6,9 +6,15 @@ import { handleRequest } from 'utils/apiHelpers';
 import { surveys } from 'actionsApi/surveys';
 
 export const SET_SURVEYS = 'ASSESSMENT.SET_SURVEY';
+export const SET_ASSESSMENTS = 'ASSESSMENT.SET_ASSESSMENTS';
 
 const setSurveyAction = payload => ({
   type: SET_SURVEYS,
+  payload,
+});
+
+export const setAssessmentAction = payload => ({
+  type: SET_ASSESSMENTS,
   payload,
 });
 
