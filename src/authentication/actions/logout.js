@@ -30,7 +30,6 @@ const logoutError = payload => ({
 
 export const logout = authenticator => (dispatch) => {
   const { isAuthenticated, authProvider } = authenticator;
-  console.log('logout dispatah huh??????');
   if (isAuthenticated) {
     dispatch(setLoading(true));
     if (authProvider && authProvider === PROVIDER.GOOGLE) {

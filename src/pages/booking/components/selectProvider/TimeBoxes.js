@@ -42,19 +42,20 @@ export class TimeBoxes extends React.PureComponent {
   getHourBoxes = (slots) => {
     if (!slots) return null;
     const slotTable = {};
+    console.log('slots', slots);
     slots
       .filter((slot) => {
         const startSec = get(slot, 'providerStartSec');
-        const isoStartSec = startSec.replace(' ', 'T');
+        // const isoStartSec = startSec.replace(' ', 'T');
         const spotsOpen = get(slot, 'spotsOpen');
-        return spotsOpen > 0 && moment() < moment(isoStartSec);
+        return spotsOpen > 0 && moment() < moment(startSec);
       })
       .sort((a, b) => a.startSec - b.startSec).map((slot) => {
+        // console.log('slot in the filter', slot);
         const startSec = get(slot, 'providerStartSec');
         const duration = get(slot, 'durationSec');
         const spotsOpen = get(slot, 'spotsOpen');
         const availabilityId = get(slot, 'id');
-        startSec.replace(' ', '-');
         slotTable[moment(startSec).format(dateFormatDash)] = slotTable[moment(startSec).format(dateFormatDash)]
           ? [
             ...slotTable[moment(startSec).format(dateFormatDash)],
@@ -69,9 +70,20 @@ export class TimeBoxes extends React.PureComponent {
                 duration,
               }),
             },
-          ] : [];
+          ] : [{
+            availabilityId,
+            time: moment(startSec),
+            duration,
+            spotsOpen,
+            action: this.onHourChange({
+              availabilityId,
+              start: moment(startSec).unix(),
+              duration,
+            }),
+          }];
         return null;
       });
+    console.log('slot atable', slotTable);
     return slotTable;
   };
 

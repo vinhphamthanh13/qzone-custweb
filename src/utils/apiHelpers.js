@@ -1,13 +1,11 @@
 export const handleResponse = (response, defaultResponse) => {
   if (response && response.status === 200) {
-    console.log('response in handle response', response);
     return response.data;
   }
   return defaultResponse;
 };
 
 export const handleError = (response) => {
-  console.info('HANDLE ERROR API', response);
   if (response && response.data) {
     return response.data.message;
   }
@@ -31,7 +29,6 @@ export const handleRequest = async (requestFunc, args, defaultResponse) => {
         null,
       ];
     }
-    console.info('HANDLE REQUEST API 1::', resp);
     return [null, message];
   } catch (e) {
     return [
