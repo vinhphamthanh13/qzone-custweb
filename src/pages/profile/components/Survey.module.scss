@@ -1,11 +1,12 @@
 @import 'styles/_settings.scss';
 
 .container {
-  margin: 1rem auto;
+  margin: auto;
   max-height: calc(100% - 65px);
   overflow: auto;
   display: flex;
   flex-direction: column;
+  padding: 1rem 0;
   color: $main_04;
 }
 
@@ -48,3 +49,9 @@
   display: flex;
   align-items: center;
 }
+
+.panelBody {
+  display: flex;
+  flex-direction: column;
+}
+

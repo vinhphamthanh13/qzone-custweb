@@ -50,6 +50,9 @@
     "redux-persist": "^5.10.0",
     "redux-thunk": "^2.3.0",
     "slick-carousel": "^1.8.1",
+    "survey-react": "^1.0.96",
+    "surveyjs-editor": "^1.0.95",
+    "surveyjs-widgets": "^1.0.96",
     "uuid": "^3.3.2",
     "whatwg-fetch": "^3.0.0",
     "yup": "^0.26.10"

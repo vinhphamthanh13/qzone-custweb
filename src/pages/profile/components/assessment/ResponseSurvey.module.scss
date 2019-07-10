@@ -1,0 +1,21 @@
+@import "styles/_settings.scss";
+
+.survey {
+  padding: 0.5rem 1rem;
+  color: $main_04;
+  border: 1px solid $main_02;
+  border-radius: 5px;
+}
+
+.title {
+  margin: 0.5rem 0 0;
+}
+
+.description {
+  margin: 1rem 0;
+}
+
+.response {
+  color: $main_02;
+  border: 1px solid red;
+}
