@@ -151,7 +151,7 @@ class Content extends Component {
       return event;
     });
     if (surveys.length !== customerAssessment.length) {
-      setAssessments(uniqBy(surveys, 'id'));
+      setAssessments(surveys);
     }
   }
 

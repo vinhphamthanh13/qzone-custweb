@@ -1,3 +1,4 @@
+import { uniqBy } from 'lodash';
 import {
   SET_SURVEYS,
   SET_ASSESSMENTS,
@@ -9,6 +10,7 @@ const initState = {
   surveyList: null,
   customerAssessment: [],
   surveyById: null,
+  allAnswers: [],
   surveyAnswers: null,
 };
 
@@ -32,6 +34,7 @@ const reducer = (state = initState, action) => {
     case SET_ANSWERED_ASSESSMENT:
       return {
         ...state,
+        allAnswers: uniqBy([...state.allAnswers, action.payload], 'id'),
         surveyAnswers: action.payload,
       };
     default:

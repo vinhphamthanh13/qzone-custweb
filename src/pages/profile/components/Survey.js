@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { string, func } from 'prop-types';
-import { get, uniqBy } from 'lodash';
+import { get, uniqBy, find } from 'lodash';
 import { connect } from 'react-redux';
 import EmptyItem from 'components/EmptyItem';
 import {
@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core';
 import {
   Edit,
-  Check,
+  CheckCircle,
   ExpandMore,
 } from '@material-ui/icons';
 import { createAssessmentResponse } from 'actionsReducers/surveys.action';
@@ -29,19 +29,23 @@ class Survey extends Component {
   static getDerivedStateFromProps(props, state) {
     const {
       customerAssessment,
-      surveyAnswers,
+      allAnswers,
     } = props;
     const {
       customerAssessment: cachedCustomerAssessment,
-      surveyAnswers: cachedSurveyAnswers,
+      allAnswers: cachedAllAnswers,
     } = state;
     if (
       customerAssessment !== cachedCustomerAssessment
-      || surveyAnswers !== cachedSurveyAnswers
+      || allAnswers.length !== cachedAllAnswers.length
     ) {
+      const surveyIds = customerAssessment.map(survey => ({
+        [survey.id]: false,
+      })).reduce((acc, next) => ({ ...acc, ...next }), {});
       return {
         customerAssessment,
-        surveyAnswers,
+        allAnswers,
+        isTakingSurvey: { ...surveyIds },
       };
     }
     return null;
@@ -49,15 +53,24 @@ class Survey extends Component {
 
   state = {
     customerAssessment: [],
-    isTakingSurvey: false,
-    surveyAnswers: null,
+    isTakingSurvey: {},
+    allAnswers: [],
   };
 
-  handleTakingSurvey = () => {
+  handleTakingSurvey = id => () => {
     this.setState({
-      isTakingSurvey: true,
+      isTakingSurvey: {
+        [id]: true,
+      },
     });
-    console.log('Take the survey nao');
+  };
+
+  handleCancelSurvey = id => () => {
+    this.setState({
+      isTakingSurvey: {
+        [id]: false,
+      },
+    });
   };
 
 
@@ -83,7 +96,11 @@ class Survey extends Component {
 
   render() {
     const { customerId } = this.props;
-    const { customerAssessment, isTakingSurvey, surveyAnswers } = this.state;
+    const {
+      customerAssessment,
+      isTakingSurvey,
+      allAnswers,
+    } = this.state;
 
     return (
       <>
@@ -95,12 +112,16 @@ class Survey extends Component {
               </Typography>
               <div className={s.surveyList}>
                 {uniqBy(customerAssessment, 'id').map((survey, index) => {
-                  const completedSurvey = surveyAnswers && surveyAnswers.status === 'COMPLETED';
+                  const currentSurvey = find(allAnswers, answer => answer.surveyId === survey.id);
+                  const completedSurvey = currentSurvey && currentSurvey.status === 'COMPLETED';
                   return (
                     <ExpansionPanel key={survey.id}>
                       <ExpansionPanelSummary
                         expandIcon={<ExpandMore />}
                         key={survey.id}
+                        classes={{
+                          content: 'full-width',
+                        }}
                       >
                         <div className={s.surveyNo}>
                           <Typography variant="subtitle1" color="inherit">
@@ -123,21 +144,24 @@ class Survey extends Component {
                       <ExpansionPanelDetails>
                         <div className={`${s.panelBody} full-width`}>
                           {
-                            !isTakingSurvey && (
+                            !isTakingSurvey[survey.id] && (
                               <Button
                                 variant="outlined"
-                                onClick={this.handleTakingSurvey}
+                                onClick={this.handleTakingSurvey(survey.id)}
                                 className="main-button"
                                 disabled={completedSurvey}
+                                classes={{
+                                  disabled: s.surveyCompleted,
+                                }}
                               >
                                 {completedSurvey ? (
                                   <>
-                                    <Check className="icon-small" />
-                                    Survey Completed
+                                    <CheckCircle className="icon-small" />
+                                    Completed
                                   </>
                                 ) : (
                                   <>
-                                    <Edit className="icon-small hover-pointer" />
+                                    <Edit className="icon-small" />
                                     Take Survey
                                   </>
                                 )}
@@ -145,12 +169,16 @@ class Survey extends Component {
                             )
                           }
                           <div className="full-width">
-                            {!isTakingSurvey && <SurveyResult surveyId={survey.id} customerId={customerId} />}
-                            {isTakingSurvey && (
+                            {!isTakingSurvey[survey.id] && (
+                              <SurveyResult surveyId={survey.id} customerId={customerId} survey={survey} />
+                            )}
+                            {isTakingSurvey[survey.id] && (
                               <ResponseSurvey
                                 assessment={survey}
                                 customerId={customerId}
                                 saveSurvey={this.handleSaveAnswers(survey, customerId)}
+                                cancelSurvey={this.handleCancelSurvey}
+                                surveyCompleted={completedSurvey}
                               />
                             )}
                           </div>

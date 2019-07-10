@@ -19,3 +19,8 @@
   color: $main_02;
   border: 1px solid red;
 }
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
