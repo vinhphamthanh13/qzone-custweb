@@ -140,7 +140,7 @@ class Content extends Component {
       cancelEventByIdAction(null);
     }
 
-    if (trackingList !== cachedTrackingList) {
+    if (trackingList !== cachedTrackingList && eventListIds.length > 0) {
       trackingAppointmentByIds(eventListIds);
     }
     const surveys = [];

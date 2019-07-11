@@ -125,7 +125,7 @@ class MainAppBar extends React.Component {
       }
     }
 
-    if (trackingLength !== cachedTrackingLength) {
+    if (trackingLength !== cachedTrackingLength && cachedEventListId.length > 0) {
       trackingAppointmentByIds(cachedEventListId);
     }
   }
