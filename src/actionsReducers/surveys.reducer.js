@@ -6,6 +6,17 @@ import {
   SET_ANSWERED_ASSESSMENT,
 } from 'actionsReducers/surveys.action';
 
+import storage from 'redux-persist/lib/storage';
+import { persistReducer } from 'redux-persist';
+import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
+
+const persistConfig = {
+  key: 'common',
+  storage,
+  stateReconciler: autoMergeLevel2,
+  blacklist: ['surveyList', 'allAnswers'],
+};
+
 const initState = {
   surveyList: null,
   customerAssessment: [],
@@ -42,4 +53,4 @@ const reducer = (state = initState, action) => {
   }
 };
 
-export default reducer;
+export default persistReducer(persistConfig, reducer);

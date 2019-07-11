@@ -76,7 +76,11 @@ ResponseSurvey.propTypes = {
   assessment: objectOf(any).isRequired,
   saveSurvey: func.isRequired,
   cancelSurvey: func.isRequired,
-  surveyCompleted: bool.isRequired,
+  surveyCompleted: bool,
+};
+
+ResponseSurvey.defaultProps = {
+  surveyCompleted: false,
 };
 
 export default ResponseSurvey;

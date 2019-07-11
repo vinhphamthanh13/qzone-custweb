@@ -36,12 +36,14 @@ class Survey extends Component {
       allAnswers: cachedAllAnswers,
     } = state;
     if (
-      customerAssessment !== cachedCustomerAssessment
+      customerAssessment.length !== cachedCustomerAssessment.length
       || allAnswers.length !== cachedAllAnswers.length
     ) {
-      const surveyIds = customerAssessment.map(survey => ({
-        [survey.id]: false,
-      })).reduce((acc, next) => ({ ...acc, ...next }), {});
+      const surveyIds = customerAssessment.length
+        ? customerAssessment.map(survey => ({
+          [survey.id]: false,
+        })).reduce((acc, next) => ({ ...acc, ...next }), {})
+        : {};
       return {
         customerAssessment,
         allAnswers,
@@ -112,7 +114,8 @@ class Survey extends Component {
               </Typography>
               <div className={s.surveyList}>
                 {uniqBy(customerAssessment, 'id').map((survey, index) => {
-                  const currentSurvey = find(allAnswers, answer => answer.surveyId === survey.id);
+                  const currentSurvey = allAnswers.length > 0
+                    && find(allAnswers, answer => answer.surveyId === survey.id);
                   const completedSurvey = currentSurvey && currentSurvey.status === 'COMPLETED';
                   return (
                     <ExpansionPanel key={survey.id}>
@@ -202,7 +205,6 @@ class Survey extends Component {
 
 const mapStateToProps = state => ({
   ...state.surveys,
-  customerAssessment: state.surveys.customerAssessment,
   eventList: state.common.eventList,
 });
 

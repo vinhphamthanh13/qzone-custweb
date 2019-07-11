@@ -68,7 +68,7 @@ export const setAnsweredAssessmentByUser = (surveyId, userId) => async (dispatch
   if (error) {
     dispatch(setError(error));
   } else {
-    dispatch(setAnsweredAssessment(result));
+    dispatch(setAnsweredAssessment(result || []));
   }
   dispatch(setLoading(false));
 };

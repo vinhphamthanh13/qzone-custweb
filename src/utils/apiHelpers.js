@@ -21,9 +21,8 @@ export const handleRequest = async (requestFunc, args, defaultResponse) => {
       objects,
       object,
     } = resp;
-    console.info('HANDLE REQUEST API::', resp);
-    const resolvedResponse = objects || object || resp;
-    if (success || resp.length) {
+    const resolvedResponse = objects || object;
+    if (success) {
       return [
         resolvedResponse,
         null,
