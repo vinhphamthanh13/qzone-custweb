@@ -15,6 +15,7 @@ import {
   Email,
   Call,
   Public,
+  LocationOn,
 } from '@material-ui/icons';
 import {
   providerType,
@@ -43,12 +44,6 @@ class ProviderContent extends React.PureComponent {
     const providerId = get(provider, 'providerId');
     this.setState({ providerId });
   }
-
-  toggleDetailDialog = () => {
-    this.setState(oldState => ({
-      isDetailDialogOpen: !oldState.isDetailDialogOpen,
-    }));
-  };
 
   toggleMapDialog = () => {
     this.setState(oldState => ({
@@ -89,6 +84,11 @@ class ProviderContent extends React.PureComponent {
     const duration = get(provider, 'avgServiceTime');
     const providerRating = get(provider, 'rating');
     const providerMode = get(provider, 'mode');
+    const providerStreet = get(provider, 'geoLocation.streetAddress');
+    const providerState = get(provider, 'geoLocation.state');
+    const providerDistrict = get(provider, 'geoLocation.district');
+    const providerPostCode = get(provider, 'geoLocation.postCode');
+
     return (
       <>
         <MapDialog
@@ -144,6 +144,18 @@ class ProviderContent extends React.PureComponent {
                   <Call className="icon-main icon-small" />
                   <Typography variant="body1" color="inherit" noWrap>
                     {providerPhone}
+                  </Typography>
+                </div>
+                <div className="icon-text">
+                  <LocationOn className="icon-main icon-small" />
+                  <Typography className="full-width" variant="body1" color="inherit" noWrap>
+                    {providerStreet}
+                  </Typography>
+                </div>
+                <div className="icon-text">
+                  <LocationOn className="icon-main icon-small icon-transparent" />
+                  <Typography className="full-width" variant="body1" color="inherit" noWrap>
+                    {providerState}, {providerDistrict}, {providerPostCode}
                   </Typography>
                 </div>
                 <div className="icon-text">
