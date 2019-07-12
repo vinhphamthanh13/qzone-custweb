@@ -1,3 +1,4 @@
+import { flattenDeep } from 'lodash';
 import { handleRequest } from 'utils/apiHelpers';
 import {
   findEventByCustomerId,
@@ -11,7 +12,7 @@ export const SET_SUCCEED = 'COMMON.SET_SUCCEED';
 export const RESET_MODAL_STATUS = 'COMMON.RESET_MODAL_STATUS';
 export const FIND_EVENT_BY_CUSTOMER_ID = 'HOME.FIND_EVENT_BY_CUSTOMER_ID';
 export const SET_SERVICE_PROVIDERS = 'HOME.SET_SERVICE_PROVIDERS';
-
+export const SET_TEMPORARY_SERVICE_BY_LOCATION = 'COMMON.SET_TEMPORARY_SERVICE_BY_LOCATION';
 export const setLoading = payload => ({
   type: SET_LOADING,
   payload,
@@ -41,6 +42,11 @@ const setEventByCustomerId = payload => ({
   payload,
 });
 
+const setTemporaryServiceByLocationAction = payload => ({
+  type: SET_TEMPORARY_SERVICE_BY_LOCATION,
+  payload,
+});
+
 export const setRatingService = data => async (dispatch) => {
   dispatch(setLoading(true));
   const rated = await handleRequest(serviceProvidersRating, [data], null);
@@ -63,11 +69,14 @@ export const findEventByCustomerIdAction = id => async (dispatch) => {
 
 export const setServiceProvidersAction = () => async (dispatch) => {
   dispatch(setLoading(true));
-  const [serviceProviderList, error] = await handleRequest(temporaryServices, []);
+  const [{ temporaryServices: tempList }, error] = await handleRequest(temporaryServices, []);
   if (error) {
     dispatch(setError(error));
-  } else {
-    dispatch(setServiceProviders(serviceProviderList));
+  }
+  if (Object.keys(tempList).length > 0) {
+    const serviceProvider = Object.keys(tempList).map(locationId => tempList[locationId]);
+    dispatch(setTemporaryServiceByLocationAction(tempList));
+    dispatch(setServiceProviders(flattenDeep(serviceProvider)));
   }
   dispatch(setLoading(false));
 };

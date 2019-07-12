@@ -5,6 +5,7 @@ import {
   RESET_MODAL_STATUS,
   FIND_EVENT_BY_CUSTOMER_ID,
   SET_SERVICE_PROVIDERS,
+  SET_TEMPORARY_SERVICE_BY_LOCATION,
 } from 'actionsReducers/common.actions';
 
 import storage from 'redux-persist/lib/storage';
@@ -26,6 +27,7 @@ const initState = {
   succeedMessage: '',
   eventList: null,
   serviceProviders: null,
+  temporaryServicesByLocation: null,
 };
 
 const reducer = (state = initState, action) => {
@@ -64,6 +66,11 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         serviceProviders: action.payload,
+      };
+    case SET_TEMPORARY_SERVICE_BY_LOCATION:
+      return {
+        ...state,
+        temporaryServicesByLocation: action.payload,
       };
     default:
       return state;

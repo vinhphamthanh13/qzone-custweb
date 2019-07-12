@@ -100,11 +100,11 @@ export const setWaitListsByIdAction = data => async (dispatch) => {
 
 export const setCancelWaitListsAction = data => async (dispatch) => {
   dispatch(setLoading(true));
-  const [cancelResult, error] = await handleRequest(cancelWaitLists, [data]);
+  const [, error] = await handleRequest(cancelWaitLists, [data]);
   if (error) {
     dispatch(setError(error));
   } else {
-    dispatch(setCancelWaitLists(cancelResult));
+    dispatch(setCancelWaitLists(data));
     dispatch(setSucceed('Your waitlist is cancelled.'));
   }
   dispatch(setLoading(false));

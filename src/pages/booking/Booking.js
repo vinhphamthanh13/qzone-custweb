@@ -83,6 +83,7 @@ class Booking extends PureComponent {
       setBookingDetail: setBookingDetailAction,
       setBookingStep: setBookingStepAction,
       waitListRegistered,
+      temporaryServicesByLocation,
     } = props;
     const {
       serviceId: cachedServiceId,
@@ -99,6 +100,7 @@ class Booking extends PureComponent {
       waitListsById: cachedWaitListsById,
       availabilitiesById: cachedAvailabilitiesById,
       waitListRegistered: cachedWaitListRegistered,
+      temporaryServicesByLocation: cachedTemporaryServiceByLocation,
     } = state;
     if (
       serviceId !== cachedServiceId
@@ -115,6 +117,7 @@ class Booking extends PureComponent {
       || waitListsById !== cachedWaitListsById
       || availabilitiesById !== cachedAvailabilitiesById
       || waitListRegistered !== cachedWaitListRegistered
+      || temporaryServicesByLocation !== cachedTemporaryServiceByLocation
     ) {
       let availabilityId = null;
       let waitListStatus = '';
@@ -193,6 +196,7 @@ class Booking extends PureComponent {
         availabilitiesById,
         waitListStatus,
         waitListRegistered,
+        temporaryServicesByLocation,
       };
     }
 
@@ -215,6 +219,7 @@ class Booking extends PureComponent {
       appointmentEvent: null,
       customerId: null,
       waitListId: null,
+      temporaryServicesByLocation: null,
     };
   }
 
@@ -380,35 +385,73 @@ class Booking extends PureComponent {
   // handle select date of provider slots
   handleDateChange = () => {};
 
-  handleMergedProviderInfo = (serviceId, serviceProviders, providersByServiceId) => {
+  handleMergedProviderInfo = (serviceId, serviceProviders, providersByServiceId, temporaryServicesByLocation) => {
+    // if (
+    //   serviceId
+    //   && serviceProviders
+    //   && serviceProviders.length
+    //   && providersByServiceId
+    //   && providersByServiceId.length
+    // ) {
+    //   const providers = [];
+    //   uniqBy(providersByServiceId, provider => provider.userSub).forEach((provider) => {
+    //     const temporaryServiceIds = [];
+    //     let uniqProvider = {};
+    //     serviceProviders.map((tempService) => {
+    //       if (tempService.providerId === provider.userSub && tempService.serviceId === serviceId) {
+    //         temporaryServiceIds.push(tempService.id);
+    //         uniqProvider = {
+    //           ...uniqProvider,
+    //           ...provider,
+    //           ...tempService,
+    //         };
+    //       }
+    //       return null;
+    //     });
+    //     if (uniqProvider.id) {
+    //       uniqProvider.temporaryServiceIds = temporaryServiceIds;
+    //       providers.push(uniqProvider);
+    //     }
+    //   });
+    //   return providers;
+    // }
+    console.log('serviceProviders', serviceProviders);
     if (
       serviceId
-      && serviceProviders
-      && serviceProviders.length
+      && temporaryServicesByLocation
+      && Object.keys(temporaryServicesByLocation).length
       && providersByServiceId
       && providersByServiceId.length
     ) {
-      const providers = [];
-      uniqBy(providersByServiceId, provider => provider.userSub).forEach((provider) => {
-        const temporaryServiceIds = [];
-        let uniqProvider = {};
-        serviceProviders.map((tempService) => {
-          if (tempService.providerId === provider.userSub && tempService.serviceId === serviceId) {
-            temporaryServiceIds.push(tempService.id);
-            uniqProvider = {
-              ...uniqProvider,
-              ...provider,
-              ...tempService,
-            };
+      const locationProviders = [];
+      console.log('providersByServiceId', providersByServiceId);
+      Object.keys(temporaryServicesByLocation).map((locationId) => {
+        console.log('locationId', locationId);
+        uniqBy(providersByServiceId, provider => provider.userSub).forEach((provider) => {
+          const temporaryServiceIds = [];
+          let uniqProvider = {};
+          temporaryServicesByLocation[locationId].map((tempService) => {
+            console.log('tempService', tempService);
+            if (tempService.providerId === provider.userSub && tempService.serviceId === serviceId) {
+              temporaryServiceIds.push(tempService.id);
+              uniqProvider = {
+                ...uniqProvider,
+                ...provider,
+                ...tempService,
+              };
+            }
+            return null;
+          });
+          if (uniqProvider.id) {
+            console.log('uniqueProvider', uniqProvider);
+            uniqProvider.temporaryServiceIds = temporaryServiceIds;
+            locationProviders.push(uniqProvider);
           }
-          return null;
         });
-        if (uniqProvider.id) {
-          uniqProvider.temporaryServiceIds = temporaryServiceIds;
-          providers.push(uniqProvider);
-        }
+        return null;
       });
-      return providers;
+      console.log('locationPorvider', locationProviders);
+      return locationProviders;
     }
     return null;
   };
@@ -478,6 +521,7 @@ class Booking extends PureComponent {
       appointmentEvent,
       waitListId,
       customerId,
+      temporaryServicesByLocation,
     } = this.state;
 
     const Step = this.stepComponents[bookingStep];
@@ -488,7 +532,9 @@ class Booking extends PureComponent {
       serviceId,
       serviceProviders,
       providersByServiceIdList,
+      temporaryServicesByLocation,
     );
+    console.log('providers', providers);
     const providersWithSlot = availabilitiesBulk && providers
       && this.handleProviderAvailableSlots(availabilitiesBulk, providers);
     const stepProps = {

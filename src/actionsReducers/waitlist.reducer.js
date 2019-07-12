@@ -36,6 +36,7 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         cancelWaitLists: action.payload,
+        waitLists: state.waitLists.filter(waitList => waitList.waitListId),
       };
     case VALIDATE_WAIT_LIST:
       return {
