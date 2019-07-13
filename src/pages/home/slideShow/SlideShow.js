@@ -83,10 +83,12 @@ class SlideShow extends Component {
             </div>
           ) : <div className="advertisers" /> }
           <div className="advertisers">
-            <Typography variant="subheading" color="textSecondary">
-            For advertisement. Contact us at Quezone.com.au or
-            Hotline: +61 222 33 44 444
-            </Typography>
+            {false && (
+              <Typography variant="subheading" color="textSecondary">
+                For advertisement. Contact us at Quezone.com.au or
+                Hotline: +61 222 33 44 444
+              </Typography>
+            )}
           </div>
         </div>
       </div>
