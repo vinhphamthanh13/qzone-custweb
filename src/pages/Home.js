@@ -273,15 +273,16 @@ export class Home extends React.PureComponent {
                       </Categorize>
                     )
                   }
-                  {categoriesServices && categoriesServices.map(category => (
-                    <Categorize key={category.name} name={category.name}>
-                      <Services
-                        services={category.services}
-                        onBooking={this.handleBooking}
-                        handleAuth={this.openAuthModal}
-                      />
-                    </Categorize>
-                  ))}
+                  {categoriesServices
+                    && categoriesServices.map(category => category.services.length > 0 && (
+                      <Categorize key={category.name} name={category.name}>
+                        <Services
+                          services={category.services}
+                          onBooking={this.handleBooking}
+                          handleAuth={this.openAuthModal}
+                        />
+                      </Categorize>
+                    ))}
                 </>
               )
             }
