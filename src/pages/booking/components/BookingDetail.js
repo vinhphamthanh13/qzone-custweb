@@ -12,6 +12,7 @@ import {
   PersonPin,
   Book,
   Fingerprint,
+  Person,
 } from '@material-ui/icons';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
@@ -104,6 +105,7 @@ class BookingDetail extends React.PureComponent {
     const provider = get(bookingDetail, 'provider');
     const providerName = get(provider, 'providerName');
     const duration = get(provider, 'avgServiceTime');
+    const fullAddress = get(provider, 'geoLocation.fullAddress');
     const providerRating = get(provider, 'rating');
     const userGiven = get(userDetail, 'givenName');
     const userFamily = get(userDetail, 'familyName');
@@ -133,13 +135,19 @@ class BookingDetail extends React.PureComponent {
               </Typography>
             </div>
             <div className={s.bookingItems}>
-              <LocationOn className="icon-main" />
+              <Person className="icon-main" />
               <Typography variant="subtitle1" color="inherit" className="text-margin-right">
                 {providerName}
               </Typography>
               <div>
                 <RateStar rating={providerRating} />
               </div>
+            </div>
+            <div className={s.bookingItems}>
+              <LocationOn className="icon-main" />
+              <Typography variant="subtitle1" color="inherit" className="text-margin-right" noWrap>
+                {fullAddress}
+              </Typography>
             </div>
             <div className={s.bookingItems}>
               <PersonPin className="icon-main icon-shake" onClick={this.toggleMapDialog} />

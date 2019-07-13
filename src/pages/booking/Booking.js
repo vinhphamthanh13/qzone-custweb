@@ -472,7 +472,7 @@ class Booking extends PureComponent {
   });
 
   renderChevron = (valid, dir) => {
-    const chevronStyle = valid ? 'icon-white icon-big simple-button' : 'icon-disabled icon-big';
+    const chevronStyle = valid ? 'icon-main icon-big simple-button' : 'icon-disabled icon-big';
     return dir < 0 ? <ChevronLeft className={chevronStyle} />
       : <ChevronRight className={chevronStyle} />;
   };
