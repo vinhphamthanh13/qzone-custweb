@@ -17,6 +17,7 @@
   flex-direction: column;
   color: $main_04;
   box-sizing: border-box;
+  width: 100%;
 }
 
 .providerListCardHeader {
@@ -102,4 +103,11 @@
   &:hover {
     color: $danger;
   }
+}
+
+.locationService {
+  border: 1px solid $main_02;
+  width: 100%;
+  border-radius: 6px;
+  background: rgba($main_02, 0.4);
 }

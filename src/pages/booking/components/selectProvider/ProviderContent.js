@@ -146,17 +146,19 @@ class ProviderContent extends React.PureComponent {
                     {providerPhone}
                   </Typography>
                 </div>
-                <div className="icon-text">
-                  <LocationOn className="icon-main icon-small" />
-                  <Typography className="full-width text-bold" variant="body1" color="inherit" noWrap>
-                    {providerStreet}
-                  </Typography>
-                </div>
-                <div className="icon-text">
-                  <LocationOn className="icon-main icon-small icon-transparent" />
-                  <Typography className="full-width text-bold" variant="body1" color="inherit" noWrap>
-                    {providerState}, {providerDistrict}, {providerPostCode}
-                  </Typography>
+                <div className={s.locationService}>
+                  <div className="icon-text">
+                    <LocationOn className="icon-main icon-small" />
+                    <Typography className="full-width text-bold" variant="body1" color="inherit" noWrap>
+                      {providerStreet}
+                    </Typography>
+                  </div>
+                  <div className="icon-text">
+                    <LocationOn className="icon-main icon-small icon-transparent" />
+                    <Typography className="full-width text-bold" variant="body1" color="inherit" noWrap>
+                      {providerState}, {providerDistrict}, {providerPostCode}
+                    </Typography>
+                  </div>
                 </div>
                 <div className="icon-text">
                   <Public className="icon-main icon-small" />
