@@ -250,6 +250,7 @@ class Booking extends PureComponent {
       waitListId: null,
       temporaryServicesByLocation: null,
     };
+    this.myBooking = React.createRef();
   }
 
   componentDidMount() {
@@ -502,6 +503,10 @@ class Booking extends PureComponent {
     resetRegisterWaitListStatusAction();
   };
 
+  scrollToMyBooking = () => {
+    window.scrollTo(0, this.myBooking.current.offsetTop);
+  };
+
   render() {
     const {
       setBookingDetail: setBookingDetailAction,
@@ -546,6 +551,7 @@ class Booking extends PureComponent {
         setBookingStep: setBookingStepAction,
         handleAuth,
         showPage,
+        scrollBooking: this.scrollToMyBooking,
       },
       [BOOKING.STEPS.CONFIRM_BOOKING]: {
         bookingService: service,
@@ -576,7 +582,7 @@ class Booking extends PureComponent {
             isBackDropClickDisabled
           />
         )}
-        <div className="full-width">
+        <div ref={this.myBooking} className="full-width">
           {showPage && (
             <div className={`${s.navBar} h-space-btw`}>
               <div className="brand-logo">

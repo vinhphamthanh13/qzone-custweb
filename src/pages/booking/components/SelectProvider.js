@@ -23,12 +23,14 @@ class SelectProvider extends React.PureComponent {
     const {
       setBookingDetail,
       setBookingStep,
+      scrollBooking,
     } = this.props;
     setBookingDetail({
       provider,
       time,
     });
     setBookingStep(BOOKING.STEPS.CONFIRM_BOOKING);
+    scrollBooking();
   };
 
   render() {
@@ -91,6 +93,7 @@ SelectProvider.propTypes = {
   onDateChange: func.isRequired,
   handleAuth: func.isRequired,
   showPage: bool.isRequired,
+  scrollBooking: func.isRequired,
 };
 
 SelectProvider.defaultProps = {

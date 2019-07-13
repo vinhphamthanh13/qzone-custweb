@@ -1,5 +1,5 @@
 export const STATUS = {
-  WAITING: 'In Queuing',
+  WAITING: 'Waiting...',
   COMING: 'Coming Soon',
   EXPIRED: 'Expired',
   CANCELED: 'CANCELED',
