@@ -243,7 +243,7 @@ class MainAppBar extends React.Component {
     const adSearchStyle = maintenance ? 'icon-main gray-color' : 'icon-main white-color';
     return (
       <div className={classes.root}>
-        <AppBar position="fixed">
+        <AppBar classes={{ root: 'z-index-high' }} position="fixed">
           <Toolbar className={`${classes.mainLinear}`}>
             <Avatar
               className={classes.avatar}

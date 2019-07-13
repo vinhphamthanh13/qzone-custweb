@@ -253,6 +253,7 @@ export class Home extends React.PureComponent {
                         <Services
                           services={searchResult}
                           onBooking={this.handleBooking}
+                          handleAuth={this.openAuthModal}
                         />
                       </Categorize>
                     )
@@ -267,6 +268,7 @@ export class Home extends React.PureComponent {
                         <Services
                           services={serviceProviderNearByList}
                           onBooking={this.handleBooking}
+                          handleAuth={this.openAuthModal}
                         />
                       </Categorize>
                     )
@@ -276,6 +278,7 @@ export class Home extends React.PureComponent {
                       <Services
                         services={category.services}
                         onBooking={this.handleBooking}
+                        handleAuth={this.openAuthModal}
                       />
                     </Categorize>
                   ))}

@@ -19,7 +19,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border-bottom: 2px solid rgba($grayNickel, 0.5);
+  //border-bottom: 2px solid rgba($grayNickel, 0.5);
   color: $main_04;
   position: relative;
 }
@@ -29,12 +29,16 @@
   flex-direction: column;
 }
 
-.selectProviderList {
+.selectProviderPage {
   width: auto;
   display: flex;
   justify-content: center;
   height: calc(100vh - 7rem);
   overflow: auto;
+}
+
+.selectProviderList {
+  height: 100%;
 }
 
 .selectDateOfBooking {

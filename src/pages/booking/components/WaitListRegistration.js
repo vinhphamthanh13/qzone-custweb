@@ -255,7 +255,7 @@ class WaitListRegistration extends Component {
     return (
       <>
         {isRegisterWaitLists && (
-          <div className="cover-bg-black z-index-high">
+          <div className="cover-bg-black z-index-highest">
             <div className={s.waitListForm}>
               <div className={s.title}>
                 <Typography variant="headline" color="inherit" className="text-bold">

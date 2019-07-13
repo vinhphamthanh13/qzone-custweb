@@ -41,6 +41,7 @@ class BookingPage extends Component {
           waitListId={wId}
           temporaryServiceId={tId}
           handleAuth={this.openAuthModal}
+          showPage
         />
       </>
     );

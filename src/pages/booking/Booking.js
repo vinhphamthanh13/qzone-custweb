@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import {
+  bool,
   string,
   func,
   number,
@@ -64,6 +65,34 @@ import s from './Booking.module.scss';
 const STEP_LABELS = ['Select Provider', 'Book Appointment', 'Complete Booking'];
 
 class Booking extends PureComponent {
+  static propTypes = {
+    showPage: bool, // Showing this booking in Home or Booking flow
+    serviceId: string,
+    temporaryServiceId: string,
+    bookingStep: number.isRequired,
+    getServiceByIdAction: func.isRequired,
+    setServiceProvidersAction: func.isRequired,
+    setProvidersByServiceIdAction: func.isRequired,
+    setAvailabilitiesBySpecialEventBulkAction: func.isRequired,
+    setAvailabilitiesByIdAction: func.isRequired,
+    setBookingDetail: func.isRequired,
+    setBookingStep: func.isRequired,
+    registerEventAction: func.isRequired,
+    handleAuth: func.isRequired,
+    resetBooking: func.isRequired,
+    setTemporaryServicesByIdAction: func.isRequired,
+    waitListsById: objectOf(any),
+    setError: func.isRequired,
+    resetRegisterWaitListStatus: func.isRequired,
+  };
+
+  static defaultProps = {
+    serviceId: null,
+    temporaryServiceId: null,
+    waitListsById: null,
+    showPage: false,
+  };
+
   static getDerivedStateFromProps(props, state) {
     const {
       serviceId,
@@ -386,36 +415,6 @@ class Booking extends PureComponent {
   handleDateChange = () => {};
 
   handleMergedProviderInfo = (serviceId, serviceProviders, providersByServiceId, temporaryServicesByLocation) => {
-    // if (
-    //   serviceId
-    //   && serviceProviders
-    //   && serviceProviders.length
-    //   && providersByServiceId
-    //   && providersByServiceId.length
-    // ) {
-    //   const providers = [];
-    //   uniqBy(providersByServiceId, provider => provider.userSub).forEach((provider) => {
-    //     const temporaryServiceIds = [];
-    //     let uniqProvider = {};
-    //     serviceProviders.map((tempService) => {
-    //       if (tempService.providerId === provider.userSub && tempService.serviceId === serviceId) {
-    //         temporaryServiceIds.push(tempService.id);
-    //         uniqProvider = {
-    //           ...uniqProvider,
-    //           ...provider,
-    //           ...tempService,
-    //         };
-    //       }
-    //       return null;
-    //     });
-    //     if (uniqProvider.id) {
-    //       uniqProvider.temporaryServiceIds = temporaryServiceIds;
-    //       providers.push(uniqProvider);
-    //     }
-    //   });
-    //   return providers;
-    // }
-    console.log('serviceProviders', serviceProviders);
     if (
       serviceId
       && temporaryServicesByLocation
@@ -424,14 +423,11 @@ class Booking extends PureComponent {
       && providersByServiceId.length
     ) {
       const locationProviders = [];
-      console.log('providersByServiceId', providersByServiceId);
       Object.keys(temporaryServicesByLocation).map((locationId) => {
-        console.log('locationId', locationId);
         uniqBy(providersByServiceId, provider => provider.userSub).forEach((provider) => {
           const temporaryServiceIds = [];
           let uniqProvider = {};
           temporaryServicesByLocation[locationId].map((tempService) => {
-            console.log('tempService', tempService);
             if (tempService.providerId === provider.userSub && tempService.serviceId === serviceId) {
               temporaryServiceIds.push(tempService.id);
               uniqProvider = {
@@ -443,14 +439,12 @@ class Booking extends PureComponent {
             return null;
           });
           if (uniqProvider.id) {
-            console.log('uniqueProvider', uniqProvider);
             uniqProvider.temporaryServiceIds = temporaryServiceIds;
             locationProviders.push(uniqProvider);
           }
         });
         return null;
       });
-      console.log('locationPorvider', locationProviders);
       return locationProviders;
     }
     return null;
@@ -508,6 +502,7 @@ class Booking extends PureComponent {
       setBookingStep: setBookingStepAction,
       handleAuth,
       resetBooking: resetBookingAction,
+      showPage,
     } = this.props;
     const {
       serviceId,
@@ -534,7 +529,6 @@ class Booking extends PureComponent {
       providersByServiceIdList,
       temporaryServicesByLocation,
     );
-    console.log('providers', providers);
     const providersWithSlot = availabilitiesBulk && providers
       && this.handleProviderAvailableSlots(availabilitiesBulk, providers);
     const stepProps = {
@@ -545,6 +539,7 @@ class Booking extends PureComponent {
         setBookingDetail: setBookingDetailAction,
         setBookingStep: setBookingStepAction,
         handleAuth,
+        showPage,
       },
       [BOOKING.STEPS.CONFIRM_BOOKING]: {
         bookingService: service,
@@ -575,32 +570,34 @@ class Booking extends PureComponent {
             isBackDropClickDisabled
           />
         )}
-        <div>
-          <div className={`${s.navBar} h-space-btw`}>
-            <div className="brand-logo">
-              <Avatar classes={{ img: s.logoImage }} src={logo} alt="Quezone Logo" className="brand-logo" />
-            </div>
-            <div className={s.bookingStepsWrapper}>
-              <Button disabled={!isBackValid} onClick={this.handleStepChange(-1)} className="simple-button">
-                {this.renderChevron(isBackValid, -1)}
-              </Button>
-              <div className={s.stepper}>
-                {this.renderSteppers()}
+        <div className="full-width">
+          {showPage && (
+            <div className={`${s.navBar} h-space-btw`}>
+              <div className="brand-logo">
+                <Avatar classes={{ img: s.logoImage }} src={logo} alt="Quezone Logo" className="brand-logo" />
               </div>
-              <Button disabled={!isNextValid} onClick={this.handleStepChange(1)} className="simple-button">
-                {this.renderChevron(isNextValid, 1)}
-              </Button>
+              <div className={s.bookingStepsWrapper}>
+                <Button disabled={!isBackValid} onClick={this.handleStepChange(-1)} className="simple-button">
+                  {this.renderChevron(isBackValid, -1)}
+                </Button>
+                <div className={s.stepper}>
+                  {this.renderSteppers()}
+                </div>
+                <Button disabled={!isNextValid} onClick={this.handleStepChange(1)} className="simple-button">
+                  {this.renderChevron(isNextValid, 1)}
+                </Button>
+              </div>
+              <div className={s.goBack}>
+                {isProfile && (
+                  <IconButton color="inherit" onClick={this.goProfile}>
+                    <AccountBox />
+                  </IconButton>)}
+                <IconButton color="inherit" onClick={this.goHome} aria-label="Close">
+                  <Home />
+                </IconButton>
+              </div>
             </div>
-            <div className={s.goBack}>
-              {isProfile && (
-                <IconButton color="inherit" onClick={this.goProfile}>
-                  <AccountBox />
-                </IconButton>)}
-              <IconButton color="inherit" onClick={this.goHome} aria-label="Close">
-                <Home />
-              </IconButton>
-            </div>
-          </div>
+          )}
           <Step
             {...stepProps[bookingStep]}
           />
@@ -609,32 +606,6 @@ class Booking extends PureComponent {
     );
   }
 }
-
-Booking.propTypes = {
-  serviceId: string,
-  temporaryServiceId: string,
-  bookingStep: number.isRequired,
-  getServiceByIdAction: func.isRequired,
-  setServiceProvidersAction: func.isRequired,
-  setProvidersByServiceIdAction: func.isRequired,
-  setAvailabilitiesBySpecialEventBulkAction: func.isRequired,
-  setAvailabilitiesByIdAction: func.isRequired,
-  setBookingDetail: func.isRequired,
-  setBookingStep: func.isRequired,
-  registerEventAction: func.isRequired,
-  handleAuth: func.isRequired,
-  resetBooking: func.isRequired,
-  setTemporaryServicesByIdAction: func.isRequired,
-  waitListsById: objectOf(any),
-  setError: func.isRequired,
-  resetRegisterWaitListStatus: func.isRequired,
-};
-
-Booking.defaultProps = {
-  serviceId: null,
-  temporaryServiceId: null,
-  waitListsById: null,
-};
 
 const mapStateToProps = state => ({
   ...state.common,

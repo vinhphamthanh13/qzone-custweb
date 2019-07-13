@@ -3,6 +3,7 @@ import {
   func,
   objectOf,
   object,
+  bool,
   any,
   arrayOf,
 } from 'prop-types';
@@ -10,7 +11,7 @@ import {
   chunk,
   noop,
 } from 'lodash';
-import { Typography } from '@material-ui/core';
+import { Typography, Divider } from '@material-ui/core';
 import DatePicker from 'components/Calendar/DatePicker';
 import SubLoading from 'components/SubLoading';
 import { BOOKING } from 'utils/constants';
@@ -36,22 +37,28 @@ class SelectProvider extends React.PureComponent {
       providers,
       onDateChange,
       handleAuth,
+      showPage,
     } = this.props;
+    const selectProviderStyle = showPage
+      ? s.selectProviderPage : `${s.selectProviderPage} ${s.selectProviderList}`;
 
     return (
       <>
         { bookingService && (
           <div className={s.selectProviderWrapper}>
             <div className={s.selectProviderHeader}>
-              <div className={s.selectDateOfBooking}>
-                <DatePicker onChange={onDateChange} selectDate={noop} enableCalendar={false} />
-              </div>
+              {showPage && (
+                <div className={s.selectDateOfBooking}>
+                  <DatePicker onChange={onDateChange} selectDate={noop} enableCalendar={false} />
+                </div>
+              )}
               <Typography color="inherit" variant="title" className="text-bold">
                 {bookingService.name}
               </Typography>
             </div>
+            {showPage && <Divider />}
             {providers ? (
-              <div className={s.selectProviderList}>
+              <div className={selectProviderStyle}>
                 {chunk(providers, Math.ceil(providers.length / 4)).map(list => (
                   <div key={Math.random()} className={s.providerRow}>
                     {list.map(provider => (
@@ -83,6 +90,7 @@ SelectProvider.propTypes = {
   setBookingStep: func.isRequired,
   onDateChange: func.isRequired,
   handleAuth: func.isRequired,
+  showPage: bool.isRequired,
 };
 
 SelectProvider.defaultProps = {
