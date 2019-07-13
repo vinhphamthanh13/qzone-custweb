@@ -604,6 +604,21 @@ class Booking extends PureComponent {
               </div>
             </div>
           )}
+          {!showPage && (
+            <div className={`${s.navBar} ${s.navBarInverse} h-space-btw`}>
+              <div className={s.bookingStepsWrapper}>
+                <Button disabled={!isBackValid} onClick={this.handleStepChange(-1)} className="simple-button">
+                  {this.renderChevron(isBackValid, -1)}
+                </Button>
+                <div className={s.stepper}>
+                  {this.renderSteppers()}
+                </div>
+                <Button disabled={!isNextValid} onClick={this.handleStepChange(1)} className="simple-button">
+                  {this.renderChevron(isNextValid, 1)}
+                </Button>
+              </div>
+            </div>
+          )}
           <Step
             {...stepProps[bookingStep]}
           />

@@ -170,11 +170,13 @@ class ProviderContent extends React.PureComponent {
             </div>
           </div>
           <div className={s.calendarTime}>
-            <div className={s.providerListCardDescriptionBottom}>
-              <Typography variant="body1" color="inherit">
-                Local timezone: {moment.tz.guess()}
-              </Typography>
-            </div>
+            {false && (
+              <div className={s.providerListCardDescriptionBottom}>
+                <Typography variant="body1" color="inherit">
+                  Local timezone: {moment.tz.guess()}
+                </Typography>
+              </div>
+            )}
             {this.renderTimeBox(providerMode)}
           </div>
         </div>
