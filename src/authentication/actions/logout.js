@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // Logout
 
 import { Auth } from 'aws-amplify';
@@ -51,6 +52,15 @@ export const logout = authenticator => (dispatch) => {
         dispatch(setLoading(false));
         dispatch(storeUserSessionLogin(initSession));
         // saveSession(initSession);
+      });
+    } else if (authProvider && authProvider === PROVIDER.FACEBOOK) {
+      FB.getLoginStatus((logoutResponse) => {
+        if (logoutResponse.status === 'connected') {
+          FB.logout();
+        }
+        dispatch(logoutSuccess());
+        dispatch(setLoading(false));
+        dispatch(storeUserSessionLogin(initSession));
       });
     } else {
       Auth.signOut({ global: true })

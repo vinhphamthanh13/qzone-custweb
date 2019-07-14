@@ -4,7 +4,9 @@ import { string, bool, func } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
 import { Formik } from 'formik';
-import { LOGIN_TYPES, FACEBOOK } from 'utils/constants';
+import {
+  LOGIN_TYPES,
+} from 'utils/constants';
 import Error from 'components/Error';
 import {
   FB_APP_ID,
@@ -13,7 +15,7 @@ import {
 } from 'config/auth';
 import Form from './components/Form';
 import {
-  login, createGoogleScript, loginGoogle, saveUserToAws,
+  login, createGoogleScript, loginGoogle, loginFacebook,
 } from './actions/login';
 import { loginSchema } from './components/schemas';
 
@@ -73,18 +75,15 @@ class Login extends React.Component {
   };
 
   handleLoginFaceBook = () => {
-    const { saveUserToAws: saveUserToAwsAction } = this.props;
-    FB.login(
-      (response) => {
-        const status = get(response, 'status');
-        const authResponse = get(response, 'authResponse');
-        if (status === FACEBOOK.STATUS.CONNECTED) {
-          console.log('facebook response', response);
-          saveUserToAwsAction(authResponse);
-        }
-      },
-      { scope: 'public_profile, email' },
-    );
+    const { loginFacebook: loginFacebookAction } = this.props;
+    FB.getLoginStatus((response) => {
+      const authResponse = get(response, 'authResponse');
+      if (!authResponse) {
+        loginFacebookAction(FB);
+      } else {
+        loginFacebookAction(FB, authResponse);
+      }
+    });
   };
 
 
@@ -128,7 +127,7 @@ class Login extends React.Component {
 Login.propTypes = {
   loginGoogle: func.isRequired,
   logInAction: func.isRequired,
-  saveUserToAws: func.isRequired,
+  loginFacebook: func.isRequired,
   onClose: func.isRequired,
   isOpen: bool,
   errorMessage: string,
@@ -148,6 +147,6 @@ const mapStateToProps = state => ({
 
 export default connect(mapStateToProps, {
   loginGoogle,
-  saveUserToAws,
+  loginFacebook,
   logInAction: login,
 })(Login);

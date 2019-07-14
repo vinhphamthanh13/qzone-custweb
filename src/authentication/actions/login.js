@@ -1,6 +1,7 @@
 import { Auth } from 'aws-amplify';
 import { get } from 'lodash';
 import moment from 'moment';
+import { FACEBOOK } from 'utils/constants';
 import {
   GOOGLE_ID,
   AUTH_METHOD,
@@ -94,8 +95,6 @@ const awsAuth = (provider, { token, expires }, user, dispatch) => {
       userType: 'CUSTOMER',
     };
     const [result, error] = await handleRequest(saveSocialUser, [socialAccount]);
-    console.log('credential after login ', provider);
-    console.log('credential after login with credential', credential);
     if (error) {
       dispatch(setError(error));
     } else {
@@ -104,7 +103,7 @@ const awsAuth = (provider, { token, expires }, user, dispatch) => {
         givenName: user.name,
       }));
       dispatch(storeUserSessionLogin({
-        authProvider: PROVIDER.GOOGLE,
+        authProvider: provider,
         start_session: moment().unix() * 1000,
         id: result.id,
         userName: user.name,
@@ -136,16 +135,41 @@ export const loginGoogle = () => async (dispatch) => {
 };
 
 // Facebook login
-export const saveUserToAws = data => async (dispatch) => {
-  console.log('data to login facebook', data);
+
+export const retrieveFacebookAccount = async (FB) => {
+  const user = {};
+  await FB.api('/me', { fields: 'email, name' }, (response) => {
+    const email = get(response, 'email');
+    const name = get(response, 'name');
+    user.email = email;
+    user.name = name;
+  });
+  return user;
+};
+
+export const loginFacebook = (FB, preAuthResponse = null) => async (dispatch) => {
   dispatch(setLoading(true));
-  const [result, error] = await handleRequest(saveSocialUser, [data]);
-  if (error) {
-    dispatch(setError(error));
+  if (!preAuthResponse) {
+    FB.login(
+      async (response) => {
+        const status = get(response, 'status');
+        if (status === FACEBOOK.STATUS.CONNECTED) {
+          const authResponse = get(response, 'authResponse');
+          const token = get(authResponse, 'accessToken');
+          const expires = get(authResponse, 'expiresIn');
+          const user = await retrieveFacebookAccount(FB);
+          awsAuth(PROVIDER.FACEBOOK, { token, expires }, user, dispatch);
+        }
+        dispatch(setLoading(false));
+      },
+      { scope: 'public_profile, email' },
+    );
   } else {
-    console.log('login facebook success and save to AWS', result);
+    const token = get(preAuthResponse, 'accessToken');
+    const expires = get(preAuthResponse, 'expiresIn');
+    const user = await retrieveFacebookAccount(FB);
+    awsAuth(PROVIDER.FACEBOOK, { token, expires }, user, dispatch);
   }
-  dispatch(setLoading(false));
 };
 
 // receive Push Notification
