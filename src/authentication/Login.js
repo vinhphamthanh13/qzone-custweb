@@ -38,7 +38,6 @@ class Login extends React.Component {
         version: FB_API_VERSION,
       });
 
-      FB.AppEvents.logPageView();
       FB.getLoginStatus((response) => {
         const status = get(response, 'status');
         const authResponse = get(response, 'authResponse');

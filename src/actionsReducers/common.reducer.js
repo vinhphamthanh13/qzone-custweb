@@ -16,7 +16,13 @@ const persistConfig = {
   key: 'common',
   storage,
   stateReconciler: autoMergeLevel2,
-  blacklist: ['errorMessage', 'isError', 'isLoading', 'isSucceed', 'succeedMessage'],
+  blacklist: [
+    'isLoading',
+    'isError',
+    'isSucceed',
+    'errorMessage',
+    'succeedMessage',
+  ],
 };
 
 const initState = {

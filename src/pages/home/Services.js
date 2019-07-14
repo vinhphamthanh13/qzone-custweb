@@ -24,16 +24,16 @@ export default function Services({
           && <EmptyItem message="No service available!" />
         }
         {services && services.map(service => (
-            <>
-              {false && (
-                <Grid item xs={10} sm={6} md={3} key={service.id}>
-                  <ServiceCard service={service} onBooking={onBooking} />
-                </Grid>
-              )}
-              {service && service.id && (
-                <Booking serviceId={service.id} handleAuth={handleAuth} />
-              )}
-            </>
+          <div key={service.id}>
+            {false && (
+              <Grid item xs={10} sm={6} md={3} key={service.id}>
+                <ServiceCard service={service} onBooking={onBooking} />
+              </Grid>
+            )}
+            {service && service.id && (
+              <Booking serviceId={service.id} handleAuth={handleAuth} />
+            )}
+          </div>
         ))}
       </Grid>
     </>
