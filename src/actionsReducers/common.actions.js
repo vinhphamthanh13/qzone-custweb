@@ -74,7 +74,7 @@ export const setServiceProvidersAction = () => async (dispatch) => {
   if (error) {
     dispatch(setError(error));
   }
-  if (Object.keys(tempList).length > 0) {
+  if (tempList && Object.keys(tempList).length > 0) {
     const serviceProvider = Object.keys(tempList).map(locationId => tempList[locationId]);
     dispatch(setTemporaryServiceByLocationAction(tempList));
     dispatch(setServiceProviders(flattenDeep(serviceProvider)));

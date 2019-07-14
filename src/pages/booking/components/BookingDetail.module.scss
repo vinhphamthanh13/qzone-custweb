@@ -57,6 +57,22 @@
   ) 1 100%;
 }
 
+.formTitle {
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid $gallery;
+  color: $main;
+}
+
+.formFields {
+  color: $info;
+  padding: 0 2em 0;
+  width: 400px;
+}
+
+.viewMapButton {
+  margin-left: 16px;
+}
+
 @media only screen and (max-width: $app-mobile) {
   .bookingAppointment {
     display: flex;
@@ -73,22 +89,13 @@
   }
 
   .clientInfo {
-    padding: 1em 0 0 2.5em;
+    border: none;
+    text-align: center;
+    padding: 0;
   }
-}
 
-.formTitle {
-  padding-bottom: 0.5em;
-  border-bottom: 1px solid $gallery;
-  color: $main;
-}
-
-.formFields {
-  color: $info;
-  padding: 0 2em 0;
-  width: 400px;
-}
-
-.viewMapButton {
-  margin-left: 16px;
+  .formFields {
+    padding: 0.5rem 1rem;
+    width: 100%;
+  }
 }

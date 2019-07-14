@@ -175,7 +175,7 @@ class BookingDetail extends React.PureComponent {
           <div className={s.formTitle}>
             <Typography variant="title" color="inherit" className="text-bold">Client Info</Typography>
           </div>
-          <div>
+          <div className="full-width">
             <div className={s.formFields}>
               <TextField
                 disabled

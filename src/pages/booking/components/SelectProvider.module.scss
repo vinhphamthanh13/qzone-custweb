@@ -36,6 +36,16 @@
   overflow: auto;
 }
 
+.selectProviderList {
+  height: 100%;
+}
+
+.selectDateOfBooking {
+  height: 100%;
+  position: absolute;
+  left: 1.7rem
+}
+
 @media only screen and (max-width: $app-mobile) {
   .selectProviderPage {
     display: flex;
@@ -45,12 +55,10 @@
   }
 }
 
-.selectProviderList {
-  height: 100%;
-}
 
-.selectDateOfBooking {
-  height: 100%;
-  position: absolute;
-  left: 1.7rem
+@media only screen and (max-width: 1443px) {
+  .selectProviderPage {
+    display: flex;
+    justify-content: flex-start;
+  }
 }
