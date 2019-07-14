@@ -70,7 +70,7 @@ class WaitListRegistration extends Component {
       const serviceId = get(service, 'id');
       const queuedProviders = providers && providers.filter(provider => provider.mode === 'QUEUE');
       const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
-      const customerId = get(userDetail, 'userSub');
+      const customerId = get(userDetail, 'userSub') || get(userDetail, 'id');
       const isQueuing = queuedProviders && !!queuedProviders.length;
 
       return {

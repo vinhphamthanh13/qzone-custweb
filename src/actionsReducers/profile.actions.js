@@ -23,7 +23,7 @@ export const updateProfileAction = payload => ({
 
 export const postUpdatedProfile = data => async (dispatch) => {
   dispatch(setLoading(true));
-  const userSub = get(data, 'userSub');
+  const userSub = get(data, 'userSub') || get(data, 'id');
   const [profileUpdated, error] = await handleRequest(updateProfile, [data]);
   if (error) {
     dispatch(setError(error));

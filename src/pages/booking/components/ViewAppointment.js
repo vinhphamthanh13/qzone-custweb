@@ -23,6 +23,7 @@ import {
 } from '@material-ui/icons';
 import { get } from 'lodash';
 import moment from 'moment';
+import momentum from 'moment-timezone';
 import AddToCalendar from 'react-add-to-calendar';
 import { history } from 'containers/App';
 import CustomLink from 'components/CustomLink';
@@ -49,9 +50,10 @@ class ViewAppointment extends Component {
   handleViewAppointment = () => {
     const {
       resetBooking: resetBookingAction,
-      userDetail: { userSub },
+      userDetail,
       goProfilePage: goProfilePageAction,
     } = this.props;
+    const userSub = get(userDetail, 'userSub') || get(userDetail, 'id');
     resetBookingAction();
     goProfilePageAction(PROFILE.PAGE.EVENT_LIST);
     history.push(`/profile/${userSub}`);
@@ -86,7 +88,7 @@ class ViewAppointment extends Component {
     const startTimeSec = moment(providerStartSec.replace(/\..*/, '')).unix();
     const duration = get(appointmentEvent, 'duration');
     const providerTimezoneId = get(appointmentEvent, 'timezone');
-    const timeZoneId = moment.tz.guess();
+    const timeZoneId = momentum.tz.guess();
     const addToCalendarTZ = moment(startTimeSec * 1000).tz(timeZoneId).format('Z');
     const bookedEvent = {
       title: serviceName,

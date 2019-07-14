@@ -151,7 +151,7 @@ class Booking extends PureComponent {
       let waitListStatus = '';
       let resolvedServiceId = serviceId;
       let resolvedTemporaryServiceId = temporaryServiceId;
-      const customerId = get(userDetail, 'userSub');
+      const customerId = get(userDetail, 'userSub') || get(userDetail, 'id');
 
       if (resolvedTemporaryServiceId && serviceProviders && serviceProviders.length > 0) {
         resolvedServiceId = resolvedServiceId || get(serviceProviders, '0.serviceId');
@@ -394,7 +394,7 @@ class Booking extends PureComponent {
     } = this.state;
     const availabilityId = get(bookingDetail, 'time.availabilityId');
     const duration = get(bookingDetail, 'time.duration');
-    const customerId = get(userDetail, 'userSub');
+    const customerId = get(userDetail, 'userSub') || get(userDetail, 'id');
     const startSec = get(bookingDetail, 'time.start');
     this.toggleConfirmDialog(false)();
     registerEvent({
@@ -608,7 +608,7 @@ class Booking extends PureComponent {
             </div>
           )}
           {!showPage && (
-            <div className={`${s.navBar} ${s.navBarInverse} h-space-btw`}>
+            <div className={`${s.navBar} ${s.navBarInverse}`}>
               <div className={s.bookingStepsWrapper}>
                 <Button disabled={!isBackValid} onClick={this.handleStepChange(-1)} className="simple-button">
                   {this.renderChevron(isBackValid, -1)}

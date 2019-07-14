@@ -2,7 +2,7 @@
 
 .navBar {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   background: linear-gradient(to bottom, $main, $white);
   height: $app-bar-height;
@@ -27,10 +27,8 @@
 }
 
 .bookingStepsWrapper {
-  width: 100%;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: row;
 }
 
 .stepper {
@@ -38,7 +36,7 @@
   padding: 0.5rem;
   border-radius: 0.4rem;
   display: flex;
-  min-width: $sm;
+  min-width: $app-mobile;
   justify-content: space-between;
 }
 
@@ -47,6 +45,41 @@
   justify-content: center;
   align-items: center;
   margin: auto 1rem;
+}
+
+@media only screen and (max-width: $app-mobile) {
+  .navBar {
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px;
+  }
+
+  .bookingStepsWrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .stepper {
+    border: 1.5px solid $gallery;
+    padding: 0.5rem;
+    border-radius: 0.4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-self: flex-start;
+  }
+
+  .step {
+    display: flex;
+    justify-content: flex-start;
+    margin: 0.2rem auto;
+    width: 50%;
+  }
 }
 
 .stepNumber {

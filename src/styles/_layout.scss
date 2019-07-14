@@ -251,11 +251,12 @@
   }
   & .slider-wrapper {
     display: flex;
+    width: 100%;
     flex-direction: column;
     @include breakpoint-up(sm) {
       flex-direction: row;
     }
-    justify-content: space-between;
+    justify-content: center;
     & .advertisers {
       display: none;
       @include breakpoint-up(md) {
@@ -267,10 +268,11 @@
   }
   & .slider-control {
     max-width: 570px;
-    min-width: 550px;
+    min-width: 375px;
     box-shadow: 1px 1px 3px #ccc;
     padding: 1rem;
-    margin: 0 1.5em;
+    margin: auto;
+    box-sizing: border-box;
   }
 }
 

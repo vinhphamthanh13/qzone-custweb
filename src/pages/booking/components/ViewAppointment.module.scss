@@ -4,7 +4,7 @@
   margin: 1em auto;
   display: flex;
   justify-content: space-evenly;
-  min-width: $sm;
+  min-width: $app-mobile;
   width: 60%;
   border: 1px solid $main_03;
   border-radius: 0.2rem;
@@ -95,6 +95,27 @@
 
 .providerAddress {
   margin: 1rem 0.5rem;
+}
+
+@media only screen and (max-width: $app-mobile) {
+  .viewAppointment {
+    display: flex;
+    flex-direction: column;
+  }
+  .providerAddress {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 1rem;
+  }
+
+  .viewTitle {
+    border-bottom: 1px solid $main-03;
+  }
+
+  .appointmentDetail {
+    padding: 0.5rem 0 1rem;
+  }
 }
 
 .appointmentInfo {

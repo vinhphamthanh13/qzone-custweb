@@ -92,7 +92,7 @@ class Provider extends Component {
     const providerAvatar = get(providerInfo, 'image.fileUrl');
     const providerDescription = get(providerInfo, 'description');
     const providerQualification = get(providerInfo, 'qualifications');
-    const customerId = get(userDetail, 'userSub');
+    const customerId = get(userDetail, 'userSub') || get(userDetail, 'id');
     const headContact = {
       name: providerName,
       email: providerEmail,
@@ -126,7 +126,7 @@ class Provider extends Component {
               />
             </div>
           </div>
-          <ProviderFooter loading={isLoading} />
+          <ProviderFooter loading={isLoading} maintenance={false} />
         </div>
       </>
     );

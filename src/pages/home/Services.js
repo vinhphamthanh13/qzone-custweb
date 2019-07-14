@@ -24,7 +24,7 @@ export default function Services({
           && <EmptyItem message="No service available!" />
         }
         {services && services.map(service => (
-          <div key={service.id}>
+          <div className="full-width" key={service.id}>
             {false && (
               <Grid item xs={10} sm={6} md={3} key={service.id}>
                 <ServiceCard service={service} onBooking={onBooking} />

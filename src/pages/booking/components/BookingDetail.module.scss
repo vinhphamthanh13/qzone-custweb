@@ -4,7 +4,6 @@
   margin: 1em auto;
   display: flex;
   justify-content: space-evenly;
-  min-width: $smx;
   max-width: $max-width;
   border: 1px solid $main_03;
   border-radius: 0.3rem;
@@ -25,6 +24,10 @@
 
 .serviceTitle {
   color: $main;
+}
+
+.serviceItems {
+  margin-top: 32px;
 }
 
 .bookingItems {
@@ -54,6 +57,26 @@
   ) 1 100%;
 }
 
+@media only screen and (max-width: $app-mobile) {
+  .bookingAppointment {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+  }
+
+  .bookingHeadInfo {
+    text-align: center;
+  }
+
+  .serviceItems {
+    padding: 0 1rem;
+  }
+
+  .clientInfo {
+    padding: 1em 0 0 2.5em;
+  }
+}
+
 .formTitle {
   padding-bottom: 0.5em;
   border-bottom: 1px solid $gallery;
@@ -64,10 +87,6 @@
   color: $info;
   padding: 0 2em 0;
   width: 400px;
-}
-
-.serviceItems {
-  margin-top: 32px;
 }
 
 .viewMapButton {

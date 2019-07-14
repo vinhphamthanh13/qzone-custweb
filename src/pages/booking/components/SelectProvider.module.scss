@@ -7,7 +7,6 @@
   flex-direction: column;
   justify-content: flex-start;
   width: 100%;
-  min-width: $smx;
   overflow: auto;
   max-width: $max-width;
   margin: 0 auto;
@@ -35,6 +34,15 @@
   justify-content: center;
   height: calc(100vh - 7rem);
   overflow: auto;
+}
+
+@media only screen and (max-width: $app-mobile) {
+  .selectProviderPage {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 .selectProviderList {
