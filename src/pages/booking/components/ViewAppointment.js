@@ -93,7 +93,7 @@ class ViewAppointment extends Component {
     const bookedEvent = {
       title: serviceName,
       description: serviceDescription,
-      location: `${streetAddress}, ${district}, ${stateName}, ${city}, ${country}`,
+      location: `${streetAddress}, ${city}, ${stateName} ${postCode}, ${country}`,
       startTime: `${moment(startTimeSec * 1000).format('YYYY-MM-DDTHH:mm:ss')}${addToCalendarTZ}`,
       endTime: `${moment(startTimeSec * 1000).add(duration, 'm').format('YYYY-MM-DDTHH:mm:ss')}${addToCalendarTZ}`,
     };
