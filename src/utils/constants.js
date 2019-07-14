@@ -50,7 +50,7 @@ export const regExPattern = {
   removedTimeZone: /\..*/,
 };
 
-export const loginType = {
+export const LOGIN_TYPES = {
   FB: 'FaceBook',
   GP: 'Google',
 };

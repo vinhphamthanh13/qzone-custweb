@@ -3,33 +3,22 @@ import React from 'react';
 import { string, bool, func } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
-import CustomModal from 'components/Modal/CustomModal';
 import { Formik } from 'formik';
-import { resetModalStatus } from 'actionsReducers/common.actions';
-import { loginType, FACEBOOK } from 'utils/constants';
+import { LOGIN_TYPES, FACEBOOK } from 'utils/constants';
+import Error from 'components/Error';
 import {
   FB_APP_ID,
   FB_API_VERSION,
+  AUTH_METHOD,
 } from 'config/auth';
 import Form from './components/Form';
 import {
-  login, createGoogleScript, googleLogIn, facebookLogIn,
+  login, createGoogleScript, loginGoogle, saveUserToAws,
 } from './actions/login';
 import { loginSchema } from './components/schemas';
 
 class Login extends React.Component {
-  state = {
-    error: { open: false, errorMessage: '' },
-  };
-
   componentDidMount() {
-    const ga = window.gapi && window.gapi.auth2
-      ? window.gapi.auth2.getAuthInstance() : null;
-
-    if (!ga) {
-      createGoogleScript();
-    }
-
     window.fbAsyncInit = () => {
       FB.init({
         appId: FB_APP_ID,
@@ -37,16 +26,7 @@ class Login extends React.Component {
         xfbml: true,
         version: FB_API_VERSION,
       });
-
-      FB.getLoginStatus((response) => {
-        const status = get(response, 'status');
-        const authResponse = get(response, 'authResponse');
-        console.log('facebook', authResponse);
-        if (status === FACEBOOK.STATUS.CONNECTED) {
-          // this.redirectToDashboard();
-          // this.handleFacebookUserData(authResponse);
-        }
-      });
+      FB.AppEvents.logPageView();
     };
 
     (function (document, script, id) {
@@ -59,33 +39,28 @@ class Login extends React.Component {
       js.src = 'https://connect.facebook.net/en_US/sdk.js';
       fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
-  }
 
-  componentWillReceiveProps(nextProps) {
-    const { errorMessage } = nextProps;
-    let error = {};
-    if (errorMessage) {
-      error = { open: true, errorMessage };
-    } else {
-      error = { open: false, errorMessage };
+    const ga = window.gapi && window.gapi[AUTH_METHOD]
+      ? window.gapi.auth2.getAuthInstance() : null;
+
+    if (!ga) {
+      createGoogleScript();
     }
-    this.setState({ error });
   }
 
-  onLogin = (values, name) => {
+  handleLogin = (values, name) => {
     const {
       logInAction,
-      facebookLogIn: facebookLogInAction,
-      googleLogIn: googleLogInAction,
+      loginGoogle: loginGoogleAction,
       isForgotPassword,
     } = this.props;
 
     switch (name) {
-      case loginType.FB:
-        facebookLogInAction();
+      case LOGIN_TYPES.FB:
+        this.handleLoginFaceBook();
         break;
-      case loginType.GP:
-        googleLogInAction();
+      case LOGIN_TYPES.GP:
+        loginGoogleAction();
         break;
       default:
         if (!isForgotPassword) logInAction(values);
@@ -97,42 +72,43 @@ class Login extends React.Component {
     this.props.onClose();
   };
 
-  closeCustomModal = () => {
-    const { resetModalStatusAction } = this.props;
-    resetModalStatusAction();
+  handleLoginFaceBook = () => {
+    const { saveUserToAws: saveUserToAwsAction } = this.props;
+    FB.login(
+      (response) => {
+        const status = get(response, 'status');
+        const authResponse = get(response, 'authResponse');
+        if (status === FACEBOOK.STATUS.CONNECTED) {
+          console.log('facebook response', response);
+          saveUserToAwsAction(authResponse);
+        }
+      },
+      { scope: 'public_profile, email' },
+    );
   };
+
 
   render() {
     const { isOpen, handleAuthenticate } = this.props;
     const socialActions = {
-      facebook: () => this.onLogin('', loginType.FB),
-      google: () => this.onLogin('', loginType.GP),
+      facebook: () => this.handleLogin('', LOGIN_TYPES.FB),
+      google: () => this.handleLogin('', LOGIN_TYPES.GP),
     };
     const loginInit = {
       email: '',
       password: '',
     };
-    const { error: { open, errorMessage } } = this.state;
-    const errorModal = open
-      ? (
-        <CustomModal
-          type="error"
-          title="Login failed!"
-          message={errorMessage}
-          isOpen={!!errorMessage}
-          onClose={this.closeCustomModal}
-        />) : null;
 
     return (
       <>
-        {errorModal}
+        <Error />
         {isOpen && (
           <div className="flex item-center cover-bg-black z-index-higher">
             <Formik
               initialValues={loginInit}
               validationSchema={loginSchema}
               enableReinitialize
-              onSubmit={this.onLogin}
+              onSubmit={this.handleLogin}
               render={props => (
                 <Form
                   {...props}
@@ -150,12 +126,11 @@ class Login extends React.Component {
 }
 
 Login.propTypes = {
-  googleLogIn: func.isRequired,
+  loginGoogle: func.isRequired,
   logInAction: func.isRequired,
-  facebookLogIn: func.isRequired,
+  saveUserToAws: func.isRequired,
   onClose: func.isRequired,
   isOpen: bool,
-  resetModalStatusAction: func.isRequired,
   errorMessage: string,
   handleAuthenticate: func.isRequired,
   isForgotPassword: bool.isRequired,
@@ -172,8 +147,7 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, {
-  googleLogIn,
-  facebookLogIn,
+  loginGoogle,
+  saveUserToAws,
   logInAction: login,
-  resetModalStatusAction: resetModalStatus,
 })(Login);

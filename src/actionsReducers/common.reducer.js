@@ -22,6 +22,7 @@ const persistConfig = {
     'isSucceed',
     'errorMessage',
     'succeedMessage',
+    'eventList',
   ],
 };
 

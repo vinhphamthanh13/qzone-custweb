@@ -10,7 +10,6 @@ import {
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import moment from 'moment';
-import momentum from 'moment-timezone';
 import {
   get,
   uniqBy,
@@ -310,7 +309,6 @@ class Booking extends PureComponent {
       serviceId: cachedServiceId,
     } = this.state;
 
-    console.log('momentum.tz.guess()', momentum.tz.guess());
     const bookedId = get(appointmentEvent, 'id');
     const cachedId = get(cachedAppointmentEvent, 'id');
 
@@ -323,7 +321,6 @@ class Booking extends PureComponent {
     if (cachedServiceProviders && cachedServiceProviders !== serviceProviders) {
       const specialEventIdList = cachedServiceProviders.map(serviceProvider => ({
         specialEventId: serviceProvider.id,
-        // customerTimezoneId: momentum.tz.guess(),
         customerTimezoneId: serviceProvider.timezoneId,
       }));
       setAvailabilitiesBySpecialEventBulk(specialEventIdList);

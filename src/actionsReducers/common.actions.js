@@ -1,4 +1,4 @@
-import { flattenDeep } from 'lodash';
+import { flattenDeep, get } from 'lodash';
 import { handleRequest } from 'utils/apiHelpers';
 import {
   findEventByCustomerId,
@@ -69,7 +69,8 @@ export const findEventByCustomerIdAction = id => async (dispatch) => {
 
 export const setServiceProvidersAction = () => async (dispatch) => {
   dispatch(setLoading(true));
-  const [{ temporaryServices: tempList }, error] = await handleRequest(temporaryServices, []);
+  const [result, error] = await handleRequest(temporaryServices, []);
+  const tempList = get(result, 'temporaryServices');
   if (error) {
     dispatch(setError(error));
   }

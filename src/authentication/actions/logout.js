@@ -8,7 +8,10 @@ import {
   LOGOUT_SUCCESS,
   LOGOUT_ERROR_RST,
 } from './constants';
-import { storeUserSessionLogin } from './login';
+import {
+  createGoogleScript,
+  storeUserSessionLogin,
+} from './login';
 
 const initSession = {};
 
@@ -30,10 +33,18 @@ const logoutError = payload => ({
 
 export const logout = authenticator => (dispatch) => {
   const { isAuthenticated, authProvider } = authenticator;
+
   if (isAuthenticated) {
     dispatch(setLoading(true));
     if (authProvider && authProvider === PROVIDER.GOOGLE) {
-      const ga = window.gapi[AUTH_METHOD].getAuthInstance();
+      let ga = window.gapi && window.gapi[AUTH_METHOD]
+        ? window.gapi.auth2.getAuthInstance() : null;
+
+      if (!ga) {
+        createGoogleScript();
+        ga = window.gapi[AUTH_METHOD].getAuthInstance();
+      }
+
       ga.signOut().then(() => {
         ga.disconnect();
         dispatch(logoutSuccess());
