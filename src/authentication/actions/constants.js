@@ -1,3 +1,5 @@
+import { BASE_URL, CLIENT_URL } from 'config/api';
+
 export const STORE_USER_SESSION_LOGIN = 'AUTH.STORE_USER_SESSION_LOGIN';
 export const STORE_USER_SESSION_ERROR = 'AUTH.STORE_USER_SESSION_ERROR';
 export const REGISTER_AWS_SUCCESS = 'AUTH.REGISTER_AWS_SUCCESS';
@@ -16,4 +18,17 @@ export const LOAD_SESSION_TO_STATE = 'AUTH.LOAD_SESSION_TO_STATE';
 export const SET_USER_DETAILS = 'AUTH.SET_USER_DETAILS';
 export const FIRE_BASE_STORE_USER = 'AUTH.FIRE_BASE_STORE_USER';
 export const AUTHENTICATED_KEY = 'qz_token';
-export const LOGIN_FACEBOOK_USER = 'AUTH.LOGIN_FACEBOOK_USER';
+export const FACEBOOK_AUTH_TOKEN = 'AUTH.FACEBOOK_AUTH_TOKEN';
+
+// export const API_BASE_URL = 'https://13.238.116.171:8094';
+// export const ACCESS_TOKEN = 'accessToken';
+
+// export const OAUTH2_REDIRECT_URI = 'http://172.24.68.74:3000/oauth2/redirect';
+export const OAUTH2_REDIRECT_URI = `${CLIENT_URL}/oauth2/redirect`;
+// export const OAUTH2_REDIRECT_URI = 'http://192.168.100.10:3000/oauth2/redirect';
+
+// export const GOOGLE_AUTH_URL = API_BASE_URL + '/oauth2/authorize/google?redirect_uri=' + OAUTH2_REDIRECT_URI;
+// export const FACEBOOK_AUTH_URL = `${API_BASE_URL}/oauth2/authorize/facebook?redirect_uri=${OAUTH2_REDIRECT_URI}`;
+export const FACEBOOK_AUTH_URL = `${BASE_URL}/oauth2/authorize/facebook?redirect_uri=${OAUTH2_REDIRECT_URI}`;
+// API_BASE_URL + '/oauth2/authorize/facebook?redirect_uri=' + OAUTH2_REDIRECT_URI;
+// export const GITHUB_AUTH_URL = API_BASE_URL + '/oauth2/authorize/github?redirect_uri=' + OAUTH2_REDIRECT_URI;

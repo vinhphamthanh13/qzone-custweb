@@ -1,4 +1,5 @@
 import Home from 'pages/Home';
+import OAuth2 from 'authentication/OAuth2';
 import Booking from 'pages/Booking';
 import PageNotFound from 'pages/PageNotFound';
 import AccessDenied from 'pages/AccessDenied';
@@ -14,6 +15,13 @@ const rootRoutes = [
     path: '/',
     name: 'Home',
     component: Home,
+  },
+  {
+    exact: false,
+    strict: false,
+    path: '/oauth2/redirect',
+    name: 'OAuth2',
+    component: OAuth2,
   },
   {
     exact: true,

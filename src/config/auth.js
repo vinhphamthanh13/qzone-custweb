@@ -9,7 +9,6 @@ export const PROVIDER = {
   QUEZONE: 'quezone',
 };
 export const FB_APP_ID = '243175483037775';
-export const FB_APP_SECRET = '57f0b5563eb747ca4e722f14644f6493';
 export const FB_API_VERSION = 'v3.3';
 
 export const AWS_CONFIG = {

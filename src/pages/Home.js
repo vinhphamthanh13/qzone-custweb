@@ -19,6 +19,7 @@ import {
 import {
   setServiceProvidersAction,
 } from 'actionsReducers/common.actions';
+import { fetchFacebookUser } from 'authentication/actions/login';
 import { regExPattern } from 'utils/constants';
 import Services from './home/Services';
 import Auth from './Auth';
@@ -36,18 +37,24 @@ export class Home extends React.PureComponent {
       services,
       serviceProviders,
       serviceProviderNearByList,
+      facebookToken,
+      userDetail,
     } = props;
     const {
       categories: cachedCategories,
       services: cachedServices,
       serviceProviders: cachedServiceProviders,
       serviceProviderNearByList: cachedServiceProviderNearByList,
+      facebookToken: cachedFacebookToken,
+      userDetail: cachedUserDetail,
     } = state;
     if (
       categories !== cachedCategories
       || serviceProviders !== cachedServiceProviders
       || services !== cachedServices
       || serviceProviderNearByList !== cachedServiceProviderNearByList
+      || facebookToken !== cachedFacebookToken
+      || userDetail !== cachedUserDetail
     ) {
       const combineServiceProviders = services && services.map((service) => {
         const linkedProvider = serviceProviders && serviceProviders
@@ -60,6 +67,8 @@ export class Home extends React.PureComponent {
         serviceProviders,
         serviceProviderNearByList,
         combineServiceProviders,
+        facebookToken,
+        userDetail,
       };
     }
     return null;
@@ -77,6 +86,8 @@ export class Home extends React.PureComponent {
       isOpenAdvancedSearch: false,
       isShowingAdvancedSearch: false,
       combineServiceProviders: null,
+      facebookToken: null,
+      userDetail: null,
     };
   }
 
@@ -100,10 +111,13 @@ export class Home extends React.PureComponent {
     const {
       isError: cachedIsError,
       errorMessage: cachedErrorMessage,
+      fetchFacebookUser: fetchFacebookUserAction,
     } = this.props;
     const {
       serviceProviders,
       categories: cachedCategories,
+      facebookToken,
+      userDetail,
     } = this.state;
 
     if (
@@ -114,6 +128,12 @@ export class Home extends React.PureComponent {
       || ((categories !== cachedCategories) && (!cachedCategories))
     ) {
       history.replace(`/in-maintenance/${uuidv1()}`);
+    }
+
+    console.log('component did update token >>>>>>', facebookToken);
+
+    if (!userDetail && facebookToken) {
+      fetchFacebookUserAction(facebookToken);
     }
   }
 
@@ -300,6 +320,7 @@ Home.propTypes = {
   setServiceCategoriesAction: func.isRequired,
   setServicesAction: func.isRequired,
   setServiceProvidersAction: func.isRequired,
+  fetchFacebookUser: func.isRequired,
 };
 
 Home.defaultProps = {
@@ -319,5 +340,6 @@ export default connect(
     setServiceCategoriesAction,
     setServicesAction,
     setServiceProvidersAction,
+    fetchFacebookUser,
   },
 )(Home);

@@ -16,6 +16,7 @@ import {
   saveSocialUser,
   fetchUserDetail,
   firebaseStoreUser,
+  fetchFBUser,
 } from 'actionsApi/auth';
 import {
   handleResponse,
@@ -26,6 +27,7 @@ import {
   STORE_USER_SESSION_ERROR,
   SET_USER_DETAILS,
   FIRE_BASE_STORE_USER,
+  FACEBOOK_AUTH_TOKEN,
 } from './constants';
 
 // Redux
@@ -115,6 +117,9 @@ const awsAuth = (provider, { token, expires }, user, dispatch) => {
       }));
     }
     dispatch(setLoading(false));
+  }).catch((error) => {
+    console.log('login federation failed', error);
+    dispatch(setError('Login failed'));
   });
 };
 
@@ -169,6 +174,39 @@ export const loginFacebook = (FB, preAuthResponse = null) => async (dispatch) =>
     const expires = get(preAuthResponse, 'expiresIn');
     const user = await retrieveFacebookAccount(FB);
     awsAuth(PROVIDER.FACEBOOK, { token, expires }, user, dispatch);
+  }
+};
+
+export const setFBTokenAction = payload => ({
+  type: FACEBOOK_AUTH_TOKEN,
+  payload,
+});
+
+export const fetchFacebookUser = token => async (dispatch) => {
+  dispatch(setLoading(true));
+  const user = await fetchFBUser(token);
+  if (user.status === 200) {
+    const userName = get(user, 'data.givenName');
+    const id = get(user, 'data.id');
+    // awsAuth(PROVIDER.FACEBOOK, { token, expires: 5710 }, { email, name }, dispatch);
+    dispatch(setUserDetails({
+      ...user.data,
+      givenName: userName,
+    }));
+    dispatch(storeUserSessionLogin({
+      authProvider: PROVIDER.FACEBOOK,
+      start_session: moment().unix() * 1000,
+      id,
+      userName,
+      givenName: userName,
+      qz_token: token,
+      qz_refresh_token: null,
+      expiration: moment().add(60, 'd').unix() * 1000,
+      isAuthenticated: !!id,
+    }));
+  } else {
+    dispatch(setError('Cannot login with your Facebook account at the moment!'));
+    dispatch(setLoading(false));
   }
 };
 
