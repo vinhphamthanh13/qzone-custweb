@@ -3,6 +3,8 @@ import {
   func,
   bool,
   string,
+  objectOf,
+  any,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
@@ -86,8 +88,6 @@ export class Home extends React.PureComponent {
       isOpenAdvancedSearch: false,
       isShowingAdvancedSearch: false,
       combineServiceProviders: null,
-      facebookToken: null,
-      userDetail: null,
     };
   }
 
@@ -96,10 +96,18 @@ export class Home extends React.PureComponent {
       setServiceCategoriesAction: setServiceCategories,
       setServicesAction: setServices,
       setServiceProvidersAction: setServiceProviders,
+      fetchFacebookUser: fetchFacebookUserAction,
+      userDetail,
+      facebookToken,
     } = this.props;
     setServiceCategories();
     setServices();
     setServiceProviders();
+    console.log('component did update', facebookToken);
+    console.log('component did update', userDetail);
+    if (!userDetail && facebookToken) {
+      fetchFacebookUserAction(facebookToken);
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -111,13 +119,10 @@ export class Home extends React.PureComponent {
     const {
       isError: cachedIsError,
       errorMessage: cachedErrorMessage,
-      fetchFacebookUser: fetchFacebookUserAction,
     } = this.props;
     const {
       serviceProviders,
       categories: cachedCategories,
-      facebookToken,
-      userDetail,
     } = this.state;
 
     if (
@@ -128,12 +133,6 @@ export class Home extends React.PureComponent {
       || ((categories !== cachedCategories) && (!cachedCategories))
     ) {
       history.replace(`/in-maintenance/${uuidv1()}`);
-    }
-
-    console.log('component did update token >>>>>>', facebookToken);
-
-    if (!userDetail && facebookToken) {
-      fetchFacebookUserAction(facebookToken);
     }
   }
 
@@ -321,11 +320,15 @@ Home.propTypes = {
   setServicesAction: func.isRequired,
   setServiceProvidersAction: func.isRequired,
   fetchFacebookUser: func.isRequired,
+  facebookToken: string,
+  userDetail: objectOf(any),
 };
 
 Home.defaultProps = {
   isError: false,
   errorMessage: '',
+  facebookToken: null,
+  userDetail: null,
 };
 
 const mapStateToProps = state => ({
