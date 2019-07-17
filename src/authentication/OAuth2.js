@@ -34,7 +34,7 @@ class OAuth2 extends Component {
     }
 
     if (error) {
-      setErrorAction('We encounter an unexpected error with your social account. Please sign up our system first!');
+      setErrorAction(error);
     }
 
     return (
