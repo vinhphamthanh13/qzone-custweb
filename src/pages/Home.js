@@ -3,8 +3,6 @@ import {
   func,
   bool,
   string,
-  objectOf,
-  any,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
@@ -21,7 +19,6 @@ import {
 import {
   setServiceProvidersAction,
 } from 'actionsReducers/common.actions';
-import { fetchFacebookUser } from 'authentication/actions/login';
 import { regExPattern } from 'utils/constants';
 import Services from './home/Services';
 import Auth from './Auth';
@@ -96,16 +93,10 @@ export class Home extends React.PureComponent {
       setServiceCategoriesAction: setServiceCategories,
       setServicesAction: setServices,
       setServiceProvidersAction: setServiceProviders,
-      fetchFacebookUser: fetchFacebookUserAction,
-      userDetail,
-      facebookToken,
     } = this.props;
     setServiceCategories();
     setServices();
     setServiceProviders();
-    if (!userDetail && facebookToken) {
-      fetchFacebookUserAction(facebookToken);
-    }
   }
 
   componentDidUpdate(prevProps) {
@@ -317,16 +308,11 @@ Home.propTypes = {
   setServiceCategoriesAction: func.isRequired,
   setServicesAction: func.isRequired,
   setServiceProvidersAction: func.isRequired,
-  fetchFacebookUser: func.isRequired,
-  facebookToken: string,
-  userDetail: objectOf(any),
 };
 
 Home.defaultProps = {
   isError: false,
   errorMessage: '',
-  facebookToken: null,
-  userDetail: null,
 };
 
 const mapStateToProps = state => ({
@@ -341,6 +327,5 @@ export default connect(
     setServiceCategoriesAction,
     setServicesAction,
     setServiceProvidersAction,
-    fetchFacebookUser,
   },
 )(Home);
