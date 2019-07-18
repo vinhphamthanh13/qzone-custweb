@@ -103,8 +103,6 @@ export class Home extends React.PureComponent {
     setServiceCategories();
     setServices();
     setServiceProviders();
-    console.log('component did update', facebookToken);
-    console.log('component did update', userDetail);
     if (!userDetail && facebookToken) {
       fetchFacebookUserAction(facebookToken);
     }
