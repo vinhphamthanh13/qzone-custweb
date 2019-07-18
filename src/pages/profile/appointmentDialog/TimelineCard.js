@@ -5,6 +5,7 @@ import {
   objectOf,
   any,
   func,
+  bool,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
@@ -40,6 +41,26 @@ import CountDownDisplay from './CountDownDisplay';
 import { STATUS } from './Appointment.constants';
 
 class TimelineCard extends Component {
+  static propTypes = {
+    id: string.isRequired,
+    serviceName: string.isRequired,
+    providerName: string.isRequired,
+    providerStartSec: string.isRequired,
+    timezone: string.isRequired,
+    duration: number.isRequired,
+    geoLocation: objectOf(any).isRequired,
+    setRatingService: func.isRequired,
+    bookingCode: string.isRequired,
+    customerId: string.isRequired,
+    cancelEventByIdAction: func.isRequired,
+    status: string.isRequired,
+    cancellable: bool,
+  };
+
+  static defaultProps = {
+    cancellable: true,
+  };
+
   static getDerivedStateFromProps(props, state) {
     const {
       serviceProviders,
@@ -108,6 +129,7 @@ class TimelineCard extends Component {
       geoLocation,
       id,
       status,
+      cancellable,
     } = this.props;
     const {
       isOpenMap,
@@ -283,16 +305,20 @@ class TimelineCard extends Component {
               </Typography>
             </div>
             {status === STATUS.UNSPECIFIED ? (
-              <Button
-                color="inherit"
-                variant="outlined"
-                className={!eventExpired ? s.cancelEvent : s.cancelEventHidden}
-                onClick={this.handleCancelEventConfirmation(true, id)}
-                disabled={eventExpired}
-              >
-                <Cancel color="inherit" className="icon-in-button-left" />
-                Cancel
-              </Button>
+              <>
+                {cancellable && (
+                  <Button
+                    color="inherit"
+                    variant="outlined"
+                    className={!eventExpired ? s.cancelEvent : s.cancelEventHidden}
+                    onClick={this.handleCancelEventConfirmation(true, id)}
+                    disabled={eventExpired}
+                  >
+                    <Cancel color="inherit" className="icon-in-button-left" />
+                    Cancel
+                  </Button>
+                )}
+              </>
             ) : (
               <Typography
                 variant="subheading"
@@ -308,21 +334,6 @@ class TimelineCard extends Component {
     );
   }
 }
-
-TimelineCard.propTypes = {
-  id: string.isRequired,
-  serviceName: string.isRequired,
-  providerName: string.isRequired,
-  providerStartSec: string.isRequired,
-  timezone: string.isRequired,
-  duration: number.isRequired,
-  geoLocation: objectOf(any).isRequired,
-  setRatingService: func.isRequired,
-  bookingCode: string.isRequired,
-  customerId: string.isRequired,
-  cancelEventByIdAction: func.isRequired,
-  status: string.isRequired,
-};
 
 const mapStateToProps = state => ({
   ...state.common,

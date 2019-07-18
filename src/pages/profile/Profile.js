@@ -65,8 +65,13 @@ class Profile extends Component {
   }
 
   componentDidUpdate() {
-    const { loginSession } = this.state;
+    const { loginSession, userDetail } = this.state;
     const expired = get(loginSession, 'expiration');
+
+    if (!userDetail) {
+      history.push('/');
+    }
+
     if (moment().isAfter(moment(expired))) {
       this.handleLogout();
     }

@@ -6,6 +6,7 @@ import Provider from 'pages/Provider';
 import Organization from 'pages/Organization';
 import Profile from 'pages/Profile';
 import Maintenance from 'pages/Maintenance';
+import ViewEvent from 'pages/profile/ViewEvent';
 
 const rootRoutes = [
   {
@@ -70,6 +71,13 @@ const rootRoutes = [
     path: '/in-maintenance/:id',
     name: 'Maintenance',
     component: Maintenance,
+  },
+  {
+    exact: true,
+    strict: true,
+    path: '/event/:id',
+    name: 'View Appointment',
+    component: ViewEvent,
   },
   {
     exact: true,

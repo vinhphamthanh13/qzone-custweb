@@ -3,6 +3,7 @@ import { handleRequest } from 'utils/apiHelpers';
 import {
   findEventByCustomerId,
   temporaryServices,
+  eventById,
 } from 'actionsApi/common';
 import { serviceProvidersRating } from 'actionsApi/rating';
 
@@ -13,6 +14,8 @@ export const RESET_MODAL_STATUS = 'COMMON.RESET_MODAL_STATUS';
 export const FIND_EVENT_BY_CUSTOMER_ID = 'HOME.FIND_EVENT_BY_CUSTOMER_ID';
 export const SET_SERVICE_PROVIDERS = 'HOME.SET_SERVICE_PROVIDERS';
 export const SET_TEMPORARY_SERVICE_BY_LOCATION = 'COMMON.SET_TEMPORARY_SERVICE_BY_LOCATION';
+export const SET_EVENT_BY_ID = 'COMMON.SET_EVENT_BY_ID';
+
 export const setLoading = payload => ({
   type: SET_LOADING,
   payload,
@@ -67,6 +70,11 @@ export const findEventByCustomerIdAction = id => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
+export const setEventByIdAction = payload => ({
+  type: SET_EVENT_BY_ID,
+  payload,
+});
+
 export const setServiceProvidersAction = () => async (dispatch) => {
   dispatch(setLoading(true));
   const [result, error] = await handleRequest(temporaryServices, []);
@@ -78,6 +86,17 @@ export const setServiceProvidersAction = () => async (dispatch) => {
     const serviceProvider = Object.keys(tempList).map(locationId => tempList[locationId]);
     dispatch(setTemporaryServiceByLocationAction(tempList));
     dispatch(setServiceProviders(flattenDeep(serviceProvider)));
+  }
+  dispatch(setLoading(false));
+};
+
+export const setEventById = id => async (dispatch) => {
+  dispatch(setLoading(true));
+  const [result, error] = await handleRequest(eventById, [id]);
+  if (error) {
+    dispatch(setError(error));
+  } else {
+    dispatch(setEventByIdAction(result));
   }
   dispatch(setLoading(false));
 };

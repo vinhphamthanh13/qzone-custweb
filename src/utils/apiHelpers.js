@@ -28,7 +28,7 @@ export const handleRequest = async (requestFunc, args, defaultResponse) => {
         null,
       ];
     }
-    return [null, message];
+    return [null, message || 'Your request is unavailable!'];
   } catch (e) {
     return [
       null,

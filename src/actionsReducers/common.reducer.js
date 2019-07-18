@@ -6,6 +6,7 @@ import {
   FIND_EVENT_BY_CUSTOMER_ID,
   SET_SERVICE_PROVIDERS,
   SET_TEMPORARY_SERVICE_BY_LOCATION,
+  SET_EVENT_BY_ID,
 } from 'actionsReducers/common.actions';
 
 import storage from 'redux-persist/lib/storage';
@@ -23,6 +24,7 @@ const persistConfig = {
     'errorMessage',
     'succeedMessage',
     'eventList',
+    'eventById',
   ],
 };
 
@@ -35,6 +37,7 @@ const initState = {
   eventList: null,
   serviceProviders: null,
   temporaryServicesByLocation: null,
+  eventById: null,
 };
 
 const reducer = (state = initState, action) => {
@@ -78,6 +81,11 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         temporaryServicesByLocation: action.payload,
+      };
+    case SET_EVENT_BY_ID:
+      return {
+        ...state,
+        eventById: action.payload,
       };
     default:
       return state;
