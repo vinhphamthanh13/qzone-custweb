@@ -27,7 +27,7 @@ const initState = {
 };
 
 const persistConfig = {
-  key: 'common',
+  key: 'booking',
   storage,
   stateReconciler: autoMergeLevel2,
   blacklist: [
