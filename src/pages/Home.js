@@ -60,7 +60,7 @@ export class Home extends React.PureComponent {
     ) {
       const combineServiceProviders = services && services.map((service) => {
         const linkedProvider = serviceProviders && serviceProviders
-          .filter(provider => provider.serviceId === service.id);
+          .filter(provider => provider && (provider.serviceId === service.id));
         return { ...service, linkedProvider };
       });
       return {
