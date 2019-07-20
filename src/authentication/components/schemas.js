@@ -61,3 +61,16 @@ export const forgotPasswordSchema = Yup.object().shape({
     .oneOf([Yup.ref('password')], 'Confirmed password is not matched')
     .required('Confirm password is required'),
 });
+
+export const clientInfo = Yup.object().shape({
+  userName: Yup
+    .string()
+    .required('User name cannot be blank'),
+  userEmail: Yup
+    .string()
+    .matches(regExPattern.email, { message: 'Email address is not valid' })
+    .required('Email cannot be blank'),
+  phoneNumber: Yup
+    .string()
+    .matches(regExPattern.phoneNumber, { message: 'Phone number is invalid' }),
+});

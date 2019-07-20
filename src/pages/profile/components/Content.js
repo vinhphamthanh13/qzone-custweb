@@ -13,11 +13,12 @@ import {
 import { findEventByCustomerIdAction } from 'actionsReducers/common.actions';
 import { cancelEventById } from 'actionsReducers/profile.actions';
 import { trackingAppointmentByIdsAction } from 'actionsReducers/customer.actions';
+import { setBookingStep } from 'actionsReducers/booking.actions';
 import {
   setSurveys,
   setAssessmentAction,
 } from 'actionsReducers/surveys.action';
-import { PROFILE } from 'utils/constants';
+import { PROFILE, BOOKING } from 'utils/constants';
 import WaitList from './WaitList';
 import Info from './Info';
 import Survey from './Survey';
@@ -156,9 +157,14 @@ class Content extends Component {
   }
 
   handleSignOut = () => {
-    const { onClose, handleLogout } = this.props;
+    const {
+      onClose,
+      handleLogout,
+      setBookingStep: setBookingStepAction,
+    } = this.props;
     onClose();
     handleLogout();
+    setBookingStepAction(BOOKING.STEPS.SELECT_PROVIDER);
   };
 
   handleSelectSideMenu = panel => (event) => {
@@ -272,6 +278,7 @@ Content.propTypes = {
   cancelEventById: func.isRequired,
   trackingAppointmentByIdsAction: func.isRequired,
   handleLogout: func.isRequired,
+  setBookingStep: func.isRequired,
 };
 
 Content.defaultProps = {
@@ -291,4 +298,5 @@ export default connect(mapStateToProps, {
   trackingAppointmentByIdsAction,
   setSurveys,
   setAssessmentAction,
+  setBookingStep,
 })(Content);

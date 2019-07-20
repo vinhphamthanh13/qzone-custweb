@@ -296,7 +296,6 @@ class Booking extends PureComponent {
       getServiceByIdAction: getServiceById,
       setProvidersByServiceIdAction: setProvidersByServiceId,
       waitListsById: cachedWaitListsById,
-      // availabilityId: cachedAvailabilityId,
       setAvailabilitiesByIdAction: setAvailabilitiesById,
       setServiceProvidersAction: setServiceProviders,
       waitListRegistered: cachedWaitListRegistered,
@@ -504,6 +503,11 @@ class Booking extends PureComponent {
     window.scrollTo(0, this.myBooking.current.offsetTop);
   };
 
+  handleSignUpGuest = (info) => {
+    const { saveGuestInfo: saveGuestInfoAction } = this.props;
+    saveGuestInfoAction(info);
+  };
+
   render() {
     const {
       setBookingDetail: setBookingDetailAction,
@@ -552,7 +556,6 @@ class Booking extends PureComponent {
       },
       [BOOKING.STEPS.CONFIRM_BOOKING]: {
         bookingService: service,
-        handleAuth,
         handleConfirmDialog: this.toggleConfirmDialog(true),
       },
       [BOOKING.STEPS.VIEW_BOOKING]: {

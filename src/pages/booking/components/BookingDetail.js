@@ -3,7 +3,8 @@ import {
   func,
 } from 'prop-types';
 import {
-  Button, TextField, Typography,
+  Button,
+  Typography,
 } from '@material-ui/core';
 import {
   AvTimer,
@@ -11,7 +12,6 @@ import {
   LocationOn,
   PersonPin,
   Book,
-  Fingerprint,
   Person,
 } from '@material-ui/icons';
 import { connect } from 'react-redux';
@@ -24,12 +24,25 @@ import {
   defaultDateFormat,
   AUTHENTICATED_KEY,
 } from 'utils/constants';
-import formatName from 'utils/formatName';
 import RateStar from 'components/Rating/RateStar';
-import MapDialog from '../../../components/Map/MapDialog';
+import {
+  saveGuestInfo,
+} from 'authentication/actions/login';
+import MapDialog from 'components/Map/MapDialog';
+import ClientInfo from './ClientInfo';
 import s from './BookingDetail.module.scss';
 
 class BookingDetail extends React.PureComponent {
+  static propTypes = {
+    bookingService: serviceType,
+    handleConfirmDialog: func.isRequired,
+    saveGuestInfo: func.isRequired,
+  };
+
+  static defaultProps = {
+    bookingService: null,
+  };
+
   static getDerivedStateFromProps(props, state) {
     const {
       bookingDetail,
@@ -63,6 +76,8 @@ class BookingDetail extends React.PureComponent {
       bookingDetail: null,
       userDetail: null,
       loginSession: null,
+      captchaVerified: false,
+      formValid: false,
     };
   }
 
@@ -71,25 +86,45 @@ class BookingDetail extends React.PureComponent {
   };
 
   handleConfirmDialog = isAuthenticated => () => {
-    const { handleConfirmDialog, handleAuth } = this.props;
+    const { handleConfirmDialog } = this.props;
     if (isAuthenticated) {
       handleConfirmDialog();
-    } else {
-      handleAuth('isLoginOpen');
     }
   };
 
-  renderBookingButton = auth => (auth ? (
-    <>
-      <Book color="inherit" className="icon-small icon-in-button-left" />
-      <Typography variant="body1" color="inherit">Book Now</Typography>
-    </>
-  ) : (
-    <>
-      <Fingerprint color="inherit" className="icon-small icon-in-button-left" />
-      <Typography variant="body1" color="inherit">Sign In</Typography>
-    </>
-  ));
+  verifyCaptcha = () => {
+    console.log('captcha after save social user is sete to true');
+    this.setState({
+      captchaVerified: true,
+    });
+  };
+
+  handleCaptchaVerified = (response, userInfo) => {
+    const { saveGuestInfo: saveGuestInfoAction } = this.props;
+    if (response) {
+      saveGuestInfoAction(userInfo, this.verifyCaptcha);
+    }
+  };
+
+  handleInvalidCaptcha = () => {
+    this.setState({
+      captchaVerified: false,
+    });
+  };
+
+  handleFormValidation = isValid => this.setState({ formValid: isValid });
+
+  handleGuestInfo = (values) => {
+    const givenName = get(values, 'userName');
+    const email = get(values, 'userEmail');
+    const phone = get(values, 'phoneNumber');
+    return {
+      givenName,
+      email,
+      phone,
+      userType: 'GUEST',
+    };
+  };
 
   render() {
     const {
@@ -99,7 +134,10 @@ class BookingDetail extends React.PureComponent {
       bookingDetail,
       userDetail,
       loginSession,
+      captchaVerified,
+      formValid,
     } = this.state;
+
     const serviceName = get(bookingService, 'name');
     const bookingTime = get(bookingDetail, 'time.start');
     const provider = get(bookingDetail, 'provider');
@@ -107,11 +145,11 @@ class BookingDetail extends React.PureComponent {
     const duration = get(provider, 'avgServiceTime');
     const fullAddress = get(provider, 'geoLocation.fullAddress');
     const providerRating = get(provider, 'rating');
-    const userGiven = get(userDetail, 'givenName');
-    const userFamily = get(userDetail, 'familyName');
-    const userEmail = get(userDetail, 'email');
-    const userPhone = get(userDetail, 'telephone');
     const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
+    const isBookingValid = isAuthenticated || (formValid && captchaVerified);
+
+    console.log('booking Detail ======> state', this.state);
+    console.log('booking Detail ======> props', this.props);
 
     return (
       <div className={s.bookingAppointment}>
@@ -165,9 +203,11 @@ class BookingDetail extends React.PureComponent {
             <Button
               variant="outlined"
               className="main-button"
-              onClick={this.handleConfirmDialog(isAuthenticated)}
+              onClick={this.handleConfirmDialog(isBookingValid)}
+              disabled={!isBookingValid}
             >
-              {this.renderBookingButton(isAuthenticated)}
+              <Book color="inherit" className="icon-small icon-in-button-left" />
+              <Typography variant="body1" color="inherit">Book Now</Typography>
             </Button>
           </div>
         </div>
@@ -176,29 +216,14 @@ class BookingDetail extends React.PureComponent {
             <Typography variant="title" color="inherit" className="text-bold">Client Info</Typography>
           </div>
           <div className="full-width">
-            <div className={s.formFields}>
-              <TextField
-                disabled
-                fullWidth
-                label="Client name"
-                value={formatName({ givenName: userGiven, familyName: userFamily })}
-                margin="dense"
-              />
-              <TextField
-                disabled
-                fullWidth
-                label="Email"
-                value={userEmail || ''}
-                margin="dense"
-              />
-              <TextField
-                disabled
-                fullWidth
-                label="Phone number"
-                value={userPhone || ''}
-                margin="dense"
-              />
-            </div>
+            <ClientInfo
+              handleFormValidation={this.handleFormValidation}
+              userDetail={userDetail}
+              verifyCallback={this.handleCaptchaVerified}
+              expiredCallback={this.handleInvalidCaptcha}
+              onloadCallback={this.handleInvalidCaptcha}
+              handleGuestInfo={this.handleGuestInfo}
+            />
           </div>
         </div>
         <MapDialog
@@ -212,19 +237,11 @@ class BookingDetail extends React.PureComponent {
   }
 }
 
-BookingDetail.propTypes = {
-  bookingService: serviceType,
-  handleConfirmDialog: func.isRequired,
-  handleAuth: func.isRequired,
-};
-
-BookingDetail.defaultProps = {
-  bookingService: null,
-};
-
 const mapStatToProps = state => ({
   ...state.auth,
   ...state.booking,
 });
 
-export default connect(mapStatToProps)(React.memo(BookingDetail));
+export default connect(mapStatToProps, {
+  saveGuestInfo,
+})(React.memo(BookingDetail));

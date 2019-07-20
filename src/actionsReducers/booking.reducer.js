@@ -32,7 +32,7 @@ const persistConfig = {
   stateReconciler: autoMergeLevel2,
   blacklist: [
     'appointmentEvent',
-    'bookingDetail',
+    // 'bookingDetail',
   ],
 };
 

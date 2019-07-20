@@ -106,7 +106,7 @@ export const passwordPolicy = {
 export const telephonePolicy = {
   statement: 'Dial mobile phone numbers format:',
   items: [
-    '+[country code][are code][phone number]',
+    '+[country code][area code][phone number]',
     'Example: +61412345678',
   ],
 };
