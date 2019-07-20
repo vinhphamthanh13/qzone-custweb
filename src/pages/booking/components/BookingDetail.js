@@ -25,11 +25,24 @@ import {
   AUTHENTICATED_KEY,
 } from 'utils/constants';
 import RateStar from 'components/Rating/RateStar';
+import {
+  saveGuestInfo,
+} from 'authentication/actions/login';
 import MapDialog from 'components/Map/MapDialog';
 import ClientInfo from './ClientInfo';
 import s from './BookingDetail.module.scss';
 
 class BookingDetail extends React.PureComponent {
+  static propTypes = {
+    bookingService: serviceType,
+    handleConfirmDialog: func.isRequired,
+    saveGuestInfo: func.isRequired,
+  };
+
+  static defaultProps = {
+    bookingService: null,
+  };
+
   static getDerivedStateFromProps(props, state) {
     const {
       bookingDetail,
@@ -73,35 +86,45 @@ class BookingDetail extends React.PureComponent {
   };
 
   handleConfirmDialog = isAuthenticated => () => {
-    const { handleConfirmDialog, handleAuth } = this.props;
+    const { handleConfirmDialog } = this.props;
     if (isAuthenticated) {
       handleConfirmDialog();
-    } else {
-      handleAuth('isLoginOpen');
     }
   };
 
-  handleCaptchaVerified = (response) => {
-    if (response) {
-      this.setState({
-        captchaVerified: true,
-      });
-    }
-  };
-
-  handleExpiredCaptchaCallback = () => {
+  verifyCaptcha = () => {
+    console.log('captcha after save social user is sete to true');
     this.setState({
-      captchaVerified: false,
+      captchaVerified: true,
     });
   };
 
-  handleCaptchaLoad = () => {
+  handleCaptchaVerified = (response, userInfo) => {
+    const { saveGuestInfo: saveGuestInfoAction } = this.props;
+    if (response) {
+      saveGuestInfoAction(userInfo, this.verifyCaptcha);
+    }
+  };
+
+  handleInvalidCaptcha = () => {
     this.setState({
       captchaVerified: false,
     });
   };
 
   handleFormValidation = isValid => this.setState({ formValid: isValid });
+
+  handleGuestInfo = (values) => {
+    const givenName = get(values, 'userName');
+    const email = get(values, 'userEmail');
+    const phone = get(values, 'phoneNumber');
+    return {
+      givenName,
+      email,
+      phone,
+      userType: 'GUEST',
+    };
+  };
 
   render() {
     const {
@@ -124,6 +147,9 @@ class BookingDetail extends React.PureComponent {
     const providerRating = get(provider, 'rating');
     const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
     const isBookingValid = isAuthenticated || (formValid && captchaVerified);
+
+    console.log('booking Detail ======> state', this.state);
+    console.log('booking Detail ======> props', this.props);
 
     return (
       <div className={s.bookingAppointment}>
@@ -194,8 +220,9 @@ class BookingDetail extends React.PureComponent {
               handleFormValidation={this.handleFormValidation}
               userDetail={userDetail}
               verifyCallback={this.handleCaptchaVerified}
-              expiredCallback={this.handleExpiredCaptchaCallback}
-              onloadCallback={this.handleCaptchaLoad}
+              expiredCallback={this.handleInvalidCaptcha}
+              onloadCallback={this.handleInvalidCaptcha}
+              handleGuestInfo={this.handleGuestInfo}
             />
           </div>
         </div>
@@ -210,19 +237,11 @@ class BookingDetail extends React.PureComponent {
   }
 }
 
-BookingDetail.propTypes = {
-  bookingService: serviceType,
-  handleConfirmDialog: func.isRequired,
-  handleAuth: func.isRequired,
-};
-
-BookingDetail.defaultProps = {
-  bookingService: null,
-};
-
 const mapStatToProps = state => ({
   ...state.auth,
   ...state.booking,
 });
 
-export default connect(mapStatToProps)(React.memo(BookingDetail));
+export default connect(mapStatToProps, {
+  saveGuestInfo,
+})(React.memo(BookingDetail));

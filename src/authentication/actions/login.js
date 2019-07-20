@@ -26,6 +26,8 @@ import {
   STORE_USER_SESSION_ERROR,
   SET_USER_DETAILS,
   FIRE_BASE_STORE_USER,
+  SET_GUEST_ERROR,
+  CLEAR_GUEST_ERROR,
 } from './constants';
 
 // Redux
@@ -274,4 +276,38 @@ export const login = (value) => {
         dispatch(setLoading(false));
       });
   };
+};
+
+// Q GUEST
+
+export const setGuestErrorAction = () => ({
+  type: SET_GUEST_ERROR,
+});
+
+export const clearGuestErrorAction = () => ({
+  type: CLEAR_GUEST_ERROR,
+});
+
+export const saveGuestInfo = (data, callback) => async (dispatch) => {
+  dispatch(setLoading(true));
+  const [result, error] = await handleRequest(saveSocialUser, [data]);
+  if (error) {
+    dispatch(setError(error));
+    dispatch(setGuestErrorAction());
+  } else {
+    const session = {
+      authProvider: PROVIDER.QUEZONE,
+      id: get(result, 'userSub') || get(result, 'id'),
+      start_session: moment().unix() * 1000,
+      username: get(result, 'fullName') || get(result, 'givenName'),
+      qz_token: null,
+      qz_refresh_token: null,
+      expiration: moment().add(1, 'd').unix() * 1000, // AWS exp counted in second
+      isAuthenticated: !!get(result, 'userSub') || !!get(result, 'id'),
+    };
+    dispatch(storeUserSessionLogin(session));
+    dispatch(setUserDetails(result));
+    callback();
+  }
+  dispatch(setLoading(false));
 };

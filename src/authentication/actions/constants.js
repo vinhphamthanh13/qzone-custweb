@@ -19,6 +19,9 @@ export const SET_USER_DETAILS = 'AUTH.SET_USER_DETAILS';
 export const FIRE_BASE_STORE_USER = 'AUTH.FIRE_BASE_STORE_USER';
 export const AUTHENTICATED_KEY = 'qz_token';
 export const FACEBOOK_AUTH_TOKEN = 'AUTH.FACEBOOK_AUTH_TOKEN';
+export const SET_GUEST_ERROR = 'AUTH.SET_GUEST_ERROR';
+export const CLEAR_GUEST_ERROR = 'AUTH.CLEAR_AUTH_ERROR';
+
 
 // export const API_BASE_URL = 'https://13.238.116.171:8094';
 // export const ACCESS_TOKEN = 'accessToken';

@@ -21,6 +21,8 @@ import {
   FIRE_BASE_STORE_USER,
   AUTHENTICATED_KEY,
   FACEBOOK_AUTH_TOKEN,
+  SET_GUEST_ERROR,
+  CLEAR_GUEST_ERROR,
 } from './constants';
 
 const authInitialize = {
@@ -39,6 +41,7 @@ const authInitialize = {
   isLogoutError: false,
   firebaseUserStored: null,
   facebookToken: null,
+  guestUserError: false,
 };
 
 const auth = (state = authInitialize, action) => {
@@ -153,6 +156,16 @@ const auth = (state = authInitialize, action) => {
       return {
         ...state,
         facebookToken: action.payload,
+      };
+    case SET_GUEST_ERROR:
+      return {
+        ...state,
+        guestUserError: true,
+      };
+    case CLEAR_GUEST_ERROR:
+      return {
+        ...state,
+        guestUserError: false,
       };
     default:
       return state;

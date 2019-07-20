@@ -6,6 +6,8 @@ import {
   bool,
   any,
 } from 'prop-types';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
 import { get } from 'lodash';
 import { withFormik } from 'formik';
 import { TextField, InputAdornment } from '@material-ui/core';
@@ -14,6 +16,7 @@ import { POPOVER_TYPE } from 'utils/constants';
 import { clientInfo } from 'authentication/components/schemas';
 import { GOOGLE_CAPTCHA_SITE_KEY } from 'config/auth';
 import PolicyPopover from 'authentication/components/PolicyPopover';
+import { clearGuestErrorAction } from 'authentication/actions/login';
 import s from './ClientInfo.module.scss';
 
 class ClientInfo extends Component {
@@ -30,6 +33,7 @@ class ClientInfo extends Component {
     expiredCallback: func.isRequired,
     handleSubmit: func.isRequired,
     onloadCallback: func.isRequired,
+    clearGuestErrorAction: func.isRequired,
   };
 
   static defaultProps = {
@@ -39,19 +43,51 @@ class ClientInfo extends Component {
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { userDetail } = props;
-    const { userDetail: cachedUserDetail } = state;
+    const {
+      userDetail,
+      guestUserError,
+    } = props;
+    const {
+      userDetail: cachedUserDetail,
+      guestUserError: cachedGuestUserError,
+    } = state;
 
-    if (userDetail !== cachedUserDetail) {
-      return { userDetail };
+    if (
+      userDetail !== cachedUserDetail
+      || guestUserError !== cachedGuestUserError
+    ) {
+      return {
+        userDetail,
+        guestUserError,
+      };
     }
 
     return null;
   }
 
-  state = {
-    userDetail: null,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      userDetail: null,
+      guestUserError: false,
+    };
+
+    this.recaptcha = React.createRef();
+  }
+
+
+  componentDidUpdate() {
+    const { clearGuestErrorAction: clearGuestError } = this.props;
+    const {
+      guestUserError,
+    } = this.state;
+    if (guestUserError) {
+      clearGuestError();
+      if (this.recaptcha.current) {
+        this.recaptcha.current.reset();
+      }
+    }
+  }
 
   handleInput = (event) => {
     const {
@@ -62,6 +98,22 @@ class ClientInfo extends Component {
     setFieldValue(name, value);
   };
 
+  handleVerifiedCaptcha = (response) => {
+    const {
+      verifyCallback,
+      values,
+    } = this.props;
+    const email = get(values, 'userEmail');
+    const givenName = get(values, 'userName');
+    const phone = get(values, 'phoneNumber');
+    verifyCallback(response, {
+      givenName,
+      email,
+      phone,
+      userType: 'GUEST',
+    });
+  };
+
   render() {
     const {
       values,
@@ -70,7 +122,6 @@ class ClientInfo extends Component {
       isInitialValid,
       isValid,
       expiredCallback,
-      verifyCallback,
       touched,
       handleBlur,
       handleFormValidation,
@@ -83,6 +134,7 @@ class ClientInfo extends Component {
     const userName = get(values, 'userName') || '';
     const userEmail = get(values, 'userEmail') || '';
     const phoneNumber = get(values, 'phoneNumber') || '';
+    const userId = get(userDetail, 'userSub') || get(userDetail, 'id');
     handleFormValidation(isValid);
 
     return (
@@ -92,8 +144,7 @@ class ClientInfo extends Component {
             <TextField
               fullWidth
               autoFocus={!userDetail}
-              disabled={userDetail}
-              autoComplete
+              disabled={!!userId}
               name="userName"
               label="Client name"
               placeholder="Enter your name"
@@ -106,8 +157,7 @@ class ClientInfo extends Component {
             />
             <TextField
               fullWidth
-              disabled={userDetail}
-              autoComplete
+              disabled={!!userId}
               name="userEmail"
               label="Email address"
               placeholder="Enter your email address"
@@ -121,8 +171,7 @@ class ClientInfo extends Component {
             <TextField
               fullWidth
               name="phoneNumber"
-              disabled={userDetail}
-              autoComplete
+              disabled={!!userId}
               label="Phone number"
               placeholder="Enter your phone number"
               onChange={this.handleInput}
@@ -144,9 +193,10 @@ class ClientInfo extends Component {
         {!userDetail && (isValid || isInitialValid) && (
           <div className={s.recaptcha}>
             <Recaptcha
+              ref={this.recaptcha}
               sitekey={GOOGLE_CAPTCHA_SITE_KEY}
               render="explicit"
-              verifyCallback={verifyCallback}
+              verifyCallback={this.handleVerifiedCaptcha}
               expiredCallback={expiredCallback}
               onloadCallback={onloadCallback}
             />
@@ -157,18 +207,25 @@ class ClientInfo extends Component {
   }
 }
 
-export default withFormik({
-  validationSchema: clientInfo,
-  enableReinitialize: true,
-  mapPropsToValues: (props) => {
-    const { userDetail } = props;
-    const userName = get(userDetail, 'fullName');
-    const userEmail = get(userDetail, 'email');
-    const phoneNumber = get(userDetail, 'telephone');
-    return {
-      userName,
-      userEmail,
-      phoneNumber,
-    };
-  },
-})(ClientInfo);
+export default compose(
+  withFormik({
+    validationSchema: clientInfo,
+    enableReinitialize: true,
+    mapPropsToValues: (props) => {
+      const { userDetail } = props;
+      const userName = get(userDetail, 'givenName');
+      const userEmail = get(userDetail, 'email');
+      const phoneNumber = get(userDetail, 'telephone');
+      return {
+        userName,
+        userEmail,
+        phoneNumber,
+      };
+    },
+  }),
+  connect(state => ({
+    ...state.auth,
+  }), {
+    clearGuestErrorAction,
+  }),
+)(ClientInfo);
