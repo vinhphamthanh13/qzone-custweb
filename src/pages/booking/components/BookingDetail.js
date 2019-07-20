@@ -12,7 +12,6 @@ import {
   LocationOn,
   PersonPin,
   Book,
-  Fingerprint,
   Person,
 } from '@material-ui/icons';
 import { connect } from 'react-redux';
@@ -65,6 +64,7 @@ class BookingDetail extends React.PureComponent {
       userDetail: null,
       loginSession: null,
       captchaVerified: false,
+      formValid: false,
     };
   }
 
@@ -81,21 +81,6 @@ class BookingDetail extends React.PureComponent {
     }
   };
 
-  renderBookingButton = (auth) => {
-    const { captchaVerified } = this.state;
-    return (auth || captchaVerified) ? (
-      <>
-        <Book color="inherit" className="icon-small icon-in-button-left" />
-        <Typography variant="body1" color="inherit">Book Now</Typography>
-      </>
-    ) : (
-      <>
-        <Fingerprint color="inherit" className="icon-small icon-in-button-left" />
-        <Typography variant="body1" color="inherit">Sign In</Typography>
-      </>
-    );
-  };
-
   handleCaptchaVerified = (response) => {
     if (response) {
       this.setState({
@@ -110,6 +95,13 @@ class BookingDetail extends React.PureComponent {
     });
   };
 
+  handleCaptchaLoad = () => {
+    this.setState({
+      captchaVerified: false,
+    });
+  };
+
+  handleFormValidation = isValid => this.setState({ formValid: isValid });
 
   render() {
     const {
@@ -119,7 +111,10 @@ class BookingDetail extends React.PureComponent {
       bookingDetail,
       userDetail,
       loginSession,
+      captchaVerified,
+      formValid,
     } = this.state;
+
     const serviceName = get(bookingService, 'name');
     const bookingTime = get(bookingDetail, 'time.start');
     const provider = get(bookingDetail, 'provider');
@@ -128,6 +123,7 @@ class BookingDetail extends React.PureComponent {
     const fullAddress = get(provider, 'geoLocation.fullAddress');
     const providerRating = get(provider, 'rating');
     const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
+    const isBookingValid = isAuthenticated || (formValid && captchaVerified);
 
     return (
       <div className={s.bookingAppointment}>
@@ -181,9 +177,11 @@ class BookingDetail extends React.PureComponent {
             <Button
               variant="outlined"
               className="main-button"
-              onClick={this.handleConfirmDialog(isAuthenticated)}
+              onClick={this.handleConfirmDialog(isBookingValid)}
+              disabled={!isBookingValid}
             >
-              {this.renderBookingButton(isAuthenticated)}
+              <Book color="inherit" className="icon-small icon-in-button-left" />
+              <Typography variant="body1" color="inherit">Book Now</Typography>
             </Button>
           </div>
         </div>
@@ -193,9 +191,11 @@ class BookingDetail extends React.PureComponent {
           </div>
           <div className="full-width">
             <ClientInfo
+              handleFormValidation={this.handleFormValidation}
               userDetail={userDetail}
               verifyCallback={this.handleCaptchaVerified}
               expiredCallback={this.handleExpiredCaptchaCallback}
+              onloadCallback={this.handleCaptchaLoad}
             />
           </div>
         </div>

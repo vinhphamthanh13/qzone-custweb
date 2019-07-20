@@ -85,23 +85,25 @@ class Slide extends Component {
                 }
               </div>
             </div>
-            <div className={style.cta}>
-              <div className={style.blockItem}>
-                <div className={style.iconInfo}>
-                  <Domain className={style.icon} />
-                  <Typography variant="body1">
-                    <CustomLink text={orgName} to={`/organization/${orgId}`} />
-                  </Typography>
+            {false && (
+              <div className={style.cta}>
+                <div className={style.blockItem}>
+                  <div className={style.iconInfo}>
+                    <Domain className={style.icon} />
+                    <Typography variant="body1" noWrap>
+                      <CustomLink text={orgName} to={`/organization/${orgId}`} />
+                    </Typography>
+                  </div>
                 </div>
-              </div>
-              <Button
-                disabled={disabledBooking}
-                onClick={onBooking}
-                variant="outlined"
-                className="main-button"
-              >Book Now!
-              </Button>
-            </div>
+                <Button
+                  disabled={disabledBooking}
+                  onClick={onBooking}
+                  variant="outlined"
+                  className="main-button"
+                >Book Now!
+                </Button>
+              </div>)
+            }
           </div>
         </div>
       </>

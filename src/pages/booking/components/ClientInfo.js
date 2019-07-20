@@ -22,15 +22,14 @@ class ClientInfo extends Component {
     touched: objectOf(any).isRequired,
     setFieldValue: func.isRequired,
     handleBlur: func.isRequired,
-    // setTouched: func.isRequired,
+    handleFormValidation: func.isRequired,
     errors: objectOf(string).isRequired,
     isValid: bool.isRequired,
     isInitialValid: bool,
-    // userDetail: objectOf(any),
     verifyCallback: func.isRequired,
     expiredCallback: func.isRequired,
-    // captchaVerified: bool,
     handleSubmit: func.isRequired,
+    onloadCallback: func.isRequired,
   };
 
   static defaultProps = {
@@ -57,12 +56,10 @@ class ClientInfo extends Component {
   handleInput = (event) => {
     const {
       setFieldValue,
-      // setTouched,
     } = this.props;
     if (event) event.preventDefault();
     const { name, value } = event.target;
     setFieldValue(name, value);
-    // setTouched({ [name]: true });
   };
 
   render() {
@@ -76,16 +73,17 @@ class ClientInfo extends Component {
       verifyCallback,
       touched,
       handleBlur,
+      handleFormValidation,
+      onloadCallback,
     } = this.props;
     const {
       userDetail,
     } = this.state;
 
-    const userName = get(values, 'userName');
-    const userEmail = get(values, 'userEmail');
-    const phoneNumber = get(values, 'phoneNumber');
-    console.log('touched', touched);
-    console.log('errors', errors);
+    const userName = get(values, 'userName') || '';
+    const userEmail = get(values, 'userEmail') || '';
+    const phoneNumber = get(values, 'phoneNumber') || '';
+    handleFormValidation(isValid);
 
     return (
       <>
@@ -93,8 +91,12 @@ class ClientInfo extends Component {
           <form onSubmit={handleSubmit}>
             <TextField
               fullWidth
+              autoFocus={!userDetail}
+              disabled={userDetail}
+              autoComplete
               name="userName"
               label="Client name"
+              placeholder="Enter your name"
               onChange={this.handleInput}
               onBlur={handleBlur}
               value={userName}
@@ -104,8 +106,11 @@ class ClientInfo extends Component {
             />
             <TextField
               fullWidth
+              disabled={userDetail}
+              autoComplete
               name="userEmail"
-              label="Email"
+              label="Email address"
+              placeholder="Enter your email address"
               onChange={this.handleInput}
               onBlur={handleBlur}
               value={userEmail}
@@ -116,7 +121,10 @@ class ClientInfo extends Component {
             <TextField
               fullWidth
               name="phoneNumber"
+              disabled={userDetail}
+              autoComplete
               label="Phone number"
+              placeholder="Enter your phone number"
               onChange={this.handleInput}
               onBlur={handleBlur}
               value={phoneNumber}
@@ -140,6 +148,7 @@ class ClientInfo extends Component {
               render="explicit"
               verifyCallback={verifyCallback}
               expiredCallback={expiredCallback}
+              onloadCallback={onloadCallback}
             />
           </div>
         )}
@@ -153,7 +162,6 @@ export default withFormik({
   enableReinitialize: true,
   mapPropsToValues: (props) => {
     const { userDetail } = props;
-    console.log('formikke map props to values', userDetail);
     const userName = get(userDetail, 'fullName');
     const userEmail = get(userDetail, 'email');
     const phoneNumber = get(userDetail, 'telephone');
