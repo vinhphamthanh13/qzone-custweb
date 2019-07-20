@@ -3,7 +3,8 @@ import {
   func,
 } from 'prop-types';
 import {
-  Button, TextField, Typography,
+  Button,
+  Typography,
 } from '@material-ui/core';
 import {
   AvTimer,
@@ -24,9 +25,9 @@ import {
   defaultDateFormat,
   AUTHENTICATED_KEY,
 } from 'utils/constants';
-import formatName from 'utils/formatName';
 import RateStar from 'components/Rating/RateStar';
-import MapDialog from '../../../components/Map/MapDialog';
+import MapDialog from 'components/Map/MapDialog';
+import ClientInfo from './ClientInfo';
 import s from './BookingDetail.module.scss';
 
 class BookingDetail extends React.PureComponent {
@@ -63,6 +64,7 @@ class BookingDetail extends React.PureComponent {
       bookingDetail: null,
       userDetail: null,
       loginSession: null,
+      captchaVerified: false,
     };
   }
 
@@ -79,17 +81,35 @@ class BookingDetail extends React.PureComponent {
     }
   };
 
-  renderBookingButton = auth => (auth ? (
-    <>
-      <Book color="inherit" className="icon-small icon-in-button-left" />
-      <Typography variant="body1" color="inherit">Book Now</Typography>
-    </>
-  ) : (
-    <>
-      <Fingerprint color="inherit" className="icon-small icon-in-button-left" />
-      <Typography variant="body1" color="inherit">Sign In</Typography>
-    </>
-  ));
+  renderBookingButton = (auth) => {
+    const { captchaVerified } = this.state;
+    return (auth || captchaVerified) ? (
+      <>
+        <Book color="inherit" className="icon-small icon-in-button-left" />
+        <Typography variant="body1" color="inherit">Book Now</Typography>
+      </>
+    ) : (
+      <>
+        <Fingerprint color="inherit" className="icon-small icon-in-button-left" />
+        <Typography variant="body1" color="inherit">Sign In</Typography>
+      </>
+    );
+  };
+
+  handleCaptchaVerified = (response) => {
+    if (response) {
+      this.setState({
+        captchaVerified: true,
+      });
+    }
+  };
+
+  handleExpiredCaptchaCallback = () => {
+    this.setState({
+      captchaVerified: false,
+    });
+  };
+
 
   render() {
     const {
@@ -107,10 +127,6 @@ class BookingDetail extends React.PureComponent {
     const duration = get(provider, 'avgServiceTime');
     const fullAddress = get(provider, 'geoLocation.fullAddress');
     const providerRating = get(provider, 'rating');
-    const userGiven = get(userDetail, 'givenName');
-    const userFamily = get(userDetail, 'familyName');
-    const userEmail = get(userDetail, 'email');
-    const userPhone = get(userDetail, 'telephone');
     const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
 
     return (
@@ -176,29 +192,11 @@ class BookingDetail extends React.PureComponent {
             <Typography variant="title" color="inherit" className="text-bold">Client Info</Typography>
           </div>
           <div className="full-width">
-            <div className={s.formFields}>
-              <TextField
-                disabled
-                fullWidth
-                label="Client name"
-                value={formatName({ givenName: userGiven, familyName: userFamily })}
-                margin="dense"
-              />
-              <TextField
-                disabled
-                fullWidth
-                label="Email"
-                value={userEmail || ''}
-                margin="dense"
-              />
-              <TextField
-                disabled
-                fullWidth
-                label="Phone number"
-                value={userPhone || ''}
-                margin="dense"
-              />
-            </div>
+            <ClientInfo
+              userDetail={userDetail}
+              verifyCallback={this.handleCaptchaVerified}
+              expiredCallback={this.handleExpiredCaptchaCallback}
+            />
           </div>
         </div>
         <MapDialog

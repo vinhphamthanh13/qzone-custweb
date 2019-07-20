@@ -3,6 +3,8 @@ export const QZ_COGNITO_IDENTITY_KEY = 'qz.auth.cognito.identity';
 export const AUTH_METHOD = 'auth2';
 export const GOOGLE_ID = '166981643559-r54fbu1evv6cpfpphqjtlo4j950vdmvn.apps.googleusercontent.com';
 export const GOOGLE_GEO_API_KEY = 'AIzaSyATIXiytQDXMl_QyQWWD4t5L7JNgh6Eq_c';
+export const GOOGLE_CAPTCHA_SITE_KEY = '6LfqfK4UAAAAAFm_WbwR2ZR46afREdp-IV1Ne49l';
+export const GOOGLE_CAPTCHA_SECRET = '6LfqfK4UAAAAALouP8hiG-PFTVW7HAUCjBPSRmgM';
 export const PROVIDER = {
   GOOGLE: 'google',
   FACEBOOK: 'facebook',
