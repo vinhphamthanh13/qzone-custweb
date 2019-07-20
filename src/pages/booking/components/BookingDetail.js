@@ -148,9 +148,6 @@ class BookingDetail extends React.PureComponent {
     const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
     const isBookingValid = isAuthenticated || (formValid && captchaVerified);
 
-    console.log('booking Detail ======> state', this.state);
-    console.log('booking Detail ======> props', this.props);
-
     return (
       <div className={s.bookingAppointment}>
         <div className={s.bookingDetail}>

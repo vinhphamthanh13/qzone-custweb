@@ -84,7 +84,7 @@ class ViewAppointment extends Component {
     const email = get(userDetail, 'email');
     const serviceName = get(appointmentEvent, 'serviceName');
     const serviceDescription = get(bookingService, 'description');
-    const providerStartSec = get(appointmentEvent, 'providerStartSec');
+    const providerStartSec = get(appointmentEvent, 'providerStartSec') || '';
     const startTimeSec = moment(providerStartSec.replace(/\..*/, '')).unix();
     const duration = get(appointmentEvent, 'duration');
     const providerTimezoneId = get(appointmentEvent, 'timezone');

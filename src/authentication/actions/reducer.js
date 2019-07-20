@@ -1,3 +1,6 @@
+import storage from 'redux-persist/lib/storage';
+import { persistReducer } from 'redux-persist';
+import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import {
   SET_LOADING,
   RESET_MODAL_STATUS,
@@ -20,10 +23,31 @@ import {
   SET_USER_DETAILS, LOGOUT_ERROR_RST,
   FIRE_BASE_STORE_USER,
   AUTHENTICATED_KEY,
-  FACEBOOK_AUTH_TOKEN,
   SET_GUEST_ERROR,
   CLEAR_GUEST_ERROR,
 } from './constants';
+
+
+const persistConfig = {
+  key: 'auth',
+  storage,
+  stateReconciler: autoMergeLevel2,
+  blacklist: [
+    'cognitoToken',
+    'registerErrorMessage',
+    'loginErrorMessage',
+    'isVerificationCode',
+    'resendVerificationCodeStatus',
+    'iSignUpSuccess',
+    'isForgotPassword',
+    'resetPasswordStatus',
+    'resetPasswordMessage',
+    'isLogoutError',
+    'firebaseUserStored',
+    'facebookToken',
+    'guestUserError',
+  ],
+};
 
 const authInitialize = {
   userDetail: null,
@@ -40,11 +64,10 @@ const authInitialize = {
   resetPasswordMessage: '',
   isLogoutError: false,
   firebaseUserStored: null,
-  facebookToken: null,
   guestUserError: false,
 };
 
-const auth = (state = authInitialize, action) => {
+const reducer = (state = authInitialize, action) => {
   switch (action.type) {
     case REGISTER_AWS_ERROR:
       return {
@@ -152,11 +175,6 @@ const auth = (state = authInitialize, action) => {
         ...state,
         firebaseUserStored: action.payload,
       };
-    case FACEBOOK_AUTH_TOKEN:
-      return {
-        ...state,
-        facebookToken: action.payload,
-      };
     case SET_GUEST_ERROR:
       return {
         ...state,
@@ -172,4 +190,4 @@ const auth = (state = authInitialize, action) => {
   }
 };
 
-export default auth;
+export default persistReducer(persistConfig, reducer);

@@ -11,7 +11,7 @@ import { persistReducer } from 'redux-persist';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 
 const persistConfig = {
-  key: 'survey',
+  key: 'surveys',
   storage,
   stateReconciler: autoMergeLevel2,
   blacklist: ['surveyList', 'allAnswers'],
