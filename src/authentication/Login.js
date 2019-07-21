@@ -2,7 +2,10 @@
 import React from 'react';
 import { string, bool, func } from 'prop-types';
 import { connect } from 'react-redux';
-import { get, noop } from 'lodash';
+import {
+  get,
+  // noop,
+} from 'lodash';
 import { Formik } from 'formik';
 import {
   LOGIN_TYPES,
@@ -25,7 +28,7 @@ class Login extends React.Component {
       console.log('facebook init', FB_APP_ID);
       FB.init({
         appId: FB_APP_ID,
-        // cookie: true,
+        cookie: true,
         xfbml: true,
         version: FB_API_VERSION,
       });
@@ -60,8 +63,7 @@ class Login extends React.Component {
 
     switch (name) {
       case LOGIN_TYPES.FB:
-        // this.handleLoginFaceBook();
-        noop();
+        this.handleLoginFaceBook();
         break;
       case LOGIN_TYPES.GP:
         loginGoogleAction();
@@ -81,6 +83,7 @@ class Login extends React.Component {
     console.log('handlel FB login', FB_APP_ID);
     FB.getLoginStatus((response) => {
       const authResponse = get(response, 'authResponse');
+      console.log('in the login fb', response);
       if (!authResponse) {
         loginFacebookAction(FB);
       } else {

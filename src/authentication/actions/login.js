@@ -87,6 +87,10 @@ export const createGoogleScript = () => {
 
 const awsAuth = (provider, { token, expires }, user, dispatch) => {
   const expiration = expires * 1000 + moment().unix() * 1000;
+  console.log('aws auth federated', provider);
+  console.log('aws auth federated token', token);
+  console.log('aws auth federated expires', expires);
+  console.log('aws auth federated user', user);
   Auth.federatedSignIn(
     provider,
     { token, expires_at: expiration },
@@ -119,7 +123,8 @@ const awsAuth = (provider, { token, expires }, user, dispatch) => {
     dispatch(setLoading(false));
   }).catch((error) => {
     console.log('login federation failed', error);
-    dispatch(setError('Login failed'));
+    dispatch(setError(`Login fail with ${provider}`));
+    dispatch(setLoading(false));
   });
 };
 
@@ -143,13 +148,23 @@ export const loginGoogle = () => async (dispatch) => {
 
 export const retrieveFacebookAccount = async (FB) => {
   const user = {};
-  await FB.api('/me', { fields: 'email, name' }, (response) => {
+  const test = await FB.api('/me', { fields: 'email, name' }, (response) => {
+    console.log('retrieve user me', response);
     const email = get(response, 'email');
     const name = get(response, 'name');
     user.email = email;
     user.name = name;
   });
+  console.log('teseing aldjf alsdjfal sj>>>>>>>>>>>>>>>', test);
   return user;
+};
+
+const forwardFBUserToAWS = (provider, credentials, FB, dispatch) => {
+  FB.api('/me', { fields: 'email, name' }, (response) => {
+    const email = get(response, 'email');
+    const name = get(response, 'name');
+    awsAuth(provider, credentials, { name, email }, dispatch);
+  });
 };
 
 export const loginFacebook = (FB, preAuthResponse = null) => async (dispatch) => {
@@ -158,57 +173,26 @@ export const loginFacebook = (FB, preAuthResponse = null) => async (dispatch) =>
     FB.login(
       async (response) => {
         const status = get(response, 'status');
+        console.log('now login facbook fresh', response);
         if (status === FACEBOOK.STATUS.CONNECTED) {
           const authResponse = get(response, 'authResponse');
           const token = get(authResponse, 'accessToken');
           const expires = get(authResponse, 'expiresIn');
-          const user = await retrieveFacebookAccount(FB);
-          awsAuth(PROVIDER.FACEBOOK, { token, expires }, user, dispatch);
+          forwardFBUserToAWS(PROVIDER.FACEBOOK, { token, expires }, FB, dispatch);
         }
         dispatch(setLoading(false));
       },
       { scope: 'public_profile, email' },
     );
   } else {
+    console.log('face book acc already logged in', preAuthResponse);
     const token = get(preAuthResponse, 'accessToken');
     const expires = get(preAuthResponse, 'expiresIn');
     const user = await retrieveFacebookAccount(FB);
+    console.log('retrieve user API', user);
     awsAuth(PROVIDER.FACEBOOK, { token, expires }, user, dispatch);
   }
 };
-
-// export const setFBTokenAction = payload => ({
-//   type: FACEBOOK_AUTH_TOKEN,
-//   payload,
-// });
-//
-// export const fetchFacebookUser = token => async (dispatch) => {
-//   dispatch(setLoading(true));
-//   const user = await fetchFBUser(token);
-//   if (user.status === 200) {
-//     const userName = get(user, 'data.givenName');
-//     const id = get(user, 'data.id');
-//     // awsAuth(PROVIDER.FACEBOOK, { token, expires: 5710 }, { email, name }, dispatch);
-//     dispatch(setUserDetails({
-//       ...user.data,
-//       givenName: userName,
-//     }));
-//     dispatch(storeUserSessionLogin({
-//       authProvider: PROVIDER.FACEBOOK,
-//       start_session: moment().unix() * 1000,
-//       id,
-//       userName,
-//       givenName: userName,
-//       qz_token: token,
-//       qz_refresh_token: null,
-//       expiration: moment().add(60, 'd').unix() * 1000,
-//       isAuthenticated: !!id,
-//     }));
-//   } else {
-//     dispatch(setError('Cannot login with your Facebook account at the moment!'));
-//     dispatch(setLoading(false));
-//   }
-// };
 
 // receive Push Notification
 export const storeFireBaseUserAction = async (data, dispatch) => {
