@@ -4,7 +4,7 @@ import {
   string,
 } from 'prop-types';
 import { connect } from 'react-redux';
-import { get, noop } from 'lodash';
+import { get } from 'lodash';
 import moment from 'moment';
 import { logout } from 'authentication/actions/logout';
 import {
@@ -52,6 +52,7 @@ class Profile extends Component {
     userDetail: null,
     loginSession: null,
     isPopupWarning: '',
+    toggleSidePanel: false,
   };
 
   componentDidMount() {
@@ -104,6 +105,12 @@ class Profile extends Component {
     history.push('/');
   };
 
+  handleSidePanel = (value = true) => {
+    this.setState(oldState => ({
+      toggleSidePanel: value && !oldState.toggleSidePanel,
+    }));
+  };
+
   render() {
     const {
       updateProfileStatus,
@@ -112,10 +119,10 @@ class Profile extends Component {
     const {
       userDetail,
       isPopupWarning,
+      toggleSidePanel,
     } = this.state;
 
     const givenName = get(userDetail, 'givenName');
-    const email = get(userDetail, 'email');
     const updateProfileMsgError = isPopupWarning === 'error' ? (
       <CustomModal
         isOpen
@@ -142,7 +149,11 @@ class Profile extends Component {
         {updateProfileMsgSuccess}
         <div>
           <div className={`${s.profile} column`}>
-            <Header userDetail={{ givenName, email }} onClose={this.goBooking} onOpenAccount={noop} />
+            <Header
+              userName={givenName}
+              onClose={this.goBooking}
+              handleSidePanel={this.handleSidePanel}
+            />
             <div className={`container-max auto-margin-horizontal ${s.contentAfooter}`}>
               <Content
                 customerId={customerId}
@@ -151,6 +162,8 @@ class Profile extends Component {
                 handleAccount={this.handleAccount}
                 updateProfileStatus={updateProfileStatus}
                 handleLogout={this.handleLogout}
+                toggleSidePanel={toggleSidePanel}
+                handleSidePanel={this.handleSidePanel}
               />
             </div>
           </div>

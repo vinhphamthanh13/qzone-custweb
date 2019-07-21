@@ -201,7 +201,7 @@ class WaitList extends Component {
             </div>)) : null}
         {waitLists && waitLists.length === 0 && (
           <EmptyItem
-            message="You have not enrolled in any waitlist at the moment!"
+            message="No Item Found!"
           />
         )}
         {!waitLists ? <SubLoading loading /> : null}

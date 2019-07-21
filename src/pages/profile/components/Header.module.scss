@@ -1,11 +1,9 @@
 @import "styles/_settings.scss";
 
 .header {
-  width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: fixed;
   height: $app-bar-height;
   background: linear-gradient(to right, $malibu, $main);
 }
@@ -34,6 +32,16 @@
 .headerSupport {
   display: flex;
   justify-content: space-evenly;
+  align-items: center;
+  margin: auto 0.5rem;
+}
+
+.greeting {
+  padding: 0.2rem 0.2rem 0.2rem 0.5rem;
+  border: 1px solid $main_02;
+  border-radius: 0.2rem;
+  display: flex;
+  align-items: center;
 }
 
 .headerItem {
