@@ -1,10 +1,12 @@
 import React from 'react';
 import {
   func,
+  bool,
 } from 'prop-types';
 import {
   Button,
   Typography,
+  IconButton,
 } from '@material-ui/core';
 import {
   AvTimer,
@@ -13,6 +15,7 @@ import {
   PersonPin,
   Book,
   Person,
+  Edit,
 } from '@material-ui/icons';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
@@ -37,6 +40,7 @@ class BookingDetail extends React.PureComponent {
     bookingService: serviceType,
     handleConfirmDialog: func.isRequired,
     saveGuestInfo: func.isRequired,
+    showPage: bool.isRequired,
   };
 
   static defaultProps = {
@@ -93,7 +97,6 @@ class BookingDetail extends React.PureComponent {
   };
 
   verifyCaptcha = () => {
-    console.log('captcha after save social user is sete to true');
     this.setState({
       captchaVerified: true,
     });
@@ -129,6 +132,7 @@ class BookingDetail extends React.PureComponent {
   render() {
     const {
       bookingService,
+      showPage,
     } = this.props;
     const {
       bookingDetail,
@@ -147,17 +151,13 @@ class BookingDetail extends React.PureComponent {
     const providerRating = get(provider, 'rating');
     const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
     const isBookingValid = isAuthenticated || (formValid && captchaVerified);
-
-    console.log('booking Detail ======> state', this.state);
-    console.log('booking Detail ======> props', this.props);
+    const detailStyle = showPage ? s.bookingAppointmentPage : s.bookingAppointment;
 
     return (
-      <div className={s.bookingAppointment}>
+      <div className={detailStyle}>
         <div className={s.bookingDetail}>
           <div className={s.bookingHeadInfo}>
-            <div className={s.serviceTitle}>
-              <Typography variant="title" color="textSecondary" className="text-bold">{serviceName}</Typography>
-            </div>
+            <Typography variant="title" color="inherit" className="text-bold">{serviceName}</Typography>
           </div>
           <div className={s.serviceItems}>
             <div className={s.bookingItems}>
@@ -214,6 +214,9 @@ class BookingDetail extends React.PureComponent {
         <div className={s.clientInfo}>
           <div className={s.formTitle}>
             <Typography variant="title" color="inherit" className="text-bold">Client Info</Typography>
+            <IconButton disabled={!userDetail}>
+              <Edit className="icon-small icon-transparent" />
+            </IconButton>
           </div>
           <div className="full-width">
             <ClientInfo

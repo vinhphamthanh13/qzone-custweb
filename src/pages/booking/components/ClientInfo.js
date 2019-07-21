@@ -183,7 +183,7 @@ class ClientInfo extends Component {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    {!!errors.phoneNumber && touched.phoneNumber && <PolicyPopover type={POPOVER_TYPE.TEL} />}
+                    {!!errors.phoneNumber && touched.phoneNumber ? <PolicyPopover type={POPOVER_TYPE.TEL} /> : ''}
                   </InputAdornment>
                 ),
               }}

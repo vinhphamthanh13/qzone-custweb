@@ -1,30 +1,26 @@
 import React from 'react';
-import { func } from 'prop-types';
+import {
+  func,
+  string,
+} from 'prop-types';
 import {
   Avatar,
-  IconButton,
   Typography,
+  Button,
 } from '@material-ui/core';
 import {
-  ExpandMore,
   Home,
+  MoreVert,
 } from '@material-ui/icons';
 import logo from 'images/quezone-logo.png';
 import s from './Header.module.scss';
 
 const Header = (props) => {
-  const { onClose, onOpenAccount } = props;
-  const NAVBAR = [
-    // {
-    //   id: 0, name: 'Booking', action: onClose, appendIcon: null,
-    // },
-    // {
-    //   id: 1, name: 'Help', action: noop, appendIcon: <ExpandMore className="icon-white" />,
-    // },
-    {
-      id: 1, name: 'My account', action: onOpenAccount, appendIcon: <ExpandMore className="icon-white" />,
-    },
-  ];
+  const {
+    onClose,
+    handleSidePanel,
+    userName,
+  } = props;
 
   return (
     <div className={s.header}>
@@ -41,21 +37,15 @@ const Header = (props) => {
             />
           </div>
           <div className={s.headerSupport}>
-            <IconButton color="inherit" onClick={onClose}>
+            <Button variant="text" color="inherit" onClick={onClose}>
               <Home color="inherit" />
-            </IconButton>
-            { NAVBAR.map(nav => (
-              <div key={nav.id} className={s.headerItem}>
-                <Typography
-                  className="hover-bright white-color"
-                  variant="subheading"
-                  onClick={nav.action}
-                >
-                  {nav.name}
-                </Typography>
-                {nav.appendIcon}
-              </div>
-            ))}
+            </Button>
+            <Button variant="text" color="inherit" onClick={handleSidePanel}>
+              <Typography variant="body1" color="inherit">
+                Hi {userName}
+              </Typography>
+              <MoreVert />
+            </Button>
           </div>
         </div>
       </div>
@@ -65,7 +55,8 @@ const Header = (props) => {
 
 Header.propTypes = {
   onClose: func.isRequired,
-  onOpenAccount: func.isRequired,
+  handleSidePanel: func.isRequired,
+  userName: string.isRequired,
 };
 
 export default Header;

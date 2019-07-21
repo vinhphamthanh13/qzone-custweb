@@ -1,16 +1,24 @@
 @import "styles/_settings.scss";
 
 .viewAppointment {
-  margin: 1em auto;
+  margin: 1rem auto;
   display: flex;
+  flex-direction: column;
   justify-content: space-evenly;
-  min-width: $app-mobile;
-  width: 60%;
-  border: 1px solid $main_03;
-  border-radius: 0.2rem;
+  width: 100%;
   box-sizing: border-box;
-  box-shadow: 1px 2px 2px $grayNickel;
-  overflow: hidden;
+  padding: 0 0 3rem;
+}
+
+.viewAppointmentPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 1rem auto;
+  height: calc(100vh - 200px);
+  overflow: auto;
+  padding: 0 0 3rem;
 }
 
 .viewTitle {
@@ -236,23 +244,8 @@
   color: $danger;
 }
 
-@media only screen and (max-width: $app-mobile) {
-  .viewAppointment {
-    display: flex;
-    flex-direction: column;
-  }
-  .providerAddress {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 0 1rem;
-  }
-
-  .viewTitle {
-    border-bottom: 1px solid $main-03;
-  }
-
-  .appointmentDetail {
-    padding: 0.5rem 0 1rem;
+@include breakpoint-up(sm) {
+  .viewAppointmentPage {
+    height: calc(100vh - 152px);
   }
 }

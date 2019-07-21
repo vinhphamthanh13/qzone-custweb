@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { string, func } from 'prop-types';
+import { string, func, bool } from 'prop-types';
 import { connect } from 'react-redux';
 import { find, uniqBy } from 'lodash';
+import moment from 'moment';
 import { Typography } from '@material-ui/core';
 import {
   Event,
@@ -68,16 +69,28 @@ class Content extends Component {
 
   SIDE_PANEL = [
     {
-      name: PROFILE.PAGE.WAIT_LIST, icon: AddToQueue, text: 'My waiting list', isSelected: false,
+      name: PROFILE.PAGE.WAIT_LIST,
+      icon: AddToQueue,
+      text: 'My waiting list',
+      isSelected: false,
     },
     {
-      name: PROFILE.PAGE.EVENT_LIST, icon: Event, text: 'My event list', isSelected: false,
+      name: PROFILE.PAGE.EVENT_LIST,
+      icon: Event,
+      text: 'My event list',
+      isSelected: false,
     },
     {
-      name: PROFILE.PAGE.SURVEY, icon: Assessment, text: 'My assessment list', isSelected: false,
+      name: PROFILE.PAGE.SURVEY,
+      icon: Assessment,
+      text: 'My assessment list',
+      isSelected: false,
     },
     {
-      name: PROFILE.PAGE.MY_INFO, icon: Settings, text: 'My information', isSelected: false,
+      name: PROFILE.PAGE.MY_INFO,
+      icon: Settings,
+      text: 'My information',
+      isSelected: false,
     },
     {
       name: 'signOut',
@@ -168,7 +181,9 @@ class Content extends Component {
   };
 
   handleSelectSideMenu = panel => (event) => {
+    const { handleSidePanel } = this.props;
     event.preventDefault();
+    handleSidePanel();
     this.setState({
       sidePanel: {
         ...this.initState,
@@ -212,12 +227,24 @@ class Content extends Component {
     });
   };
 
+  greetingText = () => {
+    const hour = moment().hour();
+    if (hour >= 12 && hour <= 17) {
+      return 'Good afternoon!';
+    }
+    if (hour >= 18) {
+      return 'Good evening!';
+    }
+    return 'Good morning!';
+  };
+
   render() {
     const {
-      givenName,
       handleAccount,
       updateProfileStatus,
       customerId,
+      toggleSidePanel,
+      handleSidePanel,
     } = this.props;
     const {
       sidePanel: {
@@ -228,18 +255,24 @@ class Content extends Component {
       },
       eventList: cachedEventList,
     } = this.state;
+
     return (
       <div className={s.content}>
-        <div className={s.sidebar}>
-          <div>
-            <Typography variant="subtitle1" color="primary" className={`${s.title} text-capitalize`}>
-              Hi {givenName}!
-            </Typography>
+        {toggleSidePanel && (
+          // eslint-disable-next-line
+          <div className={s.sidebarOverlay} onClick={() => handleSidePanel(false)}>
+            <div className={s.sidebar}>
+              <div>
+                <Typography variant="subtitle1" color="primary" className={`${s.title} text-capitalize`}>
+                  {this.greetingText()}
+                </Typography>
+              </div>
+              <div className={s.cta}>
+                {this.renderItems()}
+              </div>
+            </div>
           </div>
-          <div className={s.cta}>
-            {this.renderItems()}
-          </div>
-        </div>
+        )}
         {
           waitList && (
             <div className={s.profilePage}>
@@ -279,6 +312,8 @@ Content.propTypes = {
   trackingAppointmentByIdsAction: func.isRequired,
   handleLogout: func.isRequired,
   setBookingStep: func.isRequired,
+  toggleSidePanel: bool.isRequired,
+  handleSidePanel: func.isRequired,
 };
 
 Content.defaultProps = {

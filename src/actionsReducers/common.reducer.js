@@ -1,3 +1,6 @@
+import storage from 'redux-persist/lib/storage';
+import { persistReducer } from 'redux-persist';
+import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import {
   SET_LOADING,
   SET_ERROR,
@@ -8,10 +11,6 @@ import {
   SET_TEMPORARY_SERVICE_BY_LOCATION,
   SET_EVENT_BY_ID,
 } from 'actionsReducers/common.actions';
-
-import storage from 'redux-persist/lib/storage';
-import { persistReducer } from 'redux-persist';
-import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 
 const persistConfig = {
   key: 'common',

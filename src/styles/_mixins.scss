@@ -23,3 +23,27 @@
     }
   }
 }
+
+@mixin breakpoint-down($breakpoint) {
+  @if $breakpoint == sm {
+    @media (max-width: $sm) {
+      @content;
+    }
+  } @else if $breakpoint == lmd {
+    @media (max-width: $lmd) {
+      @content;
+    }
+  } @else if $breakpoint == md {
+    @media (max-width: $md) {
+      @content;
+    }
+  } @else if $breakpoint == lg {
+    @media (max-width: $lg) {
+      @content;
+    }
+  } @else {
+    @media (max-width: $xl) {
+      @content;
+    }
+  }
+}

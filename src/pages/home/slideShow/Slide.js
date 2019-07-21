@@ -8,7 +8,7 @@ import CustomLink from 'components/CustomLink';
 import { READ_MORE_MAX } from 'utils/constants';
 import RateStar from 'components/Rating/RateStar';
 import ReadMore from '../services/readMore/ReadMore';
-import style from './Slide.module.scss';
+import s from './Slide.module.scss';
 
 class Slide extends Component {
   state = {
@@ -57,21 +57,21 @@ class Slide extends Component {
           rating={rating}
           reviews={reviews}
         />
-        <div className={style.wrapper}>
-          <div className={style.image}>
+        <div className={s.wrapper}>
+          <div className={s.image}>
             <img src={imageUrl} alt={name} width="100%" height="100%" />
           </div>
-          <div className={style.content}>
+          <div className={s.content}>
             <div>
-              <div className={style.title}>
-                <Typography variant="headline" color="textSecondary" noWrap>
+              <div className={s.title}>
+                <Typography variant="headline" color="inherit" noWrap>
                   {name}
                 </Typography>
               </div>
-              <div className={style.rating}>
+              <div className={s.rating}>
                 <RateStar rating={rating} reviews={reviews} />
               </div>
-              <div className={style.description}>
+              <div className={s.description}>
                 { description.split('').length > READ_MORE_MAX ? (
                   <Typography variant="body1" color="textSecondary">
                     {description.split('').slice(0, READ_MORE_MAX)}... <CustomLink
@@ -86,10 +86,10 @@ class Slide extends Component {
               </div>
             </div>
             {false && (
-              <div className={style.cta}>
-                <div className={style.blockItem}>
-                  <div className={style.iconInfo}>
-                    <Domain className={style.icon} />
+              <div className={s.cta}>
+                <div className={s.blockItem}>
+                  <div className={s.iconInfo}>
+                    <Domain className={s.icon} />
                     <Typography variant="body1" noWrap>
                       <CustomLink text={orgName} to={`/organization/${orgId}`} />
                     </Typography>

@@ -1,3 +1,5 @@
+import { isEmpty } from 'lodash';
+
 export const handleResponse = (response, defaultResponse) => {
   if (response && response.status === 200) {
     return response.data;
@@ -22,7 +24,7 @@ export const handleRequest = async (requestFunc, args, defaultResponse) => {
       object,
     } = resp;
     const resolvedResponse = objects || object;
-    if (success) {
+    if (success || !isEmpty(resolvedResponse)) {
       return [
         resolvedResponse,
         null,

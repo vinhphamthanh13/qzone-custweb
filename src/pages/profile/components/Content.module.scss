@@ -1,21 +1,20 @@
 @import "styles/_settings.scss";
 
 .content {
+  margin: 1rem 0.5rem 0;
   display: flex;
   justify-content: space-between;
-  margin-top: $app-bar-height;
+  position: relative;
 }
 
 .sidebar {
-  margin: 1em 0.5em;
-  border-radius: 5px;
-  width: 350px;
+  position: absolute;
+  width: 100%;
   height: 100vh;
   color: $main_01;
   background: linear-gradient(to top, $main, $main_02);
-  @include breakpoint-up(xl) {
-    margin: 1em 0;
-  }
+  transition: opacity 0.3ms;
+  //z-index: 2;
 }
 
 .title {
@@ -67,4 +66,20 @@
 
 .customerInfo {
   color: $main;
+}
+
+.sidebarOverlay {
+  position: fixed;
+  top: $app-bar-height;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+@include breakpoint-up(sm) {
+  .sidebar {
+    width: $app-mobile;
+  }
 }

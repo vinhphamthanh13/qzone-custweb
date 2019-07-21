@@ -8,6 +8,7 @@ import { get } from 'lodash';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slide from './Slide';
+import s from './SlideShow.module.scss';
 
 class SlideShow extends Component {
   static getDerivedStateFromProps(props, state) {
@@ -39,16 +40,14 @@ class SlideShow extends Component {
       autoplay: true,
       autoplaySpeed: 3000,
       pauseOnHover: true,
-      className: 'slider-control',
+      className: s.sliderControl,
     };
 
     return (
-      <div className="service-carousel">
-        <div>
-          <Typography className="title" variant="headline" color="textSecondary">Trending</Typography>
-        </div>
-        <div className="slider-wrapper">
-          <div className="advertisers" />
+      <div className={s.carousel}>
+        <Typography className={s.carouselTitle} variant="headline" color="textSecondary">Trending</Typography>
+        <div className={s.sliderWrapper}>
+          <div className={s.advertisers} />
           {topServices ? (
             <div>
               <Slider {...slideSettings}>
@@ -81,8 +80,8 @@ class SlideShow extends Component {
                 })}
               </Slider>
             </div>
-          ) : <div className="advertisers" /> }
-          <div className="advertisers">
+          ) : <div className={s.advertisers} /> }
+          <div className={s.advertisers}>
             {false && (
               <Typography variant="subheading" color="textSecondary">
                 For advertisement. Contact us at Quezone.com.au or

@@ -1,16 +1,16 @@
 import React from 'react';
 import { string } from 'prop-types';
 import { Typography } from '@material-ui/core';
-import logo from 'images/quezone-logo.png';
-import styles from './EmptyItem.module.scss';
+import { LocalFlorist } from '@material-ui/icons';
+import s from './EmptyItem.module.scss';
 
 export default function EmptyItem({ message }) {
   return (
-    <div className={styles.column}>
+    <div className={s.column}>
       <div>
-        <img src={logo} alt="quezone-logo" width="220px" />
+        <LocalFlorist className="main-color icon-huge" />
       </div>
-      <Typography variant="h5" color="textSecondary">{message}</Typography>
+      <Typography variant="h5" color="textSecondary">{'No Item Found' || message}</Typography>
     </div>
   );
 }

@@ -274,8 +274,11 @@ class MainAppBar extends React.Component {
             <div className="advanced-search-app-bar">
               <Button onClick={this.handleActionAdvancedSearch} className="simple-button">
                 <FindInPage className={adSearchStyle} />
-                <Typography className={adSearchStyle} variant="subheading">Advanced search
-                </Typography>
+                <span className="advance-search-cta-label">
+                  <Typography className={adSearchStyle} variant="body1">
+                    Advanced search
+                  </Typography>
+                </span>
               </Button>
             </div>
             <div className={classes.grow} />
