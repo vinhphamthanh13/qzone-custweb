@@ -247,40 +247,6 @@
   }
 }
 
-.service-carousel {
-  margin: 1.5em 0.5rem;
-  & .title {
-    margin: 0.5rem 0.5rem 1.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid $alto;
-  }
-  & .slider-wrapper {
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-    @include breakpoint-up(sm) {
-      flex-direction: row;
-    }
-    justify-content: center;
-    & .advertisers {
-      display: none;
-      @include breakpoint-up(md) {
-        display: flex;
-        padding: 0.5rem;
-        width: 30%;
-      }
-    }
-  }
-  & .slider-control {
-    max-width: 570px;
-    min-width: 375px;
-    box-shadow: 1px 1px 3px #ccc;
-    padding: 1rem;
-    margin: auto;
-    box-sizing: border-box;
-  }
-}
-
 .qz-icon-padding-small {
   margin: auto 0.5rem auto 0;
 }

@@ -1,9 +1,9 @@
 @import "styles/_settings.scss";
 
 .formFields {
-  color: $info;
-  padding: 0 2em 0;
-  width: 400px;
+  color: $main_04;
+  width: 100%;
+  padding: 0.5rem 0.5rem 0;
 }
 
 .recaptcha {
@@ -11,12 +11,12 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  margin: 1rem 0 1rem;
+  margin: 1rem 0 auto;
 }
 
-@media only screen and (max-width: $app-mobile) {
+@include breakpoint-up(sm) {
   .formFields {
-    padding: 0.5rem 1rem;
-    width: 100%;
+    width: $app-mobile;
+    margin: 0 auto;
   }
 }

@@ -72,5 +72,6 @@ export const clientInfo = Yup.object().shape({
     .required('Email cannot be blank'),
   phoneNumber: Yup
     .string()
-    .matches(regExPattern.phoneNumber, { message: 'Phone number is invalid' }),
+    .matches(regExPattern.phoneNumber, { message: 'Phone number is invalid' })
+    .required('Phone number cannot be blank'),
 });

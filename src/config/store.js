@@ -27,7 +27,18 @@ const rootPersistConfig = {
   key: 'qz_custweb',
   storage,
   stateReconciler: autoMergeLevel1,
-  blacklist: ['common', 'booking', 'surveys'],
+  blacklist: [
+    'auth',
+    'common',
+    'home',
+    'booking',
+    'organization',
+    'provider',
+    'waitLists',
+    'profile',
+    'customer',
+    'surveys',
+  ],
 };
 
 // const persistedSession = loadSession();
@@ -46,10 +57,25 @@ const rootReducer = combineReducers({
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
 
+let middleWare = [];
+if (process.env.NODE_ENV === 'production') {
+  middleWare = [
+    ...middleWare,
+    thunk,
+  ];
+} else {
+  middleWare = [
+    ...middleWare,
+    thunk,
+    logger,
+  ];
+}
+
+
 const store = createStore(
   persistedReducer,
   compose(
-    applyMiddleware(thunk, logger),
+    applyMiddleware(...middleWare),
     // eslint-disable-next-line no-underscore-dangle
     window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__() : f => f,
   ),

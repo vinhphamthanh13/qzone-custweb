@@ -1,33 +1,25 @@
 @import "styles/_settings.scss";
 
 .bookingAppointment {
-  margin: 1em auto;
+  margin: 1rem auto auto;
   display: flex;
-  justify-content: space-evenly;
-  max-width: $max-width;
-  border: 1px solid $main_03;
-  border-radius: 0.3rem;
-  box-sizing: border-box;
-  box-shadow: 1px 2px 2px $grayNickel;
+  flex-direction: column;
   color: $main_04;
+  padding: 0 0.5rem;
 }
 
 .bookingDetail {
-  padding-top: 1em;
-  max-width: $max-width;
+  width: 100%;
 }
 
 .bookingHeadInfo {
-  padding-bottom: 0.5em;
-  border-bottom: 1px solid $main_03;
-}
-
-.serviceTitle {
-  color: $main;
+  padding: 0.5em 0 1rem;
+  border-bottom: 1px solid $main_02;
+  text-align: center;
 }
 
 .serviceItems {
-  margin-top: 32px;
+  margin-top: 1.5rem;
 }
 
 .bookingItems {
@@ -47,20 +39,16 @@
 }
 
 .clientInfo {
-  padding: 1em 0 0 2.5em;
-  border-left-width: 4px;
-  border-left-style: solid;
-  border-image: linear-gradient(
-    to bottom,
-    $main_03,
-    rgba(0, 0, 0, 0)
-  ) 1 100%;
+  padding: 0.8rem;
 }
 
 .formTitle {
   padding-bottom: 0.5em;
-  border-bottom: 1px solid $gallery;
-  color: $main;
+  border-bottom: 1px solid $main_03;
+  color: $main_04;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .formFields {
@@ -71,31 +59,4 @@
 
 .viewMapButton {
   margin-left: 16px;
-}
-
-@media only screen and (max-width: $app-mobile) {
-  .bookingAppointment {
-    display: flex;
-    flex-direction: column;
-    margin: auto;
-  }
-
-  .bookingHeadInfo {
-    text-align: center;
-  }
-
-  .serviceItems {
-    padding: 0 1rem;
-  }
-
-  .clientInfo {
-    border: none;
-    text-align: center;
-    padding: 0;
-  }
-
-  .formFields {
-    padding: 0.5rem 1rem;
-    width: 100%;
-  }
 }

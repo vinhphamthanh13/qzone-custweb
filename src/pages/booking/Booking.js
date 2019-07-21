@@ -61,7 +61,7 @@ import BookingDetail from './components/BookingDetail';
 import ViewAppointment from './components/ViewAppointment';
 import s from './Booking.module.scss';
 
-const STEP_LABELS = ['Select Provider', 'Book Appointment', 'Complete Booking'];
+const STEP_LABELS = ['Select A Provider', 'Book Appointment', 'Complete Booking'];
 
 class Booking extends PureComponent {
   static propTypes = {
@@ -473,26 +473,39 @@ class Booking extends PureComponent {
       : <ChevronRight className={chevronStyle} />;
   };
 
-  renderSteppers = () => STEP_LABELS.map((step, index) => {
-    const { bookingStep } = this.state;
-    const [numberStyle, labelStyle] = bookingStep >= index
-      ? [`${s.stepNumber} ${s.stepNumberActive}`, `${s.stepLabel} ${s.stepLabelActive}`]
-      : [s.stepNumber, s.stepLabel];
-    return (
-      <div key={uuidv1()} className={s.step}>
-        <div className={numberStyle}>
-          <Typography variant="subheading" color="inherit">
-            {index + 1}
-          </Typography>
-        </div>
-        <div className={labelStyle}>
-          <Typography variant="subheading" color="inherit" className="text-bold">
-            {step}
-          </Typography>
-        </div>
+  renderSteppers = (isBackValid, isNextValid) => (
+    <>
+      <Button disabled={!isBackValid} onClick={this.handleStepChange(-1)} className="simple-button">
+        {this.renderChevron(isBackValid, -1)}
+      </Button>
+      <div className={s.stepsWrapper}>
+        {
+          STEP_LABELS.map((step, index) => {
+            const { bookingStep } = this.state;
+            const [numberStyle, labelStyle] = bookingStep >= index
+              ? [`${s.stepNumber} ${s.stepNumberActive}`, `${s.stepLabel} ${s.stepLabelActive}`]
+              : [s.stepNumber, s.stepLabel];
+            return (
+              <div key={uuidv1()} className={s.step}>
+                <div className={numberStyle}>
+                  <Typography variant="body1" color="inherit">
+                    {index + 1}
+                  </Typography>
+                </div>
+                <div className={labelStyle}>
+                  <Typography variant="body1" color="inherit" className="text-bold">
+                    {step}
+                  </Typography>
+                </div>
+              </div>
+            );
+          })
+        }
       </div>
-    );
-  });
+      <Button disabled={!isNextValid} onClick={this.handleStepChange(1)} className="simple-button">
+        {this.renderChevron(isNextValid, 1)}
+      </Button>
+    </>);
 
   handleResetWaitListStatus = () => {
     const { resetRegisterWaitListStatus: resetRegisterWaitListStatusAction } = this.props;
@@ -501,11 +514,6 @@ class Booking extends PureComponent {
 
   scrollToMyBooking = () => {
     window.scrollTo(0, this.myBooking.current.offsetTop);
-  };
-
-  handleSignUpGuest = (info) => {
-    const { saveGuestInfo: saveGuestInfoAction } = this.props;
-    saveGuestInfoAction(info);
   };
 
   render() {
@@ -611,18 +619,8 @@ class Booking extends PureComponent {
             </div>
           )}
           {!showPage && (
-            <div className={`${s.navBar} ${s.navBarInverse}`}>
-              <div className={s.bookingStepsWrapper}>
-                <Button disabled={!isBackValid} onClick={this.handleStepChange(-1)} className="simple-button">
-                  {this.renderChevron(isBackValid, -1)}
-                </Button>
-                <div className={s.stepper}>
-                  {this.renderSteppers()}
-                </div>
-                <Button disabled={!isNextValid} onClick={this.handleStepChange(1)} className="simple-button">
-                  {this.renderChevron(isNextValid, 1)}
-                </Button>
-              </div>
+            <div className={s.stepper}>
+              {this.renderSteppers(isBackValid, isNextValid)}
             </div>
           )}
           <Step
