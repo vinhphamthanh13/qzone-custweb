@@ -25,6 +25,7 @@ import {
   AccountBox,
   ChevronLeft,
   ChevronRight,
+  Fingerprint,
 } from '@material-ui/icons';
 import uuidv1 from 'uuid/v1';
 import logo from 'images/quezone-logo.png';
@@ -475,7 +476,11 @@ class Booking extends PureComponent {
 
   renderSteppers = (isBackValid, isNextValid) => (
     <>
-      <Button disabled={!isBackValid} onClick={this.handleStepChange(-1)} className="simple-button">
+      <Button
+        disabled={!isBackValid}
+        onClick={this.handleStepChange(-1)}
+        className="simple-button"
+      >
         {this.renderChevron(isBackValid, -1)}
       </Button>
       <div className={s.stepsWrapper}>
@@ -543,6 +548,7 @@ class Booking extends PureComponent {
     const isBackValid = bookingStep === BOOKING.STEPS.CONFIRM_BOOKING && !waitListId;
     const isNextValid = bookingStep < BOOKING.STEPS.CONFIRM_BOOKING && bookingDetail;
     const isProfile = customerId && bookingStep !== BOOKING.STEPS.CONFIRM_BOOKING;
+    const isShowLogin = !customerId && bookingStep === BOOKING.STEPS.SELECT_PROVIDER;
     const providers = this.handleMergedProviderInfo(
       serviceId,
       serviceProviders,
@@ -565,11 +571,13 @@ class Booking extends PureComponent {
       [BOOKING.STEPS.CONFIRM_BOOKING]: {
         bookingService: service,
         handleConfirmDialog: this.toggleConfirmDialog(true),
+        showPage,
       },
       [BOOKING.STEPS.VIEW_BOOKING]: {
         bookingService: service,
         appointmentEvent,
         resetBooking: resetBookingAction,
+        showPage,
       },
     };
 
@@ -592,29 +600,30 @@ class Booking extends PureComponent {
         )}
         <div ref={this.myBooking} className="full-width">
           {showPage && (
-            <div className={`${s.navBar} h-space-btw`}>
-              <div className="brand-logo">
-                <Avatar classes={{ img: s.logoImage }} src={logo} alt="Quezone Logo" className="brand-logo" />
-              </div>
-              <div className={s.bookingStepsWrapper}>
-                <Button disabled={!isBackValid} onClick={this.handleStepChange(-1)} className="simple-button">
-                  {this.renderChevron(isBackValid, -1)}
-                </Button>
-                <div className={s.stepper}>
-                  {this.renderSteppers()}
+            <div className={s.bookingInstant}>
+              <div className={`${s.navBar} h-space-btw`}>
+                <div className="brand-logo">
+                  <Avatar classes={{ img: s.logoImage }} src={logo} alt="Quezone Logo" className="brand-logo" />
                 </div>
-                <Button disabled={!isNextValid} onClick={this.handleStepChange(1)} className="simple-button">
-                  {this.renderChevron(isNextValid, 1)}
-                </Button>
+                <div className={s.goBack}>
+                  {isProfile && (
+                    <IconButton color="inherit" onClick={this.goProfile}>
+                      <AccountBox />
+                    </IconButton>)}
+                  {isShowLogin && (
+                    <IconButton color="inherit" onClick={() => handleAuth('isLoginOpen')}>
+                      <Fingerprint />
+                    </IconButton>
+                  )}
+                  <IconButton color="inherit" onClick={this.goHome} aria-label="Close">
+                    <Home />
+                  </IconButton>
+                </div>
               </div>
-              <div className={s.goBack}>
-                {isProfile && (
-                  <IconButton color="inherit" onClick={this.goProfile}>
-                    <AccountBox />
-                  </IconButton>)}
-                <IconButton color="inherit" onClick={this.goHome} aria-label="Close">
-                  <Home />
-                </IconButton>
+              <div className={s.bookingStepsWrapperPage}>
+                <div className={s.stepper}>
+                  {this.renderSteppers(isBackValid, isNextValid)}
+                </div>
               </div>
             </div>
           )}

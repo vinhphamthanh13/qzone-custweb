@@ -8,6 +8,15 @@
   padding: 0 0.5rem;
 }
 
+.bookingAppointmentPage {
+  display: flex;
+  flex-direction: column;
+  color: $main_04;
+  padding: 0 0.5rem 3rem;
+  height: calc(100vh - 182px);
+  overflow: auto;
+}
+
 .bookingDetail {
   width: 100%;
 }
@@ -59,4 +68,10 @@
 
 .viewMapButton {
   margin-left: 16px;
+}
+
+@include breakpoint-up(sm) {
+  .bookingAppointmentPage {
+    height: calc(100vh - 136px);
+  }
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   func,
+  bool,
 } from 'prop-types';
 import {
   Button,
@@ -39,6 +40,7 @@ class BookingDetail extends React.PureComponent {
     bookingService: serviceType,
     handleConfirmDialog: func.isRequired,
     saveGuestInfo: func.isRequired,
+    showPage: bool.isRequired,
   };
 
   static defaultProps = {
@@ -130,6 +132,7 @@ class BookingDetail extends React.PureComponent {
   render() {
     const {
       bookingService,
+      showPage,
     } = this.props;
     const {
       bookingDetail,
@@ -148,9 +151,10 @@ class BookingDetail extends React.PureComponent {
     const providerRating = get(provider, 'rating');
     const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
     const isBookingValid = isAuthenticated || (formValid && captchaVerified);
+    const detailStyle = showPage ? s.bookingAppointmentPage : s.bookingAppointment;
 
     return (
-      <div className={s.bookingAppointment}>
+      <div className={detailStyle}>
         <div className={s.bookingDetail}>
           <div className={s.bookingHeadInfo}>
             <Typography variant="title" color="inherit" className="text-bold">{serviceName}</Typography>

@@ -117,3 +117,13 @@
 .tooltip-lg {
   font-size: 0.8rem;
 }
+
+.advance-search-cta-label {
+  display: none;
+}
+
+@include breakpoint-up(sm) {
+  .advance-search-cta-label {
+    display: block;
+  }
+}

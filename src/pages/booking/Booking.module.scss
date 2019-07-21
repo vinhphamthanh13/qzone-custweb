@@ -1,5 +1,10 @@
 @import "styles/_settings.scss";
 
+.bookingInstant {
+  display: flex;
+  flex-direction: column;
+}
+
 .navBar {
   display: flex;
   justify-content: center;
@@ -31,6 +36,12 @@
   flex-direction: row;
 }
 
+.bookingStepsWrapperPage {
+  display: flex;
+  flex-direction: row;
+  margin: auto;
+}
+
 .stepper {
   display: flex;
   justify-content: space-between;
@@ -55,24 +66,6 @@
   margin: auto 1rem;
   width: 200px;
   padding: 0.3rem 0;
-}
-
-
-@include breakpoint-up(sm) {
-  .stepper {
-    border-radius: 6px;
-  }
-
-  .stepsWrapper {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .step {
-    width: fit-content;
-  }
 }
 
 .stepNumber {
@@ -103,40 +96,19 @@
   transition: color 0.5s ease-in;
 }
 
-@include breakpoint-down(sm) {
-  //.navBar {
-  //  height: auto;
-  //  display: flex;
-  //  justify-content: center;
-  //  align-items: center;
-  //  padding: 2px;
-  //  box-sizing: border-box;
-  //}
-  //
-  //.bookingStepsWrapper {
-  //  width: 100%;
-  //  display: flex;
-  //  flex-direction: column;
-  //  justify-content: center;
-  //  align-items: center;
-  //}
-  //
-  //.stepper {
-  //  border: 1px solid $gallery;
-  //  padding: 0.5rem;
-  //  border-radius: 0.4rem;
-  //  display: flex;
-  //  flex-direction: column;
-  //  justify-content: space-between;
-  //  align-self: flex-start;
-  //  box-sizing: border-box;
-  //  width: 100%;
-  //}
-  //
-  //.step {
-  //  display: flex;
-  //  justify-content: flex-start;
-  //  margin: 0.2rem auto;
-  //  width: 50%;
-  //}
+@include breakpoint-up(sm) {
+  .stepper {
+    border-radius: 6px;
+  }
+
+  .stepsWrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .step {
+    width: fit-content;
+  }
 }

@@ -7,15 +7,12 @@
 }
 
 .sidebar {
-  margin: 1em 0.5em;
+  margin: 1rem 0.5rem;
   border-radius: 5px;
   width: 350px;
   height: 100vh;
   color: $main_01;
   background: linear-gradient(to top, $main, $main_02);
-  @include breakpoint-up(xl) {
-    margin: 1em 0;
-  }
 }
 
 .title {

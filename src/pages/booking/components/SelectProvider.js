@@ -9,10 +9,8 @@ import {
 } from 'prop-types';
 import {
   chunk,
-  noop,
 } from 'lodash';
 import { Typography, Divider } from '@material-ui/core';
-import DatePicker from 'components/Calendar/DatePicker';
 import SubLoading from 'components/SubLoading';
 import { BOOKING } from 'utils/constants';
 import ProviderContent from './selectProvider/ProviderContent';
@@ -37,23 +35,18 @@ class SelectProvider extends React.PureComponent {
     const {
       bookingService,
       providers,
-      onDateChange,
       handleAuth,
       showPage,
     } = this.props;
     const selectProviderStyle = showPage
-      ? s.selectProviderPage : `${s.selectProviderPage} ${s.selectProviderList}`;
+      ? s.selectProviderPageShow : `${s.selectProviderPage} ${s.selectProviderList}`;
+    const selectProviderWrapperStyle = showPage ? s.selectProviderWrapperPage : s.selectProviderWrapperPage;
 
     return (
       <>
         { bookingService && (
-          <div className={s.selectProviderWrapper}>
+          <div className={selectProviderWrapperStyle}>
             <div className={s.selectProviderHeader}>
-              {showPage && (
-                <div className={s.selectDateOfBooking}>
-                  <DatePicker onChange={onDateChange} selectDate={noop} enableCalendar={false} />
-                </div>
-              )}
               <Typography color="inherit" variant="title" className="text-bold">
                 {bookingService.name}
               </Typography>
@@ -64,16 +57,15 @@ class SelectProvider extends React.PureComponent {
                 {chunk(providers, Math.ceil(providers.length / 4)).map(list => (
                   <div key={Math.random()} className={s.providerRow}>
                     {list.map(provider => (
-                      <div key={provider.id}>
-                        <ProviderContent
-                          service={bookingService}
-                          providers={providers}
-                          provider={provider}
-                          onTimeSelect={this.onSelectBooking(provider)}
-                          handleAuth={handleAuth}
-                        />
-                      </div>))
-                    }
+                      <ProviderContent
+                        key={provider.id}
+                        service={bookingService}
+                        providers={providers}
+                        provider={provider}
+                        onTimeSelect={this.onSelectBooking(provider)}
+                        handleAuth={handleAuth}
+                      />
+                    ))}
                   </div>
                 ))}
               </div>
@@ -90,7 +82,6 @@ SelectProvider.propTypes = {
   providers: arrayOf(object),
   setBookingDetail: func.isRequired,
   setBookingStep: func.isRequired,
-  onDateChange: func.isRequired,
   handleAuth: func.isRequired,
   showPage: bool.isRequired,
   scrollBooking: func.isRequired,
