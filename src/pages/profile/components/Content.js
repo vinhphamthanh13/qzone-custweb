@@ -273,28 +273,27 @@ class Content extends Component {
             </div>
           </div>
         )}
-        {
-          waitList && (
-            <div className={s.profilePage}>
-              <Typography variant="title" color="inherit">Enroll Queues</Typography>
-              <WaitList customerId={customerId} />
-            </div>
-          )
-        }
         {eventList && (
           <div className={s.profilePage}>
-            <Typography variant="title" color="inherit">Events</Typography>
+            <Typography variant="title" color="inherit" className="underlined">Events</Typography>
             <EventList customerId={customerId} eventList={cachedEventList} />
+          </div>)
+        }
+        {waitList && (
+          <div className={s.profilePage}>
+            <Typography variant="title" color="inherit" className="underlined">Enroll Queues</Typography>
+            <WaitList customerId={customerId} />
           </div>)
         }
         {myInfo && (
           <div className={s.profilePage}>
+            <Typography variant="title" color="inherit" className="underlined">Information</Typography>
             <Info handleAccount={handleAccount} updateProfileStatus={updateProfileStatus} />
           </div>)
         }
         {surveyList && (
           <div className={s.profilePage}>
-            <Typography variant="title" color="inherit">Assessments</Typography>
+            <Typography variant="title" color="inherit" className="underlined">Assessments</Typography>
             <Survey customerId={customerId} eventList={cachedEventList} />
           </div>)
         }

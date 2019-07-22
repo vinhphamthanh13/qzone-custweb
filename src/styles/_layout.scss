@@ -216,6 +216,11 @@
   color: $gray !important;
 }
 
+.underlined {
+  padding-bottom: 0.5rem;
+  border-bottom: 0.2rem solid $main_03;
+}
+
 .cover-bg-black {
   position: fixed;
   top: 0;
