@@ -85,42 +85,43 @@ export const createGoogleScript = () => {
   document.body.appendChild(script);
 };
 
-const awsAuth = (provider, { token, expires }, user, dispatch) => {
+const awsAuth = async (provider, { token, expires }, user, dispatch) => {
   const expiration = expires * 1000 + moment().unix() * 1000;
-  Auth.federatedSignIn(
-    provider,
-    { token, expires_at: expiration },
-    user,
-  ).then(async (credential) => {
-    const socialAccount = {
-      email: user.email,
-      userType: 'CUSTOMER',
-    };
-    const [result, error] = await handleRequest(saveSocialUser, [socialAccount]);
-    if (error) {
-      dispatch(setError(error));
-    } else {
-      dispatch(setUserDetails({
-        ...result,
-        givenName: user.name,
-      }));
-      dispatch(storeUserSessionLogin({
-        authProvider: provider,
-        start_session: moment().unix() * 1000,
-        id: result.id,
-        userName: user.name,
-        givenName: user.name,
-        qz_token: credential.sessionToken,
-        qz_refresh_token: null,
-        expiration,
-        isAuthenticated: !!result.id,
-      }));
-    }
-    dispatch(setLoading(false));
-  }).catch(() => {
-    dispatch(setError(`Login fail with ${provider}`));
-    dispatch(setLoading(false));
-  });
+  // Auth.federatedSignIn(
+  //   provider,
+  //   { token, expires_at: expiration },
+  //   user,
+  // ).then(async (credential) => {
+  const socialAccount = {
+    email: user.email,
+    userType: 'CUSTOMER',
+  };
+  const [result, error] = await handleRequest(saveSocialUser, [socialAccount]);
+  if (error) {
+    dispatch(setError(error));
+  } else {
+    dispatch(setUserDetails({
+      ...result,
+      givenName: user.name,
+    }));
+    dispatch(storeUserSessionLogin({
+      authProvider: provider,
+      start_session: moment().unix() * 1000,
+      id: result.id,
+      userName: user.name,
+      givenName: user.name,
+      qz_token: token,
+      // qz_token: credential.sessionToken,
+      qz_refresh_token: null,
+      expiration,
+      isAuthenticated: !!result.id,
+    }));
+  }
+  dispatch(setLoading(false));
+  // }).catch(() => {
+  //   dispatch(setError(`Login fail with ${provider}`));
+  //   dispatch(setLoading(false));
+  // });
 };
 
 export const loginGoogle = () => async (dispatch) => {
