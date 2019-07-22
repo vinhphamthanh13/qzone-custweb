@@ -69,12 +69,6 @@ class Content extends Component {
 
   SIDE_PANEL = [
     {
-      name: PROFILE.PAGE.WAIT_LIST,
-      icon: AddToQueue,
-      text: 'My waiting list',
-      isSelected: false,
-    },
-    {
       name: PROFILE.PAGE.EVENT_LIST,
       icon: Event,
       text: 'My event list',
@@ -84,6 +78,12 @@ class Content extends Component {
       name: PROFILE.PAGE.SURVEY,
       icon: Assessment,
       text: 'My assessment list',
+      isSelected: false,
+    },
+    {
+      name: PROFILE.PAGE.WAIT_LIST,
+      icon: AddToQueue,
+      text: 'My waiting list',
       isSelected: false,
     },
     {
@@ -276,12 +276,14 @@ class Content extends Component {
         {
           waitList && (
             <div className={s.profilePage}>
+              <Typography variant="title" color="inherit">Enroll Queues</Typography>
               <WaitList customerId={customerId} />
             </div>
           )
         }
         {eventList && (
           <div className={s.profilePage}>
+            <Typography variant="title" color="inherit">Events</Typography>
             <EventList customerId={customerId} eventList={cachedEventList} />
           </div>)
         }
@@ -292,6 +294,7 @@ class Content extends Component {
         }
         {surveyList && (
           <div className={s.profilePage}>
+            <Typography variant="title" color="inherit">Assessments</Typography>
             <Survey customerId={customerId} eventList={cachedEventList} />
           </div>)
         }

@@ -134,7 +134,7 @@ export const loginGoogle = () => async (dispatch) => {
     const name = profile.getName();
     awsAuth(PROVIDER.GOOGLE, { token, expires }, { email, name }, dispatch);
   }).catch((error) => {
-    dispatch(setError(error));
+    dispatch(setError(`Cannot login with Google Account due to ${error.error}`));
     dispatch(setLoading(false));
   });
 };
