@@ -210,12 +210,6 @@ class BookingDetail extends React.PureComponent {
                 {telephone}
               </Typography>
             </div>
-            <div className={s.bookingItems}>
-              <Public className="icon-main" />
-              <Typography variant="subtitle1" color="inherit">
-                {timezoneId}
-              </Typography>
-            </div>
             <div className={s.locationService}>
               <div className={s.bookingItems}>
                 <LocationOn className="icon-main" />
@@ -223,6 +217,12 @@ class BookingDetail extends React.PureComponent {
                   {fullAddress}
                 </Typography>
               </div>
+            </div>
+            <div className={s.bookingItems}>
+              <Public className="icon-main" />
+              <Typography variant="subtitle1" color="inherit">
+                {timezoneId}
+              </Typography>
             </div>
           </div>
           <div className={s.bookingCta}>
