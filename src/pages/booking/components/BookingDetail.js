@@ -183,7 +183,7 @@ class BookingDetail extends React.PureComponent {
             </div>
             <div className={s.bookingItems}>
               <LocationOn className="icon-main" />
-              <Typography variant="subtitle1" color="inherit" className="text-margin-right" noWrap>
+              <Typography variant="subtitle1" color="inherit" className="text-margin-right">
                 {fullAddress}
               </Typography>
             </div>
