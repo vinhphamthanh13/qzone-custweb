@@ -4,19 +4,18 @@ import {
 } from 'prop-types';
 import { VerticalTimeline } from 'react-vertical-timeline-component';
 import TimelineCard from './TimelineCard';
+import s from './AppointmentTimeline.module.scss';
 
 const AppointmentTimeline = ({ items }) => (
-  <VerticalTimeline>
-    <div>
-      {items.sort((a, b) => b.startSec - a.startSec)
-        .map(item => (
-          <TimelineCard
-            key={item.id}
-            {...item}
-          />
-        ))
-      }
-    </div>
+  <VerticalTimeline className={s.verticalTimeline}>
+    {items.sort((a, b) => b.startSec - a.startSec)
+      .map(item => (
+        <TimelineCard
+          key={item.id}
+          {...item}
+        />
+      ))
+    }
   </VerticalTimeline>
 );
 

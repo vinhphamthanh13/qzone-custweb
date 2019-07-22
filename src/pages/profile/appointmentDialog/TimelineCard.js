@@ -225,7 +225,7 @@ class TimelineCard extends Component {
           className={s.cardContainer}
         >
           <div>
-            <Typography variant="headline" color="inherit" className="text-bold" noWrap align="center">
+            <Typography variant="title" color="inherit" className="text-bold" align="center">
               {streetAddress}
             </Typography>
           </div>
@@ -267,7 +267,7 @@ class TimelineCard extends Component {
             </div>
             <div className={s.providerRating}>
               <Typography
-                variant="subheading"
+                variant="subtitle1"
                 color="textSecondary"
                 className="text-bold icon-main"
               >{providerName}
