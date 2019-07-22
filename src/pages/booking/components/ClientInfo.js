@@ -157,6 +157,7 @@ class ClientInfo extends Component {
             />
             <TextField
               fullWidth
+              type="email"
               disabled={!!userId}
               name="userEmail"
               label="Email address"
@@ -170,6 +171,7 @@ class ClientInfo extends Component {
             />
             <TextField
               fullWidth
+              type="tel"
               name="phoneNumber"
               disabled={!!userId}
               label="Phone number"

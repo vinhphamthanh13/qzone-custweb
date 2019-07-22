@@ -150,7 +150,7 @@ class ProviderContent extends React.PureComponent {
                 <div className={s.locationService}>
                   <div className="icon-text">
                     <LocationOn className="icon-main icon-small" />
-                    <Typography className="full-width text-bold" variant="body1" color="inherit" noWrap>
+                    <Typography className="full-width text-bold" variant="body1" color="inherit">
                       {providerStreet}, {providerCity},
                     </Typography>
                   </div>
