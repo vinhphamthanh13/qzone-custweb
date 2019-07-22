@@ -84,11 +84,7 @@ class ProviderContent extends React.PureComponent {
     const duration = get(provider, 'avgServiceTime');
     const providerRating = get(provider, 'rating');
     const providerMode = get(provider, 'mode');
-    const providerStreet = get(provider, 'geoLocation.streetAddress');
-    const providerState = get(provider, 'geoLocation.state');
-    const providerCity = get(provider, 'geoLocation.city');
-    const providerPostCode = get(provider, 'geoLocation.postCode');
-    const providerCountry = get(provider, 'geoLocation.country');
+    const fullAddress = get(provider, 'geoLocation.fullAddress');
 
     return (
       <>
@@ -151,13 +147,7 @@ class ProviderContent extends React.PureComponent {
                   <div className="icon-text">
                     <LocationOn className="icon-main icon-small" />
                     <Typography className="full-width text-bold" variant="body1" color="inherit">
-                      {providerStreet}, {providerCity},
-                    </Typography>
-                  </div>
-                  <div className="icon-text">
-                    <LocationOn className="icon-main icon-small icon-transparent" />
-                    <Typography className="full-width text-bold" variant="body1" color="inherit" noWrap>
-                      {providerState} {providerPostCode}, {providerCountry}
+                      {fullAddress},
                     </Typography>
                   </div>
                 </div>
