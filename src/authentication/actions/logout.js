@@ -68,7 +68,6 @@ export const logout = authenticator => (dispatch) => {
           dispatch(logoutSuccess(data));
           dispatch(setLoading(false));
           dispatch(storeUserSessionLogin(initSession));
-          // saveSession(initSession);
         })
         .catch((error) => {
           dispatch(logoutError(error));
