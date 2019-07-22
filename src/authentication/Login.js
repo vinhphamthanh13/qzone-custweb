@@ -25,7 +25,6 @@ import { loginSchema } from './components/schemas';
 class Login extends React.Component {
   componentDidMount() {
     window.fbAsyncInit = () => {
-      console.log('facebook init', FB_APP_ID);
       FB.init({
         appId: FB_APP_ID,
         cookie: true,
@@ -81,6 +80,7 @@ class Login extends React.Component {
   handleLoginFaceBook = () => {
     const { loginFacebook: loginFacebookAction } = this.props;
     console.log('handlel FB login', FB_APP_ID);
+    FB.AppEvents.logEvent('buttonClicked');
     FB.getLoginStatus((response) => {
       const authResponse = get(response, 'authResponse');
       console.log('in the login fb', response);

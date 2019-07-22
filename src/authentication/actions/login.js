@@ -146,19 +146,6 @@ export const loginGoogle = () => async (dispatch) => {
 
 // Facebook login
 
-export const retrieveFacebookAccount = async (FB) => {
-  const user = {};
-  const test = await FB.api('/me', { fields: 'email, name' }, (response) => {
-    console.log('retrieve user me', response);
-    const email = get(response, 'email');
-    const name = get(response, 'name');
-    user.email = email;
-    user.name = name;
-  });
-  console.log('teseing aldjf alsdjfal sj>>>>>>>>>>>>>>>', test);
-  return user;
-};
-
 const forwardFBUserToAWS = (provider, credentials, FB, dispatch) => {
   FB.api('/me', { fields: 'email, name' }, (response) => {
     const email = get(response, 'email');
@@ -188,9 +175,7 @@ export const loginFacebook = (FB, preAuthResponse = null) => async (dispatch) =>
     console.log('face book acc already logged in', preAuthResponse);
     const token = get(preAuthResponse, 'accessToken');
     const expires = get(preAuthResponse, 'expiresIn');
-    const user = await retrieveFacebookAccount(FB);
-    console.log('retrieve user API', user);
-    awsAuth(PROVIDER.FACEBOOK, { token, expires }, user, dispatch);
+    forwardFBUserToAWS(PROVIDER.FACEBOOK, { token, expires }, FB, dispatch);
   }
 };
 
