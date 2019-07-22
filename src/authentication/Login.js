@@ -79,11 +79,10 @@ class Login extends React.Component {
 
   handleLoginFaceBook = () => {
     const { loginFacebook: loginFacebookAction } = this.props;
-    console.log('handlel FB login', FB_APP_ID);
+    console.info('Logging user with Facebook account');
     FB.AppEvents.logEvent('buttonClicked');
     FB.getLoginStatus((response) => {
       const authResponse = get(response, 'authResponse');
-      console.log('in the login fb', response);
       if (!authResponse) {
         loginFacebookAction(FB);
       } else {

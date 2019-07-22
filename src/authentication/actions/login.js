@@ -87,10 +87,6 @@ export const createGoogleScript = () => {
 
 const awsAuth = (provider, { token, expires }, user, dispatch) => {
   const expiration = expires * 1000 + moment().unix() * 1000;
-  console.log('aws auth federated', provider);
-  console.log('aws auth federated token', token);
-  console.log('aws auth federated expires', expires);
-  console.log('aws auth federated user', user);
   Auth.federatedSignIn(
     provider,
     { token, expires_at: expiration },
@@ -121,8 +117,7 @@ const awsAuth = (provider, { token, expires }, user, dispatch) => {
       }));
     }
     dispatch(setLoading(false));
-  }).catch((error) => {
-    console.log('login federation failed', error);
+  }).catch(() => {
     dispatch(setError(`Login fail with ${provider}`));
     dispatch(setLoading(false));
   });
@@ -160,7 +155,6 @@ export const loginFacebook = (FB, preAuthResponse = null) => async (dispatch) =>
     FB.login(
       async (response) => {
         const status = get(response, 'status');
-        console.log('now login facbook fresh', response);
         if (status === FACEBOOK.STATUS.CONNECTED) {
           const authResponse = get(response, 'authResponse');
           const token = get(authResponse, 'accessToken');
@@ -172,7 +166,6 @@ export const loginFacebook = (FB, preAuthResponse = null) => async (dispatch) =>
       { scope: 'public_profile, email' },
     );
   } else {
-    console.log('face book acc already logged in', preAuthResponse);
     const token = get(preAuthResponse, 'accessToken');
     const expires = get(preAuthResponse, 'expiresIn');
     forwardFBUserToAWS(PROVIDER.FACEBOOK, { token, expires }, FB, dispatch);
