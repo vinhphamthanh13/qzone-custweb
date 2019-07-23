@@ -11,6 +11,7 @@ import {
   LOGIN_TYPES,
 } from 'utils/constants';
 import Error from 'components/Error';
+// import { FB_APP_ID, FB_API_VERSION } from 'config/auth';
 import Form from './components/Form';
 import {
   login, loginGoogle, loginFacebook,
@@ -18,6 +19,30 @@ import {
 import { loginSchema } from './components/schemas';
 
 class Login extends React.Component {
+  // componentDidMount() {
+  //   window.fbAsyncInit = () => {
+  //     console.log('init FBook login', FB_APP_ID);
+  //     FB.init({
+  //       appId: FB_APP_ID,
+  //       cookie: true,
+  //       xfbml: true,
+  //       version: FB_API_VERSION,
+  //     });
+  //     FB.AppEvents.logPageView();
+  //   };
+  //
+  //   (function (document, script, id) {
+  //     const fjs = document.getElementsByTagName(script)[0];
+  //     if (document.getElementById(id)) {
+  //       return;
+  //     }
+  //     const js = document.createElement(script);
+  //     js.id = id;
+  //     js.src = 'https://connect.facebook.net/en_US/sdk.js';
+  //     fjs.parentNode.insertBefore(js, fjs);
+  //   }(document, 'script', 'facebook-jssdk'));
+  // }
+
   handleLogin = (values, name) => {
     const {
       logInAction,

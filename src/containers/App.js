@@ -15,8 +15,6 @@ import 'config/api';
 import {
   AUTH_METHOD,
   AWS_CONFIG,
-  FB_API_VERSION,
-  FB_APP_ID,
 } from 'config/auth';
 import store from 'config/store';
 import 'styles/_settings.scss';
@@ -34,17 +32,7 @@ export const history = createBrowserHistory();
 Amplify.configure(AWS_CONFIG);
 
 class App extends Component {
-  componentWillMount() {
-    window.fbAsyncInit = () => {
-      FB.init({
-        appId: FB_APP_ID,
-        cookie: true,
-        xfbml: true,
-        version: FB_API_VERSION,
-      });
-      FB.AppEvents.logPageView();
-    };
-
+  componentDidMount() {
     const ga = window.gapi && window.gapi[AUTH_METHOD]
       ? window.gapi.auth2.getAuthInstance() : null;
 
