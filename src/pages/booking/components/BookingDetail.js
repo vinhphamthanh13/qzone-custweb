@@ -16,6 +16,9 @@ import {
   Book,
   Person,
   Edit,
+  Email,
+  Call,
+  Public,
 } from '@material-ui/icons';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
@@ -24,7 +27,7 @@ import {
   serviceType,
 } from 'types/global';
 import {
-  defaultDateFormat,
+  longDateFormat,
   AUTHENTICATED_KEY,
 } from 'utils/constants';
 import RateStar from 'components/Rating/RateStar';
@@ -146,6 +149,9 @@ class BookingDetail extends React.PureComponent {
     const bookingTime = get(bookingDetail, 'time.start');
     const provider = get(bookingDetail, 'provider');
     const providerName = get(provider, 'providerName');
+    const email = get(provider, 'email');
+    const telephone = get(provider, 'telephone');
+    const timezoneId = get(provider, 'timezoneId');
     const duration = get(provider, 'avgServiceTime');
     const fullAddress = get(provider, 'geoLocation.fullAddress');
     const providerRating = get(provider, 'rating');
@@ -158,12 +164,32 @@ class BookingDetail extends React.PureComponent {
         <div className={s.bookingDetail}>
           <div className={s.bookingHeadInfo}>
             <Typography variant="title" color="inherit" className="text-bold">{serviceName}</Typography>
+            <div className={s.viewMap}>
+              <PersonPin className="icon-main icon-shake" onClick={this.toggleMapDialog} />
+              <Typography
+                variant="subtitle1"
+                color="inherit"
+                onClick={this.toggleMapDialog}
+                className="hover-pointer"
+              >
+                View map
+              </Typography>
+            </div>
           </div>
           <div className={s.serviceItems}>
             <div className={s.bookingItems}>
+              <Person className="icon-main" />
+              <Typography variant="subtitle1" color="inherit" className="text-margin-right text-bold">
+                {providerName}
+              </Typography>
+              <div>
+                <RateStar rating={providerRating} />
+              </div>
+            </div>
+            <div className={s.bookingItems}>
               <DateRange className="icon-main" />
               <Typography variant="subtitle1" color="inherit">
-                {bookingTime && moment(bookingTime * 1000).format(defaultDateFormat)}
+                {bookingTime && moment(bookingTime * 1000).format(longDateFormat)}
               </Typography>
             </div>
             <div className={s.bookingItems}>
@@ -173,29 +199,29 @@ class BookingDetail extends React.PureComponent {
               </Typography>
             </div>
             <div className={s.bookingItems}>
-              <Person className="icon-main" />
-              <Typography variant="subtitle1" color="inherit" className="text-margin-right">
-                {providerName}
+              <Email className="icon-main" />
+              <Typography variant="subtitle1" color="inherit">
+                {email}
               </Typography>
-              <div>
-                <RateStar rating={providerRating} />
+            </div>
+            <div className={s.bookingItems}>
+              <Call className="icon-main" />
+              <Typography variant="subtitle1" color="inherit">
+                {telephone}
+              </Typography>
+            </div>
+            <div className={s.locationService}>
+              <div className={s.bookingItems}>
+                <LocationOn className="icon-main" />
+                <Typography variant="subtitle1" color="inherit" className="text-margin-right">
+                  {fullAddress}
+                </Typography>
               </div>
             </div>
             <div className={s.bookingItems}>
-              <LocationOn className="icon-main" />
-              <Typography variant="subtitle1" color="inherit" className="text-margin-right">
-                {fullAddress}
-              </Typography>
-            </div>
-            <div className={s.bookingItems}>
-              <PersonPin className="icon-main icon-shake" onClick={this.toggleMapDialog} />
-              <Typography
-                variant="subtitle1"
-                color="inherit"
-                onClick={this.toggleMapDialog}
-                className="hover-pointer"
-              >
-                View map
+              <Public className="icon-main" />
+              <Typography variant="subtitle1" color="inherit">
+                {timezoneId}
               </Typography>
             </div>
           </div>

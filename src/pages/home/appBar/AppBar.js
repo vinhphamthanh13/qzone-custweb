@@ -216,7 +216,7 @@ class MainAppBar extends React.Component {
         >
           <NotificationsIcon />
         </Badge>
-        <IconButton onClick={this.navigatingProfile(PROFILE.PAGE.WAIT_LIST)} color="inherit">
+        <IconButton onClick={this.navigatingProfile(PROFILE.PAGE.EVENT_LIST)} color="inherit">
           <AssignmentInd />
         </IconButton>
       </>

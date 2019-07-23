@@ -69,12 +69,6 @@ class Content extends Component {
 
   SIDE_PANEL = [
     {
-      name: PROFILE.PAGE.WAIT_LIST,
-      icon: AddToQueue,
-      text: 'My waiting list',
-      isSelected: false,
-    },
-    {
       name: PROFILE.PAGE.EVENT_LIST,
       icon: Event,
       text: 'My event list',
@@ -84,6 +78,12 @@ class Content extends Component {
       name: PROFILE.PAGE.SURVEY,
       icon: Assessment,
       text: 'My assessment list',
+      isSelected: false,
+    },
+    {
+      name: PROFILE.PAGE.WAIT_LIST,
+      icon: AddToQueue,
+      text: 'My waiting list',
       isSelected: false,
     },
     {
@@ -273,25 +273,27 @@ class Content extends Component {
             </div>
           </div>
         )}
-        {
-          waitList && (
-            <div className={s.profilePage}>
-              <WaitList customerId={customerId} />
-            </div>
-          )
-        }
         {eventList && (
           <div className={s.profilePage}>
+            <Typography variant="title" color="inherit" className="underlined">Events</Typography>
             <EventList customerId={customerId} eventList={cachedEventList} />
+          </div>)
+        }
+        {waitList && (
+          <div className={s.profilePage}>
+            <Typography variant="title" color="inherit" className="underlined">Enroll Queues</Typography>
+            <WaitList customerId={customerId} />
           </div>)
         }
         {myInfo && (
           <div className={s.profilePage}>
+            <Typography variant="title" color="inherit" className="underlined">Information</Typography>
             <Info handleAccount={handleAccount} updateProfileStatus={updateProfileStatus} />
           </div>)
         }
         {surveyList && (
           <div className={s.profilePage}>
+            <Typography variant="title" color="inherit" className="underlined">Assessments</Typography>
             <Survey customerId={customerId} eventList={cachedEventList} />
           </div>)
         }

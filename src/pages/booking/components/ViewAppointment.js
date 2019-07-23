@@ -227,7 +227,7 @@ class ViewAppointment extends Component {
                 </div>
                 <div className={s.viewItems}>
                   <Public className="icon-small" />
-                  <Typography variant="body1" className="danger-color" inline noWrap>
+                  <Typography variant="body1" color="primary" inline noWrap>
                     {providerTimezoneId}
                   </Typography>
                 </div>

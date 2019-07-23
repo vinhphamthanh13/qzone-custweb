@@ -29,6 +29,8 @@ import {
   LocationOn,
   Public,
   Cancel,
+  Email,
+  Call,
 } from '@material-ui/icons';
 import RateStar from 'components/Rating/RateStar';
 import MapDialog from 'components/Map/MapDialog';
@@ -36,6 +38,7 @@ import { setRatingService } from 'actionsReducers/common.actions';
 import { cancelEventByIdAction } from 'actionsReducers/profile.actions';
 import Rating from 'material-ui-rating';
 import CustomModal from 'components/Modal/CustomModal';
+import { longDateFormat } from 'utils/constants';
 import s from './TimelineCard.module.scss';
 import CountDownDisplay from './CountDownDisplay';
 import { STATUS } from './Appointment.constants';
@@ -55,10 +58,13 @@ class TimelineCard extends Component {
     cancelEventByIdAction: func.isRequired,
     status: string.isRequired,
     cancellable: bool,
+    providerEmail: string.isRequired,
+    providerTelephone: string,
   };
 
   static defaultProps = {
     cancellable: true,
+    providerTelephone: '',
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -127,6 +133,8 @@ class TimelineCard extends Component {
       serviceName,
       timezone,
       geoLocation,
+      providerEmail,
+      providerTelephone,
       id,
       status,
       cancellable,
@@ -191,12 +199,7 @@ class TimelineCard extends Component {
       currentEventStatus = STATUS.COMING;
       displayIconStatus = <Timer className="icon-danger" />;
     }
-    const streetAddress = get(geoLocation, 'streetAddress');
-    const district = get(geoLocation, 'district');
-    const state = get(geoLocation, 'state');
-    const postCode = get(geoLocation, 'postCode');
-    const city = get(geoLocation, 'city');
-    const country = get(geoLocation, 'country');
+    const fullAddress = get(geoLocation, 'fullAddress');
     const mapProvider = { geoLocation };
     const eventExpired = eventStatus === STATUS.EXPIRED;
     const statusStyle = status === STATUS.CANCELED ? 'bg-danger' : 'bg-success';
@@ -224,20 +227,16 @@ class TimelineCard extends Component {
           icon={currentIconTimeline}
           className={s.cardContainer}
         >
-          <div>
-            <Typography variant="headline" color="inherit" className="text-bold" noWrap align="center">
-              {streetAddress}
-            </Typography>
-          </div>
-          <div className={s.eventFullAddress}>
-            <Typography variant="subtitle1" color="textSecondary" align="center">
-              {district} {state} {postCode} - {city} {country}
+          <div className="flexCol v-center h-center">
+            <Typography variant="subtitle1" color="inherit" className="text-bold" align="center">
+              {fullAddress}
             </Typography>
             {!eventExpired && (
               <Button color="inherit" className="simple-button" onClick={this.handleToggleMap}>
                 <LocationOn color="inherit" className="icon-main" />
                 View map
-              </Button>)}
+              </Button>
+            )}
           </div>
           {eventExpired && (
             <div className={s.ratingWrapper}>
@@ -267,7 +266,7 @@ class TimelineCard extends Component {
             </div>
             <div className={s.providerRating}>
               <Typography
-                variant="subheading"
+                variant="subtitle1"
                 color="textSecondary"
                 className="text-bold icon-main"
               >{providerName}
@@ -277,7 +276,7 @@ class TimelineCard extends Component {
             <div className={s.appointmentItem}>
               <DateRange className="icon-main" />
               <Typography variant="subheading" color="inherit" inline noWrap>
-                {moment(providerStartSec).format('DD MMM YYYY')}
+                {moment(providerStartSec).format(longDateFormat)}
               </Typography>
             </div>
             <div className={s.appointmentItem}>
@@ -286,6 +285,20 @@ class TimelineCard extends Component {
                 {moment(providerStartSec).format('LT')}{' - '}{moment(providerStartSec).add(duration, 'm').format('LT')}
               </Typography>
             </div>
+            <div className={s.appointmentItem}>
+              <Email className="icon-main" />
+              <Typography variant="subheading" color="inherit" inline noWrap>
+                {providerEmail}
+              </Typography>
+            </div>
+            {providerTelephone !== null && providerTelephone.length > 0 && (
+              <div className={s.appointmentItem}>
+                <Call className="icon-main" />
+                <Typography variant="subheading" color="inherit" inline noWrap>
+                  {providerTelephone}
+                </Typography>
+              </div>
+            )}
             <div className={s.appointmentItem}>
               <Public className="icon-main" />
               <Typography variant="subheading" color="inherit" inline noWrap>

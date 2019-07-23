@@ -22,9 +22,12 @@
 }
 
 .bookingHeadInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
   padding: 0.5em 0 1rem;
   border-bottom: 1px solid $main_02;
-  text-align: center;
 }
 
 .serviceItems {
@@ -36,6 +39,16 @@
   justify-content: flex-start;
   align-items: center;
   width: 100%;
+}
+
+.viewMap {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border: 1px solid $main_03;
+  border-radius: 0.3rem;
+  padding: 0.1rem 0.5rem;
+  margin: 0.5rem auto 0;
 }
 
 .bookingCta {
@@ -68,6 +81,16 @@
 
 .viewMapButton {
   margin-left: 16px;
+}
+
+.locationService {
+  border: 1px solid $main_02;
+  width: 100%;
+  border-radius: 6px;
+  background: rgba($main_03, 0.1);
+  height: 70px;
+  display: flex;
+  align-items: center;
 }
 
 @include breakpoint-up(sm) {

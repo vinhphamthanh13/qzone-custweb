@@ -1,57 +1,47 @@
 /* eslint-disable no-undef, func-names */
+
 import React from 'react';
 import { string, bool, func } from 'prop-types';
 import { connect } from 'react-redux';
 import {
   get,
-  // noop,
 } from 'lodash';
 import { Formik } from 'formik';
 import {
   LOGIN_TYPES,
 } from 'utils/constants';
 import Error from 'components/Error';
-import {
-  FB_APP_ID,
-  FB_API_VERSION,
-  AUTH_METHOD,
-} from 'config/auth';
+// import { FB_APP_ID, FB_API_VERSION } from 'config/auth';
 import Form from './components/Form';
 import {
-  login, createGoogleScript, loginGoogle, loginFacebook,
+  login, loginGoogle, loginFacebook,
 } from './actions/login';
 import { loginSchema } from './components/schemas';
 
 class Login extends React.Component {
-  componentDidMount() {
-    window.fbAsyncInit = () => {
-      FB.init({
-        appId: FB_APP_ID,
-        cookie: true,
-        xfbml: true,
-        version: FB_API_VERSION,
-      });
-      FB.AppEvents.logPageView();
-    };
-
-    (function (document, script, id) {
-      const fjs = document.getElementsByTagName(script)[0];
-      if (document.getElementById(id)) {
-        return;
-      }
-      const js = document.createElement(script);
-      js.id = id;
-      js.src = 'https://connect.facebook.net/en_US/sdk.js';
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-
-    const ga = window.gapi && window.gapi[AUTH_METHOD]
-      ? window.gapi.auth2.getAuthInstance() : null;
-
-    if (!ga) {
-      createGoogleScript();
-    }
-  }
+  // componentDidMount() {
+  //   window.fbAsyncInit = () => {
+  //     console.log('init FBook login', FB_APP_ID);
+  //     FB.init({
+  //       appId: FB_APP_ID,
+  //       cookie: true,
+  //       xfbml: true,
+  //       version: FB_API_VERSION,
+  //     });
+  //     FB.AppEvents.logPageView();
+  //   };
+  //
+  //   (function (document, script, id) {
+  //     const fjs = document.getElementsByTagName(script)[0];
+  //     if (document.getElementById(id)) {
+  //       return;
+  //     }
+  //     const js = document.createElement(script);
+  //     js.id = id;
+  //     js.src = 'https://connect.facebook.net/en_US/sdk.js';
+  //     fjs.parentNode.insertBefore(js, fjs);
+  //   }(document, 'script', 'facebook-jssdk'));
+  // }
 
   handleLogin = (values, name) => {
     const {
@@ -79,7 +69,6 @@ class Login extends React.Component {
 
   handleLoginFaceBook = () => {
     const { loginFacebook: loginFacebookAction } = this.props;
-    console.info('Logging user with Facebook account');
     FB.AppEvents.logEvent('buttonClicked');
     FB.getLoginStatus((response) => {
       const authResponse = get(response, 'authResponse');

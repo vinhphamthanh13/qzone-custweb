@@ -27,6 +27,11 @@
   display: flex;
 }
 
+.flexCol {
+  display: flex;
+  flex-direction: column;
+}
+
 .v-center {
   align-items: center;
 }
@@ -214,6 +219,11 @@
 
 .default-color {
   color: $gray !important;
+}
+
+.underlined {
+  padding-bottom: 0.5rem;
+  border-bottom: 0.2rem solid $main_03;
 }
 
 .cover-bg-black {

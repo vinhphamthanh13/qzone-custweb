@@ -154,7 +154,7 @@ class Profile extends Component {
               onClose={this.goBooking}
               handleSidePanel={this.handleSidePanel}
             />
-            <div className={`container-max auto-margin-horizontal ${s.contentAfooter}`}>
+            <div className={`container-max auto-margin-horizontal ${s.profileContent}`}>
               <Content
                 customerId={customerId}
                 givenName={givenName}

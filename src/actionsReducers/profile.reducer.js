@@ -8,7 +8,7 @@ import {
 const initState = {
   updateProfileStatus: '',
   firebaseUserStored: null,
-  profilePage: PROFILE.PAGE.WAIT_LIST,
+  profilePage: PROFILE.PAGE.EVENT_LIST,
   cancelEventByIdStatus: null,
 };
 
