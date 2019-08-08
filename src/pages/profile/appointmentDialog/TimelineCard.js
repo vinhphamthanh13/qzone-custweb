@@ -35,7 +35,7 @@ import Rating from 'material-ui-rating';
 import CustomModal from 'components/Modal/CustomModal';
 import Success from 'components/Success';
 import Error from 'components/Error';
-import { longDateFormat } from 'utils/constants';
+import { longDateFormat, timeSlotFormat } from 'utils/constants';
 import { EVENT_STATUS } from './Appointment.constants';
 import RescheduleSlots from '../RescheduleSlots';
 import s from './TimelineCard.module.scss';
@@ -132,16 +132,22 @@ class TimelineCard extends Component {
     window.location.reload();
   };
 
-  handleRescheduleEventConfirmation = (value, eventId, specialServiceId) => () => {
+  handleRescheduleEventConfirmation = (value, eventId) => (data) => {
+    const availabilityId = get(data, 'availabilityId');
+    const startTime = get(data, 'start');
     this.setState({
       isRescheduleOpen: value,
-      specialServiceId,
+      newAvailabilityId: availabilityId || null,
       eventId,
+      rescheduledTime: moment(startTime * 1000).format(timeSlotFormat).toUpperCase(),
+      specialServiceId: null,
     });
   };
 
   handleRescheduleEventAction = () => {
-    this.handleRescheduleEventConfirmation(false, null)();
+    const { eventId, newAvailabilityId } = this.state;
+    this.handleRescheduleEventConfirmation(false, null, null)();
+    console.log('process reschedule with data', eventId, newAvailabilityId);
   };
 
   handleShowRescheduleSlots = specialServiceId => () => {
@@ -174,6 +180,7 @@ class TimelineCard extends Component {
       viewUrl,
       isRescheduleOpen,
       specialServiceId,
+      rescheduledTime,
     } = this.state;
 
     const serviceProviderId = '//TODO';
@@ -249,7 +256,8 @@ class TimelineCard extends Component {
           </>
         )}
         <CustomModal
-          message={`Are your sure to reschedule this event? Code ${bookingCode.toUpperCase()}`}
+          message={`Are your sure to reschedule this event to ${rescheduledTime} for booking code \
+          ${bookingCode.toUpperCase()}`}
           title="Event Confirmation"
           isOpen={isRescheduleOpen}
           type="info"
@@ -268,7 +276,7 @@ class TimelineCard extends Component {
         && (
           <RescheduleSlots
             rescheduledSlots={availabilitiesBulk.filter(slot => slot.specialServiceId === tempServiceId)}
-            onRescheduleConfirm={this.handleRescheduleEventConfirmation}
+            onRescheduleConfirm={this.handleRescheduleEventConfirmation(true, id)}
           />
         )}
         {isOpenMap && (

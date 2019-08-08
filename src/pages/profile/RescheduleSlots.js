@@ -1,15 +1,14 @@
 import React from 'react';
-import { arrayOf, object } from 'prop-types';
+import { arrayOf, object, func } from 'prop-types';
 import TimeBoxes from 'pages/booking/components/selectProvider/TimeBoxes';
 import s from './RescheduleSlots.module.scss';
 
 const RescheduleSlots = (props) => {
-  console.log('reschedule slots', props);
-  const { rescheduledSlots } = props;
+  const { rescheduledSlots, onRescheduleConfirm } = props;
   return (
     <div className="cover-bg-black">
       <div className={s.rescheduleSlots}>
-        <TimeBoxes availableSlots={rescheduledSlots} onSelectSlot={() => {}} />
+        <TimeBoxes availableSlots={rescheduledSlots} onSelectSlot={onRescheduleConfirm} />
       </div>
     </div>
   );
@@ -17,6 +16,7 @@ const RescheduleSlots = (props) => {
 
 RescheduleSlots.propTypes = {
   rescheduledSlots: arrayOf(object),
+  onRescheduleConfirm: func.isRequired,
 };
 
 RescheduleSlots.defaultProps = {
