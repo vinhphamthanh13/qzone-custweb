@@ -13,6 +13,7 @@ import moment from 'moment';
 import {
   get,
   uniqBy,
+  compact,
 } from 'lodash';
 import {
   IconButton,
@@ -424,7 +425,7 @@ class Booking extends PureComponent {
     ) {
       const locationProviders = [];
       Object.keys(temporaryServicesByLocation).map((locationId) => {
-        uniqBy(providersByServiceId, provider => provider.userSub).forEach((provider) => {
+        uniqBy(compact(providersByServiceId), provider => provider.userSub).forEach((provider) => {
           const temporaryServiceIds = [];
           let uniqProvider = {};
           temporaryServicesByLocation[locationId].map((tempService) => {
