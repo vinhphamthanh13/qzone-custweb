@@ -26,7 +26,7 @@ import MapDialog from 'components/Map/MapDialog';
 import CustomLink from 'components/CustomLink';
 import defaultImage from 'images/default-service-card.png';
 import WaitListRegistration from '../WaitListRegistration';
-import TimeBoxes from './TimeBoxes';
+import WrappedBox from './WrappedBox';
 import s from './ProviderContent.module.scss';
 
 class ProviderContent extends React.PureComponent {
@@ -61,7 +61,7 @@ class ProviderContent extends React.PureComponent {
     return (mode === 'QUEUE' ? (
       <WaitListRegistration handleAuth={handleAuth} providers={providers} initProvider={provider} />
     ) : (
-      <TimeBoxes
+      <WrappedBox
         provider={provider}
         onSelectSlot={onTimeSelect}
       />));
