@@ -1,4 +1,4 @@
-@import "styles/_color.scss";
+@import "styles/_settings.scss";
 
 .modalRoot {
   display: flex;
@@ -9,10 +9,12 @@
 
 .wrapper {
   position: relative;
-  max-width: 1rem * 24;
-  min-width: 1rem * 23;
+  max-width: 375px;
+  min-width: 370px;
   display: flex;
   padding: 1rem;
+  box-sizing: border-box;
+  opacity: 0.9;
 }
 
 .wrapperLogo {
@@ -66,3 +68,9 @@
   padding: 0.1rem 1.6rem;
 }
 
+@include breakpoint-up(sm) {
+  .wrapper {
+    max-width: 1rem * 25;
+    min-width: 1rem * 23;
+  }
+}

@@ -29,7 +29,7 @@ import {
 } from '@material-ui/icons';
 import RateStar from 'components/Rating/RateStar';
 import MapDialog from 'components/Map/MapDialog';
-import { setRatingService } from 'actionsReducers/common.actions';
+import { setRatingService, rescheduleEvent } from 'actionsReducers/common.actions';
 import { cancelEventByIdAction } from 'actionsReducers/profile.actions';
 import Rating from 'material-ui-rating';
 import CustomModal from 'components/Modal/CustomModal';
@@ -60,6 +60,7 @@ class TimelineCard extends Component {
     providerTelephone: string,
     tempServiceId: string.isRequired,
     availabilitiesBulk: arrayOf(object).isRequired,
+    rescheduleEvent: func.isRequired,
   };
 
   static defaultProps = {
@@ -145,9 +146,10 @@ class TimelineCard extends Component {
   };
 
   handleRescheduleEventAction = () => {
+    const { rescheduleEvent: rescheduleEventAction } = this.props;
     const { eventId, newAvailabilityId } = this.state;
     this.handleRescheduleEventConfirmation(false, null, null)();
-    console.log('process reschedule with data', eventId, newAvailabilityId);
+    rescheduleEventAction({ eventId, newAvailabilityId });
   };
 
   handleShowRescheduleSlots = specialServiceId => () => {
@@ -277,6 +279,7 @@ class TimelineCard extends Component {
           <RescheduleSlots
             rescheduledSlots={availabilitiesBulk.filter(slot => slot.specialServiceId === tempServiceId)}
             onRescheduleConfirm={this.handleRescheduleEventConfirmation(true, id)}
+            closeReschedule={this.handleRescheduleEventConfirmation(false, null)}
           />
         )}
         {isOpenMap && (
@@ -436,4 +439,5 @@ const mapStateToProps = state => ({
 export default connect(mapStateToProps, {
   setRatingService,
   cancelEventByIdAction,
+  rescheduleEvent,
 })(TimelineCard);
