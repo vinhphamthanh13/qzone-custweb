@@ -5,6 +5,7 @@ import {
   func,
 } from 'prop-types';
 import { connect } from 'react-redux';
+import { noop } from 'lodash';
 import findValueByKey from 'utils/findValueByKey';
 import CustomModal from 'components/Modal/CustomModal';
 import { resetModalStatus } from 'actionsReducers/common.actions';
@@ -15,7 +16,13 @@ const Success = (props) => {
     success,
     succeedMessage,
     resetModalStatus: resetModalStatusAction,
+    userCallback,
   } = props;
+
+  const callback = () => {
+    resetModalStatusAction();
+    userCallback();
+  };
 
   return success ? (
     <CustomModal
@@ -23,7 +30,7 @@ const Success = (props) => {
       title="Success!"
       message={succeedMessage}
       isOpen
-      cancelCallBack={resetModalStatusAction}
+      cancelCallBack={callback}
       className="z-index-highest"
       isBackDropClickDisabled
     />
@@ -34,6 +41,11 @@ Success.propTypes = {
   success: bool.isRequired,
   succeedMessage: string.isRequired,
   resetModalStatus: func.isRequired,
+  userCallback: func,
+};
+
+Success.defaultProps = {
+  userCallback: noop,
 };
 
 const mapStateToProps = (state) => {
