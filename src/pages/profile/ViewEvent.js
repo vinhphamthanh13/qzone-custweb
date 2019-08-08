@@ -65,7 +65,7 @@ class ViewEvent extends Component {
           </div>
           {eventById && eventById.id && (
             <div className={s.content}>
-              <TimelineCard {...eventById} cancellable={false} />
+              <TimelineCard {...eventById} />
               <Footer maintenance={false} />
             </div>
           )}
