@@ -60,6 +60,7 @@
 
 .bookingCode {
   font-weight: bolder;
+  text-align: center;
 }
 
 .cardDetail {
@@ -132,6 +133,10 @@
     background: $main_02;
     color: $main;
   }
+}
+
+.reschedule {
+  font-size: 0.85rem;
 }
 
 .cancelEventHidden {

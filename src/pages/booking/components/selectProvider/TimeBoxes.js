@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  func,
+  func, arrayOf, object,
 } from 'prop-types';
 import { Typography, Button } from '@material-ui/core';
 import moment from 'moment';
@@ -17,19 +17,6 @@ import {
 import s from './TimeBoxes.module.scss';
 
 export class TimeBoxes extends React.PureComponent {
-  static getDerivedStateFromProps(props, state) {
-    const { provider } = props;
-    const { provider: cachedProvider } = state;
-    if (provider !== cachedProvider) {
-      return { provider };
-    }
-    return null;
-  }
-
-  state = {
-    provider: null,
-  };
-
   onHourChange = ({ availabilityId, start, duration }) => (event) => {
     event.preventDefault();
     this.props.onSelectSlot({
@@ -128,14 +115,14 @@ export class TimeBoxes extends React.PureComponent {
   };
 
   render() {
-    const { provider } = this.state;
-    const availableSlots = get(provider, 'availableSlots');
+    const { availableSlots } = this.props;
     const hourBoxes = this.getHourBoxes(availableSlots);
     return hourBoxes && this.renderTimeBox(hourBoxes);
   }
 }
 
 TimeBoxes.propTypes = {
+  availableSlots: arrayOf(object).isRequired,
   onSelectSlot: func.isRequired,
 };
 

@@ -1,11 +1,6 @@
 import React, { Component } from 'react';
 import {
-  string,
-  number,
-  objectOf,
-  any,
-  func,
-  bool,
+  string, number, objectOf, any, func, bool, arrayOf, object,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
@@ -34,14 +29,15 @@ import {
 } from '@material-ui/icons';
 import RateStar from 'components/Rating/RateStar';
 import MapDialog from 'components/Map/MapDialog';
-import { setRatingService } from 'actionsReducers/common.actions';
+import { setRatingService, rescheduleEvent } from 'actionsReducers/common.actions';
 import { cancelEventByIdAction } from 'actionsReducers/profile.actions';
 import Rating from 'material-ui-rating';
 import CustomModal from 'components/Modal/CustomModal';
 import Success from 'components/Success';
 import Error from 'components/Error';
-import { longDateFormat } from 'utils/constants';
+import { longDateFormat, timeSlotFormat } from 'utils/constants';
 import { EVENT_STATUS } from './Appointment.constants';
+import RescheduleSlots from '../RescheduleSlots';
 import s from './TimelineCard.module.scss';
 import CountDownDisplay from './CountDownDisplay';
 
@@ -62,6 +58,9 @@ class TimelineCard extends Component {
     cancellable: bool,
     providerEmail: string.isRequired,
     providerTelephone: string,
+    tempServiceId: string.isRequired,
+    availabilitiesBulk: arrayOf(object).isRequired,
+    rescheduleEvent: func.isRequired,
   };
 
   static defaultProps = {
@@ -96,6 +95,8 @@ class TimelineCard extends Component {
       isOpenMap: false,
       isCancelEvent: false,
       eventId: null,
+      isRescheduleOpen: false,
+      specialServiceId: null,
     };
   }
 
@@ -124,15 +125,37 @@ class TimelineCard extends Component {
   handleCancelEventAction = () => {
     const { cancelEventByIdAction: cancelEventById } = this.props;
     const { eventId } = this.state;
-    this.handleCancelEventConfirmation(false)();
-    this.setState({
-      eventId: null,
-    });
+    this.handleCancelEventConfirmation(false, null)();
     cancelEventById(eventId);
   };
 
   handleRefreshPage = () => {
     window.location.reload();
+  };
+
+  handleRescheduleEventConfirmation = (value, eventId) => (data) => {
+    const availabilityId = get(data, 'availabilityId');
+    const startTime = get(data, 'start');
+    this.setState({
+      isRescheduleOpen: value,
+      newAvailabilityId: availabilityId || null,
+      eventId,
+      rescheduledTime: moment(startTime * 1000).format(timeSlotFormat).toUpperCase(),
+      specialServiceId: null,
+    });
+  };
+
+  handleRescheduleEventAction = () => {
+    const { rescheduleEvent: rescheduleEventAction } = this.props;
+    const { eventId, newAvailabilityId } = this.state;
+    this.handleRescheduleEventConfirmation(false, null, null)();
+    rescheduleEventAction({ eventId, newAvailabilityId });
+  };
+
+  handleShowRescheduleSlots = specialServiceId => () => {
+    this.setState({
+      specialServiceId,
+    });
   };
 
   render() {
@@ -150,12 +173,18 @@ class TimelineCard extends Component {
       id,
       status,
       cancellable,
+      tempServiceId,
+      availabilitiesBulk,
     } = this.props;
     const {
       isOpenMap,
       isCancelEvent,
       viewUrl,
+      isRescheduleOpen,
+      specialServiceId,
+      rescheduledTime,
     } = this.state;
+
     const serviceProviderId = '//TODO';
     const providerRating = 5;
     const bookedTime = moment(providerStartSec.replace(' ', 'T'));
@@ -218,6 +247,7 @@ class TimelineCard extends Component {
     const mapProvider = { geoLocation };
     const eventExpired = eventStatus === EVENT_STATUS.EXPIRED;
     const statusStyle = status === EVENT_STATUS.CANCELED ? 'bg-danger' : 'bg-success';
+    const isReschedule = status !== EVENT_STATUS.CANCELED && status !== EVENT_STATUS.COMPLETED;
 
     return (
       <>
@@ -228,6 +258,15 @@ class TimelineCard extends Component {
           </>
         )}
         <CustomModal
+          message={`Are your sure to reschedule this event to ${rescheduledTime} for booking code \
+          ${bookingCode.toUpperCase()}`}
+          title="Event Confirmation"
+          isOpen={isRescheduleOpen}
+          type="info"
+          cancelCallBack={this.handleRescheduleEventConfirmation(false, null, null)}
+          okCallBack={this.handleRescheduleEventAction}
+        />
+        <CustomModal
           message={`Are your sure to cancel this event? Code ${bookingCode.toUpperCase()}`}
           title="Event Confirmation"
           isOpen={isCancelEvent}
@@ -235,6 +274,14 @@ class TimelineCard extends Component {
           cancelCallBack={this.handleCancelEventConfirmation(false)}
           okCallBack={this.handleCancelEventAction}
         />
+        {specialServiceId && availabilitiesBulk && availabilitiesBulk.length > 0
+        && (
+          <RescheduleSlots
+            rescheduledSlots={availabilitiesBulk.filter(slot => slot.specialServiceId === tempServiceId)}
+            onRescheduleConfirm={this.handleRescheduleEventConfirmation(true, id)}
+            closeReschedule={this.handleRescheduleEventConfirmation(false, null)}
+          />
+        )}
         {isOpenMap && (
           <MapDialog
             toggle={this.handleToggleMap}
@@ -249,7 +296,7 @@ class TimelineCard extends Component {
           className={s.cardContainer}
         >
           <div className="flexCol v-center h-center">
-            <Typography variant="subtitle1" color="inherit" className="text-bold" align="center">
+            <Typography variant="subtitle1" color="inherit" className="text-bold text-center">
               {fullAddress}
             </Typography>
             {!eventExpired && (
@@ -277,7 +324,7 @@ class TimelineCard extends Component {
             </div>
           )}
           <div className={s.appointmentCode}>
-            <Typography variant="headline" color="secondary" align="center" classes={{ headline: s.bookingCode }}>
+            <Typography variant="headline" color="secondary" classes={{ headline: s.bookingCode }}>
               {bookingCode.toUpperCase()}
             </Typography>
           </div>
@@ -329,7 +376,20 @@ class TimelineCard extends Component {
           </div>
           <div className={s.appointmentItem}>
             {displayIconStatus}
-            <Typography variant="subheading" className="danger-color">{currentEventStatus}</Typography>
+            <Typography variant="subheading" className="danger-color">
+              {currentEventStatus}
+            </Typography>
+            {isReschedule && (
+              <Button
+                color="inherit"
+                variant="text"
+                className={`${s.reschedule} simple-button`}
+                onClick={this.handleShowRescheduleSlots(tempServiceId)}
+              >
+                <Update color="inherit" className="icon-in-button-left" />
+                Reschedule
+              </Button>
+            )}
           </div>
           <div className={`${s.appointmentRemainedTime} ${currentStyleStatus}`}>
             <div className={s.remainedDisplay}>
@@ -372,10 +432,12 @@ class TimelineCard extends Component {
 const mapStateToProps = state => ({
   ...state.common,
   ...state.home,
+  ...state.booking,
   ...state.waitLists,
 });
 
 export default connect(mapStateToProps, {
   setRatingService,
   cancelEventByIdAction,
+  rescheduleEvent,
 })(TimelineCard);

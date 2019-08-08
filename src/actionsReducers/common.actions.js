@@ -4,6 +4,7 @@ import {
   findEventByCustomerId,
   temporaryServices,
   eventById,
+  reschedule,
 } from 'actionsApi/common';
 import { serviceProvidersRating } from 'actionsApi/rating';
 
@@ -97,6 +98,17 @@ export const setEventById = id => async (dispatch) => {
     dispatch(setError(error));
   } else {
     dispatch(setEventByIdAction(result));
+  }
+  dispatch(setLoading(false));
+};
+
+export const rescheduleEvent = data => async (dispatch) => {
+  dispatch(setLoading(true));
+  const [, error] = await handleRequest(reschedule, [data]);
+  if (error) {
+    dispatch(setError(error));
+  } else {
+    dispatch(setSucceed('You have been rescheduled your event successfully!'));
   }
   dispatch(setLoading(false));
 };
