@@ -23,11 +23,14 @@ class ViewEvent extends Component {
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { eventById } = props;
+    const { eventById, match: { path } } = props;
     const { eventById: cachedEventById } = state;
 
-    if (eventById !== cachedEventById) {
-      return { eventById };
+    if (
+      eventById !== cachedEventById
+      || path
+    ) {
+      return { eventById, viewUrl: path };
     }
 
     return null;
@@ -35,6 +38,7 @@ class ViewEvent extends Component {
 
   state = {
     eventById: null,
+    viewUrl: undefined,
   };
 
   componentDidMount() {
@@ -51,7 +55,7 @@ class ViewEvent extends Component {
   };
 
   render() {
-    const { eventById } = this.state;
+    const { eventById, viewUrl } = this.state;
 
     return (
       <>
@@ -65,7 +69,7 @@ class ViewEvent extends Component {
           </div>
           {eventById && eventById.id && (
             <div className={s.content}>
-              <TimelineCard {...eventById} />
+              <TimelineCard {...eventById} viewUrl={viewUrl} />
               <Footer maintenance={false} />
             </div>
           )}

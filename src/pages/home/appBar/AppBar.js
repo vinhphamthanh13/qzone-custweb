@@ -42,6 +42,7 @@ import {
 } from 'utils/constants';
 import logo from 'images/quezone-logo.png';
 import { goProfilePage } from 'actionsReducers/profile.actions';
+import { EVENT_STATUS } from '../../profile/appointmentDialog/Appointment.constants';
 import TrackingEvents from './TrackingEvents';
 import styles from './AppBarStyle';
 
@@ -180,7 +181,9 @@ class MainAppBar extends React.Component {
     const eventTracked = trackingList.filter(item => item && item.confirmedTime !== null);
     const currentTime = moment.now();
     const eventCount = eventList && eventList.length
-      && eventList.filter(event => moment(event.providerStartSec) > currentTime).length;
+      && eventList
+        .filter(event => event.status !== EVENT_STATUS.CANCELED)
+        .filter(event => moment(event.providerStartSec) > currentTime).length;
     const badgeStyle = eventCount > 0 ? 'text-margin-lr hover-pointer' : 'text-margin-lr';
     const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
     const [authLabel, openForm] = maintenance ? ['Sign Up', 'isRegisterOpen'] : ['Sign In', 'isLoginOpen'];

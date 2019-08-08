@@ -38,10 +38,12 @@ import { setRatingService } from 'actionsReducers/common.actions';
 import { cancelEventByIdAction } from 'actionsReducers/profile.actions';
 import Rating from 'material-ui-rating';
 import CustomModal from 'components/Modal/CustomModal';
+import Success from 'components/Success';
+import Error from 'components/Error';
 import { longDateFormat } from 'utils/constants';
+import { EVENT_STATUS } from './Appointment.constants';
 import s from './TimelineCard.module.scss';
 import CountDownDisplay from './CountDownDisplay';
-import { STATUS } from './Appointment.constants';
 
 class TimelineCard extends Component {
   static propTypes = {
@@ -70,13 +72,19 @@ class TimelineCard extends Component {
   static getDerivedStateFromProps(props, state) {
     const {
       serviceProviders,
+      viewUrl,
     } = props;
     const {
       serviceProviders: cachedServiceProviders,
+      viewUrl: cachedViewUrl,
     } = state;
-    if (serviceProviders !== cachedServiceProviders) {
+    if (
+      serviceProviders !== cachedServiceProviders
+      || viewUrl !== cachedViewUrl
+    ) {
       return {
         serviceProviders,
+        viewUrl,
       };
     }
     return null;
@@ -123,6 +131,10 @@ class TimelineCard extends Component {
     cancelEventById(eventId);
   };
 
+  handleRefreshPage = () => {
+    window.location.reload();
+  };
+
   render() {
     const {
       bookingCode,
@@ -142,6 +154,7 @@ class TimelineCard extends Component {
     const {
       isOpenMap,
       isCancelEvent,
+      viewUrl,
     } = this.state;
     const serviceProviderId = '//TODO';
     const providerRating = 5;
@@ -155,7 +168,7 @@ class TimelineCard extends Component {
           color: '#fff',
         },
         <AlarmOff />,
-        STATUS.EXPIRED,
+        EVENT_STATUS.EXPIRED,
         <AssignmentLate className="icon-main danger-color" />,
         s.eventStatusComplete,
         <NotInterested className="icon-white" />,
@@ -165,7 +178,7 @@ class TimelineCard extends Component {
           color: '#fff',
         },
         <AlarmOn />,
-        STATUS.WAITING,
+        EVENT_STATUS.WAITING,
         <Reorder className="icon-main" />,
         s.eventStatusWaiting,
         <AlarmAdd className="icon-white" />,
@@ -181,7 +194,7 @@ class TimelineCard extends Component {
     if (remainTimeSec < -3600000) {
       displayTimeout = moment(bookedTime).fromNow(true);
     } else if (remainTimeSec > -36000000 && remainTimeSec < 0) {
-      displayTimeout = status === STATUS.UNSPECIFIED ? (
+      displayTimeout = status === EVENT_STATUS.UNSPECIFIED ? (
         <CountDownDisplay startTime={remainTimeSec} serviceName={serviceName} providerName={providerName} />
       ) : displayTimeout;
       currentEventStyle = {
@@ -196,16 +209,24 @@ class TimelineCard extends Component {
       };
       currentStyleStatus = s.eventStatusCountDown;
       currentIconTimeline = <Update />;
-      currentEventStatus = STATUS.COMING;
+      currentEventStatus = EVENT_STATUS.COMING;
       displayIconStatus = <Timer className="icon-danger" />;
     }
+
+    if (status === EVENT_STATUS.CANCELED) currentEventStatus = `${EVENT_STATUS.CANCELED} CONFIRMED!`;
     const fullAddress = get(geoLocation, 'fullAddress');
     const mapProvider = { geoLocation };
-    const eventExpired = eventStatus === STATUS.EXPIRED;
-    const statusStyle = status === STATUS.CANCELED ? 'bg-danger' : 'bg-success';
+    const eventExpired = eventStatus === EVENT_STATUS.EXPIRED;
+    const statusStyle = status === EVENT_STATUS.CANCELED ? 'bg-danger' : 'bg-success';
 
     return (
       <>
+        {viewUrl && (
+          <>
+            <Success userCallback={this.handleRefreshPage} />
+            <Error />
+          </>
+        )}
         <CustomModal
           message={`Are your sure to cancel this event? Code ${bookingCode.toUpperCase()}`}
           title="Event Confirmation"
@@ -317,7 +338,7 @@ class TimelineCard extends Component {
                 {displayTimeout}
               </Typography>
             </div>
-            {status === STATUS.UNSPECIFIED ? (
+            {status === EVENT_STATUS.UNSPECIFIED ? (
               <>
                 {cancellable && (
                   <Button

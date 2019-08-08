@@ -4,20 +4,29 @@ import {
 } from 'prop-types';
 import { VerticalTimeline } from 'react-vertical-timeline-component';
 import TimelineCard from './TimelineCard';
+import { EVENT_STATUS } from './Appointment.constants';
 import s from './AppointmentTimeline.module.scss';
 
-const AppointmentTimeline = ({ items }) => (
-  <VerticalTimeline className={s.verticalTimeline}>
-    {items.sort((a, b) => b.startSec - a.startSec)
-      .map(item => (
-        <TimelineCard
-          key={item.id}
-          {...item}
-        />
-      ))
-    }
-  </VerticalTimeline>
-);
+const AppointmentTimeline = ({ items }) => {
+  const cancelledEvent = items
+    .filter(item => item.status === EVENT_STATUS.CANCELED)
+    .sort((a, b) => b.startSec - a.startSec);
+  const sortEvent = items
+    .filter(item => item.status !== EVENT_STATUS.CANCELED)
+    .sort((a, b) => b.startSec - a.startSec);
+  return (
+    <VerticalTimeline className={s.verticalTimeline}>
+      {[...sortEvent, ...cancelledEvent]
+        .map(item => (
+          <TimelineCard
+            key={item.id}
+            {...item}
+          />
+        ))
+      }
+    </VerticalTimeline>
+  );
+};
 
 AppointmentTimeline.propTypes = {
   items: arrayOf(

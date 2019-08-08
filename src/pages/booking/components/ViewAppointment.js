@@ -14,7 +14,6 @@ import { connect } from 'react-redux';
 import {
   DateRange,
   AvTimer,
-  ViewList,
   Email,
   Call,
   Place,
@@ -36,6 +35,10 @@ import {
 } from 'types/global';
 import { goProfilePage } from 'actionsReducers/profile.actions';
 import {
+  setBookingStep,
+  setBookingDetail,
+} from 'actionsReducers/booking.actions';
+import {
   defaultDateFormat,
   timeSlotFormat,
   PROFILE,
@@ -53,6 +56,8 @@ class ViewAppointment extends Component {
     resetBooking: func.isRequired,
     goProfilePage: func.isRequired,
     showPage: bool.isRequired,
+    setBookingStep: func.isRequired,
+    setBookingDetail: func.isRequired,
   };
 
   static defaultProps = {
@@ -73,6 +78,15 @@ class ViewAppointment extends Component {
     resetBookingAction();
     goProfilePageAction(PROFILE.PAGE.EVENT_LIST);
     history.push(`/profile/${userSub}`);
+  };
+
+  handleGoBooking = () => {
+    const {
+      setBookingStep: setBookingStepAction,
+      setBookingDetail: setBookingDetailAction,
+    } = this.props;
+    setBookingStepAction(0);
+    setBookingDetailAction(null);
   };
 
   render() {
@@ -182,19 +196,18 @@ class ViewAppointment extends Component {
               </div>
             </div>
           </div>
-          <Button
-            className={`${s.viewAppointmentCta} main-button`}
-            variant="outlined"
-            onClick={this.handleViewAppointment}
-          >
-            <ViewList className="icon-in-button-left" />
-            <Typography
-              className="hover-pointer"
-              variant="subheading"
-              color="inherit"
-            >View appointment
-            </Typography>
-          </Button>
+          <div className={s.viewCta}>
+            <Button className="main-button" variant="outlined" onClick={this.handleGoBooking}>
+              Continue Booking
+            </Button>
+            <Button
+              className={`${s.viewAppointmentCta} main-button`}
+              variant="outlined"
+              onClick={this.handleViewAppointment}
+            >
+              View appointment
+            </Button>
+          </div>
         </div>
         <div className={s.appointmentDetail}>
           <div className={s.bookingConfirmedIcon}>
@@ -286,4 +299,6 @@ const mapStateToProps = state => ({
 
 export default connect(mapStateToProps, {
   goProfilePage,
+  setBookingStep,
+  setBookingDetail,
 })(ViewAppointment);

@@ -25,9 +25,14 @@
   width: 100%;
 }
 
+.viewCta {
+  display: inline-flex;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
 .viewAppointmentCta {
   color: $main;
-  margin: 1em auto;
   border: 1px solid $main_03;
   display: flex;
   justify-content: center;

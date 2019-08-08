@@ -1,4 +1,4 @@
-export const STATUS = {
+export const EVENT_STATUS = {
   WAITING: 'Waiting...',
   COMING: 'Coming Soon',
   EXPIRED: 'Expired',
