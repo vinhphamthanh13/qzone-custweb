@@ -9,11 +9,12 @@ import {
   SET_BOOKING_STEP,
   RESET_BOOKING,
   SET_TEMPORARY_SERVICES_BY_ID,
+  SET_BOOKED_EVENT_ID,
 } from 'actionsReducers/booking.actions';
-
-import storage from 'redux-persist/lib/storage';
-import { persistReducer } from 'redux-persist';
-import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
+//
+// import storage from 'redux-persist/lib/storage';
+// import { persistReducer } from 'redux-persist';
+// import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 
 const initState = {
   service: null,
@@ -24,17 +25,7 @@ const initState = {
   appointmentEvent: null,
   bookingDetail: null,
   availabilitiesById: null,
-};
-
-const persistConfig = {
-  key: 'booking',
-  storage,
-  stateReconciler: autoMergeLevel2,
-  blacklist: [
-    'bookingStep',
-    'appointmentEvent',
-    'bookingDetail',
-  ],
+  bookedEventIdList: [],
 };
 
 const reducer = (state = initState, action) => {
@@ -86,6 +77,11 @@ const reducer = (state = initState, action) => {
         ...state,
         serviceProviders: [action.payload],
       };
+    case SET_BOOKED_EVENT_ID:
+      return {
+        ...state,
+        bookedEventIdList: [...state.bookedEventIdList, action.payload],
+      };
     case RESET_BOOKING:
       return initState;
     default:
@@ -93,4 +89,5 @@ const reducer = (state = initState, action) => {
   }
 };
 
-export default persistReducer(persistConfig, reducer);
+// export default persistReducer(persistConfig, reducer);
+export default reducer;

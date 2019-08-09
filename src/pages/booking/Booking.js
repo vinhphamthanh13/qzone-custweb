@@ -114,6 +114,7 @@ class Booking extends PureComponent {
       setBookingStep: setBookingStepAction,
       waitListRegistered,
       temporaryServicesByLocation,
+      bookedEventIdList,
     } = props;
     const {
       serviceId: cachedServiceId,
@@ -131,6 +132,7 @@ class Booking extends PureComponent {
       availabilitiesById: cachedAvailabilitiesById,
       waitListRegistered: cachedWaitListRegistered,
       temporaryServicesByLocation: cachedTemporaryServiceByLocation,
+      bookedEventIdList: cachedBookedEventIdList,
     } = state;
     if (
       serviceId !== cachedServiceId
@@ -148,6 +150,7 @@ class Booking extends PureComponent {
       || availabilitiesById !== cachedAvailabilitiesById
       || waitListRegistered !== cachedWaitListRegistered
       || temporaryServicesByLocation !== cachedTemporaryServiceByLocation
+      || bookedEventIdList.length !== cachedBookedEventIdList.length
     ) {
       let availabilityId = null;
       let waitListStatus = '';
@@ -227,6 +230,7 @@ class Booking extends PureComponent {
         waitListStatus,
         waitListRegistered,
         temporaryServicesByLocation,
+        bookedEventIdList,
       };
     }
 
@@ -250,6 +254,7 @@ class Booking extends PureComponent {
       customerId: null,
       waitListId: null,
       temporaryServicesByLocation: null,
+      bookedEventIdList: [],
     };
     this.myBooking = React.createRef();
   }
@@ -452,6 +457,8 @@ class Booking extends PureComponent {
   };
 
   handleProviderAvailableSlots = (availabilitiesBulk, providers) => providers.map((provider) => {
+    const { bookedEventIdList } = this.state;
+    console.debug('bookedEventIdList', bookedEventIdList);
     const availableSlots = [];
     availabilitiesBulk.map((slot) => {
       const locationId = get(provider, 'geoLocation.id');
