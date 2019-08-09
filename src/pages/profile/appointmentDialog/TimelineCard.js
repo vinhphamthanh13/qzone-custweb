@@ -379,7 +379,7 @@ class TimelineCard extends Component {
             <Typography variant="subheading" className="danger-color">
               {currentEventStatus}
             </Typography>
-            {isReschedule && (
+            {false && isReschedule && ( // disabled Reschedule
               <Button
                 color="inherit"
                 variant="text"

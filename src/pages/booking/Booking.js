@@ -293,6 +293,7 @@ class Booking extends PureComponent {
       waitListsById,
       // availabilityId,
       waitListRegistered,
+      bookedEventIdList,
     } = prevProps;
     const {
       isError: cachedIsError,
@@ -313,6 +314,7 @@ class Booking extends PureComponent {
     } = prevState;
     const {
       serviceId: cachedServiceId,
+      bookedEventIdList: cachedBookedEventIdList,
     } = this.state;
 
     const bookedId = get(appointmentEvent, 'id');
@@ -324,7 +326,9 @@ class Booking extends PureComponent {
       setAvailabilitiesById(cachedAvailabilityId);
     }
 
-    if (cachedServiceProviders && cachedServiceProviders !== serviceProviders) {
+    if (
+      (cachedServiceProviders && cachedServiceProviders !== serviceProviders)
+      || bookedEventIdList.length !== cachedBookedEventIdList.length) {
       const specialEventIdList = cachedServiceProviders.map(serviceProvider => ({
         specialEventId: serviceProvider.id,
         customerTimezoneId: serviceProvider.timezoneId,
@@ -457,8 +461,6 @@ class Booking extends PureComponent {
   };
 
   handleProviderAvailableSlots = (availabilitiesBulk, providers) => providers.map((provider) => {
-    const { bookedEventIdList } = this.state;
-    console.debug('bookedEventIdList', bookedEventIdList);
     const availableSlots = [];
     availabilitiesBulk.map((slot) => {
       const locationId = get(provider, 'geoLocation.id');
