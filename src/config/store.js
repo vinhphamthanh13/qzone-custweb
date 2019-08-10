@@ -6,8 +6,6 @@ import logger from 'redux-logger';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import autoMergeLevel1 from 'redux-persist/es/stateReconciler/autoMergeLevel1';
-
-// import { AUTHENTICATED_KEY } from 'utils/constants';
 import auth from 'authentication/actions/reducer';
 import common from 'actionsReducers/common.reducer';
 import home from 'actionsReducers/home.reducer';
@@ -18,10 +16,6 @@ import waitLists from 'actionsReducers/waitlist.reducer';
 import organization from 'actionsReducers/organization.reducer';
 import customer from 'actionsReducers/customer.reducer';
 import surveys from 'actionsReducers/surveys.reducer';
-//
-// import { loadSessionToState } from 'authentication/actions/session';
-// import { getUserDetail } from 'authentication/actions/login';
-// import { loadSession } from './localStorage';
 
 const rootPersistConfig = {
   key: 'qz_custweb',
@@ -40,8 +34,6 @@ const rootPersistConfig = {
     'surveys',
   ],
 };
-
-// const persistedSession = loadSession();
 const rootReducer = combineReducers({
   auth,
   common,
@@ -54,7 +46,6 @@ const rootReducer = combineReducers({
   customer,
   surveys,
 });
-
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
 
 let middleWare = [];
@@ -71,7 +62,6 @@ if (process.env.NODE_ENV === 'production') {
   ];
 }
 
-
 const store = createStore(
   persistedReducer,
   compose(
@@ -80,13 +70,6 @@ const store = createStore(
     window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__() : f => f,
   ),
 );
-
 const persistor = persistStore(store);
-//
-// // loading session from local storage to redux store
-// if (persistedSession && persistedSession[AUTHENTICATED_KEY]) {
-//   store.dispatch(getUserDetail(persistedSession.id));
-//   store.dispatch(loadSessionToState(persistedSession));
-// }
 
 export default { store, persistor };

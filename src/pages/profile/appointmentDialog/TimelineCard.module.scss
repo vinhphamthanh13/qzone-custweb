@@ -42,6 +42,7 @@
 .appointmentItem {
   display: flex;
   align-items: center;
+  position: relative;
 }
 
 .cardContainer {
@@ -129,6 +130,8 @@
   color: $main_01;
   border-radius: unset;
   border: unset;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
   &:hover {
     background: $main_02;
     color: $main;
@@ -137,6 +140,16 @@
 
 .reschedule {
   font-size: 0.85rem;
+  position: absolute;
+  border: 1px solid $main_04;
+  padding: 0 0.5rem;
+  right: 0;
+  top: -0.2rem;
+}
+
+.reschedule:hover {
+  border: 1px solid $fruitSalad;
+  color: $fruitSalad !important;
 }
 
 .cancelEventHidden {

@@ -24,6 +24,7 @@ export const SET_APPOINTMENT_CUSTOMER_EVENTS = 'BOOKING.SET_APPOINTMENT_CUSTOMER
 export const SET_BOOKING_STEP = 'BOOKING.SET_BOOKING_STEP';
 export const RESET_BOOKING = 'BOOKING.RESET_BOOKING';
 export const SET_TEMPORARY_SERVICES_BY_ID = 'BOOKING.SET_TEMPORARY_SERVICES_BY_ID';
+export const SET_BOOKED_EVENT_ID = 'BOOKING.SET_BOOKED_EVENT_ID';
 
 const getServiceById = payload => ({
   type: GET_SERVICE_BY_ID,
@@ -66,6 +67,11 @@ export const setBookingStep = payload => ({
 
 export const resetBooking = () => ({
   type: RESET_BOOKING,
+});
+
+export const setBookedEventId = payload => ({
+  type: SET_BOOKED_EVENT_ID,
+  payload,
 });
 
 export const getServiceByIdAction = data => async (dispatch) => {
@@ -133,6 +139,7 @@ export const registerEventAction = data => async (dispatch) => {
     dispatch(setError(error));
   } else {
     dispatch(setAppointmentCustomerEvents(registeredEvent));
+    dispatch(setBookedEventId(data.availabilityId));
   }
   dispatch(setLoading(false));
 };

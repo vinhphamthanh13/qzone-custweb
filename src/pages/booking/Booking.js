@@ -114,6 +114,7 @@ class Booking extends PureComponent {
       setBookingStep: setBookingStepAction,
       waitListRegistered,
       temporaryServicesByLocation,
+      bookedEventIdList,
     } = props;
     const {
       serviceId: cachedServiceId,
@@ -131,6 +132,7 @@ class Booking extends PureComponent {
       availabilitiesById: cachedAvailabilitiesById,
       waitListRegistered: cachedWaitListRegistered,
       temporaryServicesByLocation: cachedTemporaryServiceByLocation,
+      bookedEventIdList: cachedBookedEventIdList,
     } = state;
     if (
       serviceId !== cachedServiceId
@@ -148,6 +150,7 @@ class Booking extends PureComponent {
       || availabilitiesById !== cachedAvailabilitiesById
       || waitListRegistered !== cachedWaitListRegistered
       || temporaryServicesByLocation !== cachedTemporaryServiceByLocation
+      || bookedEventIdList.length !== cachedBookedEventIdList.length
     ) {
       let availabilityId = null;
       let waitListStatus = '';
@@ -174,7 +177,7 @@ class Booking extends PureComponent {
         const providerId = get(availabilitiesById, 'providerId');
         let provider = {};
         let providerDetail = {};
-        if (providersByServiceIdList && providersByServiceIdList.length) {
+        if (providersByServiceIdList && providersByServiceIdList.length > 0) {
           provider = providersByServiceIdList.find(item => item.userSub === providerId);
         }
         if (serviceProviders && serviceProviders.length) {
@@ -227,6 +230,7 @@ class Booking extends PureComponent {
         waitListStatus,
         waitListRegistered,
         temporaryServicesByLocation,
+        bookedEventIdList,
       };
     }
 
@@ -250,6 +254,7 @@ class Booking extends PureComponent {
       customerId: null,
       waitListId: null,
       temporaryServicesByLocation: null,
+      bookedEventIdList: [],
     };
     this.myBooking = React.createRef();
   }
@@ -288,6 +293,7 @@ class Booking extends PureComponent {
       waitListsById,
       // availabilityId,
       waitListRegistered,
+      bookedEventIdList,
     } = prevProps;
     const {
       isError: cachedIsError,
@@ -308,6 +314,7 @@ class Booking extends PureComponent {
     } = prevState;
     const {
       serviceId: cachedServiceId,
+      bookedEventIdList: cachedBookedEventIdList,
     } = this.state;
 
     const bookedId = get(appointmentEvent, 'id');
@@ -319,7 +326,9 @@ class Booking extends PureComponent {
       setAvailabilitiesById(cachedAvailabilityId);
     }
 
-    if (cachedServiceProviders && cachedServiceProviders !== serviceProviders) {
+    if (
+      (cachedServiceProviders && cachedServiceProviders !== serviceProviders)
+      || bookedEventIdList.length !== cachedBookedEventIdList.length) {
       const specialEventIdList = cachedServiceProviders.map(serviceProvider => ({
         specialEventId: serviceProvider.id,
         customerTimezoneId: serviceProvider.timezoneId,
@@ -586,7 +595,7 @@ class Booking extends PureComponent {
       <>
         <Success />
         <Error resetOtherStatus={this.handleResetWaitListStatus} />
-        <Loading />
+        { false && <Loading />}
         {bookingDetail && bookingDetail.provider && (
           <CustomModal
             type="info"
