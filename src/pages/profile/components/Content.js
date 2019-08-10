@@ -35,6 +35,7 @@ class Content extends Component {
       waitLists,
       surveyList,
       customerAssessment,
+      rescheduleStatus,
     } = props;
     const {
       eventList: cachedEventList,
@@ -43,6 +44,7 @@ class Content extends Component {
       waitLists: cachedWaitLists,
       surveyList: cachedSurveyList,
       customerAssessment: cachedCustomerAssessment,
+      rescheduleStatus: cachedRescheduleStatus,
     } = state;
     if (
       eventList !== cachedEventList
@@ -51,6 +53,7 @@ class Content extends Component {
       || waitLists !== cachedWaitLists
       || surveyList !== cachedSurveyList
       || customerAssessment !== cachedCustomerAssessment
+      || rescheduleStatus !== cachedRescheduleStatus
     ) {
       const eventListIds = eventList && eventList.length && eventList.map(item => item.id);
 
@@ -62,6 +65,7 @@ class Content extends Component {
         waitLists,
         surveyList,
         customerAssessment,
+        rescheduleStatus,
       };
     }
     return null;
@@ -129,6 +133,7 @@ class Content extends Component {
   componentDidUpdate(prevProps) {
     const {
       cancelEventByIdStatus,
+      rescheduleStatus,
       setAssessmentAction: setAssessments,
       eventList,
     } = prevProps;
@@ -144,12 +149,18 @@ class Content extends Component {
       cancelEventByIdStatus: cachedCancelEventByIdStatus,
       eventListIds,
       surveyList,
+      rescheduleStatus: cachedRescheduleStatus,
     } = this.state;
 
     const trackingList = eventList && eventList.length;
     const cachedTrackingList = cachedEventList && cachedEventList.length;
 
-    if (cancelEventByIdStatus !== cachedCancelEventByIdStatus && cachedCancelEventByIdStatus === 200) {
+    if (
+      (cancelEventByIdStatus !== cachedCancelEventByIdStatus
+      && cachedCancelEventByIdStatus === 200)
+      || (rescheduleStatus !== cachedRescheduleStatus
+      && cachedRescheduleStatus === 200)
+    ) {
       findEventByCustomerId(customerId);
       cancelEventByIdAction(null);
     }

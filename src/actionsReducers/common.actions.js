@@ -16,6 +16,7 @@ export const FIND_EVENT_BY_CUSTOMER_ID = 'HOME.FIND_EVENT_BY_CUSTOMER_ID';
 export const SET_SERVICE_PROVIDERS = 'HOME.SET_SERVICE_PROVIDERS';
 export const SET_TEMPORARY_SERVICE_BY_LOCATION = 'COMMON.SET_TEMPORARY_SERVICE_BY_LOCATION';
 export const SET_EVENT_BY_ID = 'COMMON.SET_EVENT_BY_ID';
+export const SET_RESCHEDULE_STATUS = 'COMMON.SET_RESCHEDULE_STATUS';
 
 export const setLoading = payload => ({
   type: SET_LOADING,
@@ -102,12 +103,18 @@ export const setEventById = id => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
+export const setRescheduleStatusAction = payload => ({
+  type: SET_RESCHEDULE_STATUS,
+  payload,
+});
+
 export const rescheduleEvent = data => async (dispatch) => {
   dispatch(setLoading(true));
   const [, error] = await handleRequest(reschedule, [data]);
   if (error) {
     dispatch(setError(error));
   } else {
+    dispatch(setRescheduleStatusAction(200));
     dispatch(setSucceed('You have been rescheduled your event successfully!'));
   }
   dispatch(setLoading(false));

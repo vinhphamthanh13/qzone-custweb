@@ -177,7 +177,7 @@ class Booking extends PureComponent {
         const providerId = get(availabilitiesById, 'providerId');
         let provider = {};
         let providerDetail = {};
-        if (providersByServiceIdList && providersByServiceIdList.length) {
+        if (providersByServiceIdList && providersByServiceIdList.length > 0) {
           provider = providersByServiceIdList.find(item => item.userSub === providerId);
         }
         if (serviceProviders && serviceProviders.length) {
@@ -595,7 +595,7 @@ class Booking extends PureComponent {
       <>
         <Success />
         <Error resetOtherStatus={this.handleResetWaitListStatus} />
-        <Loading />
+        { false && <Loading />}
         {bookingDetail && bookingDetail.provider && (
           <CustomModal
             type="info"

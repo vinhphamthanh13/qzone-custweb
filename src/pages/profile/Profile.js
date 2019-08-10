@@ -15,8 +15,8 @@ import {
   setServiceProvidersAction,
   findEventByCustomerIdAction,
 } from 'actionsReducers/common.actions';
-import { history } from 'containers/App';
 import { AUTHENTICATED_KEY } from 'utils/constants';
+import { handlePushLocation } from 'utils/common';
 import CustomModal from 'components/Modal/CustomModal';
 import Header from './components/Header';
 import Content from './components/Content';
@@ -70,7 +70,7 @@ class Profile extends Component {
     const expired = get(loginSession, 'expiration');
 
     if (!userDetail) {
-      history.push('/');
+      handlePushLocation('/')();
     }
 
     if (moment().isAfter(moment(expired))) {
@@ -84,7 +84,7 @@ class Profile extends Component {
     const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
     const authProvider = get(loginSession, 'authProvider');
 
-    history.push('/');
+    handlePushLocation('/')();
     logoutAction({
       isAuthenticated,
       authProvider,
@@ -99,10 +99,6 @@ class Profile extends Component {
   resetUpdateProfileStatus = () => {
     const { updateProfileAction: updateProfileStatus } = this.props;
     updateProfileStatus('');
-  };
-
-  goBooking = () => {
-    history.push('/');
   };
 
   handleSidePanel = (value = true) => {
@@ -151,14 +147,14 @@ class Profile extends Component {
           <div className={`${s.profile} column`}>
             <Header
               userName={givenName}
-              onClose={this.goBooking}
+              onClose={handlePushLocation('/')}
               handleSidePanel={this.handleSidePanel}
             />
             <div className={`container-max auto-margin-horizontal ${s.profileContent}`}>
               <Content
                 customerId={customerId}
                 givenName={givenName}
-                onClose={this.goBooking}
+                onClose={handlePushLocation('/')}
                 handleAccount={this.handleAccount}
                 updateProfileStatus={updateProfileStatus}
                 handleLogout={this.handleLogout}

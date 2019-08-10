@@ -29,13 +29,14 @@ import {
 } from '@material-ui/icons';
 import RateStar from 'components/Rating/RateStar';
 import MapDialog from 'components/Map/MapDialog';
-import { setRatingService, rescheduleEvent } from 'actionsReducers/common.actions';
+import { setRatingService, rescheduleEvent, setRescheduleStatusAction } from 'actionsReducers/common.actions';
 import { cancelEventByIdAction } from 'actionsReducers/profile.actions';
 import Rating from 'material-ui-rating';
 import CustomModal from 'components/Modal/CustomModal';
 import Success from 'components/Success';
 import Error from 'components/Error';
 import { longDateFormat, timeSlotFormat } from 'utils/constants';
+import { handlePushLocation } from 'utils/common';
 import { EVENT_STATUS } from './Appointment.constants';
 import RescheduleSlots from '../RescheduleSlots';
 import s from './TimelineCard.module.scss';
@@ -61,6 +62,7 @@ class TimelineCard extends Component {
     tempServiceId: string.isRequired,
     availabilitiesBulk: arrayOf(object).isRequired,
     rescheduleEvent: func.isRequired,
+    setRescheduleStatusAction: func.isRequired,
   };
 
   static defaultProps = {
@@ -129,10 +131,6 @@ class TimelineCard extends Component {
     cancelEventById(eventId);
   };
 
-  handleRefreshPage = () => {
-    window.location.reload();
-  };
-
   handleRescheduleEventConfirmation = (value, eventId) => (data) => {
     const availabilityId = get(data, 'availabilityId');
     const startTime = get(data, 'start');
@@ -146,10 +144,11 @@ class TimelineCard extends Component {
   };
 
   handleRescheduleEventAction = () => {
-    const { rescheduleEvent: rescheduleEventAction } = this.props;
+    const { rescheduleEvent: rescheduleEventAction, setRescheduleStatusAction: setRescheduleStatus } = this.props;
     const { eventId, newAvailabilityId } = this.state;
     this.handleRescheduleEventConfirmation(false, null, null)();
     rescheduleEventAction({ eventId, newAvailabilityId });
+    setRescheduleStatus(500);
   };
 
   handleShowRescheduleSlots = specialServiceId => () => {
@@ -247,13 +246,16 @@ class TimelineCard extends Component {
     const mapProvider = { geoLocation };
     const eventExpired = eventStatus === EVENT_STATUS.EXPIRED;
     const statusStyle = status === EVENT_STATUS.CANCELED ? 'bg-danger' : 'bg-success';
-    const isReschedule = status !== EVENT_STATUS.CANCELED && status !== EVENT_STATUS.COMPLETED;
+    const isReschedule = status !== EVENT_STATUS.CANCELED
+      && status !== EVENT_STATUS.COMPLETED
+      && availabilitiesBulk
+      && availabilitiesBulk.length > 0;
 
     return (
       <>
         {viewUrl && (
           <>
-            <Success userCallback={this.handleRefreshPage} />
+            <Success userCallback={handlePushLocation('/')} />
             <Error />
           </>
         )}
@@ -274,8 +276,7 @@ class TimelineCard extends Component {
           cancelCallBack={this.handleCancelEventConfirmation(false)}
           okCallBack={this.handleCancelEventAction}
         />
-        {specialServiceId && availabilitiesBulk && availabilitiesBulk.length > 0
-        && (
+        {specialServiceId && (
           <RescheduleSlots
             rescheduledSlots={availabilitiesBulk.filter(slot => slot.specialServiceId === tempServiceId)}
             onRescheduleConfirm={this.handleRescheduleEventConfirmation(true, id)}
@@ -379,7 +380,7 @@ class TimelineCard extends Component {
             <Typography variant="subheading" className="danger-color">
               {currentEventStatus}
             </Typography>
-            {false && isReschedule && ( // disabled Reschedule
+            {isReschedule && ( // disabled Reschedule
               <Button
                 color="inherit"
                 variant="text"
@@ -440,4 +441,5 @@ export default connect(mapStateToProps, {
   setRatingService,
   cancelEventByIdAction,
   rescheduleEvent,
+  setRescheduleStatusAction,
 })(TimelineCard);
