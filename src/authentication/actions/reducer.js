@@ -1,6 +1,3 @@
-import storage from 'redux-persist/lib/storage';
-import { persistReducer } from 'redux-persist';
-import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import {
   SET_LOADING,
   RESET_MODAL_STATUS,
@@ -26,28 +23,6 @@ import {
   SET_GUEST_ERROR,
   CLEAR_GUEST_ERROR,
 } from './constants';
-
-
-const persistConfig = {
-  key: 'auth',
-  storage,
-  stateReconciler: autoMergeLevel2,
-  blacklist: [
-    'cognitoToken',
-    'registerErrorMessage',
-    'loginErrorMessage',
-    'isVerificationCode',
-    'resendVerificationCodeStatus',
-    'iSignUpSuccess',
-    'isForgotPassword',
-    'resetPasswordStatus',
-    'resetPasswordMessage',
-    'isLogoutError',
-    'firebaseUserStored',
-    'facebookToken',
-    'guestUserError',
-  ],
-};
 
 const authInitialize = {
   userDetail: null,
@@ -190,4 +165,4 @@ const reducer = (state = authInitialize, action) => {
   }
 };
 
-export default persistReducer(persistConfig, reducer);
+export default reducer;

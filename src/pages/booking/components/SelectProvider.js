@@ -11,7 +11,7 @@ import {
   chunk,
 } from 'lodash';
 import { Typography, Divider } from '@material-ui/core';
-import SubLoading from 'components/SubLoading';
+// import SubLoading from 'components/SubLoading';
 import { BOOKING } from 'utils/constants';
 import ProviderContent from './selectProvider/ProviderContent';
 import s from './SelectProvider.module.scss';
@@ -69,7 +69,7 @@ class SelectProvider extends React.PureComponent {
                   </div>
                 ))}
               </div>
-            ) : <SubLoading loading={!providers} />}
+            ) : null}
           </div>
         )}
       </>

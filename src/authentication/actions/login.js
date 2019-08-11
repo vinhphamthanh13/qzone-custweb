@@ -15,7 +15,6 @@ import {
   getCustomerByEmail as loginApi,
   saveSocialUser,
   fetchUserDetail,
-  firebaseStoreUser,
 } from 'actionsApi/auth';
 import {
   handleResponse,
@@ -25,32 +24,22 @@ import {
   STORE_USER_SESSION_LOGIN,
   STORE_USER_SESSION_ERROR,
   SET_USER_DETAILS,
-  FIRE_BASE_STORE_USER,
   SET_GUEST_ERROR,
   CLEAR_GUEST_ERROR,
 } from './constants';
-
 // Redux
 export const storeUserSessionLogin = payload => ({
   type: STORE_USER_SESSION_LOGIN,
   payload,
 });
-
 const storeUserSessionError = payload => ({
   type: STORE_USER_SESSION_ERROR,
   payload,
 });
-
 const setUserDetails = payload => ({
   type: SET_USER_DETAILS,
   payload,
 });
-
-export const storeFireBaseUser = payload => ({
-  type: FIRE_BASE_STORE_USER,
-  payload,
-});
-
 export const getUserDetail = userId => async (dispatch) => {
   dispatch(setLoading(true));
   const [userDetail] = await handleRequest(fetchUserDetail, [userId], [{}]);
@@ -61,9 +50,7 @@ export const getUserDetail = userId => async (dispatch) => {
   }
   dispatch(setLoading(false));
 };
-
 // Google User
-
 export const initGapi = () => {
   // init the Google SDK client
   const g = window.gapi;
@@ -75,7 +62,6 @@ export const initGapi = () => {
     });
   });
 };
-
 export const createGoogleScript = () => {
   // load the Google SDK
   const script = document.createElement('script');
@@ -84,7 +70,6 @@ export const createGoogleScript = () => {
   script.onload = initGapi;
   document.body.appendChild(script);
 };
-
 const awsAuth = async (provider, { token, expires }, user, dispatch) => {
   const expiration = expires * 1000 + moment().unix() * 1000;
   // Auth.federatedSignIn(
@@ -123,7 +108,6 @@ const awsAuth = async (provider, { token, expires }, user, dispatch) => {
   //   dispatch(setLoading(false));
   // });
 };
-
 export const loginGoogle = () => async (dispatch) => {
   dispatch(setLoading(true));
   const ga = window.gapi[AUTH_METHOD].getAuthInstance();
@@ -139,9 +123,7 @@ export const loginGoogle = () => async (dispatch) => {
     dispatch(setLoading(false));
   });
 };
-
 // Facebook login
-
 const forwardFBUserToAWS = (provider, credentials, FB, dispatch) => {
   FB.api('/me', { fields: 'email, name' }, (response) => {
     const email = get(response, 'email');
@@ -149,7 +131,6 @@ const forwardFBUserToAWS = (provider, credentials, FB, dispatch) => {
     awsAuth(provider, credentials, { name, email }, dispatch);
   });
 };
-
 export const loginFacebook = (FB, preAuthResponse = null) => async (dispatch) => {
   dispatch(setLoading(true));
   if (!preAuthResponse) {
@@ -172,21 +153,6 @@ export const loginFacebook = (FB, preAuthResponse = null) => async (dispatch) =>
     forwardFBUserToAWS(PROVIDER.FACEBOOK, { token, expires }, FB, dispatch);
   }
 };
-
-// receive Push Notification
-export const storeFireBaseUserAction = async (data, dispatch) => {
-  dispatch(setLoading(true));
-  const [firebaseUserStored, error] = await handleRequest(firebaseStoreUser, [data]);
-  if (error) {
-    dispatch(setError(error));
-  } else {
-    dispatch(storeFireBaseUser(firebaseUserStored || 'success'));
-  }
-  dispatch(setLoading(false));
-};
-
-// const askFireBaseUserToken = async () => askForPermissionToReceiveNotifications();
-
 // Q-customer
 export const login = (value) => {
   const { email, password } = value;
@@ -240,17 +206,13 @@ export const login = (value) => {
       });
   };
 };
-
 // Q GUEST
-
 export const setGuestErrorAction = () => ({
   type: SET_GUEST_ERROR,
 });
-
 export const clearGuestErrorAction = () => ({
   type: CLEAR_GUEST_ERROR,
 });
-
 export const saveGuestInfo = (data, callback) => async (dispatch) => {
   dispatch(setLoading(true));
   const [result, error] = await handleRequest(saveSocialUser, [data]);

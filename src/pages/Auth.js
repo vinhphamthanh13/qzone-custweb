@@ -11,7 +11,7 @@ import Register from 'authentication/Register';
 import Login from 'authentication/Login';
 import VerificationCode from 'authentication/components/VerificationCode';
 import CustomModal from 'components/Modal/CustomModal';
-import { logout, clearLogoutErrorStatus } from 'authentication/actions/logout';
+import { logout } from 'authentication/actions/logout';
 import {
   reEnterVerificationCode, closeRegisterSuccessModal, resetResendVerificationCodeModal,
   clearResetPasswordStatus,
@@ -105,11 +105,6 @@ class Auth extends Component {
     this.setState({ isSessionTimeout: false });
   };
 
-  handleLogoutError = () => {
-    const { clearLogoutErrorStatusAction } = this.props;
-    clearLogoutErrorStatusAction();
-  };
-
   render() {
     const {
       isRegisterOpen,
@@ -122,8 +117,6 @@ class Auth extends Component {
       handleAuthenticate,
       resetPasswordStatus,
       resetPasswordMessage,
-      isLogoutError,
-      logoutErrorMessage,
     } = this.props;
     const {
       isSessionTimeout,
@@ -208,18 +201,8 @@ class Auth extends Component {
       resetPasswordModal = null;
     }
 
-    const renderLogoutError = isLogoutError ? (
-      <CustomModal
-        type="error"
-        isOpen
-        title="Sign out error"
-        message={logoutErrorMessage}
-        onClose={this.handleLogoutError}
-      />) : null;
-
     return (
       <>
-        {renderLogoutError}
         {renderSessionTimeout}
         {verificationCodeModal}
         {errorModal}
@@ -258,9 +241,6 @@ Auth.propTypes = {
   clearResetPasswordStatusAction: func.isRequired,
   autoLoginAction: func.isRequired,
   logoutAction: func.isRequired,
-  isLogoutError: bool,
-  logoutErrorMessage: string,
-  clearLogoutErrorStatusAction: func.isRequired,
 };
 
 Auth.defaultProps = {
@@ -268,8 +248,6 @@ Auth.defaultProps = {
   iSignUpSuccessModal: false,
   verificationErrorMessage: '',
   resendVerificationCodeStatus: 'none',
-  isLogoutError: false,
-  logoutErrorMessage: '',
 };
 
 const mapStateToProps = state => ({
@@ -285,6 +263,5 @@ export default connect(
     clearResetPasswordStatusAction: clearResetPasswordStatus,
     logoutAction: logout,
     autoLoginAction: autoLogin,
-    clearLogoutErrorStatusAction: clearLogoutErrorStatus,
   },
 )(Auth);
