@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  string, number, objectOf, any, func, bool, arrayOf, object,
+  string, number, objectOf, func, bool, arrayOf, object,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
@@ -50,7 +50,7 @@ class TimelineCard extends Component {
     providerStartSec: string.isRequired,
     timezone: string.isRequired,
     duration: number.isRequired,
-    geoLocation: objectOf(any).isRequired,
+    coordinates: objectOf(number).isRequired,
     setRatingService: func.isRequired,
     bookingCode: string.isRequired,
     customerId: string.isRequired,
@@ -63,6 +63,7 @@ class TimelineCard extends Component {
     availabilitiesBulk: arrayOf(object).isRequired,
     rescheduleEvent: func.isRequired,
     setRescheduleStatusAction: func.isRequired,
+    fullAddress: string.isRequired,
   };
 
   static defaultProps = {
@@ -166,7 +167,7 @@ class TimelineCard extends Component {
       providerName,
       serviceName,
       timezone,
-      geoLocation,
+      coordinates,
       providerEmail,
       providerTelephone,
       id,
@@ -174,6 +175,7 @@ class TimelineCard extends Component {
       cancellable,
       tempServiceId,
       availabilitiesBulk,
+      fullAddress,
     } = this.props;
     const {
       isOpenMap,
@@ -242,8 +244,7 @@ class TimelineCard extends Component {
     }
 
     if (status === EVENT_STATUS.CANCELED) currentEventStatus = `${EVENT_STATUS.CANCELED} CONFIRMED!`;
-    const fullAddress = get(geoLocation, 'fullAddress');
-    const mapProvider = { geoLocation };
+    const mapProvider = { coordinates, fullAddress };
     const eventExpired = eventStatus === EVENT_STATUS.EXPIRED;
     const statusStyle = status === EVENT_STATUS.CANCELED ? 'bg-danger' : 'bg-success';
     const isReschedule = status !== EVENT_STATUS.CANCELED

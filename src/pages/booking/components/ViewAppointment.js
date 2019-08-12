@@ -104,12 +104,7 @@ class ViewAppointment extends Component {
     const serviceId = get(bookingService, 'id');
     const provider = get(bookingDetail[serviceId], 'provider');
     const bookingCode = get(appointmentEvent, 'bookingCode');
-    const stateName = get(appointmentEvent, 'geoLocation.state');
-    const city = get(appointmentEvent, 'geoLocation.city');
-    const country = get(appointmentEvent, 'geoLocation.country');
-    const district = get(appointmentEvent, 'geoLocation.district');
-    const postCode = get(appointmentEvent, 'geoLocation.postCode');
-    const streetAddress = get(appointmentEvent, 'geoLocation.streetAddress');
+    const fullAddress = get(appointmentEvent, 'fullAddress');
     const providerEmail = get(provider, 'email');
     const providerPhone = get(provider, 'telephone');
     const providerWebsite = get(provider, 'website');
@@ -129,7 +124,7 @@ class ViewAppointment extends Component {
     const bookedEvent = {
       title: serviceName,
       description: serviceDescription,
-      location: `${streetAddress}, ${city}, ${stateName} ${postCode}, ${country}`,
+      location: fullAddress,
       startTime: `${moment(startTimeSec * 1000).format('YYYY-MM-DDTHH:mm:ss')}${addToCalendarTZ}`,
       endTime: `${moment(startTimeSec * 1000).add(duration, 'm').format('YYYY-MM-DDTHH:mm:ss')}${addToCalendarTZ}`,
     };
@@ -178,19 +173,7 @@ class ViewAppointment extends Component {
               <div className={s.addressItems}>
                 <Place className="icon-small icon-brand" />
                 <Typography noWrap variant="body2" color="textSecondary">
-                  {streetAddress}, {district}
-                </Typography>
-              </div>
-              <div className={s.addressItems}>
-                <Place className="icon-small icon-transparent" />
-                <Typography noWrap variant="body2" color="textSecondary">
-                  {stateName}, {city}
-                </Typography>
-              </div>
-              <div className={s.addressItems}>
-                <Place className="icon-small icon-transparent" />
-                <Typography noWrap variant="body2" color="textSecondary">
-                  {country}, {postCode}
+                  {fullAddress}
                 </Typography>
               </div>
               <div className={s.addressItems}>

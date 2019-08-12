@@ -352,7 +352,7 @@ class Booking extends PureComponent {
 
     if (bookedId !== cachedId) {
       setBookingStepAction({
-        [cachedServiceId]: BOOKING.STEPS.VIEW_BOOKING,
+        [cachedAppointmentEvent.serviceId]: BOOKING.STEPS.VIEW_BOOKING,
       });
     }
 

@@ -11,13 +11,9 @@ import s from './MapDialog.module.scss';
 export default function MapDialog({
   isOpen, toggle, provider, serviceName,
 }) {
-  const providerStreet = get(provider, 'geoLocation.streetAddress');
-  const providerDistrict = get(provider, 'geoLocation.district');
-  const providerState = get(provider, 'geoLocation.state');
-  const providerCountry = get(provider, 'geoLocation.country');
-  const providerPostCode = get(provider, 'geoLocation.postCode');
-  const providerLat = get(provider, 'geoLocation.coordinates.latitude');
-  const providerLng = get(provider, 'geoLocation.coordinates.longitude');
+  const fullAddress = get(provider, 'fullAddress');
+  const providerLat = get(provider, 'coordinates.latitude');
+  const providerLng = get(provider, 'coordinates.longitude');
 
   return (
     <Dialog
@@ -47,7 +43,7 @@ export default function MapDialog({
             <div className="icon-text">
               <LocationOnOutlined className="icon-main icon-small" />
               <Typography variant="subtitle2">
-                {providerStreet}, {providerDistrict}, {providerState}, {providerPostCode},  {providerCountry}
+                {fullAddress}
               </Typography>
             </div>
           </div>
