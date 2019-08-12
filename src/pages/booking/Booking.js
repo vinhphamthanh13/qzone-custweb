@@ -244,7 +244,7 @@ class Booking extends PureComponent {
       serviceId: null,
       service: null,
       serviceProviders: null,
-      providersByServiceIdList: null,
+      providersByServiceIdList: [],
       availabilitiesBulk: null,
       bookingStep: BOOKING.STEPS.SELECT_PROVIDER,
       bookingDetail: null,
@@ -554,6 +554,7 @@ class Booking extends PureComponent {
       temporaryServicesByLocation,
     } = this.state;
 
+    console.log('serviceId', serviceId);
     const Step = this.stepComponents[bookingStep];
     const isBackValid = bookingStep === BOOKING.STEPS.CONFIRM_BOOKING && !waitListId;
     const isNextValid = bookingStep < BOOKING.STEPS.CONFIRM_BOOKING && bookingDetail;
@@ -562,14 +563,18 @@ class Booking extends PureComponent {
     const providers = this.handleMergedProviderInfo(
       serviceId,
       serviceProviders,
-      providersByServiceIdList,
+      providersByServiceIdList[serviceId],
       temporaryServicesByLocation,
     );
     const providersWithSlot = availabilitiesBulk && providers
       && this.handleProviderAvailableSlots(availabilitiesBulk, providers);
+
+    console.log('providersByServiceIdList', providersByServiceIdList);
+    console.log('providers', providers);
+    console.log('providerwithslot', providersWithSlot);
     const stepProps = {
       [BOOKING.STEPS.SELECT_PROVIDER]: {
-        bookingService: service,
+        bookingService: service && service[serviceId],
         providers: providersWithSlot,
         onDateChange: this.handleDateChange,
         setBookingDetail: setBookingDetailAction,
@@ -579,12 +584,12 @@ class Booking extends PureComponent {
         scrollBooking: this.scrollToMyBooking,
       },
       [BOOKING.STEPS.CONFIRM_BOOKING]: {
-        bookingService: service,
+        bookingService: service && service[serviceId],
         handleConfirmDialog: this.toggleConfirmDialog(true),
         showPage,
       },
       [BOOKING.STEPS.VIEW_BOOKING]: {
-        bookingService: service,
+        bookingService: service && service[serviceId],
         appointmentEvent,
         resetBooking: resetBookingAction,
         showPage,
