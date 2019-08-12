@@ -42,6 +42,7 @@ import {
   defaultDateFormat,
   timeSlotFormat,
   PROFILE,
+  BOOKING,
 } from 'utils/constants';
 import s from './ViewAppointment.module.scss';
 
@@ -84,8 +85,11 @@ class ViewAppointment extends Component {
     const {
       setBookingStep: setBookingStepAction,
       setBookingDetail: setBookingDetailAction,
+      bookingService,
     } = this.props;
-    setBookingStepAction(0);
+    setBookingStepAction({
+      [bookingService.id]: BOOKING.STEPS.SELECT_PROVIDER,
+    });
     setBookingDetailAction(null);
   };
 
@@ -97,7 +101,8 @@ class ViewAppointment extends Component {
       userDetail,
       showPage,
     } = this.props;
-    const provider = get(bookingDetail, 'provider');
+    const serviceId = get(bookingService, 'id');
+    const provider = get(bookingDetail[serviceId], 'provider');
     const bookingCode = get(appointmentEvent, 'bookingCode');
     const stateName = get(appointmentEvent, 'geoLocation.state');
     const city = get(appointmentEvent, 'geoLocation.city');

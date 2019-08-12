@@ -21,9 +21,9 @@ const initState = {
   providersByServiceIdList: [],
   availabilities: null,
   availabilitiesBulk: null,
-  bookingStep: 0,
+  bookingStep: {},
+  bookingDetail: {},
   appointmentEvent: null,
-  bookingDetail: null,
   availabilitiesById: null,
   bookedEventIdList: [],
 };
@@ -75,7 +75,10 @@ const reducer = (state = initState, action) => {
     case SET_BOOKING_STEP:
       return {
         ...state,
-        bookingStep: action.payload,
+        bookingStep: {
+          ...state.bookingStep,
+          ...action.payload,
+        },
       };
     case SET_APPOINTMENT_CUSTOMER_EVENTS:
       return {
@@ -85,7 +88,10 @@ const reducer = (state = initState, action) => {
     case SET_BOOKING_DETAIL:
       return {
         ...state,
-        bookingDetail: action.payload,
+        bookingDetail: {
+          ...state.bookingDetail,
+          ...action.payload,
+        },
       };
     // instant booking will change the flow
     // by mutating the serviceProviders list
