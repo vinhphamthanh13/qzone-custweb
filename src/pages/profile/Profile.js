@@ -15,9 +15,10 @@ import {
   setServiceProvidersAction,
   findEventByCustomerIdAction,
 } from 'actionsReducers/common.actions';
-import { AUTHENTICATED_KEY } from 'utils/constants';
+import { AUTHENTICATED_KEY, SESSION } from 'utils/constants';
 import { handlePushLocation } from 'utils/common';
 import CustomModal from 'components/Modal/CustomModal';
+import Loading from 'components/Loading';
 import Header from './components/Header';
 import Content from './components/Content';
 import s from './Profile.module.scss';
@@ -53,6 +54,7 @@ class Profile extends Component {
     loginSession: null,
     isPopupWarning: '',
     toggleSidePanel: false,
+    isSessionTimeout: false,
   };
 
   componentDidMount() {
@@ -66,24 +68,29 @@ class Profile extends Component {
   }
 
   componentDidUpdate() {
-    const { loginSession, userDetail } = this.state;
+    const { loginSession, userDetail, isSessionTimeout } = this.state;
     const expired = get(loginSession, 'expiration');
 
     if (!userDetail) {
       handlePushLocation('/')();
     }
 
-    if (moment().isAfter(moment(expired))) {
-      this.handleLogout();
+    if (!isSessionTimeout && moment().isAfter(moment(expired))) {
+      this.handlePopupSessionTimeout();
     }
   }
+
+  handlePopupSessionTimeout = () => {
+    this.setState({
+      isSessionTimeout: true,
+    });
+  };
 
   handleLogout = () => {
     const { logout: logoutAction } = this.props;
     const { loginSession } = this.state;
     const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
     const authProvider = get(loginSession, 'authProvider');
-
     handlePushLocation('/')();
     logoutAction({
       isAuthenticated,
@@ -116,6 +123,7 @@ class Profile extends Component {
       userDetail,
       isPopupWarning,
       toggleSidePanel,
+      isSessionTimeout,
     } = this.state;
 
     const givenName = get(userDetail, 'givenName');
@@ -143,6 +151,15 @@ class Profile extends Component {
       <>
         {updateProfileMsgError}
         {updateProfileMsgSuccess}
+        <Loading />
+        <CustomModal
+          type="error"
+          title={SESSION.EXPIRED.title}
+          isOpen={isSessionTimeout}
+          message={SESSION.EXPIRED.message}
+          okButton
+          okCallBack={this.handleLogout}
+        />
         <div>
           <div className={`${s.profile} column`}>
             <Header

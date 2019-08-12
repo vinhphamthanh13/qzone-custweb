@@ -106,7 +106,13 @@ const reducer = (state = initState, action) => {
         bookedEventIdList: [...state.bookedEventIdList, action.payload],
       };
     case RESET_BOOKING:
-      return initState;
+      return {
+        ...state,
+        bookingStep: {},
+        bookingDetail: {},
+        appointmentEvent: null,
+        bookedEventIdList: [],
+      };
     default:
       return state;
   }
