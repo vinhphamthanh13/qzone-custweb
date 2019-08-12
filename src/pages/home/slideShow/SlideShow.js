@@ -7,6 +7,7 @@ import { Typography } from '@material-ui/core';
 import { get } from 'lodash';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import DefaultImage from 'images/default-service-card.png';
 import Slide from './Slide';
 import s from './SlideShow.module.scss';
 
@@ -53,7 +54,7 @@ class SlideShow extends Component {
               <Slider {...slideSettings}>
                 {topServices.map((service) => {
                   const serviceId = get(service, 'id');
-                  const fileUrl = get(service, 'image.fileUrl');
+                  const fileUrl = get(service, 'image.fileUrl') || DefaultImage;
                   const name = get(service, 'name');
                   const description = get(service, 'description');
                   const rating = get(service, 'rating');
