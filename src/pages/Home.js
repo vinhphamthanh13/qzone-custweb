@@ -1,12 +1,9 @@
 import React from 'react';
 import {
   func,
-  // bool,
-  // string,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
-// import uuidv1 from 'uuid/v1';
 import { Grid } from '@material-ui/core';
 import { history } from 'containers/App';
 import Loading from 'components/Loading';
@@ -19,7 +16,6 @@ import {
 import {
   setServiceProvidersAction,
 } from 'actionsReducers/common.actions';
-// import { regExPattern } from 'utils/constants';
 import Services from './home/Services';
 import Auth from './Auth';
 import AppBar from './home/appBar/AppBar';
@@ -81,7 +77,6 @@ export class Home extends React.PureComponent {
       searchResult: null,
       isRegisterOpen: false,
       isLoginOpen: false,
-      sessionTimeoutId: 0,
       isOpenAdvancedSearch: false,
       isShowingAdvancedSearch: false,
       combineServiceProviders: null,
@@ -89,6 +84,10 @@ export class Home extends React.PureComponent {
   }
 
   componentDidMount() {
+    this.handleReloadApp();
+  }
+
+  handleReloadApp = () => {
     const {
       setServiceCategoriesAction: setServiceCategories,
       setServicesAction: setServices,
@@ -97,37 +96,6 @@ export class Home extends React.PureComponent {
     setServiceCategories();
     setServices();
     setServiceProviders();
-  }
-
-  // componentDidUpdate(prevProps) {
-  //   const {
-  //     isError,
-  //     errorMessage,
-  //     categories,
-  //   } = prevProps;
-  //   const {
-  //     isError: cachedIsError,
-  //     errorMessage: cachedErrorMessage,
-  //   } = this.props;
-  //   const {
-  //     serviceProviders,
-  //     categories: cachedCategories,
-  //   } = this.state;
-  //
-  //   // if (
-  //   //   (isError !== cachedIsError
-  //   //   && errorMessage !== cachedErrorMessage
-  //   //   && regExPattern.connectError.test(cachedErrorMessage))
-  //   //   || (serviceProviders && serviceProviders.length === 0)
-  //   //   || ((categories !== cachedCategories) && (!cachedCategories))
-  //   // ) {
-  //   //   // history.replace(`/in-maintenance/${uuidv1()}`);
-  //   //   console.log('what is maintenance', uuidv1());
-  //   // }
-  // }
-
-  getSessionTimeoutId = (id) => {
-    this.setState({ sessionTimeoutId: id });
   };
 
   handleOnSearch = (event) => {
@@ -203,7 +171,6 @@ export class Home extends React.PureComponent {
       isRegisterOpen,
       isLoginOpen,
       isOpenAdvancedSearch,
-      sessionTimeoutId,
       combineServiceProviders,
     } = this.state;
 
@@ -224,14 +191,13 @@ export class Home extends React.PureComponent {
           isLoginOpen={isLoginOpen}
           closeDialog={this.closeDialog}
           handleAuthenticate={this.openAuthModal}
-          getSessionTimeoutId={this.getSessionTimeoutId}
+          onReloadApp={this.handleReloadApp}
         />
         <AppBar
           handleAuthenticate={this.openAuthModal}
           onSearch={this.handleOnSearch}
           onSearchValue={searchText}
           handleAdvancedSearch={this.openAdvancedSearch}
-          sessionTimeoutId={sessionTimeoutId}
           maintenance={systemMaintenance}
         />
         {isOpenAdvancedSearch && (
@@ -304,17 +270,10 @@ export class Home extends React.PureComponent {
 }
 
 Home.propTypes = {
-  // isError: bool,
-  // errorMessage: string,
   setServiceCategoriesAction: func.isRequired,
   setServicesAction: func.isRequired,
   setServiceProvidersAction: func.isRequired,
 };
-
-// Home.defaultProps = {
-//   isError: false,
-//   errorMessage: '',
-// };
 
 const mapStateToProps = state => ({
   ...state.common,

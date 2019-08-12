@@ -180,10 +180,6 @@ export const login = (value) => {
                     expiration: exp * 1000, // AWS exp counted in second
                     isAuthenticated: !!get(response, 'data.object.userSub'),
                   };
-                  // askFireBaseUserToken().then(userToken => storeFireBaseUserAction({
-                  //   email,
-                  //   userToken,
-                  // }, dispatch));
                   dispatch(storeUserSessionLogin(session));
                   dispatch(setUserDetails(userDetail));
                 }

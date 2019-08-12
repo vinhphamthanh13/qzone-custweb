@@ -49,8 +49,6 @@ class Auth extends Component {
     userDetail: null,
   };
 
-  sessionTimeoutId = 0;
-
   componentDidUpdate() {
     const {
       loginSession,
@@ -89,14 +87,15 @@ class Auth extends Component {
   };
 
   handleLogout = () => {
-    const { logoutAction } = this.props;
+    const { logoutAction, onReloadApp } = this.props;
     const { loginSession } = this.state;
     const { isAuthenticated, authProvider } = loginSession;
-    // this.setState({ isSessionTimeout: true });
+    this.setState({ isSessionTimeout: true });
     logoutAction({
       isAuthenticated,
       authProvider,
     });
+    onReloadApp();
   };
 
   handlePopupLogin = () => {
@@ -241,6 +240,7 @@ Auth.propTypes = {
   clearResetPasswordStatusAction: func.isRequired,
   autoLoginAction: func.isRequired,
   logoutAction: func.isRequired,
+  onReloadApp: func.isRequired,
 };
 
 Auth.defaultProps = {

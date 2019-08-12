@@ -34,7 +34,6 @@ class BookingPage extends Component {
           isLoginOpen={isLoginOpen}
           closeDialog={this.closeAuthModal}
           handleAuthenticate={this.openAuthModal}
-          getSessionTimeoutId={this.getSessionTimeoutId}
         />
         <Booking
           serviceId={sId}

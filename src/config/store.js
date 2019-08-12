@@ -2,7 +2,7 @@ import {
   createStore, applyMiddleware, compose, combineReducers,
 } from 'redux';
 import thunk from 'redux-thunk';
-// import logger from 'redux-logger';
+import logger from 'redux-logger';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import autoMergeLevel1 from 'redux-persist/es/stateReconciler/autoMergeLevel1';
@@ -67,7 +67,7 @@ if (process.env.NODE_ENV === 'production') {
   middleWare = [
     ...middleWare,
     thunk,
-    // logger,
+    logger,
   ];
 }
 
