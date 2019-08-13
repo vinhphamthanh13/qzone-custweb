@@ -149,6 +149,7 @@ class BookingDetail extends React.PureComponent {
     const serviceName = get(bookingService, 'name');
     const bookingTime = get(bookingDetail[serviceId], 'time.start');
     const provider = get(bookingDetail[serviceId], 'provider');
+    const geoLocation = get(provider, 'geoLocation');
     const providerName = get(provider, 'providerName');
     const email = get(provider, 'email');
     const telephone = get(provider, 'telephone');
@@ -260,7 +261,7 @@ class BookingDetail extends React.PureComponent {
           isOpen={this.state.isMapDialogOpen}
           toggle={this.toggleMapDialog}
           serviceName={serviceName}
-          provider={provider}
+          geoLocation={geoLocation}
         />
       </div>
     );

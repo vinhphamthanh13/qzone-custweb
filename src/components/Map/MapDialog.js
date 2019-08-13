@@ -9,11 +9,11 @@ import GoogleMap from 'components/GoogleMap';
 import s from './MapDialog.module.scss';
 
 export default function MapDialog({
-  isOpen, toggle, provider, serviceName,
+  isOpen, toggle, geoLocation, serviceName,
 }) {
-  const fullAddress = get(provider, 'fullAddress');
-  const providerLat = get(provider, 'coordinates.latitude');
-  const providerLng = get(provider, 'coordinates.longitude');
+  const fullAddress = get(geoLocation, 'fullAddress');
+  const providerLat = get(geoLocation, 'coordinates.latitude');
+  const providerLng = get(geoLocation, 'coordinates.longitude');
 
   return (
     <Dialog
@@ -68,20 +68,18 @@ MapDialog.propTypes = {
   isOpen: bool.isRequired,
   toggle: func.isRequired,
   serviceName: string.isRequired,
-  provider: shape({
-    geoLocation: {
-      coordinates: {
-        longitude: number,
-        latitude: number,
-      },
+  geoLocation: shape({
+    coordinates: {
+      longitude: number,
+      latitude: number,
     },
+    fullAddress: string,
   }),
 };
 
 MapDialog.defaultProps = {
-  provider: {
-    geoLocation: {
-      coordinates: {},
-    },
+  geoLocation: {
+    coordinates: {},
+    fullAddress: '',
   },
 };
