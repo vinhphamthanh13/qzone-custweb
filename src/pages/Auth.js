@@ -11,7 +11,7 @@ import Register from 'authentication/Register';
 import Login from 'authentication/Login';
 import VerificationCode from 'authentication/components/VerificationCode';
 import CustomModal from 'components/Modal/CustomModal';
-import { logout, clearLogoutErrorStatus } from 'authentication/actions/logout';
+import { logout } from 'authentication/actions/logout';
 import {
   reEnterVerificationCode, closeRegisterSuccessModal, resetResendVerificationCodeModal,
   clearResetPasswordStatus,
@@ -48,8 +48,6 @@ class Auth extends Component {
     loginSession: null,
     userDetail: null,
   };
-
-  sessionTimeoutId = 0;
 
   componentDidUpdate() {
     const {
@@ -89,25 +87,21 @@ class Auth extends Component {
   };
 
   handleLogout = () => {
-    const { logoutAction } = this.props;
+    const { logoutAction, onReloadApp } = this.props;
     const { loginSession } = this.state;
     const { isAuthenticated, authProvider } = loginSession;
-    // this.setState({ isSessionTimeout: true });
+    this.setState({ isSessionTimeout: true });
     logoutAction({
       isAuthenticated,
       authProvider,
     });
+    onReloadApp();
   };
 
   handlePopupLogin = () => {
     const { handleAuthenticate } = this.props;
     handleAuthenticate('isLoginOpen');
     this.setState({ isSessionTimeout: false });
-  };
-
-  handleLogoutError = () => {
-    const { clearLogoutErrorStatusAction } = this.props;
-    clearLogoutErrorStatusAction();
   };
 
   render() {
@@ -122,8 +116,6 @@ class Auth extends Component {
       handleAuthenticate,
       resetPasswordStatus,
       resetPasswordMessage,
-      isLogoutError,
-      logoutErrorMessage,
     } = this.props;
     const {
       isSessionTimeout,
@@ -208,18 +200,8 @@ class Auth extends Component {
       resetPasswordModal = null;
     }
 
-    const renderLogoutError = isLogoutError ? (
-      <CustomModal
-        type="error"
-        isOpen
-        title="Sign out error"
-        message={logoutErrorMessage}
-        onClose={this.handleLogoutError}
-      />) : null;
-
     return (
       <>
-        {renderLogoutError}
         {renderSessionTimeout}
         {verificationCodeModal}
         {errorModal}
@@ -258,9 +240,7 @@ Auth.propTypes = {
   clearResetPasswordStatusAction: func.isRequired,
   autoLoginAction: func.isRequired,
   logoutAction: func.isRequired,
-  isLogoutError: bool,
-  logoutErrorMessage: string,
-  clearLogoutErrorStatusAction: func.isRequired,
+  onReloadApp: func.isRequired,
 };
 
 Auth.defaultProps = {
@@ -268,8 +248,6 @@ Auth.defaultProps = {
   iSignUpSuccessModal: false,
   verificationErrorMessage: '',
   resendVerificationCodeStatus: 'none',
-  isLogoutError: false,
-  logoutErrorMessage: '',
 };
 
 const mapStateToProps = state => ({
@@ -285,6 +263,5 @@ export default connect(
     clearResetPasswordStatusAction: clearResetPasswordStatus,
     logoutAction: logout,
     autoLoginAction: autoLogin,
-    clearLogoutErrorStatusAction: clearLogoutErrorStatus,
   },
 )(Auth);

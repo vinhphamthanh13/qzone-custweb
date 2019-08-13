@@ -11,7 +11,6 @@ import {
   chunk,
 } from 'lodash';
 import { Typography, Divider } from '@material-ui/core';
-import SubLoading from 'components/SubLoading';
 import { BOOKING } from 'utils/constants';
 import ProviderContent from './selectProvider/ProviderContent';
 import s from './SelectProvider.module.scss';
@@ -19,15 +18,20 @@ import s from './SelectProvider.module.scss';
 class SelectProvider extends React.PureComponent {
   onSelectBooking = provider => (time) => {
     const {
+      bookingService,
       setBookingDetail,
       setBookingStep,
       scrollBooking,
     } = this.props;
     setBookingDetail({
-      provider,
-      time,
+      [bookingService.id]: {
+        provider,
+        time,
+      },
     });
-    setBookingStep(BOOKING.STEPS.CONFIRM_BOOKING);
+    setBookingStep({
+      [bookingService.id]: BOOKING.STEPS.CONFIRM_BOOKING,
+    });
     scrollBooking();
   };
 
@@ -69,7 +73,7 @@ class SelectProvider extends React.PureComponent {
                   </div>
                 ))}
               </div>
-            ) : <SubLoading loading={!providers} />}
+            ) : null}
           </div>
         )}
       </>

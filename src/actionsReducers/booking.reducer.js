@@ -18,12 +18,12 @@ import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 
 const initState = {
   service: null,
-  providersByServiceIdList: null,
+  providersByServiceIdList: [],
   availabilities: null,
   availabilitiesBulk: null,
-  bookingStep: 0,
+  bookingStep: {},
+  bookingDetail: {},
   appointmentEvent: null,
-  bookingDetail: null,
   availabilitiesById: null,
   bookedEventIdList: [],
 };
@@ -44,12 +44,18 @@ const reducer = (state = initState, action) => {
     case GET_SERVICE_BY_ID:
       return {
         ...state,
-        service: action.payload,
+        service: {
+          ...state.service,
+          ...action.payload,
+        },
       };
     case SET_PROVIDERS_BY_SERVICE_ID:
       return {
         ...state,
-        providersByServiceIdList: action.payload,
+        providersByServiceIdList: {
+          ...state.providersByServiceIdList,
+          ...action.payload,
+        },
       };
     case SET_AVAILABILITIES_BY_SPECIAL_EVENT_ID:
       return {
@@ -69,7 +75,10 @@ const reducer = (state = initState, action) => {
     case SET_BOOKING_STEP:
       return {
         ...state,
-        bookingStep: action.payload,
+        bookingStep: {
+          ...state.bookingStep,
+          ...action.payload,
+        },
       };
     case SET_APPOINTMENT_CUSTOMER_EVENTS:
       return {
@@ -79,7 +88,10 @@ const reducer = (state = initState, action) => {
     case SET_BOOKING_DETAIL:
       return {
         ...state,
-        bookingDetail: action.payload,
+        bookingDetail: {
+          ...state.bookingDetail,
+          ...action.payload,
+        },
       };
     // instant booking will change the flow
     // by mutating the serviceProviders list
@@ -94,7 +106,13 @@ const reducer = (state = initState, action) => {
         bookedEventIdList: [...state.bookedEventIdList, action.payload],
       };
     case RESET_BOOKING:
-      return initState;
+      return {
+        ...state,
+        bookingStep: {},
+        bookingDetail: {},
+        appointmentEvent: null,
+        bookedEventIdList: [],
+      };
     default:
       return state;
   }

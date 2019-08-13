@@ -145,9 +145,10 @@ class BookingDetail extends React.PureComponent {
       formValid,
     } = this.state;
 
+    const serviceId = get(bookingService, 'id');
     const serviceName = get(bookingService, 'name');
-    const bookingTime = get(bookingDetail, 'time.start');
-    const provider = get(bookingDetail, 'provider');
+    const bookingTime = get(bookingDetail[serviceId], 'time.start');
+    const provider = get(bookingDetail[serviceId], 'provider');
     const providerName = get(provider, 'providerName');
     const email = get(provider, 'email');
     const telephone = get(provider, 'telephone');

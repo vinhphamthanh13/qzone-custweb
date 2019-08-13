@@ -136,17 +136,15 @@ class Content extends Component {
       rescheduleStatus,
       setAssessmentAction: setAssessments,
       eventList,
-    } = prevProps;
-    const {
       findEventByCustomerIdAction: findEventByCustomerId,
       cancelEventById: cancelEventByIdAction,
       customerId,
-      eventList: cachedEventList,
-      trackingAppointmentByIdsAction: trackingAppointmentByIds,
       customerAssessment,
-    } = this.props;
+      trackingAppointmentByIdsAction: trackingAppointmentByIds,
+    } = prevProps;
     const {
       cancelEventByIdStatus: cachedCancelEventByIdStatus,
+      eventList: cachedEventList,
       eventListIds,
       surveyList,
       rescheduleStatus: cachedRescheduleStatus,
@@ -165,7 +163,7 @@ class Content extends Component {
       cancelEventByIdAction(null);
     }
 
-    if (trackingList !== cachedTrackingList && eventListIds.length > 0) {
+    if (trackingList !== cachedTrackingList && eventListIds && eventListIds.length > 0) {
       trackingAppointmentByIds(eventListIds);
     }
     const surveys = [];

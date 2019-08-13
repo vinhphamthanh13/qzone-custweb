@@ -80,7 +80,9 @@ export const getServiceByIdAction = data => async (dispatch) => {
   if (error) {
     dispatch(setError(error));
   } else {
-    dispatch(getServiceById(service));
+    dispatch(getServiceById({
+      [data]: service,
+    }));
   }
   dispatch(setLoading(false));
 };
@@ -91,7 +93,9 @@ export const setProvidersByServiceIdAction = data => async (dispatch) => {
   if (error) {
     dispatch(setError(error));
   } else {
-    dispatch(setProvidersByServiceId(providersById));
+    dispatch(setProvidersByServiceId({
+      [data]: providersById,
+    }));
   }
   dispatch(setLoading(false));
 };

@@ -22,7 +22,6 @@ const rootPersistConfig = {
   storage,
   stateReconciler: autoMergeLevel1,
   blacklist: [
-    'auth',
     'common',
     'home',
     'booking',
@@ -34,6 +33,7 @@ const rootPersistConfig = {
     'surveys',
   ],
 };
+
 const rootReducer = combineReducers({
   auth,
   common,
@@ -46,7 +46,16 @@ const rootReducer = combineReducers({
   customer,
   surveys,
 });
-const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
+
+const appReducer = (state, action) => {
+  let newState = state;
+  if (action.type === 'RESET_APP') {
+    newState = undefined;
+  }
+  return rootReducer(newState, action);
+};
+
+const persistedReducer = persistReducer(rootPersistConfig, appReducer);
 
 let middleWare = [];
 if (process.env.NODE_ENV === 'production') {

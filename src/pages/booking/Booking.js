@@ -70,7 +70,7 @@ class Booking extends PureComponent {
     showPage: bool, // Showing this booking in Home or Booking flow
     serviceId: string,
     temporaryServiceId: string,
-    bookingStep: number.isRequired,
+    bookingStep: objectOf(number).isRequired,
     getServiceByIdAction: func.isRequired,
     setServiceProvidersAction: func.isRequired,
     setProvidersByServiceIdAction: func.isRequired,
@@ -193,17 +193,21 @@ class Booking extends PureComponent {
           start: startSec,
         };
         if (
-          bookingStep === 0
+          bookingStep[serviceId] === BOOKING.STEPS.SELECT_PROVIDER
           && postProvider.userSub
           && postProvider.geoLocation
           && waitListId
           && availabilityId
         ) {
           setBookingDetailAction({
-            provider: postProvider,
-            time,
+            [serviceId]: {
+              provider: postProvider,
+              time,
+            },
           });
-          setBookingStepAction(BOOKING.STEPS.CONFIRM_BOOKING);
+          setBookingStepAction({
+            [serviceId]: BOOKING.STEPS.CONFIRM_BOOKING,
+          });
         }
       }
 
@@ -244,10 +248,10 @@ class Booking extends PureComponent {
       serviceId: null,
       service: null,
       serviceProviders: null,
-      providersByServiceIdList: null,
+      providersByServiceIdList: [],
       availabilitiesBulk: null,
-      bookingStep: BOOKING.STEPS.SELECT_PROVIDER,
-      bookingDetail: null,
+      bookingStep: {},
+      bookingDetail: {},
       isConfirmDialogOpen: false,
       userDetail: null,
       appointmentEvent: null,
@@ -269,11 +273,15 @@ class Booking extends PureComponent {
       setWaitListsByIdAction: setWaitListsById,
       waitListId,
       setServiceProvidersAction: setServiceProviders,
+      setBookingStep: setBookingStepAction,
     } = this.props;
     if (serviceId) {
       getServiceById(serviceId);
       setProvidersByServiceId(serviceId);
       setServiceProviders();
+      setBookingStepAction({
+        [serviceId]: BOOKING.STEPS.SELECT_PROVIDER,
+      });
     }
     if (temporaryServiceId) {
       setTemporaryServicesById(temporaryServiceId);
@@ -343,7 +351,9 @@ class Booking extends PureComponent {
     }
 
     if (bookedId !== cachedId) {
-      setBookingStepAction(BOOKING.STEPS.VIEW_BOOKING);
+      setBookingStepAction({
+        [cachedAppointmentEvent.serviceId]: BOOKING.STEPS.VIEW_BOOKING,
+      });
     }
 
     if (
@@ -359,17 +369,22 @@ class Booking extends PureComponent {
   };
 
   handleStepChange = dir => () => {
+    const { serviceId } = this.state;
     const {
       setBookingStep: setBookingStepAction,
     } = this.props;
     const {
       bookingStep,
     } = this.state;
-    if (bookingStep > BOOKING.STEPS.SELECT_PROVIDER && dir < 0) {
-      setBookingStepAction(bookingStep - 1);
+    if (bookingStep[serviceId] > BOOKING.STEPS.SELECT_PROVIDER && dir < 0) {
+      setBookingStepAction({
+        [serviceId]: bookingStep[serviceId] - 1,
+      });
     }
-    if (bookingStep < BOOKING.STEPS.VIEW_BOOKING && dir > 0) {
-      setBookingStepAction(bookingStep + 1);
+    if (bookingStep[serviceId] < BOOKING.STEPS.VIEW_BOOKING && dir > 0) {
+      setBookingStepAction({
+        [serviceId]: bookingStep[serviceId] + 1,
+      });
     }
   };
 
@@ -401,11 +416,12 @@ class Booking extends PureComponent {
     const {
       bookingDetail,
       userDetail,
+      serviceId,
     } = this.state;
-    const availabilityId = get(bookingDetail, 'time.availabilityId');
-    const duration = get(bookingDetail, 'time.duration');
+    const availabilityId = get(bookingDetail[serviceId], 'time.availabilityId');
+    const duration = get(bookingDetail[serviceId], 'time.duration');
     const customerId = get(userDetail, 'userSub') || get(userDetail, 'id');
-    const startSec = get(bookingDetail, 'time.start');
+    const startSec = get(bookingDetail[serviceId], 'time.start');
     this.toggleConfirmDialog(false)();
     registerEvent({
       customerId,
@@ -420,9 +436,6 @@ class Booking extends PureComponent {
   toggleConfirmDialog = isConfirmDialogOpen => () => {
     this.setState({ isConfirmDialogOpen });
   };
-
-  // handle select date of provider slots
-  handleDateChange = () => {};
 
   handleMergedProviderInfo = (serviceId, serviceProviders, providersByServiceId, temporaryServicesByLocation) => {
     if (
@@ -496,8 +509,8 @@ class Booking extends PureComponent {
       <div className={s.stepsWrapper}>
         {
           STEP_LABELS.map((step, index) => {
-            const { bookingStep } = this.state;
-            const [numberStyle, labelStyle] = bookingStep >= index
+            const { bookingStep, serviceId } = this.state;
+            const [numberStyle, labelStyle] = bookingStep[serviceId] >= index
               ? [`${s.stepNumber} ${s.stepNumberActive}`, `${s.stepLabel} ${s.stepLabelActive}`]
               : [s.stepNumber, s.stepLabel];
             return (
@@ -554,24 +567,23 @@ class Booking extends PureComponent {
       temporaryServicesByLocation,
     } = this.state;
 
-    const Step = this.stepComponents[bookingStep];
-    const isBackValid = bookingStep === BOOKING.STEPS.CONFIRM_BOOKING && !waitListId;
-    const isNextValid = bookingStep < BOOKING.STEPS.CONFIRM_BOOKING && bookingDetail;
-    const isProfile = customerId && bookingStep !== BOOKING.STEPS.CONFIRM_BOOKING;
-    const isShowLogin = !customerId && bookingStep === BOOKING.STEPS.SELECT_PROVIDER;
+    const Step = this.stepComponents[bookingStep[serviceId] || BOOKING.STEPS.SELECT_PROVIDER];
+    const isBackValid = bookingStep[serviceId] === BOOKING.STEPS.CONFIRM_BOOKING && !waitListId;
+    const isNextValid = bookingStep[serviceId] < BOOKING.STEPS.CONFIRM_BOOKING && bookingDetail[serviceId];
+    const isProfile = customerId && bookingStep[serviceId] !== BOOKING.STEPS.CONFIRM_BOOKING;
+    const isShowLogin = !customerId && bookingStep[serviceId] === BOOKING.STEPS.SELECT_PROVIDER;
     const providers = this.handleMergedProviderInfo(
       serviceId,
       serviceProviders,
-      providersByServiceIdList,
+      providersByServiceIdList[serviceId],
       temporaryServicesByLocation,
     );
     const providersWithSlot = availabilitiesBulk && providers
       && this.handleProviderAvailableSlots(availabilitiesBulk, providers);
     const stepProps = {
       [BOOKING.STEPS.SELECT_PROVIDER]: {
-        bookingService: service,
+        bookingService: service && service[serviceId],
         providers: providersWithSlot,
-        onDateChange: this.handleDateChange,
         setBookingDetail: setBookingDetailAction,
         setBookingStep: setBookingStepAction,
         handleAuth,
@@ -579,12 +591,12 @@ class Booking extends PureComponent {
         scrollBooking: this.scrollToMyBooking,
       },
       [BOOKING.STEPS.CONFIRM_BOOKING]: {
-        bookingService: service,
+        bookingService: service && service[serviceId],
         handleConfirmDialog: this.toggleConfirmDialog(true),
         showPage,
       },
       [BOOKING.STEPS.VIEW_BOOKING]: {
-        bookingService: service,
+        bookingService: service && service[serviceId],
         appointmentEvent,
         resetBooking: resetBookingAction,
         showPage,
@@ -596,7 +608,7 @@ class Booking extends PureComponent {
         <Success />
         <Error resetOtherStatus={this.handleResetWaitListStatus} />
         { false && <Loading />}
-        {bookingDetail && bookingDetail.provider && (
+        {bookingDetail[serviceId] && bookingDetail[serviceId].provider && (
           <CustomModal
             type="info"
             title="Booking confirmation"
@@ -643,7 +655,7 @@ class Booking extends PureComponent {
             </div>
           )}
           <Step
-            {...stepProps[bookingStep]}
+            {...stepProps[bookingStep[serviceId]]}
           />
         </div>
       </>

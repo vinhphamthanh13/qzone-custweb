@@ -1,36 +1,11 @@
 /* eslint-disable no-undef */
-// Logout
 
 import { Auth } from 'aws-amplify';
 import { setLoading } from 'actionsReducers/common.actions';
 import { AUTH_METHOD, PROVIDER } from 'config/auth';
 import {
-  LOGOUT_ERROR,
-  LOGOUT_SUCCESS,
-  LOGOUT_ERROR_RST,
-} from './constants';
-import {
   createGoogleScript,
-  storeUserSessionLogin,
 } from './login';
-
-const initSession = {};
-
-const resetLogoutError = () => ({
-  type: LOGOUT_ERROR_RST,
-});
-
-export const clearLogoutErrorStatus = () => dispatch => dispatch(resetLogoutError());
-
-const logoutSuccess = payload => ({
-  type: LOGOUT_SUCCESS,
-  payload,
-});
-
-const logoutError = payload => ({
-  type: LOGOUT_ERROR,
-  payload,
-});
 
 export const logout = authenticator => (dispatch) => {
   const { isAuthenticated, authProvider } = authenticator;
@@ -48,31 +23,26 @@ export const logout = authenticator => (dispatch) => {
 
       ga.signOut().then(() => {
         ga.disconnect();
-        dispatch(logoutSuccess());
         dispatch(setLoading(false));
-        dispatch(storeUserSessionLogin(initSession));
-        // saveSession(initSession);
       });
     } else if (authProvider && authProvider === PROVIDER.FACEBOOK) {
       FB.getLoginStatus((logoutResponse) => {
         if (logoutResponse.status === 'connected') {
           FB.logout();
         }
-        dispatch(logoutSuccess());
         dispatch(setLoading(false));
-        dispatch(storeUserSessionLogin(initSession));
       });
     } else {
       Auth.signOut({ global: true })
-        .then((data) => {
-          dispatch(logoutSuccess(data));
+        .then(() => {
           dispatch(setLoading(false));
-          dispatch(storeUserSessionLogin(initSession));
         })
-        .catch((error) => {
-          dispatch(logoutError(error));
+        .catch(() => {
           dispatch(setLoading(false));
         });
     }
+    dispatch({
+      type: 'RESET_APP',
+    });
   }
 };

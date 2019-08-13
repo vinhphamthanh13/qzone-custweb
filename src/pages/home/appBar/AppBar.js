@@ -52,16 +52,19 @@ class MainAppBar extends React.Component {
       eventList,
       loginSession,
       trackingAppointmentById,
+      appointmentEvent,
     } = props;
     const {
       eventList: cachedEventList,
       loginSession: cachedLoginSession,
       trackingAppointmentById: cachedTrackingAppointmentById,
+      appointmentEvent: cachedAppointmentEvent,
     } = state;
     if (
       eventList !== cachedEventList
       || loginSession !== cachedLoginSession
       || trackingAppointmentById !== cachedTrackingAppointmentById
+      || appointmentEvent !== cachedAppointmentEvent
     ) {
       const eventListIds = eventList && eventList.length && eventList.map(item => item.id);
 
@@ -70,6 +73,7 @@ class MainAppBar extends React.Component {
         loginSession,
         eventListIds,
         trackingAppointmentById: compact(trackingAppointmentById),
+        appointmentEvent,
       };
     }
     return null;
@@ -83,6 +87,7 @@ class MainAppBar extends React.Component {
       loginSession: null,
       trackingAppointmentById: null,
       isShowingTrackingList: false,
+      appointmentEvent: null,
     };
   }
 
@@ -101,6 +106,7 @@ class MainAppBar extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     const {
       loginSession,
+      appointmentEvent,
     } = prevProps;
     const {
       loginSession: updatedLoginSession,
@@ -112,6 +118,7 @@ class MainAppBar extends React.Component {
     } = prevState;
     const {
       eventListIds: cachedEventListId,
+      appointmentEvent: cachedAppointmentEvent,
     } = this.state;
 
     const trackingLength = eventListIds && eventListIds.length;
@@ -126,8 +133,16 @@ class MainAppBar extends React.Component {
       }
     }
 
-    if (trackingLength !== cachedTrackingLength && cachedEventListId.length > 0) {
+    if (
+      trackingLength !== cachedTrackingLength
+      && cachedEventListId
+      && cachedEventListId.length > 0
+    ) {
       trackingAppointmentByIds(cachedEventListId);
+    }
+
+    if (appointmentEvent && cachedAppointmentEvent && appointmentEvent.id !== cachedAppointmentEvent.id) {
+      findEventByCustomerId(updatedLoginSession.id);
     }
   }
 
@@ -315,6 +330,7 @@ const mapStateToProps = state => ({
   ...state.common,
   ...state.auth,
   ...state.home,
+  ...state.booking,
   ...state.customer,
 });
 
