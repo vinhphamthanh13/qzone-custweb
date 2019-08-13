@@ -289,7 +289,7 @@ class TimelineCard extends Component {
             toggle={this.handleToggleMap}
             isOpen={isOpenMap}
             serviceName={serviceName}
-            provider={mapProvider}
+            geoLocation={mapProvider}
           />)
         }
         <VerticalTimelineElement

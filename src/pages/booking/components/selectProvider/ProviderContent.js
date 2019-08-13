@@ -85,6 +85,7 @@ class ProviderContent extends React.PureComponent {
     const providerRating = get(provider, 'rating');
     const providerMode = get(provider, 'mode');
     const fullAddress = get(provider, 'geoLocation.fullAddress');
+    const geoLocation = get(provider, 'geoLocation');
 
     return (
       <>
@@ -92,7 +93,7 @@ class ProviderContent extends React.PureComponent {
           isOpen={isMapDialogOpen}
           toggle={this.toggleMapDialog}
           serviceName={serviceName}
-          provider={provider}
+          geoLocation={geoLocation}
         />
         <div className={s.providerListCard}>
           <div className={s.providerListCardContent}>
