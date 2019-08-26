@@ -214,7 +214,7 @@ class Form extends Component {
           </CardHeader>
           <CardBody>
             { renderedForm }
-            { formType === LOGIN && <ForgotPassword email={email} /> }
+            { formType === LOGIN && <ForgotPassword email={email} closeAuth={onClose} /> }
             { formType === REGISTER && (
               <FormControlLabel
                 control={(

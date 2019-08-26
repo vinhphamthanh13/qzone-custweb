@@ -22,6 +22,7 @@ const rootPersistConfig = {
   storage,
   stateReconciler: autoMergeLevel1,
   blacklist: [
+    'auth',
     'common',
     'home',
     'booking',

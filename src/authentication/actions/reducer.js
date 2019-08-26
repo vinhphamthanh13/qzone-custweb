@@ -1,3 +1,6 @@
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+import autoMergeLevel1 from 'redux-persist/es/stateReconciler/autoMergeLevel1';
 import {
   SET_LOADING,
   RESET_MODAL_STATUS,
@@ -18,11 +21,33 @@ import {
   RESET_PASSWORD_STATUS,
   LOAD_SESSION_TO_STATE,
   SET_USER_DETAILS, LOGOUT_ERROR_RST,
-  FIRE_BASE_STORE_USER,
   AUTHENTICATED_KEY,
   SET_GUEST_ERROR,
   CLEAR_GUEST_ERROR,
 } from './constants';
+
+
+const persistConfig = {
+  key: 'qz_custweb_auth',
+  storage,
+  stateReconciler: autoMergeLevel1,
+  blacklist: [
+    'isForgotPassword',
+    'isVerificationCode',
+    'registerErrorMessage',
+    'loginErrorMessage',
+    'isLoading',
+    'isVerificationCode',
+    'resendVerificationCodeStatus',
+    'iSignUpSuccess',
+    'isForgotPassword',
+    'resetPasswordStatus',
+    'resetPasswordMessage',
+    'isLogoutError',
+    'guestUserError',
+  ],
+};
+
 
 const authInitialize = {
   userDetail: null,
@@ -34,11 +59,10 @@ const authInitialize = {
   resendVerificationCodeStatus: 'none', // success, error, none
   iSignUpSuccess: false,
   loginSession: null,
-  isForgotPassword: false,
+  isForgotPassword: { value: null },
   resetPasswordStatus: 'none', // success, error, none
   resetPasswordMessage: '',
   isLogoutError: false,
-  firebaseUserStored: null,
   guestUserError: false,
 };
 
@@ -145,11 +169,6 @@ const reducer = (state = authInitialize, action) => {
         ...state,
         userDetail: action.payload,
       };
-    case FIRE_BASE_STORE_USER:
-      return {
-        ...state,
-        firebaseUserStored: action.payload,
-      };
     case SET_GUEST_ERROR:
       return {
         ...state,
@@ -165,4 +184,4 @@ const reducer = (state = authInitialize, action) => {
   }
 };
 
-export default reducer;
+export default persistReducer(persistConfig, reducer);

@@ -1,7 +1,9 @@
 /* eslint-disable no-undef, func-names */
 
 import React from 'react';
-import { string, bool, func } from 'prop-types';
+import {
+  string, bool, func, objectOf, any,
+} from 'prop-types';
 import { connect } from 'react-redux';
 import {
   get,
@@ -11,7 +13,6 @@ import {
   LOGIN_TYPES,
 } from 'utils/constants';
 import Error from 'components/Error';
-// import { FB_APP_ID, FB_API_VERSION } from 'config/auth';
 import Form from './components/Form';
 import {
   login, loginGoogle, loginFacebook,
@@ -19,30 +20,6 @@ import {
 import { loginSchema } from './components/schemas';
 
 class Login extends React.Component {
-  // componentDidMount() {
-  //   window.fbAsyncInit = () => {
-  //     console.log('init FBook login', FB_APP_ID);
-  //     FB.init({
-  //       appId: FB_APP_ID,
-  //       cookie: true,
-  //       xfbml: true,
-  //       version: FB_API_VERSION,
-  //     });
-  //     FB.AppEvents.logPageView();
-  //   };
-  //
-  //   (function (document, script, id) {
-  //     const fjs = document.getElementsByTagName(script)[0];
-  //     if (document.getElementById(id)) {
-  //       return;
-  //     }
-  //     const js = document.createElement(script);
-  //     js.id = id;
-  //     js.src = 'https://connect.facebook.net/en_US/sdk.js';
-  //     fjs.parentNode.insertBefore(js, fjs);
-  //   }(document, 'script', 'facebook-jssdk'));
-  // }
-
   handleLogin = (values, name) => {
     const {
       logInAction,
@@ -58,7 +35,7 @@ class Login extends React.Component {
         loginGoogleAction();
         break;
       default:
-        if (!isForgotPassword) logInAction(values);
+        if (!isForgotPassword.value) logInAction(values);
     }
     this.onClose();
   };
@@ -126,7 +103,7 @@ Login.propTypes = {
   isOpen: bool,
   errorMessage: string,
   handleAuthenticate: func.isRequired,
-  isForgotPassword: bool.isRequired,
+  isForgotPassword: objectOf(any).isRequired,
 };
 
 Login.defaultProps = {
