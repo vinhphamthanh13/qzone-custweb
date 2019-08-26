@@ -1,16 +1,10 @@
 import React, { Component } from 'react';
-import { func, bool, string } from 'prop-types';
+import { func, string } from 'prop-types';
 import { connect } from 'react-redux';
-import { Formik } from 'formik';
 import { noop } from 'lodash';
-import {
-  Typography, Modal, Paper, Avatar, Tooltip,
-} from '@material-ui/core';
-import logo from 'images/logo.png';
+import { Typography, Tooltip } from '@material-ui/core';
 import { regExPattern } from 'utils/constants';
-import { forgotPassword, forgotPasswordSubmit, toggleResetPassword } from 'authentication/actions/register';
-import FormPassword from './FormPassword';
-import { forgotPasswordSchema } from './schemas';
+import { forgotPassword } from 'authentication/actions/register';
 
 class ForgotPassword extends Component {
   onChange = (event) => {
@@ -21,37 +15,21 @@ class ForgotPassword extends Component {
   };
 
   handleReqVerificationCode = () => {
-    const { forgotPasswordAction, email } = this.props;
+    const { forgotPasswordAction, email, closeAuth } = this.props;
     forgotPasswordAction(email);
-  };
-
-  handleSubmitNewPassword = (value) => {
-    const { email, forgotPasswordSubmitAction } = this.props;
-    const { code, password } = value;
-    forgotPasswordSubmitAction({ email, code, new_password: password });
-  };
-
-  handleCloseResetPassword = () => {
-    const { closeResetPasswordAction } = this.props;
-    closeResetPasswordAction(false);
+    closeAuth();
   };
 
   render() {
-    const {
-      isForgotPassword, email,
-    } = this.props;
-    const forgotInit = {
-      code: '',
-      password: '',
-      confirmPassword: '',
-    };
+    const { email } = this.props;
+
     const [forgotPasswordTitle, forgotClass] = !regExPattern.email.test(email)
       ? ['Enter your email above to reset password!', 'button-pad-bot text-right hover-pointer']
       : ['', 'button-pad-bot hover-pointer text-right hover-main-color'];
     const cta = !regExPattern.email.test(email) ? noop : this.handleReqVerificationCode;
     return (
       <>
-        <div className="flex h-end">
+        <div className="flex h-end z-index-highest">
           <div>
             <Tooltip title={forgotPasswordTitle} placement="top-end" classes={{ tooltip: 'tooltip-lg' }}>
               <Typography
@@ -65,35 +43,6 @@ class ForgotPassword extends Component {
             </Tooltip>
           </div>
         </div>
-        <Modal
-          open={isForgotPassword}
-          className="modal-wrapper"
-          disableAutoFocus
-          disableBackdropClick
-          disableEscapeKeyDown
-        >
-          <Paper className="verification-modal">
-            <div className="verification-modal-logo">
-              <Avatar className="verification-modal-avatar" src={logo} />
-            </div>
-            <div className="verification-modal-content">
-              <Typography variant="h6" color="primary">Resetting Password</Typography>
-              <Typography variant="caption" color="textSecondary">(Code was sent to your email {email})</Typography>
-              <Formik
-                initialValues={forgotInit}
-                validationSchema={forgotPasswordSchema}
-                enableReinitialize
-                onSubmit={this.handleSubmitNewPassword}
-                render={props => (
-                  <FormPassword
-                    {...props}
-                    handleCloseModal={this.handleCloseResetPassword}
-                  />
-                )}
-              />
-            </div>
-          </Paper>
-        </Modal>
       </>
     );
   }
@@ -101,18 +50,10 @@ class ForgotPassword extends Component {
 
 ForgotPassword.propTypes = {
   forgotPasswordAction: func.isRequired,
-  forgotPasswordSubmitAction: func.isRequired,
-  isForgotPassword: bool.isRequired,
   email: string.isRequired,
-  closeResetPasswordAction: func.isRequired,
+  closeAuth: func.isRequired,
 };
 
-const mapStateToProps = state => ({
-  isForgotPassword: state.auth.isForgotPassword,
-});
-
-export default connect(mapStateToProps, {
+export default connect(null, {
   forgotPasswordAction: forgotPassword,
-  forgotPasswordSubmitAction: forgotPasswordSubmit,
-  closeResetPasswordAction: toggleResetPassword,
 })(ForgotPassword);

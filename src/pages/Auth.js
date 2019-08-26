@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import {
-  bool,
-  func,
-  string,
+  bool, func, string,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
@@ -16,6 +14,7 @@ import {
   reEnterVerificationCode, closeRegisterSuccessModal, resetResendVerificationCodeModal,
   clearResetPasswordStatus,
 } from 'authentication/actions/register';
+import ForgotPasswordForm from 'authentication/components/ForgotPasswordForm';
 import { login as autoLogin } from 'authentication/actions/login';
 import {
   SESSION,
@@ -26,18 +25,22 @@ class Auth extends Component {
     const {
       loginSession,
       userDetail,
+      isForgotPassword,
     } = props;
     const {
       loginSession: cachedLoginSession,
       userDetail: cachedUserDetail,
+      isForgotPassword: cisForgotPassword,
     } = state;
     if (
       loginSession !== cachedLoginSession
       || userDetail !== cachedUserDetail
+      || isForgotPassword.value !== cisForgotPassword.value
     ) {
       return {
         loginSession,
         userDetail,
+        isForgotPassword,
       };
     }
     return null;
@@ -47,6 +50,7 @@ class Auth extends Component {
     isSessionTimeout: false,
     loginSession: null,
     userDetail: null,
+    isForgotPassword: { value: null },
   };
 
   componentDidUpdate() {
@@ -118,6 +122,7 @@ class Auth extends Component {
       resetPasswordMessage,
     } = this.props;
     const {
+      isForgotPassword,
       isSessionTimeout,
       userDetail,
     } = this.state;
@@ -208,6 +213,7 @@ class Auth extends Component {
         {successModal}
         {resendModal}
         {resetPasswordModal}
+        {isForgotPassword.value && <ForgotPasswordForm />}
         <Register
           isOpen={isRegisterOpen}
           onClose={() => closeDialog('isRegisterOpen')}

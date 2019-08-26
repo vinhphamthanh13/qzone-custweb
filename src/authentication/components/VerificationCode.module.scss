@@ -1,0 +1,23 @@
+@import "styles/_settings.scss";
+
+.paper {
+  color: $main_01;
+  padding: 1rem;
+  max-width: 374px;
+  width: 100%;
+}
+
+.content {
+  color: $main_02;
+}
+
+.countDown {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.footerActions {
+  display: flex;
+  justify-content: space-between;
+}

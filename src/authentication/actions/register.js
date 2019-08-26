@@ -130,11 +130,11 @@ export const forgotPassword = email => (dispatch) => {
   Auth.forgotPassword(email)
     .then(() => {
       /* @return {object} - CodeDeliveryDetails {} */
-      dispatch(toggleResetPassword(true));
+      dispatch(toggleResetPassword({ email, value: true }));
       dispatch(setLoading(false));
     })
     .catch((error) => {
-      dispatch(toggleResetPassword(false));
+      dispatch(toggleResetPassword({ email: '', value: false }));
       dispatch(setLoading(false));
       dispatch(handleResetPasswordStatus({
         status: 'error',
@@ -154,7 +154,7 @@ export const forgotPasswordSubmit = values => (dispatch) => {
         status: 'success',
         message: 'Password is reset successfully! Enjoy your new login',
       }));
-      dispatch(toggleResetPassword(false));
+      dispatch(toggleResetPassword({ email: '', value: false }));
     })
     .catch((error) => {
       dispatch(setLoading(false));
@@ -162,7 +162,7 @@ export const forgotPasswordSubmit = values => (dispatch) => {
         status: 'error',
         message: error.message,
       }));
-      dispatch(toggleResetPassword(false));
+      dispatch(toggleResetPassword({ email: '', value: false }));
     });
 };
 

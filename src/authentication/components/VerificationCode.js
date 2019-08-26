@@ -2,18 +2,14 @@ import React, { Component } from 'react';
 import {
   func, objectOf, any,
 } from 'prop-types';
-import { classesType } from 'types/global';
 import { connect } from 'react-redux';
-import { compose } from 'redux';
 import {
-  Modal, Paper, Button, Typography, Avatar, TextField, InputAdornment,
+  Modal, Paper, Button, Typography, TextField, InputAdornment,
 } from '@material-ui/core';
-import withStyles from '@material-ui/core/styles/withStyles';
 import { regExPattern } from 'utils/constants';
-import logo from 'images/logo.png';
 import { confirmSignUp, resendCode } from '../actions/register';
 import ResendVerificationCode from './ResendVerificationCode';
-import s from './VerificationCode.style';
+import s from './VerificationCode.module.scss';
 
 class VerificationCode extends Component {
   initState = {
@@ -79,7 +75,6 @@ class VerificationCode extends Component {
 
   render() {
     const { countDown, verificationCode, verificationCodeError } = this.state;
-    const { classes } = this.props;
 
     return (
       <Modal
@@ -89,34 +84,34 @@ class VerificationCode extends Component {
         disableBackdropClick
         disableEscapeKeyDown
       >
-        <Paper className="verification-modal">
-          <div className="verification-modal-logo">
-            <Avatar className="verification-modal-avatar" src={logo} />
-          </div>
-          <div className="verification-modal-content">
+        <Paper className={s.paper}>
+          <div className={s.content}>
             <Typography variant="h6" color="primary">Enter verification code</Typography>
-            <Typography variant="subheading" color="textSecondary">(code was sent to your email)</Typography>
+            <Typography variant="subheading" color="textSecondary">(code was sent to your registered email)</Typography>
             <TextField
               disabled={!countDown}
               fullWidth
               value={verificationCode}
               onChange={this.handleOnChange}
               InputProps={{
-                className: classes.header,
                 endAdornment: (
-                  <InputAdornment position="end">
+                  <InputAdornment
+                    position="end"
+                    classes={{
+                      root: s.countDown,
+                    }}
+                  >
                     <Typography
                       variant="subheading"
                       color="primary"
-                      className={classes.countDown}
                     >
-                      {countDown} sec
+                      {countDown} {countDown > 1 ? 'secs' : 'sec'}
                     </Typography>
                   </InputAdornment>
                 ),
               }}
             />
-            <div className={classes.footerActions}>
+            <div className={s.footerActions}>
               <ResendVerificationCode
                 isDisabledResend={!!countDown}
                 resendCodeAction={this.handleResendCode}
@@ -135,7 +130,6 @@ class VerificationCode extends Component {
 }
 
 VerificationCode.propTypes = {
-  classes: classesType.isRequired,
   confirmSignUpAction: func.isRequired,
   userDetail: objectOf(any).isRequired,
   resendCodeAction: func.isRequired,
@@ -145,10 +139,10 @@ const mapStateToProps = state => ({
   userDetail: state.auth.userDetail,
 });
 
-export default compose(
-  withStyles(s),
-  connect(mapStateToProps, {
+export default connect(
+  mapStateToProps,
+  {
     confirmSignUpAction: confirmSignUp,
     resendCodeAction: resendCode,
-  }),
+  },
 )(VerificationCode);
