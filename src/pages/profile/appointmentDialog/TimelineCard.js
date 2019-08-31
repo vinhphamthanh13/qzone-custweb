@@ -75,6 +75,7 @@ class TimelineCard extends Component {
     const {
       serviceProviders,
       viewUrl,
+      loginSession,
     } = props;
     const {
       serviceProviders: cachedServiceProviders,
@@ -87,6 +88,7 @@ class TimelineCard extends Component {
       return {
         serviceProviders,
         viewUrl,
+        loginSession,
       };
     }
     return null;
@@ -100,6 +102,7 @@ class TimelineCard extends Component {
       eventId: null,
       isRescheduleOpen: false,
       specialServiceId: null,
+      loginSession: null,
     };
   }
 
@@ -127,9 +130,10 @@ class TimelineCard extends Component {
 
   handleCancelEventAction = () => {
     const { cancelEventByIdAction: cancelEventById } = this.props;
-    const { eventId } = this.state;
+    const { eventId, loginSession } = this.state;
+    const authHeaders = get(loginSession, 'authHeaders');
     this.handleCancelEventConfirmation(false, null)();
-    cancelEventById(eventId);
+    cancelEventById(eventId, authHeaders);
   };
 
   handleRescheduleEventConfirmation = (value, eventId) => (data) => {
@@ -146,9 +150,10 @@ class TimelineCard extends Component {
 
   handleRescheduleEventAction = () => {
     const { rescheduleEvent: rescheduleEventAction, setRescheduleStatusAction: setRescheduleStatus } = this.props;
-    const { eventId, newAvailabilityId } = this.state;
+    const { eventId, newAvailabilityId, loginSession } = this.state;
+    const authHeaders = get(loginSession, 'authHeaders');
     this.handleRescheduleEventConfirmation(false, null, null)();
-    rescheduleEventAction({ eventId, newAvailabilityId });
+    rescheduleEventAction({ eventId, newAvailabilityId }, authHeaders);
     setRescheduleStatus(500);
   };
 
@@ -214,7 +219,7 @@ class TimelineCard extends Component {
         <AlarmAdd className="icon-white" />,
       ];
 
-    let displayTimeout = 'Slot is not valid anymore!';
+    let displayTimeout = 'Slot is invalid!';
     let currentEventStyle = eventStyle;
     let currentStyleStatus = styleStatus;
     let currentIconTimeline = iconTimeline;
@@ -250,7 +255,8 @@ class TimelineCard extends Component {
     const isReschedule = status !== EVENT_STATUS.CANCELED
       && status !== EVENT_STATUS.COMPLETED
       && availabilitiesBulk
-      && availabilitiesBulk.length > 0;
+      && availabilitiesBulk.length > 0
+      && !eventExpired;
 
     return (
       <>
@@ -433,6 +439,7 @@ class TimelineCard extends Component {
 
 const mapStateToProps = state => ({
   ...state.common,
+  ...state.auth,
   ...state.home,
   ...state.booking,
   ...state.waitLists,

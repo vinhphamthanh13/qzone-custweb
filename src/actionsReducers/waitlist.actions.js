@@ -10,7 +10,6 @@ import {
   registerWaitLists,
   waitListsByCustomerId,
   cancelWaitLists,
-  validateWaitListsBulk,
   waitListsById,
 } from 'actionsApi/waitlist';
 import {
@@ -49,11 +48,6 @@ const setCancelWaitLists = payload => ({
   payload,
 });
 
-const setWaitListsValidation = payload => ({
-  type: VALIDATE_WAIT_LIST,
-  payload,
-});
-
 export const registerWaitListsAction = data => async (dispatch) => {
   dispatch(setLoading(true));
   data.some(async (waitList) => {
@@ -76,9 +70,9 @@ export const registerWaitListsAction = data => async (dispatch) => {
   });
 };
 
-export const setWaitListsAction = data => async (dispatch) => {
+export const setWaitListsAction = (data, headers) => async (dispatch) => {
   dispatch(setLoading(true));
-  const [waitlists, error] = await handleRequest(waitListsByCustomerId, [data]);
+  const [waitlists, error] = await handleRequest(waitListsByCustomerId, [data, headers]);
   if (error) {
     dispatch(setError(error));
   } else {
@@ -87,9 +81,9 @@ export const setWaitListsAction = data => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
-export const setWaitListsByIdAction = data => async (dispatch) => {
+export const setWaitListsByIdAction = (data, headers) => async (dispatch) => {
   dispatch(setLoading(true));
-  const [waitListData, error] = await handleRequest(waitListsById, [data]);
+  const [waitListData, error] = await handleRequest(waitListsById, [data, headers]);
   if (error) {
     dispatch(setError(error));
   } else {
@@ -98,9 +92,9 @@ export const setWaitListsByIdAction = data => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
-export const setCancelWaitListsAction = data => async (dispatch) => {
+export const setCancelWaitListsAction = (data, headers) => async (dispatch) => {
   dispatch(setLoading(true));
-  const [, error] = await handleRequest(cancelWaitLists, [data]);
+  const [, error] = await handleRequest(cancelWaitLists, [data, headers]);
   if (error) {
     dispatch(setError(error));
   } else {
@@ -108,37 +102,4 @@ export const setCancelWaitListsAction = data => async (dispatch) => {
     dispatch(setSucceed('Your waitlist is cancelled.'));
   }
   dispatch(setLoading(false));
-};
-
-export const setWaitListsValidationAction = data => async (dispatch) => {
-  dispatch(setLoading(true));
-  const [validations, allError] = await validateWaitListsBulk(data);
-  if (allError) {
-    dispatch(setError(get(JSON.parse(allError), 'response.data.message')));
-    dispatch(setLoading(false));
-  } else {
-    let message = '';
-    let status = true;
-    validations.map(async (validation, index) => {
-      status = get(validation, 'data.object.status');
-      message = get(validation, 'data.object.message');
-      if (status) {
-        dispatch(setWaitListsValidation(message));
-        const [registerWaitList, error] = await handleRequest(registerWaitLists, [data[index]]);
-        if (error) {
-          dispatch(setError(error));
-        } else {
-          dispatch(setRegisterWaitListStatus(registerWaitList));
-          dispatch(setSucceed('Congratulation! Your waitlist is enrolled!'));
-        }
-        dispatch(setLoading(false));
-        return null;
-      }
-      return null;
-    });
-    if (!status) {
-      dispatch(setError(message));
-      dispatch(setLoading(false));
-    }
-  }
 };

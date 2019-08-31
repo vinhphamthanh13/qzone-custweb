@@ -2,7 +2,6 @@ import { get } from 'lodash';
 import {
   serviceById,
   providersByServiceId,
-  availabilitiesBySpecialEventId,
   availabilitiesBySpecialEventIdBulk,
   events,
   temporaryServicesById,
@@ -32,10 +31,6 @@ const getServiceById = payload => ({
 });
 const setProvidersByServiceId = payload => ({
   type: SET_PROVIDERS_BY_SERVICE_ID,
-  payload,
-});
-const setAvailabilitiesBySpecialEventId = payload => ({
-  type: SET_AVAILABILITIES_BY_SPECIAL_EVENT_ID,
   payload,
 });
 const setAvailabilitiesBySpecialEventBulk = payload => ({
@@ -100,17 +95,6 @@ export const setProvidersByServiceIdAction = data => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
-export const setAvailabilitiesBySpecialEventIdAction = data => async (dispatch) => {
-  dispatch(setLoading(true));
-  const [availabilities, error] = await handleRequest(availabilitiesBySpecialEventId, [data]);
-  if (error) {
-    dispatch(setError(error));
-  } else {
-    dispatch(setAvailabilitiesBySpecialEventId(availabilities));
-  }
-  dispatch(setLoading(false));
-};
-
 export const setAvailabilitiesBySpecialEventBulkAction = data => async (dispatch) => {
   dispatch(setLoading(true));
   const [availabilitiesBulk, allError] = await availabilitiesBySpecialEventIdBulk(data);
@@ -136,9 +120,9 @@ export const setAvailabilitiesByIdAction = data => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
-export const registerEventAction = data => async (dispatch) => {
+export const registerEventAction = (data, headers) => async (dispatch) => {
   dispatch(setLoading(true));
-  const [registeredEvent, error] = await handleRequest(events, [data]);
+  const [registeredEvent, error] = await handleRequest(events, [data, headers]);
   if (error) {
     dispatch(setError(error));
   } else {

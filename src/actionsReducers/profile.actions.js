@@ -20,10 +20,10 @@ export const updateProfileAction = payload => ({
   payload,
 });
 
-export const postUpdatedProfile = data => async (dispatch) => {
+export const postUpdatedProfile = (data, headers) => async (dispatch) => {
   dispatch(setLoading(true));
   const userSub = get(data, 'userSub') || get(data, 'id');
-  const [profileUpdated, error] = await handleRequest(updateProfile, [data]);
+  const [profileUpdated, error] = await handleRequest(updateProfile, [data, headers]);
   if (error) {
     dispatch(setError(error));
     dispatch(updateProfileAction('error'));
@@ -42,9 +42,9 @@ export const cancelEventById = payload => ({
   payload,
 });
 
-export const cancelEventByIdAction = data => async (dispatch) => {
+export const cancelEventByIdAction = (data, headers) => async (dispatch) => {
   dispatch(setLoading(true));
-  const [canceledResult, error] = await handleRequest(eventsCancelById, [data]);
+  const [canceledResult, error] = await handleRequest(eventsCancelById, [data, headers]);
   if (error) {
     dispatch(setError(error));
   } else {

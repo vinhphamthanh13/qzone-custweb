@@ -259,6 +259,7 @@ class Booking extends PureComponent {
       waitListId: null,
       temporaryServicesByLocation: null,
       bookedEventIdList: [],
+      loginSession: null,
     };
     this.myBooking = React.createRef();
   }
@@ -299,7 +300,6 @@ class Booking extends PureComponent {
       appointmentEvent,
       setAvailabilitiesBySpecialEventBulkAction: setAvailabilitiesBySpecialEventBulk,
       waitListsById,
-      // availabilityId,
       waitListRegistered,
       bookedEventIdList,
     } = prevProps;
@@ -417,7 +417,9 @@ class Booking extends PureComponent {
       bookingDetail,
       userDetail,
       serviceId,
+      loginSession,
     } = this.state;
+    const authHeaders = get(loginSession, 'authHeaders');
     const availabilityId = get(bookingDetail[serviceId], 'time.availabilityId');
     const duration = get(bookingDetail[serviceId], 'time.duration');
     const customerId = get(userDetail, 'userSub') || get(userDetail, 'id');
@@ -430,7 +432,7 @@ class Booking extends PureComponent {
       startSec,
       status: 'UNSPECIFIED',
       type: 'APPOINTMENT',
-    });
+    }, authHeaders);
   };
 
   toggleConfirmDialog = isConfirmDialogOpen => () => {
