@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 // service-controller
 export const serviceById = data => axios.get(`/services/${data}`);
 
@@ -16,5 +15,5 @@ export const availabilitiesBySpecialEventIdBulk = eventList => axios.all(
   .catch(error => [null, JSON.stringify(error)]);
 
 // ********** event-resource ********** //
-export const events = data => axios.post('/events', data);
-export const temporaryServicesById = data => axios.get(`/temporary-services/${data}`);
+export const events = (data, headers) => axios.post('/events', data, headers);
+export const temporaryServicesById = (data, headers) => axios.get(`/temporary-services/${data}`, headers);

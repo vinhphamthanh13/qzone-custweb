@@ -61,9 +61,9 @@ export const setRatingService = data => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
-export const findEventByCustomerIdAction = id => async (dispatch) => {
+export const findEventByCustomerIdAction = (id, headers) => async (dispatch) => {
   dispatch(setLoading(true));
-  const [eventList, error] = await handleRequest(findEventByCustomerId, [id]);
+  const [eventList, error] = await handleRequest(findEventByCustomerId, [id, headers]);
   if (error) {
     dispatch(setError(error));
   } else {
@@ -92,9 +92,9 @@ export const setServiceProvidersAction = () => async (dispatch) => {
   dispatch(setLoading(false));
 };
 
-export const setEventById = id => async (dispatch) => {
+export const setEventById = (id, headers) => async (dispatch) => {
   dispatch(setLoading(true));
-  const [result, error] = await handleRequest(eventById, [id]);
+  const [result, error] = await handleRequest(eventById, [id, headers]);
   if (error) {
     dispatch(setError(error));
   } else {
@@ -108,9 +108,9 @@ export const setRescheduleStatusAction = payload => ({
   payload,
 });
 
-export const rescheduleEvent = data => async (dispatch) => {
+export const rescheduleEvent = (data, headers) => async (dispatch) => {
   dispatch(setLoading(true));
-  const [, error] = await handleRequest(reschedule, [data]);
+  const [, error] = await handleRequest(reschedule, [data, headers]);
   if (error) {
     dispatch(setError(error));
   } else {

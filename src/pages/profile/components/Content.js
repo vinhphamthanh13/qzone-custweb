@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { string, func, bool } from 'prop-types';
+import {
+  string, func, bool, objectOf,
+} from 'prop-types';
 import { connect } from 'react-redux';
 import { find, uniqBy } from 'lodash';
 import moment from 'moment';
@@ -122,16 +124,18 @@ class Content extends Component {
 
   componentDidMount() {
     const {
+      authHeaders,
       profilePage,
       setSurveys: setSurveyAction,
     } = this.props;
 
-    setSurveyAction();
+    setSurveyAction(authHeaders);
     this.setState({ sidePanel: { [profilePage]: true } });
   }
 
   componentDidUpdate(prevProps) {
     const {
+      authHeaders,
       cancelEventByIdStatus,
       rescheduleStatus,
       setAssessmentAction: setAssessments,
@@ -159,12 +163,12 @@ class Content extends Component {
       || (rescheduleStatus !== cachedRescheduleStatus
       && cachedRescheduleStatus === 200)
     ) {
-      findEventByCustomerId(customerId);
+      findEventByCustomerId(customerId, authHeaders);
       cancelEventByIdAction(null);
     }
 
     if (trackingList !== cachedTrackingList && eventListIds && eventListIds.length > 0) {
-      trackingAppointmentByIds(eventListIds);
+      trackingAppointmentByIds(eventListIds, authHeaders);
     }
     const surveys = [];
     // eslint-disable-next-line
@@ -254,6 +258,7 @@ class Content extends Component {
       customerId,
       toggleSidePanel,
       handleSidePanel,
+      authHeaders,
     } = this.props;
     const {
       sidePanel: {
@@ -291,7 +296,7 @@ class Content extends Component {
         {waitList && (
           <div className={s.profilePage}>
             <Typography variant="title" color="inherit" className="underlined">Enroll Queues</Typography>
-            <WaitList customerId={customerId} />
+            <WaitList customerId={customerId} authHeaders={authHeaders} />
           </div>)
         }
         {myInfo && (
@@ -312,6 +317,7 @@ class Content extends Component {
 }
 
 Content.propTypes = {
+  authHeaders: objectOf(string),
   customerId: string.isRequired,
   onClose: func.isRequired,
   givenName: string,
@@ -329,6 +335,7 @@ Content.propTypes = {
 
 Content.defaultProps = {
   givenName: '',
+  authHeaders: {},
 };
 
 const mapStateToProps = state => ({

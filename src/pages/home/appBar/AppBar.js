@@ -98,8 +98,9 @@ class MainAppBar extends React.Component {
     } = this.props;
     const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
     const customerId = get(loginSession, 'id');
+    const authHeaders = get(loginSession, 'authHeaders');
     if (isAuthenticated && customerId) {
-      findEventByCustomerId(customerId);
+      findEventByCustomerId(customerId, authHeaders);
     }
   }
 
@@ -128,21 +129,20 @@ class MainAppBar extends React.Component {
       loginSession !== updatedLoginSession
     ) {
       const id = get(updatedLoginSession, 'id');
+      const authHeaders = get(updatedLoginSession, 'authHeaders');
       if (id) {
-        findEventByCustomerId(updatedLoginSession.id);
+        findEventByCustomerId(id, authHeaders);
       }
-    }
-
-    if (
-      trackingLength !== cachedTrackingLength
-      && cachedEventListId
-      && cachedEventListId.length > 0
-    ) {
-      trackingAppointmentByIds(cachedEventListId);
-    }
-
-    if (appointmentEvent && cachedAppointmentEvent && appointmentEvent.id !== cachedAppointmentEvent.id) {
-      findEventByCustomerId(updatedLoginSession.id);
+      if (
+        trackingLength !== cachedTrackingLength
+        && cachedEventListId
+        && cachedEventListId.length > 0
+      ) {
+        trackingAppointmentByIds(cachedEventListId, authHeaders);
+      }
+      if (appointmentEvent && cachedAppointmentEvent && appointmentEvent.id !== cachedAppointmentEvent.id) {
+        findEventByCustomerId(id, authHeaders);
+      }
     }
   }
 

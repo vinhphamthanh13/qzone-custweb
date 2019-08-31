@@ -13,9 +13,9 @@ const trackingAppointmentByIds = payload => ({
   payload,
 });
 
-export const trackingAppointmentByIdsAction = data => async (dispatch) => {
+export const trackingAppointmentByIdsAction = (data, headers) => async (dispatch) => {
   dispatch(setLoading(true));
-  const [trackingResult, error] = await trackingAllAppointmentByEventId(data);
+  const [trackingResult, error] = await trackingAllAppointmentByEventId(data, headers);
   if (error) {
     dispatch(setError(get(JSON.parse(error), 'response.data.message')));
   } else {

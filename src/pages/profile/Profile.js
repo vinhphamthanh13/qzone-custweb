@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {
   func,
   string,
+  objectOf,
+  any,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
@@ -62,9 +64,10 @@ class Profile extends Component {
       setServiceProvidersAction: setServiceProviders,
       findEventByCustomerIdAction: findEventByCustomerId,
       customerId,
+      loginSession: { authHeaders },
     } = this.props;
     setServiceProviders();
-    findEventByCustomerId(customerId);
+    findEventByCustomerId(customerId, authHeaders);
   }
 
   componentDidUpdate() {
@@ -99,8 +102,11 @@ class Profile extends Component {
   };
 
   handleAccount = (data) => {
-    const { postUpdatedProfile: postUpdatedProfileAction } = this.props;
-    postUpdatedProfileAction(data);
+    const {
+      postUpdatedProfile: postUpdatedProfileAction,
+      loginSession: { authHeaders },
+    } = this.props;
+    postUpdatedProfileAction(data, authHeaders);
   };
 
   resetUpdateProfileStatus = () => {
@@ -118,6 +124,7 @@ class Profile extends Component {
     const {
       updateProfileStatus,
       customerId,
+      loginSession: { authHeaders },
     } = this.props;
     const {
       userDetail,
@@ -177,6 +184,7 @@ class Profile extends Component {
                 handleLogout={this.handleLogout}
                 toggleSidePanel={toggleSidePanel}
                 handleSidePanel={this.handleSidePanel}
+                authHeaders={authHeaders}
               />
             </div>
           </div>
@@ -194,6 +202,7 @@ Profile.propTypes = {
   updateProfileAction: func.isRequired,
   findEventByCustomerIdAction: func.isRequired,
   logout: func.isRequired,
+  loginSession: objectOf(any).isRequired,
 };
 
 Profile.defaultProps = {

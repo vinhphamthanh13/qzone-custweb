@@ -15,11 +15,13 @@ import {
   getCustomerByEmail as loginApi,
   saveSocialUser,
   fetchUserDetail,
+  // guestUsers,
 } from 'actionsApi/auth';
 import {
   handleResponse,
   handleRequest,
 } from 'utils/apiHelpers';
+import { createHeaders } from 'utils/common';
 import {
   STORE_USER_SESSION_LOGIN,
   STORE_USER_SESSION_ERROR,
@@ -81,7 +83,7 @@ const awsAuth = async (provider, { token, expires }, user, dispatch) => {
     email: user.email,
     userType: 'CUSTOMER',
   };
-  const [result, error] = await handleRequest(saveSocialUser, [socialAccount]);
+  const [result, error] = await handleRequest(saveSocialUser, [socialAccount, token]);
   if (error) {
     dispatch(setError(error));
   } else {
@@ -96,7 +98,6 @@ const awsAuth = async (provider, { token, expires }, user, dispatch) => {
       userName: user.name,
       givenName: user.name,
       qz_token: token,
-      // qz_token: credential.sessionToken,
       qz_refresh_token: null,
       expiration,
       isAuthenticated: !!result.id,
@@ -164,7 +165,7 @@ export const login = (value) => {
           const { idToken: { jwtToken, payload }, refreshToken: { token } } = json.signInUserSession;
           const { exp } = payload;
           if (payload.email_verified) {
-            loginApi({ email })
+            loginApi({ email }, jwtToken)
               .then((response) => {
                 if (response.data.object) {
                   const resp = handleResponse(response);
@@ -179,6 +180,7 @@ export const login = (value) => {
                     qz_refresh_token: token,
                     expiration: exp * 1000, // AWS exp counted in second
                     isAuthenticated: !!get(response, 'data.object.userSub'),
+                    authHeaders: createHeaders(jwtToken),
                   };
                   dispatch(storeUserSessionLogin(session));
                   dispatch(setUserDetails(userDetail));
@@ -203,6 +205,22 @@ export const login = (value) => {
   };
 };
 // Q GUEST
+// export const guestUsersApi = (customerId, email, givenName, phoneNumber) => async (dispatch) => {
+//   const data = {
+//     customerId,
+//     email,
+//     givenName,
+//     phoneNumber,
+//   };
+//   dispatch(setLoading(true));
+//   const [result, error] = await handleRequest(guestUsers, [data]);
+//   if (error) {
+//     dispatch(setError(error));
+//   } else {
+//     dispatch(guestUsersAction(result));
+//   }
+//   dispatch(setLoading(false));
+// };
 export const setGuestErrorAction = () => ({
   type: SET_GUEST_ERROR,
 });

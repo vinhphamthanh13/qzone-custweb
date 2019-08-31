@@ -1,21 +1,13 @@
 import axios from 'axios';
-import { FIND_BY_MAIL, SOCIAL_LOGIN, FACEBOOK_USER } from './url';
+import { createHeaders } from 'utils/common';
+import { FIND_BY_MAIL, SOCIAL_LOGIN } from './url';
 
-export const getCustomerByEmail = body => axios.post(FIND_BY_MAIL, body);
+export const getCustomerByEmail = (body, token) => axios.post(FIND_BY_MAIL, body, createHeaders(token));
 
-export const saveSocialUser = body => axios.post(SOCIAL_LOGIN, body);
+export const saveSocialUser = (body, token) => axios.post(SOCIAL_LOGIN, body, createHeaders(token));
 
-export const catchAwsUser = body => axios.put('/aws-users', body);
+export const catchAwsUser = (body, token) => axios.put('/aws-users', body, createHeaders(token));
 
-export const fetchUserDetail = userId => axios.get(`/users/${userId}`);
+export const fetchUserDetail = (userId, token) => axios.get(`/users/${userId}`, createHeaders(token));
 
-// ********** firebase ********** //
-export const firebaseStoreUser = data => axios.post('/firebase/store/user', data);
-
-// ********** Facebook User ********* //
-export const fetchFBUser = token => axios.get(FACEBOOK_USER, {
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}`,
-  },
-});
+export const guestUsers = body => axios.put('/guest-users', body);
