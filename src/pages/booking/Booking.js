@@ -622,7 +622,7 @@ class Booking extends PureComponent {
             isBackDropClickDisabled
           />
         )}
-        <div ref={this.myBooking} className="full-width">
+        <div ref={this.myBooking} className={`${s.bookingBox} full-width`}>
           {showPage && (
             <div className={s.bookingInstant}>
               <div className={`${s.navBar} h-space-btw`}>

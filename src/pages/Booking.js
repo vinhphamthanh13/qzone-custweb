@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { noop } from 'lodash';
 import { matchType } from 'types/global';
 import { BOOKING } from 'utils/constants';
 import Auth from './Auth';
@@ -34,6 +35,7 @@ class BookingPage extends Component {
           isLoginOpen={isLoginOpen}
           closeDialog={this.closeAuthModal}
           handleAuthenticate={this.openAuthModal}
+          onReloadApp={noop}
         />
         <Booking
           serviceId={sId}
