@@ -29,6 +29,7 @@ import {
   SET_GUEST_ERROR,
   CLEAR_GUEST_ERROR,
 } from './constants';
+
 // Redux
 export const storeUserSessionLogin = payload => ({
   type: STORE_USER_SESSION_LOGIN,

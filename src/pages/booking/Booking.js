@@ -1,43 +1,27 @@
 import React, { PureComponent } from 'react';
 import {
-  bool,
-  string,
-  func,
-  number,
-  objectOf,
-  any,
+  bool, string, func, number, objectOf, any,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import moment from 'moment';
 import {
-  get,
-  uniqBy,
-  compact,
+  get, uniqBy, compact,
 } from 'lodash';
 import {
-  IconButton,
-  Avatar,
-  Button,
-  Typography,
+  IconButton, Avatar, Button, Typography,
 } from '@material-ui/core';
 import {
-  Home,
-  AccountBox,
-  ChevronLeft,
-  ChevronRight,
-  Fingerprint,
+  Home, AccountBox, ChevronLeft, ChevronRight, Fingerprint,
 } from '@material-ui/icons';
 import uuidv1 from 'uuid/v1';
 import logo from 'images/quezone-logo.png';
 import CustomModal from 'components/Modal/CustomModal';
-import Loading from 'components/Loading';
 import Error from 'components/Error';
 import { history } from 'containers/App';
 import Success from 'components/Success';
 import {
-  BOOKING,
-  regExPattern,
+  BOOKING, regExPattern,
 } from 'utils/constants';
 import {
   setServiceProvidersAction,
@@ -543,7 +527,7 @@ class Booking extends PureComponent {
   };
 
   scrollToMyBooking = () => {
-    window.scrollTo(0, this.myBooking.current.offsetTop);
+    window.scrollTo(0, 0);
   };
 
   render() {
@@ -609,7 +593,6 @@ class Booking extends PureComponent {
       <>
         <Success />
         <Error resetOtherStatus={this.handleResetWaitListStatus} />
-        { false && <Loading />}
         {bookingDetail[serviceId] && bookingDetail[serviceId].provider && (
           <CustomModal
             type="info"

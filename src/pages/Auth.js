@@ -53,12 +53,13 @@ class Auth extends Component {
     isForgotPassword: { value: null },
   };
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
+    const { isInstantBooking } = prevProps;
     const {
       loginSession,
     } = this.state;
     const expiration = get(loginSession, 'expiration');
-    if (moment().isAfter(moment(expiration))) {
+    if (!isInstantBooking && expiration && moment().isAfter(moment(expiration))) {
       this.handleLogout();
     }
   }
@@ -91,14 +92,16 @@ class Auth extends Component {
   };
 
   handleLogout = () => {
-    const { logoutAction, onReloadApp } = this.props;
+    const { logoutAction, onReloadApp, isInstantBooking } = this.props;
     const { loginSession } = this.state;
     const { isAuthenticated, authProvider } = loginSession;
     this.setState({ isSessionTimeout: true });
-    logoutAction({
-      isAuthenticated,
-      authProvider,
-    });
+    if (!isInstantBooking) {
+      logoutAction({
+        isAuthenticated,
+        authProvider,
+      });
+    }
     onReloadApp();
   };
 
@@ -247,6 +250,7 @@ Auth.propTypes = {
   autoLoginAction: func.isRequired,
   logoutAction: func.isRequired,
   onReloadApp: func.isRequired,
+  isInstantBooking: bool,
 };
 
 Auth.defaultProps = {
@@ -254,6 +258,7 @@ Auth.defaultProps = {
   iSignUpSuccessModal: false,
   verificationErrorMessage: '',
   resendVerificationCodeStatus: 'none',
+  isInstantBooking: false,
 };
 
 const mapStateToProps = state => ({

@@ -99,7 +99,10 @@ class MainAppBar extends React.Component {
     const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
     const customerId = get(loginSession, 'id');
     const authHeaders = get(loginSession, 'authHeaders');
-    if (isAuthenticated && customerId) {
+    const startSession = get(loginSession, 'start_session');
+    if (isAuthenticated
+      && customerId
+      && ((moment.now() - moment(startSession)) / 3600) < 1) {
       findEventByCustomerId(customerId, authHeaders);
     }
   }

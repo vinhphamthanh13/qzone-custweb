@@ -36,6 +36,7 @@ class BookingPage extends Component {
           closeDialog={this.closeAuthModal}
           handleAuthenticate={this.openAuthModal}
           onReloadApp={noop}
+          isInstantBooking={tId}
         />
         <Booking
           serviceId={sId}
