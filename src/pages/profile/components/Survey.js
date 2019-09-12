@@ -9,45 +9,61 @@ import {
   ExpansionPanelSummary,
   Typography,
   Button,
+  IconButton,
 } from '@material-ui/core';
 import {
   Edit,
   CheckCircle,
   ExpandMore,
+  Home,
 } from '@material-ui/icons';
-import { createAssessmentResponse } from 'actionsReducers/surveys.action';
+import { createAssessmentResponse, getSurveyById, setAnsweredAssessmentByUser } from 'actionsReducers/surveys.action';
+import { matchType, historyType } from 'types/global';
 import SurveyResult from './assessment/SurveyResult';
 import ResponseSurvey from './assessment/ResponseSurvey';
-import s from './Survey.module.scss';
+import styles from './Survey.module.scss';
 
 class Survey extends Component {
   static propTypes = {
-    customerId: string.isRequired,
+    customerId: string,
     createAssessmentResponse: func.isRequired,
+    match: matchType,
+    getSurveyById: func.isRequired,
+    setAnsweredAssessmentByUser: func.isRequired,
+    history: historyType,
   };
+
+  static defaultProps = {
+    customerId: '',
+    match: null,
+    history: null,
+  }
 
   static getDerivedStateFromProps(props, state) {
     const {
       customerAssessment,
       allAnswers,
+      match,
     } = props;
     const {
       customerAssessment: cachedCustomerAssessment,
       allAnswers: cachedAllAnswers,
     } = state;
+
     if (
       customerAssessment.length !== cachedCustomerAssessment.length
       || allAnswers.length !== cachedAllAnswers.length
     ) {
-      const surveyIds = customerAssessment.length
+      const isAccessedByDirectLink = match && match.path === '/survey/:surveyId/:customerId';
+      const newIsTakingSurvey = customerAssessment.length
         ? customerAssessment.map(survey => ({
-          [survey.id]: false,
+          [survey.id]: isAccessedByDirectLink,
         })).reduce((acc, next) => ({ ...acc, ...next }), {})
         : {};
       return {
         customerAssessment,
         allAnswers,
-        isTakingSurvey: { ...surveyIds },
+        isTakingSurvey: { ...newIsTakingSurvey },
       };
     }
     return null;
@@ -58,6 +74,16 @@ class Survey extends Component {
     isTakingSurvey: {},
     allAnswers: [],
   };
+
+  componentDidMount() {
+    const { match } = this.props;
+    const isAccessedByDirectLink = match && match.path === '/survey/:surveyId/:customerId';
+
+    if (isAccessedByDirectLink) {
+      this.props.getSurveyById(match.params.surveyId);
+      this.props.setAnsweredAssessmentByUser(match.params.surveyId, match.params.customerId);
+    }
+  }
 
   handleTakingSurvey = id => () => {
     this.setState({
@@ -74,7 +100,6 @@ class Survey extends Component {
       },
     });
   };
-
 
   handleSaveAnswers = (assessment, customerId) => (answers) => {
     const {
@@ -96,29 +121,44 @@ class Survey extends Component {
     saveAnswers(responseSurvey);
   };
 
+  returnHomePage = () => {
+    this.props.history.push('/');
+  }
+
   render() {
-    const { customerId } = this.props;
+    const { match } = this.props;
     const {
       customerAssessment,
       isTakingSurvey,
       allAnswers,
     } = this.state;
 
+    const customerId = this.props.customerId || match.params.customerId;
+    const isAccessedByDirectLink = match && match.path === '/survey/:surveyId/:customerId';
+
     return (
       <>
         {customerAssessment && customerAssessment.length !== 0
           ? (
-            <div className={s.container}>
-              <Typography variant="title" color="inherit" className="text-bold">
-                Assessment of services
-              </Typography>
-              <div className={s.surveyList}>
+            <div className={styles.container}>
+              <div className={styles.header}>
+                {isAccessedByDirectLink
+                  && (
+                    <IconButton classes={{ root: styles.homeBtn }} color="primary" onClick={this.returnHomePage}>
+                      <Home />
+                    </IconButton>
+                  )}
+                <Typography variant="title" color="inherit" className="text-bold">
+                  Assessment of services
+                </Typography>
+              </div>
+              <div className={styles.surveyList}>
                 {uniqBy(customerAssessment, 'id').map((survey, index) => {
-                  const currentSurvey = allAnswers.length > 0
-                    && find(allAnswers, answer => answer.surveyId === survey.id);
+                  const currentSurvey = find(allAnswers, answer => answer.surveyId === survey.id);
                   const completedSurvey = currentSurvey && currentSurvey.status === 'COMPLETED';
+
                   return (
-                    <ExpansionPanel key={survey.id}>
+                    <ExpansionPanel defaultExpanded={customerAssessment.length === 1 && index === 0} key={survey.id}>
                       <ExpansionPanelSummary
                         expandIcon={<ExpandMore />}
                         key={survey.id}
@@ -126,18 +166,18 @@ class Survey extends Component {
                           content: 'full-width',
                         }}
                       >
-                        <div className={s.surveyNo}>
+                        <div className={styles.surveyNo}>
                           <Typography variant="subtitle1" color="inherit">
                             {`${index + 1}`.padStart(2, '0')}
                           </Typography>
                         </div>
-                        <div className={s.surveyTitleAndDesc}>
-                          <div className={s.title}>
+                        <div className={styles.surveyTitleAndDesc}>
+                          <div className={styles.title}>
                             <Typography variant="subtitle1" color="inherit" noWrap>
                               {survey.title}
                             </Typography>
                           </div>
-                          <div className={s.description}>
+                          <div className={styles.description}>
                             <Typography variant="subtitle2" color="inherit" noWrap>
                               {survey.description}
                             </Typography>
@@ -145,7 +185,7 @@ class Survey extends Component {
                         </div>
                       </ExpansionPanelSummary>
                       <ExpansionPanelDetails>
-                        <div className={`${s.panelBody} full-width`}>
+                        <div className={`${styles.panelBody} full-width`}>
                           {
                             !isTakingSurvey[survey.id] && (
                               <Button
@@ -153,9 +193,7 @@ class Survey extends Component {
                                 onClick={this.handleTakingSurvey(survey.id)}
                                 className="main-button"
                                 disabled={completedSurvey}
-                                classes={{
-                                  disabled: s.surveyCompleted,
-                                }}
+                                classes={{ disabled: styles.surveyCompleted }}
                               >
                                 {completedSurvey ? (
                                   <>
@@ -163,24 +201,24 @@ class Survey extends Component {
                                     Completed
                                   </>
                                 ) : (
-                                  <>
-                                    <Edit className="icon-small" />
-                                    Take Survey
+                                    <>
+                                      <Edit className="icon-small" />
+                                      Take Survey
                                   </>
                                 )}
                               </Button>
                             )
                           }
                           <div className="full-width">
-                            {!isTakingSurvey[survey.id] && (
+                            {completedSurvey && (
                               <SurveyResult surveyId={survey.id} customerId={customerId} survey={survey} />
                             )}
-                            {isTakingSurvey[survey.id] && (
+                            {!completedSurvey && (
                               <ResponseSurvey
                                 assessment={survey}
                                 customerId={customerId}
                                 saveSurvey={this.handleSaveAnswers(survey, customerId)}
-                                cancelSurvey={this.handleCancelSurvey}
+                                cancelSurvey={isAccessedByDirectLink ? undefined : this.handleCancelSurvey}
                                 surveyCompleted={completedSurvey}
                               />
                             )}
@@ -210,4 +248,6 @@ const mapStateToProps = state => ({
 
 export default connect(mapStateToProps, {
   createAssessmentResponse,
+  getSurveyById,
+  setAnsweredAssessmentByUser,
 })(Survey);

@@ -52,12 +52,14 @@ const ResponseSurvey = (props) => {
     <div className={s.survey}>
       <div className={s.header}>
         <Typography variant="title" color="inherit" className={s.title}>{title}</Typography>
-        <Button
-          onClick={cancelSurvey(surveyId)}
-          variant="outlined"
-        >
-          {surveyCompleted ? 'Back' : 'Cancel'}
-        </Button>
+        {!!cancelSurvey && (
+          <Button
+            onClick={cancelSurvey(surveyId)}
+            variant="outlined"
+          >
+            {surveyCompleted ? 'Back' : 'Cancel'}
+          </Button>
+        )}
       </div>
       <Typography variant="body1" color="inherit" className={s.description}>
         <strong>Description</strong>: {description}
@@ -75,12 +77,13 @@ const ResponseSurvey = (props) => {
 ResponseSurvey.propTypes = {
   assessment: objectOf(any).isRequired,
   saveSurvey: func.isRequired,
-  cancelSurvey: func.isRequired,
+  cancelSurvey: func,
   surveyCompleted: bool,
 };
 
 ResponseSurvey.defaultProps = {
   surveyCompleted: false,
+  cancelSurvey: null,
 };
 
 export default ResponseSurvey;

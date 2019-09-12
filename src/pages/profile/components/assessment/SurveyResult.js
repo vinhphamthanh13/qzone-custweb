@@ -75,8 +75,6 @@ class ResponseSurvey extends Component {
     const surveyContent = get(survey, 'survey');
     const surveyInfo = new Survey.Model(surveyContent);
     const questionAnswers = get(surveyAnswer, 'questionAnswers');
-    // eslint-disable-next-line
-    console.log('question answer', questionAnswers);
     surveyInfo.data = JSON.parse(questionAnswers || '{}');
     surveyInfo.mode = 'display';
 
