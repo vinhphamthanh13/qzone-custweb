@@ -7,6 +7,7 @@ import Organization from 'pages/Organization';
 import Profile from 'pages/Profile';
 import Maintenance from 'pages/Maintenance';
 import ViewEvent from 'pages/profile/ViewEvent';
+import Assessment from 'pages/Assessment';
 
 const rootRoutes = [
   {
@@ -15,6 +16,13 @@ const rootRoutes = [
     path: '/',
     name: 'Home',
     component: Home,
+  },
+  {
+    exact: true,
+    strict: true,
+    path: '/survey/:surveyId/:customerId',
+    name: 'Take survey',
+    component: Assessment,
   },
   {
     exact: true,

@@ -10,6 +10,15 @@
   color: $main_04;
 }
 
+.header {
+  display: flex;
+  align-items: center;
+}
+
+.homeBtn {
+  margin-right: 8px;
+}
+
 .surveyList {
   display: flex;
   flex-direction: column;
