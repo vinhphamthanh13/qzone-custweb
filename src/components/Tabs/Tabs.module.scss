@@ -1,0 +1,50 @@
+@import "styles/_settings.scss";
+
+$max-tab-width: 320px;
+
+.wrapper {
+  overflow-y: visible;
+  user-select: none;
+  position: relative;
+}
+
+.tabs {
+  display: flex;
+  color: $main_01;
+  min-width: 320px;
+  width: 100%;
+}
+
+.tab {
+  display: flex;
+  padding: 0.5rem;
+  width: 100%;
+  max-width: $max-tab-width;
+  color: $mako;
+  cursor: pointer;
+  transition: all 0.2s ease-in;
+  border: 1px solid $main_03;
+  border-top-right-radius: 0.4rem;
+  border-top-left-radius: 0.4rem;
+  background: linear-gradient(to bottom, $main_01, $main_03);
+}
+
+.tabActive {
+  background: $main_04;
+  color: $main_01;
+  border: unset;
+}
+
+.tabName {
+  width: 100%;
+  max-width: $max-tab-width;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  text-align: center;
+  overflow: hidden;
+}
+
+.tab:hover {
+  background: linear-gradient(to top, $main_01, $main_03);
+}
