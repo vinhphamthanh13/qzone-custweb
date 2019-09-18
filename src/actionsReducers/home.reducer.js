@@ -6,7 +6,7 @@ import {
 } from './home.actions';
 
 const initState = {
-  categories: null,
+  categories: [],
   services: null,
   serviceProviderNearByList: null,
   servicesByNameList: null,

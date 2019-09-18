@@ -1,7 +1,5 @@
-import React from 'react';
-import {
-  func,
-} from 'prop-types';
+import React, { Component } from 'react';
+import { func } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
 import { Grid } from '@material-ui/core';
@@ -9,13 +7,7 @@ import { history } from 'containers/App';
 import Loading from 'components/Loading';
 import Error from 'components/Error';
 import EmptyItem from 'components/EmptyItem';
-import {
-  setServiceCategoriesAction,
-  setServicesAction,
-} from 'actionsReducers/home.actions';
-import {
-  setServiceProvidersAction,
-} from 'actionsReducers/common.actions';
+import { homeProps } from 'pages/commonProps';
 import Services from './home/Services';
 import Auth from './Auth';
 import AppBar from './home/appBar/AppBar';
@@ -25,14 +17,13 @@ import SlideShow from './home/slideShow/SlideShow';
 import AdvancedSearch from './home/search/AdvancedSearch';
 import s from './Home.module.scss';
 
-export class Home extends React.PureComponent {
+export class Home extends Component {
   static getDerivedStateFromProps(props, state) {
     const {
       categories,
       services,
       serviceProviders,
       serviceProviderNearByList,
-      facebookToken,
       userDetail,
     } = props;
     const {
@@ -40,7 +31,6 @@ export class Home extends React.PureComponent {
       services: cachedServices,
       serviceProviders: cachedServiceProviders,
       serviceProviderNearByList: cachedServiceProviderNearByList,
-      facebookToken: cachedFacebookToken,
       userDetail: cachedUserDetail,
     } = state;
     if (
@@ -48,7 +38,6 @@ export class Home extends React.PureComponent {
       || serviceProviders !== cachedServiceProviders
       || services !== cachedServices
       || serviceProviderNearByList !== cachedServiceProviderNearByList
-      || facebookToken !== cachedFacebookToken
       || userDetail !== cachedUserDetail
     ) {
       const combineServiceProviders = services && services.map((service) => {
@@ -62,7 +51,6 @@ export class Home extends React.PureComponent {
         serviceProviders,
         serviceProviderNearByList,
         combineServiceProviders,
-        facebookToken,
         userDetail,
       };
     }
@@ -89,13 +77,13 @@ export class Home extends React.PureComponent {
 
   handleReloadApp = () => {
     const {
-      setServiceCategoriesAction: setServiceCategories,
-      setServicesAction: setServices,
-      setServiceProvidersAction: setServiceProviders,
+      dispatchServiceCategory,
+      dispatchServices,
+      dispatchTemporaryServices,
     } = this.props;
-    setServiceCategories();
-    setServices();
-    setServiceProviders();
+    dispatchServiceCategory();
+    dispatchServices();
+    dispatchTemporaryServices();
   };
 
   handleOnSearch = (event) => {
@@ -270,22 +258,12 @@ export class Home extends React.PureComponent {
 }
 
 Home.propTypes = {
-  setServiceCategoriesAction: func.isRequired,
-  setServicesAction: func.isRequired,
-  setServiceProvidersAction: func.isRequired,
+  dispatchServiceCategory: func.isRequired,
+  dispatchServices: func.isRequired,
+  dispatchTemporaryServices: func.isRequired,
 };
 
-const mapStateToProps = state => ({
-  ...state.common,
-  ...state.home,
-  ...state.auth,
-});
-
 export default connect(
-  mapStateToProps,
-  {
-    setServiceCategoriesAction,
-    setServicesAction,
-    setServiceProvidersAction,
-  },
+  homeProps.mapStateTopProps,
+  homeProps.mapDispatchToProps,
 )(Home);

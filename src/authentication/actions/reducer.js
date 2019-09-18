@@ -28,7 +28,7 @@ import {
 
 
 const persistConfig = {
-  key: 'qz_custweb_auth',
+  key: 'quezone_customer_authentication',
   storage,
   stateReconciler: autoMergeLevel1,
   blacklist: [

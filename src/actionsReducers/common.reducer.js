@@ -11,6 +11,7 @@ import {
   SET_TEMPORARY_SERVICE_BY_LOCATION,
   SET_EVENT_BY_ID,
   SET_RESCHEDULE_STATUS,
+  SERVICES_BY_SERVICE_CATEGORY_ID,
 } from 'actionsReducers/common.actions';
 
 const persistConfig = {
@@ -39,6 +40,7 @@ const initState = {
   temporaryServicesByLocation: null,
   eventById: null,
   rescheduleStatus: 500,
+  servicesByServiceCategoryId: {},
 };
 
 const reducer = (state = initState, action) => {
@@ -92,6 +94,14 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         rescheduleStatus: action.payload,
+      };
+    case SERVICES_BY_SERVICE_CATEGORY_ID:
+      return {
+        ...state,
+        servicesByServiceCategoryId: {
+          ...state.servicesByServiceCategoryId,
+          ...action.payload,
+        }
       };
     default:
       return state;

@@ -1,4 +1,5 @@
-import Home from 'pages/Home';
+// import Home from 'pages/Home';
+import Landing from 'pages/Landing';
 import Booking from 'pages/Booking';
 import PageNotFound from 'pages/PageNotFound';
 import AccessDenied from 'pages/AccessDenied';
@@ -15,7 +16,7 @@ const rootRoutes = [
     strict: true,
     path: '/',
     name: 'Home',
-    component: Home,
+    component: Landing,
   },
   {
     exact: true,
