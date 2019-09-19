@@ -30,7 +30,7 @@ class Services extends Component {
   }
 
   createServiceCard = service => {
-    const sDescr = get(service, 'description');
+    const sDescription = get(service, 'description');
     // const sDuration = get(service, 'duration');
     // const sId = get(service, 'id');
     const imgUrl = get(service, 'image.fileUrl');
@@ -39,16 +39,16 @@ class Services extends Component {
     const orgName = get(service, 'organizationEntity.name');
     // const orgId = get(service, 'organizationId');
     return (
-      <div className={s.serviceCard}>
-        <div className={s.serviceImg}>
-          <img src={imgUrl} alt={imgAlt} />
+      <div className={s.card}>
+        <div className={s.image}>
+          <img src={imgUrl} alt={imgAlt} width="100%" height="100%" />
         </div>
-        <div className={s.serviceContent}>
-          <div className={s.serviceName}>
+        <div className={s.cardContent}>
+          <div className={s.cardName}>
             {sName}
           </div>
           <div className={s.description}>
-            {sDescr}
+            {sDescription}
           </div>
           <div className={s.footer}>
             {orgName}

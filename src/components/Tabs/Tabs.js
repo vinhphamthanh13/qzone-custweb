@@ -51,11 +51,14 @@ class Tabs extends Component {
     });
   }
 
-  handleNextTab = () => {
+  handleNextTab = value => () => {
     const { activeChunkTabs, maxChunkCount } = this.state;
     let shiftTab;
-    if (activeChunkTabs < maxChunkCount - 1) {
-      shiftTab = activeChunkTabs + 1;
+    if (
+      value > 0 && activeChunkTabs < maxChunkCount - 1 ||
+      value < 0 && activeChunkTabs > 0
+    ) {
+      shiftTab = activeChunkTabs + value;
     } else {
       shiftTab = 0;
     }
@@ -64,6 +67,7 @@ class Tabs extends Component {
       ...oldState.chunkHistory,
     }));
   };
+
 
   handleSelectTab = (index, tabInfo, catName) => () => {
     const { onSelectTab } = this.props;
@@ -98,16 +102,17 @@ class Tabs extends Component {
   };
 
   render() {
-    const { tabsInfo } = this.state;
-
+    const { tabsInfo, activeChunkTabs, maxChunkCount } = this.state;
+    const disableNext = activeChunkTabs === maxChunkCount - 1;
+    const disablePrev = activeChunkTabs === 0;
     return (
       <div className={s.wrapper}>
         <ul className={s.tabs}>
-          <IconButton className={s.nextTab} onClick={this.handleNextTab}>
+          <IconButton className={s.nextTab} onClick={this.handleNextTab(-1)} disabled={disablePrev}>
             <NavigateBefore color="inherit" />
           </IconButton>
           {this.createTab(tabsInfo)}
-          <IconButton className={s.nextTab} onClick={this.handleNextTab}>
+          <IconButton className={s.nextTab} onClick={this.handleNextTab(1)} disabled={disableNext}>
             <NavigateNext color="inherit" />
           </IconButton>
         </ul>

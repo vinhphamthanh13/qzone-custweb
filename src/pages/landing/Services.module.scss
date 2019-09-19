@@ -4,10 +4,40 @@
   width: 100%;
   color: $main_04;
   display: flex;
+  border-top: 6px solid $main_04;
 }
 
-.serviceCard {
+.card {
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  border-top: 4px solid $main_04;
+  max-width: $max-card-width;
+  margin: 0.4rem;
+  border: 1px solid $main_03;
+  box-shadow: 2px 2px 13px 1px $main_04;
 
+}
+
+.image {
+  max-width: $max-card-width;
+  border: 0.2rem;
+  overflow: hidden;
+  height: 150px;
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+
+}
+
+.cardName {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0.5rem 0.2rem;
+  max-width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  text-transform: capitalize;
 }
