@@ -10,23 +10,24 @@ $max-tab-width: 320px;
 
 .tabs {
   display: flex;
+  justify-content: flex-end;
   color: $main_01;
-  min-width: 320px;
+  min-width: 200px;
   width: 100%;
 }
 
 .tab {
   display: flex;
+  align-items: center;
   padding: 0.5rem;
-  width: 100%;
   max-width: $max-tab-width;
   color: $mako;
   cursor: pointer;
-  transition: all 0.2s ease-in;
   border: 1px solid $main_03;
   border-top-right-radius: 0.4rem;
   border-top-left-radius: 0.4rem;
   background: linear-gradient(to bottom, $main_01, $main_03);
+  transition: all 0.2s ease-in;
 }
 
 .tabActive {
@@ -36,6 +37,8 @@ $max-tab-width: 320px;
 }
 
 .tabName {
+  display: flex;
+  align-items: center;
   width: 100%;
   max-width: $max-tab-width;
   white-space: nowrap;
@@ -47,4 +50,8 @@ $max-tab-width: 320px;
 
 .tab:hover {
   background: linear-gradient(to top, $main_01, $main_03);
+}
+
+.nextTab {
+  color: $main_04;
 }

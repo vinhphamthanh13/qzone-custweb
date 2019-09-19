@@ -1,6 +1,13 @@
 @import "styles/_settings.scss";
 
 .content {
+  width: 100%;
   color: $main_04;
+  display: flex;
+}
+
+.serviceCard {
+  width: 100%;
+  border-top: 4px solid $main_04;
 
 }

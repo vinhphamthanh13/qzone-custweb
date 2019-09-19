@@ -6,11 +6,14 @@ ul {
 }
 
 .landing {
+  display: flex;
+  flex-direction: column;
   min-width: 375px;
   overflow: auto;
   max-width: $max-width;
   margin: 0 auto;
   position: relative;
+  width: 100%;
 }
 
 .category {
