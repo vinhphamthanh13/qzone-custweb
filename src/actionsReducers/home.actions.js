@@ -39,11 +39,11 @@ export const setServiceCategories = () => async (dispatch) => {
 
 export const setServices = () => async (dispatch) => {
   dispatch(setLoading(true));
-  const [serviceList, error] = await handleRequest(services, []);
+  const [result, error] = await handleRequest(services, []);
   if (error) {
     dispatch(setError(error));
   } else {
-    dispatch(setServicesAction(serviceList));
+    dispatch(setServicesAction(result));
   }
   dispatch(setLoading(false));
 };

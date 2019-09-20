@@ -3,8 +3,11 @@ import axios from 'axios';
 export const serviceById = data => axios.get(`/services/${data}`);
 
 // user-controller
-export const providersByServiceId = data => axios.get(`/providers-by-service-id/${data}`);
-
+export const fetchProvidersByServiceId = sId => axios.get(`/providers-by-service-id/${sId}`);
+export const providersByServiceIdBulk = listId => axios.all(
+  listId.map(sId => fetchProvidersByServiceId(sId)),
+).then(axios.spread((...responses) => [responses, null]))
+  .catch(error => [null, JSON.stringify(error)]);
 // appointment-resource
 export const availabilitiesBySpecialEventId = data => axios.post('/availabilities/temporary/service/filter', data);
 export const availabilitiesById = data => axios.get(`/availabilities/${data}`);

@@ -1,11 +1,12 @@
 import { get } from 'lodash';
 import {
   serviceById,
-  providersByServiceId,
   availabilitiesBySpecialEventIdBulk,
   events,
   temporaryServicesById,
   availabilitiesById,
+  // providersByServiceIdBulk,
+  fetchProvidersByServiceId,
 } from 'actionsApi/booking';
 import {
   setLoading,
@@ -29,7 +30,7 @@ const getServiceById = payload => ({
   type: GET_SERVICE_BY_ID,
   payload,
 });
-const setProvidersByServiceId = payload => ({
+const providersByServiceIdAction = payload => ({
   type: SET_PROVIDERS_BY_SERVICE_ID,
   payload,
 });
@@ -75,13 +76,25 @@ export const getServiceByIdAction = id => async (dispatch) => {
   }
   dispatch(setLoading(false));
 };
-export const setProvidersByServiceIdAction = sId => async (dispatch) => {
+// export const providersByServiceIdBulkApi = (listId, catName) => async dispatch => {
+//   dispatch(setLoading(true));
+//   const [providerBulk, errorBulk] = await providersByServiceIdBulk(listId);
+//   if (errorBulk) {
+//     dispatch(setError(get(JSON.parse(errorBulk), 'response.data.message')));
+//   } else {
+//     const responseBulk = [];
+//     providerBulk.map(item => responseBulk.push(...item.data.objects));
+//     dispatch(providersByServiceIdAction({ [catName]: responseBulk }));
+//   }
+//   dispatch(setLoading(false));
+// };
+export const providersByServiceIdApi = (sId, sName, catName) => async dispatch => {
   dispatch(setLoading(true));
-  const [result, error] = await handleRequest(providersByServiceId, [sId]);
+  const [result, error] = await handleRequest(fetchProvidersByServiceId, [sId]);
   if (error) {
     dispatch(setError(error));
   } else {
-    dispatch(setProvidersByServiceId(result));
+    dispatch(providersByServiceIdAction({ [catName]: { [sName]: result } }));
   }
   dispatch(setLoading(false));
 };

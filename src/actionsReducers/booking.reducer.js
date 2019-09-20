@@ -18,7 +18,7 @@ import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 
 const initState = {
   service: null,
-  providersByServiceIdList: [],
+  providersByServiceId: {},
   availabilities: null,
   availabilitiesBulk: null,
   bookingStep: {},
@@ -49,14 +49,19 @@ const reducer = (state = initState, action) => {
           ...action.payload,
         },
       };
-    case SET_PROVIDERS_BY_SERVICE_ID:
+    case SET_PROVIDERS_BY_SERVICE_ID: {
+      const catName = Object.keys(action.payload)[0];
       return {
         ...state,
-        providersByServiceIdList: {
-          ...state.providersByServiceIdList,
-          ...action.payload,
+        providersByServiceId: {
+          ...state.providersByServiceId,
+          [catName]: {
+            ...state.providersByServiceId[catName],
+            ...action.payload[catName],
+          },
         },
       };
+    }
     case SET_AVAILABILITIES_BY_SPECIAL_EVENT_ID:
       return {
         ...state,

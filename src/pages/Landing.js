@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unused-state */
+
 import React, { Component } from 'react';
 import { func } from 'prop-types';
 import { connect } from 'react-redux';
@@ -14,6 +16,7 @@ class Landing extends Component {
   static propTypes = {
     dispatchServiceCategory: func.isRequired,
     dispatchServicesByServiceCategoryId: func.isRequired,
+    dispatchProvidersByServiceId: func.isRequired,
   };
 
   static defaultProps = {
@@ -21,30 +24,35 @@ class Landing extends Component {
 
   state = {
     categories: [],
-    tabs: {},
+    tabsInfo: {},
     activeTab: 0,
     catName: '',
     servicesByServiceCategoryId: {},
+    providersByServiceId: {},
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { categories, servicesByServiceCategoryId } = props;
+    const { categories, servicesByServiceCategoryId, providersByServiceId } = props;
     const {
       categories: cachedCategories,
       servicesByServiceCategoryId: cachedServicesByServiceCategoryId,
+      providersByServiceId: cachedProvidersByServiceId,
     } = state;
-    const tabs = {};
+    const tabsInfo = {};
     if (
       categories.length && categories.length !== cachedCategories.length
       || (Object.keys(servicesByServiceCategoryId).length
       && Object.keys(servicesByServiceCategoryId).length !== Object.keys(cachedServicesByServiceCategoryId).length)
+      || (Object.keys(providersByServiceId).length
+      && Object.keys(providersByServiceId).length !== Object.keys(cachedProvidersByServiceId).length)
     ) {
-      categories.map(cat => { tabs[cat.name] = []; return null; });
-      categories.map(cat => tabs[cat.name].push(cat));
+      categories.map(cat => { tabsInfo[cat.name] = []; return null; });
+      categories.map(cat => tabsInfo[cat.name].push(cat));
       return {
         categories,
-        tabs,
+        tabsInfo,
         servicesByServiceCategoryId,
+        providersByServiceId,
       }
     }
 
@@ -56,38 +64,54 @@ class Landing extends Component {
     dispatchServiceCategory();
   }
 
+  componentDidUpdate(prevProps) {
+    const { servicesByServiceCategoryId, dispatchProvidersByServiceId } = prevProps;
+    const { servicesByServiceCategoryId: cachedServicesByServiceCategoryId, catName } = this.state;
+
+    if (
+      Object.keys(cachedServicesByServiceCategoryId).length > 0 &&
+      Object.keys(servicesByServiceCategoryId).length !== Object.keys(cachedServicesByServiceCategoryId).length
+    ) {
+      const serviceList = cachedServicesByServiceCategoryId[catName] || [];
+      serviceList.map(item => dispatchProvidersByServiceId(item.id, item.name, catName));
+    }
+  }
+
   handleSelectTab = (index, tabInfo, catName) => () => {
     const { dispatchServicesByServiceCategoryId } = this.props;
-    const { activeTab } = this.state;
     this.setState({
       activeTab: index,
       catName,
     });
     const categoryIdList = tabInfo.map(cat => cat.id);
-    if (activeTab !== index) {
-      dispatchServicesByServiceCategoryId(categoryIdList, catName);
-    }
+    dispatchServicesByServiceCategoryId(categoryIdList, catName);
   };
 
   render() {
-    const { tabs, categories, servicesByServiceCategoryId, catName } = this.state;
-    console.log('categories', categories);
+    // const { dispatchProvidersByServiceId } = this.props;
+    const { activeTab, tabsInfo, servicesByServiceCategoryId, catName, providersByServiceId } = this.state;
     const serviceList = servicesByServiceCategoryId[catName] || [];
-    console.log('serviceList', serviceList);
     return (
       <>
         <Loading />
         <Error />
         <Success />
         <div className={s.landing}>
-          {Object.keys(tabs).length > 0 && (
+          {Object.keys(tabsInfo).length > 0 && (
             <>
               <Tabs
-                tabsInfo={tabs}
+                tabsInfo={tabsInfo}
                 onSelectTab={this.handleSelectTab}
               />
               {serviceList.length > 0
-                ? <Services serviceList={serviceList} />
+                ? (
+                    <Services
+                      serviceList={serviceList}
+                      providers={providersByServiceId}
+                      catName={catName}
+                      activeTab={activeTab}
+                    />
+                  )
                 : <EmptyItem />
               }
             </>

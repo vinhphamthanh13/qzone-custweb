@@ -25,6 +25,19 @@
   border: 0.2rem;
   overflow: hidden;
   height: 150px;
+  position: relative;
+}
+
+.duration {
+  font-size: 0.85rem;
+  color: $info;
+  margin-left: 0.5rem;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 0.2rem 0.5rem;
+  border-top-left-radius: 0.5rem;
 }
 
 .cardContent {
@@ -42,12 +55,6 @@
   text-overflow: ellipsis;
   overflow: hidden;
   text-transform: capitalize;
-}
-
-.duration {
-  font-size: 0.8rem;
-  color: $info;
-  margin-left: 0.5rem;
 }
 
 .description {

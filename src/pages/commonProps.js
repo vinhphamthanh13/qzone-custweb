@@ -1,5 +1,9 @@
 import { setServiceCategories, setServices } from 'actionsReducers/home.actions';
-import { setTemporaryServices, servicesByServiceCategoryIdBulkApi } from 'actionsReducers/common.actions';
+import {
+  setTemporaryServices,
+  servicesByServiceCategoryIdBulkApi,
+} from 'actionsReducers/common.actions';
+import { providersByServiceIdApi } from 'actionsReducers/booking.actions';
 
 export const homeProps = {
   mapStateTopProps: ({ home, common, auth }) => ({
@@ -15,13 +19,15 @@ export const homeProps = {
 };
 
 export const landingProps = {
-  mapStateTopProps: ({ home, common }) => ({
+  mapStateTopProps: ({ home, common, booking }) => ({
     ...home,
     ...common,
+    ...booking,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchServiceCategory: () => dispatch(setServiceCategories()),
     dispatchServicesByServiceCategoryId: (list, catName) => dispatch(servicesByServiceCategoryIdBulkApi(list, catName)),
+    dispatchProvidersByServiceId: (sId, sName, catName) => dispatch(providersByServiceIdApi(sId, sName, catName)),
     dispatchServices: () => dispatch(setServices()),
     dispatchTemporaryServices: () => dispatch(setTemporaryServices()),
   })

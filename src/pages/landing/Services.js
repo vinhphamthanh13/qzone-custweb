@@ -1,8 +1,4 @@
 import React, { Component } from 'react';
-// import {
-//   arrayOf,
-//   object,
-// } from 'prop-types';
 import { get } from 'lodash';
 import { Button } from '@material-ui/core';
 import { limitString, navigateTo } from 'utils/common';
@@ -18,14 +14,20 @@ class Services extends Component {
 
   state = {
     serviceList: [],
+    providers: [],
   };
 
-  static getDerivedStateFromProps(props) {
-    const { serviceList } = props;
+  static getDerivedStateFromProps(props, state) {
+    const { serviceList, providers } = props;
+    const { providers: cachedProviders } = state;
 
-    if (serviceList.length) {
+    if (
+      providers.length !== cachedProviders.length ||
+      serviceList.length
+    ) {
       return {
         serviceList,
+        providers,
       };
     }
 
@@ -41,6 +43,7 @@ class Services extends Component {
   };
 
   createServiceCard = service => {
+    // const { providers } = this.state;
     const sDescription = get(service, 'description');
     const sDuration = get(service, 'duration');
     const sId = get(service, 'id');
@@ -53,13 +56,13 @@ class Services extends Component {
       <div className={s.card} key={sId}>
         <div className={s.image}>
           <img src={imgUrl} alt={imgAlt} width="100%" height="100%" />
+          <div className={s.duration}>
+            Duration: {`${sDuration}'`}
+          </div>
         </div>
         <div className={s.cardContent}>
           <div className={s.cardName}>
             {sName}
-          </div>
-          <div className={s.duration}>
-            Duration: {`${sDuration}'`}
           </div>
           <div className={s.description}>
             {limitString(sDescription, 150)}
@@ -83,7 +86,8 @@ class Services extends Component {
   };
 
   render() {
-    const { serviceList } = this.state;
+    const { serviceList, providers } = this.state;
+    console.log('providers', providers);
     return (
       <div className={s.content}>
         {serviceList.map(service => this.createServiceCard(service))}

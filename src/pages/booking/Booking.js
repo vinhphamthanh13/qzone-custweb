@@ -84,7 +84,7 @@ class Booking extends PureComponent {
       temporaryServiceId,
       service,
       serviceProviders,
-      providersByServiceIdList,
+      providersByServiceId,
       availabilitiesBulk,
       bookingStep,
       bookingDetail,
@@ -105,7 +105,7 @@ class Booking extends PureComponent {
       temporaryServiceId: cachedTemporaryServiceId,
       service: cachedService,
       serviceProviders: cachedServiceProviders,
-      providersByServiceIdList: cachedProvidersByServiceIdList,
+      providersByServiceId: cachedProvidersByServiceId,
       availabilitiesBulk: cachedAvailabilitiesBulk,
       bookingStep: cachedBookingStep,
       bookingDetail: cachedBookingDetail,
@@ -123,7 +123,7 @@ class Booking extends PureComponent {
       || temporaryServiceId !== cachedTemporaryServiceId
       || service !== cachedService
       || serviceProviders !== cachedServiceProviders
-      || providersByServiceIdList !== cachedProvidersByServiceIdList
+      || providersByServiceId !== cachedProvidersByServiceId
       || availabilitiesBulk !== cachedAvailabilitiesBulk
       || bookingStep !== cachedBookingStep
       || bookingDetail !== cachedBookingDetail
@@ -161,8 +161,8 @@ class Booking extends PureComponent {
         const providerId = get(availabilitiesById, 'providerId');
         let provider = {};
         let providerDetail = {};
-        if (providersByServiceIdList && providersByServiceIdList.length > 0) {
-          provider = providersByServiceIdList.find(item => item.userSub === providerId);
+        if (providersByServiceId && providersByServiceId.length > 0) {
+          provider = providersByServiceId.find(item => item.userSub === providerId);
         }
         if (serviceProviders && serviceProviders.length) {
           providerDetail = serviceProviders.find(item => item.id === waitListTemporaryServiceId);
@@ -195,7 +195,7 @@ class Booking extends PureComponent {
         }
       }
 
-      if (providersByServiceIdList && providersByServiceIdList.length === 0) {
+      if (providersByServiceId && providersByServiceId.length === 0) {
         history.push('/');
       }
 
@@ -204,7 +204,7 @@ class Booking extends PureComponent {
         temporaryServiceId: resolvedTemporaryServiceId,
         service,
         serviceProviders,
-        providersByServiceIdList,
+        providersByServiceId,
         availabilitiesBulk,
         bookingStep,
         bookingDetail,
@@ -232,7 +232,7 @@ class Booking extends PureComponent {
       serviceId: null,
       service: null,
       serviceProviders: null,
-      providersByServiceIdList: [],
+      providersByServiceId: [],
       availabilitiesBulk: null,
       bookingStep: {},
       bookingDetail: {},
@@ -542,7 +542,7 @@ class Booking extends PureComponent {
       serviceId,
       service,
       serviceProviders,
-      providersByServiceIdList,
+      providersByServiceId,
       availabilitiesBulk,
       bookingStep,
       bookingDetail,
@@ -561,7 +561,7 @@ class Booking extends PureComponent {
     const providers = this.handleMergedProviderInfo(
       serviceId,
       serviceProviders,
-      providersByServiceIdList[serviceId],
+      providersByServiceId[serviceId],
       temporaryServicesByLocation,
     );
     const providersWithSlot = availabilitiesBulk && providers

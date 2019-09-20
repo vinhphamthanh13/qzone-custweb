@@ -17,12 +17,14 @@
 }
 
 .tab {
-  display: flex;
-  justify-content: center;
   align-items: center;
-  padding: 0.5rem;
+  padding: 1rem 0.5rem 0.5rem;
   width: $max-tab-width;
   color: $mako;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  text-transform: uppercase;
   cursor: pointer;
   border: 1px solid $main_03;
   border-top-right-radius: 0.4rem;
@@ -35,16 +37,6 @@
   background: $main_04;
   color: $main_01;
   border: unset;
-}
-
-.tabName {
-  width: 120px;
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  text-transform: uppercase;
 }
 
 .tab:hover {

@@ -48,8 +48,7 @@ class Tabs extends Component {
     const { tabsInfo, activeTab, windowWidth } = this.state;
     const initCatName = Object.keys(tabsInfo)[0];
     const initTabInfo = tabsInfo[initCatName];
-    const categoryIdList = initTabInfo.map(cat => cat.id);
-    onSelectTab(activeTab, categoryIdList, initCatName)();
+    onSelectTab(activeTab, initTabInfo, initCatName)();
     const chunkFactor = Math.abs(windowWidth / (MAX_TAB_WIDTH + 96));
     this.setState({
       maxChunkCount: chunk(Object.keys(tabsInfo), chunkFactor).length,
@@ -81,14 +80,18 @@ class Tabs extends Component {
 
   handleSelectTab = (index, tabInfo, catName) => () => {
     const { onSelectTab } = this.props;
-    const { activeChunkTabs } = this.state;
+    const { activeChunkTabs, chunkHistory } = this.state;
     this.setState({
       activeTab: index,
       chunkHistory: {
         [activeChunkTabs]: index,
       },
     });
-    onSelectTab(index, tabInfo, catName)();
+    const oldChunk = Object.keys(chunkHistory)[0];
+    const oldTab = chunkHistory[oldChunk];
+    if (Number(oldChunk) !== activeChunkTabs || oldTab !== index) {
+      onSelectTab(index, tabInfo, catName)();
+    }
   };
 
   createTab = tabsInfo => {
@@ -100,14 +103,12 @@ class Tabs extends Component {
       const tabStyle = chunkHistory[activeChunkTabs] === index ? `${s.tab} ${s.tabActive}` : s.tab;
       return (
         // eslint-disable-next-line
-        <li
+        <div
           key={tab}
-          className={tabStyle}
+          className={`${tabStyle} ${s.tabName}`}
           onClick={this.handleSelectTab(index, tabsInfo[tab], tab)}>
-            <div className={s.tabName}>
-              {tab}
-            </div>
-        </li>
+            {tab}
+        </div>
       )
     });
   };
