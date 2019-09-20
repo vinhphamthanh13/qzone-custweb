@@ -54,47 +54,37 @@ export const setBookingDetail = payload => ({
   type: SET_BOOKING_DETAIL,
   payload,
 });
-
 export const setBookingStep = payload => ({
   type: SET_BOOKING_STEP,
   payload,
 });
-
 export const resetBooking = () => ({
   type: RESET_BOOKING,
 });
-
 export const setBookedEventId = payload => ({
   type: SET_BOOKED_EVENT_ID,
   payload,
 });
-
-export const getServiceByIdAction = data => async (dispatch) => {
+export const getServiceByIdAction = id => async (dispatch) => {
   dispatch(setLoading(true));
-  const [service, error] = await handleRequest(serviceById, [data]);
+  const [result, error] = await handleRequest(serviceById, [id]);
   if (error) {
     dispatch(setError(error));
   } else {
-    dispatch(getServiceById({
-      [data]: service,
-    }));
+    dispatch(getServiceById(result));
   }
   dispatch(setLoading(false));
 };
-
-export const setProvidersByServiceIdAction = data => async (dispatch) => {
+export const setProvidersByServiceIdAction = sId => async (dispatch) => {
   dispatch(setLoading(true));
-  const [providersById, error] = await handleRequest(providersByServiceId, [data]);
+  const [result, error] = await handleRequest(providersByServiceId, [sId]);
   if (error) {
     dispatch(setError(error));
   } else {
-    dispatch(setProvidersByServiceId({
-      [data]: providersById,
-    }));
+    dispatch(setProvidersByServiceId(result));
   }
   dispatch(setLoading(false));
 };
-
 export const setAvailabilitiesBySpecialEventBulkAction = data => async (dispatch) => {
   dispatch(setLoading(true));
   const [availabilitiesBulk, allError] = await availabilitiesBySpecialEventIdBulk(data);
@@ -108,7 +98,6 @@ export const setAvailabilitiesBySpecialEventBulkAction = data => async (dispatch
     dispatch(setLoading(false));
   }
 };
-
 export const setAvailabilitiesByIdAction = data => async (dispatch) => {
   dispatch(setLoading(true));
   const [availability, error] = await handleRequest(availabilitiesById, [data]);
@@ -119,7 +108,6 @@ export const setAvailabilitiesByIdAction = data => async (dispatch) => {
   }
   dispatch(setLoading(false));
 };
-
 export const registerEventAction = (data, headers) => async (dispatch) => {
   dispatch(setLoading(true));
   const [registeredEvent, error] = await handleRequest(events, [data, headers]);
@@ -131,7 +119,6 @@ export const registerEventAction = (data, headers) => async (dispatch) => {
   }
   dispatch(setLoading(false));
 };
-
 export const setTemporaryServicesByIdAction = data => async (dispatch) => {
   dispatch(setLoading(true));
   const [temporaryServiceById, error] = await handleRequest(temporaryServicesById, [data]);

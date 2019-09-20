@@ -3,6 +3,9 @@ export const timeSlotFormat = 'hh:mm a';
 export const defaultDateFormat = 'DD MMMM YYYY';
 export const longDateFormat = 'dddd, DD MMMM YYYY';
 
+// layout
+export const MAX_TAB_WIDTH = 160;
+
 // Auth
 export const AUTHENTICATED_KEY = 'isAuthenticated';
 

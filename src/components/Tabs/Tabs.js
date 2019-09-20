@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { func } from 'prop-types';
+import windowSize from 'react-window-size';
 import { IconButton } from '@material-ui/core';
 import { NavigateNext, NavigateBefore } from '@material-ui/icons';
 import { chunk } from 'lodash';
+import { MAX_TAB_WIDTH } from 'utils/constants';
 import s from './Tabs.module.scss';
-
-const TABS_CHUNK = 4;
 
 class Tabs extends Component {
   static propTypes = {
@@ -21,14 +21,22 @@ class Tabs extends Component {
     activeChunkTabs: 0,
     maxChunkCount: 0,
     chunkHistory: {},
+    windowWidth: 0,
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { tabsInfo } = props;
-    const { tabsInfo: cachedTabsInfo } = state;
-    if (Object.keys(tabsInfo).length && Object.keys(tabsInfo).length !== Object.keys(cachedTabsInfo).length) {
+    const { tabsInfo, windowWidth } = props;
+    const {
+      tabsInfo: cachedTabsInfo,
+      windowWidth: cachedWidth,
+    } = state;
+    if (
+      Object.keys(tabsInfo).length && Object.keys(tabsInfo).length !== Object.keys(cachedTabsInfo).length
+      || windowWidth !== cachedWidth
+    ) {
       return {
         tabsInfo,
+        windowWidth,
       };
     }
 
@@ -37,14 +45,16 @@ class Tabs extends Component {
 
   componentDidMount() {
     const { onSelectTab } = this.props;
-    const { tabsInfo, activeTab } = this.state;
+    const { tabsInfo, activeTab, windowWidth } = this.state;
     const initCatName = Object.keys(tabsInfo)[0];
     const initTabInfo = tabsInfo[initCatName];
     const categoryIdList = initTabInfo.map(cat => cat.id);
     onSelectTab(activeTab, categoryIdList, initCatName)();
+    const chunkFactor = Math.abs(windowWidth / (MAX_TAB_WIDTH + 96));
     this.setState({
-      maxChunkCount: chunk(Object.keys(tabsInfo), TABS_CHUNK).length,
+      maxChunkCount: chunk(Object.keys(tabsInfo), chunkFactor).length,
       activeChunkTabs: 0,
+      chunkFactor,
       chunkHistory: {
         0: 0,
       }
@@ -82,8 +92,9 @@ class Tabs extends Component {
   };
 
   createTab = tabsInfo => {
+    const { chunkFactor } = this.state;
     const { activeChunkTabs, chunkHistory } = this.state;
-    const tabChunkCount = chunk(Object.keys(tabsInfo), TABS_CHUNK);
+    const tabChunkCount = chunk(Object.keys(tabsInfo), chunkFactor);
     const lazyTabs = tabChunkCount[activeChunkTabs] || [];
     return lazyTabs.length > 0 && lazyTabs.map((tab, index) => {
       const tabStyle = chunkHistory[activeChunkTabs] === index ? `${s.tab} ${s.tabActive}` : s.tab;
@@ -121,4 +132,4 @@ class Tabs extends Component {
   }
 }
 
-export default Tabs;
+export default windowSize(Tabs);

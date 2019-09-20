@@ -36,7 +36,7 @@ import CustomModal from 'components/Modal/CustomModal';
 import Success from 'components/Success';
 import Error from 'components/Error';
 import { longDateFormat, timeSlotFormat } from 'utils/constants';
-import { handlePushLocation } from 'utils/common';
+import { navigateTo } from 'utils/common';
 import { EVENT_STATUS } from './Appointment.constants';
 import RescheduleSlots from '../RescheduleSlots';
 import s from './TimelineCard.module.scss';
@@ -262,7 +262,7 @@ class TimelineCard extends Component {
       <>
         {viewUrl && (
           <>
-            <Success userCallback={handlePushLocation('/')} />
+            <Success userCallback={navigateTo('/')} />
             <Error />
           </>
         )}

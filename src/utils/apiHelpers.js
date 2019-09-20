@@ -6,14 +6,12 @@ export const handleResponse = (response, defaultResponse) => {
   }
   return defaultResponse;
 };
-
 export const handleError = (response) => {
   if (response && response.data) {
     return response.data.message;
   }
   return 'Cannot connect to services';
 };
-
 export const handleRequest = async (requestFunc, args, defaultResponse) => {
   try {
     const resp = handleResponse(await requestFunc(...args), defaultResponse);
@@ -38,5 +36,10 @@ export const handleRequest = async (requestFunc, args, defaultResponse) => {
     ];
   }
 };
-
 export const handleResponseBulk = response => (Array.isArray(response) ? response.map(item => item.data.object) : []);
+export const createHeaders = token => ({
+  headers: {
+    Authorization: token ? `Bearer ${token}` : '',
+    Accept: 'application/json',
+  },
+});

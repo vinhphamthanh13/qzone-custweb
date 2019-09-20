@@ -20,8 +20,8 @@ import {
 import {
   handleResponse,
   handleRequest,
+  createHeaders
 } from 'utils/apiHelpers';
-import { createHeaders } from 'utils/common';
 import {
   STORE_USER_SESSION_LOGIN,
   STORE_USER_SESSION_ERROR,

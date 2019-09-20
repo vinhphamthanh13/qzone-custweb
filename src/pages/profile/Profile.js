@@ -18,7 +18,7 @@ import {
   findEventByCustomerIdAction,
 } from 'actionsReducers/common.actions';
 import { AUTHENTICATED_KEY, SESSION } from 'utils/constants';
-import { handlePushLocation } from 'utils/common';
+import { navigateTo } from 'utils/common';
 import CustomModal from 'components/Modal/CustomModal';
 import Loading from 'components/Loading';
 import Header from './components/Header';
@@ -75,7 +75,7 @@ class Profile extends Component {
     const expired = get(loginSession, 'expiration');
 
     if (!userDetail) {
-      handlePushLocation('/')();
+      navigateTo('/')();
     }
 
     if (!isSessionTimeout && moment().isAfter(moment(expired))) {
@@ -94,7 +94,7 @@ class Profile extends Component {
     const { loginSession } = this.state;
     const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
     const authProvider = get(loginSession, 'authProvider');
-    handlePushLocation('/')();
+    navigateTo('/')();
     logoutAction({
       isAuthenticated,
       authProvider,
@@ -171,14 +171,14 @@ class Profile extends Component {
           <div className={`${s.profile} column`}>
             <Header
               userName={givenName}
-              onClose={handlePushLocation('/')}
+              onClose={navigateTo('/')}
               handleSidePanel={this.handleSidePanel}
             />
             <div className={`container-max auto-margin-horizontal ${s.profileContent}`}>
               <Content
                 customerId={customerId}
                 givenName={givenName}
-                onClose={handlePushLocation('/')}
+                onClose={navigateTo('/')}
                 handleAccount={this.handleAccount}
                 updateProfileStatus={updateProfileStatus}
                 handleLogout={this.handleLogout}
