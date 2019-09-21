@@ -37,12 +37,12 @@ class Services extends Component {
     return null;
   }
 
-  handleSelectOrg = orgId => () => {
-    navigateTo(`/organization/${orgId}`)();
+  handleSelectProvider = (sId, sName, catName )=> () => {
+    navigateTo(`/provider/${sId}`, { category: catName, service: sName })();
   };
 
-  handleService = sId => () => {
-    console.log('serviceID', sId);
+  handleSelectOrg = orgId => () => {
+    navigateTo(`/organization/${orgId}`)();
   };
 
   createServiceCard = service => {
@@ -80,7 +80,7 @@ class Services extends Component {
             </div>
             <div className={s.cta}>
               {isProviderSelectable && (
-                <Button variant="outlined" onClick={this.handleService(sId)}>
+                <Button variant="outlined" onClick={this.handleSelectProvider(sId, sName, catName)}>
                   <NavigateNext color="inherit" />
                   Select Provider
                 </Button>

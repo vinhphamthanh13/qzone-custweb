@@ -1,5 +1,6 @@
 // import Home from 'pages/Home';
 import Landing from 'pages/Landing';
+import Providers from 'pages/landing/Providers';
 // import Booking from 'pages/Booking';
 import PageNotFound from 'pages/PageNotFound';
 import AccessDenied from 'pages/AccessDenied';
@@ -17,6 +18,13 @@ const rootRoutes = [
     path: '/',
     name: 'Home',
     component: Landing,
+  },
+  {
+    exact: true,
+    strict: true,
+    path: '/provider/:sId',
+    name: 'Select Provider',
+    component: Providers,
   },
   {
     exact: true,

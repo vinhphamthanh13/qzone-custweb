@@ -264,6 +264,6 @@ Home.propTypes = {
 };
 
 export default connect(
-  homeProps.mapStateTopProps,
+  homeProps.mapStateToProps,
   homeProps.mapDispatchToProps,
 )(Home);

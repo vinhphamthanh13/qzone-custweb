@@ -10,3 +10,4 @@ export const serviceByProviderId = id => axios.get(`/services-by-provider-id/${i
 // ********** event-resource ********** //
 // temporary-services
 export const temporaryServices = () => axios.get('/temporary-services');
+export const temporaryServicesByServiceId = sId => axios.get(`/find-temporary-services-by-service-id/${sId}`);

@@ -124,7 +124,7 @@ class Landing extends Component {
 }
 
 export default connect(
-  landingProps.mapStateTopProps,
+  landingProps.mapStateToProps,
   landingProps.mapDispatchToProps,
 )(Landing);
 
