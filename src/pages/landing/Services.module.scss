@@ -90,3 +90,14 @@
   align-items: center;
   margin: 1rem auto;
 }
+
+.noProvider {
+  color: $danger;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid $danger;
+  padding: 0.3125rem 0.5rem;
+  margin: auto 0.8rem;
+  border-radius: 0.2rem;
+}

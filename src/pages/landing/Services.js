@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { get } from 'lodash';
 import { Button } from '@material-ui/core';
 import { limitString, navigateTo } from 'utils/common';
-import { Domain, NavigateNext } from '@material-ui/icons';
+import { Domain, NavigateNext, NotificationImportant } from '@material-ui/icons';
 import s from './Services.module.scss';
 
 class Services extends Component {
@@ -13,21 +13,24 @@ class Services extends Component {
   };
 
   state = {
+    catName: '',
     serviceList: [],
     providers: [],
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { serviceList, providers } = props;
-    const { providers: cachedProviders } = state;
+    const { serviceList, providers, catName } = props;
+    const { providers: cachedProviders, catName: cachedCatName } = state;
 
     if (
       providers.length !== cachedProviders.length ||
-      serviceList.length
+      serviceList.length ||
+      catName !== cachedCatName
     ) {
       return {
         serviceList,
         providers,
+        catName,
       };
     }
 
@@ -43,7 +46,7 @@ class Services extends Component {
   };
 
   createServiceCard = service => {
-    // const { providers } = this.state;
+    const { providers, catName } = this.state;
     const sDescription = get(service, 'description');
     const sDuration = get(service, 'duration');
     const sId = get(service, 'id');
@@ -52,6 +55,8 @@ class Services extends Component {
     const sName = get(service, 'name');
     const orgName = get(service, 'organizationEntity.name');
     const orgId = get(service, 'organizationId');
+    const serviceProviders = get(providers, `${catName}.${sName}`) || [];
+    const isProviderSelectable =serviceProviders.length > 0;
     return (
       <div className={s.card} key={sId}>
         <div className={s.image}>
@@ -74,10 +79,18 @@ class Services extends Component {
               <span>&nbsp;{orgName}</span>
             </div>
             <div className={s.cta}>
-              <Button variant="outlined" onClick={this.handleService(sId)}>
-                <NavigateNext color="inherit" />
-                Select Provider
-              </Button>
+              {isProviderSelectable && (
+                <Button variant="outlined" onClick={this.handleService(sId)}>
+                  <NavigateNext color="inherit" />
+                  Select Provider
+                </Button>
+              )}
+              {!isProviderSelectable && (
+                <div className={s.noProvider}>
+                  <NotificationImportant color="inherit" />
+                  <span>&nbsp;No provider found!</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -86,8 +99,7 @@ class Services extends Component {
   };
 
   render() {
-    const { serviceList, providers } = this.state;
-    console.log('providers', providers);
+    const { serviceList} = this.state;
     return (
       <div className={s.content}>
         {serviceList.map(service => this.createServiceCard(service))}
