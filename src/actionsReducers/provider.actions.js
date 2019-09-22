@@ -2,16 +2,19 @@ import {
   setLoading,
   setError,
 } from 'actionsReducers/common.actions';
+import { get } from 'lodash';
 import { handleRequest } from 'utils/apiHelpers';
 import {
   users,
   serviceByProviderId,
   temporaryServicesByServiceId,
+  availabilitiesByTemporaryServiceIdBulk,
 } from 'actionsApi/provider';
 
 export const SET_PROVIDER_DETAIL = 'PROVIDER.SET_PROVIDER_DETAIL';
 export const SET_PROVIDER_SERVICE = 'PROVIDER.SET_PROVIDER_SERVICE';
 export const TEMPORARY_SERVICES_BY_SERVICE_ID = 'TEMPORARY_SERVICE.TEMPORARY_SERVICES_BY_SERVICE_ID';
+export const AVAILABILITIES_BY_TMP_SERVICE_ID = 'APPOINTMENT_RESOURCE.AVAILABILITIES_BY_TMP_SERVICE_ID';
 const setProviderDetail = payload => ({
   type: SET_PROVIDER_DETAIL,
   payload,
@@ -24,7 +27,10 @@ const temporaryServicesByServiceIdAction = payload => ({
   type: TEMPORARY_SERVICES_BY_SERVICE_ID,
   payload,
 });
-
+const availabilitiesByTemporaryServiceIdAction = payload => ({
+  type: AVAILABILITIES_BY_TMP_SERVICE_ID,
+  payload,
+});
 export const setProviderDetailAction = id => async (dispatch) => {
   dispatch(setLoading(true));
   const [userDetail, error] = await handleRequest(users, [id]);
@@ -52,6 +58,18 @@ export const temporaryServicesByServiceIdApi = id => async (dispatch) => {
     dispatch(setError(error));
   } else {
     dispatch(temporaryServicesByServiceIdAction(result));
+  }
+  dispatch(setLoading(false));
+};
+export const availabilitiesByTemporaryServiceIdApi = (list, pId, locId) => async dispatch => {
+  dispatch(setLoading(true));
+  const [resultBulk, errorBulk] = await availabilitiesByTemporaryServiceIdBulk(list);
+  if (errorBulk) {
+    dispatch(setError(get(JSON.parse(errorBulk), 'response.data.message')));
+  } else {
+    const responseBulk = [];
+    resultBulk.map(item => responseBulk.push(...item.data.objects));
+    dispatch(availabilitiesByTemporaryServiceIdAction({ [`${pId}${locId}`]: responseBulk }));
   }
   dispatch(setLoading(false));
 };

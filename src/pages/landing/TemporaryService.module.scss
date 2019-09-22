@@ -1,0 +1,26 @@
+@import "styles/_settings.scss";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  margin: 0.2rem auto;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.slot {
+  width: 33.3333333%;
+  border: 1px solid $main_03;
+  padding: 1rem 0;
+  text-align: center;
+  cursor: pointer;
+}
+
+.slot:hover {
+  background: $main_02;
+  font-weight: 500;
+}

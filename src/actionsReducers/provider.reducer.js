@@ -2,12 +2,14 @@ import {
   SET_PROVIDER_DETAIL,
   SET_PROVIDER_SERVICE,
   TEMPORARY_SERVICES_BY_SERVICE_ID,
+  AVAILABILITIES_BY_TMP_SERVICE_ID,
 } from 'actionsReducers/provider.actions';
 
 const initState = {
   providerDetail: null,
   providerServices: null,
   temporaryServiceByServiceIds: [],
+  availabilitiesByTemporaryServiceId: {},
 };
 
 const reducer = (state = initState, action) => {
@@ -29,6 +31,14 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         temporaryServiceByServiceIds: action.payload,
+      };
+    case AVAILABILITIES_BY_TMP_SERVICE_ID:
+      return {
+        ...state,
+        availabilitiesByTemporaryServiceId: {
+          ...state.availabilitiesByTemporaryServiceId,
+          ...action.payload,
+        },
       };
     default:
       return { ...state };

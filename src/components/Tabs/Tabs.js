@@ -28,19 +28,17 @@ class Tabs extends Component {
     const { tabsInfo, windowWidth } = props;
     const {
       tabsInfo: cachedTabsInfo,
-      windowWidth: cachedWidth,
+      windowWidth: cachedWindowWidth,
     } = state;
-    if (
-      Object.keys(tabsInfo).length && Object.keys(tabsInfo).length !== Object.keys(cachedTabsInfo).length
-      || windowWidth !== cachedWidth
-    ) {
-      return {
-        tabsInfo,
-        windowWidth,
-      };
+    const updatedState = {};
+    if (JSON.stringify(tabsInfo) !== JSON.stringify(cachedTabsInfo)) {
+      updatedState.tabsInfo = tabsInfo;
+    }
+    if (windowWidth !== cachedWindowWidth) {
+      updatedState.windowWidth = windowWidth;
     }
 
-    return null;
+    return Object.keys(updatedState).length ? updatedState : null;
   }
 
   componentDidMount() {

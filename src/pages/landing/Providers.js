@@ -2,9 +2,12 @@ import React, { Component } from 'react';
 import { objectOf, any, func } from 'prop-types';
 import { connect } from 'react-redux';
 import { get, find, uniqBy } from 'lodash';
-import { PhoneIphone, Email, Place } from '@material-ui/icons';
+import { IconButton } from '@material-ui/core';
+import { navigateTo } from 'utils/common';
+import { PhoneIphone, Email, Place, NavigateBefore } from '@material-ui/icons';
 import defaultPImage from 'images/providers.jpg';
 import { providersProps } from 'pages/commonProps';
+import TemporaryService from './TemporaryService';
 import s from './Providers.module.scss';
 
 class Providers extends Component {
@@ -12,6 +15,7 @@ class Providers extends Component {
     match: objectOf(any).isRequired,
     location: objectOf(any),
     dispatchTemporaryServicesByServiceId: func.isRequired,
+    dispatchAvailabilities: func.isRequired,
   };
 
   static defaultProps = {
@@ -56,13 +60,15 @@ class Providers extends Component {
   }
 
   createProviders = provider => () => {
-    console.log('provider', provider);
+    const { dispatchAvailabilities } = this.props;
     const pId = get(provider, 'userSub');
     const pName = get(provider, 'givenName');
     const pEmail = get(provider, 'email');
     const pPhone = get(provider, 'telephone');
     const pImage = get(provider, 'imageUrl') || defaultPImage;
     const pAddress = get(provider, 'geoLocation.fullAddress');
+    const locationId = get(provider, 'geoLocation.id');
+    const temporaryServiceIds = get(provider, 'temporaryServiceId');
     return (
       <div key={pId} className={s.card}>
         <div className={s.image}>
@@ -88,7 +94,12 @@ class Providers extends Component {
           </div>
         </div>
         <div className={s.availabilities}>
-          Slots available here!
+          <TemporaryService
+            providerId={pId}
+            locationId={locationId}
+            fetchAvailabilities={dispatchAvailabilities}
+            temporaryServiceIds={temporaryServiceIds}
+          />
         </div>
       </div>
     );
@@ -129,6 +140,11 @@ class Providers extends Component {
     // console.log('providers', providers);
     return Object.keys(providerByLocation).length > 0 && (
       <div className={s.container}>
+        <div className={s.navigation}>
+          <IconButton color="inherit" onClick={navigateTo('/')}>
+            <NavigateBefore color="inherit" />
+          </IconButton>
+        </div>
         {Object.keys(providerByLocation).map(locationId => uniqBy(providerByLocation[locationId], 'userSub').map(
           provider => this.createProviders({
             ...provider,

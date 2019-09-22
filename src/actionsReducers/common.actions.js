@@ -128,13 +128,13 @@ export const rescheduleEvent = (data, headers) => async (dispatch) => {
 };
 export const servicesByServiceCategoryIdBulkApi = (listId, catName) => async dispatch => {
   dispatch(setLoading(true));
-  const [serviceBulk, errorBulk] = await servicesByServiceCategoryBulk(listId);
+  const [resultBulk, errorBulk] = await servicesByServiceCategoryBulk(listId);
   if (errorBulk) {
     dispatch(setError(get(JSON.parse(errorBulk), 'response.data.message')));
   } else {
     const responseBulk = [];
-    serviceBulk.map(item => responseBulk.push(...item.data.objects));
-    dispatch(servicesByServiceCategoryIdBulkAction({[catName]: responseBulk }));
+    resultBulk.map(item => responseBulk.push(...item.data.objects));
+    dispatch(servicesByServiceCategoryIdBulkAction({ [catName]: responseBulk }));
   }
   dispatch(setLoading(false));
 };
