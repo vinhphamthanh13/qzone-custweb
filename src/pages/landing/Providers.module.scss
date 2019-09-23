@@ -8,8 +8,13 @@
   flex-direction: column;
   height: 100vh;
   overflow: auto;
+  padding: 0.5rem 1rem;
 }
 
 .navigation {
   color: indianred;
+}
+
+.providerRow {
+  display: flex;
 }

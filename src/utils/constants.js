@@ -5,6 +5,7 @@ export const longDateFormat = 'dddd, DD MMMM YYYY';
 
 // layout
 export const MAX_TAB_WIDTH = 160;
+export const MAX_CARD_WIDTH = 320;
 
 // Auth
 export const AUTHENTICATED_KEY = 'isAuthenticated';

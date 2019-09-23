@@ -1,12 +1,17 @@
 @import "styles/_settings.scss";
 
-.content {
+.serviceContent {
+  border-top: 6px solid $main_04;
   width: 100%;
   color: $main_04;
   display: flex;
-  border-top: 6px solid $main_04;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: calc(100vh - 54px);
   overflow: auto;
 }
 
-
+.serviceRow {
+  display: flex;
+  align-items: center;
+}

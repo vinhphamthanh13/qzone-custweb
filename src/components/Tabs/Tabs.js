@@ -119,11 +119,9 @@ class Tabs extends Component {
 
   createTab = tabsInfo => {
     const { responsiveLayout: { chunkFactor } } = this.state;
-    console.log('chunk Factor', chunkFactor);
     const { activeChunkTabs, chunkHistory } = this.state;
-    console.log('active chunk tab create tab', activeChunkTabs);
     const tabChunkCount = chunk(Object.keys(tabsInfo), chunkFactor);
-    const lazyTabs = tabChunkCount[activeChunkTabs] || [];
+    const lazyTabs = tabChunkCount[activeChunkTabs] || tabChunkCount[0] || [];
     return lazyTabs.length > 0 && lazyTabs.map((tab, index) => {
       const tabStyle = chunkHistory[activeChunkTabs] === index ? `${s.tab} ${s.tabActive}` : s.tab;
       return (
