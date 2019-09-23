@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import { func } from 'prop-types';
+import { connect } from 'react-redux';
 import windowSize from 'react-window-size';
 import { IconButton } from '@material-ui/core';
 import { NavigateNext, NavigateBefore } from '@material-ui/icons';
 import { chunk } from 'lodash';
 import { MAX_TAB_WIDTH } from 'utils/constants';
+import { setChunkFactorAction } from 'actionsReducers/common.actions';
 import s from './Tabs.module.scss';
 
 class Tabs extends Component {
   static propTypes = {
     onSelectTab: func.isRequired,
     setTabOrder: func.isRequired,
+    dispatchChunkFactor: func.isRequired,
   };
 
   static defaultProps = {
@@ -20,18 +23,22 @@ class Tabs extends Component {
     tabsInfo: [],
     activeTab: 0,
     activeChunkTabs: 0,
-    maxChunkCount: 0,
     chunkHistory: {},
     windowWidth: 0,
     tabOrder: { 0: 0 },
+    responsiveLayout: {
+      chunkFactor: 1,
+      maxChunkCount: 0,
+    },
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { tabsInfo, windowWidth, tabOrder } = props;
+    const { tabsInfo, windowWidth, tabOrder, responsiveLayout } = props;
     const {
       tabsInfo: cachedTabsInfo,
       windowWidth: cachedWindowWidth,
       tabOrder: cachedTabOrder,
+      responsiveLayout: cachedResponsiveLayout,
     } = state;
     const updatedState = {};
     if (JSON.stringify(tabsInfo) !== JSON.stringify(cachedTabsInfo)) {
@@ -43,28 +50,41 @@ class Tabs extends Component {
     if (JSON.stringify(tabOrder) !== JSON.stringify(cachedTabOrder)) {
       updatedState.chunkHistory = tabOrder;
     }
+    if (JSON.stringify(responsiveLayout) !== JSON.stringify(cachedResponsiveLayout)) {
+      updatedState.responsiveLayout = responsiveLayout;
+    }
 
     return Object.keys(updatedState).length ? updatedState : null;
   }
 
   componentDidMount() {
-    const { onSelectTab } = this.props;
+    const { onSelectTab, dispatchChunkFactor } = this.props;
     const { tabsInfo, activeTab, windowWidth, tabOrder } = this.state;
     const initCatName = Object.keys(tabsInfo)[0];
     const initChunkTab = Number(Object.keys(tabOrder)[0]);
     const initTabInfo = tabsInfo[initCatName];
     onSelectTab(activeTab, initTabInfo, initCatName)();
     const chunkFactor = Math.abs(windowWidth / (MAX_TAB_WIDTH + 96));
+    const maxChunkCount = chunk(Object.keys(tabsInfo), chunkFactor).length;
+    dispatchChunkFactor({ chunkFactor, maxChunkCount });
     this.setState({
-      maxChunkCount: chunk(Object.keys(tabsInfo), chunkFactor).length,
       activeChunkTabs: initChunkTab,
-      chunkFactor,
       chunkHistory: tabOrder,
     });
   }
 
+  componentDidUpdate(prevProps) {
+    const { windowWidth, dispatchChunkFactor } = prevProps;
+    const { windowWidth: cachedWindowWidth, tabsInfo } = this.state;
+    if (windowWidth !== cachedWindowWidth) {
+      const chunkFactor = Math.abs(windowWidth / (MAX_TAB_WIDTH + 96));
+      const maxChunkCount = chunk(Object.keys(tabsInfo), chunkFactor).length;
+      dispatchChunkFactor({ chunkFactor, maxChunkCount });
+    }
+  }
+
   handleNextTab = value => () => {
-    const { activeChunkTabs, maxChunkCount } = this.state;
+    const { activeChunkTabs, responsiveLayout: { maxChunkCount } } = this.state;
     let shiftTab;
     if (
       value > 0 && activeChunkTabs < maxChunkCount - 1 ||
@@ -79,7 +99,6 @@ class Tabs extends Component {
       ...oldState.chunkHistory,
     }));
   };
-
 
   handleSelectTab = (index, tabInfo, catName) => () => {
     const { onSelectTab, setTabOrder } = this.props;
@@ -99,7 +118,8 @@ class Tabs extends Component {
   };
 
   createTab = tabsInfo => {
-    const { chunkFactor } = this.state;
+    const { responsiveLayout: { chunkFactor } } = this.state;
+    console.log('chunk Factor', chunkFactor);
     const { activeChunkTabs, chunkHistory } = this.state;
     console.log('active chunk tab create tab', activeChunkTabs);
     const tabChunkCount = chunk(Object.keys(tabsInfo), chunkFactor);
@@ -119,7 +139,7 @@ class Tabs extends Component {
   };
 
   render() {
-    const { tabsInfo, activeChunkTabs, maxChunkCount } = this.state;
+    const { tabsInfo, activeChunkTabs, responsiveLayout: { maxChunkCount } } = this.state;
     const disableNext = activeChunkTabs === maxChunkCount - 1;
     const disablePrev = activeChunkTabs === 0;
     return (
@@ -138,4 +158,10 @@ class Tabs extends Component {
   }
 }
 
-export default windowSize(Tabs);
+export default connect(
+  ({ common }) => ({
+    responsiveLayout: common.responsiveLayout,
+  }),
+  dispatch => ({
+    dispatchChunkFactor: width => dispatch(setChunkFactorAction(width)),
+}))(windowSize(Tabs));

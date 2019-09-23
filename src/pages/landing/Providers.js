@@ -26,14 +26,21 @@ class Providers extends Component {
     providersByServiceId: {},
     temporaryServiceByServiceIds: {},
     serviceId: '',
+    availabilitiesByTemporaryServiceId: {},
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { providersByServiceId, temporaryServiceByServiceIds, match: { params: { sId } } } = props;
+    const {
+      providersByServiceId,
+      temporaryServiceByServiceIds,
+      match: { params: { sId } },
+      availabilitiesByTemporaryServiceId
+    } = props;
     const {
       providersByServiceId: cachedProvidersByServiceId,
       temporaryServiceByServiceIds: cachedTemporaryServiceByServiceIds,
       serviceId,
+      availabilitiesByTemporaryServiceId: cachedAvailabilitiesByTemporaryServiceId,
     } = state;
     const updatedState = {};
     if (JSON.stringify(providersByServiceId) !== JSON.stringify(cachedProvidersByServiceId)) {
@@ -44,6 +51,11 @@ class Providers extends Component {
     }
     if (sId !== serviceId) {
       updatedState.serviceId = sId;
+    }
+    if (
+      JSON.stringify(availabilitiesByTemporaryServiceId) !== JSON.stringify(cachedAvailabilitiesByTemporaryServiceId)
+    ) {
+      updatedState.availabilitiesByTemporaryServiceId = availabilitiesByTemporaryServiceId;
     }
 
     return Object.keys(updatedState) ? updatedState : null;
@@ -73,6 +85,7 @@ class Providers extends Component {
       serviceName,
       temporaryServiceByServiceIds,
       serviceId,
+      availabilitiesByTemporaryServiceId,
     } = this.state;
     const providers = get(providersByServiceId, `${catName}.${serviceName}`) || [];
     const providerByLocation = {};
@@ -112,11 +125,13 @@ class Providers extends Component {
         {Object.keys(providerByLocation).map(locationId => uniqBy(providerByLocation[locationId], 'userSub').map(
           provider => (
             <Provider
+              key={provider.userSub}
               provider={{
                 ...provider,
                 temporaryServiceId: temporaryServiceByProvider[provider.userSub],
               }}
               dispatchAvailabilities={dispatchAvailabilities}
+              availabilitiesByTemporaryServiceId={availabilitiesByTemporaryServiceId}
             />)
         ))}
       </div>

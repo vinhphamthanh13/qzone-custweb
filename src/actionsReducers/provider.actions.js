@@ -51,7 +51,7 @@ export const temporaryServicesByServiceIdApi = id => async (dispatch) => {
   }
   dispatch(setLoading(false));
 };
-export const availabilitiesByTemporaryServiceIdApi = (list, pId, locId) => async dispatch => {
+export const availabilitiesByTemporaryServiceIdApi = (list, sId, pId, locId) => async dispatch => {
   dispatch(setLoading(true));
   const [resultBulk, errorBulk] = await availabilitiesByTemporaryServiceIdBulk(list);
   if (errorBulk) {
@@ -59,7 +59,7 @@ export const availabilitiesByTemporaryServiceIdApi = (list, pId, locId) => async
   } else {
     const responseBulk = [];
     resultBulk.map(item => responseBulk.push(...item.data.objects));
-    dispatch(availabilitiesByTemporaryServiceIdAction({ [`${pId}${locId}`]: responseBulk }));
+    dispatch(availabilitiesByTemporaryServiceIdAction({ [`${sId}-${pId}-${locId}`]: responseBulk }));
   }
   dispatch(setLoading(false));
 };

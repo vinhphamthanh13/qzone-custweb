@@ -13,6 +13,7 @@ import {
   SET_RESCHEDULE_STATUS,
   SERVICES_BY_SERVICE_CATEGORY_ID,
   SET_TAB_ORDER,
+  SET_RESPONSIVE_CHUNK_FACTOR,
 } from 'actionsReducers/common.actions';
 
 const persistConfig = {
@@ -43,6 +44,10 @@ const initState = {
   rescheduleStatus: 500,
   servicesByServiceCategoryId: {},
   tabOrder: { 0: 0 },
+  responsiveLayout: {
+    chunkFactor: 1,
+    maxChunkCount: 1,
+  }
 };
 
 const reducer = (state = initState, action) => {
@@ -101,6 +106,11 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         tabOrder: action.payload,
+      };
+    case SET_RESPONSIVE_CHUNK_FACTOR:
+      return {
+        ...state,
+        responsiveLayout: action.payload,
       };
     case SERVICES_BY_SERVICE_CATEGORY_ID:
       return {

@@ -58,6 +58,10 @@
   height: 12.5rem;
 }
 
+.description:first-letter {
+  text-transform: uppercase;
+}
+
 .footer {
   position: absolute;
   bottom: 0;

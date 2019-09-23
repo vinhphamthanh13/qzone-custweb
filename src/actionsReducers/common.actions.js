@@ -20,6 +20,7 @@ export const SET_EVENT_BY_ID = 'COMMON.SET_EVENT_BY_ID';
 export const SET_RESCHEDULE_STATUS = 'COMMON.SET_RESCHEDULE_STATUS';
 export const SERVICES_BY_SERVICE_CATEGORY_ID = 'COMMON.SERVICES_BY_SERVICE_CATEGORY_ID';
 export const SET_TAB_ORDER = 'COMMON.SET_TAB_ORDER';
+export const SET_RESPONSIVE_CHUNK_FACTOR = 'COMMON.SET_RESPONSIVE_CHUNK_FACTOR';
 export const setLoading = payload => ({
   type: SET_LOADING,
   payload,
@@ -49,6 +50,10 @@ const setEventByCustomerId = payload => ({
 });
 export const setTabOrder = payload => ({
   type: SET_TAB_ORDER,
+  payload,
+});
+export const setChunkFactorAction = payload => ({
+  type: SET_RESPONSIVE_CHUNK_FACTOR,
   payload,
 });
 const setTemporaryServiceByLocationAction = payload => ({

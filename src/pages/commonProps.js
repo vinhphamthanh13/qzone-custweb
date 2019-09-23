@@ -50,6 +50,7 @@ export const providersProps = {
   }),
   mapDispatchToProps: dispatch => ({
     dispatchTemporaryServicesByServiceId: list => dispatch(temporaryServicesByServiceIdApi(list)),
-    dispatchAvailabilities: (list, pId, locId) => dispatch(availabilitiesByTemporaryServiceIdApi(list, pId, locId)),
+    dispatchAvailabilities: (list, sId, pId, locId) =>
+      dispatch(availabilitiesByTemporaryServiceIdApi(list, sId, pId, locId)),
   }),
 };

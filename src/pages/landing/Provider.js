@@ -3,7 +3,8 @@ import { func } from 'prop-types';
 import { get } from 'lodash';
 import defaultPImage from 'images/providers.jpg';
 import { Email, PhoneIphone, Place } from '@material-ui/icons';
-// import TemporaryService from 'pages/landing/TemporaryService';
+import EmptyItem from 'components/EmptyItem';
+import TemporaryService from 'pages/landing/TemporaryService';
 import s from './Provider.module.scss';
 
 class Provider extends Component {
@@ -18,14 +19,23 @@ class Provider extends Component {
     serviceId: '',
     providerId: '',
     locationId: '',
+    availabilitiesByTemporaryServiceId: {},
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { provider } = props;
-    const { provider: cachedProvider} = state;
+    const { provider, availabilitiesByTemporaryServiceId } = props;
+    const {
+      provider: cachedProvider,
+      availabilitiesByTemporaryServiceId: cachedAvailabilitiesByTemporaryServiceId,
+    } = state;
     const updatedState = {};
     if (JSON.stringify(provider) !== JSON.stringify(cachedProvider)) {
       updatedState.provider = provider;
+    }
+    if (
+      JSON.stringify(availabilitiesByTemporaryServiceId) !== JSON.stringify(cachedAvailabilitiesByTemporaryServiceId)
+    ) {
+      updatedState.availabilitiesByTemporaryServiceId = availabilitiesByTemporaryServiceId;
     }
 
     return Object.keys(updatedState) ? updatedState : null;
@@ -47,15 +57,15 @@ class Provider extends Component {
   }
 
   render() {
-    const { provider, serviceId, providerId, locationId } = this.state;
+    const { provider, serviceId, providerId, locationId, availabilitiesByTemporaryServiceId } = this.state;
     const pName = get(provider, 'givenName');
     const pEmail = get(provider, 'email');
     const pPhone = get(provider, 'telephone');
     const pImage = get(provider, 'imageUrl') || defaultPImage;
     const pAddress = get(provider, 'geoLocation.fullAddress');
-    console.log('serviceId', serviceId);
-    console.log('locationId', locationId);
-
+    const timeSlots = get(availabilitiesByTemporaryServiceId,`${serviceId}-${providerId}-${locationId}`) || [];
+    const slots = timeSlots.length > 0 && timeSlots.filter(slot =>
+      slot.serviceId === serviceId && slot.providerId === providerId && slot.locationId === locationId) || [];
     return (
       <div key={providerId} className={s.card}>
         <div className={s.image}>
@@ -80,9 +90,16 @@ class Provider extends Component {
             </div>
           </div>
         </div>
-        <div className={s.availabilities}>
-          {/* <TemporaryService serviceId={serviceId} providerId={providerId} locationId={locationId} /> */}
-        </div>
+        {slots.length > 0 ? (
+          <div className={s.availabilities}>
+            <TemporaryService
+              serviceId={serviceId}
+              providerId={providerId}
+              locationId={locationId}
+              timeSlots={slots}
+            />
+          </div>
+        ) : <EmptyItem message="No time slot available"/>}
       </div>
     );
   }
