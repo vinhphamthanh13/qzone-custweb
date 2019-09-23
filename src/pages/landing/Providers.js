@@ -3,16 +3,14 @@ import { objectOf, any, func } from 'prop-types';
 import { connect } from 'react-redux';
 import { get, find, uniqBy } from 'lodash';
 import { IconButton } from '@material-ui/core';
-import { navigateTo } from 'utils/common';
-import { PhoneIphone, Email, Place, NavigateBefore } from '@material-ui/icons';
-import defaultPImage from 'images/providers.jpg';
+import { navigateTo, getLocationState } from 'utils/common';
+import { NavigateBefore } from '@material-ui/icons';
 import { providersProps } from 'pages/commonProps';
-import TemporaryService from './TemporaryService';
+import Provider from './Provider';
 import s from './Providers.module.scss';
 
 class Providers extends Component {
   static propTypes = {
-    match: objectOf(any).isRequired,
     location: objectOf(any),
     dispatchTemporaryServicesByServiceId: func.isRequired,
     dispatchAvailabilities: func.isRequired,
@@ -26,91 +24,60 @@ class Providers extends Component {
     catName: '',
     serviceName: '',
     providersByServiceId: {},
-    temporaryServiceByServiceIds: [],
+    temporaryServiceByServiceIds: {},
+    serviceId: '',
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { providersByServiceId, temporaryServiceByServiceIds } = props;
+    const { providersByServiceId, temporaryServiceByServiceIds, match: { params: { sId } } } = props;
     const {
       providersByServiceId: cachedProvidersByServiceId,
       temporaryServiceByServiceIds: cachedTemporaryServiceByServiceIds,
+      serviceId,
     } = state;
-    if (
-      Object.keys(providersByServiceId).length !== Object.keys(cachedProvidersByServiceId).length
-      || temporaryServiceByServiceIds.length !== cachedTemporaryServiceByServiceIds.length
-    ) {
-      return {
-        providersByServiceId,
-        temporaryServiceByServiceIds,
-      };
+    const updatedState = {};
+    if (JSON.stringify(providersByServiceId) !== JSON.stringify(cachedProvidersByServiceId)) {
+      updatedState.providersByServiceId = providersByServiceId;
     }
-    return null;
+    if (JSON.stringify(temporaryServiceByServiceIds) !== JSON.stringify(cachedTemporaryServiceByServiceIds)) {
+      updatedState.temporaryServiceByServiceIds = temporaryServiceByServiceIds;
+    }
+    if (sId !== serviceId) {
+      updatedState.serviceId = sId;
+    }
+
+    return Object.keys(updatedState) ? updatedState : null;
   }
 
   componentDidMount() {
-    const { location, match: { params: { sId } }, dispatchTemporaryServicesByServiceId } = this.props;
-    const catName = get(location, 'state.category');
-    const serviceName = get(location, 'state.service');
-    console.log('id', this.props);
-    dispatchTemporaryServicesByServiceId(sId);
+    const { location, dispatchTemporaryServicesByServiceId } = this.props;
+    const { serviceId } = this.state;
+    const catName = getLocationState(location, 'category');
+    const serviceName = getLocationState(location, 'service');
+    dispatchTemporaryServicesByServiceId(serviceId);
     this.setState({
       catName,
       serviceName,
     });
   }
 
-  createProviders = provider => () => {
-    const { dispatchAvailabilities } = this.props;
-    const pId = get(provider, 'userSub');
-    const pName = get(provider, 'givenName');
-    const pEmail = get(provider, 'email');
-    const pPhone = get(provider, 'telephone');
-    const pImage = get(provider, 'imageUrl') || defaultPImage;
-    const pAddress = get(provider, 'geoLocation.fullAddress');
-    const locationId = get(provider, 'geoLocation.id');
-    const temporaryServiceIds = get(provider, 'temporaryServiceId');
-    return (
-      <div key={pId} className={s.card}>
-        <div className={s.image}>
-          <img src={pImage} alt="QProvider" />
-        </div>
-        <div className={s.content}>
-          <div className={s.name}>
-            {pName}
-          </div>
-          <div className={s.item}>
-            <PhoneIphone className="icon-small" color="inherit" />
-            <span>&nbsp;{pPhone}</span>
-          </div>
-          <div className={s.item}>
-            <Email className="icon-small" color="inherit" />
-            <span>&nbsp;{pEmail}</span>
-          </div>
-          <div className={s.place}>
-            <div className={s.item}>
-              <Place className="icon-small" color="secondary" />
-              <span>&nbsp;{pAddress}</span>
-            </div>
-          </div>
-        </div>
-        <div className={s.availabilities}>
-          <TemporaryService
-            providerId={pId}
-            locationId={locationId}
-            fetchAvailabilities={dispatchAvailabilities}
-            temporaryServiceIds={temporaryServiceIds}
-          />
-        </div>
-      </div>
-    );
+  handleSelectService = catName => () => {
+    navigateTo('/', { catName })();
   };
 
   render() {
-    const { providersByServiceId, catName, serviceName, temporaryServiceByServiceIds } = this.state;
+    const { dispatchAvailabilities } = this.props;
+    const {
+      providersByServiceId,
+      catName,
+      serviceName,
+      temporaryServiceByServiceIds,
+      serviceId,
+    } = this.state;
     const providers = get(providersByServiceId, `${catName}.${serviceName}`) || [];
     const providerByLocation = {};
-    if (temporaryServiceByServiceIds.length > 0) {
-      temporaryServiceByServiceIds.map(item => {
+    if (Object.keys(temporaryServiceByServiceIds).length > 0 && temporaryServiceByServiceIds[serviceId].length) {
+      temporaryServiceByServiceIds[serviceId].map(item => {
         const locationId = get(item, 'geoLocation.id');
         const providerId = get(item, 'providerId');
         const providerDetail = find(providers, ['userSub', providerId]);
@@ -135,21 +102,23 @@ class Providers extends Component {
         })
       );
     }
-    // console.log('providerBylocaion', providerByLocation);
-    // console.log('temporaryServiceByProvider', temporaryServiceByProvider);
-    // console.log('providers', providers);
     return Object.keys(providerByLocation).length > 0 && (
       <div className={s.container}>
         <div className={s.navigation}>
-          <IconButton color="inherit" onClick={navigateTo('/')}>
+          <IconButton color="inherit" onClick={this.handleSelectService(catName)}>
             <NavigateBefore color="inherit" />
           </IconButton>
         </div>
         {Object.keys(providerByLocation).map(locationId => uniqBy(providerByLocation[locationId], 'userSub').map(
-          provider => this.createProviders({
-            ...provider,
-            temporaryServiceId: temporaryServiceByProvider[provider.userSub],
-          })()))}
+          provider => (
+            <Provider
+              provider={{
+                ...provider,
+                temporaryServiceId: temporaryServiceByProvider[provider.userSub],
+              }}
+              dispatchAvailabilities={dispatchAvailabilities}
+            />)
+        ))}
       </div>
     );
   }

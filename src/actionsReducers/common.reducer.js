@@ -12,6 +12,7 @@ import {
   SET_EVENT_BY_ID,
   SET_RESCHEDULE_STATUS,
   SERVICES_BY_SERVICE_CATEGORY_ID,
+  SET_TAB_ORDER,
 } from 'actionsReducers/common.actions';
 
 const persistConfig = {
@@ -41,6 +42,7 @@ const initState = {
   eventById: null,
   rescheduleStatus: 500,
   servicesByServiceCategoryId: {},
+  tabOrder: { 0: 0 },
 };
 
 const reducer = (state = initState, action) => {
@@ -94,6 +96,11 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         rescheduleStatus: action.payload,
+      };
+    case SET_TAB_ORDER:
+      return {
+        ...state,
+        tabOrder: action.payload,
       };
     case SERVICES_BY_SERVICE_CATEGORY_ID:
       return {

@@ -10,6 +10,7 @@ import s from './Tabs.module.scss';
 class Tabs extends Component {
   static propTypes = {
     onSelectTab: func.isRequired,
+    setTabOrder: func.isRequired,
   };
 
   static defaultProps = {
@@ -22,13 +23,15 @@ class Tabs extends Component {
     maxChunkCount: 0,
     chunkHistory: {},
     windowWidth: 0,
+    tabOrder: { 0: 0 },
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { tabsInfo, windowWidth } = props;
+    const { tabsInfo, windowWidth, tabOrder } = props;
     const {
       tabsInfo: cachedTabsInfo,
       windowWidth: cachedWindowWidth,
+      tabOrder: cachedTabOrder,
     } = state;
     const updatedState = {};
     if (JSON.stringify(tabsInfo) !== JSON.stringify(cachedTabsInfo)) {
@@ -37,24 +40,26 @@ class Tabs extends Component {
     if (windowWidth !== cachedWindowWidth) {
       updatedState.windowWidth = windowWidth;
     }
+    if (JSON.stringify(tabOrder) !== JSON.stringify(cachedTabOrder)) {
+      updatedState.chunkHistory = tabOrder;
+    }
 
     return Object.keys(updatedState).length ? updatedState : null;
   }
 
   componentDidMount() {
     const { onSelectTab } = this.props;
-    const { tabsInfo, activeTab, windowWidth } = this.state;
+    const { tabsInfo, activeTab, windowWidth, tabOrder } = this.state;
     const initCatName = Object.keys(tabsInfo)[0];
+    const initChunkTab = Number(Object.keys(tabOrder)[0]);
     const initTabInfo = tabsInfo[initCatName];
     onSelectTab(activeTab, initTabInfo, initCatName)();
     const chunkFactor = Math.abs(windowWidth / (MAX_TAB_WIDTH + 96));
     this.setState({
       maxChunkCount: chunk(Object.keys(tabsInfo), chunkFactor).length,
-      activeChunkTabs: 0,
+      activeChunkTabs: initChunkTab,
       chunkFactor,
-      chunkHistory: {
-        0: 0,
-      }
+      chunkHistory: tabOrder,
     });
   }
 
@@ -77,7 +82,7 @@ class Tabs extends Component {
 
 
   handleSelectTab = (index, tabInfo, catName) => () => {
-    const { onSelectTab } = this.props;
+    const { onSelectTab, setTabOrder } = this.props;
     const { activeChunkTabs, chunkHistory } = this.state;
     this.setState({
       activeTab: index,
@@ -87,6 +92,7 @@ class Tabs extends Component {
     });
     const oldChunk = Object.keys(chunkHistory)[0];
     const oldTab = chunkHistory[oldChunk];
+    setTabOrder({ [activeChunkTabs]: index });
     if (Number(oldChunk) !== activeChunkTabs || oldTab !== index) {
       onSelectTab(index, tabInfo, catName)();
     }
@@ -95,6 +101,7 @@ class Tabs extends Component {
   createTab = tabsInfo => {
     const { chunkFactor } = this.state;
     const { activeChunkTabs, chunkHistory } = this.state;
+    console.log('active chunk tab create tab', activeChunkTabs);
     const tabChunkCount = chunk(Object.keys(tabsInfo), chunkFactor);
     const lazyTabs = tabChunkCount[activeChunkTabs] || [];
     return lazyTabs.length > 0 && lazyTabs.map((tab, index) => {
@@ -103,7 +110,7 @@ class Tabs extends Component {
         // eslint-disable-next-line
         <div
           key={tab}
-          className={`${tabStyle} ${s.tabName}`}
+          className={`${tabStyle}`}
           onClick={this.handleSelectTab(index, tabsInfo[tab], tab)}>
             {tab}
         </div>

@@ -2,6 +2,7 @@ import { setServiceCategories, setServices } from 'actionsReducers/home.actions'
 import {
   setTemporaryServices,
   servicesByServiceCategoryIdBulkApi,
+  setTabOrder,
 } from 'actionsReducers/common.actions';
 import { providersByServiceIdApi } from 'actionsReducers/booking.actions';
 import {
@@ -34,6 +35,8 @@ export const landingProps = {
     dispatchProvidersByServiceId: (sId, sName, catName) => dispatch(providersByServiceIdApi(sId, sName, catName)),
     dispatchServices: () => dispatch(setServices()),
     dispatchTemporaryServices: () => dispatch(setTemporaryServices()),
+    dispatchTemporaryServicesByServiceId: list => dispatch(temporaryServicesByServiceIdApi(list)),
+    dispatchSetTabOrder: order => dispatch(setTabOrder(order)),
   })
 };
 
@@ -43,7 +46,7 @@ export const providersProps = {
     servicesByServiceCategoryId: common.servicesByServiceCategoryId,
     temporaryServiceByServiceIds: provider.temporaryServiceByServiceIds,
     availabilitiesByTemporaryServiceId: provider.availabilitiesByTemporaryServiceId,
-
+    tabOrder: common.tabOrder,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchTemporaryServicesByServiceId: list => dispatch(temporaryServicesByServiceIdApi(list)),

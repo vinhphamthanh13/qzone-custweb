@@ -8,7 +8,7 @@ import {
 const initState = {
   providerDetail: null,
   providerServices: null,
-  temporaryServiceByServiceIds: [],
+  temporaryServiceByServiceIds: {},
   availabilitiesByTemporaryServiceId: {},
 };
 
@@ -30,7 +30,10 @@ const reducer = (state = initState, action) => {
     case TEMPORARY_SERVICES_BY_SERVICE_ID:
       return {
         ...state,
-        temporaryServiceByServiceIds: action.payload,
+        temporaryServiceByServiceIds: {
+          ...state.temporaryServiceByServiceIds,
+          ...action.payload,
+        },
       };
     case AVAILABILITIES_BY_TMP_SERVICE_ID:
       return {

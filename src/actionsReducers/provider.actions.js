@@ -41,23 +41,13 @@ export const setProviderDetailAction = id => async (dispatch) => {
   }
   dispatch(setLoading(false));
 };
-export const providerDetailApi = id => async (dispatch) => {
-  dispatch(setLoading(true));
-  const [result, error] = await handleRequest(users, [id]);
-  if (error) {
-    dispatch(setError(error));
-  } else {
-    dispatch(setProviderDetail(result));
-  }
-  dispatch(setLoading(false));
-};
 export const temporaryServicesByServiceIdApi = id => async (dispatch) => {
   dispatch(setLoading(true));
   const [result, error] = await handleRequest(temporaryServicesByServiceId, [id]);
   if (error) {
     dispatch(setError(error));
   } else {
-    dispatch(temporaryServicesByServiceIdAction(result));
+    dispatch(temporaryServicesByServiceIdAction({ [id]: result}));
   }
   dispatch(setLoading(false));
 };

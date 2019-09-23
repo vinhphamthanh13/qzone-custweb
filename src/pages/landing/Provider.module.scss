@@ -1,0 +1,60 @@
+@import "styles/_settings.scss";
+
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: $max-card-width;
+  margin: 0.4rem;
+  border: 1px solid $main_03;
+  box-shadow: 2px 2px 13px 1px $main_04;
+  position: relative;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+}
+
+.image {
+  max-width: $max-card-width;
+  border: 0.2rem;
+  overflow: hidden;
+  height: 150px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.name {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0.5rem;
+  max-width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  text-transform: capitalize;
+}
+
+.item {
+  color: inherit;
+  display: flex;
+  align-items: center;
+}
+
+.place {
+  height: 3.5rem;
+  display: flex;
+  align-items: center;
+  border: 1px solid $main_03;
+  border-radius: 0.4rem;
+  background: $gallery;
+  padding: 0.2rem 0.2rem 0.2rem 0.1rem;
+  margin: auto 0.2rem;
+}
+
+.availabilities {
+  color: inherit;
+}

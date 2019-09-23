@@ -22,8 +22,8 @@ const rootRoutes = [
   {
     exact: true,
     strict: true,
-    path: '/provider/:sId',
-    name: 'Select Provider',
+    path: '/provider-by-service/:sId',
+    name: 'Provider By Service',
     component: Providers,
   },
   {

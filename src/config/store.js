@@ -14,6 +14,7 @@ import waitLists from 'actionsReducers/waitlist.reducer';
 import organization from 'actionsReducers/organization.reducer';
 import customer from 'actionsReducers/customer.reducer';
 import surveys from 'actionsReducers/surveys.reducer';
+// import landing from 'actionsReducers/landing.reducer';
 
 const rootReducer = combineReducers({
   auth,
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   profile,
   customer,
   surveys,
+  // landing,
 });
 
 const appReducer = (state, action) => {

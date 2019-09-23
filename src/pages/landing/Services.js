@@ -3,12 +3,6 @@ import Service from './Service';
 import s from './Services.module.scss';
 
 class Services extends Component {
-  static propTypes = {
-  };
-
-  static defaultProps = {
-  };
-
   state = {
     catName: '',
     serviceList: [],
@@ -17,27 +11,22 @@ class Services extends Component {
   static getDerivedStateFromProps(props, state) {
     const { serviceList, catName } = props;
     const { catName: cachedCatName } = state;
-
-    if (
-      serviceList.length ||
-      catName !== cachedCatName
-    ) {
-      return {
-        serviceList,
-        catName,
-      };
+    const updatedState = {};
+    if (serviceList.length) {
+      updatedState.serviceList = serviceList;
+    }
+    if (catName !== cachedCatName) {
+      updatedState.catName = catName;
     }
 
-    return null;
+    return Object.keys(updatedState).length ? updatedState : null;
   }
-
-
 
   render() {
     const { serviceList, catName } = this.state;
     return (
       <div className={s.content}>
-        {serviceList.map(service => <Service service={service} catName={catName} />)}
+        {serviceList.map(service => <Service key={service.id} service={service} catName={catName} />)}
       </div>
     );
   }

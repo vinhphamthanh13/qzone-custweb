@@ -11,6 +11,7 @@ import s from './Service.module.scss';
 class Service extends Component {
   static propTypes = {
     dispatchProvidersByServiceId: func.isRequired,
+    dispatchTemporaryServicesByServiceId: func.isRequired,
   };
 
   static defaultProps = {
@@ -24,30 +25,34 @@ class Service extends Component {
 
   static getDerivedStateFromProps(props, state) {
     const { service, catName, providersByServiceId } = props;
-    const { service: cachedService, catName: cachedCatName, providersByServiceId: cachedProvidersByServiceId } = state;
-    if (
-      service.id !== cachedService.id
-      || catName !== cachedCatName
-      || providersByServiceId !== cachedProvidersByServiceId
-    ) {
-      return {
-        service,
-        catName,
-        providersByServiceId,
-      };
+    const {
+      service: cachedService,
+      catName: cachedCatName,
+      providersByServiceId: cachedProvidersByServiceId,
+    } = state;
+    const updatedState = {};
+    if (service.id !== cachedService.id) {
+      updatedState.service = service;
+    }
+    if (catName !== cachedCatName) {
+      updatedState.catName = catName;
+    }
+    if (JSON.stringify(providersByServiceId) !== JSON.stringify(cachedProvidersByServiceId)) {
+      updatedState.providersByServiceId = providersByServiceId;
     }
 
-    return null;
+    return Object.keys(updatedState) ? updatedState : null;
   }
 
   componentDidMount() {
-    const { dispatchProvidersByServiceId } = this.props;
+    const { dispatchProvidersByServiceId, dispatchTemporaryServicesByServiceId } = this.props;
         const { service, catName } = this.state;
     dispatchProvidersByServiceId(service.id, service.name, catName);
+    dispatchTemporaryServicesByServiceId(service.id);
   }
 
   handleSelectProvider = (sId, sName, catName )=> () => {
-    navigateTo(`/provider/${sId}`, { category: catName, service: sName })();
+    navigateTo(`/provider-by-service/${sId}`, { category: catName, service: sName })();
   };
 
   handleSelectOrg = orgId => () => {

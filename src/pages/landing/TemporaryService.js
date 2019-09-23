@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { func } from 'prop-types';
 import { get, chunk } from 'lodash';
+import uuidv1 from 'uuid/v1';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { providersProps } from 'pages/commonProps';
@@ -18,39 +19,43 @@ class TemporaryService extends Component {
       providerId: '',
       locationId: '',
       temporaryServiceIds: [],
+      availabilitiesByTemporaryServiceId: {},
     };
 
     static getDerivedStateFromProps(props, state) {
-      const { temporaryServiceIds, providerId, locationId, availabilitiesByTemporaryServiceId } = props;
+      const { temporaryServiceIds, providerId, locationId, availabilitiesByTemporaryServiceId, serviceId } = props;
       const {
-        temporaryServiceIds: cachedTemporaryServiceIds,
         providerId: cachedProviderId,
         locationId: cachedLocationId,
         availabilitiesByTemporaryServiceId: cachedAvailabilitiesByTemporaryServiceId,
+        serviceId: cachedServiceId,
       } = state;
-        if (
-          temporaryServiceIds.length !== cachedTemporaryServiceIds.length
-          || providerId !== cachedProviderId
-          || locationId !== cachedLocationId
-          || !(Object.is(availabilitiesByTemporaryServiceId, cachedAvailabilitiesByTemporaryServiceId))
-        ) {
-            return {
-              locationId,
-              providerId,
-              temporaryServiceIds,
-              availabilitiesByTemporaryServiceId,
-            };
-        }
+      const updatedState = {};
+      if (temporaryServiceIds.length) {
+        updatedState.temporaryServiceIds = temporaryServiceIds;
+      }
+      if (providerId !== cachedProviderId) {
+        updatedState.providerId = providerId;
+      }
+      if (serviceId !== cachedServiceId) {
+        updatedState.serviceId = serviceId;
+      }
+      if (locationId !== cachedLocationId) {
+        updatedState.locationId = locationId;
+      }
+      if (
+        JSON.stringify(availabilitiesByTemporaryServiceId) !== JSON.stringify(cachedAvailabilitiesByTemporaryServiceId)
+      ) {
+        updatedState.availabilitiesByTemporaryServiceId = availabilitiesByTemporaryServiceId;
+      }
 
-        return null;
+      return Object.keys(updatedState) ? updatedState : null;
     }
 
     componentDidMount() {
       const { fetchAvailabilities } = this.props;
       const { temporaryServiceIds, providerId, locationId } = this.state;
-      if (providerId && temporaryServiceIds.length > 0) {
-        fetchAvailabilities(temporaryServiceIds, providerId, locationId);
-      }
+      fetchAvailabilities(temporaryServiceIds, providerId, locationId);
     }
 
     render() {
@@ -59,10 +64,11 @@ class TemporaryService extends Component {
       const slots = get(availabilitiesByTemporaryServiceId, `${providerId}${locationId}`) || [];
       return (
         <div className={s.container}>
+          {providerId}{locationId}
           {slots.length > 0 && chunk(slots, 3).map(chunkRow => (
-            <div className={s.row}>
+            <div className={s.row} key={uuidv1()}>
               {chunkRow.map(slot => (
-                <div className={s.slot}>
+                <div className={s.slot} key={slot.id}>
                   {moment(slot.providerStartSec).format('HH:mm A')}
                 </div>
               ))}

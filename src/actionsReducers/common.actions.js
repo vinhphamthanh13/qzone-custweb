@@ -19,7 +19,7 @@ export const SET_TEMPORARY_SERVICE_BY_LOCATION = 'COMMON.SET_TEMPORARY_SERVICE_B
 export const SET_EVENT_BY_ID = 'COMMON.SET_EVENT_BY_ID';
 export const SET_RESCHEDULE_STATUS = 'COMMON.SET_RESCHEDULE_STATUS';
 export const SERVICES_BY_SERVICE_CATEGORY_ID = 'COMMON.SERVICES_BY_SERVICE_CATEGORY_ID';
-
+export const SET_TAB_ORDER = 'COMMON.SET_TAB_ORDER';
 export const setLoading = payload => ({
   type: SET_LOADING,
   payload,
@@ -45,6 +45,10 @@ const setServiceProviders = payload => ({
 });
 const setEventByCustomerId = payload => ({
   type: FIND_EVENT_BY_CUSTOMER_ID,
+  payload,
+});
+export const setTabOrder = payload => ({
+  type: SET_TAB_ORDER,
   payload,
 });
 const setTemporaryServiceByLocationAction = payload => ({

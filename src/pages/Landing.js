@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unused-state */
 
 import React, { Component } from 'react';
-import { func } from 'prop-types';
+import { func, objectOf, any } from 'prop-types';
 import { connect } from 'react-redux';
 import { landingProps } from 'pages/commonProps';
 import EmptyItem from 'components/EmptyItem';
@@ -9,6 +9,7 @@ import Loading from 'components/Loading';
 import Error from 'components/Error';
 import Success from 'components/Success';
 import Tabs from 'components/Tabs/Tabs'
+import { getLocationState } from 'utils/common';
 import Services from './landing/Services';
 import s from './Landing.module.scss';
 
@@ -16,22 +17,28 @@ class Landing extends Component {
   static propTypes = {
     dispatchServiceCategory: func.isRequired,
     dispatchServicesByServiceCategoryId: func.isRequired,
+    dispatchSetTabOrder: func.isRequired,
+    match: objectOf(any),
+    location: objectOf(any),
   };
 
   static defaultProps = {
+    match: {},
+    location: {},
   };
 
   state = {
     tabsInfo: {},
+    tabOrder: {},
     activeTab: 0,
     catName: '',
     servicesByServiceCategoryId: {},
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { categories, servicesByServiceCategoryId } = props;
+    const { categories, servicesByServiceCategoryId, tabOrder } = props;
     const {
-      servicesByServiceCategoryId: cachedServicesByServiceCategoryId,
+      servicesByServiceCategoryId: cachedServicesByServiceCategoryId, tabOrder: cachedTabOrder,
     } = state;
     const tabsInfo = {};
     const updatedState = {};
@@ -44,12 +51,17 @@ class Landing extends Component {
     if (JSON.stringify(servicesByServiceCategoryId) !== JSON.stringify(cachedServicesByServiceCategoryId)) {
       updatedState.servicesByServiceCategoryId = servicesByServiceCategoryId;
     }
+    if (JSON.stringify(tabOrder) !== JSON.stringify(cachedTabOrder)) {
+      updatedState.tabOrder = tabOrder;
+    }
 
     return Object.keys(updatedState).length ? updatedState : null;
   }
 
   componentDidMount() {
-    const { dispatchServiceCategory } = this.props;
+    const { dispatchServiceCategory, match, location } = this.props;
+    console.log('match', match);
+    this.setState({ catName: getLocationState(location,'catName') });
     dispatchServiceCategory();
   }
 
@@ -64,8 +76,10 @@ class Landing extends Component {
   };
 
   render() {
-    const { activeTab, tabsInfo, servicesByServiceCategoryId, catName } = this.state;
+    const { dispatchSetTabOrder } = this.props;
+    const { activeTab, tabsInfo, servicesByServiceCategoryId, catName, tabOrder } = this.state;
     const serviceList = servicesByServiceCategoryId[catName] || [];
+
     return (
       <>
         <Loading />
@@ -75,6 +89,8 @@ class Landing extends Component {
           {Object.keys(tabsInfo).length > 0 && (
             <>
               <Tabs
+                setTabOrder={dispatchSetTabOrder}
+                tabOrder={tabOrder}
                 tabsInfo={tabsInfo}
                 onSelectTab={this.handleSelectTab}
               />
