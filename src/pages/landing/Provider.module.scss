@@ -27,6 +27,25 @@
   align-items: center;
 }
 
+.rateStar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background: $gallery;
+  padding: 0.2rem;
+  border-top-right-radius: 0.2rem;
+}
+
+.viewMap {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: $gallery;
+  font-size: 1rem;
+  border-radius: 0.2rem;
+  padding: 0.2rem;
+}
+
 .name {
   font-size: 1.2rem;
   font-weight: 600;

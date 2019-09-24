@@ -5,7 +5,6 @@ import {
   events,
   temporaryServicesById,
   availabilitiesById,
-  // providersByServiceIdBulk,
   fetchProvidersByServiceId,
 } from 'actionsApi/booking';
 import {
@@ -25,6 +24,7 @@ export const SET_BOOKING_STEP = 'BOOKING.SET_BOOKING_STEP';
 export const RESET_BOOKING = 'BOOKING.RESET_BOOKING';
 export const SET_TEMPORARY_SERVICES_BY_ID = 'BOOKING.SET_TEMPORARY_SERVICES_BY_ID';
 export const SET_BOOKED_EVENT_ID = 'BOOKING.SET_BOOKED_EVENT_ID';
+export const SELECT_BOOKING_SLOT = 'BOOKING.SELECT_BOOKING_SLOT';
 
 const getServiceById = payload => ({
   type: GET_SERVICE_BY_ID,
@@ -50,7 +50,6 @@ const setTemporaryServicesById = payload => ({
   type: SET_TEMPORARY_SERVICES_BY_ID,
   payload,
 });
-
 export const setBookingDetail = payload => ({
   type: SET_BOOKING_DETAIL,
   payload,
@@ -66,6 +65,10 @@ export const setBookedEventId = payload => ({
   type: SET_BOOKED_EVENT_ID,
   payload,
 });
+export const selectBookingSlot = payload => ({
+  type: SELECT_BOOKING_SLOT,
+  payload,
+});
 export const getServiceByIdAction = id => async (dispatch) => {
   dispatch(setLoading(true));
   const [result, error] = await handleRequest(serviceById, [id]);
@@ -76,18 +79,6 @@ export const getServiceByIdAction = id => async (dispatch) => {
   }
   dispatch(setLoading(false));
 };
-// export const providersByServiceIdBulkApi = (listId, catName) => async dispatch => {
-//   dispatch(setLoading(true));
-//   const [providerBulk, errorBulk] = await providersByServiceIdBulk(listId);
-//   if (errorBulk) {
-//     dispatch(setError(get(JSON.parse(errorBulk), 'response.data.message')));
-//   } else {
-//     const responseBulk = [];
-//     providerBulk.map(item => responseBulk.push(...item.data.objects));
-//     dispatch(providersByServiceIdAction({ [catName]: responseBulk }));
-//   }
-//   dispatch(setLoading(false));
-// };
 export const providersByServiceIdApi = (sId, sName, catName) => async dispatch => {
   dispatch(setLoading(true));
   const [result, error] = await handleRequest(fetchProvidersByServiceId, [sId]);

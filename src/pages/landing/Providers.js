@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { objectOf, any, func } from 'prop-types';
 import { connect } from 'react-redux';
 import windowSize from 'react-window-size';
-import { get, find, uniqBy, chunk } from 'lodash';
+import { get, find, uniqBy, chunk, flatten } from 'lodash';
 import { IconButton } from '@material-ui/core';
 import { navigateTo, getLocationState } from 'utils/common';
 import { NavigateBefore } from '@material-ui/icons';
@@ -124,6 +124,10 @@ class Providers extends Component {
       );
     }
     const chunkFactor = Math.abs(windowWidth / MAX_CARD_WIDTH);
+    const providerList = Object.keys(providerByLocation).map(locId =>
+      uniqBy(providerByLocation[locId], 'userSub').map(provider => provider));
+    const providerFlatten = flatten(providerList);
+
     return Object.keys(providerByLocation).length > 0 && (
       <div className={s.container}>
         <div className={s.navigation}>
@@ -131,21 +135,21 @@ class Providers extends Component {
             <NavigateBefore color="inherit" />
           </IconButton>
         </div>
-        {Object.keys(providerByLocation).map(locationId =>
-          chunk(uniqBy(providerByLocation[locationId], 'userSub'), chunkFactor).map(providerRow => (
-            <div className={s.providerRow}>
-              {providerRow.map(provider => (
-                <Provider
-                  key={provider.userSub}
-                  provider={{
-                    ...provider,
-                    temporaryServiceId: temporaryServiceByProvider[provider.userSub],
-                  }}
-                  dispatchAvailabilities={dispatchAvailabilities}
-                  availabilitiesByTemporaryServiceId={availabilitiesByTemporaryServiceId}
-              />))}
-            </div>
-          )))}
+        {chunk(providerFlatten, chunkFactor).map((providerRow, index) => (
+          // eslint-disable-next-line
+          <div className={s.providerRow} key={index}>
+            {providerRow.map(provider => (
+              <Provider
+                key={provider.userSub}
+                provider={{
+                  ...provider,
+                  temporaryServiceId: temporaryServiceByProvider[provider.userSub],
+                }}
+                dispatchAvailabilities={dispatchAvailabilities}
+                availabilitiesByTemporaryServiceId={availabilitiesByTemporaryServiceId}
+            />))}
+          </div>
+        ))}
       </div>
     );
   }
