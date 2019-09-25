@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { func } from 'prop-types';
 import { chunk } from 'lodash';
 import uuidv1 from 'uuid/v1';
 import moment from 'moment';
@@ -6,6 +7,7 @@ import s from './TemporaryService.module.scss';
 
 class TemporaryService extends Component {
   static propTypes = {
+    selectSlot: func.isRequired,
   };
 
   static defaultProps = {
@@ -27,6 +29,7 @@ class TemporaryService extends Component {
   }
 
   render() {
+    const { selectSlot } = this.props;
     const { timeSlots } = this.state;
     const slotsByDate = {};
     timeSlots.map(slot => {
@@ -35,7 +38,6 @@ class TemporaryService extends Component {
       slotsByDate[date].push(slot);
       return null;
     });
-    console.log('slotsByDate', slotsByDate);
     return (
       <div className={s.container}>
         {Object.keys(slotsByDate).map(date => (
@@ -47,7 +49,8 @@ class TemporaryService extends Component {
               {chunk(slotsByDate[date], 3).map(chunkRow => (
                 <div className={s.row} key={uuidv1()}>
                   {chunkRow.map(slot => (
-                    <div className={s.slot} key={slot.id}>
+                    /* eslint-disable-next-line */
+                    <div className={s.slot} key={slot.id} onClick={selectSlot(slot)}>
                       {moment(slot.providerStartSec).format('HH:mm A')}
                     </div>
                   ))}

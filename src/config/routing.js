@@ -1,6 +1,7 @@
 // import Home from 'pages/Home';
 import Landing from 'pages/Landing';
 import Providers from 'pages/landing/Providers';
+import Booking from 'pages/landing/booking/Booking';
 // import Booking from 'pages/Booking';
 import PageNotFound from 'pages/PageNotFound';
 import AccessDenied from 'pages/AccessDenied';
@@ -25,6 +26,13 @@ const rootRoutes = [
     path: '/provider-by-service/:sId',
     name: 'Provider By Service',
     component: Providers,
+  },
+  {
+    exact: true,
+    strict: true,
+    path: '/confirm-booking',
+    name: 'Confirm Booking',
+    component: Booking,
   },
   {
     exact: true,

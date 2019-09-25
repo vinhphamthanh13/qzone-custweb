@@ -20,7 +20,7 @@
   max-width: $max-card-width;
   border: 0.2rem;
   overflow: hidden;
-  height: 150px;
+  height: $provider-image-height;
   position: relative;
   display: flex;
   justify-content: center;
@@ -42,7 +42,7 @@
   right: 0;
   background: $gallery;
   font-size: 1rem;
-  border-radius: 0.2rem;
+  border-radius: 0.2rem 0 0 0;
   padding: 0.2rem;
 }
 
@@ -64,7 +64,7 @@
 }
 
 .place {
-  height: 3.5rem;
+  height: $full-address-height;
   display: flex;
   align-items: center;
   border: 1px solid $main_03;

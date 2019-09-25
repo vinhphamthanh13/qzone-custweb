@@ -10,7 +10,6 @@ import {
   RESET_BOOKING,
   SET_TEMPORARY_SERVICES_BY_ID,
   SET_BOOKED_EVENT_ID,
-  SELECT_BOOKING_SLOT,
 } from 'actionsReducers/booking.actions';
 
 import storage from 'redux-persist/lib/storage';
@@ -27,7 +26,6 @@ const initState = {
   appointmentEvent: null,
   availabilitiesById: null,
   bookedEventIdList: [],
-  selectedBookingSlot: {},
 };
 
 const persistConfig = {
@@ -119,11 +117,6 @@ const reducer = (state = initState, action) => {
         bookingDetail: {},
         appointmentEvent: null,
         bookedEventIdList: [],
-      };
-    case SELECT_BOOKING_SLOT:
-      return {
-        ...state,
-        selectedBookingSlot: action.payload,
       };
     default:
       return state;

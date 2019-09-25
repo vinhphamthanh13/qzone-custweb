@@ -8,6 +8,7 @@ import { providersByServiceIdApi } from 'actionsReducers/booking.actions';
 import {
   temporaryServicesByServiceIdApi,
   availabilitiesByTemporaryServiceIdApi,
+  selectBookingDetail,
 } from 'actionsReducers/provider.actions';
 
 export const homeProps = {
@@ -52,5 +53,6 @@ export const providersProps = {
     dispatchTemporaryServicesByServiceId: list => dispatch(temporaryServicesByServiceIdApi(list)),
     dispatchAvailabilities: (list, sId, pId, locId) =>
       dispatch(availabilitiesByTemporaryServiceIdApi(list, sId, pId, locId)),
+    dispatchSelectBookingDetail: slot => dispatch(selectBookingDetail(slot)),
   }),
 };

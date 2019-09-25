@@ -3,13 +3,25 @@ import {
   SET_PROVIDER_SERVICE,
   TEMPORARY_SERVICES_BY_SERVICE_ID,
   AVAILABILITIES_BY_TMP_SERVICE_ID,
+  SELECT_BOOKING_DETAIL,
 } from 'actionsReducers/provider.actions';
+
+import storage from 'redux-persist/lib/storage';
+import { persistReducer } from 'redux-persist';
+import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 
 const initState = {
   providerDetail: null,
   providerServices: null,
   temporaryServiceByServiceIds: {},
   availabilitiesByTemporaryServiceId: {},
+  selectedBookingDetail: {},
+};
+const persistConfig = {
+  key: 'provider',
+  storage,
+  stateReconciler: autoMergeLevel2,
+  blacklist: [],
 };
 
 const reducer = (state = initState, action) => {
@@ -43,9 +55,14 @@ const reducer = (state = initState, action) => {
           ...action.payload,
         },
       };
+    case SELECT_BOOKING_DETAIL:
+      return {
+        ...state,
+        selectedBookingDetail: action.payload,
+      };
     default:
       return { ...state };
   }
 };
 
-export default reducer;
+export default persistReducer(persistConfig, reducer);

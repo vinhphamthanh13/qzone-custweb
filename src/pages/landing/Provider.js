@@ -3,16 +3,18 @@ import { func } from 'prop-types';
 import { get } from 'lodash';
 import defaultPImage from 'images/providers.jpg';
 import { IconButton } from '@material-ui/core';
-import { Email, PhoneIphone, Place } from '@material-ui/icons';
+import { Email, PhoneIphone, Place, GpsFixed } from '@material-ui/icons';
 import EmptyItem from 'components/EmptyItem';
 import MapDialog from 'components/Map/MapDialog';
 import RateStar from 'components/Rating/RateStar';
+import { navigateTo } from 'utils/common';
 import TemporaryService from 'pages/landing/TemporaryService';
 import s from './Provider.module.scss';
 
 class Provider extends Component {
   static propTypes = {
     dispatchAvailabilities: func.isRequired,
+    selectBookingDetail: func.isRequired,
   };
 
   static defaultProps = {
@@ -66,26 +68,38 @@ class Provider extends Component {
     }));
   };
 
+  handleSelectSlot = (slot) => () => {
+    const { selectBookingDetail } = this.props;
+    selectBookingDetail(slot);
+    navigateTo('/confirm-booking')();
+  };
+
   render() {
     const { provider, serviceId, providerId, locationId, availabilitiesByTemporaryServiceId, isOpenMap } = this.state;
     const sName = get(provider, 'serviceName');
     const pName = get(provider, 'givenName');
     const pEmail = get(provider, 'email');
     const pPhone = get(provider, 'telephone');
-    const pImage = get(provider, 'imageUrl') || defaultPImage;
+    const providerInfo = get(provider, 'providerInformation');
+
+    const pImage = get(providerInfo, 'image.fileUrl') || defaultPImage;
     const pRate = get(provider, 'rating');
     const geoLocation = get(provider, 'geoLocation');
     const pAddress = get(geoLocation, 'fullAddress');
+    const timeZoneId = get(providerInfo, 'timeZoneId');
     const timeSlots = get(availabilitiesByTemporaryServiceId,`${serviceId}-${providerId}-${locationId}`) || [];
     const slots = timeSlots.length > 0 && timeSlots.filter(slot =>
       slot.serviceId === serviceId && slot.providerId === providerId && slot.locationId === locationId) || [];
+    const transformedSlot = slots.map(slot => ({
+      ...slot, sName, pName, pEmail, pPhone, pImage, pAddress,
+    }));
 
     return (
       <>
         <MapDialog isOpen={isOpenMap} serviceName={sName} toggle={this.handleMapPopup} geoLocation={geoLocation} />
         <div key={providerId} className={s.card}>
           <div className={s.image}>
-            <img src={pImage} alt="QProvider" />
+            <img src={pImage} alt="QProvider" width="100%" height="100%" />
             <div className={s.rateStar}>
               <RateStar rating={pRate} />
             </div>
@@ -111,14 +125,19 @@ class Provider extends Component {
                 <span>&nbsp;{pAddress}</span>
               </div>
             </div>
+            <div className={s.item}>
+              <GpsFixed className="icon-small" color="inherit" />
+              <span>&nbsp;{timeZoneId}</span>
+            </div>
           </div>
-          {slots.length > 0 ? (
+          {transformedSlot.length > 0 ? (
             <div className={s.availabilities}>
               <TemporaryService
                 serviceId={serviceId}
                 providerId={providerId}
                 locationId={locationId}
-                timeSlots={slots}
+                timeSlots={transformedSlot}
+                selectSlot={this.handleSelectSlot}
               />
             </div>
           ) : <EmptyItem message="No slot available"/>}

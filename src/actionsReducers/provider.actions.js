@@ -15,6 +15,7 @@ export const SET_PROVIDER_DETAIL = 'PROVIDER.SET_PROVIDER_DETAIL';
 export const SET_PROVIDER_SERVICE = 'PROVIDER.SET_PROVIDER_SERVICE';
 export const TEMPORARY_SERVICES_BY_SERVICE_ID = 'TEMPORARY_SERVICE.TEMPORARY_SERVICES_BY_SERVICE_ID';
 export const AVAILABILITIES_BY_TMP_SERVICE_ID = 'APPOINTMENT_RESOURCE.AVAILABILITIES_BY_TMP_SERVICE_ID';
+export const SELECT_BOOKING_DETAIL = 'BOOKING.SELECT_BOOKING_DETAIL';
 const setProviderDetail = payload => ({
   type: SET_PROVIDER_DETAIL,
   payload,
@@ -73,3 +74,7 @@ export const setProviderServiceAction = id => async (dispatch) => {
   }
   dispatch(setLoading(false));
 };
+export const selectBookingDetail = payload => ({
+  type: SELECT_BOOKING_DETAIL,
+  payload,
+});

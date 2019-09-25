@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
 import { objectOf, any, func } from 'prop-types';
 import { connect } from 'react-redux';
@@ -16,6 +17,7 @@ class Providers extends Component {
     location: objectOf(any),
     dispatchTemporaryServicesByServiceId: func.isRequired,
     dispatchAvailabilities: func.isRequired,
+    dispatchSelectBookingDetail: func.isRequired,
   };
 
   static defaultProps = {
@@ -85,15 +87,10 @@ class Providers extends Component {
   };
 
   render() {
-    const { dispatchAvailabilities } = this.props;
+    const { dispatchAvailabilities, dispatchSelectBookingDetail } = this.props;
     const {
-      providersByServiceId,
-      catName,
-      serviceName,
-      temporaryServiceByServiceIds,
-      serviceId,
-      availabilitiesByTemporaryServiceId,
-      windowWidth,
+      providersByServiceId, catName, serviceName, temporaryServiceByServiceIds,
+      serviceId, availabilitiesByTemporaryServiceId, windowWidth,
     } = this.state;
     const providers = get(providersByServiceId, `${catName}.${serviceName}`) || [];
     const providerByLocation = {};
@@ -135,18 +132,18 @@ class Providers extends Component {
             <NavigateBefore color="inherit" />
           </IconButton>
         </div>
-        {chunk(providerFlatten, chunkFactor).map((providerRow, index) => (
-          // eslint-disable-next-line
-          <div className={s.providerRow} key={index}>
-            {providerRow.map(provider => (
+        {chunk(providerFlatten, chunkFactor).map((providerRow, ind) => (
+          <div className={s.providerRow} key={ind}>
+            {providerRow.map((provider, index) => (
               <Provider
-                key={provider.userSub}
+                key={`${provider.userSub}-${index}`}
                 provider={{
                   ...provider,
                   temporaryServiceId: temporaryServiceByProvider[provider.userSub],
                 }}
                 dispatchAvailabilities={dispatchAvailabilities}
                 availabilitiesByTemporaryServiceId={availabilitiesByTemporaryServiceId}
+                selectBookingDetail={dispatchSelectBookingDetail}
             />))}
           </div>
         ))}

@@ -93,20 +93,10 @@ class ClientInfo extends Component {
 
   render() {
     const {
-      values,
-      handleSubmit,
-      errors,
-      isInitialValid,
-      isValid,
-      expiredCallback,
-      touched,
-      handleBlur,
-      handleFormValidation,
-      onloadCallback,
+      values, handleSubmit, errors, isInitialValid, isValid, expiredCallback, touched,
+      handleBlur, handleFormValidation, onloadCallback,
     } = this.props;
-    const {
-      userDetail,
-    } = this.state;
+    const { userDetail } = this.state;
 
     const userName = get(values, 'userName') || '';
     const userEmail = get(values, 'userEmail') || '';
