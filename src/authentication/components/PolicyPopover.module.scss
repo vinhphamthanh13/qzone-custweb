@@ -1,0 +1,20 @@
+@import "styles/_settings.scss";
+
+ul {
+  list-style-type: circle;
+  padding-left: 1.3rem;
+}
+
+.hint {
+  color: $info;
+  min-width: unset;
+}
+
+.hintConventions {
+  padding: 0.5rem 1rem;
+}
+
+.hintConventions > p {
+  font-weight: 500;
+  color: $info;
+}
