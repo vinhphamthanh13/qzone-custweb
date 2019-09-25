@@ -1,20 +1,22 @@
 @import "styles/_settings.scss";
 
 .container {
-  color: $main_04;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .details {
+  margin: 0.5rem auto;
   display: flex;
   flex-direction: column;
   width: $max-card-width;
-  margin: 0.2rem 0.5rem;
 }
 
 .sName {
   font-size: $heading;
   font-weight: 600;
-  padding: 0.2rem 0;
   color: $fruitSalad;
 }
 
@@ -52,4 +54,9 @@
   border: 1px solid $main_03;
   background: $gallery;
   border-radius: 0.4rem;
+}
+
+.clientInfo {
+  display: flex;
+  flex-direction: column;
 }

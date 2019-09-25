@@ -1,14 +1,10 @@
 @import "styles/_settings.scss";
 
-.content {
-  width: 100%;
-}
-
 .card {
-  display: flex;
-  flex-direction: column;
   width: 100%;
   max-width: $max-card-width;
+  display: flex;
+  flex-direction: column;
   margin: 0.4rem;
   border: 1px solid $main_03;
   box-shadow: 2px 2px 13px 1px $main_04;
@@ -17,20 +13,17 @@
 
 .image {
   max-width: $max-card-width;
-  border: 0.2rem;
   overflow: hidden;
-  height: 150px;
+  height: $provider-image-height;
   position: relative;
 }
 
 .duration {
-  font-size: 0.85rem;
-  color: $info;
-  margin-left: 0.5rem;
+  color: $success;
   position: absolute;
   bottom: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.8);
+  background: $gallery;
   padding: 0.2rem 0.5rem;
   border-top-left-radius: 0.5rem;
 }
@@ -38,17 +31,12 @@
 .cardContent {
   display: flex;
   flex-direction: column;
-
 }
 
 .cardName {
   font-size: 1.2rem;
   font-weight: 600;
   margin: 0.5rem;
-  max-width: 100%;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
   text-transform: capitalize;
 }
 

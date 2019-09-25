@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { func, string, objectOf, bool, any } from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { get } from 'lodash';
+import { get, noop } from 'lodash';
 import { withFormik } from 'formik';
 import { TextField, InputAdornment } from '@material-ui/core';
 import Recaptcha from 'react-recaptcha';
@@ -19,19 +19,20 @@ class ClientInfo extends Component {
     touched: objectOf(any).isRequired,
     setFieldValue: func.isRequired,
     handleBlur: func.isRequired,
-    handleFormValidation: func.isRequired,
+    handleSubmit: func.isRequired,
     errors: objectOf(string).isRequired,
     isValid: bool.isRequired,
     isInitialValid: bool,
     verifyCallback: func.isRequired,
     expiredCallback: func.isRequired,
-    handleSubmit: func.isRequired,
     onloadCallback: func.isRequired,
+    handleFormValidation: func,
     clearGuestErrorAction: func.isRequired,
   };
 
   static defaultProps = {
     isInitialValid: false,
+    handleFormValidation: noop,
   };
 
   state = {

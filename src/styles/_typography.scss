@@ -64,3 +64,10 @@
 .text-right {
   text-align: right;
 }
+
+.ellipsis {
+  max-width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

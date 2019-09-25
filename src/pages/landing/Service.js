@@ -81,7 +81,7 @@ class Service extends Component {
           </div>
         </div>
         <div className={s.cardContent}>
-          <div className={s.cardName}>
+          <div className={`${s.cardName} ellipsis`}>
             {sName}
           </div>
           <div className={s.description}>
@@ -91,7 +91,7 @@ class Service extends Component {
             {/* eslint-disable-next-line */}
             <div className={s.orgDescription} onClick={this.handleSelectOrg(orgId)}>
               <Domain color="inherit" />
-              <span>&nbsp;{orgName}</span>
+              <span className="ellipsis">&nbsp;{orgName}</span>
             </div>
             <div className={s.cta}>
               {isProviderSelectable && (

@@ -2,21 +2,15 @@
 
 .formFields {
   color: $main_04;
-  width: 100%;
+  width: $max-card-width;
   padding: 0.5rem 0.5rem 0;
 }
 
 .recaptcha {
   color: $main_04;
-  width: 100%;
+  width: $max-card-width;
   display: flex;
   justify-content: center;
-  margin: 1rem 0 auto;
-}
-
-@include breakpoint-up(sm) {
-  .formFields {
-    width: $app-mobile;
-    margin: 0 auto;
-  }
+  border: 1px solid red;
+  margin-top: 0.5rem;
 }

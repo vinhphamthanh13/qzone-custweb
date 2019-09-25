@@ -27,6 +27,10 @@
   align-items: center;
 }
 
+.image:hover {
+  color: $danger;
+}
+
 .rateStar {
   position: absolute;
   bottom: 0;
