@@ -13,8 +13,8 @@ import {
 
 export const homeProps = {
   mapStateToProps: ({ home, common, auth }) => ({
+    servicesByServiceCategoryId: common.servicesByServiceCategoryId,
     ...home,
-    ...common,
     ...auth,
   }),
   mapDispatchToProps: dispatch => ({
@@ -26,9 +26,10 @@ export const homeProps = {
 
 export const landingProps = {
   mapStateToProps: ({ home, common, booking }) => ({
-    ...home,
-    ...common,
     providersByServiceId: booking.providersByServiceId,
+    categories: home.categories,
+    servicesByServiceCategoryId: common.servicesByServiceCategoryId,
+    tabOrder: common.tabOrder,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchServiceCategory: () => dispatch(setServiceCategories()),

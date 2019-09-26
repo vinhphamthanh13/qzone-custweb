@@ -127,10 +127,15 @@ class Providers extends Component {
 
     return Object.keys(providerByLocation).length > 0 && (
       <div className={s.container}>
-        <div className={s.navigation}>
-          <IconButton color="inherit" onClick={this.handleSelectService(catName)}>
-            <NavigateBefore color="inherit" />
-          </IconButton>
+        <div className={s.headline}>
+          <div className={s.navigation}>
+            <IconButton color="inherit" onClick={this.handleSelectService(catName)}>
+              <NavigateBefore color="inherit" />
+            </IconButton>
+          </div>
+          <div className={`${s.title} ellipsis`}>
+            {serviceName}
+          </div>
         </div>
         {chunk(providerFlatten, chunkFactor).map((providerRow, ind) => (
           <div className={s.providerRow} key={ind}>
@@ -140,6 +145,7 @@ class Providers extends Component {
                 provider={{
                   ...provider,
                   temporaryServiceId: temporaryServiceByProvider[provider.userSub],
+                  catName,
                 }}
                 dispatchAvailabilities={dispatchAvailabilities}
                 availabilitiesByTemporaryServiceId={availabilitiesByTemporaryServiceId}

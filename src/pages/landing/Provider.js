@@ -3,7 +3,7 @@ import { func } from 'prop-types';
 import { get } from 'lodash';
 import defaultPImage from 'images/providers.jpg';
 import { IconButton } from '@material-ui/core';
-import { Email, PhoneIphone, Place, GpsFixed } from '@material-ui/icons';
+import { Email, PhoneIphone, Place, GpsFixed, PersonPin } from '@material-ui/icons';
 import EmptyItem from 'components/EmptyItem';
 import MapDialog from 'components/Map/MapDialog';
 import RateStar from 'components/Rating/RateStar';
@@ -81,7 +81,7 @@ class Provider extends Component {
     const pEmail = get(provider, 'email');
     const pPhone = get(provider, 'telephone');
     const providerInfo = get(provider, 'providerInformation');
-
+    const catName = get(provider, 'catName');
     const pImage = get(providerInfo, 'image.fileUrl') || defaultPImage;
     const pRate = get(provider, 'rating');
     const geoLocation = get(provider, 'geoLocation');
@@ -91,7 +91,7 @@ class Provider extends Component {
     const slots = timeSlots.length > 0 && timeSlots.filter(slot =>
       slot.serviceId === serviceId && slot.providerId === providerId && slot.locationId === locationId) || [];
     const transformedSlot = slots.map(slot => ({
-      ...slot, sName, pName, pEmail, pPhone, pImage, pAddress,
+      ...slot, sName, pName, pEmail, pPhone, pImage, pAddress, catName,
     }));
 
     return (
@@ -104,7 +104,7 @@ class Provider extends Component {
               <RateStar rating={pRate} />
             </div>
             <IconButton color="inherit" className={s.viewMap} onClick={this.handleMapPopup}>
-              <Place color="inherit" />map
+              <PersonPin color="inherit" />map
             </IconButton>
           </div>
           <div className={s.content}>

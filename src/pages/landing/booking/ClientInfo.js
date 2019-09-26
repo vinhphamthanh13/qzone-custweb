@@ -18,7 +18,6 @@ class ClientInfo extends Component {
     values: objectOf(string).isRequired,
     touched: objectOf(any).isRequired,
     setFieldValue: func.isRequired,
-    handleBlur: func.isRequired,
     handleSubmit: func.isRequired,
     errors: objectOf(string).isRequired,
     isValid: bool.isRequired,
@@ -69,7 +68,7 @@ class ClientInfo extends Component {
     }
   }
 
-  handleInput = (event) => {
+  handleChange = (event) => {
     const { setFieldValue } = this.props;
     if (event) event.preventDefault();
     const { name, value } = event.target;
@@ -94,8 +93,8 @@ class ClientInfo extends Component {
 
   render() {
     const {
-      values, handleSubmit, errors, isInitialValid, isValid, expiredCallback, touched,
-      handleBlur, handleFormValidation, onloadCallback,
+      values, handleSubmit, errors, isInitialValid, isValid, expiredCallback, touched, onloadCallback,
+      handleFormValidation,
     } = this.props;
     const { userDetail } = this.state;
 
@@ -106,60 +105,55 @@ class ClientInfo extends Component {
     handleFormValidation(isValid);
 
     return (
-      <>
-        <div className={s.formFields}>
-          <form onSubmit={handleSubmit}>
-            <TextField
-              fullWidth
-              autoFocus={!userDetail}
-              disabled={!!userId}
-              name="userName"
-              label="Client name"
-              placeholder="Enter your name"
-              onChange={this.handleInput}
-              onBlur={handleBlur}
-              value={userName}
-              margin="dense"
-              error={!!errors.userName && touched.userName}
-              helperText={touched.userName && errors.userName}
-            />
-            <TextField
-              fullWidth
-              type="email"
-              disabled={!!userId}
-              name="userEmail"
-              label="Email address"
-              placeholder="Enter your email address"
-              onChange={this.handleInput}
-              onBlur={handleBlur}
-              value={userEmail}
-              margin="dense"
-              error={!!errors.userEmail && touched.userEmail}
-              helperText={touched.userEmail && errors.userEmail}
-            />
-            <TextField
-              fullWidth
-              type="tel"
-              name="phoneNumber"
-              disabled={!!userId}
-              label="Phone number"
-              placeholder="Enter your phone number"
-              onChange={this.handleInput}
-              onBlur={handleBlur}
-              value={phoneNumber}
-              margin="dense"
-              error={!!errors.phoneNumber && touched.phoneNumber}
-              helperText={touched.phoneNumber && errors.phoneNumber}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    {!!errors.phoneNumber && touched.phoneNumber ? <PolicyPopover type={POPOVER_TYPE.TEL} /> : ''}
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </form>
-        </div>
+      <div className={s.formFields}>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            fullWidth
+            autoFocus={!userDetail}
+            disabled={!!userId}
+            name="userName"
+            label="Client name"
+            placeholder="Enter your name"
+            onChange={this.handleChange}
+            value={userName}
+            margin="dense"
+            error={!!errors.userName && touched.userName}
+            helperText={touched.userName && errors.userName}
+          />
+          <TextField
+            fullWidth
+            type="email"
+            disabled={!!userId}
+            name="userEmail"
+            label="Email address"
+            placeholder="Enter your email address"
+            onChange={this.handleChange}
+            value={userEmail}
+            margin="dense"
+            error={!!errors.userEmail && touched.userEmail}
+            helperText={touched.userEmail && errors.userEmail}
+          />
+          <TextField
+            fullWidth
+            type="tel"
+            name="phoneNumber"
+            disabled={!!userId}
+            label="Phone number"
+            placeholder="Enter your phone number"
+            onChange={this.handleChange}
+            value={phoneNumber}
+            margin="dense"
+            error={!!errors.phoneNumber && touched.phoneNumber}
+            helperText={touched.phoneNumber && errors.phoneNumber}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  {!!errors.phoneNumber && touched.phoneNumber ? <PolicyPopover type={POPOVER_TYPE.TEL} /> : ''}
+                </InputAdornment>
+              ),
+            }}
+          />
+        </form>
         {!userDetail && (isValid || isInitialValid) && (
           <div className={s.recaptcha}>
             <Recaptcha
@@ -172,7 +166,7 @@ class ClientInfo extends Component {
             />
           </div>
         )}
-      </>
+      </div>
     );
   }
 }

@@ -1,6 +1,7 @@
 
 export const bookingProps = {
-  mapStateToProps: ({ provider }) => ({
+  mapStateToProps: ({ auth, provider }) => ({
+    userDetail: auth.userDetail,
     selectedBookingDetail: provider.selectedBookingDetail,
   })
 };

@@ -3,6 +3,10 @@ export const timeSlotFormat = 'hh:mm a';
 export const defaultDateFormat = 'DD MMMM YYYY';
 export const longDateFormat = 'dddd, DD MMMM YYYY';
 
+// Navigation
+export const LS_BACK = 'goBack';
+export const LS_INFO = 'locationState';
+
 // layout
 export const MAX_TAB_WIDTH = 160;
 export const MAX_CARD_WIDTH = 320;

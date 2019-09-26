@@ -12,5 +12,5 @@ export const getLocationState = (location, key) => get(location, `state.${key}`)
 
 export const limitString = (value, length) => {
   const subString = `${value}`.substr(0, length);
-  return `${subString}...`;
+  return `${value}`.length > length ? `${subString}...` : value;
 };

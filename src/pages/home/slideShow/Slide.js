@@ -1,33 +1,47 @@
 import React, { Component } from 'react';
-import {
-  number, string, func, bool,
-} from 'prop-types';
-import { Typography, Button } from '@material-ui/core';
 import { Domain } from '@material-ui/icons';
-import CustomLink from 'components/CustomLink';
+import { limitString, navigateTo } from 'utils/common';
 import { READ_MORE_MAX } from 'utils/constants';
-import RateStar from 'components/Rating/RateStar';
-import ReadMore from '../services/readMore/ReadMore';
 import s from './Slide.module.scss';
 
 class Slide extends Component {
   state = {
-    isReadMoreOpen: false,
+    imageUrl: '',
+    name: '',
+    description: '',
+    orgName: '',
+    orgId: '',
   };
 
-  handleCloseReadMore = () => {
-    this.setState({ isReadMoreOpen: false });
-  };
+  static getDerivedStateFromProps(props, state) {
+    const { imageUrl, name, description, orgName, orgId } = props;
+    const {
+      imageUrl: cachedImage, name: cachedName, description: cachedDescription,
+      orgName: cachedOrgName, orgId: cachedOrgId,
+    } = state;
+    const updatedState = {};
+    if (imageUrl !== cachedImage) {
+      updatedState.imageUrl = imageUrl;
+    }
+    if (name !== cachedName) {
+      updatedState.name = name;
+    }
+    if (description !== cachedDescription) {
+      updatedState.description = description;
+    }
+    if (orgName !== cachedOrgName) {
+      updatedState.orgName = orgName;
+    }
+    if (orgId !== cachedOrgId) {
+      updatedState.orgId = orgId;
+    }
 
-  handleOpenReadMore = (event) => {
-    event.preventDefault();
-    this.setState({ isReadMoreOpen: true });
-  };
+    return Object.keys(updatedState) ? updatedState : null;
+  }
 
-  handleReadMoreBooking = () => {
-    const { onBooking } = this.props;
-    onBooking();
-    this.handleCloseReadMore();
+  handleRedirectOrg = () => {
+    const { orgId } = this.state;
+    navigateTo(`/organization/${orgId}`)();
   };
 
   render() {
@@ -35,98 +49,28 @@ class Slide extends Component {
       imageUrl,
       name,
       description,
-      rating,
-      reviews,
-      onBooking,
       orgName,
-      orgId,
-      disabledBooking,
-    } = this.props;
-    const { isReadMoreOpen } = this.state;
+    } = this.state;
 
     return (
-      <>
-        <ReadMore
-          isOpen={isReadMoreOpen}
-          onClose={this.handleCloseReadMore}
-          serviceName={name}
-          orgName={orgName}
-          orgId={orgId}
-          orgDescription={description}
-          onBooking={this.handleReadMoreBooking}
-          rating={rating}
-          reviews={reviews}
-        />
-        <div className={s.wrapper}>
-          <div className={s.image}>
-            <img src={imageUrl} alt={name} width="100%" height="100%" />
+      <div className={s.wrapper}>
+        <div className={s.image}>
+          <img src={imageUrl} alt={name} width="100%" height="100%" />
+        </div>
+        <div className={s.content}>
+          <div className={`${s.title} ellipsis`}>{name}</div>
+          <div className={s.description}>
+            {limitString(description, READ_MORE_MAX)}
           </div>
-          <div className={s.content}>
-            <div>
-              <div className={s.title}>
-                <Typography variant="headline" color="inherit" noWrap>
-                  {name}
-                </Typography>
-              </div>
-              <div className={s.rating}>
-                <RateStar rating={rating} reviews={reviews} />
-              </div>
-              <div className={s.description}>
-                { description.split('').length > READ_MORE_MAX ? (
-                  <Typography variant="body1" color="textSecondary">
-                    {description.split('').slice(0, READ_MORE_MAX)}... <CustomLink
-                      text="Read more"
-                      small
-                      to="#"
-                      onClick={this.handleOpenReadMore}
-                    />
-                  </Typography>
-                ) : <Typography variant="body1" color="textSecondary">{description}</Typography>
-                }
-              </div>
-            </div>
-            {false && (
-              <div className={s.cta}>
-                <div className={s.blockItem}>
-                  <div className={s.iconInfo}>
-                    <Domain className={s.icon} />
-                    <Typography variant="body1" noWrap>
-                      <CustomLink text={orgName} to={`/organization/${orgId}`} />
-                    </Typography>
-                  </div>
-                </div>
-                <Button
-                  disabled={disabledBooking}
-                  onClick={onBooking}
-                  variant="outlined"
-                  className="main-button"
-                >Book Now!
-                </Button>
-              </div>)
-            }
+          {/* eslint-disable-next-line */}
+          <div className="flex" onClick={this.handleRedirectOrg}>
+            <Domain className="icon-small" color="inherit" />
+            <span className={s.orgName}>&nbsp;{orgName}</span>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 }
-
-Slide.propTypes = {
-  imageUrl: string.isRequired,
-  name: string.isRequired,
-  description: string,
-  rating: number,
-  reviews: number,
-  onBooking: func.isRequired,
-  orgName: string.isRequired,
-  orgId: string.isRequired,
-  disabledBooking: bool.isRequired,
-};
-
-Slide.defaultProps = {
-  rating: 0,
-  reviews: 0,
-  description: '',
-};
 
 export default Slide;

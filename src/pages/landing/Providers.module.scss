@@ -4,12 +4,26 @@
   width: 100%;
   color: $main_04;
   display: flex;
+  flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  flex-direction: column;
   height: 100vh;
   overflow: auto;
-  padding: 0.5rem 1rem;
+}
+
+.headline {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid $gallery;
+  margin: auto;
+  text-transform: capitalize;
+}
+
+.title {
+  font-size: $heading;
+  color: $success;
+  font-weight: 500;
 }
 
 .navigation {

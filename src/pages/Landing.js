@@ -1,5 +1,4 @@
 /* eslint-disable react/no-unused-state */
-
 import React, { Component } from 'react';
 import { func, objectOf, any } from 'prop-types';
 import { connect } from 'react-redux';
@@ -18,12 +17,10 @@ class Landing extends Component {
     dispatchServiceCategory: func.isRequired,
     dispatchServicesByServiceCategoryId: func.isRequired,
     dispatchSetTabOrder: func.isRequired,
-    match: objectOf(any),
     location: objectOf(any),
   };
 
   static defaultProps = {
-    match: {},
     location: {},
   };
 
@@ -59,8 +56,7 @@ class Landing extends Component {
   }
 
   componentDidMount() {
-    const { dispatchServiceCategory, match, location } = this.props;
-    console.log('match', match);
+    const { dispatchServiceCategory, location } = this.props;
     this.setState({ catName: getLocationState(location,'catName') });
     dispatchServiceCategory();
   }

@@ -2,78 +2,42 @@ import React, { Component } from 'react';
 import { func } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
-import { Grid } from '@material-ui/core';
-import { history } from 'containers/App';
+import { navigateTo } from 'utils/common';
 import Loading from 'components/Loading';
 import Error from 'components/Error';
-import EmptyItem from 'components/EmptyItem';
+// import EmptyItem from 'components/EmptyItem';
 import { homeProps } from 'pages/commonProps';
-import Services from './home/Services';
 import Auth from './Auth';
 import AppBar from './home/appBar/AppBar';
-import Categorize from './home/Categorize';
+import Landing from './Landing';
 import Footer from './components/footer/Footer';
 import SlideShow from './home/slideShow/SlideShow';
 import AdvancedSearch from './home/search/AdvancedSearch';
 import s from './Home.module.scss';
 
 export class Home extends Component {
+  state = {
+    servicesByServiceCategoryId: {},
+    // searchText: '',
+    // searchResult: null,
+    isRegisterOpen: false,
+    isLoginOpen: false,
+    // isOpenAdvancedSearch: false,
+    // isShowingAdvancedSearch: false,
+
+  };
+
   static getDerivedStateFromProps(props, state) {
-    const {
-      categories,
-      services,
-      serviceProviders,
-      serviceProviderNearByList,
-      userDetail,
-    } = props;
-    const {
-      categories: cachedCategories,
-      services: cachedServices,
-      serviceProviders: cachedServiceProviders,
-      serviceProviderNearByList: cachedServiceProviderNearByList,
-      userDetail: cachedUserDetail,
-    } = state;
-    if (
-      categories !== cachedCategories
-      || serviceProviders !== cachedServiceProviders
-      || services !== cachedServices
-      || serviceProviderNearByList !== cachedServiceProviderNearByList
-      || userDetail !== cachedUserDetail
-    ) {
-      const combineServiceProviders = services && services.map((service) => {
-        const linkedProvider = serviceProviders && serviceProviders
-          .filter(provider => provider && (provider.serviceId === service.id));
-        return { ...service, linkedProvider };
-      });
-      return {
-        categories,
-        services,
-        serviceProviders,
-        serviceProviderNearByList,
-        combineServiceProviders,
-        userDetail,
-      };
+    const { servicesByServiceCategoryId } = props;
+    const { servicesByServiceCategoryId: cachedServicesByServiceCategoryId } = state;
+    const updatedState = {};
+    if (JSON.stringify(servicesByServiceCategoryId) !== JSON.stringify(cachedServicesByServiceCategoryId)) {
+      updatedState.servicesByServiceCategoryId = servicesByServiceCategoryId;
     }
-    return null;
+
+    return Object.keys(updatedState) ? updatedState : null;
   }
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      categories: null,
-      searchText: '',
-      searchResult: null,
-      isRegisterOpen: false,
-      isLoginOpen: false,
-      isOpenAdvancedSearch: false,
-      isShowingAdvancedSearch: false,
-      combineServiceProviders: null,
-    };
-  }
-
-  componentDidMount() {
-    this.handleReloadApp();
-  }
 
   handleReloadApp = () => {
     const {
@@ -106,7 +70,7 @@ export class Home extends Component {
 
   handleBooking = (service) => {
     const serviceId = get(service, 'id');
-    history.push(`/booking/${serviceId}`);
+    navigateTo(`/booking/${serviceId}`)();
   };
 
   openAuthModal = (key) => {
@@ -115,14 +79,6 @@ export class Home extends Component {
 
   closeDialog = (key) => {
     this.setState({ [key]: false });
-  };
-
-  handleCloseSearch = () => {
-    this.closeAdvancedSearchResult();
-    this.setState({
-      searchText: '',
-      searchResult: null,
-    });
   };
 
   handleAdvancedSearchResult = (value) => {
@@ -151,27 +107,22 @@ export class Home extends Component {
 
   render() {
     const {
-      categories,
-      isShowingAdvancedSearch,
-      serviceProviderNearByList,
       searchText,
-      searchResult,
       isRegisterOpen,
       isLoginOpen,
       isOpenAdvancedSearch,
-      combineServiceProviders,
+      searchResult,
+      isShowingAdvancedSearch,
+      servicesByServiceCategoryId,
     } = this.state;
 
-    const categoriesServices = categories && categories.length > 0 && categories.map(category => ({
-      name: category.name,
-      services: combineServiceProviders
-        && combineServiceProviders.filter(service => service.serviceCategoryId === category.id),
-    }));
-    const systemMaintenance = !combineServiceProviders
-      || (combineServiceProviders && combineServiceProviders.length === 0);
-
+    const servicesList = [];
+    Object.keys(servicesByServiceCategoryId).map(catName =>
+      servicesByServiceCategoryId[catName].map(service => servicesList.push(service)));
+    console.log('searchResult', searchResult);
+    console.log('isShowingAdvancedSearch', isShowingAdvancedSearch);
     return (
-      <>
+      <div className={s.landingPage}>
         <Error />
         <Loading />
         <Auth
@@ -186,8 +137,13 @@ export class Home extends Component {
           onSearch={this.handleOnSearch}
           onSearchValue={searchText}
           handleAdvancedSearch={this.openAdvancedSearch}
-          maintenance={systemMaintenance}
         />
+
+        <SlideShow
+          services={servicesList}
+        />
+        <Landing />
+        <Footer maintenance={false} />
         {isOpenAdvancedSearch && (
           <div className="flex auto-margin-horizontal cover-bg-black">
             <AdvancedSearch
@@ -197,62 +153,7 @@ export class Home extends Component {
             />
           </div>)
         }
-        <Grid container>
-          <Grid item xs={12} className={s.landingPage}>
-            {
-              systemMaintenance ? <EmptyItem message="There is no service available at the moment" /> : (
-                <>
-                  <SlideShow
-                    services={combineServiceProviders}
-                    onBooking={this.handleBooking}
-                  />
-                  {
-                    searchResult && (
-                      <Categorize
-                        search
-                        name="Search results"
-                        onClose={this.handleCloseSearch}
-                      >
-                        <Services
-                          services={searchResult}
-                          onBooking={this.handleBooking}
-                          handleAuth={this.openAuthModal}
-                        />
-                      </Categorize>
-                    )
-                  }
-                  {
-                    isShowingAdvancedSearch && (
-                      <Categorize
-                        search
-                        name="Advanced Search Results"
-                        onClose={this.handleCloseSearch}
-                      >
-                        <Services
-                          services={serviceProviderNearByList}
-                          onBooking={this.handleBooking}
-                          handleAuth={this.openAuthModal}
-                        />
-                      </Categorize>
-                    )
-                  }
-                  {categoriesServices
-                    && categoriesServices.map(category => category.services.length > 0 && (
-                      <Categorize key={category.name} name={category.name}>
-                        <Services
-                          services={category.services}
-                          onBooking={this.handleBooking}
-                          handleAuth={this.openAuthModal}
-                        />
-                      </Categorize>
-                    ))}
-                </>
-              )
-            }
-            <Footer maintenance={systemMaintenance} />
-          </Grid>
-        </Grid>
-      </>
+      </div>
     );
   }
 }

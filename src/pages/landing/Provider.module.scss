@@ -50,6 +50,11 @@
   padding: 0.2rem;
 }
 
+.viewMap:hover {
+  background: $gallery;
+  transition: all 0.2s ease-in;
+}
+
 .name {
   font-size: 1.2rem;
   font-weight: 600;
