@@ -17,7 +17,7 @@ const rootRoutes = [
     exact: true,
     strict: true,
     path: '/',
-    name: 'Home',
+    name: 'Custweb for Booking Service',
     component: Home,
   },
   {

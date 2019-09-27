@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { func } from 'prop-types';
+import { func, objectOf, any } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
 import { navigateTo } from 'utils/common';
@@ -10,16 +10,25 @@ import { homeProps } from 'pages/commonProps';
 import Auth from './Auth';
 import AppBar from './home/appBar/AppBar';
 import Landing from './Landing';
+import Services from './landing/Services';
 import Footer from './components/footer/Footer';
 import SlideShow from './home/slideShow/SlideShow';
 import AdvancedSearch from './home/search/AdvancedSearch';
 import s from './Home.module.scss';
 
 export class Home extends Component {
+  static propTypes = {
+    location: objectOf(any),
+  };
+
+  static defaultProps = {
+    location: {},
+  };
+
   state = {
     servicesByServiceCategoryId: {},
-    // searchText: '',
-    // searchResult: null,
+    searchText: '',
+    searchResult: [],
     isRegisterOpen: false,
     isLoginOpen: false,
     // isOpenAdvancedSearch: false,
@@ -50,13 +59,16 @@ export class Home extends Component {
     dispatchTemporaryServices();
   };
 
-  handleOnSearch = (event) => {
+  handleInstantSearch = (event) => {
     event.preventDefault();
     const { value } = event.target;
-    let searchResult = null;
+    const { servicesByServiceCategoryId } = this.state;
+    const servicesList = [];
+    Object.keys(servicesByServiceCategoryId).map(catName =>
+      servicesByServiceCategoryId[catName].map(service => servicesList.push(service)));
+    let searchResult = [];
     if (value.length > 2) {
-      const { combineServiceProviders } = this.state;
-      searchResult = combineServiceProviders.filter((service) => {
+      searchResult = servicesList.filter((service) => {
         const orgName = get(service, 'organizationEntity.name');
         const serviceName = get(service, 'name');
         return (
@@ -106,6 +118,7 @@ export class Home extends Component {
   };
 
   render() {
+    const { location } = this.props;
     const {
       searchText,
       isRegisterOpen,
@@ -134,16 +147,22 @@ export class Home extends Component {
         />
         <AppBar
           handleAuthenticate={this.openAuthModal}
-          onSearch={this.handleOnSearch}
+          onSearch={this.handleInstantSearch}
           onSearchValue={searchText}
           handleAdvancedSearch={this.openAdvancedSearch}
         />
-
-        <SlideShow
-          services={servicesList}
-        />
-        <Landing />
+        {servicesList.length > 0 && (
+          <SlideShow
+            services={servicesList}
+          />
+        )}
+        <Landing location={location} />
         <Footer maintenance={false} />
+        {searchResult.length > 0 && (
+          <div className={s.instantSearch}>
+            <Services serviceList={searchResult} />
+          </div>
+        )}
         {isOpenAdvancedSearch && (
           <div className="flex auto-margin-horizontal cover-bg-black">
             <AdvancedSearch

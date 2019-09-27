@@ -8,3 +8,12 @@
   overflow: auto;
   position: relative;
 }
+
+.instantSearch {
+  position: fixed;
+  background: rgba(0, 0, 0, 0.4);
+  width: 100vw;
+  height: calc(100vh - 66px);
+  top: $app-bar-height;
+  background: $gallery;
+}
