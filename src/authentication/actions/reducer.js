@@ -50,7 +50,7 @@ const persistConfig = {
 
 
 const authInitialize = {
-  userDetail: null,
+  userDetail: {},
   cognitoToken: '',
   registerErrorMessage: '',
   loginErrorMessage: '',
@@ -58,7 +58,7 @@ const authInitialize = {
   isVerificationCode: false,
   resendVerificationCodeStatus: 'none', // success, error, none
   iSignUpSuccess: false,
-  loginSession: null,
+  loginSession: {},
   isForgotPassword: { value: null },
   resetPasswordStatus: 'none', // success, error, none
   resetPasswordMessage: '',

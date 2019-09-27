@@ -155,9 +155,9 @@ class MainAppBar extends React.Component {
   };
 
   handleActionAdvancedSearch = () => {
-    const { handleAdvancedSearch, maintenance } = this.props;
+    const { toggleAdvancedSearch, maintenance } = this.props;
     if (!maintenance) {
-      handleAdvancedSearch();
+      toggleAdvancedSearch(true)();
     }
   };
 
@@ -318,7 +318,7 @@ MainAppBar.propTypes = {
   loginSession: objectOf(any),
   findEventByCustomerIdAction: func.isRequired,
   onSearchValue: string,
-  handleAdvancedSearch: func.isRequired,
+  toggleAdvancedSearch: func.isRequired,
   maintenance: bool.isRequired,
   goProfilePage: func.isRequired,
   trackingAppointmentByIdsAction: func.isRequired,

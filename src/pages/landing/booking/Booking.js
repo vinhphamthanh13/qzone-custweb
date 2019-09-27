@@ -5,9 +5,14 @@ import { Formik } from 'formik';
 import moment from 'moment';
 import { get } from 'lodash';
 import { IconButton, Button, Input, InputLabel } from '@material-ui/core';
-import { Email, PhoneIphone, Place, GpsFixed, Schedule, DateRange, NavigateBefore } from '@material-ui/icons';
+import {
+  Email, PhoneIphone, Place, GpsFixed, Schedule, DateRange, NavigateBefore, Book, Fingerprint,
+} from '@material-ui/icons';
+// import Auth from 'pages/Auth';
 import { limitString, navigateTo } from 'utils/common';
 import { clientInfo } from 'authentication/components/schemas';
+// import Recaptcha from 'react-recaptcha';
+// import { GOOGLE_CAPTCHA_SITE_KEY } from 'config/auth';
 import { ADDRESS_LENGTH, POPOVER_TYPE } from 'utils/constants';
 import PolicyPopover from 'authentication/components/PolicyPopover';
 import { bookingProps } from './commonProps';
@@ -21,7 +26,7 @@ class Booking extends Component {
   };
 
   state = {
-    // captchaVerified: false,
+    captchaVerified: false,
     userDetail: {},
   };
 
@@ -44,7 +49,7 @@ class Booking extends Component {
   };
 
   render() {
-    const { selectedBookingDetail, userDetail } = this.state;
+    const { selectedBookingDetail, userDetail, captchaVerified } = this.state;
     const cName = get(userDetail, 'givenName');
     const cEmail = get(userDetail, 'email');
     const cPhone = get(userDetail, 'telephone');
@@ -62,6 +67,7 @@ class Booking extends Component {
     const catName = get(selectedBookingDetail, 'catName');
     const timezoneId = get(selectedBookingDetail, 'timezoneId');
     console.log('selected booking detail', selectedBookingDetail);
+    console.log('selected userDetail detail', userDetail);
 
     return (
       <div className={s.container}>
@@ -118,11 +124,16 @@ class Booking extends Component {
                 console.log('formik', values);
               }}
               render={props => {
-                const { values, setFieldTouched, handleChange, errors, touched } = props;
+                const { values, setFieldTouched, handleChange, errors, touched, isValid } = props;
                 const userName = get(values, 'userName');
                 const userEmail = get(values, 'userEmail');
                 const phoneNumber = get(values, 'phoneNumber');
-
+                const userId = get(userDetail, 'userSub');
+                const isAuthUser = userId && isValid;
+                const bookingValid = isAuthUser || captchaVerified;
+                const loginValid = !(isAuthUser && captchaVerified);
+                const ctaIcon = bookingValid ? <Book color="inherit" /> : <Fingerprint color="inherit" />;
+                const ctaLabel = bookingValid ? 'book now!' : 'login';
                 return (
                   <form onSubmit={props.handleSubmit}>
                     <div className={s.formControl}>
@@ -166,15 +177,19 @@ class Booking extends Component {
                       {touched.phoneNumber && errors.phoneNumber &&
                         <div className={s.errorMessage}>{props.errors.phoneNumber}</div>
                       }
-                      {errors.phoneNumber && (
+                      {touched.phoneNumber && errors.phoneNumber && (
                         <div className={s.popOver}>
                           <PolicyPopover type={POPOVER_TYPE.TEL} />
                         </div>
                       )}
                     </div>
                     <div className={s.bookingCta}>
-                      <Button type="submit" className="simple-button" variant="outlined">
-                        Book now!
+                      <Button
+                        disabled={!bookingValid && !loginValid}
+                        className="simple-button"
+                        variant="outlined"
+                      >
+                        {ctaIcon}<span>&nbsp;{ctaLabel}</span>
                       </Button>
                     </div>
                   </form>

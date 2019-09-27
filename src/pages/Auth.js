@@ -11,39 +11,29 @@ import VerificationCode from 'authentication/components/VerificationCode';
 import CustomModal from 'components/Modal/CustomModal';
 import { logout } from 'authentication/actions/logout';
 import {
-  reEnterVerificationCode, closeRegisterSuccessModal, resetResendVerificationCodeModal,
-  clearResetPasswordStatus,
+  reEnterVerificationCode, closeRegisterSuccessModal, resetResendVerificationCodeModal, clearResetPasswordStatus,
 } from 'authentication/actions/register';
 import ForgotPasswordForm from 'authentication/components/ForgotPasswordForm';
 import { login as autoLogin } from 'authentication/actions/login';
-import {
-  SESSION,
-} from 'utils/constants';
+import { SESSION } from 'utils/constants';
 
 class Auth extends Component {
   static getDerivedStateFromProps(props, state) {
+    const { loginSession, userDetail, isForgotPassword } = props;
     const {
-      loginSession,
-      userDetail,
-      isForgotPassword,
-    } = props;
-    const {
-      loginSession: cachedLoginSession,
-      userDetail: cachedUserDetail,
-      isForgotPassword: cisForgotPassword,
+      loginSession: cachedLoginSession, userDetail: cachedUserDetail, isForgotPassword: cisForgotPassword,
     } = state;
-    if (
-      loginSession !== cachedLoginSession
-      || userDetail !== cachedUserDetail
-      || isForgotPassword.value !== cisForgotPassword.value
-    ) {
-      return {
-        loginSession,
-        userDetail,
-        isForgotPassword,
-      };
+    const updatedState = {};
+    if (JSON.stringify(loginSession) !== JSON.stringify(cachedLoginSession)) {
+      updatedState.loginSession = loginSession;
     }
-    return null;
+    if(JSON.stringify(userDetail) !== JSON.stringify(cachedUserDetail)) {
+      updatedState.userDetail = userDetail;
+    }
+    if (isForgotPassword.value !== cisForgotPassword.value) {
+      updatedState.isForgotPassword = isForgotPassword;
+    }
+    return Object.keys(updatedState) ? updatedState : null;
   }
 
   state = {

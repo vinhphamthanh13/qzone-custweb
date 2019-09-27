@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import { func, objectOf, any } from 'prop-types';
+import { objectOf, any } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
-import { navigateTo } from 'utils/common';
 import Loading from 'components/Loading';
 import Error from 'components/Error';
-// import EmptyItem from 'components/EmptyItem';
 import { homeProps } from 'pages/commonProps';
 import Auth from './Auth';
 import AppBar from './home/appBar/AppBar';
@@ -31,9 +29,8 @@ export class Home extends Component {
     searchResult: [],
     isRegisterOpen: false,
     isLoginOpen: false,
-    // isOpenAdvancedSearch: false,
-    // isShowingAdvancedSearch: false,
-
+    openAdvancedSearch: false,
+    showAdvancedResult: false,
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -46,18 +43,6 @@ export class Home extends Component {
 
     return Object.keys(updatedState) ? updatedState : null;
   }
-
-
-  handleReloadApp = () => {
-    const {
-      dispatchServiceCategory,
-      dispatchServices,
-      dispatchTemporaryServices,
-    } = this.props;
-    dispatchServiceCategory();
-    dispatchServices();
-    dispatchTemporaryServices();
-  };
 
   handleInstantSearch = (event) => {
     event.preventDefault();
@@ -80,11 +65,6 @@ export class Home extends Component {
     this.setState({ searchResult, searchText: value });
   };
 
-  handleBooking = (service) => {
-    const serviceId = get(service, 'id');
-    navigateTo(`/booking/${serviceId}`)();
-  };
-
   openAuthModal = (key) => {
     this.setState({ [key]: true });
   };
@@ -93,47 +73,24 @@ export class Home extends Component {
     this.setState({ [key]: false });
   };
 
-  handleAdvancedSearchResult = (value) => {
-    this.setState({ isShowingAdvancedSearch: value });
+  handleAdvancedResult = value => () => {
+    this.setState({ showAdvancedResult: value })
   };
 
-  openAdvancedSearchResult = () => {
-    this.handleAdvancedSearchResult(true);
-  };
-
-  closeAdvancedSearchResult = () => {
-    this.handleAdvancedSearchResult(false);
-  };
-
-  handleAdvancedSearch = (value) => {
-    this.setState({ isOpenAdvancedSearch: value });
-  };
-
-  openAdvancedSearch = () => {
-    this.handleAdvancedSearch(true);
-  };
-
-  closeAdvancedSearch = () => {
-    this.handleAdvancedSearch(false);
+  toggleAdvancedSearch = (value) => () => {
+    this.setState({ openAdvancedSearch: value });
   };
 
   render() {
     const { location } = this.props;
     const {
-      searchText,
-      isRegisterOpen,
-      isLoginOpen,
-      isOpenAdvancedSearch,
-      searchResult,
-      isShowingAdvancedSearch,
-      servicesByServiceCategoryId,
+      searchText, isRegisterOpen, isLoginOpen, openAdvancedSearch, searchResult, servicesByServiceCategoryId,
+      showAdvancedResult,
     } = this.state;
 
     const servicesList = [];
     Object.keys(servicesByServiceCategoryId).map(catName =>
       servicesByServiceCategoryId[catName].map(service => servicesList.push(service)));
-    console.log('searchResult', searchResult);
-    console.log('isShowingAdvancedSearch', isShowingAdvancedSearch);
     return (
       <div className={s.landingPage}>
         <Error />
@@ -143,13 +100,12 @@ export class Home extends Component {
           isLoginOpen={isLoginOpen}
           closeDialog={this.closeDialog}
           handleAuthenticate={this.openAuthModal}
-          onReloadApp={this.handleReloadApp}
         />
         <AppBar
           handleAuthenticate={this.openAuthModal}
           onSearch={this.handleInstantSearch}
           onSearchValue={searchText}
-          handleAdvancedSearch={this.openAdvancedSearch}
+          toggleAdvancedSearch={this.toggleAdvancedSearch}
         />
         {servicesList.length > 0 && (
           <SlideShow
@@ -163,25 +119,19 @@ export class Home extends Component {
             <Services serviceList={searchResult} />
           </div>
         )}
-        {isOpenAdvancedSearch && (
+        {openAdvancedSearch && (
           <div className="flex auto-margin-horizontal cover-bg-black">
             <AdvancedSearch
-              onOpenResult={this.openAdvancedSearchResult}
-              onCloseResult={this.closeAdvancedSearchResult}
-              onClose={this.closeAdvancedSearch}
+              handleResult={this.handleAdvancedResult}
+              onClose={this.toggleAdvancedSearch}
             />
           </div>)
         }
+        {showAdvancedResult && <div />}
       </div>
     );
   }
 }
-
-Home.propTypes = {
-  dispatchServiceCategory: func.isRequired,
-  dispatchServices: func.isRequired,
-  dispatchTemporaryServices: func.isRequired,
-};
 
 export default connect(
   homeProps.mapStateToProps,

@@ -18,8 +18,7 @@ export const SEARCH_KEY = {
 class AdvancedSearch extends Component {
   static propTypes = {
     onClose: func.isRequired,
-    onCloseResult: func.isRequired,
-    onOpenResult: func.isRequired,
+    handleResult: func.isRequired,
     setServiceProviderNearByAction: func.isRequired,
   };
 
@@ -44,15 +43,15 @@ class AdvancedSearch extends Component {
   };
 
   handleClose = () => {
-    const { onClose, onCloseResult } = this.props;
-    onClose();
-    onCloseResult();
+    const { onClose, handleResult } = this.props;
+    onClose(false)();
+    handleResult(false)();
   };
 
   handleOpenResult = () => {
-    const { onClose, onOpenResult } = this.props;
-    onClose();
-    onOpenResult();
+    const { onClose, handleResult } = this.props;
+    onClose(false)();
+    handleResult(true)();
   };
 
   handleSearch = async () => {
@@ -119,17 +118,15 @@ class AdvancedSearch extends Component {
               *Provider near by
             </Typography>
           </div>
-          <div className={s.button}>
-            <Button
-              disabled={!submitValid}
-              variant="outlined"
-              className="simple-button hover-outline"
-              onClick={this.handleSearch}
-              type="submit"
-            >
-              <Search className={iconSearchStyle} /> Go!
-            </Button>
-          </div>
+          <Button
+            disabled={!submitValid}
+            variant="outlined"
+            className="simple-button hover-outline"
+            onClick={this.handleSearch}
+            type="submit"
+          >
+            <Search className={iconSearchStyle} /> Go!
+          </Button>
         </div>
       </div>
     );

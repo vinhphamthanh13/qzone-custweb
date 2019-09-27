@@ -3,6 +3,7 @@
 .advancedSearch {
   border-radius: 0.4rem;
   width: 100%;
+  min-width: $event-card-width;
   background: $gallery;
   margin: auto 1rem;
 }
