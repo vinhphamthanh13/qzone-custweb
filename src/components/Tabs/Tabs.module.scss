@@ -1,7 +1,5 @@
 @import "styles/_settings.scss";
 
-
-
 .wrapper {
   overflow-y: visible;
   user-select: none;
@@ -17,7 +15,6 @@
 }
 
 .tab {
-  align-items: center;
   padding: 1rem 0.5rem 0.5rem;
   width: $max-tab-width;
   color: $mako;
@@ -26,10 +23,9 @@
   overflow: hidden;
   text-transform: uppercase;
   cursor: pointer;
-  border: 1px solid $main_03;
-  border-top-right-radius: 0.4rem;
-  border-top-left-radius: 0.4rem;
-  background: linear-gradient(to bottom, $main_01, $main_03);
+  border: 1px solid $main_01;
+  text-align: center;
+  background: $we_peep;
   transition: all 0.2s ease-in;
 }
 
@@ -40,7 +36,8 @@
 }
 
 .tab:hover {
-  background: linear-gradient(to top, $main_01, $main_03);
+  background: $main_04;
+  color: $main_01;
 }
 
 .nextTab {

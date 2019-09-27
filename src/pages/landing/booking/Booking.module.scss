@@ -97,8 +97,6 @@
   display: flex;
   flex-direction: column;
   width: $max-card-width;
-  border-left: 4px solid $main_03;
-  padding-left: 1.8rem;
 }
 
 .clientTitle {
@@ -110,6 +108,10 @@
   margin-bottom: 0.5rem;
 }
 
+.formData {
+  width: $max-card-width;
+}
+
 .formControl {
   display: flex;
   flex-direction: column;
@@ -117,6 +119,11 @@
   padding-bottom: 1rem;
   position: relative;
   color: $success;
+}
+
+.label {
+  color: $main;
+  font-size: $caption;
 }
 
 .errorMessage {
@@ -135,6 +142,13 @@
   transform: translateY(-50%);
 }
 
+.recaptcha {
+  margin: 1rem auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .bookingCta {
   display: flex;
   justify-content: center;
@@ -148,5 +162,7 @@
   .clientInfo {
     margin-left: 2rem;
     padding-top: 0.5rem;
+    border-left: 4px solid $main_03;
+    padding-left: 1.8rem;
   }
 }

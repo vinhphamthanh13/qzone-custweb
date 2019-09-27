@@ -16,4 +16,5 @@
   height: calc(100vh - 66px);
   top: $app-bar-height;
   background: $gallery;
+  z-index: 2;
 }

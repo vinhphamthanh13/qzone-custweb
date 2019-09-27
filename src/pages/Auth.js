@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import {
-  bool, func, string,
-} from 'prop-types';
+import { bool, func, string } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
 import moment from 'moment';
@@ -18,6 +16,13 @@ import { login as autoLogin } from 'authentication/actions/login';
 import { SESSION } from 'utils/constants';
 
 class Auth extends Component {
+  state = {
+    isSessionTimeout: false,
+    loginSession: {},
+    userDetail: {},
+    isForgotPassword: { value: null },
+  };
+
   static getDerivedStateFromProps(props, state) {
     const { loginSession, userDetail, isForgotPassword } = props;
     const {
@@ -36,18 +41,9 @@ class Auth extends Component {
     return Object.keys(updatedState) ? updatedState : null;
   }
 
-  state = {
-    isSessionTimeout: false,
-    loginSession: null,
-    userDetail: null,
-    isForgotPassword: { value: null },
-  };
-
   componentDidUpdate(prevProps) {
     const { isInstantBooking } = prevProps;
-    const {
-      loginSession,
-    } = this.state;
+    const { loginSession } = this.state;
     const expiration = get(loginSession, 'expiration');
     if (!isInstantBooking && expiration && moment().isAfter(moment(expiration))) {
       this.handleLogout();
@@ -82,7 +78,7 @@ class Auth extends Component {
   };
 
   handleLogout = () => {
-    const { logoutAction, onReloadApp, isInstantBooking } = this.props;
+    const { logoutAction, isInstantBooking } = this.props;
     const { loginSession } = this.state;
     const { isAuthenticated, authProvider } = loginSession;
     this.setState({ isSessionTimeout: true });
@@ -92,7 +88,6 @@ class Auth extends Component {
         authProvider,
       });
     }
-    onReloadApp();
   };
 
   handlePopupLogin = () => {
@@ -103,22 +98,10 @@ class Auth extends Component {
 
   render() {
     const {
-      isRegisterOpen,
-      isLoginOpen,
-      closeDialog,
-      isVerificationCode,
-      verificationErrorMessage,
-      iSignUpSuccessModal,
-      resendVerificationCodeStatus,
-      handleAuthenticate,
-      resetPasswordStatus,
-      resetPasswordMessage,
+      isRegisterOpen, isLoginOpen, closeDialog, isVerificationCode, verificationErrorMessage,
+      iSignUpSuccessModal, resendVerificationCodeStatus, handleAuthenticate, resetPasswordStatus, resetPasswordMessage,
     } = this.props;
-    const {
-      isForgotPassword,
-      isSessionTimeout,
-      userDetail,
-    } = this.state;
+    const { isForgotPassword, isSessionTimeout, userDetail } = this.state;
     const email = get(userDetail, 'email');
     const renderSessionTimeout = isSessionTimeout
       ? (
@@ -225,22 +208,21 @@ class Auth extends Component {
 Auth.propTypes = {
   isRegisterOpen: bool.isRequired,
   isLoginOpen: bool.isRequired,
-  closeDialog: func.isRequired,
+  isInstantBooking: bool,
   isVerificationCode: bool,
-  reEnterVerificationCodeAction: func.isRequired,
-  closeRegisterSuccessModalAction: func.isRequired,
   iSignUpSuccessModal: bool,
   verificationErrorMessage: string,
   resendVerificationCodeStatus: string,
-  closeResendStatusModal: func.isRequired,
-  handleAuthenticate: func.isRequired,
   resetPasswordStatus: string.isRequired,
   resetPasswordMessage: string.isRequired,
+  closeResendStatusModal: func.isRequired,
+  handleAuthenticate: func.isRequired,
+  closeDialog: func.isRequired,
+  reEnterVerificationCodeAction: func.isRequired,
+  closeRegisterSuccessModalAction: func.isRequired,
   clearResetPasswordStatusAction: func.isRequired,
   autoLoginAction: func.isRequired,
   logoutAction: func.isRequired,
-  onReloadApp: func.isRequired,
-  isInstantBooking: bool,
 };
 
 Auth.defaultProps = {
