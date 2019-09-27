@@ -1,0 +1,50 @@
+@import "styles/_settings.scss";
+
+.advancedSearch {
+  border-radius: 0.4rem;
+  width: 100%;
+  background: $gallery;
+  margin: auto 1rem;
+}
+
+.title {
+  color: $white;
+  padding-left: 1rem;
+  border-bottom: 3px solid $grayNickel;
+  background: linear-gradient(to bottom right, $main, $malibu);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item {
+  margin: 1rem auto;
+  padding: 0 1rem;
+}
+
+.helper {
+  margin-top: 5px;
+  color: $info;
+}
+
+.cta {
+  display: flex;
+  margin: 1rem auto 0;
+  padding: 0 1rem 1rem;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.buttons {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@include breakpoint-up(sm) {
+  .advancedSearch {
+    width: 500px;
+    height: auto;
+  }
+}

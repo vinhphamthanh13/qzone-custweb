@@ -39,7 +39,7 @@
 }
 
 .sName {
-  font-size: $heading;
+  font-size: $title;
   font-weight: 600;
   color: $fruitSalad;
   text-transform: capitalize;
@@ -126,6 +126,13 @@
   color: $danger;
   font-size: $caption;
   font-style: italic;
+}
+
+.popOver {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
 }
 
 .bookingCta {

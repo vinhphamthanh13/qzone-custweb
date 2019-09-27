@@ -65,6 +65,7 @@ export const forgotPasswordSchema = Yup.object().shape({
 export const clientInfo = Yup.object().shape({
   userName: Yup
     .string()
+    .matches(regExPattern.userName, { message: 'Name is too short'})
     .required('User name cannot be blank'),
   userEmail: Yup
     .string()

@@ -8,7 +8,8 @@ import { IconButton, Button, Input, InputLabel } from '@material-ui/core';
 import { Email, PhoneIphone, Place, GpsFixed, Schedule, DateRange, NavigateBefore } from '@material-ui/icons';
 import { limitString, navigateTo } from 'utils/common';
 import { clientInfo } from 'authentication/components/schemas';
-import { ADDRESS_LENGTH } from 'utils/constants';
+import { ADDRESS_LENGTH, POPOVER_TYPE } from 'utils/constants';
+import PolicyPopover from 'authentication/components/PolicyPopover';
 import { bookingProps } from './commonProps';
 import s from './Booking.module.scss';
 
@@ -118,7 +119,6 @@ class Booking extends Component {
               }}
               render={props => {
                 const { values, setFieldTouched, handleChange, errors, touched } = props;
-                console.log('props winthin Fm', props);
                 const userName = get(values, 'userName');
                 const userEmail = get(values, 'userEmail');
                 const phoneNumber = get(values, 'phoneNumber');
@@ -166,6 +166,11 @@ class Booking extends Component {
                       {touched.phoneNumber && errors.phoneNumber &&
                         <div className={s.errorMessage}>{props.errors.phoneNumber}</div>
                       }
+                      {errors.phoneNumber && (
+                        <div className={s.popOver}>
+                          <PolicyPopover type={POPOVER_TYPE.TEL} />
+                        </div>
+                      )}
                     </div>
                     <div className={s.bookingCta}>
                       <Button type="submit" className="simple-button" variant="outlined">

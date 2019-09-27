@@ -38,9 +38,7 @@ class PolicyPopover extends Component {
           <Typography>{whichPolicy.statement}</Typography>
           <ul>
             {whichPolicy.items.map(rule => (
-              <li key={rule}>
-                <Typography>{rule}</Typography>
-              </li>
+              <li key={rule}>{rule}</li>
             ))}
           </ul>
         </ul>
