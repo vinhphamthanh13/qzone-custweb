@@ -43,11 +43,13 @@ const reducer = (state = initState, action) => {
         ...state,
         bookedEventId: '',
       };
-    case SET_BOOKED_EVENT_DETAIL:
+    case SET_BOOKED_EVENT_DETAIL: {
+      console.log('SET_BOOKED_EVENT', action.payload);
       return {
         ...state,
-        bookedEventDetail: action.payload,
+        bookedEventDetail: Object.assign({}, action.payload),
       };
+    }
     default:
       return state;
   }

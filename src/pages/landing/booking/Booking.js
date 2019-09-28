@@ -37,6 +37,7 @@ class Booking extends Component {
     isLoginOpen: false,
     confirmBooking: false,
     loginSession: {},
+    bookedEventDetail: {},
   };
 
   recaptcha = React.createRef();
@@ -47,8 +48,6 @@ class Booking extends Component {
       selectedBookingDetail: cachedBookingDetail, userDetail: cachedUserDetail, loginSession: cachedLoginSession,
       bookedEventDetail: cachedBookedEventDetail,
     } = state;
-    console.log('props derived', props);
-    console.log('state derived', state);
     const updatedState = {};
     if (
       selectedBookingDetail !== null &&
@@ -81,14 +80,12 @@ class Booking extends Component {
   componentDidUpdate(prevProps) {
     const { bookedEventDetail } = prevProps;
     const { bookedEventDetail: cachedBookedEventDetail } = this.state;
-    console.log('booking Did update', bookedEventDetail);
     if (
       bookedEventDetail !== null &&
       JSON.stringify(bookedEventDetail) !== JSON.stringify(cachedBookedEventDetail)
     ) {
-      const bookedEventId = get(bookedEventDetail, 'id');
+      const bookedEventId = get(cachedBookedEventDetail, 'id');
       if (bookedEventId) {
-        console.log('redirect right afer bookined success', bookedEventId);
         navigateTo(`/event/${bookedEventId}`)();
       }
     }
