@@ -2,6 +2,17 @@ export const dateFormatDash = 'DD-MM-YYYY';
 export const timeSlotFormat = 'hh:mm a';
 export const defaultDateFormat = 'DD MMMM YYYY';
 export const longDateFormat = 'dddd, DD MMMM YYYY';
+export const FULL_DATE = 'dddd, DD MMMM YYYY';
+export const DATE_FORMAT = {
+  AUS: {
+    FULL: 'dddd, DD MMMM YYYY',
+    NUM: 'YYYY-MM-DD',
+  },
+  IND: {
+    FULL: 'dddd, DD MMMM YYYY',
+    NUM: 'DD-MM-YYYY',
+  },
+};
 
 // Navigation
 export const LS_BACK = 'goBack';

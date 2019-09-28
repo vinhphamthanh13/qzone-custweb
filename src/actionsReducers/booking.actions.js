@@ -24,7 +24,8 @@ export const SET_BOOKING_STEP = 'BOOKING.SET_BOOKING_STEP';
 export const RESET_BOOKING = 'BOOKING.RESET_BOOKING';
 export const SET_TEMPORARY_SERVICES_BY_ID = 'BOOKING.SET_TEMPORARY_SERVICES_BY_ID';
 export const SET_BOOKED_EVENT_ID = 'BOOKING.SET_BOOKED_EVENT_ID';
-
+// Decoupling
+export const SET_BOOKED_EVENT_DETAIL = 'BOOKING.SET_BOOKED_EVENT_DETAIL';
 const getServiceById = payload => ({
   type: GET_SERVICE_BY_ID,
   payload,
@@ -125,6 +126,27 @@ export const setTemporaryServicesByIdAction = data => async (dispatch) => {
     dispatch(setError(error));
   } else {
     dispatch(setTemporaryServicesById(temporaryServiceById));
+  }
+  dispatch(setLoading(false));
+};
+
+// Decoupling
+const bookEventAction = payload => ({
+  type: SET_BOOKED_EVENT_DETAIL,
+  payload,
+});
+const bookEventIdAction = payload => ({
+  type: SET_BOOKED_EVENT_ID,
+  payload,
+});
+export const bookEventApi = (data, headers) => async (dispatch) => {
+  dispatch(setLoading(true));
+  const [result, error] = await handleRequest(events, [data, headers]);
+  if (error) {
+    dispatch(setError(error));
+  } else {
+    dispatch(bookEventAction(result));
+    dispatch(bookEventIdAction(data.availabilityId));
   }
   dispatch(setLoading(false));
 };

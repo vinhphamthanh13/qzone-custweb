@@ -16,7 +16,7 @@ import { GOOGLE_CAPTCHA_SITE_KEY } from 'config/auth';
 import Loading from 'components/Loading';
 import Error from 'components/Error';
 import CustomModal from 'components/Modal/CustomModal';
-import { ADDRESS_LENGTH, POPOVER_TYPE } from 'utils/constants';
+import { ADDRESS_LENGTH, POPOVER_TYPE, FULL_DATE } from 'utils/constants';
 import PolicyPopover from 'authentication/components/PolicyPopover';
 import { bookingProps } from './commonProps';
 import s from './Booking.module.scss';
@@ -24,6 +24,7 @@ import s from './Booking.module.scss';
 class Booking extends Component {
   static propTypes = {
     dispatchSaveGuestInfo: func.isRequired,
+    dispatchBookEvent: func.isRequired,
   };
 
   static defaultProps = {
@@ -35,13 +36,17 @@ class Booking extends Component {
     isRegisterOpen: false,
     isLoginOpen: false,
     confirmBooking: false,
+    loginSession: {},
   };
 
   recaptcha = React.createRef();
 
   static getDerivedStateFromProps(props, state) {
-    const { selectedBookingDetail, userDetail } = props;
-    const { selectedBookingDetail: cachedBookingDetail, userDetail: cachedUserDetail  } = state;
+    const { selectedBookingDetail, userDetail, loginSession,bookedEventDetail } = props;
+    const {
+      selectedBookingDetail: cachedBookingDetail, userDetail: cachedUserDetail, loginSession: cachedLoginSession,
+      bookedEventDetail: cachedBookedEventDetail,
+    } = state;
     const updatedState = {};
     if (JSON.stringify(selectedBookingDetail) !== JSON.stringify(cachedBookingDetail)) {
       updatedState.selectedBookingDetail = selectedBookingDetail;
@@ -49,8 +54,25 @@ class Booking extends Component {
     if (JSON.stringify(userDetail) !== JSON.stringify(cachedUserDetail)) {
       updatedState.userDetail = userDetail;
     }
+    if (JSON.stringify(loginSession) !== JSON.stringify(cachedLoginSession)) {
+      updatedState.loginSession = loginSession;
+    }
+    if (JSON.stringify(bookedEventDetail) !== JSON.stringify(cachedBookedEventDetail)) {
+      updatedState.bookedEventDetail = bookedEventDetail;
+    }
 
     return Object.keys(updatedState) ? updatedState : null;
+  }
+
+  componentDidUpdate(prevProps) {
+    const { bookedEventDetail } = prevProps;
+    const { bookedEventDetail: cachedBookedEventDetail } = this.state;
+    if (JSON.stringify(bookedEventDetail) !== JSON.stringify(cachedBookedEventDetail)) {
+      const bookedEventId = get(bookedEventDetail, 'id');
+      if (bookedEventId) {
+        navigateTo(`/event/${bookedEventId}`)();
+      }
+    }
   }
 
   handleSelectProvider = (sId, sName, catName )=> () => {
@@ -70,8 +92,18 @@ class Booking extends Component {
   };
 
   handleRegisterEvent = () => {
+    const { dispatchBookEvent } = this.props;
+    const { userDetail, selectedBookingDetail, loginSession } = this.state;
     this.toggleConfirmBooking();
-    console.log('Booking now');
+    console.log(dispatchBookEvent);
+    const customerId = get(userDetail, 'userSub') || get(userDetail, 'id');
+    const duration = get(selectedBookingDetail, 'duration');
+    const availabilityId = get(selectedBookingDetail, 'id');
+    const startSec = get(selectedBookingDetail, 'providerStartSec');
+    const authHeaders = get(loginSession, 'authHeaders');
+    dispatchBookEvent({
+      customerId, duration, availabilityId, startSec, status: 'UNSPECIFIED', type: 'APPOINTMENT',
+    }, authHeaders);
   };
 
   toggleConfirmBooking = () => {
@@ -103,7 +135,7 @@ class Booking extends Component {
 
   render() {
     const {
-      selectedBookingDetail, userDetail, captchaVerified, isRegisterOpen, isLoginOpen, confirmBooking,
+      selectedBookingDetail, userDetail, captchaVerified, isRegisterOpen, isLoginOpen, confirmBooking
     } = this.state;
     const cName = get(userDetail, 'givenName');
     const cEmail = get(userDetail, 'email');
@@ -165,7 +197,7 @@ class Booking extends Component {
                 <div className={`${s.pName} ellipsis`}>{pName}</div>
                 <div className={s.item}>
                   <DateRange className="icon-small" color="secondary" />
-                  {moment(providerStartSec).format('dddd, DD-MM-YYYY')}
+                  {moment(providerStartSec).format(FULL_DATE)}
                 </div>
                 <div className={s.item}>
                   <Schedule className="icon-small" color="secondary" />
@@ -221,7 +253,7 @@ class Booking extends Component {
                           onBlur={() => setFieldTouched('userName', true)}
                           onChange={handleChange}
                           value={userName}
-                          disabled={disableField}
+                          disabled={!!disableField}
                         />
                         {touched.userName && errors.userName &&
                           <div className={s.errorMessage}>{props.errors.userName}</div>
@@ -236,7 +268,7 @@ class Booking extends Component {
                           onChange={handleChange}
                           onBlur={() => setFieldTouched('userEmail', true)}
                           value={userEmail}
-                          disabled={disableField}
+                          disabled={!!disableField}
                         />
                         {touched.userEmail && errors.userEmail &&
                           <div className={s.errorMessage}>{props.errors.userEmail}</div>
@@ -251,7 +283,7 @@ class Booking extends Component {
                           onBlur={() => setFieldTouched('phoneNumber', true)}
                           onChange={handleChange}
                           value={phoneNumber}
-                          disabled={disableField}
+                          disabled={!!disableField}
                         />
                         {touched.phoneNumber && errors.phoneNumber &&
                           <div className={s.errorMessage}>{props.errors.phoneNumber}</div>
