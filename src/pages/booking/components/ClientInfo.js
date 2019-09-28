@@ -43,7 +43,10 @@ class ClientInfo extends Component {
     const { userDetail, guestUserError } = props;
     const { userDetail: cachedUserDetail, guestUserError: cachedGuestUserError } = state;
     const updatedState = {};
-    if (JSON.stringify(userDetail) !== JSON.stringify(cachedUserDetail)) {
+    if (
+      userDetail !== null &&
+      JSON.stringify(userDetail) !== JSON.stringify(cachedUserDetail)
+    ) {
       updatedState.userDetail = userDetail;
     }
     if (guestUserError !== cachedGuestUserError) {

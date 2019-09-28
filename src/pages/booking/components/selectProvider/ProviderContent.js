@@ -78,7 +78,7 @@ class ProviderContent extends React.PureComponent {
     const providerFamily = get(provider, 'familyName');
     const providerEmail = get(provider, 'email');
     const providerPhone = get(provider, 'telephone');
-    const providerImage = get(provider, 'providerInformation.image.fileUrl') || defaultImage;
+    const providerImage = get(provider, 'providerInformation.image.fileUrl', defaultImage);
     const providerTimeZone = get(provider, 'providerInformation.timeZoneId');
     const { isMapDialogOpen } = this.state;
     const duration = get(provider, 'avgServiceTime');

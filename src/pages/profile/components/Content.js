@@ -31,13 +31,7 @@ import s from './Content.module.scss';
 class Content extends Component {
   static getDerivedStateFromProps(props, state) {
     const {
-      eventList,
-      profilePage,
-      cancelEventByIdStatus,
-      waitLists,
-      surveyList,
-      customerAssessment,
-      rescheduleStatus,
+      eventList, profilePage, cancelEventByIdStatus, waitLists, surveyList, customerAssessment, rescheduleStatus,
     } = props;
     const {
       eventList: cachedEventList,
@@ -48,29 +42,41 @@ class Content extends Component {
       customerAssessment: cachedCustomerAssessment,
       rescheduleStatus: cachedRescheduleStatus,
     } = state;
+    const updatedState = {};
     if (
-      eventList !== cachedEventList
-      || (profilePage && profilePage !== cachedProfilePage)
-      || cancelEventByIdStatus !== cachedCancelEventByIdStatus
-      || waitLists !== cachedWaitLists
-      || surveyList !== cachedSurveyList
-      || customerAssessment !== cachedCustomerAssessment
-      || rescheduleStatus !== cachedRescheduleStatus
+      eventList !== null &&
+      JSON.stringify(eventList) !== JSON.stringify(cachedEventList)
     ) {
       const eventListIds = eventList && eventList.length && eventList.map(item => item.id);
-
-      return {
-        eventList,
-        eventListIds,
-        profilePage,
-        cancelEventByIdStatus,
-        waitLists,
-        surveyList,
-        customerAssessment,
-        rescheduleStatus,
-      };
+      updatedState.eventList = eventList;
+      updatedState.eventListIds = eventListIds;
     }
-    return null;
+    if (JSON.profilePage !== cachedProfilePage) {
+      updatedState.profilePage = profilePage;
+    }
+    if (cancelEventByIdStatus !== cachedCancelEventByIdStatus) {
+      updatedState.cancelEventByIdStatus = cancelEventByIdStatus;
+    }
+    if (
+      waitLists !== null &&
+      JSON.stringify(waitLists) !== JSON.stringify(cachedWaitLists)
+    ) {
+      updatedState.waitLists = waitLists;
+    }
+    if (
+      surveyList !== null &&
+      JSON.stringify(surveyList) !== JSON.stringify(cachedSurveyList)
+    ) {
+      updatedState.surveyList = surveyList;
+    }
+    if (customerAssessment !== cachedCustomerAssessment) {
+      updatedState.customerAssessment = customerAssessment;
+    }
+    if (rescheduleStatus !== cachedRescheduleStatus) {
+      updatedState.rescheduleStatus = rescheduleStatus;
+    }
+
+    return Object.keys(updatedState) ? updatedState : null;
   }
 
   SIDE_PANEL = [

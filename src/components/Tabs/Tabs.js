@@ -41,16 +41,25 @@ class Tabs extends Component {
       responsiveLayout: cachedResponsiveLayout,
     } = state;
     const updatedState = {};
-    if (JSON.stringify(tabsInfo) !== JSON.stringify(cachedTabsInfo)) {
+    if (
+      tabsInfo !== null &&
+      JSON.stringify(tabsInfo) !== JSON.stringify(cachedTabsInfo)
+    ) {
       updatedState.tabsInfo = tabsInfo;
     }
     if (windowWidth !== cachedWindowWidth) {
       updatedState.windowWidth = windowWidth;
     }
-    if (JSON.stringify(tabOrder) !== JSON.stringify(cachedTabOrder)) {
+    if (
+      tabOrder !== null &&
+      JSON.stringify(tabOrder) !== JSON.stringify(cachedTabOrder)
+    ) {
       updatedState.chunkHistory = tabOrder;
     }
-    if (JSON.stringify(responsiveLayout) !== JSON.stringify(cachedResponsiveLayout)) {
+    if (
+      responsiveLayout !== null &&
+      JSON.stringify(responsiveLayout) !== JSON.stringify(cachedResponsiveLayout)
+    ) {
       updatedState.responsiveLayout = responsiveLayout;
     }
 

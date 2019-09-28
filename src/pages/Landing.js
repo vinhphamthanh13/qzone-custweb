@@ -9,7 +9,7 @@ import Error from 'components/Error';
 import Success from 'components/Success';
 import Tabs from 'components/Tabs/Tabs'
 import { getLocationState } from 'utils/common';
-import Services from './landing/Services';
+import Services from './landing/service/Services';
 import s from './Landing.module.scss';
 
 class Landing extends Component {
@@ -45,10 +45,16 @@ class Landing extends Component {
       updatedState.categories = categories;
       updatedState.tabsInfo = tabsInfo;
     }
-    if (JSON.stringify(servicesByServiceCategoryId) !== JSON.stringify(cachedServicesByServiceCategoryId)) {
+    if (
+      servicesByServiceCategoryId !== null &&
+      JSON.stringify(servicesByServiceCategoryId) !== JSON.stringify(cachedServicesByServiceCategoryId)
+    ) {
       updatedState.servicesByServiceCategoryId = servicesByServiceCategoryId;
     }
-    if (JSON.stringify(tabOrder) !== JSON.stringify(cachedTabOrder)) {
+    if (
+      tabOrder !== null &&
+      JSON.stringify(tabOrder) !== JSON.stringify(cachedTabOrder)
+    ) {
       updatedState.tabOrder = tabOrder;
     }
 

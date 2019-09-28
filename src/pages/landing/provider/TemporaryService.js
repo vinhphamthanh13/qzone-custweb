@@ -3,6 +3,7 @@ import { func } from 'prop-types';
 import { chunk } from 'lodash';
 import uuidv1 from 'uuid/v1';
 import moment from 'moment';
+import { FULL_DATE, TIME_FORMAT } from 'utils/constants';
 import s from './TemporaryService.module.scss';
 
 class TemporaryService extends Component {
@@ -43,7 +44,7 @@ class TemporaryService extends Component {
         {Object.keys(slotsByDate).map(date => (
           <div key={uuidv1()}>
             <div className={s.date}>
-              {moment(date).format('dddd, DD MMM YYYY')}
+              {moment(date).format(FULL_DATE)}
             </div>
             <div>
               {chunk(slotsByDate[date], 3).map(chunkRow => (
@@ -51,7 +52,7 @@ class TemporaryService extends Component {
                   {chunkRow.map(slot => (
                     /* eslint-disable-next-line */
                     <div className={s.slot} key={slot.id} onClick={selectSlot(slot)}>
-                      {moment(slot.providerStartSec).format('HH:mm A')}
+                      {moment(slot.providerStartSec).format(TIME_FORMAT)}
                     </div>
                   ))}
                 </div>

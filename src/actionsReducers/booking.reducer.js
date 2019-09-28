@@ -6,7 +6,7 @@ import {
 } from 'actionsReducers/booking.actions';
 
 const initState = {
-  bookedEventIdList: [],
+  bookedEventId: '',
   bookedEventDetail: {},
   providersByServiceId: {},
 };
@@ -36,12 +36,12 @@ const reducer = (state = initState, action) => {
     case SET_BOOKED_EVENT_ID:
       return {
         ...state,
-        bookedEventIdList: [...state.bookedEventIdList, action.payload],
+        bookedEventId: action.payload,
       };
     case RESET_BOOKING:
       return {
         ...state,
-        bookedEventIdList: [],
+        bookedEventId: '',
       };
     case SET_BOOKED_EVENT_DETAIL:
       return {

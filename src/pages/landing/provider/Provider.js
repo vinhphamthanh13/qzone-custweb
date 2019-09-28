@@ -8,7 +8,7 @@ import EmptyItem from 'components/EmptyItem';
 import MapDialog from 'components/Map/MapDialog';
 import RateStar from 'components/Rating/RateStar';
 import { navigateTo } from 'utils/common';
-import TemporaryService from 'pages/landing/TemporaryService';
+import TemporaryService from './TemporaryService';
 import s from './Provider.module.scss';
 
 class Provider extends Component {
@@ -26,19 +26,30 @@ class Provider extends Component {
     locationId: '',
     availabilitiesByTemporaryServiceId: {},
     isOpenMap: false,
+    bookedEventId: '',
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { provider, availabilitiesByTemporaryServiceId } = props;
+    const { provider, availabilitiesByTemporaryServiceId, bookedEventId } = props;
     const {
-      provider: cachedProvider,
+      provider: cachedProvider, bookedEventId: cachedBookedEventId,
       availabilitiesByTemporaryServiceId: cachedAvailabilitiesByTemporaryServiceId,
     } = state;
     const updatedState = {};
-    if (JSON.stringify(provider) !== JSON.stringify(cachedProvider)) {
+    if (
+      provider !== null &&
+      JSON.stringify(provider) !== JSON.stringify(cachedProvider)
+    ) {
       updatedState.provider = provider;
     }
     if (
+      bookedEventId !== null &&
+      JSON.stringify(bookedEventId) !== JSON.stringify(cachedBookedEventId)
+    ) {
+      updatedState.bookedEventId = bookedEventId;
+    }
+    if (
+      availabilitiesByTemporaryServiceId !== null &&
       JSON.stringify(availabilitiesByTemporaryServiceId) !== JSON.stringify(cachedAvailabilitiesByTemporaryServiceId)
     ) {
       updatedState.availabilitiesByTemporaryServiceId = availabilitiesByTemporaryServiceId;
@@ -75,24 +86,29 @@ class Provider extends Component {
   };
 
   render() {
-    const { provider, serviceId, providerId, locationId, availabilitiesByTemporaryServiceId, isOpenMap } = this.state;
+    const {
+      provider, serviceId, providerId, locationId, availabilitiesByTemporaryServiceId, isOpenMap,
+      bookedEventId,
+    } = this.state;
     const sName = get(provider, 'serviceName');
     const pName = get(provider, 'givenName');
     const pEmail = get(provider, 'email');
     const pPhone = get(provider, 'telephone');
     const providerInfo = get(provider, 'providerInformation');
     const catName = get(provider, 'catName');
-    const pImage = get(providerInfo, 'image.fileUrl') || defaultPImage;
+    const pImage = get(providerInfo, 'image.fileUrl', defaultPImage);
     const pRate = get(provider, 'rating');
     const geoLocation = get(provider, 'geoLocation');
     const pAddress = get(geoLocation, 'fullAddress');
     const timeZoneId = get(providerInfo, 'timeZoneId');
-    const timeSlots = get(availabilitiesByTemporaryServiceId,`${serviceId}-${providerId}-${locationId}`) || [];
+    const timeSlots = get(availabilitiesByTemporaryServiceId,`${serviceId}-${providerId}-${locationId}`,  []);
     const slots = timeSlots.length > 0 && timeSlots.filter(slot =>
       slot.serviceId === serviceId && slot.providerId === providerId && slot.locationId === locationId) || [];
-    const transformedSlot = slots.map(slot => ({
+    const transformedSlot = slots.filter(item => item.id !== bookedEventId).map(slot => ({
       ...slot, sName, pName, pEmail, pPhone, pImage, pAddress, catName,
     }));
+    console.log('transformedSlot >>>>>>>>>>', transformedSlot);
+
 
     return (
       <>

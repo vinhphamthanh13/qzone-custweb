@@ -45,6 +45,7 @@ export const landingProps = {
 export const providersProps = {
   mapStateToProps: ({ booking, common, provider }) => ({
     providersByServiceId: booking.providersByServiceId,
+    bookedEventIdList: booking.bookedEventIdList,
     servicesByServiceCategoryId: common.servicesByServiceCategoryId,
     temporaryServiceByServiceIds: provider.temporaryServiceByServiceIds,
     availabilitiesByTemporaryServiceId: provider.availabilitiesByTemporaryServiceId,

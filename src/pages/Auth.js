@@ -29,10 +29,16 @@ class Auth extends Component {
       loginSession: cachedLoginSession, userDetail: cachedUserDetail, isForgotPassword: cisForgotPassword,
     } = state;
     const updatedState = {};
-    if (JSON.stringify(loginSession) !== JSON.stringify(cachedLoginSession)) {
+    if (
+      loginSession !== null &&
+      JSON.stringify(loginSession) !== JSON.stringify(cachedLoginSession)
+    ) {
       updatedState.loginSession = loginSession;
     }
-    if(JSON.stringify(userDetail) !== JSON.stringify(cachedUserDetail)) {
+    if(
+      userDetail !== null &&
+      JSON.stringify(userDetail) !== JSON.stringify(cachedUserDetail)
+    ) {
       updatedState.userDetail = userDetail;
     }
     if (isForgotPassword.value !== cisForgotPassword.value) {

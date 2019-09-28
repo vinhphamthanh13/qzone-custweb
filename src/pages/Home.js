@@ -8,7 +8,7 @@ import { homeProps } from 'pages/commonProps';
 import Auth from './Auth';
 import AppBar from './home/appBar/AppBar';
 import Landing from './Landing';
-import Services from './landing/Services';
+import Services from './landing/service/Services';
 import Footer from './components/footer/Footer';
 import SlideShow from './home/slideShow/SlideShow';
 import AdvancedSearch from './home/search/AdvancedSearch';
@@ -37,7 +37,10 @@ export class Home extends Component {
     const { servicesByServiceCategoryId } = props;
     const { servicesByServiceCategoryId: cachedServicesByServiceCategoryId } = state;
     const updatedState = {};
-    if (JSON.stringify(servicesByServiceCategoryId) !== JSON.stringify(cachedServicesByServiceCategoryId)) {
+    if (
+      servicesByServiceCategoryId !== null &&
+      JSON.stringify(servicesByServiceCategoryId) !== JSON.stringify(cachedServicesByServiceCategoryId)
+    ) {
       updatedState.servicesByServiceCategoryId = servicesByServiceCategoryId;
     }
 

@@ -16,7 +16,7 @@ import { GOOGLE_CAPTCHA_SITE_KEY } from 'config/auth';
 import Loading from 'components/Loading';
 import Error from 'components/Error';
 import CustomModal from 'components/Modal/CustomModal';
-import { ADDRESS_LENGTH, POPOVER_TYPE, FULL_DATE } from 'utils/constants';
+import { ADDRESS_LENGTH, POPOVER_TYPE, FULL_DATE, TIME_FORMAT } from 'utils/constants';
 import PolicyPopover from 'authentication/components/PolicyPopover';
 import { bookingProps } from './commonProps';
 import s from './Booking.module.scss';
@@ -42,22 +42,36 @@ class Booking extends Component {
   recaptcha = React.createRef();
 
   static getDerivedStateFromProps(props, state) {
-    const { selectedBookingDetail, userDetail, loginSession,bookedEventDetail } = props;
+    const { selectedBookingDetail, userDetail, loginSession, bookedEventDetail } = props;
     const {
       selectedBookingDetail: cachedBookingDetail, userDetail: cachedUserDetail, loginSession: cachedLoginSession,
       bookedEventDetail: cachedBookedEventDetail,
     } = state;
+    console.log('props derived', props);
+    console.log('state derived', state);
     const updatedState = {};
-    if (JSON.stringify(selectedBookingDetail) !== JSON.stringify(cachedBookingDetail)) {
+    if (
+      selectedBookingDetail !== null &&
+      JSON.stringify(selectedBookingDetail) !== JSON.stringify(cachedBookingDetail)
+    ) {
       updatedState.selectedBookingDetail = selectedBookingDetail;
     }
-    if (JSON.stringify(userDetail) !== JSON.stringify(cachedUserDetail)) {
+    if (
+      userDetail !== null &&
+      JSON.stringify(userDetail) !== JSON.stringify(cachedUserDetail)
+    ) {
       updatedState.userDetail = userDetail;
     }
-    if (JSON.stringify(loginSession) !== JSON.stringify(cachedLoginSession)) {
+    if (
+      loginSession !== null &&
+      JSON.stringify(loginSession) !== JSON.stringify(cachedLoginSession)
+    ) {
       updatedState.loginSession = loginSession;
     }
-    if (JSON.stringify(bookedEventDetail) !== JSON.stringify(cachedBookedEventDetail)) {
+    if (
+      bookedEventDetail !== null &&
+      JSON.stringify(bookedEventDetail) !== JSON.stringify(cachedBookedEventDetail)
+    ) {
       updatedState.bookedEventDetail = bookedEventDetail;
     }
 
@@ -67,9 +81,14 @@ class Booking extends Component {
   componentDidUpdate(prevProps) {
     const { bookedEventDetail } = prevProps;
     const { bookedEventDetail: cachedBookedEventDetail } = this.state;
-    if (JSON.stringify(bookedEventDetail) !== JSON.stringify(cachedBookedEventDetail)) {
+    console.log('booking Did update', bookedEventDetail);
+    if (
+      bookedEventDetail !== null &&
+      JSON.stringify(bookedEventDetail) !== JSON.stringify(cachedBookedEventDetail)
+    ) {
       const bookedEventId = get(bookedEventDetail, 'id');
       if (bookedEventId) {
+        console.log('redirect right afer bookined success', bookedEventId);
         navigateTo(`/event/${bookedEventId}`)();
       }
     }
@@ -95,9 +114,10 @@ class Booking extends Component {
     const { dispatchBookEvent } = this.props;
     const { userDetail, selectedBookingDetail, loginSession } = this.state;
     this.toggleConfirmBooking();
+    console.log('selectedBookingDetail', selectedBookingDetail);
     console.log(dispatchBookEvent);
     const customerId = get(userDetail, 'userSub') || get(userDetail, 'id');
-    const duration = get(selectedBookingDetail, 'duration');
+    const duration = get(selectedBookingDetail, 'durationSec');
     const availabilityId = get(selectedBookingDetail, 'id');
     const startSec = get(selectedBookingDetail, 'providerStartSec');
     const authHeaders = get(loginSession, 'authHeaders');
@@ -149,8 +169,8 @@ class Booking extends Component {
     const pAddress = get(selectedBookingDetail, 'pAddress');
     const durationSec = get(selectedBookingDetail, 'durationSec');
     const providerStartSec = get(selectedBookingDetail, 'providerStartSec');
-    const startTime = moment(providerStartSec).format('HH:mm a');
-    const endTime = moment(providerStartSec).add(60, 'minutes').format('HH:mm a');
+    const startTime = moment(providerStartSec).format(TIME_FORMAT);
+    const endTime = moment(providerStartSec).add(60, 'minutes').format(TIME_FORMAT);
     const catName = get(selectedBookingDetail, 'catName');
     const timezoneId = get(selectedBookingDetail, 'timezoneId');
     const userId = get(userDetail, 'userSub') || get(userDetail, 'id');

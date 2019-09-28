@@ -3,7 +3,7 @@ import Slider from 'react-slick';
 import { get } from 'lodash';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import DefaultImage from 'images/default-service-card.png';
+import defaultImage from 'images/default-service-card.png';
 import Slide from './Slide';
 import s from './SlideShow.module.scss';
 
@@ -16,7 +16,10 @@ class SlideShow extends Component {
     const { services } = props;
     const { services: cachedServices } = state;
     const updatedState = {};
-    if (JSON.stringify(services) !== JSON.stringify(cachedServices)) {
+    if (
+      services !== null &&
+      JSON.stringify(services) !== JSON.stringify(cachedServices)
+    ) {
       updatedState.services = services;
     }
 
@@ -44,7 +47,7 @@ class SlideShow extends Component {
               <Slider {...slideSettings}>
                 {services.map((service) => {
                   const serviceId = get(service, 'id');
-                  const fileUrl = get(service, 'image.fileUrl') || DefaultImage;
+                  const fileUrl = get(service, 'image.fileUrl', defaultImage);
                   const name = get(service, 'name');
                   const description = get(service, 'description');
                   const orgEntity = get(service, 'organizationEntity');

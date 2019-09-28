@@ -31,15 +31,13 @@ class Providers extends Component {
     temporaryServiceByServiceIds: {},
     serviceId: '',
     availabilitiesByTemporaryServiceId: {},
+    bookedEventId: '',
   };
 
   static getDerivedStateFromProps(props, state) {
     const {
-      providersByServiceId,
-      temporaryServiceByServiceIds,
-      match: { params: { sId } },
-      availabilitiesByTemporaryServiceId,
-      windowWidth,
+      providersByServiceId, temporaryServiceByServiceIds, match: { params: { sId } },
+      availabilitiesByTemporaryServiceId, bookedEventId, windowWidth,
     } = props;
     const {
       providersByServiceId: cachedProvidersByServiceId,
@@ -47,24 +45,38 @@ class Providers extends Component {
       serviceId,
       availabilitiesByTemporaryServiceId: cachedAvailabilitiesByTemporaryServiceId,
       windowWidth: cachedWindowWidth,
+      bookedEventId: cachedBookedEventId,
     } = state;
     const updatedState = {};
-    if (JSON.stringify(providersByServiceId) !== JSON.stringify(cachedProvidersByServiceId)) {
+    if (
+      providersByServiceId !== null &&
+      JSON.stringify(providersByServiceId) !== JSON.stringify(cachedProvidersByServiceId)
+    ) {
       updatedState.providersByServiceId = providersByServiceId;
     }
-    if (JSON.stringify(temporaryServiceByServiceIds) !== JSON.stringify(cachedTemporaryServiceByServiceIds)) {
+    if (
+      temporaryServiceByServiceIds !== null &&
+      JSON.stringify(temporaryServiceByServiceIds) !== JSON.stringify(cachedTemporaryServiceByServiceIds)
+    ) {
       updatedState.temporaryServiceByServiceIds = temporaryServiceByServiceIds;
     }
     if (sId !== serviceId) {
       updatedState.serviceId = sId;
     }
     if (
+      availabilitiesByTemporaryServiceId !== null &&
       JSON.stringify(availabilitiesByTemporaryServiceId) !== JSON.stringify(cachedAvailabilitiesByTemporaryServiceId)
     ) {
       updatedState.availabilitiesByTemporaryServiceId = availabilitiesByTemporaryServiceId;
     }
     if (windowWidth !== cachedWindowWidth) {
       updatedState.windowWidth = windowWidth;
+    }
+    if (
+      bookedEventId !== null &&
+      JSON.stringify(bookedEventId) !== JSON.stringify(cachedBookedEventId)
+    ) {
+      updatedState.bookedEventId = bookedEventId;
     }
 
     return Object.keys(updatedState) ? updatedState : null;
@@ -90,9 +102,9 @@ class Providers extends Component {
     const { dispatchAvailabilities, dispatchSelectBookingDetail } = this.props;
     const {
       providersByServiceId, catName, serviceName, temporaryServiceByServiceIds,
-      serviceId, availabilitiesByTemporaryServiceId, windowWidth,
+      serviceId, availabilitiesByTemporaryServiceId, windowWidth, bookedEventId,
     } = this.state;
-    const providers = get(providersByServiceId, `${catName}.${serviceName}`) || [];
+    const providers = get(providersByServiceId, `${catName}.${serviceName}`, []);
     const providerByLocation = {};
     if (Object.keys(temporaryServiceByServiceIds).length > 0 && temporaryServiceByServiceIds[serviceId].length) {
       temporaryServiceByServiceIds[serviceId].map(item => {
@@ -150,6 +162,7 @@ class Providers extends Component {
                 dispatchAvailabilities={dispatchAvailabilities}
                 availabilitiesByTemporaryServiceId={availabilitiesByTemporaryServiceId}
                 selectBookingDetail={dispatchSelectBookingDetail}
+                bookedEventId={bookedEventId}
             />))}
           </div>
         ))}

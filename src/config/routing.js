@@ -1,5 +1,5 @@
 import Home from 'pages/Home';
-import Providers from 'pages/landing/Providers';
+import Providers from 'pages/landing/provider/Providers';
 import Booking from 'pages/landing/booking/Booking';
 import PageNotFound from 'pages/PageNotFound';
 import AccessDenied from 'pages/AccessDenied';

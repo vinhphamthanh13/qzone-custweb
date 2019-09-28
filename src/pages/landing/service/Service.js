@@ -37,7 +37,10 @@ class Service extends Component {
     if (catName !== cachedCatName) {
       updatedState.catName = catName;
     }
-    if (JSON.stringify(providersByServiceId) !== JSON.stringify(cachedProvidersByServiceId)) {
+    if (
+      providersByServiceId !== null &&
+      JSON.stringify(providersByServiceId) !== JSON.stringify(cachedProvidersByServiceId)
+    ) {
       updatedState.providersByServiceId = providersByServiceId;
     }
 
@@ -69,7 +72,7 @@ class Service extends Component {
     const sName = get(service, 'name');
     const orgName = get(service, 'organizationEntity.name');
     const orgId = get(service, 'organizationId');
-    const serviceProviders = get(providersByServiceId, `${catName}.${sName}`) || [];
+    const serviceProviders = get(providersByServiceId, `${catName}.${sName}`, []);
     const isProviderSelectable = serviceProviders.length > 0;
 
     return (
