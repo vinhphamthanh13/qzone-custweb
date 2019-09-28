@@ -7,6 +7,7 @@ import { persistStore } from 'redux-persist';
 import auth from 'authentication/actions/reducer';
 import common from 'actionsReducers/common.reducer';
 import home from 'actionsReducers/home.reducer';
+import landing from 'actionsReducers/landing.reducer';
 import booking from 'actionsReducers/booking.reducer';
 import provider from 'actionsReducers/provider.reducer';
 import profile from 'actionsReducers/profile.reducer';
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
   auth,
   common,
   home,
+  landing,
   booking,
   organization,
   provider,
@@ -27,7 +29,6 @@ const rootReducer = combineReducers({
   profile,
   customer,
   surveys,
-  // landing,
 });
 
 const appReducer = (state, action) => {

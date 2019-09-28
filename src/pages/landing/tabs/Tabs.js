@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import windowSize from 'react-window-size';
 import { IconButton } from '@material-ui/core';
 import { NavigateNext, NavigateBefore } from '@material-ui/icons';
-import { chunk } from 'lodash';
+import { chunk, get } from 'lodash';
 import { MAX_TAB_WIDTH } from 'utils/constants';
-import { setChunkFactorAction } from 'actionsReducers/common.actions';
+import { tabProps } from '../../commonProps';
 import s from './Tabs.module.scss';
 
 class Tabs extends Component {
@@ -20,8 +20,6 @@ class Tabs extends Component {
   };
 
   state = {
-    tabsInfo: [],
-    activeTab: 0,
     activeChunkTabs: 0,
     chunkHistory: {},
     windowWidth: 0,
@@ -30,22 +28,23 @@ class Tabs extends Component {
       chunkFactor: 1,
       maxChunkCount: 0,
     },
+    landingPageFactors: {},
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { tabsInfo, windowWidth, tabOrder, responsiveLayout } = props;
+    const { windowWidth, tabOrder, responsiveLayout, landingPageFactors } = props;
     const {
-      tabsInfo: cachedTabsInfo,
       windowWidth: cachedWindowWidth,
       tabOrder: cachedTabOrder,
       responsiveLayout: cachedResponsiveLayout,
+      landingPageFactors: cachedLandingPageFactors,
     } = state;
     const updatedState = {};
     if (
-      tabsInfo !== null &&
-      JSON.stringify(tabsInfo) !== JSON.stringify(cachedTabsInfo)
+      landingPageFactors !== null &&
+      JSON.stringify(landingPageFactors) !== JSON.stringify(cachedLandingPageFactors)
     ) {
-      updatedState.tabsInfo = tabsInfo;
+      updatedState.landingPageFactors = landingPageFactors;
     }
     if (windowWidth !== cachedWindowWidth) {
       updatedState.windowWidth = windowWidth;
@@ -68,11 +67,13 @@ class Tabs extends Component {
 
   componentDidMount() {
     const { onSelectTab, dispatchChunkFactor } = this.props;
-    const { tabsInfo, activeTab, windowWidth, tabOrder } = this.state;
-    const initCatName = Object.keys(tabsInfo)[0];
+    const { windowWidth, tabOrder, landingPageFactors } = this.state;
     const initChunkTab = Number(Object.keys(tabOrder)[0]);
-    const initTabInfo = tabsInfo[initCatName];
-    onSelectTab(activeTab, initTabInfo, initCatName)();
+    const activeTab = get(landingPageFactors, 'activeTab');
+    const catName = get(landingPageFactors, 'catName');
+    const tabsInfo = get(landingPageFactors, 'tabsInfo');
+    const tabInfo = get(landingPageFactors, `tabsInfo.${catName}`);
+    onSelectTab(activeTab, tabInfo, catName)();
     const chunkFactor = Math.abs(windowWidth / (MAX_TAB_WIDTH + 96));
     const maxChunkCount = chunk(Object.keys(tabsInfo), chunkFactor).length;
     dispatchChunkFactor({ chunkFactor, maxChunkCount });
@@ -84,9 +85,10 @@ class Tabs extends Component {
 
   componentDidUpdate(prevProps) {
     const { windowWidth, dispatchChunkFactor } = prevProps;
-    const { windowWidth: cachedWindowWidth, tabsInfo } = this.state;
+    const { windowWidth: cachedWindowWidth, landingPageFactors } = this.state;
     if (windowWidth !== cachedWindowWidth) {
       const chunkFactor = Math.abs(windowWidth / (MAX_TAB_WIDTH + 96));
+      const tabsInfo = get(landingPageFactors, 'tabsInfo');
       const maxChunkCount = chunk(Object.keys(tabsInfo), chunkFactor).length;
       dispatchChunkFactor({ chunkFactor, maxChunkCount });
     }
@@ -113,7 +115,6 @@ class Tabs extends Component {
     const { onSelectTab, setTabOrder } = this.props;
     const { activeChunkTabs, chunkHistory } = this.state;
     this.setState({
-      activeTab: index,
       chunkHistory: {
         [activeChunkTabs]: index,
       },
@@ -146,7 +147,8 @@ class Tabs extends Component {
   };
 
   render() {
-    const { tabsInfo, activeChunkTabs, responsiveLayout: { maxChunkCount } } = this.state;
+    const { activeChunkTabs, responsiveLayout: { maxChunkCount }, landingPageFactors } = this.state;
+    const tabsInfo = get(landingPageFactors, 'tabsInfo');
     const disableNext = activeChunkTabs === maxChunkCount - 1;
     const disablePrev = activeChunkTabs === 0;
     return (
@@ -155,7 +157,7 @@ class Tabs extends Component {
           <IconButton className={s.nextTab} onClick={this.handleNextTab(-1)} disabled={disablePrev}>
             <NavigateBefore color="inherit" />
           </IconButton>
-          {this.createTab(tabsInfo)}
+          {!!tabsInfo && Object.keys(tabsInfo) && this.createTab(tabsInfo)}
           <IconButton className={s.nextTab} onClick={this.handleNextTab(1)} disabled={disableNext}>
             <NavigateNext color="inherit" />
           </IconButton>
@@ -166,9 +168,6 @@ class Tabs extends Component {
 }
 
 export default connect(
-  ({ common }) => ({
-    responsiveLayout: common.responsiveLayout,
-  }),
-  dispatch => ({
-    dispatchChunkFactor: width => dispatch(setChunkFactorAction(width)),
-}))(windowSize(Tabs));
+  tabProps.mapStateToProps,
+  tabProps.mapDispatchToProps,
+)(windowSize(Tabs));

@@ -3,6 +3,7 @@ import {
   setTemporaryServices,
   servicesByServiceCategoryIdBulkApi,
   setTabOrder,
+  setChunkFactorAction,
 } from 'actionsReducers/common.actions';
 import { providersByServiceIdApi } from 'actionsReducers/booking.actions';
 import {
@@ -10,6 +11,7 @@ import {
   availabilitiesByTemporaryServiceIdApi,
   selectBookingDetail,
 } from 'actionsReducers/provider.actions';
+import { setLandingPageAction } from 'actionsReducers/landing.action';
 
 export const homeProps = {
   mapStateToProps: ({ home, common, auth }) => ({
@@ -25,11 +27,12 @@ export const homeProps = {
 };
 
 export const landingProps = {
-  mapStateToProps: ({ home, common, booking }) => ({
+  mapStateToProps: ({ home, landing, common, booking }) => ({
     providersByServiceId: booking.providersByServiceId,
     categories: home.categories,
     servicesByServiceCategoryId: common.servicesByServiceCategoryId,
     tabOrder: common.tabOrder,
+    landingPageFactors: landing.landingPageFactors,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchServiceCategory: () => dispatch(setServiceCategories()),
@@ -39,6 +42,17 @@ export const landingProps = {
     dispatchTemporaryServices: () => dispatch(setTemporaryServices()),
     dispatchTemporaryServicesByServiceId: list => dispatch(temporaryServicesByServiceIdApi(list)),
     dispatchSetTabOrder: order => dispatch(setTabOrder(order)),
+    dispatchSetLandingPage: data => dispatch(setLandingPageAction(data)),
+  })
+};
+
+export const tabProps = {
+  mapStateToProps: ({ common, landing }) => ({
+    landingPageFactors: landing.landingPageFactors,
+    responsiveLayout: common.responsiveLayout,
+  }),
+  mapDispatchToProps: dispatch => ({
+    dispatchChunkFactor: width => dispatch(setChunkFactorAction(width)),
   })
 };
 

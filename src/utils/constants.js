@@ -11,6 +11,7 @@ export const LS_BACK = 'goBack';
 export const LS_INFO = 'locationState';
 
 // layout
+export const DEVICE_MIN_WIDTH = 375;
 export const MAX_TAB_WIDTH = 160;
 export const MAX_CARD_WIDTH = 320;
 export const ADDRESS_LENGTH = 85;
