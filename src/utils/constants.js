@@ -28,6 +28,12 @@ export const FACEBOOK = {
   },
 };
 
+// Service
+export const SERVICE_MODE = {
+  QUEUE: 'queue',
+  SCHEDULE: 'schedule',
+};
+
 // Booking flow
 export const BOOKING = {
   CACHE_DATA: 'qz_booking_cached',

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { func } from 'prop-types';
 import { connect } from 'react-redux';
+import { Button } from '@material-ui/core';
 import { get } from 'lodash';
 import { limitString, navigateTo } from 'utils/common';
-import { Domain, NavigateNext, NotificationImportant } from '@material-ui/icons';
+import { Domain, NavigateNext, NotificationImportant, WrapText } from '@material-ui/icons';
 import { landingProps } from 'pages/commonProps';
-import { Button } from '@material-ui/core';
+import { SERVICE_MODE } from 'utils/constants';
 import s from './Service.module.scss';
 
 class Service extends Component {
@@ -62,6 +63,10 @@ class Service extends Component {
     navigateTo(`/organization/${orgId}`)();
   };
 
+  handleQueue = () => {
+    console.log('You are able to queue');
+  };
+
   render() {
     const { providersByServiceId, catName, service } = this.state;
     const sDescription = get(service, 'description');
@@ -74,6 +79,8 @@ class Service extends Component {
     const orgId = get(service, 'organizationId');
     const serviceProviders = get(providersByServiceId, `${catName}.${sName}`, []);
     const isProviderSelectable = serviceProviders.length > 0;
+    const mode = get(service, 'mode', '');
+    const isQueuedMode = mode.toLowerCase() === SERVICE_MODE.QUEUE;
 
     return (
       <div className={s.card} key={sId}>
@@ -97,16 +104,27 @@ class Service extends Component {
               <span className="ellipsis">&nbsp;{orgName}</span>
             </div>
             <div className={s.cta}>
-              {isProviderSelectable && (
-                <Button variant="outlined" onClick={this.handleSelectProvider(sId, sName, catName)}>
-                  <NavigateNext color="inherit" />
-                  Select Provider
-                </Button>
-              )}
-              {!isProviderSelectable && (
-                <div className={s.noProvider}>
-                  <NotificationImportant color="inherit" />
-                  <span>&nbsp;No provider found!</span>
+              {isQueuedMode ? (
+                <div className={s.queueMode}>
+                  <Button variant="outlined" color="inherit" onClick={this.handleQueue}>
+                    <WrapText colo="inherit" />
+                    <span>&nbsp;Join Queue</span>
+                  </Button>
+                </div>
+              ) : (
+                <div className={s.scheduleMode}>
+                  {isProviderSelectable && (
+                    <Button variant="outlined" color="inherit" onClick={this.handleSelectProvider(sId, sName, catName)}>
+                      <NavigateNext color="inherit" />
+                      Select Provider
+                    </Button>
+                  )}
+                  {!isProviderSelectable && (
+                    <div className={s.noProvider}>
+                      <NotificationImportant color="inherit" />
+                      <span>&nbsp;No provider found!</span>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
