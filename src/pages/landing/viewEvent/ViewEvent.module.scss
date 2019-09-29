@@ -6,6 +6,7 @@
   display: flex;
   flex-direction: column;
   overflow: auto;
+  color: $main_04;
 }
 
 .navBar {
@@ -63,4 +64,17 @@
 .bookingCode strong {
   font-size: $heading;
   color: $persimnon;
+}
+
+.confirmEvent {
+  color: $success;
+}
+
+.cancelledEvent {
+  color: $danger;
+}
+
+.cta {
+  width: 100%;
+  margin: 1rem 1.3rem;
 }

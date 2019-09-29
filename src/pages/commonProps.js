@@ -6,6 +6,8 @@ import {
   setTabOrder,
   setChunkFactorAction,
   setEventByIdApi,
+  cancelEventByIdApi,
+  cancelEventByIdAction,
 } from 'actionsReducers/common.actions';
 import { providersByServiceIdApi, bookEventApi } from 'actionsReducers/booking.actions';
 import {
@@ -91,9 +93,13 @@ export const bookingProps = {
 export const viewEventProps = {
   mapStateToProps: ({ common, auth }) => ({
     eventById: common.eventById,
+    cancelEventStatus: common.cancelEventStatus,
     userDetail: auth.userDetail,
+    loginSession: auth.loginSession,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchSetEventById: id => dispatch(setEventByIdApi(id)),
+    dispatchCancelEvent: (id, headers) => dispatch(cancelEventByIdApi(id, headers)),
+    dispatchClearCancelStatus: () => dispatch(cancelEventByIdAction(500)),
   }),
 };

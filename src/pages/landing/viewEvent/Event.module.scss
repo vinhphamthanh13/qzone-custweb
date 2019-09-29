@@ -1,5 +1,11 @@
 @import "styles/_settings.scss";
 
+.container {
+  margin: 0.2rem;
+  border-bottom: 1px solid $gallery;
+  padding-bottom: 1rem;
+}
+
 .address {
   color: $main_04;
   border: 1px solid $main_03;
@@ -26,14 +32,6 @@
   max-width: 500px;
 }
 
-.confirmEvent {
-  color: $success;
-}
-
-.cancelledEvent {
-  color: $danger;
-}
-
 .serviceName {
   width: 100%;
   margin: 1rem 0.5rem auto;
@@ -41,7 +39,6 @@
   color: $success;
   font-weight: 500;
   text-transform: capitalize;
-  text-decoration: underline;
   text-align: center;
 }
 

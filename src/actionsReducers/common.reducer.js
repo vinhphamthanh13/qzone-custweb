@@ -14,6 +14,7 @@ import {
   SERVICES_BY_SERVICE_CATEGORY_ID,
   SET_TAB_ORDER,
   SET_RESPONSIVE_CHUNK_FACTOR,
+  CANCEL_EVENT_BY_ID,
 } from 'actionsReducers/common.actions';
 
 const persistConfig = {
@@ -47,7 +48,8 @@ const initState = {
   responsiveLayout: {
     chunkFactor: 1,
     maxChunkCount: 1,
-  }
+  },
+  cancelEventStatus: 500,
 };
 
 const reducer = (state = initState, action) => {
@@ -119,6 +121,11 @@ const reducer = (state = initState, action) => {
           ...state.servicesByServiceCategoryId,
           ...action.payload,
         }
+      };
+    case CANCEL_EVENT_BY_ID:
+      return {
+        ...state,
+        cancelEventStatus: action.payload,
       };
     default:
       return state;

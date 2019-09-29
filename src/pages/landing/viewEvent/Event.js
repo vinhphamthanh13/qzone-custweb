@@ -46,10 +46,10 @@ class Event extends Component {
     const timezone = get(appointment, 'timezone');
 
     return (
-      <>
+      <div className={s.container}>
         <div className={s.address}>
-          <Place className="icon-big" color="inherit" />
-          <span>&nbsp;{fullAddress}&nbsp;</span>
+          <Place className="icon-normal" color="inherit" />
+          <span>{fullAddress}&nbsp;</span>
           <div className={s.map}>
             <IconButton
               color="inherit"
@@ -92,7 +92,7 @@ class Event extends Component {
             <span>&nbsp;{timezone}</span>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 }

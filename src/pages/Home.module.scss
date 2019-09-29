@@ -3,10 +3,10 @@
 .landingPage {
   margin: $app-bar-height auto 1rem !important;
   max-width: $max-width;
-  min-width: $min-width;
   height: calc(100vh - 65px);
   overflow: auto;
   position: relative;
+  box-sizing: border-box;
 }
 
 .instantSearch {

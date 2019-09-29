@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  bool,
-  string,
-  func,
-} from 'prop-types';
+import { bool, string, func } from 'prop-types';
 import { connect } from 'react-redux';
 import { noop } from 'lodash';
 import findValueByKey from 'utils/findValueByKey';
