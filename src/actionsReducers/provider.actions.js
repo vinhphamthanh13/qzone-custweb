@@ -9,12 +9,14 @@ import {
   serviceByProviderId,
   temporaryServicesByServiceId,
   availabilitiesByTemporaryServiceIdBulk,
+  availabilitiesByTemporaryServiceId,
 } from 'actionsApi/provider';
 
 export const SET_PROVIDER_DETAIL = 'PROVIDER.SET_PROVIDER_DETAIL';
 export const SET_PROVIDER_SERVICE = 'PROVIDER.SET_PROVIDER_SERVICE';
 export const TEMPORARY_SERVICES_BY_SERVICE_ID = 'TEMPORARY_SERVICE.TEMPORARY_SERVICES_BY_SERVICE_ID';
 export const AVAILABILITIES_BY_TMP_SERVICE_ID = 'APPOINTMENT_RESOURCE.AVAILABILITIES_BY_TMP_SERVICE_ID';
+export const INSTANT_AVAILABILITIES_BY_TMP_SERVICE_ID = 'APPOINTMENT_RESOURCE.INSTANT_AVAILABILITIES_BY_TMP_SERVICE_ID';
 export const SELECT_BOOKING_DETAIL = 'BOOKING.SELECT_BOOKING_DETAIL';
 const setProviderDetail = payload => ({
   type: SET_PROVIDER_DETAIL,
@@ -30,6 +32,10 @@ const temporaryServicesByServiceIdAction = payload => ({
 });
 const availabilitiesByTemporaryServiceIdAction = payload => ({
   type: AVAILABILITIES_BY_TMP_SERVICE_ID,
+  payload,
+});
+const instantAvailabilitiesByTemporaryServiceIdAction = payload => ({
+  type: INSTANT_AVAILABILITIES_BY_TMP_SERVICE_ID,
   payload,
 });
 export const setProviderDetailAction = id => async (dispatch) => {
@@ -61,6 +67,16 @@ export const availabilitiesByTemporaryServiceIdApi = (list, sId, pId, locId) => 
     const responseBulk = [];
     resultBulk.map(item => responseBulk.push(...item.data.objects));
     dispatch(availabilitiesByTemporaryServiceIdAction({ [`${sId}-${pId}-${locId}`]: responseBulk }));
+  }
+  dispatch(setLoading(false));
+};
+export const instantAvailabilitiesByTemporaryServiceIdApi = id => async dispatch => {
+  dispatch(setLoading(true));
+  const [result, error] = await handleRequest(availabilitiesByTemporaryServiceId, [id]);
+  if (error) {
+    dispatch(setError(error));
+  } else {
+    dispatch(instantAvailabilitiesByTemporaryServiceIdAction(result));
   }
   dispatch(setLoading(false));
 };

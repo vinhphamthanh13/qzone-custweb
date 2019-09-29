@@ -13,6 +13,7 @@ import { providersByServiceIdApi, bookEventApi } from 'actionsReducers/booking.a
 import {
   temporaryServicesByServiceIdApi,
   availabilitiesByTemporaryServiceIdApi,
+  instantAvailabilitiesByTemporaryServiceIdApi,
   selectBookingDetail,
 } from 'actionsReducers/provider.actions';
 import { setLandingPageAction } from 'actionsReducers/landing.action';
@@ -101,5 +102,16 @@ export const viewEventProps = {
     dispatchSetEventById: id => dispatch(setEventByIdApi(id)),
     dispatchCancelEvent: (id, headers) => dispatch(cancelEventByIdApi(id, headers)),
     dispatchClearCancelStatus: () => dispatch(cancelEventByIdAction(500)),
+  }),
+};
+
+export const instantProps = {
+  mapStateToProps: ({ booking }) => ({
+    instantAvailabilitiesByTemporaryServiceId: booking.instantAvailabilitiesByTemporaryServiceId,
+  }),
+  mapDispatchToProps: dispatch => ({
+    dispatchInstantAvailabilitiesByTemporaryServiceId: id => dispatch(
+      instantAvailabilitiesByTemporaryServiceIdApi(id),
+    ),
   }),
 };

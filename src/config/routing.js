@@ -1,6 +1,7 @@
 import Home from 'pages/Home';
 import Providers from 'pages/landing/provider/Providers';
 import Booking from 'pages/landing/booking/Booking';
+import InstantBooking from 'pages/landing/booking/Instant';
 import PageNotFound from 'pages/PageNotFound';
 import AccessDenied from 'pages/AccessDenied';
 import Provider from 'pages/Provider';
@@ -39,13 +40,13 @@ const rootRoutes = [
     name: 'Take survey',
     component: Assessment,
   },
-  // {
-  //   exact: true,
-  //   strict: true,
-  //   path: '/booking/instant/:id',
-  //   name: 'Instant Booking',
-  //   component: Booking,
-  // },
+  {
+    exact: true,
+    strict: true,
+    path: '/booking/instant/:id',
+    name: 'Instant Booking',
+    component: InstantBooking,
+  },
   // {
   //   exact: true,
   //   strict: true,
