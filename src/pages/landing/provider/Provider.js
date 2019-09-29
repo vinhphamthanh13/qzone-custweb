@@ -3,7 +3,7 @@ import { func } from 'prop-types';
 import { get } from 'lodash';
 import defaultPImage from 'images/providers.jpg';
 import { IconButton } from '@material-ui/core';
-import { Email, PhoneIphone, Place, GpsFixed, PersonPin } from '@material-ui/icons';
+import { Email, PhoneIphone, Place, GpsFixed, Map } from '@material-ui/icons';
 import EmptyItem from 'components/EmptyItem';
 import MapDialog from 'components/Map/MapDialog';
 import RateStar from 'components/Rating/RateStar';
@@ -107,8 +107,6 @@ class Provider extends Component {
     const transformedSlot = slots.filter(item => item.id !== bookedEventId).map(slot => ({
       ...slot, sName, pName, pEmail, pPhone, pImage, pAddress, catName,
     }));
-    console.log('transformedSlot >>>>>>>>>>', transformedSlot);
-
 
     return (
       <>
@@ -120,7 +118,7 @@ class Provider extends Component {
               <RateStar rating={pRate} />
             </div>
             <IconButton color="inherit" className={s.viewMap} onClick={this.handleMapPopup}>
-              <PersonPin color="inherit" />map
+              <Map color="inherit" />map
             </IconButton>
           </div>
           <div className={s.content}>

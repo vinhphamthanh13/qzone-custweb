@@ -7,7 +7,7 @@ import Provider from 'pages/Provider';
 import Organization from 'pages/Organization';
 import Profile from 'pages/Profile';
 import Maintenance from 'pages/Maintenance';
-import ViewEvent from 'pages/profile/ViewEvent';
+import ViewEvent from 'pages/landing/viewEvent/ViewEvent';
 import Assessment from 'pages/Assessment';
 
 const rootRoutes = [

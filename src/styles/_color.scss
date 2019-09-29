@@ -14,6 +14,7 @@ $fruitSalad: #4CAF50;
 $seaGreen: #2F843F;
 $celadon: #A9E2AD;
 $galliano: #E2C60D;
+$goldTips: #DEBE12;
 $gallery: #EBEAEA;
 $grayNickel: #BBBCB9;
 $persimnon: #FF5F57; // 255, 95, 87
@@ -29,8 +30,6 @@ $danger: #F44336;
 $success: #4CAF50; // 76, 175, 80
 $info: #00ACC1;
 $gray: #999;
-$crimson: $main;
-$goldTips: $malibu;
 
 .main-color {
   color: $main !important;
@@ -74,10 +73,6 @@ $goldTips: $malibu;
 
 .malibu-color {
   color: $malibu !important;
-}
-
-.crimson-color {
-  color: $crimson !important;
 }
 
 .goldTips {

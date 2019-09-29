@@ -1,11 +1,13 @@
+import { saveGuestInfo } from 'authentication/actions/login';
 import { setServiceCategories, setServices } from 'actionsReducers/home.actions';
 import {
   setTemporaryServices,
   servicesByServiceCategoryIdBulkApi,
   setTabOrder,
   setChunkFactorAction,
+  setEventByIdApi,
 } from 'actionsReducers/common.actions';
-import { providersByServiceIdApi } from 'actionsReducers/booking.actions';
+import { providersByServiceIdApi, bookEventApi } from 'actionsReducers/booking.actions';
 import {
   temporaryServicesByServiceIdApi,
   availabilitiesByTemporaryServiceIdApi,
@@ -70,5 +72,28 @@ export const providersProps = {
     dispatchAvailabilities: (list, sId, pId, locId) =>
       dispatch(availabilitiesByTemporaryServiceIdApi(list, sId, pId, locId)),
     dispatchSelectBookingDetail: slot => dispatch(selectBookingDetail(slot)),
+  }),
+};
+
+export const bookingProps = {
+  mapStateToProps: ({ auth, provider, booking }) => ({
+    userDetail: auth.userDetail,
+    loginSession: auth.loginSession,
+    selectedBookingDetail: provider.selectedBookingDetail,
+    bookedEventDetail: booking.bookedEventDetail,
+  }),
+  mapDispatchToProps: dispatch => ({
+    dispatchSaveGuestInfo: (data, cb) => dispatch(saveGuestInfo(data, cb)),
+    dispatchBookEvent: (data, headers) => dispatch(bookEventApi(data, headers)),
+  }),
+};
+
+export const viewEventProps = {
+  mapStateToProps: ({ common, auth }) => ({
+    eventById: common.eventById,
+    userDetail: auth.userDetail,
+  }),
+  mapDispatchToProps: dispatch => ({
+    dispatchSetEventById: id => dispatch(setEventByIdApi(id)),
   }),
 };

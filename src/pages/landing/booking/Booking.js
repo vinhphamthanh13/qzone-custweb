@@ -18,7 +18,7 @@ import Error from 'components/Error';
 import CustomModal from 'components/Modal/CustomModal';
 import { ADDRESS_LENGTH, POPOVER_TYPE, FULL_DATE, TIME_FORMAT } from 'utils/constants';
 import PolicyPopover from 'authentication/components/PolicyPopover';
-import { bookingProps } from './commonProps';
+import { bookingProps } from '../../commonProps';
 import s from './Booking.module.scss';
 
 class Booking extends Component {

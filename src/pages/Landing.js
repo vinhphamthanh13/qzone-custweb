@@ -104,7 +104,6 @@ class Landing extends Component {
     const { activeTab, servicesByServiceCategoryId, catName, tabOrder, landingPageFactors } = this.state;
     const serviceList = servicesByServiceCategoryId[catName] || [];
     const tabsInfo = get(landingPageFactors, 'tabsInfo');
-    console.log('Landing >>> ', landingPageFactors);
 
     return (
       <>

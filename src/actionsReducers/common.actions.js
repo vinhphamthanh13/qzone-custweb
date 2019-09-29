@@ -78,7 +78,7 @@ export const findEventByCustomerIdAction = (id, headers) => async (dispatch) => 
   }
   dispatch(setLoading(false));
 };
-export const setEventByIdAction = payload => ({
+const setEventByIdAction = payload => ({
   type: SET_EVENT_BY_ID,
   payload,
 });
@@ -144,6 +144,18 @@ export const servicesByServiceCategoryIdBulkApi = (listId, catName) => async dis
     const responseBulk = [];
     resultBulk.map(item => responseBulk.push(...item.data.objects));
     dispatch(servicesByServiceCategoryIdBulkAction({ [catName]: responseBulk }));
+  }
+  dispatch(setLoading(false));
+};
+
+// Decoupling
+export const setEventByIdApi = (id, headers) => async (dispatch) => {
+  dispatch(setLoading(true));
+  const [result, error] = await handleRequest(eventById, [id, headers]);
+  if (error) {
+    dispatch(setError(error));
+  } else {
+    dispatch(setEventByIdAction(result));
   }
   dispatch(setLoading(false));
 };

@@ -4,7 +4,7 @@ export const defaultDateFormat = 'DD MMMM YYYY';
 export const longDateFormat = 'dddd, DD MMMM YYYY';
 export const FULL_DATE = 'dddd, DD MMMM YYYY';
 export const TIME_FORMAT = 'hh:mm a';
-
+export const DEFAULT_TIME = '1970-01-01 T00:00:00';
 
 // Navigation
 export const LS_BACK = 'goBack';
@@ -42,7 +42,6 @@ export const BOOKING = {
     WAITLIST: /booking\/waitlist\/:id/,
   },
 };
-
 export const PROFILE = {
   PAGE: {
     EVENT_LIST: 'eventList',
@@ -51,7 +50,6 @@ export const PROFILE = {
     SURVEY: 'surveyList',
   },
 };
-
 export const regExPattern = {
   userName: /\w{3,}/,
   /* eslint-disable-next-line */
@@ -63,12 +61,10 @@ export const regExPattern = {
   connectError: /Cannot connect to services/,
   removedTimeZone: /\..*/,
 };
-
 export const LOGIN_TYPES = {
   FB: 'FaceBook',
   GP: 'Google',
 };
-
 export const registerPopoverPosition = {
   anchorOrigin: {
     vertical: 'bottom',
@@ -79,7 +75,6 @@ export const registerPopoverPosition = {
     horizontal: 'center',
   },
 };
-
 export const SESSION = {
   TIMEOUT: 3600000, // millisecond
   EXPIRED: {
@@ -88,24 +83,28 @@ export const SESSION = {
       + 'To continue booking, please login again!',
   },
 };
-
 export const READ_MORE_MAX = 180;
-
 export const DISTANCE = {
   EQUATOR: 40075,
   KM: 'KILOMETERS',
   MI: 'MILES',
   NU: 'NEUTRAL',
 };
+export const EVENT_STATUS = {
+  WAITING: 'Waiting...',
+  COMING: 'Coming Soon',
+  EXPIRED: 'Expired',
+  CANCELED: 'CANCELED',
+  COMPLETED: 'COMPLETED',
+  UNSPECIFIED: 'UNSPECIFIED',
+};
 
 // There is dependency between TYPE attrs name and the following policies
 // E.g, PASSWORD attrs value has password in passwordPolicy
-
 export const POPOVER_TYPE = {
   PASSWORD: 'passwordPolicy',
   TEL: 'telephonePolicy',
 };
-
 export const passwordPolicy = {
   statement: 'Password must include at least:',
   items: [
@@ -116,7 +115,6 @@ export const passwordPolicy = {
     '1 special character(s) such as #?!@$%^&*-',
   ],
 };
-
 export const telephonePolicy = {
   statement: 'Dial mobile phone numbers format:',
   items: [
