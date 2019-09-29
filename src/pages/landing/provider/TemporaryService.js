@@ -11,9 +11,6 @@ class TemporaryService extends Component {
     selectSlot: func.isRequired,
   };
 
-  static defaultProps = {
-  };
-
   state = {
     timeSlots: [],
   };

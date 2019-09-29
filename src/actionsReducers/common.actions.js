@@ -8,6 +8,7 @@ import {
   reschedule,
   servicesByServiceCategoryBulk,
   geoLocationsById,
+  servicesById,
 } from 'actionsApi/common';
 import { serviceProvidersRating } from 'actionsApi/rating';
 
@@ -25,6 +26,7 @@ export const SET_TAB_ORDER = 'COMMON.SET_TAB_ORDER';
 export const SET_RESPONSIVE_CHUNK_FACTOR = 'COMMON.SET_RESPONSIVE_CHUNK_FACTOR';
 export const CANCEL_EVENT_BY_ID = 'COMMON.CANCEL_EVENT_BY_ID';
 export const GEO_LOCATIONS_BY_ID = 'COMMON.GEO_LOCATIONS_BY_ID';
+export const SERVICES_BY_ID = 'COMMON.SERVICES_BY_ID';
 export const setLoading = payload => ({
   type: SET_LOADING,
   payload,
@@ -136,6 +138,10 @@ export const geoLocationsByIdAction = payload => ({
   type: GEO_LOCATIONS_BY_ID,
   payload,
 });
+export const servicesByIdAction = payload => ({
+  type: SERVICES_BY_ID,
+  payload,
+});
 export const rescheduleEvent = (data, headers) => async (dispatch) => {
   dispatch(setLoading(true));
   const [, error] = await handleRequest(reschedule, [data, headers]);
@@ -189,6 +195,16 @@ export const geoLocationsByIdApi = id => async dispatch => {
     dispatch(setError(error));
   } else {
     dispatch(geoLocationsByIdAction(result));
+  }
+  dispatch(setLoading(false));
+};
+export const servicesByIdApi = id => async dispatch => {
+  dispatch(setLoading(true));
+  const [result, error] = await handleRequest(servicesById, [id]);
+  if (error) {
+    dispatch(setError(error));
+  } else {
+    dispatch(servicesByIdAction(result));
   }
   dispatch(setLoading(false));
 };

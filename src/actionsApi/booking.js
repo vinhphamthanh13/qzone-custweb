@@ -4,14 +4,9 @@ export const serviceById = data => axios.get(`/services/${data}`);
 
 // user-controller
 export const fetchProvidersByServiceId = sId => axios.get(`/providers-by-service-id/${sId}`);
-export const providersByServiceIdBulk = listId => axios.all(
-  listId.map(sId => fetchProvidersByServiceId(sId)),
-).then(axios.spread((...responses) => [responses, null]))
-  .catch(error => [null, JSON.stringify(error)]);
 // appointment-resource
 export const availabilitiesBySpecialEventId = data => axios.post('/availabilities/temporary/service/filter', data);
 export const availabilitiesById = data => axios.get(`/availabilities/${data}`);
-
 export const availabilitiesBySpecialEventIdBulk = eventList => axios.all(
   eventList.map(data => availabilitiesBySpecialEventId(data)),
 ).then(axios.spread((...responses) => [responses, null]))

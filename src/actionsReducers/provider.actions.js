@@ -13,6 +13,7 @@ import {
 } from 'actionsApi/provider';
 
 export const SET_PROVIDER_DETAIL = 'PROVIDER.SET_PROVIDER_DETAIL';
+export const USERS_BY_ID = 'PROVIDER.USERS_BY_ID';
 export const SET_PROVIDER_SERVICE = 'PROVIDER.SET_PROVIDER_SERVICE';
 export const TEMPORARY_SERVICES_BY_SERVICE_ID = 'TEMPORARY_SERVICE.TEMPORARY_SERVICES_BY_SERVICE_ID';
 export const AVAILABILITIES_BY_TMP_SERVICE_ID = 'APPOINTMENT_RESOURCE.AVAILABILITIES_BY_TMP_SERVICE_ID';
@@ -36,6 +37,10 @@ const availabilitiesByTemporaryServiceIdAction = payload => ({
 });
 const instantAvailabilitiesByTemporaryServiceIdAction = payload => ({
   type: INSTANT_AVAILABILITIES_BY_TMP_SERVICE_ID,
+  payload,
+});
+const usersByIdAction = payload => ({
+  type: USERS_BY_ID,
   payload,
 });
 export const setProviderDetailAction = id => async (dispatch) => {
@@ -94,3 +99,14 @@ export const selectBookingDetail = payload => ({
   type: SELECT_BOOKING_DETAIL,
   payload,
 });
+// Decoupling
+export const usersByIdApi = id => async dispatch => {
+  dispatch(setLoading(true));
+  const [result, error] = await handleRequest(users, [id]);
+  if (error) {
+    dispatch(setError(error));
+  } else {
+    dispatch(usersByIdAction(result));
+  }
+  dispatch(setLoading(false));
+};

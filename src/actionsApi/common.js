@@ -13,3 +13,4 @@ export const servicesByServiceCategoryBulk = list => axios.all(
     .catch(error => [null, JSON.stringify(error)]);
 // *********** Geo location ************* //
 export const geoLocationsById = id => axios.get(`/geo-locations/${id}`);
+export const servicesById = id => axios.get(`/services/${id}`);

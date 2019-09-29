@@ -16,6 +16,7 @@ import {
   SET_RESPONSIVE_CHUNK_FACTOR,
   CANCEL_EVENT_BY_ID,
   GEO_LOCATIONS_BY_ID,
+  SERVICES_BY_ID,
 } from 'actionsReducers/common.actions';
 
 const persistConfig = {
@@ -31,6 +32,7 @@ const persistConfig = {
     'eventList',
     'eventById',
     'locationById',
+    'serviceById',
   ],
 };
 
@@ -53,6 +55,7 @@ const initState = {
   },
   cancelEventStatus: 500,
   locationById: {},
+  serviceById: {},
 };
 
 const reducer = (state = initState, action) => {
@@ -134,6 +137,11 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         locationById: action.payload,
+      };
+    case SERVICES_BY_ID:
+      return {
+        ...state,
+        serviceById: action.payload,
       };
     default:
       return state;

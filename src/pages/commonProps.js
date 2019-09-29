@@ -9,6 +9,7 @@ import {
   cancelEventByIdApi,
   cancelEventByIdAction,
   geoLocationsByIdApi,
+  servicesByIdApi,
 } from 'actionsReducers/common.actions';
 import { providersByServiceIdApi, bookEventApi } from 'actionsReducers/booking.actions';
 import {
@@ -16,6 +17,7 @@ import {
   availabilitiesByTemporaryServiceIdApi,
   instantAvailabilitiesByTemporaryServiceIdApi,
   selectBookingDetail,
+  usersByIdApi,
 } from 'actionsReducers/provider.actions';
 import { setLandingPageAction } from 'actionsReducers/landing.action';
 
@@ -110,11 +112,15 @@ export const instantProps = {
   mapStateToProps: ({ common, provider }) => ({
     instantAvailabilitiesByTemporaryServiceId: provider.instantAvailabilitiesByTemporaryServiceId,
     locationById: common.locationById,
+    serviceById: common.serviceById,
+    providerById: provider.providerById,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchInstantAvailabilitiesByTemporaryServiceId: id => dispatch(
       instantAvailabilitiesByTemporaryServiceIdApi(id),
     ),
     dispatchGeoLocationsById: id => dispatch(geoLocationsByIdApi(id)),
+    dispatchServicesById: id => dispatch(servicesByIdApi(id)),
+    dispatchUsersById: id => dispatch(usersByIdApi(id)),
   }),
 };

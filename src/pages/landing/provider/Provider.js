@@ -147,9 +147,6 @@ class Provider extends Component {
           {transformedSlot.length > 0 ? (
             <div className={s.availabilities}>
               <TemporaryService
-                serviceId={serviceId}
-                providerId={providerId}
-                locationId={locationId}
                 timeSlots={transformedSlot}
                 selectSlot={this.handleSelectSlot}
               />
