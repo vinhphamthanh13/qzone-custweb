@@ -7,6 +7,7 @@ import {
   eventByIdCancel,
   reschedule,
   servicesByServiceCategoryBulk,
+  geoLocationsById,
 } from 'actionsApi/common';
 import { serviceProvidersRating } from 'actionsApi/rating';
 
@@ -23,6 +24,7 @@ export const SERVICES_BY_SERVICE_CATEGORY_ID = 'COMMON.SERVICES_BY_SERVICE_CATEG
 export const SET_TAB_ORDER = 'COMMON.SET_TAB_ORDER';
 export const SET_RESPONSIVE_CHUNK_FACTOR = 'COMMON.SET_RESPONSIVE_CHUNK_FACTOR';
 export const CANCEL_EVENT_BY_ID = 'COMMON.CANCEL_EVENT_BY_ID';
+export const GEO_LOCATIONS_BY_ID = 'COMMON.GEO_LOCATIONS_BY_ID';
 export const setLoading = payload => ({
   type: SET_LOADING,
   payload,
@@ -130,6 +132,10 @@ export const setRescheduleStatusAction = payload => ({
   type: SET_RESCHEDULE_STATUS,
   payload,
 });
+export const geoLocationsByIdAction = payload => ({
+  type: GEO_LOCATIONS_BY_ID,
+  payload,
+});
 export const rescheduleEvent = (data, headers) => async (dispatch) => {
   dispatch(setLoading(true));
   const [, error] = await handleRequest(reschedule, [data, headers]);
@@ -173,6 +179,16 @@ export const cancelEventByIdApi = (data, headers) => async (dispatch) => {
   } else {
     dispatch(cancelEventByIdAction(result.success));
     dispatch(setSucceed('Your event is cancelled!'));
+  }
+  dispatch(setLoading(false));
+};
+export const geoLocationsByIdApi = id => async dispatch => {
+  dispatch(setLoading(true));
+  const [result, error] = await handleRequest(geoLocationsById, [id]);
+  if (error) {
+    dispatch(setError(error));
+  } else {
+    dispatch(geoLocationsByIdAction(result));
   }
   dispatch(setLoading(false));
 };

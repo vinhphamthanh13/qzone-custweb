@@ -11,3 +11,5 @@ export const servicesByServiceCategoryBulk = list => axios.all(
   list.map(catId => servicesByServiceCategoryId(catId))
 ).then(axios.spread((...responses) => [responses, null]))
     .catch(error => [null, JSON.stringify(error)]);
+// *********** Geo location ************* //
+export const geoLocationsById = id => axios.get(`/geo-locations/${id}`);

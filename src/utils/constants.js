@@ -10,6 +10,7 @@ export const DEFAULT_TIME = '1970-01-01 T00:00:00';
 export const LS_BACK = 'goBack';
 export const LS_INFO = 'locationState';
 export const CATEGORY_NAV_WIDTH = 66;
+
 // layout
 export const DEVICE_MIN_WIDTH = 375;
 export const MAX_TAB_WIDTH = 166;
@@ -96,6 +97,7 @@ export const DISTANCE = {
   MI: 'MILES',
   NU: 'NEUTRAL',
 };
+export const INSTANT_BOOKING_EMPTY = 'All available slots are booked! Thanks for choosing our service!';
 export const EVENT_STATUS = {
   WAITING: 'Waiting...',
   COMING: 'Coming Soon',

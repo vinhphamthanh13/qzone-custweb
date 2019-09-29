@@ -15,6 +15,7 @@ import {
   SET_TAB_ORDER,
   SET_RESPONSIVE_CHUNK_FACTOR,
   CANCEL_EVENT_BY_ID,
+  GEO_LOCATIONS_BY_ID,
 } from 'actionsReducers/common.actions';
 
 const persistConfig = {
@@ -29,6 +30,7 @@ const persistConfig = {
     'succeedMessage',
     'eventList',
     'eventById',
+    'locationById',
   ],
 };
 
@@ -50,6 +52,7 @@ const initState = {
     maxChunkCount: 1,
   },
   cancelEventStatus: 500,
+  locationById: {},
 };
 
 const reducer = (state = initState, action) => {
@@ -126,6 +129,11 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         cancelEventStatus: action.payload,
+      };
+    case GEO_LOCATIONS_BY_ID:
+      return {
+        ...state,
+        locationById: action.payload,
       };
     default:
       return state;

@@ -1,25 +1,34 @@
 @import "styles/_settings.scss";
 
+
 .container {
   width: 100%;
-  color: $main_04;
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  height: 100vh;
   overflow: auto;
+  color: $main_04;
 }
 
-.headline {
-  width: 100%;
+.navBar {
   display: flex;
   justify-content: space-between;
-  padding: 0 1rem;
   align-items: center;
-  border-bottom: 2px solid $gallery;
-  text-transform: capitalize;
-  color: $main_04;
+  width: 100%;
+  height: $app-bar-height;
+  background: linear-gradient(to left bottom, $main, $malibu);
+  padding: 0 1rem;
+}
+
+.logo {
+  width: $logo-copyright * 1.5;
+}
+
+.rightCta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: $white;
 }
 
 .title {
