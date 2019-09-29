@@ -104,7 +104,7 @@ class Provider extends Component {
     const timeSlots = get(availabilitiesByTemporaryServiceId,`${serviceId}-${providerId}-${locationId}`,  []);
     const slots = timeSlots.length > 0 && timeSlots.filter(slot =>
       slot.serviceId === serviceId && slot.providerId === providerId && slot.locationId === locationId) || [];
-    const transformedSlot = slots.filter(item => item.id !== bookedEventId).map(slot => ({
+    const transformedSlot = slots.filter(item => item.id !== bookedEventId && item.spotsOpen === 1).map(slot => ({
       ...slot, sName, pName, pEmail, pPhone, pImage, pAddress, catName,
     }));
 

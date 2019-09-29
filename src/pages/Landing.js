@@ -20,9 +20,6 @@ class Landing extends Component {
     dispatchSetLandingPage: func.isRequired,
   };
 
-  static defaultProps = {
-  };
-
   state = {
     tabsInfo: {},
     tabOrder: {},
@@ -87,16 +84,15 @@ class Landing extends Component {
     }
   }
 
-  handleSelectTab = (index, tabInfo, catName) => () => {
+  handleSelectTab = (tabInfo, catName) => () => {
     const { dispatchServicesByServiceCategoryId, dispatchSetLandingPage } = this.props;
     const { tabsInfo } = this.state;
     this.setState({
-      activeTab: index,
       catName,
     });
     const categoryIdList = tabInfo.map(cat => cat.id);
     dispatchServicesByServiceCategoryId(categoryIdList, catName);
-    dispatchSetLandingPage({ catName, activeTab: index, tabsInfo });
+    dispatchSetLandingPage({ catName, tabsInfo });
   };
 
   render() {

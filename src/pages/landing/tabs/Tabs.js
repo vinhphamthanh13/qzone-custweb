@@ -12,13 +12,11 @@ import s from './Tabs.module.scss';
 class Tabs extends Component {
   static propTypes = {
     onSelectTab: func.isRequired,
-    setTabOrder: func.isRequired,
     dispatchChunkFactor: func.isRequired,
   };
 
   state = {
     activeChunkTabs: 0,
-    chunkHistory: {},
     windowWidth: 0,
     tabOrder: { 0: 0 },
     responsiveLayout: {
@@ -66,17 +64,15 @@ class Tabs extends Component {
     const { onSelectTab, dispatchChunkFactor } = this.props;
     const { windowWidth, tabOrder, landingPageFactors } = this.state;
     const initChunkTab = Number(Object.keys(tabOrder)[0]);
-    const activeTab = get(landingPageFactors, 'activeTab');
     const catName = get(landingPageFactors, 'catName');
     const tabsInfo = get(landingPageFactors, 'tabsInfo');
     const tabInfo = get(landingPageFactors, `tabsInfo.${catName}`);
-    onSelectTab(activeTab, tabInfo, catName)();
+    if (tabInfo) onSelectTab(tabInfo, catName)();
     const chunkFactor = Math.abs(windowWidth / (MAX_TAB_WIDTH + CATEGORY_NAV_WIDTH));
     const maxChunkCount = chunk(Object.keys(tabsInfo), chunkFactor).length;
     dispatchChunkFactor({ chunkFactor, maxChunkCount });
     this.setState({
       activeChunkTabs: initChunkTab,
-      chunkHistory: tabOrder,
     });
   }
 
@@ -108,20 +104,9 @@ class Tabs extends Component {
     }));
   };
 
-  handleSelectTab = (index, tabInfo, catName) => () => {
-    const { onSelectTab, setTabOrder } = this.props;
-    const { activeChunkTabs, chunkHistory } = this.state;
-    this.setState({
-      chunkHistory: {
-        [activeChunkTabs]: index,
-      },
-    });
-    const oldChunk = Object.keys(chunkHistory)[0];
-    const oldTab = chunkHistory[oldChunk];
-    setTabOrder({ [activeChunkTabs]: index });
-    if (Number(oldChunk) !== activeChunkTabs || oldTab !== index) {
-      onSelectTab(index, tabInfo, catName)();
-    }
+  handleSelectTab = (tabInfo, catName) => () => {
+    const { onSelectTab } = this.props;
+    onSelectTab(tabInfo, catName)();
   };
 
   createTab = tabsInfo => {
@@ -129,11 +114,11 @@ class Tabs extends Component {
     const catName = get(landingPageFactors, 'catName');
     const tabChunkCount = chunk(Object.keys(tabsInfo), chunkFactor);
     const lazyTabs = tabChunkCount[activeChunkTabs] || tabChunkCount[0] || [];
-    return lazyTabs.length > 0 && lazyTabs.map((tab, index) => {
+    return lazyTabs.length > 0 && lazyTabs.map((tab) => {
       const tabStyle = catName === tab ? `${s.tab} ${s.tabActive}` : s.tab;
       return (
         // eslint-disable-next-line
-        <div key={tab} className={`${tabStyle}`} onClick={this.handleSelectTab(index, tabsInfo[tab], tab)}>{tab}</div>
+        <div key={tab} className={`${tabStyle}`} onClick={this.handleSelectTab(tabsInfo[tab], tab)}>{tab}</div>
       )
     });
   };
