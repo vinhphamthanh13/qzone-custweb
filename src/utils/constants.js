@@ -9,10 +9,10 @@ export const DEFAULT_TIME = '1970-01-01 T00:00:00';
 // Navigation
 export const LS_BACK = 'goBack';
 export const LS_INFO = 'locationState';
-
+export const CATEGORY_NAV_WIDTH = 66;
 // layout
 export const DEVICE_MIN_WIDTH = 375;
-export const MAX_TAB_WIDTH = 160;
+export const MAX_TAB_WIDTH = 166;
 export const MAX_CARD_WIDTH = 320;
 export const ADDRESS_LENGTH = 85;
 

@@ -32,7 +32,7 @@
 .tabActive {
   background: $main_04;
   color: $main_01;
-  border: unset;
+  border: 1px solid transparent;
 }
 
 .tab:hover {
@@ -42,4 +42,6 @@
 
 .nextTab {
   color: $main_04;
+  padding: unset;
+  margin: auto 0.5rem;
 }

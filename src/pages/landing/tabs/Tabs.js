@@ -5,7 +5,7 @@ import windowSize from 'react-window-size';
 import { IconButton } from '@material-ui/core';
 import { NavigateNext, NavigateBefore } from '@material-ui/icons';
 import { chunk, get } from 'lodash';
-import { MAX_TAB_WIDTH } from 'utils/constants';
+import { MAX_TAB_WIDTH, CATEGORY_NAV_WIDTH } from 'utils/constants';
 import { tabProps } from '../../commonProps';
 import s from './Tabs.module.scss';
 
@@ -14,9 +14,6 @@ class Tabs extends Component {
     onSelectTab: func.isRequired,
     setTabOrder: func.isRequired,
     dispatchChunkFactor: func.isRequired,
-  };
-
-  static defaultProps = {
   };
 
   state = {
@@ -74,7 +71,7 @@ class Tabs extends Component {
     const tabsInfo = get(landingPageFactors, 'tabsInfo');
     const tabInfo = get(landingPageFactors, `tabsInfo.${catName}`);
     onSelectTab(activeTab, tabInfo, catName)();
-    const chunkFactor = Math.abs(windowWidth / (MAX_TAB_WIDTH + 96));
+    const chunkFactor = Math.abs(windowWidth / (MAX_TAB_WIDTH + CATEGORY_NAV_WIDTH));
     const maxChunkCount = chunk(Object.keys(tabsInfo), chunkFactor).length;
     dispatchChunkFactor({ chunkFactor, maxChunkCount });
     this.setState({
@@ -87,7 +84,7 @@ class Tabs extends Component {
     const { windowWidth, dispatchChunkFactor } = prevProps;
     const { windowWidth: cachedWindowWidth, landingPageFactors } = this.state;
     if (windowWidth !== cachedWindowWidth) {
-      const chunkFactor = Math.abs(windowWidth / (MAX_TAB_WIDTH + 96));
+      const chunkFactor = Math.abs(windowWidth / (MAX_TAB_WIDTH + CATEGORY_NAV_WIDTH));
       const tabsInfo = get(landingPageFactors, 'tabsInfo');
       const maxChunkCount = chunk(Object.keys(tabsInfo), chunkFactor).length;
       dispatchChunkFactor({ chunkFactor, maxChunkCount });
@@ -128,20 +125,15 @@ class Tabs extends Component {
   };
 
   createTab = tabsInfo => {
-    const { responsiveLayout: { chunkFactor } } = this.state;
-    const { activeChunkTabs, chunkHistory } = this.state;
+    const {  activeChunkTabs, responsiveLayout: { chunkFactor }, landingPageFactors } = this.state;
+    const catName = get(landingPageFactors, 'catName');
     const tabChunkCount = chunk(Object.keys(tabsInfo), chunkFactor);
     const lazyTabs = tabChunkCount[activeChunkTabs] || tabChunkCount[0] || [];
     return lazyTabs.length > 0 && lazyTabs.map((tab, index) => {
-      const tabStyle = chunkHistory[activeChunkTabs] === index ? `${s.tab} ${s.tabActive}` : s.tab;
+      const tabStyle = catName === tab ? `${s.tab} ${s.tabActive}` : s.tab;
       return (
         // eslint-disable-next-line
-        <div
-          key={tab}
-          className={`${tabStyle}`}
-          onClick={this.handleSelectTab(index, tabsInfo[tab], tab)}>
-            {tab}
-        </div>
+        <div key={tab} className={`${tabStyle}`} onClick={this.handleSelectTab(index, tabsInfo[tab], tab)}>{tab}</div>
       )
     });
   };
@@ -155,11 +147,11 @@ class Tabs extends Component {
       <div className={s.wrapper}>
         <ul className={s.tabs}>
           <IconButton className={s.nextTab} onClick={this.handleNextTab(-1)} disabled={disablePrev}>
-            <NavigateBefore color="inherit" />
+            <NavigateBefore className="icon-big" color="inherit" />
           </IconButton>
           {!!tabsInfo && Object.keys(tabsInfo) && this.createTab(tabsInfo)}
           <IconButton className={s.nextTab} onClick={this.handleNextTab(1)} disabled={disableNext}>
-            <NavigateNext color="inherit" />
+            <NavigateNext className="icon-big" color="inherit" />
           </IconButton>
         </ul>
       </div>
