@@ -40,6 +40,9 @@ class SlideShow extends Component {
 
     return (
       <div className={s.carousel}>
+        <div className={s.title}>
+          Available services
+        </div>
         <div className={s.sliderWrapper}>
           <div className={s.advertisers} />
           {services ? (

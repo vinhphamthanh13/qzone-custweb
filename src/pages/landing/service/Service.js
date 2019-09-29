@@ -122,7 +122,7 @@ class Service extends Component {
                   {!isProviderSelectable && (
                     <div className={s.noProvider}>
                       <NotificationImportant color="inherit" />
-                      <span>&nbsp;No provider found!</span>
+                      <span>&nbsp;No provider available!</span>
                     </div>
                   )}
                 </div>
