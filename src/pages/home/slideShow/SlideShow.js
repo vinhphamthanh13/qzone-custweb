@@ -1,39 +1,32 @@
 import React, { Component } from 'react';
-import {
-  arrayOf, object, func,
-} from 'prop-types';
 import Slider from 'react-slick';
-import { Typography } from '@material-ui/core';
 import { get } from 'lodash';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import DefaultImage from 'images/default-service-card.png';
+import defaultImage from 'images/default-service-card.png';
 import Slide from './Slide';
 import s from './SlideShow.module.scss';
 
 class SlideShow extends Component {
+  state = {
+    services: [],
+  };
+
   static getDerivedStateFromProps(props, state) {
     const { services } = props;
     const { services: cachedServices } = state;
-    if (services !== cachedServices) {
-      return { topServices: services };
+    const updatedState = {};
+    if (
+      services !== null &&
+      JSON.stringify(services) !== JSON.stringify(cachedServices)
+    ) {
+      updatedState.services = services;
     }
-    return null;
+
+    return Object.keys(services) ? updatedState : null;
   }
 
-  state = {
-    topServices: null,
-  };
-
-  topTenServices = list => list.sort((item1, item2) => item2.rating - item1.rating).slice(0, 10);
-
-  handleBooking = service => () => {
-    const { onBooking } = this.props;
-    onBooking(service);
-  };
-
   render() {
-    const { topServices } = this.state;
     const slideSettings = {
       infinite: true,
       lazyMode: true,
@@ -43,22 +36,23 @@ class SlideShow extends Component {
       pauseOnHover: true,
       className: s.sliderControl,
     };
+    const { services } = this.state;
 
     return (
       <div className={s.carousel}>
-        <Typography className={s.carouselTitle} variant="headline" color="textSecondary">Trending</Typography>
+        <div className={s.title}>
+          Available services
+        </div>
         <div className={s.sliderWrapper}>
           <div className={s.advertisers} />
-          {topServices ? (
+          {services ? (
             <div>
               <Slider {...slideSettings}>
-                {topServices.map((service) => {
+                {services.map((service) => {
                   const serviceId = get(service, 'id');
-                  const fileUrl = get(service, 'image.fileUrl') || DefaultImage;
+                  const fileUrl = get(service, 'image.fileUrl', defaultImage);
                   const name = get(service, 'name');
                   const description = get(service, 'description');
-                  const rating = get(service, 'rating');
-                  const viewNum = get(service, 'viewNum');
                   const orgEntity = get(service, 'organizationEntity');
                   const orgId = get(orgEntity, 'id');
                   const orgName = get(orgEntity, 'name');
@@ -70,9 +64,6 @@ class SlideShow extends Component {
                       imageUrl={fileUrl}
                       name={name}
                       description={description}
-                      rating={rating}
-                      reviews={viewNum}
-                      onBooking={this.handleBooking(service)}
                       orgId={orgId}
                       orgName={orgName}
                       disabledBooking={!linkedProvider || linkedProvider.length < 1}
@@ -82,28 +73,10 @@ class SlideShow extends Component {
               </Slider>
             </div>
           ) : <div className={s.advertisers} /> }
-          <div className={s.advertisers}>
-            {false && (
-              <Typography variant="subheading" color="textSecondary">
-                For advertisement. Contact us at Quezone.com.au or
-                Hotline: +61 222 33 44 444
-              </Typography>
-            )}
-          </div>
         </div>
       </div>
     );
   }
 }
-
-SlideShow.propTypes = {
-  services: arrayOf(object),
-  onBooking: func.isRequired,
-};
-
-SlideShow.defaultProps = {
-  services: [],
-};
-
 
 export default SlideShow;

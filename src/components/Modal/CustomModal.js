@@ -1,20 +1,7 @@
 import React from 'react';
-import {
-  string,
-  func,
-  bool,
-} from 'prop-types';
-import {
-  Cancel,
-  CheckCircle,
-} from '@material-ui/icons';
-import {
-  Modal,
-  Typography,
-  IconButton,
-  Button,
-  Avatar,
-} from '@material-ui/core';
+import { string, func, bool } from 'prop-types';
+import { Cancel, CheckCircle } from '@material-ui/icons';
+import { Modal, Typography, IconButton, Button, Avatar } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
 import { noop } from 'lodash';
 import logo from 'images/logo.png';

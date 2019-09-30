@@ -1,0 +1,53 @@
+@import "styles/_settings.scss";
+
+.container {
+  margin: 0.2rem;
+  border-bottom: 1px solid $gallery;
+  padding-bottom: 1rem;
+}
+
+.address {
+  color: $main_04;
+  border: 1px solid $main_03;
+  background: $gallery;
+  padding: 1rem 0.7rem 1.5rem;
+  margin: auto 1rem;
+  border-radius: 0.4rem;
+  font-weight: 500;
+  font-size: 1.1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.map {
+  position: absolute;
+  bottom: -10%;
+  right: 0;
+}
+
+.bookingInfo {
+  margin: auto 1rem;
+  max-width: 500px;
+}
+
+.serviceName {
+  width: 100%;
+  margin: 1rem 0.5rem auto;
+  font-size: $heading;
+  color: $success;
+  font-weight: 500;
+  text-transform: capitalize;
+  text-align: center;
+}
+
+.providerName {
+  text-transform: capitalize;
+  font-weight: 600;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+}

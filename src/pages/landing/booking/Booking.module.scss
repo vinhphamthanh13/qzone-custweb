@@ -1,0 +1,168 @@
+@import "styles/_settings.scss";
+
+.container {
+  width: 100%;
+  color: $main_04;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100vh;
+  overflow: auto;
+}
+
+.confirmInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.details {
+  margin: 0.5rem auto;
+  display: flex;
+  flex-direction: column;
+  width: $max-card-width;
+}
+
+.headline {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid $gallery;
+  text-transform: capitalize;
+  color: indianred;
+}
+
+.title {
+  color: $info;
+  font-size: $heading;
+  font-weight: 500;
+}
+
+.sName {
+  font-size: $title;
+  font-weight: 600;
+  color: $fruitSalad;
+  text-transform: capitalize;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 0.2rem 0;
+}
+
+.pImage {
+  width: $max-card-width;
+  height: $provider-image-height;
+  overflow: hidden;
+  padding: 0.2rem 0;
+  position: relative;
+}
+
+.duration {
+  color: $main_04;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: rgba(235, 234, 234, 0.9);
+  padding: 0.2rem 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+}
+
+.pName {
+  font-size: $title;
+  text-transform: capitalize;
+  font-weight: 500;
+  padding: 0.2rem 0;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+}
+
+.place {
+  height: $full-address-height;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border: 1px solid $main_03;
+  background: $gallery;
+  border-radius: 0.4rem;
+  padding-right: 0.4rem;
+}
+
+.clientInfo {
+  display: flex;
+  flex-direction: column;
+  width: $max-card-width;
+}
+
+.clientTitle {
+  font-size: $title;
+  font-weight: 500;
+  border-bottom: 1px solid $we_peep;
+  color: $main_03;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.formData {
+  width: $max-card-width;
+}
+
+.formControl {
+  display: flex;
+  flex-direction: column;
+  margin: 0.2rem auto;
+  padding-bottom: 1rem;
+  position: relative;
+  color: $success;
+}
+
+.label {
+  color: $main;
+  font-size: $caption;
+}
+
+.errorMessage {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  color: $danger;
+  font-size: $caption;
+  font-style: italic;
+}
+
+.popOver {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+.recaptcha {
+  margin: 1rem auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bookingCta {
+  display: flex;
+  justify-content: center;
+  margin: 0.5rem auto;
+}
+
+@include breakpoint-up(sm) {
+  .confirmInfo {
+    flex-direction: row;
+  }
+  .clientInfo {
+    margin-left: 2rem;
+    padding-top: 0.5rem;
+    border-left: 4px solid $main_03;
+    padding-left: 1.8rem;
+  }
+}

@@ -1,43 +1,27 @@
 import React, { PureComponent } from 'react';
 import {
-  bool,
-  string,
-  func,
-  number,
-  objectOf,
-  any,
+  bool, string, func, number, objectOf, any,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import moment from 'moment';
 import {
-  get,
-  uniqBy,
-  compact,
+  get, uniqBy, compact,
 } from 'lodash';
 import {
-  IconButton,
-  Avatar,
-  Button,
-  Typography,
+  IconButton, Avatar, Button, Typography,
 } from '@material-ui/core';
 import {
-  Home,
-  AccountBox,
-  ChevronLeft,
-  ChevronRight,
-  Fingerprint,
+  Home, AccountBox, ChevronLeft, ChevronRight, Fingerprint,
 } from '@material-ui/icons';
 import uuidv1 from 'uuid/v1';
 import logo from 'images/quezone-logo.png';
 import CustomModal from 'components/Modal/CustomModal';
-import Loading from 'components/Loading';
 import Error from 'components/Error';
 import { history } from 'containers/App';
 import Success from 'components/Success';
 import {
-  BOOKING,
-  regExPattern,
+  BOOKING, regExPattern,
 } from 'utils/constants';
 import {
   setServiceProvidersAction,
@@ -100,7 +84,7 @@ class Booking extends PureComponent {
       temporaryServiceId,
       service,
       serviceProviders,
-      providersByServiceIdList,
+      providersByServiceId,
       availabilitiesBulk,
       bookingStep,
       bookingDetail,
@@ -121,7 +105,7 @@ class Booking extends PureComponent {
       temporaryServiceId: cachedTemporaryServiceId,
       service: cachedService,
       serviceProviders: cachedServiceProviders,
-      providersByServiceIdList: cachedProvidersByServiceIdList,
+      providersByServiceId: cachedProvidersByServiceId,
       availabilitiesBulk: cachedAvailabilitiesBulk,
       bookingStep: cachedBookingStep,
       bookingDetail: cachedBookingDetail,
@@ -139,7 +123,7 @@ class Booking extends PureComponent {
       || temporaryServiceId !== cachedTemporaryServiceId
       || service !== cachedService
       || serviceProviders !== cachedServiceProviders
-      || providersByServiceIdList !== cachedProvidersByServiceIdList
+      || providersByServiceId !== cachedProvidersByServiceId
       || availabilitiesBulk !== cachedAvailabilitiesBulk
       || bookingStep !== cachedBookingStep
       || bookingDetail !== cachedBookingDetail
@@ -177,8 +161,8 @@ class Booking extends PureComponent {
         const providerId = get(availabilitiesById, 'providerId');
         let provider = {};
         let providerDetail = {};
-        if (providersByServiceIdList && providersByServiceIdList.length > 0) {
-          provider = providersByServiceIdList.find(item => item.userSub === providerId);
+        if (providersByServiceId && providersByServiceId.length > 0) {
+          provider = providersByServiceId.find(item => item.userSub === providerId);
         }
         if (serviceProviders && serviceProviders.length) {
           providerDetail = serviceProviders.find(item => item.id === waitListTemporaryServiceId);
@@ -211,7 +195,7 @@ class Booking extends PureComponent {
         }
       }
 
-      if (providersByServiceIdList && providersByServiceIdList.length === 0) {
+      if (providersByServiceId && providersByServiceId.length === 0) {
         history.push('/');
       }
 
@@ -220,7 +204,7 @@ class Booking extends PureComponent {
         temporaryServiceId: resolvedTemporaryServiceId,
         service,
         serviceProviders,
-        providersByServiceIdList,
+        providersByServiceId,
         availabilitiesBulk,
         bookingStep,
         bookingDetail,
@@ -248,7 +232,7 @@ class Booking extends PureComponent {
       serviceId: null,
       service: null,
       serviceProviders: null,
-      providersByServiceIdList: [],
+      providersByServiceId: [],
       availabilitiesBulk: null,
       bookingStep: {},
       bookingDetail: {},
@@ -543,7 +527,7 @@ class Booking extends PureComponent {
   };
 
   scrollToMyBooking = () => {
-    window.scrollTo(0, this.myBooking.current.offsetTop);
+    window.scrollTo(0, 0);
   };
 
   render() {
@@ -558,7 +542,7 @@ class Booking extends PureComponent {
       serviceId,
       service,
       serviceProviders,
-      providersByServiceIdList,
+      providersByServiceId,
       availabilitiesBulk,
       bookingStep,
       bookingDetail,
@@ -577,7 +561,7 @@ class Booking extends PureComponent {
     const providers = this.handleMergedProviderInfo(
       serviceId,
       serviceProviders,
-      providersByServiceIdList[serviceId],
+      providersByServiceId[serviceId],
       temporaryServicesByLocation,
     );
     const providersWithSlot = availabilitiesBulk && providers
@@ -609,7 +593,6 @@ class Booking extends PureComponent {
       <>
         <Success />
         <Error resetOtherStatus={this.handleResetWaitListStatus} />
-        { false && <Loading />}
         {bookingDetail[serviceId] && bookingDetail[serviceId].provider && (
           <CustomModal
             type="info"
@@ -622,7 +605,7 @@ class Booking extends PureComponent {
             isBackDropClickDisabled
           />
         )}
-        <div ref={this.myBooking} className="full-width">
+        <div ref={this.myBooking} className={`${s.bookingBox} full-width`}>
           {showPage && (
             <div className={s.bookingInstant}>
               <div className={`${s.navBar} h-space-btw`}>

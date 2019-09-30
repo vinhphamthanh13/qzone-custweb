@@ -14,6 +14,11 @@
   padding: 0 1.25rem;
 }
 
+.bookingBox {
+  border-bottom: 1px solid whitesmoke;
+  margin-bottom: 1rem;
+}
+
 .navBarInverse {
   background: transparent;
 }
@@ -44,11 +49,12 @@
 
 .stepper {
   display: flex;
+  max-width: 710px;
   justify-content: space-between;
   align-items: center;
   border: 1px solid $main_03;
-  margin: auto 0.5rem;
-  padding: 0.5rem 0;
+  margin: auto;
+  padding: 0.1rem 0;
 }
 
 .stepsWrapper {

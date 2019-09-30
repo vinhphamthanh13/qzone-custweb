@@ -1,7 +1,17 @@
 @import "styles/_settings.scss";
 
 .carousel {
-  margin: 2rem 0.5rem auto;
+  margin: 1rem auto;
+  width: 100%;
+}
+
+.title {
+  font-size: $heading;
+  font-weight: 400;
+  color: $gray;
+  border-bottom: 2px solid $gallery;
+  margin-bottom: 0.5rem;
+  padding-left: 1rem;
 }
 
 .carouselTitle {
@@ -15,6 +25,7 @@
   width: 100%;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 
 /* Setting control slide */
@@ -24,6 +35,8 @@
   box-sizing: border-box;
   box-shadow: 1px 1px 1px #ccc;
   overflow: hidden;
+  max-width: $slide-wrapper-width;
+  display: flex;
 }
 
 .advertisers {

@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { func } from 'prop-types';
 import { get } from 'lodash';
 import { connect } from 'react-redux';
-import { Typography, TextField, Button } from '@material-ui/core';
-import { Search } from '@material-ui/icons';
+import { Typography, TextField, Button, IconButton } from '@material-ui/core';
+import { Search, Clear } from '@material-ui/icons';
 import Geocode from 'react-geocode';
 import { GOOGLE_GEO_API_KEY } from 'config/auth';
 import { setServiceProviderNearByAction } from 'actionsReducers/home.actions';
 import { DISTANCE } from 'utils/constants';
+import s from './AdvancedSearch.module.scss';
 
 export const SEARCH_KEY = {
   ADDRESS: 'asAddress',
@@ -15,6 +16,12 @@ export const SEARCH_KEY = {
 };
 
 class AdvancedSearch extends Component {
+  static propTypes = {
+    onClose: func.isRequired,
+    handleResult: func.isRequired,
+    setServiceProviderNearByAction: func.isRequired,
+  };
+
   state = {
     asAddress: '',
     asRadius: '',
@@ -36,15 +43,15 @@ class AdvancedSearch extends Component {
   };
 
   handleClose = () => {
-    const { onClose, onCloseResult } = this.props;
-    onClose();
-    onCloseResult();
+    const { onClose, handleResult } = this.props;
+    onClose(false)();
+    handleResult(false)();
   };
 
   handleOpenResult = () => {
-    const { onClose, onOpenResult } = this.props;
-    onClose();
-    onOpenResult();
+    const { onClose, handleResult } = this.props;
+    onClose(false)();
+    handleResult(true)();
   };
 
   handleSearch = async () => {
@@ -73,13 +80,16 @@ class AdvancedSearch extends Component {
     const submitValid = asAddress.split(',').length > 1 && asRadius > 0;
     const iconSearchStyle = submitValid ? 'icon-main' : 'icon-disabled';
     return (
-      <div className="advanced-search">
-        <div className="advanced-search-title">
+      <div className={s.advancedSearch}>
+        <div className={s.title}>
           <Typography variant="title" color="inherit" className="text-bold">
             Advanced Search
           </Typography>
+          <IconButton className="simple-button white-color" onClick={this.handleClose}>
+            <Clear color="inherit" />
+          </IconButton>
         </div>
-        <div className="advanced-search-item">
+        <div className={s.item}>
           <TextField
             fullWidth
             name={SEARCH_KEY.ADDRESS}
@@ -88,14 +98,14 @@ class AdvancedSearch extends Component {
             value={asAddress}
             placeholder="e.g, Street, City, Country"
           />
-          <Typography variant="caption" color="textSecondary" className="advanced-search-helper">
+          <Typography variant="caption" color="textSecondary" className={s.helper}>
             *Precise address that would help you search more accurate result
           </Typography>
-          <Typography variant="caption" color="textSecondary" className="advanced-search-helper">
+          <Typography variant="caption" color="textSecondary" className={s.helper}>
             *Valid string template: street, city, country
           </Typography>
         </div>
-        <div className="advanced-search-cta">
+        <div className={s.cta}>
           <div>
             <TextField
               name={SEARCH_KEY.RADIUS}
@@ -104,33 +114,25 @@ class AdvancedSearch extends Component {
               value={asRadius}
               placeholder="e.g, 25"
             />
-            <Typography variant="caption" color="textSecondary" className="advanced-search-helper">
+            <Typography variant="caption" color="textSecondary" className={s.helper}>
               *Provider near by
             </Typography>
           </div>
-          <div className="advanced-search-cta-buttons">
-            <Button
-              disabled={!submitValid}
-              variant="outlined"
-              className="simple-button hover-outline"
-              onClick={this.handleSearch}
-            >
-              <Search className={iconSearchStyle} /> Go!
-            </Button>
-            <Button variant="text" type="submit" className="simple-button" onClick={this.handleClose}>Cancel</Button>
-          </div>
+          <Button
+            disabled={!submitValid}
+            variant="outlined"
+            className="simple-button hover-outline"
+            onClick={this.handleSearch}
+            type="submit"
+          >
+            <Search className={iconSearchStyle} /> Go!
+          </Button>
         </div>
       </div>
     );
   }
 }
 
-AdvancedSearch.propTypes = {
-  onClose: func.isRequired,
-  onCloseResult: func.isRequired,
-  onOpenResult: func.isRequired,
-  setServiceProviderNearByAction: func.isRequired,
-};
 
 export default connect(null, {
   setServiceProviderNearByAction,

@@ -1,0 +1,83 @@
+@import "styles/_settings.scss";
+
+.container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  color: $main_04;
+}
+
+.navBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: $app-bar-height;
+  background: linear-gradient(to left bottom, $main, $malibu);
+  padding: 0 1rem;
+
+}
+
+.logo {
+  width: $logo-copyright * 1.5;
+}
+
+.rightCta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: $white;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: $max-width;
+  margin: 0 auto;
+}
+
+.title {
+  padding: 2rem 0.5rem;
+  border-bottom: 1px solid $main_02;
+  color: $success;
+  font-size: $title;
+  font-weight: 400;
+  text-align: center;
+  width: 100%;
+  background: $gallery;
+}
+
+.information {
+  color: inherit;
+}
+
+.bookingCode {
+  padding: 2rem 0.5rem;
+  font-size: $title;
+  font-weight: 400;
+  text-align: center;
+}
+
+.bookingCode strong {
+  font-size: $heading;
+  color: $persimnon;
+}
+
+.confirmEvent {
+  color: $success;
+}
+
+.cancelledEvent {
+  color: $danger;
+}
+
+.cta {
+  width: 100%;
+  margin: 1rem;
+  display: flex;
+  justify-content: space-evenly;
+}

@@ -1,31 +1,12 @@
 import React, { Component } from 'react';
-import {
-  string, number, objectOf, func, bool, arrayOf, object,
-} from 'prop-types';
+import { string, number, objectOf, func, arrayOf, object } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
 import moment from 'moment';
-import {
-  Typography,
-  Button,
-} from '@material-ui/core';
+import { Typography, Button } from '@material-ui/core';
 import { VerticalTimelineElement } from 'react-vertical-timeline-component';
-import {
-  DateRange,
-  AvTimer,
-  AlarmOff,
-  AlarmOn,
-  Reorder,
-  AlarmAdd,
-  NotInterested,
-  AssignmentLate,
-  Update,
-  Timer,
-  LocationOn,
-  Public,
-  Cancel,
-  Email,
-  Call,
+import { DateRange, AvTimer, AlarmOff, AlarmOn, Reorder, AlarmAdd, NotInterested, AssignmentLate, Update, Timer,
+  LocationOn, Public, Email, Call,
 } from '@material-ui/icons';
 import RateStar from 'components/Rating/RateStar';
 import MapDialog from 'components/Map/MapDialog';
@@ -36,7 +17,7 @@ import CustomModal from 'components/Modal/CustomModal';
 import Success from 'components/Success';
 import Error from 'components/Error';
 import { longDateFormat, timeSlotFormat } from 'utils/constants';
-import { handlePushLocation } from 'utils/common';
+import { navigateTo } from 'utils/common';
 import { EVENT_STATUS } from './Appointment.constants';
 import RescheduleSlots from '../RescheduleSlots';
 import s from './TimelineCard.module.scss';
@@ -48,7 +29,7 @@ class TimelineCard extends Component {
     serviceName: string.isRequired,
     providerName: string.isRequired,
     providerStartSec: string.isRequired,
-    timezone: string.isRequired,
+    timezoneId: string.isRequired,
     duration: number.isRequired,
     coordinates: objectOf(number).isRequired,
     setRatingService: func.isRequired,
@@ -56,7 +37,6 @@ class TimelineCard extends Component {
     customerId: string.isRequired,
     cancelEventByIdAction: func.isRequired,
     status: string.isRequired,
-    cancellable: bool,
     providerEmail: string.isRequired,
     providerTelephone: string,
     tempServiceId: string.isRequired,
@@ -67,7 +47,6 @@ class TimelineCard extends Component {
   };
 
   static defaultProps = {
-    cancellable: true,
     providerTelephone: '',
   };
 
@@ -163,6 +142,10 @@ class TimelineCard extends Component {
     });
   };
 
+  handleRedirectEvent = eventId => () => {
+    navigateTo(`/event/${eventId}`)();
+  };
+
   render() {
     const {
       bookingCode,
@@ -171,13 +154,12 @@ class TimelineCard extends Component {
       providerStartSec,
       providerName,
       serviceName,
-      timezone,
+      timezoneId,
       coordinates,
       providerEmail,
       providerTelephone,
       id,
       status,
-      cancellable,
       tempServiceId,
       availabilitiesBulk,
       fullAddress,
@@ -252,17 +234,12 @@ class TimelineCard extends Component {
     const mapProvider = { coordinates, fullAddress };
     const eventExpired = eventStatus === EVENT_STATUS.EXPIRED;
     const statusStyle = status === EVENT_STATUS.CANCELED ? 'bg-danger' : 'bg-success';
-    const isReschedule = status !== EVENT_STATUS.CANCELED
-      && status !== EVENT_STATUS.COMPLETED
-      && availabilitiesBulk
-      && availabilitiesBulk.length > 0
-      && !eventExpired;
 
     return (
       <>
         {viewUrl && (
           <>
-            <Success userCallback={handlePushLocation('/')} />
+            <Success userCallback={navigateTo('/')} />
             <Error />
           </>
         )}
@@ -378,7 +355,7 @@ class TimelineCard extends Component {
             <div className={s.appointmentItem}>
               <Public className="icon-main" />
               <Typography variant="subheading" color="inherit" inline noWrap>
-                {timezone}
+                {timezoneId}
               </Typography>
             </div>
           </div>
@@ -387,17 +364,6 @@ class TimelineCard extends Component {
             <Typography variant="subheading" className="danger-color">
               {currentEventStatus}
             </Typography>
-            {isReschedule && ( // disabled Reschedule
-              <Button
-                color="inherit"
-                variant="text"
-                className={`${s.reschedule} simple-button`}
-                onClick={this.handleShowRescheduleSlots(tempServiceId)}
-              >
-                <Update color="inherit" className="icon-in-button-left" />
-                Reschedule
-              </Button>
-            )}
           </div>
           <div className={`${s.appointmentRemainedTime} ${currentStyleStatus}`}>
             <div className={s.remainedDisplay}>
@@ -406,31 +372,22 @@ class TimelineCard extends Component {
                 {displayTimeout}
               </Typography>
             </div>
-            {status === EVENT_STATUS.UNSPECIFIED ? (
-              <>
-                {cancellable && (
-                  <Button
-                    color="inherit"
-                    variant="outlined"
-                    className={!eventExpired ? s.cancelEvent : s.cancelEventHidden}
-                    onClick={this.handleCancelEventConfirmation(true, id)}
-                    disabled={eventExpired}
-                  >
-                    <Cancel color="inherit" className="icon-in-button-left" />
-                    Cancel
-                  </Button>
-                )}
-              </>
-            ) : (
-              <Typography
-                variant="subheading"
-                className={`${statusStyle} ${s.eventStatus} text-bold`}
-              >
-                {status}
-              </Typography>
-            )}
-            {}
+            <Typography
+              variant="subheading"
+              className={`${statusStyle} ${s.eventStatus} text-bold`}
+            >
+              {status}
+            </Typography>
           </div>
+          {status !== EVENT_STATUS.CANCELED && !eventExpired && (
+            <div className={s.learnMorePolicy}>
+              <Typography onClick={this.handleRedirectEvent(id)}  className="text-bold hover-pointer info-color">
+                Cancel or reschedule this event?
+              </Typography>
+            </div>
+          )
+
+          }
         </VerticalTimelineElement>
       </>
     );

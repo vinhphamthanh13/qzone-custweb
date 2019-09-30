@@ -53,12 +53,12 @@ const Delivery = ({
 
 export default withFormik({
   mapPropsToValues: props => ({
-    streetAddress: get(props.userInfo, 'address.streetAddress') || '',
-    district: get(props.userInfo, 'address.district') || '',
-    state: get(props.userInfo, 'address.state') || '',
-    city: get(props.userInfo, 'address.city') || '',
-    postCode: get(props.userInfo, 'address.postCode') || '',
-    country: get(props.userInfo, 'address.country') || '',
+    streetAddress: get(props.userInfo, 'address.streetAddress', ''),
+    district: get(props.userInfo, 'address.district', ''),
+    state: get(props.userInfo, 'address.state', ''),
+    city: get(props.userInfo, 'address.city', ''),
+    postCode: get(props.userInfo, 'address.postCode', ''),
+    country: get(props.userInfo, 'address.country', ''),
   }),
   validationSchema: Yup.object().shape({
     streetAddress: Yup.string().min(3),

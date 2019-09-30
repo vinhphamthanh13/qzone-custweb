@@ -11,6 +11,11 @@ import {
   SET_TEMPORARY_SERVICE_BY_LOCATION,
   SET_EVENT_BY_ID,
   SET_RESCHEDULE_STATUS,
+  SERVICES_BY_SERVICE_CATEGORY_ID,
+  SET_TAB_ORDER,
+  SET_RESPONSIVE_CHUNK_FACTOR,
+  CANCEL_EVENT_BY_ID,
+  TEMPORARY_SERVICES_BY_ID,
 } from 'actionsReducers/common.actions';
 
 const persistConfig = {
@@ -25,6 +30,7 @@ const persistConfig = {
     'succeedMessage',
     'eventList',
     'eventById',
+    'temporaryServicesById',
   ],
 };
 
@@ -37,8 +43,16 @@ const initState = {
   eventList: null,
   serviceProviders: null,
   temporaryServicesByLocation: null,
-  eventById: null,
+  eventById: {},
+  servicesByServiceCategoryId: {},
+  tabOrder: { 0: 0 },
+  responsiveLayout: {
+    chunkFactor: 1,
+    maxChunkCount: 1,
+  },
+  cancelEventStatus: 500,
   rescheduleStatus: 500,
+  temporaryServicesById: {},
 };
 
 const reducer = (state = initState, action) => {
@@ -92,6 +106,34 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         rescheduleStatus: action.payload,
+      };
+    case SET_TAB_ORDER:
+      return {
+        ...state,
+        tabOrder: action.payload,
+      };
+    case SET_RESPONSIVE_CHUNK_FACTOR:
+      return {
+        ...state,
+        responsiveLayout: action.payload,
+      };
+    case SERVICES_BY_SERVICE_CATEGORY_ID:
+      return {
+        ...state,
+        servicesByServiceCategoryId: {
+          ...state.servicesByServiceCategoryId,
+          ...action.payload,
+        }
+      };
+    case CANCEL_EVENT_BY_ID:
+      return {
+        ...state,
+        cancelEventStatus: action.payload,
+      };
+    case TEMPORARY_SERVICES_BY_ID:
+      return {
+        ...state,
+        temporaryServicesById: action.payload,
       };
     default:
       return state;

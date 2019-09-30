@@ -1,11 +1,5 @@
 import React, { Component } from 'react';
-import {
-  func,
-  string,
-  objectOf,
-  bool,
-  any,
-} from 'prop-types';
+import { func, string, objectOf, bool, any } from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { get } from 'lodash';
@@ -37,44 +31,32 @@ class ClientInfo extends Component {
   };
 
   static defaultProps = {
-    // userDetail: null,
-    // captchaVerified: false,
     isInitialValid: false,
   };
 
-  static getDerivedStateFromProps(props, state) {
-    const {
-      userDetail,
-      guestUserError,
-    } = props;
-    const {
-      userDetail: cachedUserDetail,
-      guestUserError: cachedGuestUserError,
-    } = state;
+  state = {
+    userDetail: null,
+    guestUserError: false,
+  };
 
+  static getDerivedStateFromProps(props, state) {
+    const { userDetail, guestUserError } = props;
+    const { userDetail: cachedUserDetail, guestUserError: cachedGuestUserError } = state;
+    const updatedState = {};
     if (
-      userDetail !== cachedUserDetail
-      || guestUserError !== cachedGuestUserError
+      userDetail !== null &&
+      JSON.stringify(userDetail) !== JSON.stringify(cachedUserDetail)
     ) {
-      return {
-        userDetail,
-        guestUserError,
-      };
+      updatedState.userDetail = userDetail;
+    }
+    if (guestUserError !== cachedGuestUserError) {
+      updatedState.guestUserError = guestUserError;
     }
 
-    return null;
+    return Object.keys(updatedState).length ? updatedState : null;
   }
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      userDetail: null,
-      guestUserError: false,
-    };
-
-    this.recaptcha = React.createRef();
-  }
-
+  recaptcha = React.createRef();
 
   componentDidUpdate() {
     const { clearGuestErrorAction: clearGuestError } = this.props;
@@ -90,9 +72,7 @@ class ClientInfo extends Component {
   }
 
   handleInput = (event) => {
-    const {
-      setFieldValue,
-    } = this.props;
+    const { setFieldValue } = this.props;
     if (event) event.preventDefault();
     const { name, value } = event.target;
     setFieldValue(name, value);

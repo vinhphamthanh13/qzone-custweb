@@ -1,0 +1,16 @@
+@import "styles/_settings.scss";
+
+ul {
+  margin: unset;
+  padding: unset;
+}
+
+.landing {
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 375px;
+  margin: 0 auto;
+}
+

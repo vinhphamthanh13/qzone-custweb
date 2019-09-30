@@ -3,12 +3,11 @@ import {
 } from 'redux';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
-import { persistReducer, persistStore } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
-import autoMergeLevel1 from 'redux-persist/es/stateReconciler/autoMergeLevel1';
+import { persistStore } from 'redux-persist';
 import auth from 'authentication/actions/reducer';
 import common from 'actionsReducers/common.reducer';
 import home from 'actionsReducers/home.reducer';
+import landing from 'actionsReducers/landing.reducer';
 import booking from 'actionsReducers/booking.reducer';
 import provider from 'actionsReducers/provider.reducer';
 import profile from 'actionsReducers/profile.reducer';
@@ -16,29 +15,13 @@ import waitLists from 'actionsReducers/waitlist.reducer';
 import organization from 'actionsReducers/organization.reducer';
 import customer from 'actionsReducers/customer.reducer';
 import surveys from 'actionsReducers/surveys.reducer';
-
-const rootPersistConfig = {
-  key: 'qz_custweb',
-  storage,
-  stateReconciler: autoMergeLevel1,
-  blacklist: [
-    'auth',
-    'common',
-    'home',
-    'booking',
-    'organization',
-    'provider',
-    'waitLists',
-    'profile',
-    'customer',
-    'surveys',
-  ],
-};
+// import landing from 'actionsReducers/landing.reducer';
 
 const rootReducer = combineReducers({
   auth,
   common,
   home,
+  landing,
   booking,
   organization,
   provider,
@@ -56,8 +39,6 @@ const appReducer = (state, action) => {
   return rootReducer(newState, action);
 };
 
-const persistedReducer = persistReducer(rootPersistConfig, appReducer);
-
 let middleWare = [];
 if (process.env.NODE_ENV === 'production') {
   middleWare = [
@@ -73,7 +54,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const store = createStore(
-  persistedReducer,
+  appReducer,
   compose(
     applyMiddleware(...middleWare),
     // eslint-disable-next-line no-underscore-dangle

@@ -1,0 +1,99 @@
+@import "styles/_settings.scss";
+
+.card {
+  width: 100%;
+  max-width: $max-card-width;
+  display: flex;
+  flex-direction: column;
+  margin: 0.4rem;
+  border: 1px solid $main_03;
+  box-shadow: 2px 2px 13px 1px $main_04;
+  position: relative;
+}
+
+.image {
+  max-width: $max-card-width;
+  overflow: hidden;
+  height: $provider-image-height;
+  position: relative;
+}
+
+.duration {
+  color: $success;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: $gallery;
+  padding: 0.2rem 0.5rem;
+  border-top-left-radius: 0.5rem;
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.cardName {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0.5rem;
+  text-transform: capitalize;
+}
+
+.description {
+  padding: 0.2rem 0.5rem;
+  text-indent: 1rem;
+  height: 12.5rem;
+}
+
+.description:first-letter {
+  text-transform: uppercase;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.orgDescription {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0.2rem 0.5rem;
+}
+
+.orgDescription span {
+  padding-left: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  color: $success;
+}
+
+.cta {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem auto;
+}
+
+.noProvider {
+  color: $danger;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid $danger;
+  padding: 0.3125rem 0.5rem;
+  margin: auto 0.8rem;
+  border-radius: 0.2rem;
+  transition: all 0.5s ease;
+}
+
+.queueMode {
+  color: $main_04;
+}
+
+.scheduleMode {
+  color: $main_04;
+}

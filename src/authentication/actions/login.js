@@ -20,8 +20,8 @@ import {
 import {
   handleResponse,
   handleRequest,
+  createHeaders
 } from 'utils/apiHelpers';
-import { createHeaders } from 'utils/common';
 import {
   STORE_USER_SESSION_LOGIN,
   STORE_USER_SESSION_ERROR,
@@ -29,16 +29,17 @@ import {
   SET_GUEST_ERROR,
   CLEAR_GUEST_ERROR,
 } from './constants';
+
 // Redux
 export const storeUserSessionLogin = payload => ({
   type: STORE_USER_SESSION_LOGIN,
   payload,
 });
-const storeUserSessionError = payload => ({
+ const storeUserSessionError = payload => ({
   type: STORE_USER_SESSION_ERROR,
   payload,
 });
-const setUserDetails = payload => ({
+export const setUserDetails = payload => ({
   type: SET_USER_DETAILS,
   payload,
 });

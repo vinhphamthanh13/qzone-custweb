@@ -10,7 +10,7 @@ export default function EmptyItem({ message }) {
       <div>
         <LocalFlorist className="main-color icon-huge" />
       </div>
-      <Typography variant="h5" color="textSecondary">{'No Item Found' || message}</Typography>
+      <Typography variant="h5" color="textSecondary">{message}</Typography>
     </div>
   );
 }
@@ -20,5 +20,5 @@ EmptyItem.propTypes = {
 };
 
 EmptyItem.defaultProps = {
-  message: 'No service available!',
+  message: 'No Item Found',
 };

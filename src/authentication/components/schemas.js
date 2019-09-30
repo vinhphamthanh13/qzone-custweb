@@ -65,10 +65,11 @@ export const forgotPasswordSchema = Yup.object().shape({
 export const clientInfo = Yup.object().shape({
   userName: Yup
     .string()
+    .matches(regExPattern.userName, { message: 'Name is too short'})
     .required('User name cannot be blank'),
   userEmail: Yup
     .string()
-    .matches(regExPattern.email, { message: 'Email address is not valid' })
+    .matches(regExPattern.email, { message: 'Email address is invalid' })
     .required('Email cannot be blank'),
   phoneNumber: Yup
     .string()

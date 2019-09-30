@@ -1,0 +1,47 @@
+@import "styles/_settings.scss";
+
+.wrapper {
+  overflow-y: visible;
+  user-select: none;
+  position: relative;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  color: $main_01;
+  min-width: 200px;
+  width: 100%;
+}
+
+.tab {
+  padding: 1rem 0.5rem 0.5rem;
+  width: $max-tab-width;
+  color: $mako;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 1px solid $main_01;
+  text-align: center;
+  background: $we_peep;
+  transition: all 0.2s ease-in;
+}
+
+.tabActive {
+  background: $main_04;
+  color: $main_01;
+  border: 1px solid transparent;
+}
+
+.tab:hover {
+  background: $main_04;
+  color: $main_01;
+}
+
+.nextTab {
+  color: $main_04;
+  padding: unset;
+  margin: auto 0.5rem;
+}

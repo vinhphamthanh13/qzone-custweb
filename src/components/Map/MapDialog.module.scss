@@ -3,6 +3,7 @@
 .mapDialogWrapper {
   width: 100%;
   height: 100%;
+
 }
 
 .closeMap {
@@ -24,6 +25,7 @@
   display: flex;
   justify-content: flex-start;
   padding: 1em 0 0 1em;
+  text-transform: capitalize;
 }
 
 .mapBody {

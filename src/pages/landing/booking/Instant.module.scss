@@ -1,0 +1,55 @@
+@import "styles/_settings.scss";
+
+
+.container {
+  color: $main_04;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  align-items: center;
+  position: relative;
+}
+
+.navBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: $app-bar-height;
+  background: linear-gradient(to left bottom, $main, $malibu);
+  padding: 0 1rem;
+  position: fixed;
+  top:0;
+  z-index: 1;
+}
+
+.logo {
+  width: $logo-copyright * 1.5;
+}
+
+.rightCta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: $white;
+}
+
+.content {
+  width: 100%;
+  max-width: $max-width;
+  height: calc(100vh - 66px);
+  overflow: auto;
+  margin-top: $app-bar-height;
+}
+
+.title {
+  font-size: $heading;
+  color: $success;
+  font-weight: 500;
+}
+
+.navigation {
+  color: $main_04;
+}

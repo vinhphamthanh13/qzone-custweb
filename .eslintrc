@@ -1,5 +1,6 @@
 {
-  "extends": "airbnb",
+  "extends": ["airbnb", "prettier", "prettier/react"],
+  "plugins": ["prettier"],
   "parser": "babel-eslint",
   "env": {
     "browser": true,
@@ -27,12 +28,17 @@
       "error",
       "single"
     ],
+    "click-events-have-key-events": "off",
+    "no-noninteractive-element-interactions": "off",
     "react/jsx-one-expression-per-line": "off",
     "import/prefer-default-export": "off",
     "import/no-named-as-default": "off",
     "react/destructuring-assignment": "off",
     "no-console": "off",
-    "no-alert": "off"
+    "no-unused-vars": "error",
+    "react/no-unused-state": "error",
+    "no-alert": "off",
+    "prettier/prettier": "off"
   },
   "settings": {
     "import/resolver": {

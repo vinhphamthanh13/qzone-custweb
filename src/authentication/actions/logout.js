@@ -5,6 +5,8 @@ import { setLoading } from 'actionsReducers/common.actions';
 import { AUTH_METHOD, PROVIDER } from 'config/auth';
 import {
   createGoogleScript,
+  setUserDetails,
+  storeUserSessionLogin,
 } from './login';
 
 export const logout = authenticator => (dispatch) => {
@@ -12,6 +14,18 @@ export const logout = authenticator => (dispatch) => {
 
   if (isAuthenticated) {
     dispatch(setLoading(true));
+    dispatch(setUserDetails({}));
+    dispatch(storeUserSessionLogin({
+      authProvider: '',
+      id: null,
+      start_session: null,
+      username: null,
+      qz_token: '',
+      qz_refresh_token: '',
+      expiration: 0, // AWS exp counted in second
+      isAuthenticated: false,
+      authHeaders: null,
+    }));
     if (authProvider && authProvider === PROVIDER.GOOGLE) {
       let ga = window.gapi && window.gapi[AUTH_METHOD]
         ? window.gapi.auth2.getAuthInstance() : null;
@@ -41,8 +55,5 @@ export const logout = authenticator => (dispatch) => {
           dispatch(setLoading(false));
         });
     }
-    dispatch({
-      type: 'RESET_APP',
-    });
   }
 };

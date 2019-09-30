@@ -93,7 +93,7 @@
 
 .buttonOk {
   user-select: none;
-  background: $crimson;
+  background: $main;
   color: $gallery;
   border: none;
   border-radius: unset;
@@ -101,7 +101,7 @@
   font-weight: bold;
   transition: all 0.2s ease;
   &:hover {
-    background: rgba($crimson, 0.8);
+    background: rgba($main, 0.8);
   }
 }
 
@@ -118,7 +118,7 @@
   display: flex;
   justify-content: space-between;
   box-sizing: border-box;
-  color: $crimson;
+  color: $main;
 }
 
 .monthCell {
@@ -171,7 +171,7 @@
 
 .yearCell {
   padding: 1.8rem 1.6rem;
-  color: $crimson;
+  color: $main;
   box-sizing: border-box;
   border: 1px solid $white;
   transition: all 0.3s ease;
@@ -188,7 +188,7 @@
 .currentMonthYear {
   cursor: pointer;
   color: $goldTips;
-  background: rgba($crimson, 0.8);
+  background: rgba($main, 0.8);
   border-radius: 5px;
 }
 

@@ -1,12 +1,14 @@
 import Home from 'pages/Home';
-import Booking from 'pages/Booking';
+import Providers from 'pages/landing/provider/Providers';
+import Booking from 'pages/landing/booking/Booking';
+import InstantBooking from 'pages/landing/booking/Instant';
 import PageNotFound from 'pages/PageNotFound';
 import AccessDenied from 'pages/AccessDenied';
 import Provider from 'pages/Provider';
 import Organization from 'pages/Organization';
 import Profile from 'pages/Profile';
 import Maintenance from 'pages/Maintenance';
-import ViewEvent from 'pages/profile/ViewEvent';
+import ViewEvent from 'pages/landing/viewEvent/ViewEvent';
 import Assessment from 'pages/Assessment';
 
 const rootRoutes = [
@@ -14,8 +16,22 @@ const rootRoutes = [
     exact: true,
     strict: true,
     path: '/',
-    name: 'Home',
+    name: 'Custweb for Booking Service',
     component: Home,
+  },
+  {
+    exact: true,
+    strict: true,
+    path: '/provider-by-service/:sId',
+    name: 'Provider By Service',
+    component: Providers,
+  },
+  {
+    exact: true,
+    strict: true,
+    path: '/confirm-booking',
+    name: 'Confirm Booking',
+    component: Booking,
   },
   {
     exact: true,
@@ -27,24 +43,17 @@ const rootRoutes = [
   {
     exact: true,
     strict: true,
-    path: '/booking/:id',
-    name: 'Normal Booking',
-    component: Booking,
-  },
-  {
-    exact: true,
-    strict: true,
     path: '/booking/instant/:id',
     name: 'Instant Booking',
-    component: Booking,
+    component: InstantBooking,
   },
-  {
-    exact: true,
-    strict: true,
-    path: '/booking/waitlist/:id',
-    name: 'Enroll WaitLists',
-    component: Booking,
-  },
+  // {
+  //   exact: true,
+  //   strict: true,
+  //   path: '/booking/waitlist/:id',
+  //   name: 'Enroll WaitLists',
+  //   component: Booking,
+  // },
   {
     exact: true,
     strict: true,

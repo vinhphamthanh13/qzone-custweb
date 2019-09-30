@@ -1,0 +1,181 @@
+@import "styles/_settings.scss";
+
+.joinWaitLists {
+  border: 1px solid $main_03;
+  border-radius: 0.2rem;
+  margin: 1.05rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem 1rem;
+  transition: all 0.2s ease-in;
+  color: $main;
+  box-sizing: border-box;
+  width: 80%;
+  &:hover {
+    cursor: pointer;
+    border: 1px solid $main_03;
+  }
+}
+
+.waitListForm {
+  border-radius: 0.2rem;
+  color: $main;
+  background: $main_01;
+  padding: 0.5rem 1rem;
+  min-width: 400px;
+  max-width: 410px;
+  max-height: calc(100vh - 10px);
+  position: relative;
+  overflow: auto;
+}
+
+.title {
+  color: $main;
+  border-bottom: 2px solid $main_03;
+}
+
+.serviceInfo {
+  color: $main_04;
+}
+
+.serviceImage {
+  width: 100%;
+  height: 210px;
+  border-radius: 0.5rem;
+  margin: 0.5rem auto;
+}
+
+.serviceDescription {
+  color: $main_03;
+  margin-top: 1rem;
+}
+
+.enrollServiceName {
+  width: 100%;
+  margin: 0;
+}
+
+.selectProvider {
+  color: $main;
+  margin: 0.5rem auto;
+  border-bottom: 1px solid $main_03;
+}
+
+.selectProviderDropdown {
+  color: $main;
+  position: relative;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid $main_03;
+  border-radius: 0.5rem;
+  margin: 0.2rem auto;
+}
+
+.limitWidth {
+  width: 85%;
+}
+
+.dropdownBackdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba($main_01, 0.8);
+  z-index: 1;
+}
+
+.dropdownProviders {
+  position: absolute;
+  background: rgba($main_01, 0.9);
+  width: 100%;
+  list-style-type: none;
+  padding: 0.5rem;
+  box-shadow: 1px 1px 2px $main_03;
+  z-index: 1;
+}
+
+.providerItem {
+  color: $main_04;
+  margin: 0.2rem auto;
+  padding: 0 0.5rem;
+  border: 1px solid $main_03;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  &:hover {
+    background: $main_03;
+    color: $main;
+    border-radius: 0.25rem;
+  }
+}
+
+.bookWaitList {
+  color: $main_04;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.availabilityDate {
+  display: flex;
+  flex-direction: column;
+}
+
+.availabilityLabel {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.dateRange {
+  color: $main;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.datePicker {
+  position: relative;
+  margin: auto;
+}
+
+.pickerLabel {
+  position: absolute;
+  color: $main;
+}
+
+.dateSelection {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 0.8rem;
+  border-bottom: 2px solid $main_03;
+}
+
+.selectOption {
+  color: $main;
+  margin: 0 auto;
+}
+
+.bookingOption {
+  color: $main_03;
+  padding: 0.2rem;
+}
+
+.bookingOptionChecked {
+  color: $main !important;
+}
+
+.footerCta {
+  color: $main_04;
+  display: flex;
+  justify-content: space-between;
+  margin: 0.5rem 1rem 0.2rem;
+}

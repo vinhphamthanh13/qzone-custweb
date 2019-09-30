@@ -6,17 +6,6 @@ import {
   SET_ANSWERED_ASSESSMENT,
 } from 'actionsReducers/surveys.action';
 
-import storage from 'redux-persist/lib/storage';
-import { persistReducer } from 'redux-persist';
-import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
-
-const persistConfig = {
-  key: 'surveys',
-  storage,
-  stateReconciler: autoMergeLevel2,
-  blacklist: ['surveyList', 'allAnswers'],
-};
-
 const initState = {
   surveyList: null,
   customerAssessment: [],
@@ -25,7 +14,7 @@ const initState = {
   surveyAnswers: null,
 };
 
-const reducer = (state = initState, action) => {
+export default (state = initState, action) => {
   switch (action.type) {
     case SET_SURVEYS:
       return {
@@ -52,5 +41,3 @@ const reducer = (state = initState, action) => {
       return state;
   }
 };
-
-export default persistReducer(persistConfig, reducer);

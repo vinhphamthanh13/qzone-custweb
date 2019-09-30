@@ -99,7 +99,10 @@ class MainAppBar extends React.Component {
     const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
     const customerId = get(loginSession, 'id');
     const authHeaders = get(loginSession, 'authHeaders');
-    if (isAuthenticated && customerId) {
+    const startSession = get(loginSession, 'start_session');
+    if (isAuthenticated
+      && customerId
+      && ((moment.now() - moment(startSession)) / 3600) < 1) {
       findEventByCustomerId(customerId, authHeaders);
     }
   }
@@ -152,9 +155,9 @@ class MainAppBar extends React.Component {
   };
 
   handleActionAdvancedSearch = () => {
-    const { handleAdvancedSearch, maintenance } = this.props;
+    const { toggleAdvancedSearch, maintenance } = this.props;
     if (!maintenance) {
-      handleAdvancedSearch();
+      toggleAdvancedSearch(true)();
     }
   };
 
@@ -315,7 +318,7 @@ MainAppBar.propTypes = {
   loginSession: objectOf(any),
   findEventByCustomerIdAction: func.isRequired,
   onSearchValue: string,
-  handleAdvancedSearch: func.isRequired,
+  toggleAdvancedSearch: func.isRequired,
   maintenance: bool.isRequired,
   goProfilePage: func.isRequired,
   trackingAppointmentByIdsAction: func.isRequired,

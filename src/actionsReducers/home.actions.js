@@ -11,12 +11,12 @@ export const SET_SERVICES = 'HOME.SET_SERVICES';
 export const SET_SERVICE_PROVIDER_NEAR_BY = 'HOME.SET_SERVICE_PROVIDER_NEAR_BY';
 export const SET_SERVICES_BY_NAME = 'HOME.SET_SERVICES_BY_NAME';
 
-const setServiceCategories = payload => ({
+const setServiceCategoriesAction = payload => ({
   type: SET_SERVICE_CATEGORIES,
   payload,
 });
 
-const setServices = payload => ({
+const setServicesAction = payload => ({
   type: SET_SERVICES,
   payload,
 });
@@ -26,24 +26,24 @@ const setServiceProviderNearBy = payload => ({
   payload,
 });
 
-export const setServiceCategoriesAction = () => async (dispatch) => {
+export const setServiceCategories = () => async (dispatch) => {
   dispatch(setLoading(true));
   const [categoryList, error] = await handleRequest(serviceCategories, []);
   if (error) {
     dispatch(setError(error));
   } else {
-    dispatch(setServiceCategories(categoryList));
+    dispatch(setServiceCategoriesAction(categoryList));
   }
   dispatch(setLoading(false));
 };
 
-export const setServicesAction = () => async (dispatch) => {
+export const setServices = () => async (dispatch) => {
   dispatch(setLoading(true));
-  const [serviceList, error] = await handleRequest(services, []);
+  const [result, error] = await handleRequest(services, []);
   if (error) {
     dispatch(setError(error));
   } else {
-    dispatch(setServices(serviceList));
+    dispatch(setServicesAction(result));
   }
   dispatch(setLoading(false));
 };
