@@ -10,7 +10,6 @@ import AppBar from './home/appBar/AppBar';
 import Landing from './Landing';
 import Services from './landing/service/Services';
 import Footer from './components/footer/Footer';
-import SlideShow from './home/slideShow/SlideShow';
 import AdvancedSearch from './home/search/AdvancedSearch';
 import s from './Home.module.scss';
 
@@ -110,11 +109,6 @@ export class Home extends Component {
           onSearchValue={searchText}
           toggleAdvancedSearch={this.toggleAdvancedSearch}
         />
-        {servicesList.length > 0 && (
-          <SlideShow
-            services={servicesList}
-          />
-        )}
         <Landing location={location} />
         <Footer maintenance={false} />
         {searchResult.length > 0 && (

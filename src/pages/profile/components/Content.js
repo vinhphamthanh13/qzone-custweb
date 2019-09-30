@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-  string, func, bool, objectOf,
+  string, func, bool, any, objectOf,
 } from 'prop-types';
 import { connect } from 'react-redux';
 import { find, uniqBy } from 'lodash';
@@ -323,7 +323,7 @@ class Content extends Component {
 }
 
 Content.propTypes = {
-  authHeaders: objectOf(string),
+  authHeaders: objectOf(any),
   customerId: string.isRequired,
   onClose: func.isRequired,
   givenName: string,

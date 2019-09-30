@@ -1,48 +1,19 @@
 import React from 'react';
-import {
-  objectOf,
-  any,
-  func,
-  string,
-  bool,
-} from 'prop-types';
+import { objectOf, any, func, string, bool } from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import moment from 'moment';
-import {
-  noop,
-  get,
-  compact,
-} from 'lodash';
+import { noop, get, compact } from 'lodash';
 import { withStyles } from '@material-ui/core/styles';
-import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  InputBase,
-  Badge,
-  Avatar,
-  Typography,
-  Button,
-} from '@material-ui/core';
-import {
-  Search as SearchIcon,
-  AssignmentInd,
-  Notifications as NotificationsIcon,
-  Fingerprint,
-  FindInPage,
-  Assignment,
+import { AppBar, Toolbar, IconButton, InputBase, Badge, Avatar, Typography, Button } from '@material-ui/core';
+import { Search as SearchIcon, AssignmentInd, Notifications as NotificationsIcon, Fingerprint, FindInPage, Assignment,
 } from '@material-ui/icons';
 import { findEventByCustomerIdAction } from 'actionsReducers/common.actions';
 import { trackingAppointmentByIdsAction } from 'actionsReducers/customer.actions';
-import { history } from 'containers/App';
-import {
-  AUTHENTICATED_KEY,
-  PROFILE,
-} from 'utils/constants';
+import { AUTHENTICATED_KEY, PROFILE, EVENT_STATUS } from 'utils/constants';
+import { navigateTo } from 'utils/common';
 import logo from 'images/quezone-logo.png';
 import { goProfilePage } from 'actionsReducers/profile.actions';
-import { EVENT_STATUS } from '../../profile/appointmentDialog/Appointment.constants';
 import TrackingEvents from './TrackingEvents';
 import styles from './AppBarStyle';
 
@@ -165,7 +136,7 @@ class MainAppBar extends React.Component {
     const { goProfilePage: goProfilePageAction } = this.props;
     const { loginSession } = this.state;
     goProfilePageAction(page);
-    history.push(`/profile/${loginSession.id}`);
+    navigateTo(`/profile/${loginSession.id}`)();
   };
 
   toggleTrackingList = () => {
@@ -319,7 +290,7 @@ MainAppBar.propTypes = {
   findEventByCustomerIdAction: func.isRequired,
   onSearchValue: string,
   toggleAdvancedSearch: func.isRequired,
-  maintenance: bool.isRequired,
+  maintenance: bool,
   goProfilePage: func.isRequired,
   trackingAppointmentByIdsAction: func.isRequired,
 };
@@ -327,6 +298,7 @@ MainAppBar.propTypes = {
 MainAppBar.defaultProps = {
   onSearchValue: '',
   loginSession: null,
+  maintenance: false,
 };
 
 const mapStateToProps = state => ({

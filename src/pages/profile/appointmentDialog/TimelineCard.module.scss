@@ -117,13 +117,29 @@
 
 .providerRating {
   display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  margin-bottom: 1rem;
 }
 
-.serviceTitleMap {
+.rateStars {
+  font-size: 1rem;
+  position: absolute;
+  bottom: -0.8rem;
+}
+
+.sName {
+  margin: 1rem auto 0.5rem;
+  font-size: $title;
+  color: $fruitSalad;
+  font-weight: bold;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: $main;
+  text-align: center;
+  width: 100%;
+  text-transform: capitalize;
 }
 
 .learnMorePolicy {

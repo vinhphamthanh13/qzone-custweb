@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { func } from 'prop-types';
-import { DateRange, Email, GpsFixed, HowToReg, Map, PhoneIphone, Place, Schedule } from '@material-ui/icons';
-import { get } from 'lodash';
-import { IconButton } from '@material-ui/core';
+import { DateRange, Email, GpsFixed, HowToReg, PhoneIphone, Place, Schedule } from '@material-ui/icons';
+import { get, noop } from 'lodash';
 import moment from 'moment';
 import { FULL_DATE, TIME_FORMAT, EVENT_STATUS } from 'utils/constants';
 import s from './Event.module.scss';
@@ -44,22 +43,13 @@ class Event extends Component {
     const status = get(appointment, 'status');
     const disableMap = status === EVENT_STATUS.CANCELED;
     const timezoneId = get(appointment, 'timezoneId');
+    const [mapAction, mapColor, mClass] = disableMap ? [noop, 'inherit', ''] : [viewMap, 'secondary', 'hover-pointer'];
 
     return (
       <div className={s.container}>
         <div className={s.address}>
-          <Place className="icon-normal" color="inherit" />
+          <Place className={`icon-normal ${mClass}`} color={mapColor} onClick={mapAction} />
           <span>{fullAddress}&nbsp;</span>
-          <div className={s.map}>
-            <IconButton
-              color="inherit"
-              className="simple-button"
-              disabled={disableMap}
-              onClick={viewMap}
-            >
-              <Map color="inherit" />
-            </IconButton>
-          </div>
         </div>
         <div className={s.bookingInfo}>
           <div className={`${s.serviceName} ellipsis`}>
