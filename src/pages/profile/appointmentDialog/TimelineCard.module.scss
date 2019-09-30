@@ -126,6 +126,13 @@
   color: $main;
 }
 
+.learnMorePolicy {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  color: $danger;
+}
+
 .cancelEvent {
   color: $main_01;
   border-radius: unset;

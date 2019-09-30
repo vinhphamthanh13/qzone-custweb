@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { string, number, objectOf, func, bool, arrayOf, object } from 'prop-types';
+import { string, number, objectOf, func, arrayOf, object } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
 import moment from 'moment';
 import { Typography, Button } from '@material-ui/core';
 import { VerticalTimelineElement } from 'react-vertical-timeline-component';
 import { DateRange, AvTimer, AlarmOff, AlarmOn, Reorder, AlarmAdd, NotInterested, AssignmentLate, Update, Timer,
-  LocationOn, Public, Cancel, Email, Call,
+  LocationOn, Public, Email, Call,
 } from '@material-ui/icons';
 import RateStar from 'components/Rating/RateStar';
 import MapDialog from 'components/Map/MapDialog';
@@ -37,7 +37,6 @@ class TimelineCard extends Component {
     customerId: string.isRequired,
     cancelEventByIdAction: func.isRequired,
     status: string.isRequired,
-    cancellable: bool,
     providerEmail: string.isRequired,
     providerTelephone: string,
     tempServiceId: string.isRequired,
@@ -48,7 +47,6 @@ class TimelineCard extends Component {
   };
 
   static defaultProps = {
-    cancellable: true,
     providerTelephone: '',
   };
 
@@ -144,6 +142,10 @@ class TimelineCard extends Component {
     });
   };
 
+  handleRedirectEvent = eventId => () => {
+    navigateTo(`/event/${eventId}`)();
+  };
+
   render() {
     const {
       bookingCode,
@@ -158,7 +160,6 @@ class TimelineCard extends Component {
       providerTelephone,
       id,
       status,
-      cancellable,
       tempServiceId,
       availabilitiesBulk,
       fullAddress,
@@ -387,31 +388,22 @@ class TimelineCard extends Component {
                 {displayTimeout}
               </Typography>
             </div>
-            {status === EVENT_STATUS.UNSPECIFIED ? (
-              <>
-                {cancellable && (
-                  <Button
-                    color="inherit"
-                    variant="outlined"
-                    className={!eventExpired ? s.cancelEvent : s.cancelEventHidden}
-                    onClick={this.handleCancelEventConfirmation(true, id)}
-                    disabled={eventExpired}
-                  >
-                    <Cancel color="inherit" className="icon-in-button-left" />
-                    Cancel
-                  </Button>
-                )}
-              </>
-            ) : (
-              <Typography
-                variant="subheading"
-                className={`${statusStyle} ${s.eventStatus} text-bold`}
-              >
-                {status}
-              </Typography>
-            )}
-            {}
+            <Typography
+              variant="subheading"
+              className={`${statusStyle} ${s.eventStatus} text-bold`}
+            >
+              {status}
+            </Typography>
           </div>
+          {status !== EVENT_STATUS.CANCELED && !eventExpired && (
+            <div className={s.learnMorePolicy}>
+              <Typography onClick={this.handleRedirectEvent(id)}  className="text-bold hover-pointer info-color">
+                Cancel or reschedule this event?
+              </Typography>
+            </div>
+          )
+
+          }
         </VerticalTimelineElement>
       </>
     );
