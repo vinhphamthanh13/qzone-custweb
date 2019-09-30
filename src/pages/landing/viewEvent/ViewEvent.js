@@ -9,11 +9,12 @@ import Error from 'components/Error';
 import Success from 'components/Success';
 import { navigateTo } from 'utils/common';
 import Logo from 'images/quezone-logo.png';
-import { Home, AssignmentInd, Clear } from '@material-ui/icons';
+import { Home, AssignmentInd, Clear, Cached } from '@material-ui/icons';
 import { viewEventProps } from 'pages/commonProps';
 import CustomModal from 'components/Modal/CustomModal';
 import { EVENT_STATUS } from 'utils/constants';
 import Event from './Event';
+import Reschedule from './Reschedule';
 import s from './ViewEvent.module.scss';
 
 class ViewEvent extends Component {
@@ -21,6 +22,7 @@ class ViewEvent extends Component {
     dispatchSetEventById: func.isRequired,
     dispatchCancelEvent: func.isRequired,
     dispatchClearCancelStatus: func.isRequired,
+    dispatchRescheduledAvailabilities: func.isRequired,
     match: objectOf(any).isRequired,
   };
 
@@ -30,12 +32,15 @@ class ViewEvent extends Component {
     loginSession: {},
     isOpenMap: false,
     isCancelEventPopup: false,
+    isRescheduleOpen: false,
+    rescheduledAvailabilitiesByTemporaryServiceId: {},
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { eventById, userDetail, loginSession } = props;
+    const { eventById, userDetail, loginSession, rescheduledAvailabilitiesByTemporaryServiceId } = props;
     const {
       eventById: cachedEventById, userDetail: cachedUserDetail, loginSession: cachedLoginSession,
+      rescheduledAvailabilitiesByTemporaryServiceId: cachedRescheduledAvailabilitiesByTemporaryServiceId,
     } = state;
     const updatedState = {};
     if (
@@ -55,6 +60,13 @@ class ViewEvent extends Component {
     ) {
       updatedState.loginSession = loginSession;
     }
+    if (
+      rescheduledAvailabilitiesByTemporaryServiceId !== null &&
+      JSON.stringify(rescheduledAvailabilitiesByTemporaryServiceId) !==
+      JSON.stringify(cachedRescheduledAvailabilitiesByTemporaryServiceId)
+    ) {
+      updatedState.rescheduledAvailabilitiesByTemporaryServiceId = rescheduledAvailabilitiesByTemporaryServiceId;
+    }
 
     return Object.keys(updatedState) ? updatedState : null;
   }
@@ -66,6 +78,22 @@ class ViewEvent extends Component {
     } = this.props;
 
     dispatchSetEventById(id);
+  }
+
+  componentDidUpdate(prevProps) {
+    const { eventById } = prevProps;
+    const { dispatchRescheduledAvailabilities } = this.props;
+    const { eventById: cachedEventById } = this.state;
+    if (
+      eventById !== null &&
+      JSON.stringify(eventById) !== JSON.stringify(cachedEventById)
+    ) {
+      const serviceId = get(cachedEventById, 'serviceId');
+      const providerId = get(cachedEventById, 'providerId');
+      const locationId = get(cachedEventById, 'locationId');
+      const tempServiceId = get(cachedEventById, 'tempServiceId');
+      dispatchRescheduledAvailabilities(tempServiceId, serviceId, providerId, locationId);
+    }
   }
 
   handleRedirect = () => {
@@ -96,8 +124,17 @@ class ViewEvent extends Component {
     }));
   };
 
+  toggleRescheduledSlot = () => {
+    this.setState(oldState => ({
+      isRescheduleOpen: !oldState.isRescheduleOpen,
+    }));
+  };
+
   render() {
-    const { eventById, userDetail, isOpenMap, isCancelEventPopup, loginSession } = this.state;
+    const {
+      eventById, userDetail, isOpenMap, isCancelEventPopup, loginSession, rescheduledAvailabilitiesByTemporaryServiceId,
+      isRescheduleOpen,
+    } = this.state;
     const userId = get(userDetail, 'userSub') || get(userDetail, 'id');
     const headers = get(loginSession, 'authHeaders');
     const eventId = get(eventById, 'id');
@@ -114,6 +151,13 @@ class ViewEvent extends Component {
       ? [`Oops! Your reservation has been ${status}`, s.cancelledEvent]
       : ['Congratulations! Your reservation request has been confirmed!', s.confirmEvent];
     const isCancellable = !!userId && status !== EVENT_STATUS.CANCELED;
+    const sId = get(eventById, 'serviceId');
+    const pId = get(eventById, 'providerId');
+    const locId = get(eventById, 'locationId');
+    const rescheduledSlot = rescheduledAvailabilitiesByTemporaryServiceId &&
+      rescheduledAvailabilitiesByTemporaryServiceId[`${sId}-${pId}-${locId}`] || [];
+    const isRescheduleEnabled = isRescheduleOpen && rescheduledSlot.length > 0;
+    console.log('reschduledSlot', rescheduledSlot);
 
     return (
       <>
@@ -127,6 +171,7 @@ class ViewEvent extends Component {
           okCallBack={this.handleCancelEvent(eventId, headers)}
         />
         <MapDialog toggle={this.handleToggleMap} serviceName={sName} isOpen={isOpenMap} geoLocation={mapData} />
+        {isRescheduleEnabled && <Reschedule slots={rescheduledSlot} onClose={this.toggleRescheduledSlot} />}
         <Loading />
         <Error resetOtherStatus={this.handleRedirect} />
         <Success userCallback={this.handleRedirect}/>
@@ -161,6 +206,10 @@ class ViewEvent extends Component {
                     <Button variant="outlined" color="inherit" onClick={this.toggleConfirmCancelEvent}>
                       <Clear color="inherit" />
                       <span>&nbsp;Cancel</span>
+                    </Button>
+                    <Button variant="outlined" color="inherit" onClick={this.toggleRescheduledSlot}>
+                      <Cached color="inherit" />
+                      <span>&nbsp;Reschedule</span>
                     </Button>
                   </div>
                 )}

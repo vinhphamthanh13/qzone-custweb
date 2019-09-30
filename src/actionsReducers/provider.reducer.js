@@ -4,6 +4,7 @@ import {
   TEMPORARY_SERVICES_BY_SERVICE_ID,
   AVAILABILITIES_BY_TMP_SERVICE_ID,
   INSTANT_AVAILABILITIES_BY_TMP_SERVICE_ID,
+  RESCHEDULE_AVAILABILITIES_BY_TMP_SERVICE_ID,
   SELECT_BOOKING_DETAIL,
   USERS_BY_ID,
 } from 'actionsReducers/provider.actions';
@@ -18,6 +19,7 @@ const initState = {
   temporaryServiceByServiceIds: {},
   availabilitiesByTemporaryServiceId: {},
   instantAvailabilitiesByTemporaryServiceId: [],
+  rescheduledAvailabilitiesByTemporaryServiceId: [],
   selectedBookingDetail: {},
   providerById: {},
 };
@@ -68,6 +70,11 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         instantAvailabilitiesByTemporaryServiceId: action.payload,
+      };
+    case RESCHEDULE_AVAILABILITIES_BY_TMP_SERVICE_ID:
+      return {
+        ...state,
+        rescheduledAvailabilitiesByTemporaryServiceId: action.payload,
       };
     case SELECT_BOOKING_DETAIL:
       return {

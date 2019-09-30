@@ -15,6 +15,7 @@ import {
   temporaryServicesByServiceIdApi,
   availabilitiesByTemporaryServiceIdApi,
   instantAvailabilitiesByTemporaryServiceIdApi,
+  rescheduledAvailabilitiesByTemporaryServiceIdApi,
   selectBookingDetail,
   usersByIdApi,
 } from 'actionsReducers/provider.actions';
@@ -96,16 +97,19 @@ export const bookingProps = {
 };
 
 export const viewEventProps = {
-  mapStateToProps: ({ common, auth }) => ({
+  mapStateToProps: ({ common, auth, provider }) => ({
     eventById: common.eventById,
     cancelEventStatus: common.cancelEventStatus,
     userDetail: auth.userDetail,
     loginSession: auth.loginSession,
+    rescheduledAvailabilitiesByTemporaryServiceId: provider.rescheduledAvailabilitiesByTemporaryServiceId,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchSetEventById: id => dispatch(setEventByIdApi(id)),
     dispatchCancelEvent: (id, headers) => dispatch(cancelEventByIdApi(id, headers)),
     dispatchClearCancelStatus: () => dispatch(cancelEventByIdAction(500)),
+    dispatchRescheduledAvailabilities: (tId, sId, pId, locId) =>
+      dispatch(rescheduledAvailabilitiesByTemporaryServiceIdApi(tId, sId, pId, locId)),
   }),
 };
 

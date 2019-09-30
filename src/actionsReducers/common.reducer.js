@@ -43,7 +43,7 @@ const initState = {
   eventList: null,
   serviceProviders: null,
   temporaryServicesByLocation: null,
-  eventById: null,
+  eventById: {},
   rescheduleStatus: 500,
   servicesByServiceCategoryId: {},
   tabOrder: { 0: 0 },

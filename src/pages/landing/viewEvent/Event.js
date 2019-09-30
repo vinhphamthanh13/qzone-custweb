@@ -43,7 +43,7 @@ class Event extends Component {
     // const rating = get(event, 'rating', 0);
     const status = get(appointment, 'status');
     const disableMap = status === EVENT_STATUS.CANCELED;
-    const timezone = get(appointment, 'timezone');
+    const timezoneId = get(appointment, 'timezoneId');
 
     return (
       <div className={s.container}>
@@ -89,7 +89,7 @@ class Event extends Component {
           </div>
           <div className={s.item}>
             <GpsFixed className="icon-small" color="inherit" />
-            <span>&nbsp;{timezone}</span>
+            <span>&nbsp;{timezoneId}</span>
           </div>
         </div>
       </div>

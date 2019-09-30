@@ -17,6 +17,8 @@ export const USERS_BY_ID = 'PROVIDER.USERS_BY_ID';
 export const SET_PROVIDER_SERVICE = 'PROVIDER.SET_PROVIDER_SERVICE';
 export const TEMPORARY_SERVICES_BY_SERVICE_ID = 'TEMPORARY_SERVICE.TEMPORARY_SERVICES_BY_SERVICE_ID';
 export const AVAILABILITIES_BY_TMP_SERVICE_ID = 'APPOINTMENT_RESOURCE.AVAILABILITIES_BY_TMP_SERVICE_ID';
+export const RESCHEDULE_AVAILABILITIES_BY_TMP_SERVICE_ID =
+  'APPOINTMENT_RESOURCE.RESCHEDULE_AVAILABILITIES_BY_TMP_SERVICE_ID';
 export const INSTANT_AVAILABILITIES_BY_TMP_SERVICE_ID = 'APPOINTMENT_RESOURCE.INSTANT_AVAILABILITIES_BY_TMP_SERVICE_ID';
 export const SELECT_BOOKING_DETAIL = 'BOOKING.SELECT_BOOKING_DETAIL';
 const setProviderDetail = payload => ({
@@ -33,6 +35,10 @@ const temporaryServicesByServiceIdAction = payload => ({
 });
 const availabilitiesByTemporaryServiceIdAction = payload => ({
   type: AVAILABILITIES_BY_TMP_SERVICE_ID,
+  payload,
+});
+const rescheduledAvailabilitiesByTemporaryServiceIdAction = payload => ({
+  type: RESCHEDULE_AVAILABILITIES_BY_TMP_SERVICE_ID,
   payload,
 });
 const instantAvailabilitiesByTemporaryServiceIdAction = payload => ({
@@ -63,6 +69,17 @@ export const temporaryServicesByServiceIdApi = id => async (dispatch) => {
   }
   dispatch(setLoading(false));
 };
+export const rescheduledAvailabilitiesByTemporaryServiceIdApi = (tId, sId, pId, locId) => async dispatch => {
+  dispatch(setLoading(true));
+  const [result, error] = await handleRequest(availabilitiesByTemporaryServiceId, [tId]);
+  if (error) {
+    dispatch(setError(error));
+  } else {
+    dispatch(rescheduledAvailabilitiesByTemporaryServiceIdAction({ [`${sId}-${pId}-${locId}`]: result }));
+  }
+  dispatch(setLoading(false));
+};
+
 export const availabilitiesByTemporaryServiceIdApi = (list, sId, pId, locId) => async dispatch => {
   dispatch(setLoading(true));
   const [resultBulk, errorBulk] = await availabilitiesByTemporaryServiceIdBulk(list);
