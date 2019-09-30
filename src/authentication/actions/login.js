@@ -35,11 +35,11 @@ export const storeUserSessionLogin = payload => ({
   type: STORE_USER_SESSION_LOGIN,
   payload,
 });
-const storeUserSessionError = payload => ({
+ const storeUserSessionError = payload => ({
   type: STORE_USER_SESSION_ERROR,
   payload,
 });
-const setUserDetails = payload => ({
+export const setUserDetails = payload => ({
   type: SET_USER_DETAILS,
   payload,
 });

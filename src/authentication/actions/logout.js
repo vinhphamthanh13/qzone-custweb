@@ -5,6 +5,7 @@ import { setLoading } from 'actionsReducers/common.actions';
 import { AUTH_METHOD, PROVIDER } from 'config/auth';
 import {
   createGoogleScript,
+  setUserDetails,
   storeUserSessionLogin,
 } from './login';
 
@@ -13,6 +14,7 @@ export const logout = authenticator => (dispatch) => {
 
   if (isAuthenticated) {
     dispatch(setLoading(true));
+    dispatch(setUserDetails({}));
     dispatch(storeUserSessionLogin({
       authProvider: '',
       id: null,
@@ -53,8 +55,5 @@ export const logout = authenticator => (dispatch) => {
           dispatch(setLoading(false));
         });
     }
-    dispatch({
-      type: 'RESET_APP',
-    });
   }
 };
