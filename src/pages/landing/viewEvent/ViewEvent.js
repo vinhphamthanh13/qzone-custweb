@@ -26,6 +26,7 @@ class ViewEvent extends Component {
   };
 
   state = {
+    cancelEventStatus: 500,
     eventById: {},
     userDetail: {},
     loginSession: {},
@@ -36,10 +37,13 @@ class ViewEvent extends Component {
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { eventById, userDetail, loginSession, rescheduledAvailabilitiesByTemporaryServiceId } = props;
+    const {
+      eventById, userDetail, loginSession, rescheduledAvailabilitiesByTemporaryServiceId, cancelEventStatus,
+    } = props;
     const {
       eventById: cachedEventById, userDetail: cachedUserDetail, loginSession: cachedLoginSession,
       rescheduledAvailabilitiesByTemporaryServiceId: cachedRescheduledAvailabilitiesByTemporaryServiceId,
+      cancelEventStatus: cachedCancelEventStatus,
     } = state;
     const updatedState = {};
     if (
@@ -66,6 +70,9 @@ class ViewEvent extends Component {
     ) {
       updatedState.rescheduledAvailabilitiesByTemporaryServiceId = rescheduledAvailabilitiesByTemporaryServiceId;
     }
+    if (cancelEventStatus !== cachedCancelEventStatus) {
+      updatedState.cancelEventStatus = cancelEventStatus;
+    }
 
     return Object.keys(updatedState) ? updatedState : null;
   }
@@ -80,9 +87,9 @@ class ViewEvent extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { eventById } = prevProps;
-    const { dispatchRescheduledAvailabilities } = this.props;
-    const { eventById: cachedEventById } = this.state;
+    const { eventById, cancelEventStatus } = prevProps;
+    const { dispatchRescheduledAvailabilities, dispatchClearCancelStatus } = this.props;
+    const { eventById: cachedEventById, cancelEventStatus: cachedCancelEventStatus, userDetail } = this.state;
     if (
       eventById !== null &&
       JSON.stringify(eventById) !== JSON.stringify(cachedEventById)
@@ -92,6 +99,11 @@ class ViewEvent extends Component {
       const locationId = get(cachedEventById, 'locationId');
       const tempServiceId = get(cachedEventById, 'tempServiceId');
       dispatchRescheduledAvailabilities(tempServiceId, serviceId, providerId, locationId);
+    }
+    if (cancelEventStatus !== cachedCancelEventStatus && cachedCancelEventStatus === 200) {
+      const userId = get(userDetail, 'userSub') || get(userDetail, 'id');
+      dispatchClearCancelStatus();
+      navigateTo(`/profile/${userId}`)();
     }
   }
 

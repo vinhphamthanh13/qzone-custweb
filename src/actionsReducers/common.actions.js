@@ -182,7 +182,7 @@ export const cancelEventByIdApi = (data, headers) => async (dispatch) => {
   if (error) {
     dispatch(setError(error));
   } else {
-    dispatch(cancelEventByIdAction(result.success));
+    dispatch(cancelEventByIdAction(200 || result.success));
     dispatch(setSucceed('Your event is cancelled!'));
   }
   dispatch(setLoading(false));

@@ -87,7 +87,6 @@ class Provider extends Component {
       provider, serviceId, providerId, locationId, availabilitiesByTemporaryServiceId, isOpenMap,
       bookedEventId,
     } = this.state;
-    console.log('this.state', this.state);
     const sName = get(provider, 'serviceName');
     const pName = get(provider, 'givenName');
     const pEmail = get(provider, 'email');
@@ -104,9 +103,6 @@ class Provider extends Component {
       ...slot, sName, pName, pEmail, pPhone, pImage, pAddress,
     }));
 
-    console.log('pName', pName);
-    console.log('pEmail', pEmail);
-    console.log('pPhone', pPhone);
     return (
       <>
         <MapDialog isOpen={isOpenMap} serviceName={sName} toggle={this.handleMapPopup} geoLocation={geoLocation} />

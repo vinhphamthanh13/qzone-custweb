@@ -1,22 +1,11 @@
 import React, { Component } from 'react';
-import {
-  func,
-  string,
-  objectOf,
-  any,
-} from 'prop-types';
+import { func, string, objectOf, any } from 'prop-types';
 import { connect } from 'react-redux';
-import { get } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import moment from 'moment';
 import { logout } from 'authentication/actions/logout';
-import {
-  postUpdatedProfile,
-  updateProfileAction,
-} from 'actionsReducers/profile.actions';
-import {
-  setServiceProvidersAction,
-  findEventByCustomerIdAction,
-} from 'actionsReducers/common.actions';
+import { postUpdatedProfile, updateProfileAction } from 'actionsReducers/profile.actions';
+import { setServiceProvidersAction, findEventByCustomerIdAction } from 'actionsReducers/common.actions';
 import { AUTHENTICATED_KEY, SESSION } from 'utils/constants';
 import { navigateTo } from 'utils/common';
 import CustomModal from 'components/Modal/CustomModal';
@@ -26,38 +15,39 @@ import Content from './components/Content';
 import s from './Profile.module.scss';
 
 class Profile extends Component {
-  static getDerivedStateFromProps(props, state) {
-    const {
-      userDetail,
-      loginSession,
-      updateProfileStatus,
-    } = props;
-    const {
-      userDetail: cachedUserDetail,
-      loginSession: cachedLoginSession,
-      updateProfileStatus: cachedUpdateProfileStatus,
-    } = state;
-    if (
-      userDetail !== cachedUserDetail
-      || updateProfileStatus !== cachedUpdateProfileStatus
-      || loginSession !== cachedLoginSession
-    ) {
-      return {
-        userDetail,
-        loginSession,
-        updateProfileStatus,
-      };
-    }
-    return null;
-  }
 
   state = {
-    userDetail: null,
-    loginSession: null,
-    isPopupWarning: '',
+    userDetail: {},
+    loginSession: {},
+    isPopupWarning: false,
     toggleSidePanel: false,
     isSessionTimeout: false,
   };
+
+  static getDerivedStateFromProps(props, state) {
+    const { userDetail, loginSession, updateProfileStatus } = props;
+    const { userDetail: cachedUserDetail, loginSession: cachedLoginSession,
+      updateProfileStatus: cachedUpdateProfileStatus,
+    } = state;
+    const updatedState = {};
+    if (
+      userDetail !== null &&
+      JSON.stringify(userDetail) !== JSON.stringify(cachedUserDetail)
+    ) {
+      updatedState.userDetail = userDetail;
+    }
+    if (updateProfileStatus !== cachedUpdateProfileStatus) {
+      updatedState.updateProfileStatus = updateProfileStatus;
+    }
+    if (
+      loginSession !== null &&
+      JSON.stringify(loginSession) !== JSON.stringify(cachedLoginSession)
+    ) {
+      updatedState.loginSession = loginSession;
+    }
+
+    return Object.keys(updatedState) ? updatedState : null;
+  }
 
   componentDidMount() {
     const {
@@ -70,11 +60,13 @@ class Profile extends Component {
     findEventByCustomerId(customerId, authHeaders);
   }
 
-  componentDidUpdate() {
-    const { loginSession, userDetail, isSessionTimeout } = this.state;
+  componentDidUpdate(prevProps) {
+    const { userDetail } = prevProps;
+    const { loginSession, userDetail: cachedUserDetail, isSessionTimeout } = this.state;
+
     const expired = get(loginSession, 'expiration');
 
-    if (!userDetail) {
+    if (JSON.stringify(userDetail) !== JSON.stringify(cachedUserDetail) || isEmpty(cachedUserDetail)) {
       navigateTo('/')();
     }
 

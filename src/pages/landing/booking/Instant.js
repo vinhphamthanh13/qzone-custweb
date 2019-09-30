@@ -83,7 +83,6 @@ class Instant extends Component {
     const { temporaryServicesById } = prevProps;
     const { dispatchUsersById } = this.props;
     const { temporaryServicesById: cachedTemporaryServicesById } = this.state;
-    console.log('temporaryServiceById', temporaryServicesById);
     if (
       temporaryServicesById !== null &&
       JSON.stringify(temporaryServicesById) !== JSON.stringify(cachedTemporaryServicesById)

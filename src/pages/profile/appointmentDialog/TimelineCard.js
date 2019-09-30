@@ -234,11 +234,6 @@ class TimelineCard extends Component {
     const mapProvider = { coordinates, fullAddress };
     const eventExpired = eventStatus === EVENT_STATUS.EXPIRED;
     const statusStyle = status === EVENT_STATUS.CANCELED ? 'bg-danger' : 'bg-success';
-    const isReschedule = status !== EVENT_STATUS.CANCELED
-      && status !== EVENT_STATUS.COMPLETED
-      && availabilitiesBulk
-      && availabilitiesBulk.length > 0
-      && !eventExpired;
 
     return (
       <>
@@ -369,17 +364,6 @@ class TimelineCard extends Component {
             <Typography variant="subheading" className="danger-color">
               {currentEventStatus}
             </Typography>
-            {isReschedule && ( // disabled Reschedule
-              <Button
-                color="inherit"
-                variant="text"
-                className={`${s.reschedule} simple-button`}
-                onClick={this.handleShowRescheduleSlots(tempServiceId)}
-              >
-                <Update color="inherit" className="icon-in-button-left" />
-                Reschedule
-              </Button>
-            )}
           </div>
           <div className={`${s.appointmentRemainedTime} ${currentStyleStatus}`}>
             <div className={s.remainedDisplay}>

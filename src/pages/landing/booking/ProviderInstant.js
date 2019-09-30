@@ -57,7 +57,6 @@ class ProviderInstant extends Component {
 
   render() {
     const { temporaryService, slots, isOpenMap } = this.state;
-    console.log('instant provider : ', this.state);
     const sName = get(temporaryService, 'serviceName');
     const pName = get(temporaryService, 'givenName');
     const pEmail = get(temporaryService, 'email');

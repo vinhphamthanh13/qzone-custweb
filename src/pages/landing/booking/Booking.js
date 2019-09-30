@@ -124,7 +124,6 @@ class Booking extends Component {
     const { dispatchBookEvent } = this.props;
     const { userDetail, selectedBookingDetail, loginSession } = this.state;
     this.toggleConfirmBooking();
-    console.log('selectedBookingDetail', selectedBookingDetail);
     console.log(dispatchBookEvent);
     const customerId = get(userDetail, 'userSub') || get(userDetail, 'id');
     const duration = get(selectedBookingDetail, 'durationSec');
