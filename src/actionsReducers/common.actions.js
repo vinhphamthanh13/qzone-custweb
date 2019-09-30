@@ -137,6 +137,10 @@ export const setRescheduleStatusAction = payload => ({
   type: SET_RESCHEDULE_STATUS,
   payload,
 });
+export const rescheduleStatusAction = payload => ({
+  type: SET_RESCHEDULE_STATUS,
+  payload,
+});
 export const rescheduleEvent = (data, headers) => async (dispatch) => {
   dispatch(setLoading(true));
   const [, error] = await handleRequest(reschedule, [data, headers]);
@@ -190,6 +194,17 @@ export const temporaryServicesByIdApi = id => async dispatch => {
     dispatch(setError(error));
   } else {
     dispatch(temporaryServicesByIdAction(result));
+  }
+  dispatch(setLoading(false));
+};
+export const rescheduleEventApi = (data, headers) => async (dispatch) => {
+  dispatch(setLoading(true));
+  const [, error] = await handleRequest(reschedule, [data, headers]);
+  if (error) {
+    dispatch(setError(error));
+  } else {
+    dispatch(rescheduleStatusAction(200));
+    dispatch(setSucceed('You have been rescheduled your event successfully!'));
   }
   dispatch(setLoading(false));
 };

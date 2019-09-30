@@ -1,31 +1,12 @@
 import React, { Component } from 'react';
-import {
-  string, number, objectOf, func, bool, arrayOf, object,
-} from 'prop-types';
+import { string, number, objectOf, func, bool, arrayOf, object } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
 import moment from 'moment';
-import {
-  Typography,
-  Button,
-} from '@material-ui/core';
+import { Typography, Button } from '@material-ui/core';
 import { VerticalTimelineElement } from 'react-vertical-timeline-component';
-import {
-  DateRange,
-  AvTimer,
-  AlarmOff,
-  AlarmOn,
-  Reorder,
-  AlarmAdd,
-  NotInterested,
-  AssignmentLate,
-  Update,
-  Timer,
-  LocationOn,
-  Public,
-  Cancel,
-  Email,
-  Call,
+import { DateRange, AvTimer, AlarmOff, AlarmOn, Reorder, AlarmAdd, NotInterested, AssignmentLate, Update, Timer,
+  LocationOn, Public, Cancel, Email, Call,
 } from '@material-ui/icons';
 import RateStar from 'components/Rating/RateStar';
 import MapDialog from 'components/Map/MapDialog';
@@ -48,7 +29,7 @@ class TimelineCard extends Component {
     serviceName: string.isRequired,
     providerName: string.isRequired,
     providerStartSec: string.isRequired,
-    timezone: string.isRequired,
+    timezoneId: string.isRequired,
     duration: number.isRequired,
     coordinates: objectOf(number).isRequired,
     setRatingService: func.isRequired,
@@ -171,7 +152,7 @@ class TimelineCard extends Component {
       providerStartSec,
       providerName,
       serviceName,
-      timezone,
+      timezoneId,
       coordinates,
       providerEmail,
       providerTelephone,
@@ -378,7 +359,7 @@ class TimelineCard extends Component {
             <div className={s.appointmentItem}>
               <Public className="icon-main" />
               <Typography variant="subheading" color="inherit" inline noWrap>
-                {timezone}
+                {timezoneId}
               </Typography>
             </div>
           </div>

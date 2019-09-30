@@ -9,6 +9,8 @@ import {
   cancelEventByIdApi,
   cancelEventByIdAction,
   temporaryServicesByIdApi,
+  rescheduleEventApi,
+  rescheduleStatusAction,
 } from 'actionsReducers/common.actions';
 import { providersByServiceIdApi, bookEventApi } from 'actionsReducers/booking.actions';
 import {
@@ -110,6 +112,17 @@ export const viewEventProps = {
     dispatchClearCancelStatus: () => dispatch(cancelEventByIdAction(500)),
     dispatchRescheduledAvailabilities: (tId, sId, pId, locId) =>
       dispatch(rescheduledAvailabilitiesByTemporaryServiceIdApi(tId, sId, pId, locId)),
+  }),
+};
+
+export const rescheduleProps = {
+  mapStateToProps: ({ common }) => ({
+    rescheduleStatus: common.rescheduleStatus,
+  }),
+  mapDispatchToProps: dispatch => ({
+    dispatchRescheduleEvent: (data, headers) => dispatch(rescheduleEventApi(data, headers)),
+    dispatchRescheduleStatus: code => dispatch(rescheduleStatusAction(code)),
+    dispatchSetEventById: id => dispatch(setEventByIdApi(id)),
   }),
 };
 

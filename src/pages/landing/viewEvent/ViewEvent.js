@@ -6,7 +6,6 @@ import { IconButton, Button } from '@material-ui/core';
 import Loading from 'components/Loading';
 import MapDialog from 'components/Map/MapDialog';
 import Error from 'components/Error';
-import Success from 'components/Success';
 import { navigateTo } from 'utils/common';
 import Logo from 'images/quezone-logo.png';
 import { Home, AssignmentInd, Clear, Cached } from '@material-ui/icons';
@@ -14,7 +13,7 @@ import { viewEventProps } from 'pages/commonProps';
 import CustomModal from 'components/Modal/CustomModal';
 import { EVENT_STATUS } from 'utils/constants';
 import Event from './Event';
-import Reschedule from './Reschedule';
+import Reschedule from '../reschedule/Reschedule';
 import s from './ViewEvent.module.scss';
 
 class ViewEvent extends Component {
@@ -157,7 +156,6 @@ class ViewEvent extends Component {
     const rescheduledSlot = rescheduledAvailabilitiesByTemporaryServiceId &&
       rescheduledAvailabilitiesByTemporaryServiceId[`${sId}-${pId}-${locId}`] || [];
     const isRescheduleEnabled = isRescheduleOpen && rescheduledSlot.length > 0;
-    console.log('reschduledSlot', rescheduledSlot);
 
     return (
       <>
@@ -171,10 +169,16 @@ class ViewEvent extends Component {
           okCallBack={this.handleCancelEvent(eventId, headers)}
         />
         <MapDialog toggle={this.handleToggleMap} serviceName={sName} isOpen={isOpenMap} geoLocation={mapData} />
-        {isRescheduleEnabled && <Reschedule slots={rescheduledSlot} onClose={this.toggleRescheduledSlot} />}
+        {isRescheduleEnabled && (
+          <Reschedule
+            eventId={eventId}
+            authHeaders={headers}
+            timeSlots={rescheduledSlot}
+            onClose={this.toggleRescheduledSlot}
+          />
+        )}
         <Loading />
         <Error resetOtherStatus={this.handleRedirect} />
-        <Success userCallback={this.handleRedirect}/>
         <div className={s.container}>
           <div className={s.navBar}>
             <div className={s.logo}>

@@ -44,7 +44,6 @@ const initState = {
   serviceProviders: null,
   temporaryServicesByLocation: null,
   eventById: {},
-  rescheduleStatus: 500,
   servicesByServiceCategoryId: {},
   tabOrder: { 0: 0 },
   responsiveLayout: {
@@ -52,6 +51,7 @@ const initState = {
     maxChunkCount: 1,
   },
   cancelEventStatus: 500,
+  rescheduleStatus: 500,
   temporaryServicesById: {},
 };
 
