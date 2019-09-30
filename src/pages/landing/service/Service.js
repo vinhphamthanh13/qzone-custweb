@@ -7,6 +7,7 @@ import { limitString, navigateTo } from 'utils/common';
 import { Domain, NavigateNext, NotificationImportant, WrapText } from '@material-ui/icons';
 import { landingProps } from 'pages/commonProps';
 import { SERVICE_MODE } from 'utils/constants';
+import WaitList from '../waitlist/WaitList';
 import s from './Service.module.scss';
 
 class Service extends Component {
@@ -23,6 +24,7 @@ class Service extends Component {
     service: {},
     catName: '',
     providersByServiceId: {},
+    isQueuePopup: false,
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -62,78 +64,86 @@ class Service extends Component {
     navigateTo(`/provider-by-service/${sId}`, { category: catName, service: sName })();
   };
 
-  handleSelectOrg = orgId => () => {
-    navigateTo(`/organization/${orgId}`)();
+  handleSelectOrg = website => () => {
+    window.open(website);
   };
 
-  handleQueue = () => {
-    console.log('You are able to queue');
+  toggleQueueModal = () => {
+    this.setState(oldState => ({
+    isQueuePopup:   !oldState.isQueuePopup,
+    }));
   };
 
   render() {
-    const { providersByServiceId, catName, service } = this.state;
+    const { providersByServiceId, catName, service, isQueuePopup } = this.state;
     const sDescription = get(service, 'description');
     const sDuration = get(service, 'duration');
     const sId = get(service, 'id');
     const imgUrl = get(service, 'image.fileUrl');
-    const imgAlt = get(service, 'image.originName');
     const sName = get(service, 'name');
     const orgName = get(service, 'organizationEntity.name');
-    const orgId = get(service, 'organizationId');
+    const website = get(service, 'organizationEntity.website');
     const serviceProviders = get(providersByServiceId, `${catName}.${sName}`, []);
     const isProviderSelectable = serviceProviders.length > 0;
     const mode = get(service, 'mode', '');
     const isQueuedMode = mode.toLowerCase() === SERVICE_MODE.QUEUE;
 
     return (
-      <div className={s.card} key={sId}>
-        <div className={s.image}>
-          <img src={imgUrl} alt={imgAlt} width="100%" height="100%" />
-          <div className={s.duration}>
-            Duration: {`${sDuration}'`}
-          </div>
-        </div>
-        <div className={s.cardContent}>
-          <div className={`${s.cardName} ellipsis`}>
-            {sName}
-          </div>
-          <div className={s.description}>
-            {limitString(sDescription, 150)}
-          </div>
-          <div className={s.footer}>
-            {/* eslint-disable-next-line */}
-            <div className={s.orgDescription} onClick={this.handleSelectOrg(orgId)}>
-              <Domain color="inherit" />
-              <span className="ellipsis">&nbsp;{orgName}</span>
+      <>
+        {isQueuePopup && <WaitList onClose={this.toggleQueueModal} />}
+        <div className={s.card} key={sId}>
+          <div className={s.image}>
+            <img src={imgUrl} alt={sName} width="100%" height="100%" />
+            <div className={s.duration}>
+              Duration: {`${sDuration}'`}
             </div>
-            <div className={s.cta}>
-              {isQueuedMode ? (
-                <div className={s.queueMode}>
-                  <Button variant="outlined" color="inherit" onClick={this.handleQueue}>
-                    <WrapText colo="inherit" />
-                    <span>&nbsp;Join Queue</span>
-                  </Button>
-                </div>
-              ) : (
-                <div className={s.scheduleMode}>
-                  {isProviderSelectable && (
-                    <Button variant="outlined" color="inherit" onClick={this.handleSelectProvider(sId, sName, catName)}>
-                      <NavigateNext color="inherit" />
-                      Select Provider
+          </div>
+          <div className={s.cardContent}>
+            <div className={`${s.cardName} ellipsis`}>
+              {sName}
+            </div>
+            <div className={s.description}>
+              {limitString(sDescription, 150)}
+            </div>
+            <div className={s.footer}>
+              {/* eslint-disable-next-line */}
+              <div className={s.orgDescription} onClick={this.handleSelectOrg(website)}>
+                <Domain color="inherit" />
+                <span className="ellipsis">&nbsp;{orgName}</span>
+              </div>
+              <div className={s.cta}>
+                {isQueuedMode ? (
+                  <div className={s.queueMode}>
+                    <Button variant="outlined" color="inherit" onClick={this.toggleQueueModal}>
+                      <WrapText colo="inherit" />
+                      <span>&nbsp;Join Queue</span>
                     </Button>
-                  )}
-                  {!isProviderSelectable && (
-                    <div className={s.noProvider}>
-                      <NotificationImportant color="inherit" />
-                      <span>&nbsp;No provider available!</span>
-                    </div>
-                  )}
-                </div>
-              )}
+                  </div>
+                ) : (
+                  <div className={s.scheduleMode}>
+                    {isProviderSelectable && (
+                      <Button
+                        variant="outlined"
+                        color="inherit"
+                        onClick={this.handleSelectProvider(sId, sName, catName)}
+                      >
+                        <NavigateNext color="inherit" />
+                        Select Provider
+                      </Button>
+                    )}
+                    {!isProviderSelectable && (
+                      <div className={s.noProvider}>
+                        <NotificationImportant color="inherit" />
+                        <span>&nbsp;No provider available!</span>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 }

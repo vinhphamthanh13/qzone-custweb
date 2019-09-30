@@ -1,37 +1,17 @@
 import React, { Component } from 'react';
 import { func, bool, objectOf, any } from 'prop-types';
-import {
-  Typography,
-  RadioGroup,
-  Radio,
-  FormControlLabel,
-  Button,
-} from '@material-ui/core';
-import {
-  ChevronRight,
-  LocationOn,
-  Queue,
-  Cancel,
-  Fingerprint,
-} from '@material-ui/icons';
+import { Typography, RadioGroup, Radio, FormControlLabel, Button } from '@material-ui/core';
+import { ChevronRight, LocationOn, Queue, Cancel, Fingerprint } from '@material-ui/icons';
 import uuidv1 from 'uuid/v1';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withFormik } from 'formik';
 import moment from 'moment';
-import {
-  get,
-} from 'lodash';
+import { get } from 'lodash';
 import DatePicker from 'components/Calendar/DatePicker';
-import {
-  // setWaitListsValidationAction,
-  registerWaitListsAction,
-} from 'actionsReducers/waitlist.actions';
+import { registerWaitListsAction } from 'actionsReducers/waitlist.actions';
 import defaultImage from 'images/default-service-card.png';
-import {
-  defaultDateFormat,
-  AUTHENTICATED_KEY,
-} from 'utils/constants';
+import { defaultDateFormat } from 'utils/constants';
 import s from './WaitList.module.scss';
 
 const DATE_RANGE_INVERT = {
@@ -40,72 +20,49 @@ const DATE_RANGE_INVERT = {
 };
 
 class WaitList extends Component {
+  state = {
+    service: {},
+    queuedProviders: [],
+    userDetail: {},
+    loginSession: {},
+  };
+
   static getDerivedStateFromProps(props, state) {
-    const {
-      providers,
-      service,
-      loginSession,
-      userDetail,
-      waitListsValidation,
-    } = props;
+    const { providers, service, loginSession, userDetail } = props;
     const {
       providers: cachedProviders,
       service: cachedService,
       loginSession: cachedLoginSession,
       userDetail: cachedUserDetail,
-      waitListsValidation: cachedWaitListsValidation,
     } = state;
+    const updatedState = {};
     if (
-      service !== cachedService
-      || providers !== cachedProviders
-      || loginSession !== cachedLoginSession
-      || userDetail !== cachedUserDetail
-      || waitListsValidation !== cachedWaitListsValidation
+      service !== null &&
+      JSON.stringify(service) !== JSON.stringify(cachedService)
     ) {
-      const serviceId = get(service, 'id');
-      const queuedProviders = providers && providers.filter(provider => provider.mode === 'QUEUE');
-      const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
-      const customerId = get(userDetail, 'userSub') || get(userDetail, 'id');
-      const isQueuing = queuedProviders && !!queuedProviders.length;
-
-      return {
-        service,
-        queuedProviders,
-        isAuthenticated,
-        customerId,
-        serviceId,
-        loginSession,
-        userDetail,
-        isQueuing,
-        waitListsValidation,
-      };
+      updatedState.serviceId = get(service, 'id');
+      updatedState.service = service;
     }
-    return null;
-  }
+    if (
+      providers !== null &&
+      JSON.stringify(providers) !== JSON.stringify(cachedProviders)
+    ) {
+      updatedState.queuedProviders = providers && providers.filter(provider => provider.mode === 'QUEUE');
+    }
+    if (
+      userDetail !== null &&
+      JSON.stringify(userDetail) !== JSON.stringify(cachedUserDetail)
+    ) {
+      updatedState.userDetail = userDetail;
+    }
+    if (
+      loginSession !== null &&
+      JSON.stringify(loginSession) !== JSON.stringify(cachedLoginSession)
+    ) {
+      updatedState.loginSession = loginSession;
+    }
 
-  constructor(props) {
-    super(props);
-    const initProvider = get(props, 'initProvider');
-    const temporaryServiceIds = get(initProvider, 'temporaryServiceIds');
-    const providerName = get(initProvider, 'providerName');
-    const geoLocation = get(initProvider, 'geoLocation');
-    const timezoneId = get(initProvider, 'timezoneId');
-
-    this.state = {
-      dateFrom: moment().unix(),
-      dateTo: moment().unix(),
-      service: null,
-      isRegisterWaitLists: false,
-      temporaryServiceIds,
-      providerName,
-      geoLocation,
-      timezoneId,
-      isOpenProviderList: false,
-      isAuthenticated: null,
-      customerId: null,
-      queuedProviders: null,
-      isQueuing: null,
-    };
+    return Object.keys(updatedState) ? updatedState : null;
   }
 
   handleToggleRegister = () => {
@@ -141,7 +98,6 @@ class WaitList extends Component {
       tempServiceId: id,
       toSec,
     }));
-    // setWaitListsValidation(validateData);
     registerWaitLists(waitListData);
     this.handleToggleRegister();
   };
@@ -229,189 +185,180 @@ class WaitList extends Component {
   render() {
     const {
       service,
-      isRegisterWaitLists,
       isOpenProviderList,
       providerName,
       geoLocation,
       timezoneId,
-      isAuthenticated,
       dateFrom,
       dateTo,
       queuedProviders,
       isQueuing,
+      userDetail,
+      loginSession
     } = this.state;
     const {
       values,
       isValid,
+      onClose,
     } = this.props;
+    console.log('userDetail', userDetail);
+    console.log('loginSession', loginSession);
     const serviceName = get(service, 'name');
     const serviceImg = get(service, 'image.fileUrl') || defaultImage;
     const fullAddress = get(geoLocation, 'fullAddress');
     return (
-      <>
-        {isRegisterWaitLists && (
-          <div className="cover-bg-black z-index-highest">
-            <div className={s.waitListForm}>
-              <div className={s.title}>
-                <Typography variant="headline" color="inherit" className="text-bold">
-                  Enroll to Waitlist
+      <div className="cover-bg-black z-index-highest">
+        <div className={s.waitListForm}>
+          <div className={s.title}>
+            <Typography variant="headline" color="inherit" className="text-bold">
+              Enroll to Waitlist
+            </Typography>
+          </div>
+          <div className={s.serviceInfo}>
+            <div className={s.serviceImage}>
+              <img src={serviceImg} alt="Service" className={s.serviceImage} />
+            </div>
+            <div className={s.serviceDescription}>
+              <div className={s.enrollServiceName}>
+                <Typography variant="title" className="main-color-04 text-bold" noWrap>
+                  {serviceName}
                 </Typography>
               </div>
-              <div className={s.serviceInfo}>
-                <div className={s.serviceImage}>
-                  <img src={serviceImg} alt="Service" className={s.serviceImage} />
-                </div>
-                <div className={s.serviceDescription}>
-                  <div className={s.enrollServiceName}>
-                    <Typography variant="title" className="main-color-04 text-bold" noWrap>
-                      {serviceName}
+              <div className={s.selectProvider}>
+                {isQueuing && (
+                  <>
+                    <Typography variant="body1" className="main-color">
+                      Appointment with:
                     </Typography>
-                  </div>
-                  <div className={s.selectProvider}>
-                    {isQueuing && (
-                      <>
-                        <Typography variant="body1" className="main-color">
-                          Appointment with:
-                        </Typography>
-                        {/* eslint-disable-next-line */}
-                        {isOpenProviderList && <div className={s.dropdownBackdrop} onClick={this.handleCloseDropdownProviders} />}
-                        {/* eslint-disable-next-line */}
-                        <div className={s.selectProviderDropdown} onClick={this.handleToggleDropdownProviders}>
-                          <Typography
-                            variant="subheading"
-                            color="inherit"
-                            className={`${s.limitWidth} text-bold`}
-                            noWrap
-                          >
-                            {providerName}
-                          </Typography>
-                          <ChevronRight className="icon-normal" />
-                          {isOpenProviderList && this.renderProviderList(queuedProviders)}
-                        </div>
-                        <div className="icon-text">
-                          <LocationOn className="icon-normal" />
-                          <Typography variant="body1" color="inherit">
-                            {fullAddress}
-                          </Typography>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </div>
-                <div className={s.bookWaitList}>
-                  <div className={s.availabilityDate}>
-                    <div className={s.availabilityLabel}>
-                      <Typography variant="body1" color="inherit" className="text-bold">
-                        Date:
-                      </Typography>
-                      <Typography variant="body1" className="danger-color">
-                        ({timezoneId})
-                      </Typography>
-                    </div>
-                    <div className={s.dateRange}>
-                      <div className={s.datePicker}>
-                        <div className={s.pickerLabel}>
-                          <Typography variant="caption" color="inherit" className="text-bold">
-                            From:
-                          </Typography>
-                        </div>
-                        <DatePicker
-                          onChange={this.handleChangeDate('dateFrom')}
-                          selectDate={this.handleSelectDate}
-                          date={moment(dateFrom * 1000)}
-                          enableCalendar
-                          type="date"
-                          isIcon
-                          iconClassName={s.dateSelection}
-                          dateFormat={defaultDateFormat}
-                        />
-                      </div>
-                      <div className={s.datePicker}>
-                        <div className={s.pickerLabel}>
-                          <Typography variant="caption" color="inherit" className="text-bold">
-                            To:
-                          </Typography>
-                        </div>
-                        <DatePicker
-                          onChange={this.handleChangeDate('dateTo')}
-                          selectDate={this.handleSelectDate}
-                          date={moment(dateTo * 1000)}
-                          enableCalendar
-                          type="date"
-                          isIcon
-                          iconClassName={s.dateSelection}
-                          dateFormat={defaultDateFormat}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className={s.selectOption}>
-                    <div className={s.bookingOption}>
-                      <RadioGroup
-                        name="enrollOption"
-                        value={values.enrollOption}
-                        onChange={this.handleChangeOption}
+                    {/* eslint-disable-next-line */}
+                    {isOpenProviderList && <div className={s.dropdownBackdrop} onClick={this.handleCloseDropdownProviders} />}
+                    {/* eslint-disable-next-line */}
+                    <div className={s.selectProviderDropdown} onClick={this.handleToggleDropdownProviders}>
+                      <Typography
+                        variant="subheading"
+                        color="inherit"
+                        className={`${s.limitWidth} text-bold`}
+                        noWrap
                       >
-                        <FormControlLabel
-                          value="automatically"
-                          control={(
-                            <Radio classes={
-                              {
-                                root: s.bookingOption,
-                                checked: s.bookingOptionChecked,
-                              }
-                            }
-                            />)}
-                          label="Make your appointment automatically."
-                        />
-                        <FormControlLabel
-                          value="manually"
-                          control={(
-                            <Radio classes={
-                              {
-                                root: s.bookingOption,
-                                checked: s.bookingOptionChecked,
-                              }
-                            }
-                            />)}
-                          label="Notify me on slot availability."
-                        />
-                      </RadioGroup>
+                        {providerName}
+                      </Typography>
+                      <ChevronRight className="icon-normal" />
+                      {isOpenProviderList && this.renderProviderList(queuedProviders)}
                     </div>
+                    <div className="icon-text">
+                      <LocationOn className="icon-normal" />
+                      <Typography variant="body1" color="inherit">
+                        {fullAddress}
+                      </Typography>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+            <div className={s.bookWaitList}>
+              <div className={s.availabilityDate}>
+                <div className={s.availabilityLabel}>
+                  <Typography variant="body1" color="inherit" className="text-bold">
+                    Date:
+                  </Typography>
+                  <Typography variant="body1" className="danger-color">
+                    ({timezoneId})
+                  </Typography>
+                </div>
+                <div className={s.dateRange}>
+                  <div className={s.datePicker}>
+                    <div className={s.pickerLabel}>
+                      <Typography variant="caption" color="inherit" className="text-bold">
+                        From:
+                      </Typography>
+                    </div>
+                    <DatePicker
+                      onChange={this.handleChangeDate('dateFrom')}
+                      selectDate={this.handleSelectDate}
+                      date={moment(dateFrom * 1000)}
+                      enableCalendar
+                      type="date"
+                      isIcon
+                      iconClassName={s.dateSelection}
+                      dateFormat={defaultDateFormat}
+                    />
+                  </div>
+                  <div className={s.datePicker}>
+                    <div className={s.pickerLabel}>
+                      <Typography variant="caption" color="inherit" className="text-bold">
+                        To:
+                      </Typography>
+                    </div>
+                    <DatePicker
+                      onChange={this.handleChangeDate('dateTo')}
+                      selectDate={this.handleSelectDate}
+                      date={moment(dateTo * 1000)}
+                      enableCalendar
+                      type="date"
+                      isIcon
+                      iconClassName={s.dateSelection}
+                      dateFormat={defaultDateFormat}
+                    />
                   </div>
                 </div>
               </div>
-              <div className={s.footerCta}>
-                <Button
-                  variant="outlined"
-                  onClick={this.handleToggleRegister}
-                  className="secondary-button"
-                >
-                  <Cancel color="inherit" className="icon-small" />
-                  Cancel
-                </Button>
-                <Button
-                  variant="outlined"
-                  onClick={this.handleRegisterWaitList}
-                  disabled={!isValid}
-                  className="main-button"
-                >
-                  <Queue color="inherit" className="icon-small" />
-                  Enroll
-                </Button>
+              <div className={s.selectOption}>
+                <div className={s.bookingOption}>
+                  <RadioGroup
+                    name="enrollOption"
+                    value={values.enrollOption}
+                    onChange={this.handleChangeOption}
+                  >
+                    <FormControlLabel
+                      value="automatically"
+                      control={(
+                        <Radio classes={
+                          {
+                            root: s.bookingOption,
+                            checked: s.bookingOptionChecked,
+                          }
+                        }
+                        />)}
+                      label="Make your appointment automatically."
+                    />
+                    <FormControlLabel
+                      value="manually"
+                      control={(
+                        <Radio classes={
+                          {
+                            root: s.bookingOption,
+                            checked: s.bookingOptionChecked,
+                          }
+                        }
+                        />)}
+                      label="Notify me on slot availability."
+                    />
+                  </RadioGroup>
+                </div>
               </div>
             </div>
           </div>
-        )}
-        <Button
-          className={`${s.joinWaitLists} simple-button main-button`}
-          onClick={this.handleToggleRegister}
-          disabled={!isQueuing}
-          variant="outlined"
-        >
-          {this.renderEnrollButton(isAuthenticated)}
-        </Button>
-      </>
+          <div className={s.footerCta}>
+            <Button
+              variant="outlined"
+              onClick={onClose}
+              className="secondary-button"
+            >
+              <Cancel color="inherit" className="icon-small" />
+              Cancel
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={this.handleRegisterWaitList}
+              disabled={!isValid}
+              className="main-button"
+            >
+              <Queue color="inherit" className="icon-small" />
+              Enroll
+            </Button>
+          </div>
+        </div>
+      </div>
     );
   }
 }
@@ -421,7 +368,7 @@ WaitList.propTypes = {
   setFieldValue: func.isRequired,
   isValid: bool.isRequired,
   handleAuth: func.isRequired,
-  // setWaitListsValidationAction: func.isRequired,
+  onClose: func.isRequired,
   registerWaitListsAction: func.isRequired,
 };
 
@@ -441,7 +388,6 @@ export default compose(
     }),
   }),
   connect(mapStateToProps, {
-    // setWaitListsValidationAction,
     registerWaitListsAction,
   }),
 )(WaitList);

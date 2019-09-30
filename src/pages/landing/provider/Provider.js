@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { func } from 'prop-types';
 import { get } from 'lodash';
 import defaultPImage from 'images/providers.jpg';
-import { IconButton } from '@material-ui/core';
-import { Email, PhoneIphone, Place, GpsFixed, Map } from '@material-ui/icons';
+import { Email, PhoneIphone, Place, GpsFixed } from '@material-ui/icons';
 import EmptyItem from 'components/EmptyItem';
 import MapDialog from 'components/Map/MapDialog';
 import RateStar from 'components/Rating/RateStar';
@@ -108,13 +107,10 @@ class Provider extends Component {
         <MapDialog isOpen={isOpenMap} serviceName={sName} toggle={this.handleMapPopup} geoLocation={geoLocation} />
         <div key={providerId} className={s.card}>
           <div className={s.image}>
-            <img src={pImage} alt="QProvider" width="100%" height="100%" />
+            <img src={pImage} alt={pName} width="100%" height="100%" />
             <div className={s.rateStar}>
-              <RateStar rating={pRate} />
+              <RateStar rating={pRate} size="small" />
             </div>
-            <IconButton color="inherit" className={s.viewMap} onClick={this.handleMapPopup}>
-              <Map color="inherit" />map
-            </IconButton>
           </div>
           <div className={s.content}>
             <div className={s.name}>
@@ -130,7 +126,7 @@ class Provider extends Component {
             </div>
             <div className={s.place}>
               <div className={s.item}>
-                <Place className="icon-small" color="secondary" />
+                <Place className="icon-small hover-pointer" color="secondary" onClick={this.handleMapPopup} />
                 <span>&nbsp;{pAddress}</span>
               </div>
             </div>
