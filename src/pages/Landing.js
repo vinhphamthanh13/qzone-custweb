@@ -68,8 +68,9 @@ class Landing extends Component {
   }
 
   componentDidMount() {
-    const { dispatchServiceCategory } = this.props;
+    const { dispatchServiceCategory, dispatchSetLandingPage } = this.props;
     dispatchServiceCategory();
+    dispatchSetLandingPage({ instantBooking: false });
   }
 
   componentDidUpdate(prevProps, prevState) {

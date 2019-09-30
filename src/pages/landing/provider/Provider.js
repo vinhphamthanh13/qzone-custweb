@@ -17,9 +17,6 @@ class Provider extends Component {
     selectBookingDetail: func.isRequired,
   };
 
-  static defaultProps = {
-  };
-
   state = {
     serviceId: '',
     providerId: '',
@@ -90,24 +87,26 @@ class Provider extends Component {
       provider, serviceId, providerId, locationId, availabilitiesByTemporaryServiceId, isOpenMap,
       bookedEventId,
     } = this.state;
+    console.log('this.state', this.state);
     const sName = get(provider, 'serviceName');
     const pName = get(provider, 'givenName');
     const pEmail = get(provider, 'email');
     const pPhone = get(provider, 'telephone');
-    const providerInfo = get(provider, 'providerInformation');
-    const catName = get(provider, 'catName');
-    const pImage = get(providerInfo, 'image.fileUrl', defaultPImage);
+    const pImage = get(provider, 'providerInformation.image.fileUrl', defaultPImage);
     const pRate = get(provider, 'rating');
     const geoLocation = get(provider, 'geoLocation');
     const pAddress = get(geoLocation, 'fullAddress');
-    const timeZoneId = get(providerInfo, 'timeZoneId');
+    const timeZoneId = get(provider, 'providerInformation.timeZoneId');
     const timeSlots = get(availabilitiesByTemporaryServiceId,`${serviceId}-${providerId}-${locationId}`,  []);
     const slots = timeSlots.length > 0 && timeSlots.filter(slot =>
       slot.serviceId === serviceId && slot.providerId === providerId && slot.locationId === locationId) || [];
     const transformedSlot = slots.filter(item => item.id !== bookedEventId && item.spotsOpen === 1).map(slot => ({
-      ...slot, sName, pName, pEmail, pPhone, pImage, pAddress, catName,
+      ...slot, sName, pName, pEmail, pPhone, pImage, pAddress,
     }));
 
+    console.log('pName', pName);
+    console.log('pEmail', pEmail);
+    console.log('pPhone', pPhone);
     return (
       <>
         <MapDialog isOpen={isOpenMap} serviceName={sName} toggle={this.handleMapPopup} geoLocation={geoLocation} />
@@ -151,7 +150,7 @@ class Provider extends Component {
                 selectSlot={this.handleSelectSlot}
               />
             </div>
-          ) : <EmptyItem message="No slot available"/>}
+          ) : <EmptyItem message="All slots are booked!"/>}
         </div>
       </>
     );

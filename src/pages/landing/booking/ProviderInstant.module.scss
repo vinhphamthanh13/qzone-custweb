@@ -1,0 +1,96 @@
+@import "styles/_settings.scss";
+
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: $max-card-width;
+  margin: 0.4rem;
+  border: 1px solid $main_03;
+  box-shadow: 2px 2px 13px 1px $main_04;
+  position: relative;
+}
+
+.title {
+  font-size: $heading;
+  color: $gray;
+  padding: 1rem 1rem 0;
+  border: 2px solid $gallery;
+  margin-bottom: 1rem;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+}
+
+.image {
+  max-width: $max-card-width;
+  border: 0.2rem;
+  overflow: hidden;
+  height: $provider-image-height;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image:hover {
+  color: $danger;
+}
+
+.rateStar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background: $gallery;
+  padding: 0.2rem;
+  border-top-right-radius: 0.2rem;
+}
+
+.viewMap {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: $gallery;
+  font-size: 1rem;
+  border-radius: 0.2rem 0 0 0;
+  padding: 0.2rem;
+}
+
+.viewMap:hover {
+  background: $gallery;
+  transition: all 0.2s ease-in;
+}
+
+.name {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0.5rem;
+  max-width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  text-transform: capitalize;
+}
+
+.item {
+  color: inherit;
+  display: flex;
+  align-items: center;
+}
+
+.place {
+  height: $full-address-height;
+  display: flex;
+  align-items: center;
+  border: 1px solid $main_03;
+  border-radius: 0.4rem;
+  background: $gallery;
+  padding: 0.2rem 0.2rem 0.2rem 0.1rem;
+  margin: auto 0.2rem;
+}
+
+.availabilities {
+  color: inherit;
+}

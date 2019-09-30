@@ -10,6 +10,7 @@ import Logo from 'images/quezone-logo.png';
 import EmptyItem from 'components/EmptyItem';
 import Loading from 'components/Loading';
 import Error from 'components/Error';
+import ProviderInstant from './ProviderInstant';
 import { instantProps } from '../../commonProps';
 import s from './Instant.module.scss';
 
@@ -17,23 +18,24 @@ class Instant extends Component {
   static propTypes = {
     match: objectOf(any).isRequired,
     dispatchInstantAvailabilitiesByTemporaryServiceId: func.isRequired,
-    dispatchGeoLocationsById: func.isRequired,
-    dispatchServicesById: func.isRequired,
+    dispatchSelectBookingDetail: func.isRequired,
+    dispatchTemporaryServicesById: func.isRequired,
     dispatchUsersById: func.isRequired,
+    dispatchSetLandingPage: func.isRequired,
   };
 
   state = {
     instantAvailabilitiesByTemporaryServiceId: [],
-    locationById: {},
+    temporaryServicesById: {},
+    providerById: {},
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { instantAvailabilitiesByTemporaryServiceId, userDetail, locationById, serviceById, providerById } = props;
+    const { instantAvailabilitiesByTemporaryServiceId, userDetail, providerById, temporaryServicesById } = props;
     const {
       instantAvailabilitiesByTemporaryServiceId: cachedInstantAvailabilitiesByTemporaryServiceId,
       userDetail: cachedUserDetail,
-      locationById: cachedLocationById,
-      serviceById: cachedServiceById,
+      temporaryServicesById: cachedTemporaryServicesById,
       providerById: cachedProviderById,
     } = state;
     const updatedState = {};
@@ -51,50 +53,43 @@ class Instant extends Component {
       updatedState.userDetail = userDetail;
     }
     if (
-      locationById !== null &&
-      JSON.stringify(locationById) !== JSON.stringify(cachedLocationById)
-    ) {
-      updatedState.locationById = locationById;
-    }
-    if (
-      serviceById !== null &&
-      JSON.stringify(serviceById) !== JSON.stringify(cachedServiceById)
-    ) {
-      updatedState.serviceById = serviceById;
-    }
-    if (
       providerById !== null &&
       JSON.stringify(providerById) !== JSON.stringify(cachedProviderById)
     ) {
       updatedState.providerById = providerById;
+    }
+    if (
+      temporaryServicesById !== null &&
+      JSON.stringify(temporaryServicesById) !== JSON.stringify(cachedTemporaryServicesById)
+    ) {
+      updatedState.temporaryServicesById = temporaryServicesById;
     }
 
     return Object.keys(updatedState) ? updatedState : null;
   }
 
   componentDidMount() {
-    const { match: { params: { id }}, dispatchInstantAvailabilitiesByTemporaryServiceId } = this.props;
+    const {
+      match: { params: { id }}, dispatchInstantAvailabilitiesByTemporaryServiceId,
+      dispatchTemporaryServicesById, dispatchSetLandingPage
+    } = this.props;
+
+    dispatchSetLandingPage({ instantBooking: true, tId: id });
     dispatchInstantAvailabilitiesByTemporaryServiceId(id);
+    dispatchTemporaryServicesById(id);
   }
 
   componentDidUpdate(prevProps) {
-    const { instantAvailabilitiesByTemporaryServiceId } = prevProps;
-    const { dispatchGeoLocationsById, dispatchServicesById, dispatchUsersById } = this.props;
-    const { instantAvailabilitiesByTemporaryServiceId: cachedInstantAvailabilitiesByTemporaryServiceId } = this.state;
+    const { temporaryServicesById } = prevProps;
+    const { dispatchUsersById } = this.props;
+    const { temporaryServicesById: cachedTemporaryServicesById } = this.state;
+    console.log('temporaryServiceById', temporaryServicesById);
     if (
-      instantAvailabilitiesByTemporaryServiceId !== null &&
-      JSON.stringify(instantAvailabilitiesByTemporaryServiceId) !==
-      JSON.stringify(cachedInstantAvailabilitiesByTemporaryServiceId)
+      temporaryServicesById !== null &&
+      JSON.stringify(temporaryServicesById) !== JSON.stringify(cachedTemporaryServicesById)
     ) {
-      const sampleSlot = cachedInstantAvailabilitiesByTemporaryServiceId[0];
-      if (sampleSlot) {
-        const locationId = get(sampleSlot, 'locationId');
-        const serviceId = get(sampleSlot, 'serviceId');
-        const providerId = get(sampleSlot, 'providerId');
-        if (locationId) dispatchGeoLocationsById(locationId);
-        if (serviceId) dispatchServicesById(serviceId);
-        if (providerId) dispatchUsersById(providerId);
-      }
+      const providerId = get(cachedTemporaryServicesById, 'providerId');
+      if (providerId) dispatchUsersById(providerId);
     }
   }
 
@@ -107,23 +102,12 @@ class Instant extends Component {
   };
 
   render() {
+    const { dispatchSelectBookingDetail } = this.props;
     const {
-      instantAvailabilitiesByTemporaryServiceId, userDetail, locationById, serviceById, providerById,
+      instantAvailabilitiesByTemporaryServiceId, userDetail, temporaryServicesById, providerById,
     } = this.state;
     const userId = get(userDetail, 'userSub') || get(userDetail, 'id');
-    console.log('instantAvailabilitiesByTemporaryServiceId', instantAvailabilitiesByTemporaryServiceId);
-    console.log('locationById', locationById);
-    console.log('serviceById', serviceById);
-    console.log('providerById', providerById);
-    // const sName = get(serviceById, 'name');
-    // const pName = get(providerById, 'givenName') || get(providerById, 'fullName');
-    // const pEmail = get(providerById, 'email');
-    // const pPhone = get(providerById, 'telephone');
-    // const pImage = get(providerById, 'providerInformation.image.fileUrl');
-    // const timeZoneId = get(providerById, 'providerInformation.image.timeZoneId');
-    // const pRate = get(serviceById, 'rating', 5);
-    // const geoLocation = get(locationById, 'coordinates');
-    // const pAddress = get(locationById, 'fullAddress');
+    const slots = instantAvailabilitiesByTemporaryServiceId.filter(slot => slot.spotsOpen !== 0);
 
     return (
       <>
@@ -145,9 +129,17 @@ class Instant extends Component {
               )}
             </div>
           </div>
-          {(!instantAvailabilitiesByTemporaryServiceId || instantAvailabilitiesByTemporaryServiceId.length === 0) && (
-            <EmptyItem message={INSTANT_BOOKING_EMPTY} />
-          )}
+          <div className={s.content}>
+            {(!instantAvailabilitiesByTemporaryServiceId || instantAvailabilitiesByTemporaryServiceId.length === 0) ? (
+              <EmptyItem message={INSTANT_BOOKING_EMPTY} />
+            ) : (
+              <ProviderInstant
+                selectBookingDetail={dispatchSelectBookingDetail}
+                temporaryService={{ ...temporaryServicesById, ...providerById }}
+                slots={slots}
+              />
+            )}
+          </div>
         </div>
       </>
     );

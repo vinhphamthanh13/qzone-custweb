@@ -43,10 +43,10 @@ class Booking extends Component {
   recaptcha = React.createRef();
 
   static getDerivedStateFromProps(props, state) {
-    const { selectedBookingDetail, userDetail, loginSession, bookedEventDetail } = props;
+    const { selectedBookingDetail, userDetail, loginSession, bookedEventDetail, landingPageFactors } = props;
     const {
       selectedBookingDetail: cachedBookingDetail, userDetail: cachedUserDetail, loginSession: cachedLoginSession,
-      bookedEventDetail: cachedBookedEventDetail,
+      bookedEventDetail: cachedBookedEventDetail, landingPageFactors: cachedLandingPageFactors,
     } = state;
     const updatedState = {};
     if (
@@ -73,6 +73,12 @@ class Booking extends Component {
     ) {
       updatedState.bookedEventDetail = bookedEventDetail;
     }
+    if (
+      landingPageFactors !== null &&
+      JSON.stringify(landingPageFactors) !== JSON.stringify(cachedLandingPageFactors)
+    ) {
+      updatedState.landingPageFactors = landingPageFactors;
+    }
 
     return Object.keys(updatedState) ? updatedState : null;
   }
@@ -91,8 +97,15 @@ class Booking extends Component {
     }
   }
 
-  handleSelectProvider = (sId, sName, catName )=> () => {
-    navigateTo(`/provider-by-service/${sId}`, { category: catName, service: sName })();
+  handleSelectProvider = sId => () => {
+    const { landingPageFactors } = this.state;
+    const instantBooking = get(landingPageFactors, 'instantBooking');
+    if (instantBooking) {
+      const tId = get(landingPageFactors, 'tId');
+      navigateTo(`/booking/instant/${tId}`)();
+    } else {
+      navigateTo(`/provider-by-service/${sId}`)();
+    }
   };
 
   openAuthModal = (key) => {
@@ -168,7 +181,6 @@ class Booking extends Component {
     const providerStartSec = get(selectedBookingDetail, 'providerStartSec');
     const startTime = moment(providerStartSec).format(TIME_FORMAT);
     const endTime = moment(providerStartSec).add(60, 'minutes').format(TIME_FORMAT);
-    const catName = get(selectedBookingDetail, 'catName');
     const timezoneId = get(selectedBookingDetail, 'timezoneId');
     const userId = get(userDetail, 'userSub') || get(userDetail, 'id');
 
@@ -194,7 +206,7 @@ class Booking extends Component {
         />
         <div className={s.container}>
           <div className={s.headline}>
-            <IconButton color="inherit" onClick={this.handleSelectProvider(sId, sName, catName)}>
+            <IconButton color="inherit" onClick={this.handleSelectProvider(sId)}>
               <NavigateBefore color="inherit" />
             </IconButton>
             <div className={s.title}>

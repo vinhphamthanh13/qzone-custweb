@@ -1,11 +1,11 @@
 /* eslint-disable react/no-array-index-key */
 import React, { Component } from 'react';
-import { objectOf, any, func } from 'prop-types';
+import { func } from 'prop-types';
 import { connect } from 'react-redux';
 import windowSize from 'react-window-size';
 import { get, find, uniqBy, chunk, flatten } from 'lodash';
 import { IconButton } from '@material-ui/core';
-import { navigateTo, getLocationState } from 'utils/common';
+import { navigateTo } from 'utils/common';
 import { NavigateBefore } from '@material-ui/icons';
 import { providersProps } from 'pages/commonProps';
 import { MAX_CARD_WIDTH } from 'utils/constants';
@@ -14,29 +14,23 @@ import s from './Providers.module.scss';
 
 class Providers extends Component {
   static propTypes = {
-    location: objectOf(any),
     dispatchTemporaryServicesByServiceId: func.isRequired,
     dispatchAvailabilities: func.isRequired,
     dispatchSelectBookingDetail: func.isRequired,
   };
 
-  static defaultProps = {
-    location: {},
-  };
-
   state = {
-    catName: '',
-    serviceName: '',
     providersByServiceId: {},
     temporaryServiceByServiceIds: {},
-    serviceId: '',
     availabilitiesByTemporaryServiceId: {},
+    landingPageFactors: {},
+    serviceId: '',
     bookedEventId: '',
   };
 
   static getDerivedStateFromProps(props, state) {
     const {
-      providersByServiceId, temporaryServiceByServiceIds, match: { params: { sId } },
+      providersByServiceId, temporaryServiceByServiceIds, match: { params: { sId } }, landingPageFactors,
       availabilitiesByTemporaryServiceId, bookedEventId, windowWidth,
     } = props;
     const {
@@ -46,6 +40,7 @@ class Providers extends Component {
       availabilitiesByTemporaryServiceId: cachedAvailabilitiesByTemporaryServiceId,
       windowWidth: cachedWindowWidth,
       bookedEventId: cachedBookedEventId,
+      landingPageFactors: cachedLandingPageFactors,
     } = state;
     const updatedState = {};
     if (
@@ -78,20 +73,20 @@ class Providers extends Component {
     ) {
       updatedState.bookedEventId = bookedEventId;
     }
+    if (
+      landingPageFactors !== null &&
+      JSON.stringify(landingPageFactors) !== JSON.stringify(cachedLandingPageFactors)
+    ) {
+      updatedState.landingPageFactors = landingPageFactors;
+    }
 
     return Object.keys(updatedState) ? updatedState : null;
   }
 
   componentDidMount() {
-    const { location, dispatchTemporaryServicesByServiceId } = this.props;
+    const { dispatchTemporaryServicesByServiceId } = this.props;
     const { serviceId } = this.state;
-    const catName = getLocationState(location, 'category');
-    const serviceName = getLocationState(location, 'service');
     dispatchTemporaryServicesByServiceId(serviceId);
-    this.setState({
-      catName,
-      serviceName,
-    });
   }
 
   handleSelectService = catName => () => {
@@ -101,10 +96,12 @@ class Providers extends Component {
   render() {
     const { dispatchAvailabilities, dispatchSelectBookingDetail } = this.props;
     const {
-      providersByServiceId, catName, serviceName, temporaryServiceByServiceIds,
+      providersByServiceId, temporaryServiceByServiceIds, landingPageFactors,
       serviceId, availabilitiesByTemporaryServiceId, windowWidth, bookedEventId,
     } = this.state;
-    const providers = get(providersByServiceId, `${catName}.${serviceName}`, []);
+    const catName = get(landingPageFactors, 'catName');
+    const sName = get(landingPageFactors, 'sName');
+    const providers = get(providersByServiceId, `${catName}.${sName}`, []);
     const providerByLocation = {};
     if (Object.keys(temporaryServiceByServiceIds).length > 0 && temporaryServiceByServiceIds[serviceId].length) {
       temporaryServiceByServiceIds[serviceId].map(item => {
@@ -146,7 +143,7 @@ class Providers extends Component {
             </IconButton>
           </div>
           <div className={`${s.title} ellipsis`}>
-            {serviceName}
+            {sName}
           </div>
         </div>
         {chunk(providerFlatten, chunkFactor).map((providerRow, ind) => (

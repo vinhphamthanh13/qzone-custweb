@@ -113,6 +113,14 @@ class Tabs extends Component {
     const {  activeChunkTabs, responsiveLayout: { chunkFactor }, landingPageFactors } = this.state;
     const catName = get(landingPageFactors, 'catName');
     const tabChunkCount = chunk(Object.keys(tabsInfo), chunkFactor);
+    // const displayTabs = [];
+    // tabChunkCount.map(tabs => {
+    //   const foundTab = tabs.indexOf(catName);
+    //   if (foundTab > -1) displayTabs.push(...tabs);
+    //   return null;
+    // });
+    // console.log('displayTab', displayTabs);
+    // console.log('tabChunkCount', tabChunkCount);
     const lazyTabs = tabChunkCount[activeChunkTabs] || tabChunkCount[0] || [];
     return lazyTabs.length > 0 && lazyTabs.map((tab) => {
       const tabStyle = catName === tab ? `${s.tab} ${s.tabActive}` : s.tab;

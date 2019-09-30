@@ -12,5 +12,4 @@ export const servicesByServiceCategoryBulk = list => axios.all(
 ).then(axios.spread((...responses) => [responses, null]))
     .catch(error => [null, JSON.stringify(error)]);
 // *********** Geo location ************* //
-export const geoLocationsById = id => axios.get(`/geo-locations/${id}`);
-export const servicesById = id => axios.get(`/services/${id}`);
+export const temporaryServicesById = id => axios.get(`/temporary-services/${id}`);

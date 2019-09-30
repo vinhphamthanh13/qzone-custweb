@@ -8,8 +8,7 @@ import {
   setEventByIdApi,
   cancelEventByIdApi,
   cancelEventByIdAction,
-  geoLocationsByIdApi,
-  servicesByIdApi,
+  temporaryServicesByIdApi,
 } from 'actionsReducers/common.actions';
 import { providersByServiceIdApi, bookEventApi } from 'actionsReducers/booking.actions';
 import {
@@ -65,13 +64,14 @@ export const tabProps = {
 };
 
 export const providersProps = {
-  mapStateToProps: ({ booking, common, provider }) => ({
+  mapStateToProps: ({ booking, common, provider, landing }) => ({
     providersByServiceId: booking.providersByServiceId,
     bookedEventIdList: booking.bookedEventIdList,
     servicesByServiceCategoryId: common.servicesByServiceCategoryId,
     temporaryServiceByServiceIds: provider.temporaryServiceByServiceIds,
     availabilitiesByTemporaryServiceId: provider.availabilitiesByTemporaryServiceId,
     tabOrder: common.tabOrder,
+    landingPageFactors: landing.landingPageFactors,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchTemporaryServicesByServiceId: list => dispatch(temporaryServicesByServiceIdApi(list)),
@@ -82,11 +82,12 @@ export const providersProps = {
 };
 
 export const bookingProps = {
-  mapStateToProps: ({ auth, provider, booking }) => ({
+  mapStateToProps: ({ auth, provider, booking, landing }) => ({
     userDetail: auth.userDetail,
     loginSession: auth.loginSession,
     selectedBookingDetail: provider.selectedBookingDetail,
     bookedEventDetail: booking.bookedEventDetail,
+    landingPageFactors: landing.landingPageFactors,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchSaveGuestInfo: (data, cb) => dispatch(saveGuestInfo(data, cb)),
@@ -111,16 +112,16 @@ export const viewEventProps = {
 export const instantProps = {
   mapStateToProps: ({ common, provider }) => ({
     instantAvailabilitiesByTemporaryServiceId: provider.instantAvailabilitiesByTemporaryServiceId,
-    locationById: common.locationById,
-    serviceById: common.serviceById,
+    temporaryServicesById: common.temporaryServicesById,
     providerById: provider.providerById,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchInstantAvailabilitiesByTemporaryServiceId: id => dispatch(
       instantAvailabilitiesByTemporaryServiceIdApi(id),
     ),
-    dispatchGeoLocationsById: id => dispatch(geoLocationsByIdApi(id)),
-    dispatchServicesById: id => dispatch(servicesByIdApi(id)),
+    dispatchSelectBookingDetail: slot => dispatch(selectBookingDetail(slot)),
+    dispatchTemporaryServicesById: slot => dispatch(temporaryServicesByIdApi(slot)),
     dispatchUsersById: id => dispatch(usersByIdApi(id)),
+    dispatchSetLandingPage: data => dispatch(setLandingPageAction(data)),
   }),
 };

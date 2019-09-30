@@ -13,6 +13,7 @@ class Service extends Component {
   static propTypes = {
     dispatchProvidersByServiceId: func.isRequired,
     dispatchTemporaryServicesByServiceId: func.isRequired,
+    dispatchSetLandingPage: func.isRequired,
   };
 
   static defaultProps = {
@@ -55,7 +56,9 @@ class Service extends Component {
     dispatchTemporaryServicesByServiceId(service.id);
   }
 
-  handleSelectProvider = (sId, sName, catName )=> () => {
+  handleSelectProvider = (sId, sName, catName)=> () => {
+    const { dispatchSetLandingPage } = this.props;
+    dispatchSetLandingPage({ sName, catName });
     navigateTo(`/provider-by-service/${sId}`, { category: catName, service: sName })();
   };
 
