@@ -109,6 +109,7 @@ export const EVENT_STATUS = {
 // Waitlist
 export const WAIT_LIST_KEYS = {
   SELECTED_PID: 'selectedPId',
+  SELECTED_P_NAME: 'selectedPName',
   SELECTED_LOC_ID: 'selectedLocId',
   SELECTED_TEMP_SERVICE_ID: 'selectedTemporaryServiceId',
 };

@@ -6,7 +6,7 @@ import { ChevronRight, LocationOn, WrapText, Cancel, Fingerprint, HowToReg } fro
 import uuidv1 from 'uuid/v1';
 import { connect } from 'react-redux';
 import { Formik } from 'formik';
-import { get, noop } from 'lodash';
+import { get, noop, isEmpty } from 'lodash';
 import { WAIT_LIST_KEYS } from 'utils/constants';
 import defaultImage from 'images/providers.jpg';
 import { waitListProps } from 'pages/commonProps';
@@ -25,6 +25,7 @@ class WaitList extends Component {
     userDetail: {},
     loginSession: {},
     [WAIT_LIST_KEYS.SELECTED_PID]: '',
+    [WAIT_LIST_KEYS.SELECTED_P_NAME]: '',
     [WAIT_LIST_KEYS.SELECTED_LOC_ID]: '',
     [WAIT_LIST_KEYS.SELECTED_TEMP_SERVICE_ID]: '',
     queuedTemporaryServiceIds: {},
@@ -36,7 +37,7 @@ class WaitList extends Component {
   static getDerivedStateFromProps(props, state) {
     const { service, loginSession, userDetail, waitListTemporaryServicesByServiceId } = props;
     const {
-      selectedPId: cachedSelectedPId, selectedLocId: cachedSelectedLocId,
+      selectedPId: cachedSelectedPId, selectedLocId: cachedSelectedLocId, selectedPName: cachedSelectedPName,
       selectedTemporaryServiceId: cachedSelectedTemporaryServiceId,
       service: cachedService,
       loginSession: cachedLoginSession,
@@ -73,23 +74,26 @@ class WaitList extends Component {
       const queuedTemporaryServiceIds = {};
       waitListTemporaryServicesByServiceId.map(item => {
         const selectedPId = get(item, 'providerId');
-        const pName = get(item, 'providerName');
+        const selectedPName = get(item, 'providerName');
         const selectedLocId = get(item, 'geoLocation.id');
         const fullAddress = get(item, 'geoLocation.fullAddress');
         const selectedTemporaryServiceId = get(item, 'id');
         if (!cachedSelectedPId) updatedState.selectedPId = selectedPId;
+        if (!cachedSelectedPName) updatedState.selectedPName = selectedPName;
         if (!cachedSelectedLocId) updatedState.selectedLocId = selectedLocId;
         if (!cachedSelectedTemporaryServiceId) updatedState.selectedTemporaryServiceId = selectedTemporaryServiceId;
-        queuedProviders[selectedPId] = queuedProviders[selectedPId] ? queuedProviders[selectedPId] : [];
-        queuedProviders[selectedPId].push(
-          {pName, selectedPId, selectedLocId, selectedTemporaryServiceId, fullAddress },
+        queuedProviders[selectedPName] = queuedProviders[selectedPName] ? queuedProviders[selectedPName] : [];
+        queuedProviders[selectedPName].push(
+          {selectedPName, selectedPId, selectedLocId, selectedTemporaryServiceId, fullAddress },
         );
         queuedTemporaryServiceIds[`${selectedPId}-${selectedLocId}`] = selectedTemporaryServiceId;
         return null;
       });
       updatedState.queuedProviders = queuedProviders;
       updatedState.queuedTemporaryServiceIds = queuedTemporaryServiceIds;
-      updatedState.initProvider = queuedProviders && queuedProviders[Object.keys(queuedProviders)[0]][0];
+      console.log('queuqueue', queuedProviders);
+      console.log('Object.keys(queuedProviders)', Object.keys(queuedProviders));
+      updatedState.initProvider = !isEmpty(queuedProviders) && queuedProviders[Object.keys(queuedProviders)[0]][0];
     }
 
     return Object.keys(updatedState) ? updatedState : null;
@@ -158,9 +162,11 @@ class WaitList extends Component {
   };
 
   handleSelectProvider = (item, setFieldValue) => () => {
+    console.log('item selected provider', item);
     const { queuedTemporaryServiceIds, selectedLocId } = this.state;
-    setFieldValue('providerName', item.pName);
+    setFieldValue('providerName', item[WAIT_LIST_KEYS.SELECTED_P_NAME]);
     this.setState({
+      [WAIT_LIST_KEYS.SELECTED_P_NAME]: item[WAIT_LIST_KEYS.SELECTED_P_NAME],
       [WAIT_LIST_KEYS.SELECTED_PID]: item[WAIT_LIST_KEYS.SELECTED_PID],
       [WAIT_LIST_KEYS.SELECTED_TEMP_SERVICE_ID]: queuedTemporaryServiceIds[
         `${item[WAIT_LIST_KEYS.SELECTED_PID]}-${selectedLocId}`
@@ -181,23 +187,30 @@ class WaitList extends Component {
 
   renderProviderList = (list, setFieldValue) => (
     <div className={s.itemList}>
-      {Object.keys(list).map(id => list[id].map(item => (
-        <div
-          key={uuidv1()}
-          className={s.item}
-          onClick={this.handleSelectProvider(item, setFieldValue)}
-        >
-          {item.pName}
-        </div>
-      )))}
+      {Object.keys(list).map((name) => {
+        console.log('providerName: ', name);
+        console.log('providerName detail: ', list[name]);
+        return (
+          <div
+            key={uuidv1()}
+            className={s.item}
+            onClick={this.handleSelectProvider({
+              selectedPName: name,
+              selectedPId: list[name][0].selectedPId,
+            }, setFieldValue)}
+          >
+            {name}
+          </div>
+        );
+      })}
     </div>
   );
 
   renderLocationList = setFieldValue => {
-    const { queuedProviders, selectedPId } = this.state;
-    console.log('trigger render location list');
+    const { queuedProviders, selectedPName } = this.state;
+    console.log('trigger render location list', queuedProviders[selectedPName]);
     return (<div className={s.itemList}>
-      {queuedProviders[selectedPId].map(item => (
+      {queuedProviders[selectedPName].map(item => (
         <div
           key={uuidv1()}
           className={s.item}
@@ -215,6 +228,7 @@ class WaitList extends Component {
     const { onClose } = this.props;
     const {
       service, isProvidersPopup, isLocationsPopup, userDetail, queuedProviders, initProvider,
+      selectedTemporaryServiceId,
     } = this.state;
     const userId = get(userDetail,'userSub') || get(userDetail, 'id');
     const [RegIcon, registerLabel] = userId ? [WrapText, 'Enroll'] : [Fingerprint, 'Login'];
@@ -278,11 +292,16 @@ class WaitList extends Component {
                         <ChevronRight />
                         {isLocationsPopup && this.renderLocationList(setFieldValue)}
                       </div>
+                      {!selectedTemporaryServiceId && (
+                        <div className={s.noneTempId}>
+                          <strong>Tip</strong>:
+                          Please select the provider first, then location. Or change to other location.
+                        </div>)}
                       <div className={s.footerCta}>
                         <Button
                           variant="outlined"
                           onClick={this.handleRegisterWaitList}
-                          disabled={!isValid}
+                          disabled={!isValid || !selectedTemporaryServiceId}
                         >
                           <RegIcon color="inherit" />
                           <span>{registerLabel}</span>
