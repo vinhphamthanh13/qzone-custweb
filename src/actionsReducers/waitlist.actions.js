@@ -29,10 +29,6 @@ const setRegisterWaitListStatus = payload => ({
   payload,
 });
 
-export const resetRegisterWaitListStatus = () => ({
-  type: RESET_REGISTER_WAITLIST_STATUS,
-});
-
 const setWaitLists = payload => ({
   type: SET_WAIT_LIST,
   payload,
@@ -80,7 +76,6 @@ export const setWaitListsAction = (data, headers) => async (dispatch) => {
   }
   dispatch(setLoading(false));
 };
-
 export const setWaitListsByIdAction = (data, headers) => async (dispatch) => {
   dispatch(setLoading(true));
   const [waitListData, error] = await handleRequest(waitListsById, [data, headers]);
@@ -91,7 +86,6 @@ export const setWaitListsByIdAction = (data, headers) => async (dispatch) => {
   }
   dispatch(setLoading(false));
 };
-
 export const setCancelWaitListsAction = (data, headers) => async (dispatch) => {
   dispatch(setLoading(true));
   const [, error] = await handleRequest(cancelWaitLists, [data, headers]);

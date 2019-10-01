@@ -90,7 +90,7 @@ class Service extends Component {
 
     return (
       <>
-        {isQueuePopup && <WaitList onClose={this.toggleQueueModal} />}
+        {isQueuePopup && <WaitList service={service} onClose={this.toggleQueueModal} />}
         <div className={s.card} key={sId}>
           <div className={s.image}>
             <img src={imgUrl} alt={sName} width="100%" height="100%" />

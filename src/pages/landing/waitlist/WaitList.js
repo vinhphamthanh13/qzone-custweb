@@ -1,39 +1,46 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
 import React, { Component } from 'react';
-import { func, bool, objectOf, any } from 'prop-types';
-import { Typography, RadioGroup, Radio, FormControlLabel, Button } from '@material-ui/core';
-import { ChevronRight, LocationOn, Queue, Cancel, Fingerprint } from '@material-ui/icons';
+import { func } from 'prop-types';
+import { Button, InputBase, IconButton } from '@material-ui/core';
+import { ChevronRight, LocationOn, WrapText, Cancel, Fingerprint, HowToReg } from '@material-ui/icons';
 import uuidv1 from 'uuid/v1';
 import { connect } from 'react-redux';
-import { compose } from 'redux';
-import { withFormik } from 'formik';
-import moment from 'moment';
-import { get } from 'lodash';
-import DatePicker from 'components/Calendar/DatePicker';
-import { registerWaitListsAction } from 'actionsReducers/waitlist.actions';
-import defaultImage from 'images/default-service-card.png';
-import { defaultDateFormat } from 'utils/constants';
+import { Formik } from 'formik';
+import { get, noop } from 'lodash';
+import { WAIT_LIST_KEYS } from 'utils/constants';
+import defaultImage from 'images/providers.jpg';
+import { waitListProps } from 'pages/commonProps';
 import s from './WaitList.module.scss';
 
-const DATE_RANGE_INVERT = {
-  dateFrom: 'dateTo',
-  dateTo: 'dateFrom',
-};
-
 class WaitList extends Component {
+  static propTypes = {
+    handleAuth: func.isRequired,
+    onClose: func.isRequired,
+    dispatchWaitListTemporaryServicesByServiceId: func.isRequired,
+  };
+
   state = {
     service: {},
     queuedProviders: [],
     userDetail: {},
     loginSession: {},
+    [WAIT_LIST_KEYS.SELECTED_PID]: '',
+    [WAIT_LIST_KEYS.SELECTED_LOC_ID]: '',
+    [WAIT_LIST_KEYS.SELECTED_TEMP_SERVICE_ID]: '',
+    queuedTemporaryServiceIds: {},
+    isProvidersPopup: false,
+    isLocationsPopup: false,
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { providers, service, loginSession, userDetail } = props;
+    const { service, loginSession, userDetail, waitListTemporaryServicesByServiceId } = props;
     const {
-      providers: cachedProviders,
+      selectedPId: cachedSelectedPId, selectedLocId: cachedSelectedLocId,
+      selectedTemporaryServiceId: cachedSelectedTemporaryServiceId,
       service: cachedService,
       loginSession: cachedLoginSession,
       userDetail: cachedUserDetail,
+      waitListTemporaryServicesByServiceId: cachedWaitListTemporaryServicesByServiceId,
     } = state;
     const updatedState = {};
     if (
@@ -42,12 +49,6 @@ class WaitList extends Component {
     ) {
       updatedState.serviceId = get(service, 'id');
       updatedState.service = service;
-    }
-    if (
-      providers !== null &&
-      JSON.stringify(providers) !== JSON.stringify(cachedProviders)
-    ) {
-      updatedState.queuedProviders = providers && providers.filter(provider => provider.mode === 'QUEUE');
     }
     if (
       userDetail !== null &&
@@ -61,8 +62,42 @@ class WaitList extends Component {
     ) {
       updatedState.loginSession = loginSession;
     }
+    if (
+      waitListTemporaryServicesByServiceId !== null &&
+      JSON.stringify(waitListTemporaryServicesByServiceId) !==
+      JSON.stringify(cachedWaitListTemporaryServicesByServiceId)
+    ) {
+      updatedState.waitListTemporaryServicesByServiceId = waitListTemporaryServicesByServiceId;
+      const queuedProviders = {};
+      const queuedTemporaryServiceIds = {};
+      waitListTemporaryServicesByServiceId.map(item => {
+        const selectedPId = get(item, 'providerId');
+        const pName = get(item, 'providerName');
+        const selectedLocId = get(item, 'geoLocation.id');
+        const fullAddress = get(item, 'geoLocation.fullAddress');
+        const selectedTemporaryServiceId = get(item, 'id');
+        if (!cachedSelectedPId) updatedState.selectedPId = selectedPId;
+        if (!cachedSelectedLocId) updatedState.selectedLocId = selectedLocId;
+        if (!cachedSelectedTemporaryServiceId) updatedState.selectedTemporaryServiceId = selectedTemporaryServiceId;
+        queuedProviders[selectedPId] = queuedProviders[selectedPId] ? queuedProviders[selectedPId] : [];
+        queuedProviders[selectedPId].push(
+          {pName, selectedPId, selectedLocId, selectedTemporaryServiceId, fullAddress },
+        );
+        queuedTemporaryServiceIds[`${selectedPId}-${selectedLocId}`] = selectedTemporaryServiceId;
+        return null;
+      });
+      updatedState.queuedProviders = queuedProviders;
+      updatedState.queuedTemporaryServiceIds = queuedTemporaryServiceIds;
+    }
 
     return Object.keys(updatedState) ? updatedState : null;
+  }
+
+  componentDidMount() {
+    const { dispatchWaitListTemporaryServicesByServiceId } = this.props;
+    const { service } = this.state;
+    dispatchWaitListTemporaryServicesByServiceId(service.id);
+
   }
 
   handleToggleRegister = () => {
@@ -80,282 +115,170 @@ class WaitList extends Component {
 
   handleRegisterWaitList = () => {
     const {
-      // setWaitListsValidationAction: setWaitListsValidation,
-      registerWaitListsAction: registerWaitLists,
-    } = this.props;
-    const {
-      customerId,
-      dateFrom,
-      dateTo,
-      temporaryServiceIds,
+      loginSession, queuedTemporaryServiceIds, selectedLocId, selectedPId, selectedTemporaryServiceId,
     } = this.state;
-
-    const startSec = dateFrom + 1; // Plus one second for startSec
-    const toSec = dateTo + 3600 * 24; // Plus one day
-    const waitListData = temporaryServiceIds.map(id => ({
-      customerId,
-      startSec,
-      tempServiceId: id,
-      toSec,
-    }));
-    registerWaitLists(waitListData);
-    this.handleToggleRegister();
+    console.log(
+      'register waitList; ', loginSession, queuedTemporaryServiceIds, selectedLocId, selectedPId,
+      selectedTemporaryServiceId);
+    // const {
+    //   // setWaitListsValidationAction: setWaitListsValidation,
+    //   registerWaitListsAction: registerWaitLists,
+    // } = this.props;
+    // const {
+    //   customerId,
+    //   dateFrom,
+    //   dateTo,
+    //   temporaryServiceIds,
+    // } = this.state;
+    //
+    // const startSec = dateFrom + 1; // Plus one second for startSec
+    // const toSec = dateTo + 3600 * 24; // Plus one day
+    // const waitListData = temporaryServiceIds.map(id => ({
+    //   customerId,
+    //   startSec,
+    //   tempServiceId: id,
+    //   toSec,
+    // }));
+    // registerWaitLists(waitListData);
+    // this.handleToggleRegister();
   };
 
-  handleChangeOption = (event) => {
-    event.preventDefault();
-    const { setFieldValue } = this.props;
-    const { name, value } = event.target;
-    setFieldValue(name, value);
-  };
-
-  handleChangeDate = key => (date) => {
-    const { dateFrom, dateTo } = this.state;
-    let newDate = null;
-    if (key === 'dateFrom' && moment(date) > moment(dateTo * 1000)) {
-      newDate = date;
-    } else if (key === 'dateTo' && moment(date) < moment(dateFrom * 1000)) {
-      newDate = date;
-    }
+  toggleProvidersList = () => {
     this.setState(oldState => ({
-      [key]: date.unix(),
-      [DATE_RANGE_INVERT[key]]: newDate ? newDate.unix() : oldState[DATE_RANGE_INVERT[key]],
+      isProvidersPopup: !oldState.isProvidersPopup,
     }));
   };
 
-  handleSelectDate = key => (date) => {
-    this.setState({ [key]: date.unix() });
-  };
-
-  handleToggleDropdownProviders = () => {
+  toggleLocationsList = () => {
     this.setState(oldState => ({
-      isOpenProviderList: !oldState.isOpenProviderList,
-    }));
+      isLocationsPopup: !oldState.isLocationsPopup,
+    }))
   };
 
-  handleCloseDropdownProviders = () => {
-    this.setState({ isOpenProviderList: false });
-  };
+  handleSelectItem = (item, key) => () => {
 
-  handleSelectProvider = provider => () => {
-    const providerName = get(provider, 'providerName');
-    const geoLocation = get(provider, 'geoLocation');
-    const timezoneId = get(provider, 'timezoneId');
-    const temporaryServiceIds = get(provider, 'temporaryServiceIds');
     this.setState({
-      providerName,
-      geoLocation,
-      timezoneId,
-      temporaryServiceIds,
+      [key]: item[key],
     });
   };
 
+
   renderProviderList = list => (
-    <div className={s.dropdownProviders}>
-      {list && list.map(provider => (
-        /* eslint-disable-next-line */
-        <div key={uuidv1()} className={s.providerItem} onClick={this.handleSelectProvider(provider)}>
-          <Typography variant="body1" color="inherit" className="text-bold">
-            {provider.providerName}
-          </Typography>
-          <Typography variant="body2" color="inherit">
-            {provider.geoLocation.fullAddress}
-          </Typography>
+    <div className={s.itemList}>
+      {Object.keys(list).map(id => list[id].map(item => (
+        <div
+          key={uuidv1()}
+          className={s.item}
+          onClick={this.handleSelectItem(item, WAIT_LIST_KEYS.SELECTED_PID)}
+        >
+          {item.pName}
         </div>
-      ))}
+      )))}
     </div>
   );
 
-  renderEnrollButton = isAuthenticated => (isAuthenticated ? (
-    <>
-      <Queue color="inherit" className="icon-small" />
-      <Typography variant="body1" color="inherit">
-        Join Queue
-      </Typography>
-    </>
-  ) : (
-    <>
-      <Fingerprint color="inherit" className="icon-small" />
-      <Typography variant="body1" color="inherit">
-        Sign in
-      </Typography>
-    </>
-  ));
+  renderLocationList = () => {
+    const { queuedProviders, selectedPId } = this.state;
+    console.log('trigger render location list');
+    return (<div className={s.itemList}>
+      {queuedProviders[selectedPId].map(item => (
+        <div
+          key={uuidv1()}
+          className={s.item}
+          onClick={this.handleSelectItem(item, WAIT_LIST_KEYS.SELECTED_LOC_ID)}
+        >
+          {item.fullAddress}
+        </div>
+      ))
+
+      }
+    </div>);
+  };
 
   render() {
+    const { onClose } = this.props;
     const {
-      service,
-      isOpenProviderList,
-      providerName,
-      geoLocation,
-      timezoneId,
-      dateFrom,
-      dateTo,
+      service, isProvidersPopup, isLocationsPopup, userDetail,
       queuedProviders,
-      isQueuing,
-      userDetail,
-      loginSession
     } = this.state;
-    const {
-      values,
-      isValid,
-      onClose,
-    } = this.props;
-    console.log('userDetail', userDetail);
-    console.log('loginSession', loginSession);
+    const userId = get(userDetail,'userSub') || get(userDetail, 'id');
+    const [RegIcon, registerLabel] = userId ? [WrapText, 'Enroll'] : [Fingerprint, 'Login'];
     const serviceName = get(service, 'name');
     const serviceImg = get(service, 'image.fileUrl') || defaultImage;
-    const fullAddress = get(geoLocation, 'fullAddress');
+    const initProvider = queuedProviders && queuedProviders[Object.keys(queuedProviders)[0]][0];
+    console.log('this.state', this.state);
+
     return (
       <div className="cover-bg-black z-index-highest">
         <div className={s.waitListForm}>
           <div className={s.title}>
-            <Typography variant="headline" color="inherit" className="text-bold">
-              Enroll to Waitlist
-            </Typography>
+            <span>Enroll to Waitlist</span>
+            <IconButton color="secondary" onClick={onClose}>
+              <Cancel color="inherit" />
+            </IconButton>
           </div>
-          <div className={s.serviceInfo}>
-            <div className={s.serviceImage}>
-              <img src={serviceImg} alt="Service" className={s.serviceImage} />
-            </div>
-            <div className={s.serviceDescription}>
-              <div className={s.enrollServiceName}>
-                <Typography variant="title" className="main-color-04 text-bold" noWrap>
-                  {serviceName}
-                </Typography>
-              </div>
-              <div className={s.selectProvider}>
-                {isQueuing && (
-                  <>
-                    <Typography variant="body1" className="main-color">
-                      Appointment with:
-                    </Typography>
-                    {/* eslint-disable-next-line */}
-                    {isOpenProviderList && <div className={s.dropdownBackdrop} onClick={this.handleCloseDropdownProviders} />}
-                    {/* eslint-disable-next-line */}
-                    <div className={s.selectProviderDropdown} onClick={this.handleToggleDropdownProviders}>
-                      <Typography
-                        variant="subheading"
-                        color="inherit"
-                        className={`${s.limitWidth} text-bold`}
-                        noWrap
-                      >
-                        {providerName}
-                      </Typography>
-                      <ChevronRight className="icon-normal" />
-                      {isOpenProviderList && this.renderProviderList(queuedProviders)}
-                    </div>
-                    <div className="icon-text">
-                      <LocationOn className="icon-normal" />
-                      <Typography variant="body1" color="inherit">
-                        {fullAddress}
-                      </Typography>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-            <div className={s.bookWaitList}>
-              <div className={s.availabilityDate}>
-                <div className={s.availabilityLabel}>
-                  <Typography variant="body1" color="inherit" className="text-bold">
-                    Date:
-                  </Typography>
-                  <Typography variant="body1" className="danger-color">
-                    ({timezoneId})
-                  </Typography>
-                </div>
-                <div className={s.dateRange}>
-                  <div className={s.datePicker}>
-                    <div className={s.pickerLabel}>
-                      <Typography variant="caption" color="inherit" className="text-bold">
-                        From:
-                      </Typography>
-                    </div>
-                    <DatePicker
-                      onChange={this.handleChangeDate('dateFrom')}
-                      selectDate={this.handleSelectDate}
-                      date={moment(dateFrom * 1000)}
-                      enableCalendar
-                      type="date"
-                      isIcon
-                      iconClassName={s.dateSelection}
-                      dateFormat={defaultDateFormat}
-                    />
-                  </div>
-                  <div className={s.datePicker}>
-                    <div className={s.pickerLabel}>
-                      <Typography variant="caption" color="inherit" className="text-bold">
-                        To:
-                      </Typography>
-                    </div>
-                    <DatePicker
-                      onChange={this.handleChangeDate('dateTo')}
-                      selectDate={this.handleSelectDate}
-                      date={moment(dateTo * 1000)}
-                      enableCalendar
-                      type="date"
-                      isIcon
-                      iconClassName={s.dateSelection}
-                      dateFormat={defaultDateFormat}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className={s.selectOption}>
-                <div className={s.bookingOption}>
-                  <RadioGroup
-                    name="enrollOption"
-                    value={values.enrollOption}
-                    onChange={this.handleChangeOption}
-                  >
-                    <FormControlLabel
-                      value="automatically"
-                      control={(
-                        <Radio classes={
-                          {
-                            root: s.bookingOption,
-                            checked: s.bookingOptionChecked,
-                          }
-                        }
-                        />)}
-                      label="Make your appointment automatically."
-                    />
-                    <FormControlLabel
-                      value="manually"
-                      control={(
-                        <Radio classes={
-                          {
-                            root: s.bookingOption,
-                            checked: s.bookingOptionChecked,
-                          }
-                        }
-                        />)}
-                      label="Notify me on slot availability."
-                    />
-                  </RadioGroup>
-                </div>
-              </div>
-            </div>
+          <div className={s.serviceImage}>
+            <img src={serviceImg} alt={serviceName} className={s.serviceImage} />
           </div>
-          <div className={s.footerCta}>
-            <Button
-              variant="outlined"
-              onClick={onClose}
-              className="secondary-button"
-            >
-              <Cancel color="inherit" className="icon-small" />
-              Cancel
-            </Button>
-            <Button
-              variant="outlined"
-              onClick={this.handleRegisterWaitList}
-              disabled={!isValid}
-              className="main-button"
-            >
-              <Queue color="inherit" className="icon-small" />
-              Enroll
-            </Button>
+          <div className={s.serviceDescription}>
+            <div className={`${s.sName} ellipsis`}>{serviceName}</div>
+            <div className={s.selectProvider}>
+              {initProvider && (
+                <Formik
+                  onSubmit={noop}
+                  isInitialValid
+                  initialValues={{
+                    providerName: initProvider.pName,
+                    fullAddress: initProvider.fullAddress,
+                  }}
+                  render={({ values, isValid }) => (
+                    <form className={s.selectedInfo}>
+                      <div className={s.label}>Appointment with:</div>
+                      <div className={s.dropdownList} onClick={this.toggleProvidersList}>
+                        <div className={s.inputItem}>
+                          <HowToReg className="icon-small" color="secondary" />
+                          <InputBase
+                            fullWidth
+                            name="providerName"
+                            inputProps={{
+                              className: 'capitalize ellipsis',
+                            }}
+                            value={values.providerName} />
+                        </div>
+                        <ChevronRight />
+                        {isProvidersPopup && this.renderProviderList(queuedProviders)}
+                      </div>
+                      <div className={s.label}>Location:</div>
+                      <div className={s.dropdownList} onClick={this.toggleLocationsList}>
+                        <div className={s.inputItem}>
+                          <LocationOn className="icon-small" color="secondary" />
+                          <InputBase
+                            fullWidth
+                            name="fullAddress"
+                            inputProps={{
+                              className: 'capitalize ellipsis',
+                            }}
+                            value={values.fullAddress}
+                          />
+                        </div>
+                        <ChevronRight />
+                        {isLocationsPopup && this.renderLocationList()}
+                      </div>
+                      <div className={s.footerCta}>
+                        <Button
+                          variant="outlined"
+                          onClick={this.handleRegisterWaitList}
+                          disabled={!isValid}
+                        >
+                          <RegIcon color="inherit" />
+                          <span>{registerLabel}</span>
+                        </Button>
+                      </div>
+                    </form>
+                  )}
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -363,31 +286,7 @@ class WaitList extends Component {
   }
 }
 
-WaitList.propTypes = {
-  values: objectOf(any).isRequired,
-  setFieldValue: func.isRequired,
-  isValid: bool.isRequired,
-  handleAuth: func.isRequired,
-  onClose: func.isRequired,
-  registerWaitListsAction: func.isRequired,
-};
-
-const mapStateToProps = state => ({
-  ...state.common,
-  ...state.booking,
-  ...state.auth,
-  ...state.waitLists,
-});
-
-export default compose(
-  withFormik({
-    enableReinitialize: true,
-    isInitialValid: true,
-    mapPropsToValues: () => ({
-      enrollOption: 'automatically',
-    }),
-  }),
-  connect(mapStateToProps, {
-    registerWaitListsAction,
-  }),
+export default connect(
+  waitListProps.mapStateToProps,
+  waitListProps.mapDispatchToProps,
 )(WaitList);

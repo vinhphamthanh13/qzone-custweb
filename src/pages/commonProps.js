@@ -15,6 +15,7 @@ import {
 import { providersByServiceIdApi, bookEventApi } from 'actionsReducers/booking.actions';
 import {
   temporaryServicesByServiceIdApi,
+  waitListTemporaryServicesByServiceIdApi,
   availabilitiesByTemporaryServiceIdApi,
   instantAvailabilitiesByTemporaryServiceIdApi,
   rescheduledAvailabilitiesByTemporaryServiceIdApi,
@@ -143,5 +144,19 @@ export const instantProps = {
     dispatchTemporaryServicesById: slot => dispatch(temporaryServicesByIdApi(slot)),
     dispatchUsersById: id => dispatch(usersByIdApi(id)),
     dispatchSetLandingPage: data => dispatch(setLandingPageAction(data)),
+  }),
+};
+
+export const waitListProps = {
+  mapStateToProps: ({ provider, auth }) => ({
+    waitListTemporaryServicesByServiceId: provider.waitListTemporaryServicesByServiceId,
+    loginSession: auth.loginSession,
+    userDetail: auth.userDetail,
+
+  }),
+  mapDispatchToProps: dispatch => ({
+    dispatchWaitListTemporaryServicesByServiceId: id => dispatch(
+      waitListTemporaryServicesByServiceIdApi(id),
+    ),
   }),
 };
