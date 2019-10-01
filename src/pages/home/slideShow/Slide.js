@@ -32,7 +32,7 @@ class Slide extends Component {
     return (
       <div className={s.wrapper}>
         <div className={s.image}>
-          <img src={image} alt={name} width="100%" height="100%" />
+          <img src={image} alt={name} width="100%" />
         </div>
         <div className={s.content}>
           <div className={s.description}>
