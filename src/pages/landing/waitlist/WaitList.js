@@ -30,6 +30,7 @@ class WaitList extends Component {
     queuedTemporaryServiceIds: {},
     isProvidersPopup: false,
     isLocationsPopup: false,
+    initProvider: {},
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -88,6 +89,7 @@ class WaitList extends Component {
       });
       updatedState.queuedProviders = queuedProviders;
       updatedState.queuedTemporaryServiceIds = queuedTemporaryServiceIds;
+      updatedState.initProvider = queuedProviders && queuedProviders[Object.keys(queuedProviders)[0]][0];
     }
 
     return Object.keys(updatedState) ? updatedState : null;
@@ -155,21 +157,35 @@ class WaitList extends Component {
     }))
   };
 
-  handleSelectItem = (item, key) => () => {
-
+  handleSelectProvider = (item, setFieldValue) => () => {
+    const { queuedTemporaryServiceIds, selectedLocId } = this.state;
+    setFieldValue('providerName', item.pName);
     this.setState({
-      [key]: item[key],
+      [WAIT_LIST_KEYS.SELECTED_PID]: item[WAIT_LIST_KEYS.SELECTED_PID],
+      [WAIT_LIST_KEYS.SELECTED_TEMP_SERVICE_ID]: queuedTemporaryServiceIds[
+        `${item[WAIT_LIST_KEYS.SELECTED_PID]}-${selectedLocId}`
+        ] || '',
     });
   };
 
+  handleSelectLocation = (item, setFieldValue) => () => {
+    const { queuedTemporaryServiceIds, selectedPId } = this.state;
+    setFieldValue('fullAddress', item.fullAddress);
+    this.setState({
+      [WAIT_LIST_KEYS.SELECTED_LOC_ID]: item[WAIT_LIST_KEYS.SELECTED_LOC_ID],
+      [WAIT_LIST_KEYS.SELECTED_TEMP_SERVICE_ID]: queuedTemporaryServiceIds[
+        `${selectedPId}-${item[WAIT_LIST_KEYS.SELECTED_LOC_ID]}`
+        ] || '',
+    });
+  };
 
-  renderProviderList = list => (
+  renderProviderList = (list, setFieldValue) => (
     <div className={s.itemList}>
       {Object.keys(list).map(id => list[id].map(item => (
         <div
           key={uuidv1()}
           className={s.item}
-          onClick={this.handleSelectItem(item, WAIT_LIST_KEYS.SELECTED_PID)}
+          onClick={this.handleSelectProvider(item, setFieldValue)}
         >
           {item.pName}
         </div>
@@ -177,7 +193,7 @@ class WaitList extends Component {
     </div>
   );
 
-  renderLocationList = () => {
+  renderLocationList = setFieldValue => {
     const { queuedProviders, selectedPId } = this.state;
     console.log('trigger render location list');
     return (<div className={s.itemList}>
@@ -185,7 +201,7 @@ class WaitList extends Component {
         <div
           key={uuidv1()}
           className={s.item}
-          onClick={this.handleSelectItem(item, WAIT_LIST_KEYS.SELECTED_LOC_ID)}
+          onClick={this.handleSelectLocation(item, setFieldValue)}
         >
           {item.fullAddress}
         </div>
@@ -198,14 +214,12 @@ class WaitList extends Component {
   render() {
     const { onClose } = this.props;
     const {
-      service, isProvidersPopup, isLocationsPopup, userDetail,
-      queuedProviders,
+      service, isProvidersPopup, isLocationsPopup, userDetail, queuedProviders, initProvider,
     } = this.state;
     const userId = get(userDetail,'userSub') || get(userDetail, 'id');
     const [RegIcon, registerLabel] = userId ? [WrapText, 'Enroll'] : [Fingerprint, 'Login'];
     const serviceName = get(service, 'name');
     const serviceImg = get(service, 'image.fileUrl') || defaultImage;
-    const initProvider = queuedProviders && queuedProviders[Object.keys(queuedProviders)[0]][0];
     console.log('this.state', this.state);
 
     return (
@@ -228,10 +242,10 @@ class WaitList extends Component {
                   onSubmit={noop}
                   isInitialValid
                   initialValues={{
-                    providerName: initProvider.pName,
-                    fullAddress: initProvider.fullAddress,
+                    providerName: 'select provider',
+                    fullAddress: 'select location',
                   }}
-                  render={({ values, isValid }) => (
+                  render={({ values, isValid, setFieldValue }) => (
                     <form className={s.selectedInfo}>
                       <div className={s.label}>Appointment with:</div>
                       <div className={s.dropdownList} onClick={this.toggleProvidersList}>
@@ -246,7 +260,7 @@ class WaitList extends Component {
                             value={values.providerName} />
                         </div>
                         <ChevronRight />
-                        {isProvidersPopup && this.renderProviderList(queuedProviders)}
+                        {isProvidersPopup && this.renderProviderList(queuedProviders, setFieldValue)}
                       </div>
                       <div className={s.label}>Location:</div>
                       <div className={s.dropdownList} onClick={this.toggleLocationsList}>
@@ -262,7 +276,7 @@ class WaitList extends Component {
                           />
                         </div>
                         <ChevronRight />
-                        {isLocationsPopup && this.renderLocationList()}
+                        {isLocationsPopup && this.renderLocationList(setFieldValue)}
                       </div>
                       <div className={s.footerCta}>
                         <Button
