@@ -22,10 +22,12 @@ import {
   usersByIdApi,
 } from 'actionsReducers/provider.actions';
 import { setLandingPageAction } from 'actionsReducers/landing.action';
+import { setOrganizationsApi } from 'actionsReducers/organization.actions';
 
 export const homeProps = {
-  mapStateToProps: ({ home, common, auth }) => ({
+  mapStateToProps: ({ home, common, auth, organization }) => ({
     servicesByServiceCategoryId: common.servicesByServiceCategoryId,
+    organizations: organization.organizations,
     ...home,
     ...auth,
   }),
@@ -33,6 +35,7 @@ export const homeProps = {
     dispatchServices: () => dispatch(setServices()),
     dispatchServiceCategory: () => dispatch(setServiceCategories()),
     dispatchTemporaryServices: () => dispatch(setTemporaryServices()),
+    dispatchOrganizations: () => dispatch(setOrganizationsApi()),
   })
 };
 

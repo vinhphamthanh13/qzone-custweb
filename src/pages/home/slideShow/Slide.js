@@ -1,71 +1,47 @@
 import React, { Component } from 'react';
-import { Domain } from '@material-ui/icons';
-import { limitString, navigateTo } from 'utils/common';
-import { READ_MORE_MAX } from 'utils/constants';
+import { get } from 'lodash';
+import { PhoneIphone, Public } from '@material-ui/icons';
 import s from './Slide.module.scss';
 
 class Slide extends Component {
   state = {
-    imageUrl: '',
-    name: '',
-    description: '',
-    orgName: '',
-    orgId: '',
+    item: {},
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { imageUrl, name, description, orgName, orgId } = props;
-    const {
-      imageUrl: cachedImage, name: cachedName, description: cachedDescription,
-      orgName: cachedOrgName, orgId: cachedOrgId,
-    } = state;
+    const { item } = props;
+    const { item: cachedItem } = state;
     const updatedState = {};
-    if (imageUrl !== cachedImage) {
-      updatedState.imageUrl = imageUrl;
-    }
-    if (name !== cachedName) {
-      updatedState.name = name;
-    }
-    if (description !== cachedDescription) {
-      updatedState.description = description;
-    }
-    if (orgName !== cachedOrgName) {
-      updatedState.orgName = orgName;
-    }
-    if (orgId !== cachedOrgId) {
-      updatedState.orgId = orgId;
+    if (
+      item !== null &&
+      JSON.stringify(item) !== JSON.stringify(cachedItem)
+    ) {
+      updatedState.item = item;
     }
 
     return Object.keys(updatedState) ? updatedState : null;
   }
 
-  handleRedirectOrg = () => {
-    const { orgId } = this.state;
-    navigateTo(`/organization/${orgId}`)();
-  };
-
   render() {
-    const {
-      imageUrl,
-      name,
-      description,
-      orgName,
-    } = this.state;
+    const { item } = this.state;
+    const name = get(item, 'name');
+    const image = get(item, 'logo.fileUrl');
+    const website = get(item, 'website');
+    const phone = get(item, 'telephone');
 
     return (
       <div className={s.wrapper}>
         <div className={s.image}>
-          <img src={imageUrl} alt={name} width="100%" height="100%" />
+          <img src={image} alt={name} width="100%" />
         </div>
         <div className={s.content}>
-          <div className={`${s.title} ellipsis`}>{name}</div>
           <div className={s.description}>
-            {limitString(description, READ_MORE_MAX)}
-          </div>
-          {/* eslint-disable-next-line */}
-          <div className="flex" onClick={this.handleRedirectOrg}>
-            <Domain className="icon-small" color="inherit" />
-            <span className={s.orgName}>&nbsp;{orgName}</span>
+          <div className={`${s.title} ellipsis`}>{name}</div>
+            <div className={s.item}><PhoneIphone color="secondary" className="icon-small" />{phone}</div>
+            <div className={s.item}>
+              <Public color="secondary" className="icon-small" />
+              <a href={website} target="_blank" rel="noopener noreferrer">&nbsp;{website}</a>
+            </div>
           </div>
         </div>
       </div>

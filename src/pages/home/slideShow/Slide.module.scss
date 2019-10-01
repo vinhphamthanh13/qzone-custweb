@@ -2,16 +2,23 @@
 
 .wrapper {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  align-items: center;
+  justify-content: space-evenly;
   box-sizing: border-box;
   overflow: hidden;
-  height: $slide-card-height;
 }
 
 .image {
-  width: 100%;
   height: $slide-image-height;
+  width: $slide-image-height;
+  border: $gallery;
+  box-shadow: 1px 1px 2px 1px $grayNickel;
+  border-radius: 0.4rem;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.1rem;
 }
 
 .content {
@@ -26,22 +33,18 @@
   font-weight: 500;
   text-transform: capitalize;
   margin-bottom: unset;
-  color: $main;
+  color: $fruitSalad;
 }
 
 .description {
   margin: 0.5rem 0;
-  text-indent: 1rem;
 }
 
 .description:first-letter {
   text-transform: uppercase;
 }
 
-.orgName {
+.item {
   display: flex;
   align-items: center;
-  color: $fruitSalad;
-  font-size: 1.1rem;
-  cursor: pointer;
 }
