@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { objectOf, any } from 'prop-types';
+import { objectOf, any, func } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
 import Loading from 'components/Loading';
@@ -9,6 +9,7 @@ import Auth from './Auth';
 import AppBar from './home/appBar/AppBar';
 import Landing from './Landing';
 import Services from './landing/service/Services';
+import SlideShow from './home/slideShow/SlideShow';
 import Footer from './components/footer/Footer';
 import AdvancedSearch from './home/search/AdvancedSearch';
 import s from './Home.module.scss';
@@ -16,6 +17,7 @@ import s from './Home.module.scss';
 export class Home extends Component {
   static propTypes = {
     location: objectOf(any),
+    dispatchOrganizations: func.isRequired,
   };
 
   static defaultProps = {
@@ -30,11 +32,15 @@ export class Home extends Component {
     isLoginOpen: false,
     openAdvancedSearch: false,
     showAdvancedResult: false,
+    organizations: [],
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { servicesByServiceCategoryId } = props;
-    const { servicesByServiceCategoryId: cachedServicesByServiceCategoryId } = state;
+    const { servicesByServiceCategoryId, organizations } = props;
+    const {
+      servicesByServiceCategoryId: cachedServicesByServiceCategoryId,
+      organizations: cachedOrganizations,
+    } = state;
     const updatedState = {};
     if (
       servicesByServiceCategoryId !== null &&
@@ -42,8 +48,19 @@ export class Home extends Component {
     ) {
       updatedState.servicesByServiceCategoryId = servicesByServiceCategoryId;
     }
+    if (
+      organizations !== null &&
+      JSON.stringify(organizations) !== JSON.stringify(cachedOrganizations)
+    ) {
+      updatedState.organizations = organizations;
+    }
 
     return Object.keys(updatedState) ? updatedState : null;
+  }
+
+  componentDidMount() {
+    const { dispatchOrganizations } = this.props;
+    dispatchOrganizations();
   }
 
   handleInstantSearch = (event) => {
@@ -87,7 +104,7 @@ export class Home extends Component {
     const { location } = this.props;
     const {
       searchText, isRegisterOpen, isLoginOpen, openAdvancedSearch, searchResult, servicesByServiceCategoryId,
-      showAdvancedResult,
+      showAdvancedResult, organizations,
     } = this.state;
 
     const servicesList = [];
@@ -109,6 +126,7 @@ export class Home extends Component {
           onSearchValue={searchText}
           toggleAdvancedSearch={this.toggleAdvancedSearch}
         />
+        {organizations && organizations.length > 0 && (<SlideShow list={organizations} />)}
         <Landing location={location} />
         <Footer maintenance={false} />
         {searchResult.length > 0 && (

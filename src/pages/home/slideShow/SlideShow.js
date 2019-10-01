@@ -3,27 +3,26 @@ import Slider from 'react-slick';
 import { get } from 'lodash';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import defaultImage from 'images/default-service-card.png';
 import Slide from './Slide';
 import s from './SlideShow.module.scss';
 
 class SlideShow extends Component {
   state = {
-    services: [],
+    list: [],
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { services } = props;
-    const { services: cachedServices } = state;
+    const { list } = props;
+    const { list: cachedList } = state;
     const updatedState = {};
     if (
-      services !== null &&
-      JSON.stringify(services) !== JSON.stringify(cachedServices)
+      list !== null &&
+      JSON.stringify(list) !== JSON.stringify(cachedList)
     ) {
-      updatedState.services = services;
+      updatedState.list = list;
     }
 
-    return Object.keys(services) ? updatedState : null;
+    return Object.keys(updatedState) ? updatedState : null;
   }
 
   render() {
@@ -36,38 +35,22 @@ class SlideShow extends Component {
       pauseOnHover: true,
       className: s.sliderControl,
     };
-    const { services } = this.state;
+    const { list } = this.state;
 
     return (
       <div className={s.carousel}>
         <div className={s.title}>
-          Available services
+          Our Organizations
         </div>
         <div className={s.sliderWrapper}>
           <div className={s.advertisers} />
-          {services ? (
+          {list ? (
             <div>
               <Slider {...slideSettings}>
-                {services.map((service) => {
-                  const serviceId = get(service, 'id');
-                  const fileUrl = get(service, 'image.fileUrl', defaultImage);
-                  const name = get(service, 'name');
-                  const description = get(service, 'description');
-                  const orgEntity = get(service, 'organizationEntity');
-                  const orgId = get(orgEntity, 'id');
-                  const orgName = get(orgEntity, 'name');
-                  const linkedProvider = get(service, 'linkedProvider');
-
+                {list.map((item) => {
+                  const id = get(item, 'id');
                   return (
-                    <Slide
-                      key={serviceId}
-                      imageUrl={fileUrl}
-                      name={name}
-                      description={description}
-                      orgId={orgId}
-                      orgName={orgName}
-                      disabledBooking={!linkedProvider || linkedProvider.length < 1}
-                    />
+                    <Slide key={id} item={item} />
                   );
                 })}
               </Slider>

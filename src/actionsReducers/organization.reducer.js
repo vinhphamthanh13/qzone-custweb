@@ -1,11 +1,13 @@
 import {
   SET_ORGANIZATION,
   SET_SERVICE_PROVIDERS,
+  SET_ORGANIZATIONS,
 } from './organization.actions';
 
 const initState = {
   serviceProviders: null,
   organization: null,
+  organizations: [],
 };
 
 const reducer = (state = initState, action) => {
@@ -19,6 +21,11 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         serviceProviders: action.payload,
+      };
+    case SET_ORGANIZATIONS:
+      return {
+        ...state,
+        organizations: action.payload,
       };
     default:
       return state;
