@@ -7,6 +7,7 @@ import {
   RESCHEDULE_AVAILABILITIES_BY_TMP_SERVICE_ID,
   SELECT_BOOKING_DETAIL,
   USERS_BY_ID,
+  WAIT_LIST_TEMPORARY_SERVICES_BY_SERVICE_ID,
 } from 'actionsReducers/provider.actions';
 
 import storage from 'redux-persist/lib/storage';
@@ -22,6 +23,7 @@ const initState = {
   rescheduledAvailabilitiesByTemporaryServiceId: [],
   selectedBookingDetail: {},
   providerById: {},
+  waitListTemporaryServicesByServiceId: [],
 };
 const persistConfig = {
   key: 'provider',
@@ -80,6 +82,11 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         selectedBookingDetail: action.payload,
+      };
+    case WAIT_LIST_TEMPORARY_SERVICES_BY_SERVICE_ID:
+      return {
+        ...state,
+        waitListTemporaryServicesByServiceId: action.payload,
       };
     default:
       return { ...state };

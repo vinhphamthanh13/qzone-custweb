@@ -15,6 +15,7 @@ class Service extends Component {
     dispatchProvidersByServiceId: func.isRequired,
     dispatchTemporaryServicesByServiceId: func.isRequired,
     dispatchSetLandingPage: func.isRequired,
+    handleAuth: func.isRequired,
   };
 
   static defaultProps = {
@@ -75,6 +76,7 @@ class Service extends Component {
   };
 
   render() {
+    const { handleAuth } = this.props;
     const { providersByServiceId, catName, service, isQueuePopup } = this.state;
     const sDescription = get(service, 'description');
     const sDuration = get(service, 'duration');
@@ -90,7 +92,7 @@ class Service extends Component {
 
     return (
       <>
-        {isQueuePopup && <WaitList onClose={this.toggleQueueModal} />}
+        {isQueuePopup && <WaitList service={service} onClose={this.toggleQueueModal} handleAuth={handleAuth} />}
         <div className={s.card} key={sId}>
           <div className={s.image}>
             <img src={imgUrl} alt={sName} width="100%" height="100%" />

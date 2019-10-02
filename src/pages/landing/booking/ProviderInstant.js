@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { func } from 'prop-types';
 import MapDialog from 'components/Map/MapDialog';
 import RateStar from 'components/Rating/RateStar';
-import { IconButton } from '@material-ui/core';
-import { Email, GpsFixed, Map, PhoneIphone, Place } from '@material-ui/icons';
+import { Email, GpsFixed, PhoneIphone, Place } from '@material-ui/icons';
 import TemporaryService from 'pages/landing/provider/TemporaryService';
 import EmptyItem from 'components/EmptyItem';
 import { get } from 'lodash';
@@ -78,11 +77,8 @@ class ProviderInstant extends Component {
           <div className={s.image}>
             <img src={pImage} alt="QProvider" width="100%" height="100%" />
             <div className={s.rateStar}>
-              <RateStar rating={pRate} />
+              <RateStar rating={pRate} size="small" />
             </div>
-            <IconButton color="inherit" className={s.viewMap} onClick={this.handleMapPopup}>
-              <Map color="inherit" />map
-            </IconButton>
           </div>
           <div className={s.content}>
             <div className={s.name}>
@@ -98,7 +94,7 @@ class ProviderInstant extends Component {
             </div>
             <div className={s.place}>
               <div className={s.item}>
-                <Place className="icon-small" color="secondary" />
+                <Place className="icon-small hover-pointer" color="secondary" onClick={this.handleMapPopup}/>
                 <span>&nbsp;{pAddress}</span>
               </div>
             </div>

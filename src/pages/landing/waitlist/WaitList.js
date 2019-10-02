@@ -1,39 +1,49 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */
 import React, { Component } from 'react';
-import { func, bool, objectOf, any } from 'prop-types';
-import { Typography, RadioGroup, Radio, FormControlLabel, Button } from '@material-ui/core';
-import { ChevronRight, LocationOn, Queue, Cancel, Fingerprint } from '@material-ui/icons';
+import { func } from 'prop-types';
+import { Button, InputBase, IconButton } from '@material-ui/core';
+import { ChevronRight, LocationOn, WrapText, Cancel, Fingerprint, HowToReg } from '@material-ui/icons';
 import uuidv1 from 'uuid/v1';
 import { connect } from 'react-redux';
-import { compose } from 'redux';
-import { withFormik } from 'formik';
-import moment from 'moment';
-import { get } from 'lodash';
-import DatePicker from 'components/Calendar/DatePicker';
-import { registerWaitListsAction } from 'actionsReducers/waitlist.actions';
-import defaultImage from 'images/default-service-card.png';
-import { defaultDateFormat } from 'utils/constants';
+import { Formik } from 'formik';
+import { get, noop, isEmpty } from 'lodash';
+import { WAIT_LIST_KEYS } from 'utils/constants';
+import defaultImage from 'images/providers.jpg';
+import { waitListProps } from 'pages/commonProps';
 import s from './WaitList.module.scss';
 
-const DATE_RANGE_INVERT = {
-  dateFrom: 'dateTo',
-  dateTo: 'dateFrom',
-};
-
 class WaitList extends Component {
+  static propTypes = {
+    handleAuth: func.isRequired,
+    onClose: func.isRequired,
+    dispatchWaitListTemporaryServicesByServiceId: func.isRequired,
+    dispatchRegisterWaitLists: func.isRequired,
+  };
+
   state = {
     service: {},
     queuedProviders: [],
     userDetail: {},
     loginSession: {},
+    [WAIT_LIST_KEYS.SELECTED_PID]: '',
+    [WAIT_LIST_KEYS.SELECTED_P_NAME]: '',
+    [WAIT_LIST_KEYS.SELECTED_LOC_ID]: '',
+    [WAIT_LIST_KEYS.SELECTED_TEMP_SERVICE_ID]: '',
+    queuedTemporaryServiceIds: {},
+    isProvidersPopup: false,
+    isLocationsPopup: false,
+    initProvider: {},
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { providers, service, loginSession, userDetail } = props;
+    const { service, loginSession, userDetail, waitListTemporaryServicesByServiceId } = props;
     const {
-      providers: cachedProviders,
+      selectedPId: cachedSelectedPId, selectedLocId: cachedSelectedLocId, selectedPName: cachedSelectedPName,
+      selectedTemporaryServiceId: cachedSelectedTemporaryServiceId,
       service: cachedService,
       loginSession: cachedLoginSession,
       userDetail: cachedUserDetail,
+      waitListTemporaryServicesByServiceId: cachedWaitListTemporaryServicesByServiceId,
     } = state;
     const updatedState = {};
     if (
@@ -42,12 +52,6 @@ class WaitList extends Component {
     ) {
       updatedState.serviceId = get(service, 'id');
       updatedState.service = service;
-    }
-    if (
-      providers !== null &&
-      JSON.stringify(providers) !== JSON.stringify(cachedProviders)
-    ) {
-      updatedState.queuedProviders = providers && providers.filter(provider => provider.mode === 'QUEUE');
     }
     if (
       userDetail !== null &&
@@ -61,301 +65,228 @@ class WaitList extends Component {
     ) {
       updatedState.loginSession = loginSession;
     }
+    if (
+      waitListTemporaryServicesByServiceId !== null &&
+      JSON.stringify(waitListTemporaryServicesByServiceId) !==
+      JSON.stringify(cachedWaitListTemporaryServicesByServiceId)
+    ) {
+      updatedState.waitListTemporaryServicesByServiceId = waitListTemporaryServicesByServiceId;
+      const queuedProviders = {};
+      const queuedTemporaryServiceIds = {};
+      waitListTemporaryServicesByServiceId.map(item => {
+        const selectedPId = get(item, 'providerId');
+        const selectedPName = get(item, 'providerName');
+        const selectedLocId = get(item, 'geoLocation.id');
+        const fullAddress = get(item, 'geoLocation.fullAddress');
+        const selectedTemporaryServiceId = get(item, 'id');
+        if (!cachedSelectedPId) updatedState.selectedPId = selectedPId;
+        if (!cachedSelectedPName) updatedState.selectedPName = selectedPName;
+        if (!cachedSelectedLocId) updatedState.selectedLocId = selectedLocId;
+        if (!cachedSelectedTemporaryServiceId) updatedState.selectedTemporaryServiceId = selectedTemporaryServiceId;
+        queuedProviders[selectedPName] = queuedProviders[selectedPName] ? queuedProviders[selectedPName] : [];
+        queuedProviders[selectedPName].push(
+          {selectedPName, selectedPId, selectedLocId, selectedTemporaryServiceId, fullAddress },
+        );
+        queuedTemporaryServiceIds[`${selectedPId}-${selectedLocId}`] = selectedTemporaryServiceId;
+        return null;
+      });
+      updatedState.queuedProviders = queuedProviders;
+      updatedState.queuedTemporaryServiceIds = queuedTemporaryServiceIds;
+      console.log('queuqueue', queuedProviders);
+      console.log('Object.keys(queuedProviders)', Object.keys(queuedProviders));
+      updatedState.initProvider = !isEmpty(queuedProviders) && queuedProviders[Object.keys(queuedProviders)[0]][0];
+    }
 
     return Object.keys(updatedState) ? updatedState : null;
   }
 
-  handleToggleRegister = () => {
-    const { handleAuth } = this.props;
-    const { isAuthenticated } = this.state;
-    if (isAuthenticated) {
-      this.setState(oldState => ({
-        isRegisterWaitLists: !oldState.isRegisterWaitLists,
-        isOpenProviderList: false,
-      }));
-    } else {
-      handleAuth('isLoginOpen');
-    }
-  };
+  componentDidMount() {
+    const { dispatchWaitListTemporaryServicesByServiceId } = this.props;
+    const { service } = this.state;
+    dispatchWaitListTemporaryServicesByServiceId(service.id);
+
+  }
 
   handleRegisterWaitList = () => {
-    const {
-      // setWaitListsValidationAction: setWaitListsValidation,
-      registerWaitListsAction: registerWaitLists,
-    } = this.props;
-    const {
-      customerId,
-      dateFrom,
-      dateTo,
-      temporaryServiceIds,
-    } = this.state;
-
-    const startSec = dateFrom + 1; // Plus one second for startSec
-    const toSec = dateTo + 3600 * 24; // Plus one day
-    const waitListData = temporaryServiceIds.map(id => ({
-      customerId,
-      startSec,
-      tempServiceId: id,
-      toSec,
-    }));
-    registerWaitLists(waitListData);
-    this.handleToggleRegister();
+    const { dispatchRegisterWaitLists, onClose } = this.props;
+    const { selectedTemporaryServiceId, userDetail } = this.state;
+    const customerId = get(userDetail, 'userSub') || get(userDetail, 'id');
+    dispatchRegisterWaitLists({
+      customerId, tempServiceId: selectedTemporaryServiceId, startSec: 0, toSec: 0,
+    });
+    onClose();
   };
 
-  handleChangeOption = (event) => {
-    event.preventDefault();
-    const { setFieldValue } = this.props;
-    const { name, value } = event.target;
-    setFieldValue(name, value);
-  };
-
-  handleChangeDate = key => (date) => {
-    const { dateFrom, dateTo } = this.state;
-    let newDate = null;
-    if (key === 'dateFrom' && moment(date) > moment(dateTo * 1000)) {
-      newDate = date;
-    } else if (key === 'dateTo' && moment(date) < moment(dateFrom * 1000)) {
-      newDate = date;
-    }
+  toggleProvidersList = () => {
     this.setState(oldState => ({
-      [key]: date.unix(),
-      [DATE_RANGE_INVERT[key]]: newDate ? newDate.unix() : oldState[DATE_RANGE_INVERT[key]],
+      isProvidersPopup: !oldState.isProvidersPopup,
     }));
   };
 
-  handleSelectDate = key => (date) => {
-    this.setState({ [key]: date.unix() });
-  };
-
-  handleToggleDropdownProviders = () => {
+  toggleLocationsList = () => {
     this.setState(oldState => ({
-      isOpenProviderList: !oldState.isOpenProviderList,
-    }));
+      isLocationsPopup: !oldState.isLocationsPopup,
+    }))
   };
 
-  handleCloseDropdownProviders = () => {
-    this.setState({ isOpenProviderList: false });
-  };
-
-  handleSelectProvider = provider => () => {
-    const providerName = get(provider, 'providerName');
-    const geoLocation = get(provider, 'geoLocation');
-    const timezoneId = get(provider, 'timezoneId');
-    const temporaryServiceIds = get(provider, 'temporaryServiceIds');
+  handleSelectProvider = (item, setFieldValue) => () => {
+    console.log('item selected provider', item);
+    const { queuedTemporaryServiceIds, selectedLocId } = this.state;
+    setFieldValue('providerName', item[WAIT_LIST_KEYS.SELECTED_P_NAME]);
     this.setState({
-      providerName,
-      geoLocation,
-      timezoneId,
-      temporaryServiceIds,
+      [WAIT_LIST_KEYS.SELECTED_P_NAME]: item[WAIT_LIST_KEYS.SELECTED_P_NAME],
+      [WAIT_LIST_KEYS.SELECTED_PID]: item[WAIT_LIST_KEYS.SELECTED_PID],
+      [WAIT_LIST_KEYS.SELECTED_TEMP_SERVICE_ID]: queuedTemporaryServiceIds[
+        `${item[WAIT_LIST_KEYS.SELECTED_PID]}-${selectedLocId}`
+        ] || '',
     });
   };
 
-  renderProviderList = list => (
-    <div className={s.dropdownProviders}>
-      {list && list.map(provider => (
-        /* eslint-disable-next-line */
-        <div key={uuidv1()} className={s.providerItem} onClick={this.handleSelectProvider(provider)}>
-          <Typography variant="body1" color="inherit" className="text-bold">
-            {provider.providerName}
-          </Typography>
-          <Typography variant="body2" color="inherit">
-            {provider.geoLocation.fullAddress}
-          </Typography>
-        </div>
-      ))}
+  handleSelectLocation = (item, setFieldValue) => () => {
+    const { queuedTemporaryServiceIds, selectedPId } = this.state;
+    setFieldValue('fullAddress', item.fullAddress);
+    this.setState({
+      [WAIT_LIST_KEYS.SELECTED_LOC_ID]: item[WAIT_LIST_KEYS.SELECTED_LOC_ID],
+      [WAIT_LIST_KEYS.SELECTED_TEMP_SERVICE_ID]: queuedTemporaryServiceIds[
+        `${selectedPId}-${item[WAIT_LIST_KEYS.SELECTED_LOC_ID]}`
+        ] || '',
+    });
+  };
+
+  renderProviderList = (list, setFieldValue) => (
+    <div className={s.itemList}>
+      {Object.keys(list).map((name) => {
+        console.log('providerName: ', name);
+        console.log('providerName detail: ', list[name]);
+        return (
+          <div
+            key={uuidv1()}
+            className={s.item}
+            onClick={this.handleSelectProvider({
+              selectedPName: name,
+              selectedPId: list[name][0].selectedPId,
+            }, setFieldValue)}
+          >
+            {name}
+          </div>
+        );
+      })}
     </div>
   );
 
-  renderEnrollButton = isAuthenticated => (isAuthenticated ? (
-    <>
-      <Queue color="inherit" className="icon-small" />
-      <Typography variant="body1" color="inherit">
-        Join Queue
-      </Typography>
-    </>
-  ) : (
-    <>
-      <Fingerprint color="inherit" className="icon-small" />
-      <Typography variant="body1" color="inherit">
-        Sign in
-      </Typography>
-    </>
-  ));
+  renderLocationList = setFieldValue => {
+    const { queuedProviders, selectedPName } = this.state;
+    console.log('trigger render location list', queuedProviders[selectedPName]);
+    return (<div className={s.itemList}>
+      {queuedProviders[selectedPName].map(item => (
+        <div
+          key={uuidv1()}
+          className={s.item}
+          onClick={this.handleSelectLocation(item, setFieldValue)}
+        >
+          {item.fullAddress}
+        </div>
+      ))
+
+      }
+    </div>);
+  };
+
+  handleLogin = () => {
+    const { handleAuth } = this.props;
+    handleAuth('isLoginOpen');
+  };
 
   render() {
+    const { onClose } = this.props;
     const {
-      service,
-      isOpenProviderList,
-      providerName,
-      geoLocation,
-      timezoneId,
-      dateFrom,
-      dateTo,
-      queuedProviders,
-      isQueuing,
-      userDetail,
-      loginSession
+      service, isProvidersPopup, isLocationsPopup, userDetail, queuedProviders, initProvider,
+      selectedTemporaryServiceId,
     } = this.state;
-    const {
-      values,
-      isValid,
-      onClose,
-    } = this.props;
-    console.log('userDetail', userDetail);
-    console.log('loginSession', loginSession);
+    const userId = get(userDetail,'userSub') || get(userDetail, 'id');
+    const [CtaIcon, ctaLabel, ctaAction] = userId
+      ? [WrapText, 'Enroll', this.handleRegisterWaitList]
+      : [Fingerprint, 'Login', this.handleLogin];
     const serviceName = get(service, 'name');
     const serviceImg = get(service, 'image.fileUrl') || defaultImage;
-    const fullAddress = get(geoLocation, 'fullAddress');
+    console.log('this.state', this.state);
+
     return (
-      <div className="cover-bg-black z-index-highest">
+      <div className="cover-bg-black z-index-higher">
         <div className={s.waitListForm}>
           <div className={s.title}>
-            <Typography variant="headline" color="inherit" className="text-bold">
-              Enroll to Waitlist
-            </Typography>
+            <span>Enroll to Waitlist</span>
+            <IconButton color="secondary" onClick={onClose}>
+              <Cancel color="inherit" />
+            </IconButton>
           </div>
-          <div className={s.serviceInfo}>
-            <div className={s.serviceImage}>
-              <img src={serviceImg} alt="Service" className={s.serviceImage} />
-            </div>
-            <div className={s.serviceDescription}>
-              <div className={s.enrollServiceName}>
-                <Typography variant="title" className="main-color-04 text-bold" noWrap>
-                  {serviceName}
-                </Typography>
-              </div>
-              <div className={s.selectProvider}>
-                {isQueuing && (
-                  <>
-                    <Typography variant="body1" className="main-color">
-                      Appointment with:
-                    </Typography>
-                    {/* eslint-disable-next-line */}
-                    {isOpenProviderList && <div className={s.dropdownBackdrop} onClick={this.handleCloseDropdownProviders} />}
-                    {/* eslint-disable-next-line */}
-                    <div className={s.selectProviderDropdown} onClick={this.handleToggleDropdownProviders}>
-                      <Typography
-                        variant="subheading"
-                        color="inherit"
-                        className={`${s.limitWidth} text-bold`}
-                        noWrap
-                      >
-                        {providerName}
-                      </Typography>
-                      <ChevronRight className="icon-normal" />
-                      {isOpenProviderList && this.renderProviderList(queuedProviders)}
-                    </div>
-                    <div className="icon-text">
-                      <LocationOn className="icon-normal" />
-                      <Typography variant="body1" color="inherit">
-                        {fullAddress}
-                      </Typography>
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
-            <div className={s.bookWaitList}>
-              <div className={s.availabilityDate}>
-                <div className={s.availabilityLabel}>
-                  <Typography variant="body1" color="inherit" className="text-bold">
-                    Date:
-                  </Typography>
-                  <Typography variant="body1" className="danger-color">
-                    ({timezoneId})
-                  </Typography>
-                </div>
-                <div className={s.dateRange}>
-                  <div className={s.datePicker}>
-                    <div className={s.pickerLabel}>
-                      <Typography variant="caption" color="inherit" className="text-bold">
-                        From:
-                      </Typography>
-                    </div>
-                    <DatePicker
-                      onChange={this.handleChangeDate('dateFrom')}
-                      selectDate={this.handleSelectDate}
-                      date={moment(dateFrom * 1000)}
-                      enableCalendar
-                      type="date"
-                      isIcon
-                      iconClassName={s.dateSelection}
-                      dateFormat={defaultDateFormat}
-                    />
-                  </div>
-                  <div className={s.datePicker}>
-                    <div className={s.pickerLabel}>
-                      <Typography variant="caption" color="inherit" className="text-bold">
-                        To:
-                      </Typography>
-                    </div>
-                    <DatePicker
-                      onChange={this.handleChangeDate('dateTo')}
-                      selectDate={this.handleSelectDate}
-                      date={moment(dateTo * 1000)}
-                      enableCalendar
-                      type="date"
-                      isIcon
-                      iconClassName={s.dateSelection}
-                      dateFormat={defaultDateFormat}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className={s.selectOption}>
-                <div className={s.bookingOption}>
-                  <RadioGroup
-                    name="enrollOption"
-                    value={values.enrollOption}
-                    onChange={this.handleChangeOption}
-                  >
-                    <FormControlLabel
-                      value="automatically"
-                      control={(
-                        <Radio classes={
-                          {
-                            root: s.bookingOption,
-                            checked: s.bookingOptionChecked,
-                          }
-                        }
-                        />)}
-                      label="Make your appointment automatically."
-                    />
-                    <FormControlLabel
-                      value="manually"
-                      control={(
-                        <Radio classes={
-                          {
-                            root: s.bookingOption,
-                            checked: s.bookingOptionChecked,
-                          }
-                        }
-                        />)}
-                      label="Notify me on slot availability."
-                    />
-                  </RadioGroup>
-                </div>
-              </div>
-            </div>
+          <div className={s.serviceImage}>
+            <img src={serviceImg} alt={serviceName} className={s.serviceImage} />
           </div>
-          <div className={s.footerCta}>
-            <Button
-              variant="outlined"
-              onClick={onClose}
-              className="secondary-button"
-            >
-              <Cancel color="inherit" className="icon-small" />
-              Cancel
-            </Button>
-            <Button
-              variant="outlined"
-              onClick={this.handleRegisterWaitList}
-              disabled={!isValid}
-              className="main-button"
-            >
-              <Queue color="inherit" className="icon-small" />
-              Enroll
-            </Button>
+          <div className={s.serviceDescription}>
+            <div className={`${s.sName} ellipsis`}>{serviceName}</div>
+            <div className={s.selectProvider}>
+              {initProvider && (
+                <Formik
+                  onSubmit={noop}
+                  isInitialValid={false}
+                  initialValues={{
+                    providerName: 'select provider',
+                    fullAddress: 'select location',
+                  }}
+                  render={({ values, isValid, setFieldValue }) => (
+                    <form className={s.selectedInfo}>
+                      <div className={s.label}>Appointment with:</div>
+                      <div className={s.dropdownList} onClick={this.toggleProvidersList}>
+                        <div className={s.inputItem}>
+                          <HowToReg className="icon-small" color="secondary" />
+                          <InputBase
+                            fullWidth
+                            name="providerName"
+                            inputProps={{
+                              className: 'capitalize ellipsis',
+                            }}
+                            value={values.providerName} />
+                        </div>
+                        <ChevronRight />
+                        {isProvidersPopup && this.renderProviderList(queuedProviders, setFieldValue)}
+                      </div>
+                      <div className={s.label}>Location:</div>
+                      <div className={s.dropdownList} onClick={this.toggleLocationsList}>
+                        <div className={s.inputItem}>
+                          <LocationOn className="icon-small" color="secondary" />
+                          <InputBase
+                            fullWidth
+                            name="fullAddress"
+                            inputProps={{
+                              className: 'capitalize ellipsis',
+                            }}
+                            value={values.fullAddress}
+                          />
+                        </div>
+                        <ChevronRight />
+                        {isLocationsPopup && this.renderLocationList(setFieldValue)}
+                      </div>
+                      {!selectedTemporaryServiceId && (
+                        <div className={s.noneTempId}>
+                          <strong>Tip</strong>:
+                          Please select the provider first, then location. Or change to other location.
+                        </div>)}
+                      <div className={s.footerCta}>
+                        <Button
+                          variant="outlined"
+                          onClick={ctaAction}
+                          disabled={!isValid || !selectedTemporaryServiceId}
+                        >
+                          <CtaIcon color="inherit" />
+                          <span>{ctaLabel}</span>
+                        </Button>
+                      </div>
+                    </form>
+                  )}
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -363,31 +294,7 @@ class WaitList extends Component {
   }
 }
 
-WaitList.propTypes = {
-  values: objectOf(any).isRequired,
-  setFieldValue: func.isRequired,
-  isValid: bool.isRequired,
-  handleAuth: func.isRequired,
-  onClose: func.isRequired,
-  registerWaitListsAction: func.isRequired,
-};
-
-const mapStateToProps = state => ({
-  ...state.common,
-  ...state.booking,
-  ...state.auth,
-  ...state.waitLists,
-});
-
-export default compose(
-  withFormik({
-    enableReinitialize: true,
-    isInitialValid: true,
-    mapPropsToValues: () => ({
-      enrollOption: 'automatically',
-    }),
-  }),
-  connect(mapStateToProps, {
-    registerWaitListsAction,
-  }),
+export default connect(
+  waitListProps.mapStateToProps,
+  waitListProps.mapDispatchToProps,
 )(WaitList);

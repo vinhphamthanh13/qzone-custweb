@@ -1,49 +1,43 @@
 import {
-  REGISTER_WAIT_LIST,
-  SET_WAIT_LIST,
-  CANCEL_WAIT_LIST,
-  VALIDATE_WAIT_LIST,
-  SET_WAIT_LIST_BY_ID,
-  RESET_REGISTER_WAITLIST_STATUS,
+  REGISTER_WAIT_LISTS,
+  SET_WAIT_LISTS,
+  CANCEL_WAIT_LISTS,
+  SET_WAIT_LISTS_BY_ID,
+  RESET_REGISTER_WAIT_LISTS_STATUS,
 } from 'actionsReducers/waitlist.actions';
 
 const initState = {
   waitListRegistered: null,
-  waitLists: null,
+  waitLists: {},
   cancelWaitLists: null,
   waitListsValidation: null,
-  waitListsById: null,
+  waitListsById: {},
 };
 
 const reducer = (state = initState, action) => {
   switch (action.type) {
-    case REGISTER_WAIT_LIST:
+    case REGISTER_WAIT_LISTS:
       return {
         ...state,
         waitListRegistered: action.payload,
       };
-    case RESET_REGISTER_WAITLIST_STATUS:
+    case RESET_REGISTER_WAIT_LISTS_STATUS:
       return {
         ...state,
         waitListRegistered: null,
       };
-    case SET_WAIT_LIST:
+    case SET_WAIT_LISTS:
       return {
         ...state,
         waitLists: action.payload,
       };
-    case CANCEL_WAIT_LIST:
+    case CANCEL_WAIT_LISTS:
       return {
         ...state,
         cancelWaitLists: action.payload,
         waitLists: state.waitLists.filter(waitList => waitList.waitListId),
       };
-    case VALIDATE_WAIT_LIST:
-      return {
-        ...state,
-        waitListsValidation: action.payload,
-      };
-    case SET_WAIT_LIST_BY_ID:
+    case SET_WAIT_LISTS_BY_ID:
       return {
         ...state,
         waitListsById: action.payload,

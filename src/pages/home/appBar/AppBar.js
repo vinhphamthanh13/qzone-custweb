@@ -18,92 +18,83 @@ import TrackingEvents from './TrackingEvents';
 import styles from './AppBarStyle';
 
 class MainAppBar extends React.Component {
+  state = {
+    eventList: [],
+    eventListIds: [],
+    loginSession: {},
+    trackingAppointmentById: null,
+    isShowingTrackingList: false,
+    appointmentEvent: {},
+  };
+
   static getDerivedStateFromProps(props, state) {
-    const {
-      eventList,
-      loginSession,
-      trackingAppointmentById,
-      appointmentEvent,
-    } = props;
+    const { eventList, loginSession, trackingAppointmentById, appointmentEvent } = props;
     const {
       eventList: cachedEventList,
       loginSession: cachedLoginSession,
       trackingAppointmentById: cachedTrackingAppointmentById,
       appointmentEvent: cachedAppointmentEvent,
     } = state;
+    const updatedState = {};
     if (
-      eventList !== cachedEventList
-      || loginSession !== cachedLoginSession
-      || trackingAppointmentById !== cachedTrackingAppointmentById
-      || appointmentEvent !== cachedAppointmentEvent
+      eventList !== null &&
+      JSON.stringify(eventList) !== JSON.stringify(cachedEventList)
     ) {
       const eventListIds = eventList && eventList.length && eventList.map(item => item.id);
-
-      return {
-        eventList,
-        loginSession,
-        eventListIds,
-        trackingAppointmentById: compact(trackingAppointmentById),
-        appointmentEvent,
-      };
+      updatedState.eventList = eventList;
+      updatedState.eventListIds = eventListIds;
     }
-    return null;
+    if (
+      loginSession !== null &&
+      JSON.stringify(loginSession) !== JSON.stringify(cachedLoginSession)
+    ) {
+      updatedState.loginSession = loginSession;
+    }
+    if (
+      trackingAppointmentById !== null &&
+      JSON.stringify(trackingAppointmentById) !== JSON.stringify(cachedTrackingAppointmentById)
+    ) {
+      updatedState.trackingAppointmentById = trackingAppointmentById;
+    }
+    if (
+      appointmentEvent !== null &&
+      JSON.stringify(appointmentEvent) !== JSON.stringify(cachedAppointmentEvent)
+  ) {
+      updatedState.appointmentEvent = appointmentEvent;
+    }
+    return Object.keys(updatedState) ? updatedState : null;
   }
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      eventList: null,
-      eventListIds: null,
-      loginSession: null,
-      trackingAppointmentById: null,
-      isShowingTrackingList: false,
-      appointmentEvent: null,
-    };
-  }
 
   componentDidMount() {
-    const {
-      loginSession,
-      findEventByCustomerIdAction: findEventByCustomerId,
-    } = this.props;
-    const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
+    const { findEventByCustomerIdAction: findEventByCustomerId } = this.props;
+    const { loginSession } = this.state;
     const customerId = get(loginSession, 'id');
     const authHeaders = get(loginSession, 'authHeaders');
     const startSession = get(loginSession, 'start_session');
-    if (isAuthenticated
-      && customerId
-      && ((moment.now() - moment(startSession)) / 3600) < 1) {
+    if (customerId && ((moment.now() - moment(startSession)) / 3600) < 1) {
       findEventByCustomerId(customerId, authHeaders);
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
+    const { loginSession, appointmentEvent } = prevProps;
     const {
-      loginSession,
-      appointmentEvent,
-    } = prevProps;
-    const {
-      loginSession: updatedLoginSession,
       findEventByCustomerIdAction: findEventByCustomerId,
       trackingAppointmentByIdsAction: trackingAppointmentByIds,
     } = this.props;
     const {
-      eventListIds,
-    } = prevState;
-    const {
-      eventListIds: cachedEventListId,
-      appointmentEvent: cachedAppointmentEvent,
+      eventListIds: cachedEventListId, appointmentEvent: cachedAppointmentEvent, loginSession: cachedLoginSession,
     } = this.state;
-
-    const trackingLength = eventListIds && eventListIds.length;
+    const trackingLength = cachedEventListId && cachedEventListId.length;
     const cachedTrackingLength = cachedEventListId && cachedEventListId.length;
 
     if (
-      loginSession !== updatedLoginSession
+      loginSession !== null &&
+      JSON.stringify(loginSession) !== JSON.stringify(cachedLoginSession)
     ) {
-      const id = get(updatedLoginSession, 'id');
-      const authHeaders = get(updatedLoginSession, 'authHeaders');
+      const id = get(cachedLoginSession, 'id');
+      const authHeaders = get(cachedLoginSession, 'authHeaders');
       if (id) {
         findEventByCustomerId(id, authHeaders);
       }

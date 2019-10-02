@@ -119,39 +119,14 @@ export const setServiceProvidersAction = () => async (dispatch) => {
   }
   dispatch(setLoading(false));
 };
-export const setEventById = (id, headers) => async (dispatch) => {
-  dispatch(setLoading(true));
-  const [result, error] = await handleRequest(eventById, [id, headers]);
-  if (error) {
-    dispatch(setError(error));
-  } else {
-    dispatch(setEventByIdAction(result));
-  }
-  dispatch(setLoading(false));
-};
 export const cancelEventByIdAction = payload => ({
   type: CANCEL_EVENT_BY_ID,
-  payload,
-});
-export const setRescheduleStatusAction = payload => ({
-  type: SET_RESCHEDULE_STATUS,
   payload,
 });
 export const rescheduleStatusAction = payload => ({
   type: SET_RESCHEDULE_STATUS,
   payload,
 });
-export const rescheduleEvent = (data, headers) => async (dispatch) => {
-  dispatch(setLoading(true));
-  const [, error] = await handleRequest(reschedule, [data, headers]);
-  if (error) {
-    dispatch(setError(error));
-  } else {
-    dispatch(setRescheduleStatusAction(200));
-    dispatch(setSucceed('You have been rescheduled your event successfully!'));
-  }
-  dispatch(setLoading(false));
-};
 export const servicesByServiceCategoryIdBulkApi = (listId, catName) => async dispatch => {
   dispatch(setLoading(true));
   const [resultBulk, errorBulk] = await servicesByServiceCategoryBulk(listId);

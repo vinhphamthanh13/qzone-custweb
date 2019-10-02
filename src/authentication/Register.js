@@ -79,7 +79,7 @@ class Register extends React.Component {
     return (
       <>
         {errorModal}
-        <Modal open={isOpen} className="flex item-center">
+        <Modal open={isOpen} className="flex item-center z-index-highest">
           <Formik
             initialValues={registerInit}
             validationSchema={registerSchema}

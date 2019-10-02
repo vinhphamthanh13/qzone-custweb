@@ -90,7 +90,6 @@ export const SESSION = {
       + 'To continue booking, please login again!',
   },
 };
-export const READ_MORE_MAX = 180;
 export const DISTANCE = {
   EQUATOR: 40075,
   KM: 'KILOMETERS',
@@ -105,6 +104,14 @@ export const EVENT_STATUS = {
   CANCELED: 'CANCELED',
   COMPLETED: 'COMPLETED',
   UNSPECIFIED: 'UNSPECIFIED',
+};
+
+// Waitlist
+export const WAIT_LIST_KEYS = {
+  SELECTED_PID: 'selectedPId',
+  SELECTED_P_NAME: 'selectedPName',
+  SELECTED_LOC_ID: 'selectedLocId',
+  SELECTED_TEMP_SERVICE_ID: 'selectedTemporaryServiceId',
 };
 
 // There is dependency between TYPE attrs name and the following policies
