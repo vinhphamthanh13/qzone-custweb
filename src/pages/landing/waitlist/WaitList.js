@@ -24,7 +24,6 @@ class WaitList extends Component {
     service: {},
     queuedProviders: [],
     userDetail: {},
-    loginSession: {},
     [WAIT_LIST_KEYS.SELECTED_PID]: '',
     [WAIT_LIST_KEYS.SELECTED_P_NAME]: '',
     [WAIT_LIST_KEYS.SELECTED_LOC_ID]: '',
@@ -36,12 +35,11 @@ class WaitList extends Component {
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { service, loginSession, userDetail, waitListTemporaryServicesByServiceId } = props;
+    const { service, userDetail, waitListTemporaryServicesByServiceId } = props;
     const {
       selectedPId: cachedSelectedPId, selectedLocId: cachedSelectedLocId, selectedPName: cachedSelectedPName,
       selectedTemporaryServiceId: cachedSelectedTemporaryServiceId,
       service: cachedService,
-      loginSession: cachedLoginSession,
       userDetail: cachedUserDetail,
       waitListTemporaryServicesByServiceId: cachedWaitListTemporaryServicesByServiceId,
     } = state;
@@ -58,12 +56,6 @@ class WaitList extends Component {
       JSON.stringify(userDetail) !== JSON.stringify(cachedUserDetail)
     ) {
       updatedState.userDetail = userDetail;
-    }
-    if (
-      loginSession !== null &&
-      JSON.stringify(loginSession) !== JSON.stringify(cachedLoginSession)
-    ) {
-      updatedState.loginSession = loginSession;
     }
     if (
       waitListTemporaryServicesByServiceId !== null &&
@@ -92,8 +84,6 @@ class WaitList extends Component {
       });
       updatedState.queuedProviders = queuedProviders;
       updatedState.queuedTemporaryServiceIds = queuedTemporaryServiceIds;
-      console.log('queuqueue', queuedProviders);
-      console.log('Object.keys(queuedProviders)', Object.keys(queuedProviders));
       updatedState.initProvider = !isEmpty(queuedProviders) && queuedProviders[Object.keys(queuedProviders)[0]][0];
     }
 
@@ -209,7 +199,6 @@ class WaitList extends Component {
       : [Fingerprint, 'Login', this.handleLogin];
     const serviceName = get(service, 'name');
     const serviceImg = get(service, 'image.fileUrl') || defaultImage;
-    console.log('this.state', this.state);
 
     return (
       <div className="cover-bg-black z-index-higher">
@@ -276,7 +265,7 @@ class WaitList extends Component {
                         <Button
                           variant="outlined"
                           onClick={ctaAction}
-                          disabled={!isValid || !selectedTemporaryServiceId}
+                          disabled={(!isValid && userId) || (!selectedTemporaryServiceId && userId)}
                         >
                           <CtaIcon color="inherit" />
                           <span>{ctaLabel}</span>
