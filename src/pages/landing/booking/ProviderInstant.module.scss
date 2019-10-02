@@ -42,25 +42,11 @@
 .rateStar {
   position: absolute;
   bottom: 0;
-  left: 0;
-  background: $gallery;
-  padding: 0.2rem;
-  border-top-right-radius: 0.2rem;
-}
-
-.viewMap {
-  position: absolute;
-  bottom: 0;
   right: 0;
   background: $gallery;
-  font-size: 1rem;
-  border-radius: 0.2rem 0 0 0;
   padding: 0.2rem;
-}
-
-.viewMap:hover {
-  background: $gallery;
-  transition: all 0.2s ease-in;
+  border-top-left-radius: 0.2rem;
+  opacity: 0.8;
 }
 
 .name {

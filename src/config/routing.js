@@ -2,6 +2,7 @@ import Home from 'pages/Home';
 import Providers from 'pages/landing/provider/Providers';
 import Booking from 'pages/landing/booking/Booking';
 import InstantBooking from 'pages/landing/booking/Instant';
+import RedirectToInstant from 'pages/landing/waitlist/RedirectToInstant';
 import PageNotFound from 'pages/PageNotFound';
 import AccessDenied from 'pages/AccessDenied';
 import Provider from 'pages/Provider';
@@ -47,13 +48,13 @@ const rootRoutes = [
     name: 'Instant Booking',
     component: InstantBooking,
   },
-  // {
-  //   exact: true,
-  //   strict: true,
-  //   path: '/booking/waitlist/:id',
-  //   name: 'Enroll WaitLists',
-  //   component: Booking,
-  // },
+  {
+    exact: true,
+    strict: true,
+    path: '/booking/waitlist/:id',
+    name: 'Enroll WaitLists',
+    component: RedirectToInstant,
+  },
   {
     exact: true,
     strict: true,

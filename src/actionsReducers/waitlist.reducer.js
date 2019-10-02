@@ -8,10 +8,10 @@ import {
 
 const initState = {
   waitListRegistered: null,
-  waitLists: null,
+  waitLists: {},
   cancelWaitLists: null,
   waitListsValidation: null,
-  waitListsById: null,
+  waitListsById: {},
 };
 
 const reducer = (state = initState, action) => {

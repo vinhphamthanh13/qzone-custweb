@@ -24,7 +24,7 @@ import {
 } from 'actionsReducers/provider.actions';
 import { setLandingPageAction } from 'actionsReducers/landing.action';
 import { setOrganizationsApi } from 'actionsReducers/organization.actions';
-import { registerWaitListsApi } from 'actionsReducers/waitlist.actions';
+import { registerWaitListsApi, setWaitListsByIdApi } from 'actionsReducers/waitlist.actions';
 
 export const homeProps = {
   mapStateToProps: ({ home, common, auth, organization }) => ({
@@ -160,5 +160,14 @@ export const waitListProps = {
       waitListTemporaryServicesByServiceIdApi(id),
     ),
     dispatchRegisterWaitLists: (data, headers) => dispatch(registerWaitListsApi(data, headers)),
+  }),
+};
+
+export const redirectToInstantProps = {
+  mapStateToProps: ({ waitLists }) => ({
+    waitListsById: waitLists.waitListsById,
+  }),
+  mapDispatchToProps: dispatch => ({
+    dispatchWaitListsById: (id, headers) => dispatch(setWaitListsByIdApi(id, headers)),
   }),
 };
