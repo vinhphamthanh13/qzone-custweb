@@ -18,6 +18,7 @@ class Landing extends Component {
     dispatchServicesByServiceCategoryId: func.isRequired,
     dispatchSetTabOrder: func.isRequired,
     dispatchSetLandingPage: func.isRequired,
+    handleAuth: func.isRequired,
   };
 
   state = {
@@ -97,7 +98,7 @@ class Landing extends Component {
   };
 
   render() {
-    const { dispatchSetTabOrder } = this.props;
+    const { dispatchSetTabOrder, handleAuth } = this.props;
     const { activeTab, servicesByServiceCategoryId, catName, tabOrder, landingPageFactors } = this.state;
     const serviceList = servicesByServiceCategoryId[catName] || [];
     const tabsInfo = get(landingPageFactors, 'tabsInfo');
@@ -122,6 +123,7 @@ class Landing extends Component {
                       serviceList={serviceList}
                       catName={catName}
                       activeTab={activeTab}
+                      handleAuth={handleAuth}
                     />
                   )
                 : <EmptyItem />

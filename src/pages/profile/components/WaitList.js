@@ -24,8 +24,8 @@ import {
 import EmptyItem from 'components/EmptyItem';
 import SubLoading from 'components/SubLoading';
 import {
-  setWaitListsAction,
-  setCancelWaitListsAction,
+  setWaitListsApi,
+  setCancelWaitListsApi,
 } from 'actionsReducers/waitlist.actions';
 import { defaultDateFormat, regExPattern, timeSlotFormat } from 'utils/constants';
 import { history } from 'containers/App';
@@ -68,7 +68,7 @@ class WaitList extends Component {
 
   componentDidMount() {
     const {
-      setWaitListsAction: setWaitLists,
+      setWaitListsApi: setWaitLists,
       setServiceProvidersAction: setServiceProviders,
       customerId,
       authHeaders,
@@ -80,7 +80,7 @@ class WaitList extends Component {
   componentDidUpdate(prevProps) {
     const {
       cancelWaitLists,
-      setWaitListsAction: setWaitLists,
+      setWaitListsApi: setWaitLists,
       customerId,
     } = prevProps;
     const {
@@ -92,7 +92,7 @@ class WaitList extends Component {
   }
 
   handleCancelQueue = waitListId => () => {
-    const { setCancelWaitListsAction: setCancelWaitLists } = this.props;
+    const { setCancelWaitListsApi: setCancelWaitLists } = this.props;
     setCancelWaitLists(waitListId);
   };
 
@@ -213,10 +213,10 @@ class WaitList extends Component {
 }
 
 WaitList.propTypes = {
-  setWaitListsAction: func.isRequired,
+  setWaitListsApi: func.isRequired,
   setServiceProvidersAction: func.isRequired,
   customerId: string.isRequired,
-  setCancelWaitListsAction: func.isRequired,
+  setCancelWaitListsApi: func.isRequired,
   authHeaders: objectOf(string).isRequired,
 };
 
@@ -231,8 +231,8 @@ export default compose(
     enableReinitialize: true,
   }),
   connect(mapStateToProps, {
-    setWaitListsAction,
+    setWaitListsApi,
     setServiceProvidersAction,
-    setCancelWaitListsAction,
+    setCancelWaitListsApi,
   }),
 )(WaitList);

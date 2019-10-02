@@ -17,6 +17,7 @@ class WaitList extends Component {
     handleAuth: func.isRequired,
     onClose: func.isRequired,
     dispatchWaitListTemporaryServicesByServiceId: func.isRequired,
+    dispatchRegisterWaitLists: func.isRequired,
   };
 
   state = {
@@ -106,47 +107,14 @@ class WaitList extends Component {
 
   }
 
-  handleToggleRegister = () => {
-    const { handleAuth } = this.props;
-    const { isAuthenticated } = this.state;
-    if (isAuthenticated) {
-      this.setState(oldState => ({
-        isRegisterWaitLists: !oldState.isRegisterWaitLists,
-        isOpenProviderList: false,
-      }));
-    } else {
-      handleAuth('isLoginOpen');
-    }
-  };
-
   handleRegisterWaitList = () => {
-    const {
-      loginSession, queuedTemporaryServiceIds, selectedLocId, selectedPId, selectedTemporaryServiceId,
-    } = this.state;
-    console.log(
-      'register waitList; ', loginSession, queuedTemporaryServiceIds, selectedLocId, selectedPId,
-      selectedTemporaryServiceId);
-    // const {
-    //   // setWaitListsValidationAction: setWaitListsValidation,
-    //   registerWaitListsAction: registerWaitLists,
-    // } = this.props;
-    // const {
-    //   customerId,
-    //   dateFrom,
-    //   dateTo,
-    //   temporaryServiceIds,
-    // } = this.state;
-    //
-    // const startSec = dateFrom + 1; // Plus one second for startSec
-    // const toSec = dateTo + 3600 * 24; // Plus one day
-    // const waitListData = temporaryServiceIds.map(id => ({
-    //   customerId,
-    //   startSec,
-    //   tempServiceId: id,
-    //   toSec,
-    // }));
-    // registerWaitLists(waitListData);
-    // this.handleToggleRegister();
+    const { dispatchRegisterWaitLists, onClose } = this.props;
+    const { selectedTemporaryServiceId, userDetail } = this.state;
+    const customerId = get(userDetail, 'userSub') || get(userDetail, 'id');
+    dispatchRegisterWaitLists({
+      customerId, tempServiceId: selectedTemporaryServiceId, startSec: 0, toSec: 0,
+    });
+    onClose();
   };
 
   toggleProvidersList = () => {
@@ -224,6 +192,11 @@ class WaitList extends Component {
     </div>);
   };
 
+  handleLogin = () => {
+    const { handleAuth } = this.props;
+    handleAuth('isLoginOpen');
+  };
+
   render() {
     const { onClose } = this.props;
     const {
@@ -231,13 +204,15 @@ class WaitList extends Component {
       selectedTemporaryServiceId,
     } = this.state;
     const userId = get(userDetail,'userSub') || get(userDetail, 'id');
-    const [RegIcon, registerLabel] = userId ? [WrapText, 'Enroll'] : [Fingerprint, 'Login'];
+    const [CtaIcon, ctaLabel, ctaAction] = userId
+      ? [WrapText, 'Enroll', this.handleRegisterWaitList]
+      : [Fingerprint, 'Login', this.handleLogin];
     const serviceName = get(service, 'name');
     const serviceImg = get(service, 'image.fileUrl') || defaultImage;
     console.log('this.state', this.state);
 
     return (
-      <div className="cover-bg-black z-index-highest">
+      <div className="cover-bg-black z-index-higher">
         <div className={s.waitListForm}>
           <div className={s.title}>
             <span>Enroll to Waitlist</span>
@@ -254,7 +229,7 @@ class WaitList extends Component {
               {initProvider && (
                 <Formik
                   onSubmit={noop}
-                  isInitialValid
+                  isInitialValid={false}
                   initialValues={{
                     providerName: 'select provider',
                     fullAddress: 'select location',
@@ -300,11 +275,11 @@ class WaitList extends Component {
                       <div className={s.footerCta}>
                         <Button
                           variant="outlined"
-                          onClick={this.handleRegisterWaitList}
+                          onClick={ctaAction}
                           disabled={!isValid || !selectedTemporaryServiceId}
                         >
-                          <RegIcon color="inherit" />
-                          <span>{registerLabel}</span>
+                          <CtaIcon color="inherit" />
+                          <span>{ctaLabel}</span>
                         </Button>
                       </div>
                     </form>

@@ -73,7 +73,7 @@ class Login extends React.Component {
       <>
         <Error />
         {isOpen && (
-          <div className="flex item-center cover-bg-black z-index-higher">
+          <div className="flex item-center cover-bg-black z-index-highest">
             <Formik
               initialValues={loginInit}
               validationSchema={loginSchema}
