@@ -66,7 +66,10 @@ export const regExPattern = {
   password: /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})/g,
   registerVerificationCode: /^\d{6}$/,
   connectError: /Cannot connect to services/,
-  removedTimeZone: /\..*/,
+  ISO_TIME: {
+    pattern: /(.*)T(.*)\..*/,
+    replaceBy: '$1 $2',
+  },
 };
 export const LOGIN_TYPES = {
   FB: 'FaceBook',

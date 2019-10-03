@@ -5,10 +5,10 @@ import moment from 'moment';
 import uuidv1 from 'uuid/v1';
 import { chunk, get } from 'lodash';
 import { Typography, Button } from '@material-ui/core';
-import { CheckCircle, Clear, DateRange, GpsFixed, AlarmAdd, PhoneIphone, HowToReg, Email } from '@material-ui/icons';
+import { CheckCircle, Clear, DateRange, GpsFixed, Schedule, PhoneIphone, HowToReg, Email } from '@material-ui/icons';
 import EmptyItem from 'components/EmptyItem';
 import { navigateTo } from 'utils/common';
-import { defaultDateFormat, regExPattern, timeSlotFormat } from 'utils/constants';
+import { FULL_DATE, regExPattern, TIME_FORMAT } from 'utils/constants';
 import { waitListsProps } from '../commonProps';
 import s from './WaitList.module.scss';
 
@@ -18,6 +18,7 @@ class WaitList extends Component {
     authHeaders: objectOf(string).isRequired,
     dispatchSetWaitLists: func.isRequired,
     dispatchCanCelWaitLists: func.isRequired,
+    dispatchBookEvent: func.isRequired,
   };
 
   state = {
@@ -26,8 +27,12 @@ class WaitList extends Component {
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { waitLists, cancelWaitLists } = props;
-    const { waitLists: cachedWaitLists, cancelWaitLists: cachedCancelWaitLists } = state;
+    const { waitLists, cancelWaitLists, bookedEventDetail } = props;
+    const {
+      waitLists: cachedWaitLists,
+      cancelWaitLists: cachedCancelWaitLists,
+      bookedEventDetail: cachedBookedEventDetail,
+    } = state;
     const updatedState = {};
     if (
       waitLists !== null &&
@@ -41,6 +46,12 @@ class WaitList extends Component {
     ) {
       updatedState.cancelWaitLists = cancelWaitLists;
     }
+    if (
+      bookedEventDetail !== null &&
+      bookedEventDetail !== cachedBookedEventDetail
+    ) {
+      updatedState.bookedEventDetail = bookedEventDetail;
+    }
 
     return Object.keys(updatedState) ? updatedState : null;
   }
@@ -51,11 +62,20 @@ class WaitList extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { cancelWaitLists } = prevProps;
+    const { cancelWaitLists, bookedEventDetail } = prevProps;
     const { dispatchSetWaitLists, customerId, authHeaders } = this.props;
-    const { cancelWaitLists: cachedCancelWaitLists } = this.state;
+    const { cancelWaitLists: cachedCancelWaitLists, bookedEventDetail: cachedBookedEventDetail } = this.state;
     if (cachedCancelWaitLists !== null && cancelWaitLists !== cachedCancelWaitLists) {
       dispatchSetWaitLists(customerId, authHeaders);
+    }
+    if (
+      bookedEventDetail !== null &&
+      JSON.stringify(bookedEventDetail) !== JSON.stringify(cachedBookedEventDetail)
+    ) {
+      const bookedEventId = get(cachedBookedEventDetail, 'id');
+      if (bookedEventId) {
+        navigateTo(`/event/${bookedEventId}`)();
+      }
     }
   }
 
@@ -65,11 +85,21 @@ class WaitList extends Component {
   };
 
   handleConfirmQueue = waitList => () => {
-    const waitListId = get(waitList, 'waitListId');
-    navigateTo(`/booking/waitlist/${waitListId}`)();
+    const { dispatchBookEvent } = this.props;
+    const customerId = get(waitList, 'customerId');
+    const headers = get(waitList, 'authHeaders');
+    const duration = get(waitList, 'duration');
+    const availabilityId = get(waitList, 'availabilityId');
+    const startSec = get(waitList, 'sstartTime').replace(
+      regExPattern.ISO_TIME.pattern, regExPattern.ISO_TIME.replaceBy);
+
+    dispatchBookEvent({
+      customerId, duration, availabilityId, startSec, status: 'UNSPECIFIED', type: 'APPOINTMENT',
+    }, headers);
   };
 
   render() {
+    const { customerId, authHeaders } = this.props;
     const { waitLists } = this.state;
     return (
       <div className={s.waitList}>
@@ -78,13 +108,19 @@ class WaitList extends Component {
             Math.ceil(waitLists.length / 3)).map(row => (
               <div key={uuidv1()} className={s.waitSlotRow}>
                 {row.map((item) => {
-                  const startTime = get(item, 'sstartTime');
+                  const startTime = get(item, 'sstartTime').replace(
+                    regExPattern.ISO_TIME.pattern, regExPattern.ISO_TIME.replaceBy,
+                  );
                   const queueStatus = get(item, 'status');
                   const pName = get(item, 'providerName');
                   const pEmail = get(item, 'providerEmail');
                   const pPhone = get(item, 'providerPhone');
                   const sName = get(item, 'serviceName');
-                  const removedTimeZone = startTime.replace(regExPattern.removedTimeZone, '');
+                  const duration = get(item, 'duration');
+                  const timezoneId = get(item, 'timezoneId');
+                  const startDate = moment(startTime).format(FULL_DATE);
+                  const timeStart = moment(startTime).format(TIME_FORMAT);
+                  const timeEnd = moment(startTime).add(duration, 'm').format(TIME_FORMAT);
                   const isExpired = moment.now() > moment(startTime);
                   const [queueTitle, waitSlotStyle] = isExpired
                     ? ['WaitList Expired!', `${s.waitSlot} ${s.waitSlotExpired}`]
@@ -98,38 +134,35 @@ class WaitList extends Component {
                       </Typography>
                       <div className={`${s.sName} ellipsis`}>{sName}</div>
                       <div className={s.providerInfo}>
-                        <div className="full-width flex text-center ellipsis subtitle item-center text-capitalize">
-                          <HowToReg className="icon-small" />
-                          <span>{pName}</span>
+                        <div className={s.agendaLabel}>
+                          Agenda:
                         </div>
-                        <div className="full-width flex text-center ellipsis item-center">
+                        <div className={s.item}>
+                          <DateRange className="icon-small danger-color" />
+                          <span>&nbsp;{startDate}</span>
+                        </div>
+                        <div className={s.item}>
+                          <Schedule className="icon-small danger-color" />
+                          <span>&nbsp;{timeStart}&nbsp;-</span>
+                          <span>&nbsp;{timeEnd}</span>
+                        </div>
+                        <div className={s.item}>
+                          <HowToReg className="icon-small" />
+                          <span><strong>{pName}</strong></span>
+                        </div>
+                        <div className={s.item}>
                           <PhoneIphone className="icon-small" />
                           <span>{pPhone}</span>
                         </div>
-                        <div className="full-width flex text-center ellipsis item-center">
+                        <div className={s.item}>
                           <Email className="icon-small" />
                           <span>{pEmail}</span>
                         </div>
-                        <div className={s.bookedTime}>
-                          <div className={`full-width icon-text ${s.schedule}`}>
-                            <div className={s.agendaLabel}>
-                              Agenda:
-                            </div>
-                            <DateRange className="icon-small danger-color" />
-                            <Typography variant="subtitle2" color="inherit">
-                              {moment(removedTimeZone).format(defaultDateFormat)}
-                            </Typography>
-                            <AlarmAdd className="icon-small danger-color" />
-                            <Typography variant="subtitle2" color="inherit">
-                              {moment(removedTimeZone).format(timeSlotFormat)}
-                            </Typography>
-                          </div>
-                          <div className={`full-width icon-text ${s.schedule}`}>
-                            <GpsFixed className="icon-small" />
-                            <Typography variant="subtitle2" color="inherit">
-                              {get(item, 'timezoneId')}
-                            </Typography>
-                          </div>
+                        <div className={s.item}>
+                          <GpsFixed className="icon-small" />
+                          <Typography variant="subtitle2" color="inherit">
+                            {timezoneId}
+                          </Typography>
                         </div>
                       </div>
                       <div className={s.queueOrder}>
@@ -153,11 +186,10 @@ class WaitList extends Component {
                         <Button
                           variant="outlined"
                           color="inherit"
-                          className="fruit-color"
-                          onClick={this.handleConfirmQueue(item)}
+                          onClick={this.handleConfirmQueue({ customerId, authHeaders, ...item})}
                           disabled={isExpired || queueStatus === 'CONFIRMED'}
                         >
-                          <CheckCircle className="icon-normal fruit-color" />
+                          <CheckCircle className="icon-normal" />
                           Confirm
                         </Button>
                       </div>

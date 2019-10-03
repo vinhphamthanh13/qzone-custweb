@@ -41,7 +41,9 @@ export const registerWaitListsApi = (data, headers) => async (dispatch) => {
     dispatch(setError(error));
   } else {
     const timezoneId = get(result, 'timezoneId');
-    const enrolledDate = get(result, 'sstartTime').replace(regExPattern.removedTimeZone, '');
+    const enrolledDate = get(result, 'sstartTime').replace(
+      regExPattern.ISO_TIME.pattern, regExPattern.ISO_TIME.replaceBy,
+      );
     dispatch(setSucceed(
       // eslint-disable-next-line max-len
       `You have been enrolled the event on ${moment(enrolledDate).format(defaultDateFormat)} at ${moment(enrolledDate).format(timeSlotFormat)}! (${timezoneId})`,
