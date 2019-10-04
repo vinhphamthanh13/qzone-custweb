@@ -17,9 +17,7 @@ const about = [
 ];
 
 const following = [
-  { name: 'twitter', icon: 'twitter' },
   { name: 'facebook', icon: 'facebook' },
-  { name: 'instagram', icon: 'instagram' },
 ];
 
 const Footer = props => (

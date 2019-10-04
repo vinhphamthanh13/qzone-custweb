@@ -73,7 +73,7 @@ class TemporaryService extends Component {
     return (
       <div className={s.container}>
         {Object.keys(transformedSlot).map(date => moment(date).isValid() && (
-          <div key={uuidv1()}>
+          <div className={s.dateChunk} key={uuidv1()}>
             <div className={s.date}>
               {moment(date).format(FULL_DATE)}
             </div>
@@ -110,7 +110,8 @@ class TemporaryService extends Component {
                     onClick={this.handleChunkIndexMore(
                       date, transformedSlot[`${date}-max`],
                     )}
-                    disabled={chunkIndex[`${date}-index`] === transformedSlot[`${date}-max`]}
+                    disabled={chunkIndex[`${date}-index`] === transformedSlot[`${date}-max`]
+                    || transformedSlot[`${date}-max`] === 0}
                   >
                     <span>next&nbsp;</span>
                     <ChevronRight />

@@ -212,6 +212,7 @@ class WaitList extends Component {
               {initProvider && (
                 <Formik
                   onSubmit={noop}
+                  enableReinitialize
                   isInitialValid={false}
                   initialValues={{
                     providerName: 'select provider',
