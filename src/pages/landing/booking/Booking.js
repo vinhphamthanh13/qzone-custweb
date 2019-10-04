@@ -266,7 +266,7 @@ class Booking extends Component {
                   const ctaIcon = bookingValid
                     ? <Book color="inherit" className="icon-small" />
                     : <Fingerprint color="inherit" className="icon-small" />;
-                  const ctaLabel = bookingValid ? 'book now!' : 'login';
+                  const ctaLabel = bookingValid ? 'book now!' : 'Proceed';
                   const ctaAction = !bookingValid && loginValid
                     ? this.handleOpenLogin
                     : this.toggleConfirmBooking;
