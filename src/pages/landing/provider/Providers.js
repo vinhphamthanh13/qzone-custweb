@@ -3,7 +3,9 @@ import React, { Component } from 'react';
 import { func } from 'prop-types';
 import { connect } from 'react-redux';
 import windowSize from 'react-window-size';
-import { get, find, uniqBy, chunk, flatten } from 'lodash';
+import { find, uniqBy, chunk, flatten } from 'lodash';
+import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
 import { IconButton } from '@material-ui/core';
 import { navigateTo } from 'utils/common';
 import { NavigateBefore } from '@material-ui/icons';
@@ -43,6 +45,10 @@ class Providers extends Component {
       landingPageFactors: cachedLandingPageFactors,
     } = state;
     const updatedState = {};
+
+    if (sId !== serviceId) {
+      updatedState.serviceId = sId;
+    }
     if (
       providersByServiceId !== null &&
       JSON.stringify(providersByServiceId) !== JSON.stringify(cachedProvidersByServiceId)
@@ -54,9 +60,6 @@ class Providers extends Component {
       JSON.stringify(temporaryServiceByServiceIds) !== JSON.stringify(cachedTemporaryServiceByServiceIds)
     ) {
       updatedState.temporaryServiceByServiceIds = temporaryServiceByServiceIds;
-    }
-    if (sId !== serviceId) {
-      updatedState.serviceId = sId;
     }
     if (
       availabilitiesByTemporaryServiceId !== null &&
@@ -89,6 +92,14 @@ class Providers extends Component {
     dispatchTemporaryServicesByServiceId(serviceId);
   }
 
+  componentDidUpdate() {
+    const { serviceId } = this.state;
+    if (serviceId === 'undefined') {
+      console.log('redirecting' );
+      navigateTo('/')();
+    }
+  }
+
   handleSelectService = catName => () => {
     navigateTo('/', { catName })();
   };
@@ -103,7 +114,12 @@ class Providers extends Component {
     const sName = get(landingPageFactors, 'sName');
     const providers = get(providersByServiceId, `${catName}.${sName}`, []);
     const providerByLocation = {};
-    if (Object.keys(temporaryServiceByServiceIds).length > 0 && temporaryServiceByServiceIds[serviceId].length) {
+    if (
+      !isEmpty(temporaryServiceByServiceIds) &&
+      Object.keys(temporaryServiceByServiceIds).length > 0 &&
+      temporaryServiceByServiceIds[serviceId] &&
+      temporaryServiceByServiceIds[serviceId].length
+    ) {
       temporaryServiceByServiceIds[serviceId].map(item => {
         const locationId = get(item, 'geoLocation.id');
         const providerId = get(item, 'providerId');
