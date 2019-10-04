@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { get } from 'lodash';
 import Loading from 'components/Loading';
 import { navigateTo } from 'utils/common';
+import { regExPattern } from 'utils/constants';
 import defaultImage from 'images/providers.jpg';
 import { redirectToInstantProps } from '../../commonProps';
 
@@ -45,6 +46,7 @@ class RedirectToInstant extends Component {
     const { waitListsById } = this.state;
     if (waitListsById !== null) {
       const waitListId = get(waitListsById, 'waitListId');
+      const availabilityId = get(waitListsById, 'availabilityId');
       const tempServiceId = get(waitListsById, 'tempServiceId');
       const sName = get(waitListsById, 'serviceName');
       const serviceId = get(waitListsById, 'serviceId');
@@ -54,11 +56,13 @@ class RedirectToInstant extends Component {
       const pAddress = get(waitListsById, 'fullAddress');
       const pImage = get(waitListsById, 'imageUrl') || defaultImage;
       const durationSec = get(waitListsById, 'duration');
-      const providerStartSec = get(waitListsById, 'sstartTime');
+      const providerStartSec = get(waitListsById, 'sstartTime').replace(
+        regExPattern.ISO_TIME.pattern, regExPattern.ISO_TIME.replaceBy,
+      );
       const timezoneId = get(waitListsById, 'timezoneId');
       dispatchSelectBookingDetail({
-        waitListId, sName, serviceId, pName, pPhone, pEmail, pImage, pAddress, durationSec, providerStartSec,
-        timezoneId,
+        id: availabilityId, waitListId, sName, serviceId, pName, pPhone, pEmail, pImage, pAddress, durationSec,
+        providerStartSec, timezoneId,
       });
       if (tempServiceId) navigateTo('/confirm-booking')();
     }
