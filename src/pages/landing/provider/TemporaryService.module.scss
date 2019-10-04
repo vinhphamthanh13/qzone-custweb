@@ -6,17 +6,22 @@
   margin: 0.2rem auto;
 }
 
+.dateChunk {
+  height: 290px;
+}
+
 .row {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   box-sizing: border-box;
-  margin: 0.2rem 0 0.5rem;
+  margin: 0.6rem 0 0.2rem;
 }
 
 .chunkSlots {
   display: flex;
   justify-content: space-evenly;
   flex-direction: column;
+  margin-left: 0.2rem;
 }
 
 .date {
@@ -33,15 +38,17 @@
 .slot {
   width: 30%;
   border: 1px solid $main_03;
-  padding: 1.8rem 0;
+  padding: 0.8rem 0;
+  margin: auto 0.5rem auto 0.2rem;
   text-align: center;
   cursor: pointer;
   overflow: hidden;
   background: $gallery;
+  border-radius: 1.8rem;
 }
 
 .slot:hover {
-  background: $main_04;
+  background: $main;
   font-weight: 500;
   color: $main_01;
 }

@@ -73,7 +73,7 @@ class TemporaryService extends Component {
     return (
       <div className={s.container}>
         {Object.keys(transformedSlot).map(date => moment(date).isValid() && (
-          <div key={uuidv1()}>
+          <div className={s.dateChunk} key={uuidv1()}>
             <div className={s.date}>
               {moment(date).format(FULL_DATE)}
             </div>
