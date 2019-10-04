@@ -12,7 +12,7 @@ import RateStar from 'components/Rating/RateStar';
 import MapDialog from 'components/Map/MapDialog';
 import { setRatingService } from 'actionsReducers/common.actions';
 import Rating from 'material-ui-rating';
-import { FULL_DATE, EVENT_STATUS, TIME_FORMAT } from 'utils/constants';
+import { FULL_DATE, EVENT_STATUS, TIME_FORMAT, DEFAULT_TIME } from 'utils/constants';
 import { navigateTo } from 'utils/common';
 import CountDownDisplay from './CountDownDisplay';
 import s from './TimelineCard.module.scss';
@@ -63,7 +63,7 @@ class TimelineCard extends Component {
     const bookingCode = get(eventById, 'bookingCode');
     const customerId = get(eventById, 'customerId');
     const duration = get(eventById, 'duration');
-    const providerStartSec = get(eventById, 'providerStartSec');
+    const providerStartSec = get(eventById, 'providerStartSec') || DEFAULT_TIME;
     const providerName = get(eventById, 'providerName');
     const serviceName = get(eventById, 'serviceName');
     const timezoneId = get(eventById, 'timezoneId');

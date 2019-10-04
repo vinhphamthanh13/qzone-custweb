@@ -4,7 +4,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import CustomButton from 'components/CustomButton';
 import s from './SocialAccountsLogin.style';
 
-const accounts = ['twitter', 'facebook', 'google'];
+const accounts = ['facebook', 'google'];
 
 const SocialAccountsLogin = (props) => {
   const { classes, actions } = props;

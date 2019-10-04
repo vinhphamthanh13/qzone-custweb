@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { func, string, objectOf } from 'prop-types';
+import { func, string, objectOf, any } from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import uuidv1 from 'uuid/v1';
@@ -15,7 +15,7 @@ import s from './WaitList.module.scss';
 class WaitList extends Component {
   static propTypes = {
     customerId: string.isRequired,
-    authHeaders: objectOf(string).isRequired,
+    authHeaders: objectOf(any).isRequired,
     dispatchSetWaitLists: func.isRequired,
     dispatchCanCelWaitLists: func.isRequired,
     dispatchBookEvent: func.isRequired,
@@ -178,7 +178,6 @@ class WaitList extends Component {
                           variant="text"
                           color="inherit"
                           onClick={this.handleCancelQueue(get(item, 'waitListId'))}
-                          disabled={queueStatus === 'CONFIRMED'}
                         >
                           <Clear color="inherit" className="icon-normal" />
                           Cancel

@@ -11,7 +11,7 @@ import Logo from 'images/quezone-logo.png';
 import { Home, AssignmentInd, Clear, Cached } from '@material-ui/icons';
 import { viewEventProps } from 'pages/commonProps';
 import CustomModal from 'components/Modal/CustomModal';
-import { EVENT_STATUS } from 'utils/constants';
+import { EVENT_STATUS, SERVICE_MODE } from 'utils/constants';
 import Event from './Event';
 import Reschedule from '../reschedule/Reschedule';
 import s from './ViewEvent.module.scss';
@@ -153,6 +153,7 @@ class ViewEvent extends Component {
     const fullAddress = get(eventById, 'fullAddress');
     const bookingCode = get(eventById, 'bookingCode');
     const status = get(eventById, 'status');
+    const eventMode = get(eventById, 'mode') || '';
     const coordinates = get(eventById, 'coordinates');
     const mapData = {
       coordinates,
@@ -167,7 +168,9 @@ class ViewEvent extends Component {
     const locId = get(eventById, 'locationId');
     const rescheduledSlot = rescheduledAvailabilitiesByTemporaryServiceId &&
       rescheduledAvailabilitiesByTemporaryServiceId[`${sId}-${pId}-${locId}`] || [];
-    const isRescheduleEnabled = isRescheduleOpen && rescheduledSlot.length > 0;
+    const isRescheduleEnabled = isRescheduleOpen
+      && rescheduledSlot.length > 0
+    const showReschedule = eventMode.toLowerCase() === SERVICE_MODE.SCHEDULE;
 
     return (
       <>
@@ -223,10 +226,12 @@ class ViewEvent extends Component {
                       <Clear color="inherit" />
                       <span>&nbsp;Cancel</span>
                     </Button>
-                    <Button variant="outlined" color="inherit" onClick={this.toggleRescheduledSlot}>
-                      <Cached color="inherit" />
-                      <span>&nbsp;Reschedule</span>
-                    </Button>
+                    {showReschedule && (
+                      <Button variant="outlined" color="inherit" onClick={this.toggleRescheduledSlot}>
+                        <Cached color="inherit" />
+                        <span>&nbsp;Reschedule</span>
+                      </Button>
+                    )}
                   </div>
                 )}
               </div>

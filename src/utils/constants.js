@@ -1,14 +1,11 @@
 export const dateFormatDash = 'DD-MM-YYYY';
 export const timeSlotFormat = 'hh:mm a';
 export const defaultDateFormat = 'DD MMMM YYYY';
-export const longDateFormat = 'dddd, DD MMMM YYYY';
 export const FULL_DATE = 'dddd, DD MMMM YYYY';
 export const TIME_FORMAT = 'hh:mm a';
 export const DEFAULT_TIME = '1970-01-01 T00:00:00';
 
 // Navigation
-export const LS_BACK = 'goBack';
-export const LS_INFO = 'locationState';
 export const CATEGORY_NAV_WIDTH = 66;
 
 // layout
