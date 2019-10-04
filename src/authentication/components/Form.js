@@ -8,7 +8,7 @@ import {
 } from '@material-ui/core';
 import withStyles from '@material-ui/core/styles/withStyles';
 import {
-  Call, Check, Email, InsertEmoticon, Lock as LockOutline, LockOpen,
+  PhoneIphone, Check, Email, InsertEmoticon, Lock as LockOutline, LockOpen,
 } from '@material-ui/icons';
 import Card from 'components/Card/Card';
 import CardHeader from 'components/Card/CardHeader';
@@ -101,7 +101,7 @@ class Form extends Component {
         name: 'telephone',
         label: 'Phone number',
         value: telephone || '',
-        icon: Call,
+        icon: PhoneIphone,
       },
       {
         id: FIELD_IDS.EMAIL,

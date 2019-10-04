@@ -110,7 +110,8 @@ class TemporaryService extends Component {
                     onClick={this.handleChunkIndexMore(
                       date, transformedSlot[`${date}-max`],
                     )}
-                    disabled={chunkIndex[`${date}-index`] === transformedSlot[`${date}-max`]}
+                    disabled={chunkIndex[`${date}-index`] === transformedSlot[`${date}-max`]
+                    || transformedSlot[`${date}-max`] === 0}
                   >
                     <span>next&nbsp;</span>
                     <ChevronRight />

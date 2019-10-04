@@ -179,7 +179,7 @@ class Booking extends Component {
     const durationSec = get(selectedBookingDetail, 'durationSec');
     const providerStartSec = get(selectedBookingDetail, 'providerStartSec');
     const startTime = moment(providerStartSec).format(TIME_FORMAT);
-    const endTime = moment(providerStartSec).add(60, 'minutes').format(TIME_FORMAT);
+    const endTime = moment(providerStartSec).add(durationSec, 'minutes').format(TIME_FORMAT);
     const timezoneId = get(selectedBookingDetail, 'timezoneId');
     const userId = get(userDetail, 'userSub') || get(userDetail, 'id');
 
@@ -264,8 +264,8 @@ class Booking extends Component {
                   const bookingValid = isAuthUser || captchaVerified;
                   const loginValid = !(isAuthUser && captchaVerified);
                   const ctaIcon = bookingValid
-                    ? <Book color="inherit" className="icon-normal" />
-                    : <Fingerprint color="inherit" className="icon-normal" />;
+                    ? <Book color="inherit" className="icon-small" />
+                    : <Fingerprint color="inherit" className="icon-small" />;
                   const ctaLabel = bookingValid ? 'book now!' : 'login';
                   const ctaAction = !bookingValid && loginValid
                     ? this.handleOpenLogin
