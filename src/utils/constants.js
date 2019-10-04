@@ -106,6 +106,9 @@ export const EVENT_STATUS = {
   UNSPECIFIED: 'UNSPECIFIED',
 };
 
+// Slots
+export const NO_SLOTS_PER_ROW = 3;
+export const NO_ROWS_PER_DATE = 2;
 // Waitlist
 export const WAIT_LIST_KEYS = {
   SELECTED_PID: 'selectedPId',
