@@ -166,6 +166,7 @@ class Booking extends Component {
     const {
       selectedBookingDetail, userDetail, captchaVerified, isRegisterOpen, isLoginOpen, confirmBooking
     } = this.state;
+    const waitListId = get(selectedBookingDetail, 'waitListId') || '';
     const cName = get(userDetail, 'givenName');
     const cEmail = get(userDetail, 'email');
     const cPhone = get(userDetail, 'telephone');
@@ -182,6 +183,7 @@ class Booking extends Component {
     const endTime = moment(providerStartSec).add(durationSec, 'minutes').format(TIME_FORMAT);
     const timezoneId = get(selectedBookingDetail, 'timezoneId');
     const userId = get(userDetail, 'userSub') || get(userDetail, 'id');
+    const navigateLeftCta = waitListId ? navigateTo('/') : this.handleSelectProvider(sId);
 
     return (
       <>
@@ -205,7 +207,7 @@ class Booking extends Component {
         />
         <div className={s.container}>
           <div className={s.headline}>
-            <IconButton color="inherit" onClick={this.handleSelectProvider(sId)}>
+            <IconButton color="inherit" onClick={navigateLeftCta}>
               <NavigateBefore color="inherit" />
             </IconButton>
             <div className={s.title}>

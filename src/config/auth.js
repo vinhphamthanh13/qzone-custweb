@@ -5,8 +5,8 @@ export const GOOGLE_ID = '628080743577-4jujtdfhclapkg13pgbb2smflaah0vem.apps.goo
 // export const GOOGLE_ID = '166981643559-r54fbu1evv6cpfpphqjtlo4j950vdmvn.apps.googleusercontent.com';
 export const GOOGLE_SECRET = 'vRfkxHyr3Wwxjm8ZAYl7HcGJ';
 export const GOOGLE_GEO_API_KEY = 'AIzaSyATIXiytQDXMl_QyQWWD4t5L7JNgh6Eq_c';
-export const GOOGLE_CAPTCHA_SITE_KEY = '6LfqfK4UAAAAAFm_WbwR2ZR46afREdp-IV1Ne49l';
-export const GOOGLE_CAPTCHA_SECRET = '6LfqfK4UAAAAALouP8hiG-PFTVW7HAUCjBPSRmgM';
+export const GOOGLE_CAPTCHA_SITE_KEY = '6Lc29bsUAAAAALLD3huMZVHQA2IL9UxJBDjTT6kH';
+export const GOOGLE_CAPTCHA_SECRET = '6Lc29bsUAAAAAL6j1N7wPWsH9EXcvqSstSQZQXX0';
 export const PROVIDER = {
   GOOGLE: 'google',
   FACEBOOK: 'facebook',

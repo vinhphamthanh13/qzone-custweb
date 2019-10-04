@@ -169,5 +169,6 @@ export const redirectToInstantProps = {
   }),
   mapDispatchToProps: dispatch => ({
     dispatchWaitListsById: (id, headers) => dispatch(setWaitListsByIdApi(id, headers)),
+    dispatchSelectBookingDetail: slot => dispatch(selectBookingDetail(slot)),
   }),
 };
