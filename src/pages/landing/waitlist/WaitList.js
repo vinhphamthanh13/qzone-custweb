@@ -120,7 +120,6 @@ class WaitList extends Component {
   };
 
   handleSelectProvider = (item, setFieldValue) => () => {
-    console.log('item selected provider', item);
     const { queuedTemporaryServiceIds, selectedLocId } = this.state;
     setFieldValue('providerName', item[WAIT_LIST_KEYS.SELECTED_P_NAME]);
     this.setState({
@@ -145,10 +144,7 @@ class WaitList extends Component {
 
   renderProviderList = (list, setFieldValue) => (
     <div className={s.itemList}>
-      {Object.keys(list).map((name) => {
-        console.log('providerName: ', name);
-        console.log('providerName detail: ', list[name]);
-        return (
+      {Object.keys(list).map((name) => (
           <div
             key={uuidv1()}
             className={s.item}
@@ -159,14 +155,12 @@ class WaitList extends Component {
           >
             {name}
           </div>
-        );
-      })}
+        ))}
     </div>
   );
 
   renderLocationList = setFieldValue => {
     const { queuedProviders, selectedPName } = this.state;
-    console.log('trigger render location list', queuedProviders[selectedPName]);
     return (<div className={s.itemList}>
       {queuedProviders[selectedPName].map(item => (
         <div
@@ -265,7 +259,7 @@ class WaitList extends Component {
                         <Button
                           variant="outlined"
                           onClick={ctaAction}
-                          disabled={(!isValid && userId) || (!selectedTemporaryServiceId && userId)}
+                          disabled={!!((!isValid && userId) || (!selectedTemporaryServiceId && userId))}
                         >
                           <CtaIcon color="inherit" />
                           <span>{ctaLabel}</span>
