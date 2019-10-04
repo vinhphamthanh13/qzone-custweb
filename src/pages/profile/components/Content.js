@@ -1,26 +1,15 @@
 import React, { Component } from 'react';
-import {
-  string, func, bool, any, objectOf,
-} from 'prop-types';
+import { string, func, bool, any, objectOf } from 'prop-types';
 import { connect } from 'react-redux';
 import { find, uniqBy } from 'lodash';
 import moment from 'moment';
 import { Typography } from '@material-ui/core';
-import {
-  Event,
-  Settings,
-  ExitToApp,
-  AddToQueue,
-  Assessment,
-} from '@material-ui/icons';
+import { Event, Settings, ExitToApp, AddToQueue, Assessment } from '@material-ui/icons';
 import { findEventByCustomerIdAction } from 'actionsReducers/common.actions';
 import { cancelEventById } from 'actionsReducers/profile.actions';
 import { trackingAppointmentByIdsAction } from 'actionsReducers/customer.actions';
 import { setBookingStep } from 'actionsReducers/booking.actions';
-import {
-  setSurveys,
-  setAssessmentAction,
-} from 'actionsReducers/surveys.action';
+import { setSurveys, setAssessmentAction } from 'actionsReducers/surveys.action';
 import { PROFILE, BOOKING } from 'utils/constants';
 import WaitList from './WaitList';
 import Info from './Info';
@@ -121,9 +110,9 @@ class Content extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      eventList: null,
-      waitLists: null,
-      surveyList: null,
+      eventList: [],
+      waitLists: [],
+      surveyList: [],
       sidePanel: { ...this.initState },
     };
   }

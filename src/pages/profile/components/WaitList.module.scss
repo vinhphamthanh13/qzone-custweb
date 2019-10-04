@@ -4,26 +4,25 @@
   max-height: calc(100% - 65px);
   overflow: auto;
   display: flex;
+  color: $main_04;
 }
 
 .waitSlotRow {
-  color: $main;
   margin: 1rem 1rem 1rem 0;
   display: flex;
   flex-direction: column;
 }
 
 .waitSlot {
-  margin: 0.2rem 0 0.7rem;
+  margin: 0.2rem auto 0.7rem;
   border: 1px solid $main_03;
-  width: 21rem;
+  width: $max-card-width;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  padding: 1rem 0;
+  padding: 1rem 0.5rem;
   border-radius: 0.2rem;
-  box-shadow: 2px 2px 4px $main_04;
+  box-shadow: 2px 2px 4px 1px $gallery;
 }
 
 .waitSlotCONFIRMED {
@@ -31,23 +30,34 @@
 }
 
 .waitSlotOPEN {
-  color: $main;
+  color: $main_04;
 }
 
-.queueAddress {
-  height: 2.2rem;
+.sName {
+  color: $fruitSalad;
+  font-size: $subtitle;
+  font-weight: 500;
+  margin: 0.5rem;
+  padding: 0 0.5rem 0.5rem;
+  border-bottom: 2px solid $fruitSalad;
+}
+
+.providerInfo {
+  width: 100%;
+  color: $main_04;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.agendaLabel {
+  font-weight: 500;
+  padding-top: 0.3rem;
+  text-decoration: underline;
 }
 
 .waitSlotExpired {
   color: $grayNickel;
-}
-
-.serviceProviderInfo {
-  color: $main;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 1rem auto;
 }
 
 .bookedTime {
@@ -60,15 +70,17 @@
 
 .schedule {
   display: flex;
-  justify-content: center !important;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+
+.item {
+  display: flex;
+  align-items: center;
 }
 
 .queueOrder {
   color: $main;
-}
-
-.serviceName {
-  color: $main_04;
 }
 
 .queueCta {

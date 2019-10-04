@@ -7,6 +7,7 @@ import { limitString, navigateTo } from 'utils/common';
 import { Domain, NavigateNext, NotificationImportant, WrapText } from '@material-ui/icons';
 import { landingProps } from 'pages/commonProps';
 import { SERVICE_MODE } from 'utils/constants';
+import defaultImage from 'images/providers.jpg';
 import WaitList from '../waitlist/WaitList';
 import s from './Service.module.scss';
 
@@ -81,7 +82,7 @@ class Service extends Component {
     const sDescription = get(service, 'description');
     const sDuration = get(service, 'duration');
     const sId = get(service, 'id');
-    const imgUrl = get(service, 'image.fileUrl');
+    const imgUrl = get(service, 'image.fileUrl') || defaultImage;
     const sName = get(service, 'name');
     const orgName = get(service, 'organizationEntity.name');
     const website = get(service, 'organizationEntity.website');

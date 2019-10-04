@@ -8,8 +8,15 @@
 
 .row {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-evenly;
   box-sizing: border-box;
+  margin: 0.2rem 0 0.5rem;
+}
+
+.chunkSlots {
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
 }
 
 .date {
@@ -24,7 +31,7 @@
 }
 
 .slot {
-  width: 33.3333333%;
+  width: 30%;
   border: 1px solid $main_03;
   padding: 1.8rem 0;
   text-align: center;
@@ -37,4 +44,22 @@
   background: $main_04;
   font-weight: 500;
   color: $main_01;
+}
+
+.showMoreSlot {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+}
+
+.extraCta {
+  display: flex;
+  justify-content: space-between;
+}
+
+.extraCta span {
+  font-size: 1.2rem;
 }

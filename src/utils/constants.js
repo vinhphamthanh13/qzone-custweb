@@ -1,14 +1,11 @@
 export const dateFormatDash = 'DD-MM-YYYY';
 export const timeSlotFormat = 'hh:mm a';
 export const defaultDateFormat = 'DD MMMM YYYY';
-export const longDateFormat = 'dddd, DD MMMM YYYY';
 export const FULL_DATE = 'dddd, DD MMMM YYYY';
 export const TIME_FORMAT = 'hh:mm a';
 export const DEFAULT_TIME = '1970-01-01 T00:00:00';
 
 // Navigation
-export const LS_BACK = 'goBack';
-export const LS_INFO = 'locationState';
 export const CATEGORY_NAV_WIDTH = 66;
 
 // layout
@@ -66,7 +63,10 @@ export const regExPattern = {
   password: /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})/g,
   registerVerificationCode: /^\d{6}$/,
   connectError: /Cannot connect to services/,
-  removedTimeZone: /\..*/,
+  ISO_TIME: {
+    pattern: /(.*)T(.*)\..*/,
+    replaceBy: '$1 $2',
+  },
 };
 export const LOGIN_TYPES = {
   FB: 'FaceBook',
@@ -106,6 +106,9 @@ export const EVENT_STATUS = {
   UNSPECIFIED: 'UNSPECIFIED',
 };
 
+// Slots
+export const NO_SLOTS_PER_ROW = 3;
+export const NO_ROWS_PER_DATE = 2;
 // Waitlist
 export const WAIT_LIST_KEYS = {
   SELECTED_PID: 'selectedPId',
