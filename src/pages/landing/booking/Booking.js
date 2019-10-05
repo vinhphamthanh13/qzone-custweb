@@ -249,7 +249,7 @@ class Booking extends Component {
                 <div className={s.item}><PhoneIphone className="icon-small" color="inherit" />{pPhone}</div>
                 <div className={s.item}><Email className="icon-small" color="inherit" />{pEmail}</div>
                 <div className={s.place}>
-                  <Place className="icon-small" color="secondary" />
+                  <Place className="icon-small" />
                   <span>&nbsp;{limitString(pAddress, ADDRESS_LENGTH)}</span>
                 </div>
                 <div className={s.item}><GpsFixed className="icon-small" color="inherit" />{timezoneId}</div>
