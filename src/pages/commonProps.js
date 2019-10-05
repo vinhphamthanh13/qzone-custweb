@@ -1,4 +1,4 @@
-import { saveGuestInfo } from 'authentication/actions/login';
+import { saveGuestInfo, clearGuestErrorAction } from 'authentication/actions/login';
 import { setServiceCategories, setServices } from 'actionsReducers/home.actions';
 import {
   setTemporaryServices,
@@ -93,6 +93,7 @@ export const bookingProps = {
   mapStateToProps: ({ auth, provider, booking, landing }) => ({
     userDetail: auth.userDetail,
     loginSession: auth.loginSession,
+    guestUserError: auth.guestUserError,
     selectedBookingDetail: provider.selectedBookingDetail,
     bookedEventDetail: booking.bookedEventDetail,
     landingPageFactors: landing.landingPageFactors,
@@ -100,6 +101,7 @@ export const bookingProps = {
   mapDispatchToProps: dispatch => ({
     dispatchSaveGuestInfo: (data, cb) => dispatch(saveGuestInfo(data, cb)),
     dispatchBookEvent: (data, headers) => dispatch(bookEventApi(data, headers)),
+    dispatchClearGuestError: () => dispatch(clearGuestErrorAction()),
   }),
 };
 

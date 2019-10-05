@@ -25,6 +25,7 @@ class Booking extends Component {
   static propTypes = {
     dispatchSaveGuestInfo: func.isRequired,
     dispatchBookEvent: func.isRequired,
+    dispatchClearGuestError: func.isRequired,
   };
 
   static defaultProps = {
@@ -37,16 +38,20 @@ class Booking extends Component {
     isLoginOpen: false,
     confirmBooking: false,
     loginSession: {},
+    guestUserError: false,
     bookedEventDetail: {},
   };
 
   recaptcha = React.createRef();
 
   static getDerivedStateFromProps(props, state) {
-    const { selectedBookingDetail, userDetail, loginSession, bookedEventDetail, landingPageFactors } = props;
+    const {
+      selectedBookingDetail, userDetail, loginSession, bookedEventDetail, landingPageFactors, guestUserError,
+    } = props;
     const {
       selectedBookingDetail: cachedBookingDetail, userDetail: cachedUserDetail, loginSession: cachedLoginSession,
       bookedEventDetail: cachedBookedEventDetail, landingPageFactors: cachedLandingPageFactors,
+      guestUserError: cachedGuestUserError,
     } = state;
     const updatedState = {};
     if (
@@ -79,13 +84,17 @@ class Booking extends Component {
     ) {
       updatedState.landingPageFactors = landingPageFactors;
     }
+    if (guestUserError !== cachedGuestUserError) {
+      updatedState.guestUserError = guestUserError;
+    }
 
     return Object.keys(updatedState) ? updatedState : null;
   }
 
   componentDidUpdate(prevProps) {
     const { bookedEventDetail } = prevProps;
-    const { bookedEventDetail: cachedBookedEventDetail } = this.state;
+    const { dispatchClearGuestError } = this.props;
+    const { bookedEventDetail: cachedBookedEventDetail, guestUserError } = this.state;
     if (
       bookedEventDetail !== null &&
       JSON.stringify(bookedEventDetail) !== JSON.stringify(cachedBookedEventDetail)
@@ -94,6 +103,9 @@ class Booking extends Component {
       if (bookedEventId) {
         navigateTo(`/event/${bookedEventId}`)();
       }
+    }
+    if (guestUserError) {
+      dispatchClearGuestError();
     }
   }
 
@@ -164,7 +176,8 @@ class Booking extends Component {
 
   render() {
     const {
-      selectedBookingDetail, userDetail, captchaVerified, isRegisterOpen, isLoginOpen, confirmBooking
+      selectedBookingDetail, userDetail, captchaVerified, isRegisterOpen, isLoginOpen, confirmBooking, guestUserError,
+
     } = this.state;
     const waitListId = get(selectedBookingDetail, 'waitListId') || '';
     const cName = get(userDetail, 'givenName');
@@ -324,7 +337,7 @@ class Booking extends Component {
                           </div>
                         )}
                       </div>
-                      {isValid && !userId && (
+                      {isValid && !userId && !guestUserError && (
                         <div className={s.recaptcha}>
                           <Recaptcha
                             ref={this.recaptcha}
