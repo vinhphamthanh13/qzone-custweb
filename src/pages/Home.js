@@ -127,7 +127,7 @@ export class Home extends Component {
           toggleAdvancedSearch={this.toggleAdvancedSearch}
         />
         {organizations && organizations.length > 0 && (<SlideShow list={organizations} />)}
-        <Landing location={location} handleAuth={this.openAuthModal}/>
+        <Landing location={location} handleAuth={this.openAuthModal} />
         <Footer maintenance={false} />
         {searchResult.length > 0 && (
           <div className={s.instantSearch}>

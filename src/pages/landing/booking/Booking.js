@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import { func } from 'prop-types';
 import { Formik } from 'formik';
 import moment from 'moment';
-import { get, noop } from 'lodash';
+import get from 'lodash/get';
+import noop from 'lodash/noop';
+import isEmpty from 'lodash/isEmpty';
 import { IconButton, Button, Input, InputLabel } from '@material-ui/core';
 import {
   Email, PhoneIphone, Place, GpsFixed, Schedule, DateRange, NavigateBefore, Book, Fingerprint,
@@ -94,7 +96,10 @@ class Booking extends Component {
   componentDidUpdate(prevProps) {
     const { bookedEventDetail } = prevProps;
     const { dispatchClearGuestError } = this.props;
-    const { bookedEventDetail: cachedBookedEventDetail, guestUserError } = this.state;
+    const { bookedEventDetail: cachedBookedEventDetail, guestUserError, selectedBookingDetail } = this.state;
+    if (!selectedBookingDetail || isEmpty(selectedBookingDetail)) {
+      navigateTo('/')();
+    }
     if (
       bookedEventDetail !== null &&
       JSON.stringify(bookedEventDetail) !== JSON.stringify(cachedBookedEventDetail)
