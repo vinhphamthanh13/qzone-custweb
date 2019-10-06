@@ -5,9 +5,9 @@ import { find, uniqBy } from 'lodash';
 import moment from 'moment';
 import { Typography } from '@material-ui/core';
 import { Event, Settings, ExitToApp, AddToQueue, Assessment } from '@material-ui/icons';
-import { findEventByCustomerIdAction } from 'actionsReducers/common.actions';
+import { findEventByCustomerIdApi } from 'actionsReducers/common.actions';
 import { cancelEventById } from 'actionsReducers/profile.actions';
-import { trackingAppointmentByIdsAction } from 'actionsReducers/customer.actions';
+import { trackingAppointmentByIdsApi } from 'actionsReducers/customer.actions';
 import { setBookingStep } from 'actionsReducers/booking.actions';
 import { setSurveys, setAssessmentAction } from 'actionsReducers/surveys.action';
 import { PROFILE, BOOKING } from 'utils/constants';
@@ -135,11 +135,11 @@ class Content extends Component {
       rescheduleStatus,
       setAssessmentAction: setAssessments,
       eventList,
-      findEventByCustomerIdAction: findEventByCustomerId,
+      findEventByCustomerIdApi: findEventByCustomerId,
       cancelEventById: cancelEventByIdAction,
       customerId,
       customerAssessment,
-      trackingAppointmentByIdsAction: trackingAppointmentByIds,
+      trackingAppointmentByIdsApi: trackingAppointmentByIds,
     } = prevProps;
     const {
       cancelEventByIdStatus: cachedCancelEventByIdStatus,
@@ -319,9 +319,9 @@ Content.propTypes = {
   handleAccount: func.isRequired,
   updateProfileStatus: string.isRequired,
   profilePage: string.isRequired,
-  findEventByCustomerIdAction: func.isRequired,
+  findEventByCustomerIdApi: func.isRequired,
   cancelEventById: func.isRequired,
-  trackingAppointmentByIdsAction: func.isRequired,
+  trackingAppointmentByIdsApi: func.isRequired,
   handleLogout: func.isRequired,
   setBookingStep: func.isRequired,
   toggleSidePanel: bool.isRequired,
@@ -341,9 +341,9 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, {
-  findEventByCustomerIdAction,
+  findEventByCustomerIdApi,
   cancelEventById,
-  trackingAppointmentByIdsAction,
+  trackingAppointmentByIdsApi,
   setSurveys,
   setAssessmentAction,
   setBookingStep,

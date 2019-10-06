@@ -77,7 +77,7 @@ export const setRatingService = data => async (dispatch) => {
   }
   dispatch(setLoading(false));
 };
-export const findEventByCustomerIdAction = (id, headers) => async (dispatch) => {
+export const findEventByCustomerIdApi = (id, headers) => async (dispatch) => {
   dispatch(setLoading(true));
   const [eventList, error] = await handleRequest(findEventByCustomerId, [id, headers]);
   if (error) {

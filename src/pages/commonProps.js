@@ -11,6 +11,7 @@ import {
   temporaryServicesByIdApi,
   rescheduleEventApi,
   rescheduleStatusAction,
+  findEventByCustomerIdApi,
 } from 'actionsReducers/common.actions';
 import { providersByServiceIdApi, bookEventApi } from 'actionsReducers/booking.actions';
 import {
@@ -25,6 +26,8 @@ import {
 import { setLandingPageAction } from 'actionsReducers/landing.action';
 import { setOrganizationsApi } from 'actionsReducers/organization.actions';
 import { registerWaitListsApi, setWaitListsByIdApi } from 'actionsReducers/waitlist.actions';
+import { goProfilePage } from 'actionsReducers/profile.actions';
+import { trackingAppointmentByIdsApi } from 'actionsReducers/customer.actions';
 
 export const homeProps = {
   mapStateToProps: ({ home, common, auth, organization }) => ({
@@ -172,5 +175,19 @@ export const redirectToInstantProps = {
   mapDispatchToProps: dispatch => ({
     dispatchWaitListsById: (id, headers) => dispatch(setWaitListsByIdApi(id, headers)),
     dispatchSelectBookingDetail: slot => dispatch(selectBookingDetail(slot)),
+  }),
+};
+
+export const appBarProps = {
+  mapStateToProps: ({ common, auth, customer, booking }) => ({
+    eventList: common.eventList,
+    loginSession: auth.loginSession,
+    trackingAppointmentById: customer.trackingAppointmentById,
+    bookedEventId: booking.bookedEventId,
+  }),
+  mapDispatchToProps: dispatch => ({
+    dispatchEventsByCustomerId: (id, headers) => dispatch(findEventByCustomerIdApi(id, headers)),
+    dispatchGoToProfile: page => dispatch(goProfilePage(page)),
+    dispatchTrackingEvent: (list, headers) => dispatch(trackingAppointmentByIdsApi(list, headers)),
   }),
 };
