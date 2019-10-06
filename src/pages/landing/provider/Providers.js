@@ -159,9 +159,7 @@ class Providers extends Component {
               <NavigateBefore color="inherit" />
             </IconButton>
           </div>
-          <div className={`${s.title} ellipsis`}>
-            {sName}
-          </div>
+          <div className={`${s.title} ellipsis`}>{sName}</div>
         </div>
         {chunk(providerFlatten, chunkFactor).map((providerRow, ind) => (
           <div className={s.providerRow} key={ind}>

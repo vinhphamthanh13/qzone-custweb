@@ -53,7 +53,7 @@ class RedirectToInstant extends Component {
 
   componentDidUpdate(prevProps) {
     const { dispatchSelectBookingDetail, dispatchGetCustomerById, dispatchSetLandingPage } = this.props;
-    const { waitListsById, userDetailById } = prevProps;
+    const { waitListsById } = prevProps;
     const { waitListsById: cachedWaitListsById, userDetailById: cachedUserDetailById } = this.state;
     if (
       cachedWaitListsById !== null &&
@@ -82,10 +82,7 @@ class RedirectToInstant extends Component {
         dispatchGetCustomerById(customerId);
       }
     }
-    if (
-      cachedUserDetailById !== null &&
-      JSON.stringify(userDetailById) !== JSON.stringify(cachedUserDetailById)
-    ) {
+    if (cachedUserDetailById) {
       navigateTo('/confirm-booking')();
       dispatchSetLandingPage({ confirmWaitLists: true })
     }

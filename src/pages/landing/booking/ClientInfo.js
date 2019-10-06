@@ -90,7 +90,7 @@ class ClientInfo extends Component {
     const cEmail = get(userDetail, 'email');
     const cPhone = get(userDetail, 'telephone');
     return (
-      <div className={s.clientInfo}>
+      <div className={s.container}>
         <div className={s.clientTitle}>
           Client Information
         </div>

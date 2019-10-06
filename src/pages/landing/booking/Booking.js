@@ -4,7 +4,7 @@ import { func } from 'prop-types';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { IconButton, Button } from '@material-ui/core';
-import { CheckCircle, NavigateBefore } from '@material-ui/icons';
+import { CheckCircle, NavigateBefore, PhoneIphone, AccountCircle, Mail } from '@material-ui/icons';
 import Auth from 'pages/Auth';
 import { navigateTo } from 'utils/common';
 import Loading from 'components/Loading';
@@ -161,12 +161,15 @@ class Booking extends Component {
 
   render() {
     const {
-      selectedBookingDetail, isRegisterOpen, isLoginOpen, confirmBooking, userDetail,
+      selectedBookingDetail, isRegisterOpen, isLoginOpen, confirmBooking, userDetail, userDetailById,
     } = this.state;
     const waitListId = get(selectedBookingDetail, 'waitListId') || '';
     const headTitle = waitListId ? 'WaitLists Confirmation' : 'Booking Confirmation';
     const sId = get(selectedBookingDetail, 'serviceId');
     const navigateLeftCta = waitListId ? navigateTo('/') : this.handleSelectProvider(sId);
+    const cName = get(userDetailById, 'givenName') || get(userDetailById, 'fullName')
+    const cEmail = get(userDetailById, 'email');
+    const cPhone = get(userDetailById, 'telephone');
 
     return (
       <>
@@ -199,19 +202,36 @@ class Booking extends Component {
           </div>
           <div className={s.confirmInfo}>
             <ProviderInfo provider={selectedBookingDetail} />
-            {!waitListId && (
-              <ClientInfo
-                userDetail={userDetail}
-                onLogin={this.handleOpenLogin}
-                onConfirmCta={this.toggleConfirmBooking}
-              />
-            )}
-            {waitListId && (
-              <Button variant="outlined" onClick={this.handleConfirmWaitLists}>
-                <CheckCircle color="inherit" className="icon-small" />
-                Confirm Now!
-              </Button>
-            )}
+            <div className={s.clientInfo}>
+              {!waitListId && (
+                <ClientInfo
+                  userDetail={userDetail}
+                  onLogin={this.handleOpenLogin}
+                  onConfirmCta={this.toggleConfirmBooking}
+                />
+              )}
+              {waitListId && (
+                <div className={s.waitList}>
+                  <div className={s.waitListTitle}>Client Information</div>
+                  <div className={s.item}>
+                    <AccountCircle color="inherit" className="icon-small" />
+                    <span>&nbsp;{cName}</span>
+                  </div>
+                  <div className={s.item}>
+                    <Mail color="inherit" className="icon-small" />
+                    <span>&nbsp;{cEmail}</span>
+                  </div>
+                  <div className={s.item}>
+                    <PhoneIphone color="inherit" className="icon-small" />
+                    <span>&nbsp;{cPhone}</span>
+                  </div>
+                  <Button variant="outlined" className="success-color" onClick={this.handleConfirmWaitLists}>
+                    <CheckCircle color="inherit" className="icon-small" />
+                    Confirm Now!
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </>

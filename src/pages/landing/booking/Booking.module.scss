@@ -16,23 +16,54 @@
   flex-direction: column;
 }
 
+.clientInfo {
+  display: flex;
+  flex-direction: column;
+}
+
 .headline {
   width: 100%;
   display: flex;
   align-items: center;
-  border-bottom: 2px solid $gallery;
+  border-bottom: 4px solid $grayNickel;
   text-transform: capitalize;
   color: indianred;
+  background: $gallery;
 }
 
 .title {
-  color: $info;
+  color: $main_04;
   font-size: $heading;
   font-weight: 500;
+}
+
+.waitList {
+  width: $max-card-width;
+}
+
+.waitListTitle {
+  color: $main_03;
+  font-size: $title;
+  font-weight: 500;
+  padding: 0.8rem 0 1rem;
+  border-bottom: 2px solid $we_peep;
+}
+
+.item {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 1rem 0;
 }
 
 @include breakpoint-up(sm) {
   .confirmInfo {
     flex-direction: row;
+  }
+  .clientInfo {
+    margin-left: 2rem;
+    padding-top: 0.5rem;
+    border-left: 4px solid $grayNickel;
+    padding-left: 1.8rem;
   }
 }
