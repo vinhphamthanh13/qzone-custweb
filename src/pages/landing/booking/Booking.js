@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { func } from 'prop-types';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import { IconButton } from '@material-ui/core';
-import { NavigateBefore } from '@material-ui/icons';
+import { IconButton, Button } from '@material-ui/core';
+import { CheckCircle, NavigateBefore } from '@material-ui/icons';
 import Auth from 'pages/Auth';
 import { navigateTo } from 'utils/common';
 import Loading from 'components/Loading';
@@ -18,6 +18,7 @@ import s from './Booking.module.scss';
 class Booking extends Component {
   static propTypes = {
     dispatchBookEvent: func.isRequired,
+    dispatchConfirmWaitLists: func.isRequired,
   };
 
   static defaultProps = {
@@ -26,21 +27,24 @@ class Booking extends Component {
   state = {
     isRegisterOpen: false,
     isLoginOpen: false,
+    userDetail: {},
+    userDetailById: {},
     confirmBooking: false,
     loginSession: {},
     bookedEventDetail: {},
-    userDetail: {},
+    selectedBookingDetail: {},
   };
 
   recaptcha = React.createRef();
 
   static getDerivedStateFromProps(props, state) {
     const {
-      selectedBookingDetail, userDetail, loginSession, bookedEventDetail, landingPageFactors,
+      selectedBookingDetail, userDetail, userDetailById, loginSession, bookedEventDetail, landingPageFactors,
     } = props;
     const {
-      selectedBookingDetail: cachedBookingDetail, userDetail: cachedUserDetail, loginSession: cachedLoginSession,
-      bookedEventDetail: cachedBookedEventDetail, landingPageFactors: cachedLandingPageFactors,
+      selectedBookingDetail: cachedBookingDetail, userDetail: cachedUserDetail, userDetail: cachedUserDetailById,
+      loginSession: cachedLoginSession, bookedEventDetail: cachedBookedEventDetail,
+      landingPageFactors: cachedLandingPageFactors,
     } = state;
     const updatedState = {};
     if (
@@ -54,6 +58,12 @@ class Booking extends Component {
       JSON.stringify(userDetail) !== JSON.stringify(cachedUserDetail)
     ) {
       updatedState.userDetail = userDetail;
+    }
+    if (
+      userDetailById !== null &&
+      JSON.stringify(userDetailById) !== JSON.stringify(cachedUserDetailById)
+    ) {
+      updatedState.userDetailById = userDetailById;
     }
     if (
       loginSession !== null &&
@@ -137,12 +147,24 @@ class Booking extends Component {
     }));
   };
 
+  handleConfirmWaitLists = () => {
+    const { dispatchConfirmWaitLists } = this.props;
+    const { selectedBookingDetail, userDetailById } = this.state;
+    const customerId = get(userDetailById, 'userSub') || get(userDetailById, 'id');
+    const duration = get(selectedBookingDetail, 'durationSec');
+    const availabilityId = get(selectedBookingDetail, 'id');
+    const startSec = get(selectedBookingDetail, 'providerStartSec');
+    dispatchConfirmWaitLists({
+      customerId, duration, availabilityId, startSec, status: 'UNSPECIFIED', type: 'APPOINTMENT',
+    });
+  };
+
   render() {
     const {
       selectedBookingDetail, isRegisterOpen, isLoginOpen, confirmBooking, userDetail,
     } = this.state;
     const waitListId = get(selectedBookingDetail, 'waitListId') || '';
-
+    const headTitle = waitListId ? 'WaitLists Confirmation' : 'Booking Confirmation';
     const sId = get(selectedBookingDetail, 'serviceId');
     const navigateLeftCta = waitListId ? navigateTo('/') : this.handleSelectProvider(sId);
 
@@ -172,16 +194,24 @@ class Booking extends Component {
               <NavigateBefore color="inherit" />
             </IconButton>
             <div className={s.title}>
-              Booking confirmation
+              {headTitle}
             </div>
           </div>
           <div className={s.confirmInfo}>
             <ProviderInfo provider={selectedBookingDetail} />
-            <ClientInfo
-              userDetail={userDetail}
-              onLogin={this.handleOpenLogin}
-              onConfirmCta={this.toggleConfirmBooking}
-            />
+            {!waitListId && (
+              <ClientInfo
+                userDetail={userDetail}
+                onLogin={this.handleOpenLogin}
+                onConfirmCta={this.toggleConfirmBooking}
+              />
+            )}
+            {waitListId && (
+              <Button variant="outlined" onClick={this.handleConfirmWaitLists}>
+                <CheckCircle color="inherit" className="icon-small" />
+                Confirm Now!
+              </Button>
+            )}
           </div>
         </div>
       </>

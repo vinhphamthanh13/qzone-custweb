@@ -13,7 +13,7 @@ import {
   rescheduleStatusAction,
   findEventByCustomerIdApi,
 } from 'actionsReducers/common.actions';
-import { providersByServiceIdApi, bookEventApi } from 'actionsReducers/booking.actions';
+import { providersByServiceIdApi, bookEventApi, confirmWaitListsApi } from 'actionsReducers/booking.actions';
 import {
   temporaryServicesByServiceIdApi,
   waitListTemporaryServicesByServiceIdApi,
@@ -89,12 +89,14 @@ export const providersProps = {
     dispatchAvailabilities: (list, sId, pId, locId) =>
       dispatch(availabilitiesByTemporaryServiceIdApi(list, sId, pId, locId)),
     dispatchSelectBookingDetail: slot => dispatch(selectBookingDetail(slot)),
+    dispatchSetLandingPage: data => dispatch(setLandingPageAction(data)),
   }),
 };
 
 export const bookingProps = {
   mapStateToProps: ({ auth, provider, booking, landing }) => ({
     userDetail: auth.userDetail,
+    userDetailById: auth.userDetailById,
     loginSession: auth.loginSession,
     selectedBookingDetail: provider.selectedBookingDetail,
     bookedEventDetail: booking.bookedEventDetail,
@@ -102,6 +104,7 @@ export const bookingProps = {
   }),
   mapDispatchToProps: dispatch => ({
     dispatchBookEvent: (data, headers) => dispatch(bookEventApi(data, headers)),
+    dispatchConfirmWaitLists: data => dispatch(confirmWaitListsApi(data)),
   }),
 };
 
@@ -174,6 +177,7 @@ export const redirectToInstantProps = {
     dispatchWaitListsById: (id, headers) => dispatch(setWaitListsByIdApi(id, headers)),
     dispatchSelectBookingDetail: slot => dispatch(selectBookingDetail(slot)),
     dispatchGetCustomerById: id => dispatch(getCustomerByIdApi(id)),
+    dispatchSetLandingPage: data => dispatch(setLandingPageAction(data)),
   }),
 };
 

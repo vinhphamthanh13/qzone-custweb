@@ -14,6 +14,7 @@ class Provider extends Component {
   static propTypes = {
     dispatchAvailabilities: func.isRequired,
     selectBookingDetail: func.isRequired,
+    setLandingPage: func.isRequired,
   };
 
   state = {
@@ -76,8 +77,9 @@ class Provider extends Component {
   };
 
   handleSelectSlot = (slot) => () => {
-    const { selectBookingDetail } = this.props;
+    const { selectBookingDetail, setLandingPage } = this.props;
     selectBookingDetail(slot);
+    setLandingPage({ instantBooking: false, confirmWaitLists: false });
     navigateTo('/confirm-booking')();
   };
 
