@@ -1,57 +1,46 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { func } from 'prop-types';
-import { Formik } from 'formik';
 import get from 'lodash/get';
-import noop from 'lodash/noop';
 import isEmpty from 'lodash/isEmpty';
-import { IconButton, Button, Input, InputLabel } from '@material-ui/core';
-import { NavigateBefore, Book, Fingerprint } from '@material-ui/icons';
+import { IconButton } from '@material-ui/core';
+import { NavigateBefore } from '@material-ui/icons';
 import Auth from 'pages/Auth';
 import { navigateTo } from 'utils/common';
-import { clientInfo } from 'authentication/components/schemas';
-import Recaptcha from 'react-recaptcha';
-import { GOOGLE_CAPTCHA_SITE_KEY } from 'config/auth';
 import Loading from 'components/Loading';
 import Error from 'components/Error';
 import CustomModal from 'components/Modal/CustomModal';
-import { POPOVER_TYPE } from 'utils/constants';
-import PolicyPopover from 'authentication/components/PolicyPopover';
 import ProviderInfo from './ProviderInfo';
+import ClientInfo from './ClientInfo';
 import { bookingProps } from '../../commonProps';
 import s from './Booking.module.scss';
 
 class Booking extends Component {
   static propTypes = {
-    dispatchSaveGuestInfo: func.isRequired,
     dispatchBookEvent: func.isRequired,
-    dispatchClearGuestError: func.isRequired,
   };
 
   static defaultProps = {
   };
 
   state = {
-    captchaVerified: false,
-    userDetail: {},
     isRegisterOpen: false,
     isLoginOpen: false,
     confirmBooking: false,
     loginSession: {},
-    guestUserError: false,
     bookedEventDetail: {},
+    userDetail: {},
   };
 
   recaptcha = React.createRef();
 
   static getDerivedStateFromProps(props, state) {
     const {
-      selectedBookingDetail, userDetail, loginSession, bookedEventDetail, landingPageFactors, guestUserError,
+      selectedBookingDetail, userDetail, loginSession, bookedEventDetail, landingPageFactors,
     } = props;
     const {
       selectedBookingDetail: cachedBookingDetail, userDetail: cachedUserDetail, loginSession: cachedLoginSession,
       bookedEventDetail: cachedBookedEventDetail, landingPageFactors: cachedLandingPageFactors,
-      guestUserError: cachedGuestUserError,
     } = state;
     const updatedState = {};
     if (
@@ -84,17 +73,13 @@ class Booking extends Component {
     ) {
       updatedState.landingPageFactors = landingPageFactors;
     }
-    if (guestUserError !== cachedGuestUserError) {
-      updatedState.guestUserError = guestUserError;
-    }
 
     return Object.keys(updatedState) ? updatedState : null;
   }
 
   componentDidUpdate(prevProps) {
     const { bookedEventDetail } = prevProps;
-    const { dispatchClearGuestError } = this.props;
-    const { bookedEventDetail: cachedBookedEventDetail, guestUserError, selectedBookingDetail } = this.state;
+    const { bookedEventDetail: cachedBookedEventDetail, selectedBookingDetail } = this.state;
     if (!selectedBookingDetail || isEmpty(selectedBookingDetail)) {
       navigateTo('/')();
     }
@@ -106,9 +91,6 @@ class Booking extends Component {
       if (bookedEventId) {
         navigateTo(`/event/${bookedEventId}`)();
       }
-    }
-    if (guestUserError) {
-      dispatchClearGuestError();
     }
   }
 
@@ -155,37 +137,12 @@ class Booking extends Component {
     }));
   };
 
-  handleVerifiedCaptcha = values => response => {
-    const { dispatchSaveGuestInfo } = this.props;
-    const email = get(values, 'userEmail');
-    const givenName = get(values, 'userName');
-    const phone = get(values, 'phoneNumber');
-    if (response) {
-      dispatchSaveGuestInfo({
-        givenName,
-        email,
-        phone,
-        userType: 'GUEST',
-      }, this.handleValidatingCaptcha(true));
-    }
-  };
-
-  handleValidatingCaptcha = value => () => {
-    this.setState({
-      captchaVerified: value,
-    });
-  };
-
   render() {
     const {
-      selectedBookingDetail, userDetail, captchaVerified, isRegisterOpen, isLoginOpen, confirmBooking, guestUserError,
-
+      selectedBookingDetail, isRegisterOpen, isLoginOpen, confirmBooking, userDetail,
     } = this.state;
     const waitListId = get(selectedBookingDetail, 'waitListId') || '';
-    const userId = get(userDetail, 'userSub') || get(userDetail, 'id');
-    const cName = get(userDetail, 'givenName');
-    const cEmail = get(userDetail, 'email');
-    const cPhone = get(userDetail, 'telephone');
+
     const sId = get(selectedBookingDetail, 'serviceId');
     const navigateLeftCta = waitListId ? navigateTo('/') : this.handleSelectProvider(sId);
 
@@ -220,116 +177,11 @@ class Booking extends Component {
           </div>
           <div className={s.confirmInfo}>
             <ProviderInfo provider={selectedBookingDetail} />
-            <div className={s.clientInfo}>
-              <div className={s.clientTitle}>
-                Client Information
-              </div>
-              <Formik
-                onSubmit={noop}
-                initialValues={{
-                  userName: cName,
-                  userEmail: cEmail,
-                  phoneNumber: cPhone,
-                }}
-                isInitialValid={!!userId}
-                validationSchema={clientInfo}
-                validateOnBlur
-                render={props => {
-                  const { values, setFieldTouched, handleChange, errors, touched, isValid } = props;
-                  const userName = get(userDetail, 'givenName') || get(values, 'userName');
-                  const userEmail = get(userDetail, 'email') || get(values, 'userEmail');
-                  const phoneNumber = get(userDetail, 'telephone') || get(values, 'phoneNumber');
-                  const isAuthUser = userId && isValid;
-                  const disableField = userId || captchaVerified;
-                  const bookingValid = isAuthUser || captchaVerified;
-                  const loginValid = !(isAuthUser && captchaVerified);
-                  const ctaIcon = bookingValid
-                    ? <Book color="inherit" className="icon-small" />
-                    : <Fingerprint color="inherit" className="icon-small" />;
-                  const ctaLabel = bookingValid ? 'book now!' : 'Proceed';
-                  const ctaAction = !bookingValid && loginValid
-                    ? this.handleOpenLogin
-                    : this.toggleConfirmBooking;
-                  return (
-                    <form className={s.formData}>
-                      <div className={s.formControl}>
-                        <InputLabel className={s.label}>Name</InputLabel>
-                        <Input
-                          placeholder="Your name"
-                          type="text"
-                          name="userName"
-                          onBlur={() => setFieldTouched('userName', true)}
-                          onChange={handleChange}
-                          value={userName}
-                          disabled={!!disableField}
-                        />
-                        {touched.userName && errors.userName &&
-                          <div className={s.errorMessage}>{props.errors.userName}</div>
-                        }
-                      </div>
-                      <div className={s.formControl}>
-                        <InputLabel className={s.label}>Email</InputLabel>
-                        <Input
-                          placeholder="Your email"
-                          type="email"
-                          name="userEmail"
-                          onChange={handleChange}
-                          onBlur={() => setFieldTouched('userEmail', true)}
-                          value={userEmail}
-                          disabled={!!disableField}
-                        />
-                        {touched.userEmail && errors.userEmail &&
-                          <div className={s.errorMessage}>{props.errors.userEmail}</div>
-                        }
-                      </div>
-                      <div className={s.formControl}>
-                        <InputLabel className={s.label}>Telephone</InputLabel>
-                        <Input
-                          placeholder="Your phone number"
-                          type="tel"
-                          name="phoneNumber"
-                          onBlur={() => setFieldTouched('phoneNumber', true)}
-                          onChange={handleChange}
-                          value={phoneNumber}
-                          disabled={!!disableField}
-                        />
-                        {touched.phoneNumber && errors.phoneNumber &&
-                          <div className={s.errorMessage}>{props.errors.phoneNumber}</div>
-                        }
-                        {touched.phoneNumber && errors.phoneNumber && (
-                          <div className={s.popOver}>
-                            <PolicyPopover type={POPOVER_TYPE.TEL} />
-                          </div>
-                        )}
-                      </div>
-                      {isValid && !userId && !guestUserError && (
-                        <div className={s.recaptcha}>
-                          <Recaptcha
-                            ref={this.recaptcha}
-                            sitekey={GOOGLE_CAPTCHA_SITE_KEY}
-                            render="explicit"
-                            verifyCallback={this.handleVerifiedCaptcha(values)}
-                            expiredCallback={this.handleValidatingCaptcha(false)}
-                            onloadCallback={this.handleValidatingCaptcha(false)}
-                          />
-                        </div>
-                      )}
-                      <div className={s.bookingCta}>
-                        <Button
-                          disabled={!bookingValid && !loginValid}
-                          className="simple-button"
-                          variant="outlined"
-                          onClick={ctaAction}
-                          color="inherit"
-                        >
-                          {ctaIcon}{ctaLabel}
-                        </Button>
-                      </div>
-                    </form>
-                  );
-                }}
-              />
-            </div>
+            <ClientInfo
+              userDetail={userDetail}
+              onLogin={this.handleOpenLogin}
+              onConfirmCta={this.toggleConfirmBooking}
+            />
           </div>
         </div>
       </>

@@ -96,15 +96,12 @@ export const bookingProps = {
   mapStateToProps: ({ auth, provider, booking, landing }) => ({
     userDetail: auth.userDetail,
     loginSession: auth.loginSession,
-    guestUserError: auth.guestUserError,
     selectedBookingDetail: provider.selectedBookingDetail,
     bookedEventDetail: booking.bookedEventDetail,
     landingPageFactors: landing.landingPageFactors,
   }),
   mapDispatchToProps: dispatch => ({
-    dispatchSaveGuestInfo: (data, cb) => dispatch(saveGuestInfo(data, cb)),
     dispatchBookEvent: (data, headers) => dispatch(bookEventApi(data, headers)),
-    dispatchClearGuestError: () => dispatch(clearGuestErrorAction()),
   }),
 };
 
@@ -191,5 +188,15 @@ export const appBarProps = {
     dispatchEventsByCustomerId: (id, headers) => dispatch(findEventByCustomerIdApi(id, headers)),
     dispatchGoToProfile: page => dispatch(goProfilePage(page)),
     dispatchTrackingEvent: (list, headers) => dispatch(trackingAppointmentByIdsApi(list, headers)),
+  }),
+};
+
+export const clientInfoProps = {
+  mapStateToProps: ({ auth }) => ({
+    guestUserError: auth.guestUserError,
+  }),
+  mapDispatchToProps: dispatch => ({
+    dispatchSaveGuestInfo: (data, cb) => dispatch(saveGuestInfo(data, cb)),
+    dispatchClearGuestError: () => dispatch(clearGuestErrorAction()),
   }),
 };
