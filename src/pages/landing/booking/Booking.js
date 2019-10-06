@@ -2,24 +2,22 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { func } from 'prop-types';
 import { Formik } from 'formik';
-import moment from 'moment';
 import get from 'lodash/get';
 import noop from 'lodash/noop';
 import isEmpty from 'lodash/isEmpty';
 import { IconButton, Button, Input, InputLabel } from '@material-ui/core';
-import {
-  Email, PhoneIphone, Place, GpsFixed, Schedule, DateRange, NavigateBefore, Book, Fingerprint,
-} from '@material-ui/icons';
+import { NavigateBefore, Book, Fingerprint } from '@material-ui/icons';
 import Auth from 'pages/Auth';
-import { limitString, navigateTo } from 'utils/common';
+import { navigateTo } from 'utils/common';
 import { clientInfo } from 'authentication/components/schemas';
 import Recaptcha from 'react-recaptcha';
 import { GOOGLE_CAPTCHA_SITE_KEY } from 'config/auth';
 import Loading from 'components/Loading';
 import Error from 'components/Error';
 import CustomModal from 'components/Modal/CustomModal';
-import { ADDRESS_LENGTH, POPOVER_TYPE, FULL_DATE, TIME_FORMAT } from 'utils/constants';
+import { POPOVER_TYPE } from 'utils/constants';
 import PolicyPopover from 'authentication/components/PolicyPopover';
+import ProviderInfo from './ProviderInfo';
 import { bookingProps } from '../../commonProps';
 import s from './Booking.module.scss';
 
@@ -184,22 +182,11 @@ class Booking extends Component {
 
     } = this.state;
     const waitListId = get(selectedBookingDetail, 'waitListId') || '';
+    const userId = get(userDetail, 'userSub') || get(userDetail, 'id');
     const cName = get(userDetail, 'givenName');
     const cEmail = get(userDetail, 'email');
     const cPhone = get(userDetail, 'telephone');
-    const sName = get(selectedBookingDetail, 'sName');
     const sId = get(selectedBookingDetail, 'serviceId');
-    const pName = get(selectedBookingDetail, 'pName');
-    const pPhone = get(selectedBookingDetail, 'pPhone');
-    const pEmail = get(selectedBookingDetail, 'pEmail');
-    const pImage = get(selectedBookingDetail, 'pImage');
-    const pAddress = get(selectedBookingDetail, 'pAddress');
-    const durationSec = get(selectedBookingDetail, 'durationSec');
-    const providerStartSec = get(selectedBookingDetail, 'providerStartSec');
-    const startTime = moment(providerStartSec).format(TIME_FORMAT);
-    const endTime = moment(providerStartSec).add(durationSec, 'minutes').format(TIME_FORMAT);
-    const timezoneId = get(selectedBookingDetail, 'timezoneId');
-    const userId = get(userDetail, 'userSub') || get(userDetail, 'id');
     const navigateLeftCta = waitListId ? navigateTo('/') : this.handleSelectProvider(sId);
 
     return (
@@ -232,33 +219,7 @@ class Booking extends Component {
             </div>
           </div>
           <div className={s.confirmInfo}>
-            <div className={s.details}>
-              <div className={s.sName}>{sName}</div>
-              <div className={s.content}>
-                <div className={s.pImage}>
-                  <img src={pImage} alt="Q Provider" width="100%" height="100%" />
-                  <div className={s.duration}>
-                    Duration: {`${durationSec}'`}
-                  </div>
-                </div>
-                <div className={`${s.pName} ellipsis`}>{pName}</div>
-                <div className={s.item}>
-                  <DateRange className="icon-small" color="secondary" />
-                  {moment(providerStartSec).format(FULL_DATE)}
-                </div>
-                <div className={s.item}>
-                  <Schedule className="icon-small" color="secondary" />
-                  {startTime} - {endTime}
-                </div>
-                <div className={s.item}><PhoneIphone className="icon-small" color="inherit" />{pPhone}</div>
-                <div className={s.item}><Email className="icon-small" color="inherit" />{pEmail}</div>
-                <div className={s.place}>
-                  <Place className="icon-small" />
-                  <span>&nbsp;{limitString(pAddress, ADDRESS_LENGTH)}</span>
-                </div>
-                <div className={s.item}><GpsFixed className="icon-small" color="inherit" />{timezoneId}</div>
-              </div>
-            </div>
+            <ProviderInfo provider={selectedBookingDetail} />
             <div className={s.clientInfo}>
               <div className={s.clientTitle}>
                 Client Information

@@ -1,4 +1,4 @@
-import { saveGuestInfo, clearGuestErrorAction } from 'authentication/actions/login';
+import { saveGuestInfo, clearGuestErrorAction, getCustomerByIdApi } from 'authentication/actions/login';
 import { setServiceCategories, setServices } from 'actionsReducers/home.actions';
 import {
   setTemporaryServices,
@@ -169,12 +169,14 @@ export const waitListProps = {
 };
 
 export const redirectToInstantProps = {
-  mapStateToProps: ({ waitLists }) => ({
+  mapStateToProps: ({ waitLists, auth }) => ({
     waitListsById: waitLists.waitListsById,
+    userDetailById: auth.userDetailById,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchWaitListsById: (id, headers) => dispatch(setWaitListsByIdApi(id, headers)),
     dispatchSelectBookingDetail: slot => dispatch(selectBookingDetail(slot)),
+    dispatchGetCustomerById: id => dispatch(getCustomerByIdApi(id)),
   }),
 };
 

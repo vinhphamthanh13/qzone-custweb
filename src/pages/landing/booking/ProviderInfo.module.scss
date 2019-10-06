@@ -1,0 +1,70 @@
+@import "styles/_settings.scss";
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.details {
+  margin: 0.5rem auto;
+  display: flex;
+  flex-direction: column;
+  width: $max-card-width;
+}
+
+.sName {
+  font-size: $title;
+  font-weight: 600;
+  color: $fruitSalad;
+  text-transform: capitalize;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 0.2rem 0;
+}
+
+.pImage {
+  width: $max-card-width;
+  height: $provider-image-height;
+  overflow: hidden;
+  padding: 0.2rem 0;
+  position: relative;
+}
+
+.duration {
+  color: $fruitSalad;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: rgba(235, 234, 234, 0.9);
+  padding: 0.2rem 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+  opacity: 0.8;
+}
+
+.pName {
+  font-size: $title;
+  text-transform: capitalize;
+  font-weight: 500;
+  padding: 0.2rem 0;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+}
+
+.place {
+  height: $full-address-height;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border: 1px solid $main_03;
+  background: $gallery;
+  border-radius: 0.4rem;
+  padding-right: 0.4rem;
+}

@@ -24,6 +24,7 @@ import {
   AUTHENTICATED_KEY,
   SET_GUEST_ERROR,
   CLEAR_GUEST_ERROR,
+  SET_CUSTOMER_BY_ID,
 } from './constants';
 
 
@@ -64,6 +65,7 @@ const authInitialize = {
   resetPasswordMessage: '',
   isLogoutError: false,
   guestUserError: false,
+  userDetailById: {},
 };
 
 const reducer = (state = authInitialize, action) => {
@@ -169,6 +171,12 @@ const reducer = (state = authInitialize, action) => {
         ...state,
         userDetail: action.payload,
       };
+    case SET_CUSTOMER_BY_ID: {
+      return {
+        ...state,
+        userDetailById: action.payload,
+      }
+    }
     case SET_GUEST_ERROR:
       return {
         ...state,
