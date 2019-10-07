@@ -115,7 +115,7 @@ class Service extends Component {
                 <span className="ellipsis">&nbsp;{orgName}</span>
               </div>
               <div className={s.cta}>
-                {isQueuedMode ? (
+                {isProviderSelectable && isQueuedMode ? (
                   <div className={s.queueMode}>
                     <Button variant="outlined" color="inherit" onClick={this.toggleQueueModal}>
                       <WrapText colo="inherit" />

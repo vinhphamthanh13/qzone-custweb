@@ -15,7 +15,7 @@ import {
   getCustomerByEmail as loginApi,
   saveSocialUser,
   fetchUserDetail,
-  // guestUsers,
+  getCustomerById,
 } from 'actionsApi/auth';
 import {
   handleResponse,
@@ -28,6 +28,7 @@ import {
   SET_USER_DETAILS,
   SET_GUEST_ERROR,
   CLEAR_GUEST_ERROR,
+  SET_CUSTOMER_BY_ID,
 } from './constants';
 
 // Redux
@@ -41,6 +42,10 @@ export const storeUserSessionLogin = payload => ({
 });
 export const setUserDetails = payload => ({
   type: SET_USER_DETAILS,
+  payload,
+});
+const setCustomerByIdAction = payload => ({
+  type: SET_CUSTOMER_BY_ID,
   payload,
 });
 export const getUserDetail = userId => async (dispatch) => {
@@ -251,6 +256,16 @@ export const saveGuestInfo = (data, callback) => async (dispatch) => {
     dispatch(storeUserSessionLogin(session));
     dispatch(setUserDetails(result));
     callback();
+  }
+  dispatch(setLoading(false));
+};
+export const getCustomerByIdApi = id => async dispatch => {
+  dispatch(setLoading(true));
+  const [result, error] = await handleRequest(getCustomerById, [id]);
+  if (error) {
+    dispatch(setError(error));
+  } else {
+    dispatch(setCustomerByIdAction(result));
   }
   dispatch(setLoading(false));
 };

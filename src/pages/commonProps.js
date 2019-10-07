@@ -1,4 +1,4 @@
-import { saveGuestInfo } from 'authentication/actions/login';
+import { saveGuestInfo, clearGuestErrorAction, getCustomerByIdApi } from 'authentication/actions/login';
 import { setServiceCategories, setServices } from 'actionsReducers/home.actions';
 import {
   setTemporaryServices,
@@ -11,8 +11,9 @@ import {
   temporaryServicesByIdApi,
   rescheduleEventApi,
   rescheduleStatusAction,
+  findEventByCustomerIdApi,
 } from 'actionsReducers/common.actions';
-import { providersByServiceIdApi, bookEventApi } from 'actionsReducers/booking.actions';
+import { providersByServiceIdApi, bookEventApi, confirmWaitListsApi } from 'actionsReducers/booking.actions';
 import {
   temporaryServicesByServiceIdApi,
   waitListTemporaryServicesByServiceIdApi,
@@ -25,6 +26,8 @@ import {
 import { setLandingPageAction } from 'actionsReducers/landing.action';
 import { setOrganizationsApi } from 'actionsReducers/organization.actions';
 import { registerWaitListsApi, setWaitListsByIdApi } from 'actionsReducers/waitlist.actions';
+import { goProfilePage } from 'actionsReducers/profile.actions';
+import { trackingAppointmentByIdsApi } from 'actionsReducers/customer.actions';
 
 export const homeProps = {
   mapStateToProps: ({ home, common, auth, organization }) => ({
@@ -86,20 +89,22 @@ export const providersProps = {
     dispatchAvailabilities: (list, sId, pId, locId) =>
       dispatch(availabilitiesByTemporaryServiceIdApi(list, sId, pId, locId)),
     dispatchSelectBookingDetail: slot => dispatch(selectBookingDetail(slot)),
+    dispatchSetLandingPage: data => dispatch(setLandingPageAction(data)),
   }),
 };
 
 export const bookingProps = {
   mapStateToProps: ({ auth, provider, booking, landing }) => ({
     userDetail: auth.userDetail,
+    userDetailById: auth.userDetailById,
     loginSession: auth.loginSession,
     selectedBookingDetail: provider.selectedBookingDetail,
     bookedEventDetail: booking.bookedEventDetail,
     landingPageFactors: landing.landingPageFactors,
   }),
   mapDispatchToProps: dispatch => ({
-    dispatchSaveGuestInfo: (data, cb) => dispatch(saveGuestInfo(data, cb)),
     dispatchBookEvent: (data, headers) => dispatch(bookEventApi(data, headers)),
+    dispatchConfirmWaitLists: data => dispatch(confirmWaitListsApi(data)),
   }),
 };
 
@@ -164,11 +169,38 @@ export const waitListProps = {
 };
 
 export const redirectToInstantProps = {
-  mapStateToProps: ({ waitLists }) => ({
+  mapStateToProps: ({ waitLists, auth }) => ({
     waitListsById: waitLists.waitListsById,
+    userDetailById: auth.userDetailById,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchWaitListsById: (id, headers) => dispatch(setWaitListsByIdApi(id, headers)),
     dispatchSelectBookingDetail: slot => dispatch(selectBookingDetail(slot)),
+    dispatchGetCustomerById: id => dispatch(getCustomerByIdApi(id)),
+    dispatchSetLandingPage: data => dispatch(setLandingPageAction(data)),
+  }),
+};
+
+export const appBarProps = {
+  mapStateToProps: ({ common, auth, customer, booking }) => ({
+    eventList: common.eventList,
+    loginSession: auth.loginSession,
+    trackingAppointmentById: customer.trackingAppointmentById,
+    bookedEventId: booking.bookedEventId,
+  }),
+  mapDispatchToProps: dispatch => ({
+    dispatchEventsByCustomerId: (id, headers) => dispatch(findEventByCustomerIdApi(id, headers)),
+    dispatchGoToProfile: page => dispatch(goProfilePage(page)),
+    dispatchTrackingEvent: (list, headers) => dispatch(trackingAppointmentByIdsApi(list, headers)),
+  }),
+};
+
+export const clientInfoProps = {
+  mapStateToProps: ({ auth }) => ({
+    guestUserError: auth.guestUserError,
+  }),
+  mapDispatchToProps: dispatch => ({
+    dispatchSaveGuestInfo: (data, cb) => dispatch(saveGuestInfo(data, cb)),
+    dispatchClearGuestError: () => dispatch(clearGuestErrorAction()),
   }),
 };

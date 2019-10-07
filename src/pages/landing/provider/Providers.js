@@ -19,6 +19,7 @@ class Providers extends Component {
     dispatchTemporaryServicesByServiceId: func.isRequired,
     dispatchAvailabilities: func.isRequired,
     dispatchSelectBookingDetail: func.isRequired,
+    dispatchSetLandingPage: func.isRequired,
   };
 
   state = {
@@ -105,7 +106,7 @@ class Providers extends Component {
   };
 
   render() {
-    const { dispatchAvailabilities, dispatchSelectBookingDetail } = this.props;
+    const { dispatchAvailabilities, dispatchSelectBookingDetail, dispatchSetLandingPage } = this.props;
     const {
       providersByServiceId, temporaryServiceByServiceIds, landingPageFactors,
       serviceId, availabilitiesByTemporaryServiceId, windowWidth, bookedEventId,
@@ -158,9 +159,7 @@ class Providers extends Component {
               <NavigateBefore color="inherit" />
             </IconButton>
           </div>
-          <div className={`${s.title} ellipsis`}>
-            {sName}
-          </div>
+          <div className={`${s.title} ellipsis`}>{sName}</div>
         </div>
         {chunk(providerFlatten, chunkFactor).map((providerRow, ind) => (
           <div className={s.providerRow} key={ind}>
@@ -176,6 +175,7 @@ class Providers extends Component {
                 availabilitiesByTemporaryServiceId={availabilitiesByTemporaryServiceId}
                 selectBookingDetail={dispatchSelectBookingDetail}
                 bookedEventId={bookedEventId}
+                setLandingPage={dispatchSetLandingPage}
             />))}
           </div>
         ))}

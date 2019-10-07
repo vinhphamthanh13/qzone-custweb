@@ -39,4 +39,6 @@
   max-width: $event-card-width;
   padding: 0.5rem;
   background: $gallery;
+  max-height: 500px;
+  overflow: auto;
 }

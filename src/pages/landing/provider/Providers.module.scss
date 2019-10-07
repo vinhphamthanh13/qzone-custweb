@@ -15,13 +15,15 @@
   width: 100%;
   display: flex;
   align-items: center;
-  border-bottom: 2px solid $gallery;
+  border-bottom: 4px solid $grayNickel;
   text-transform: capitalize;
+  background: $gallery;
+  margin-bottom: 0.5rem;
 }
 
 .title {
   font-size: $heading;
-  color: $success;
+  color: $main_04;
   font-weight: 500;
 }
 

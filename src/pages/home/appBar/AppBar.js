@@ -8,32 +8,49 @@ import { withStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, IconButton, InputBase, Badge, Avatar, Typography, Button } from '@material-ui/core';
 import { Search as SearchIcon, AssignmentInd, Notifications as NotificationsIcon, Fingerprint, FindInPage, Assignment,
 } from '@material-ui/icons';
-import { findEventByCustomerIdAction } from 'actionsReducers/common.actions';
-import { trackingAppointmentByIdsAction } from 'actionsReducers/customer.actions';
 import { AUTHENTICATED_KEY, PROFILE, EVENT_STATUS } from 'utils/constants';
 import { navigateTo } from 'utils/common';
 import logo from 'images/quezone-logo.png';
-import { goProfilePage } from 'actionsReducers/profile.actions';
+import { appBarProps } from 'pages/commonProps';
 import TrackingEvents from './TrackingEvents';
 import styles from './AppBarStyle';
 
 class MainAppBar extends React.Component {
+  static propTypes = {
+    maintenance: bool,
+    onSearchValue: string,
+    classes: objectOf(any).isRequired,
+    loginSession: objectOf(any),
+    handleAuthenticate: func.isRequired,
+    onSearch: func.isRequired,
+    toggleAdvancedSearch: func.isRequired,
+    dispatchGoToProfile: func.isRequired,
+    dispatchTrackingEvent: func.isRequired,
+    dispatchEventsByCustomerId: func.isRequired,
+  };
+
+  static defaultProps = {
+    onSearchValue: '',
+    loginSession: null,
+    maintenance: false,
+  };
+
   state = {
     eventList: [],
     eventListIds: [],
     loginSession: {},
     trackingAppointmentById: null,
+    bookedEventId: '',
     isShowingTrackingList: false,
-    appointmentEvent: {},
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { eventList, loginSession, trackingAppointmentById, appointmentEvent } = props;
+    const { eventList, loginSession, trackingAppointmentById, bookedEventId } = props;
     const {
       eventList: cachedEventList,
       loginSession: cachedLoginSession,
       trackingAppointmentById: cachedTrackingAppointmentById,
-      appointmentEvent: cachedAppointmentEvent,
+      bookedEventId: cachedBookedEventId,
     } = state;
     const updatedState = {};
     if (
@@ -56,39 +73,35 @@ class MainAppBar extends React.Component {
     ) {
       updatedState.trackingAppointmentById = trackingAppointmentById;
     }
-    if (
-      appointmentEvent !== null &&
-      JSON.stringify(appointmentEvent) !== JSON.stringify(cachedAppointmentEvent)
-  ) {
-      updatedState.appointmentEvent = appointmentEvent;
+    if (bookedEventId !== cachedBookedEventId) {
+      updatedState.bookedEventId = bookedEventId;
     }
+
     return Object.keys(updatedState) ? updatedState : null;
   }
 
-
   componentDidMount() {
-    const { findEventByCustomerIdAction: findEventByCustomerId } = this.props;
+    const { dispatchEventsByCustomerId } = this.props;
     const { loginSession } = this.state;
     const customerId = get(loginSession, 'id');
     const authHeaders = get(loginSession, 'authHeaders');
-    const startSession = get(loginSession, 'start_session');
-    if (customerId && ((moment.now() - moment(startSession)) / 3600) < 1) {
-      findEventByCustomerId(customerId, authHeaders);
+    if (customerId) {
+      dispatchEventsByCustomerId(customerId, authHeaders);
     }
   }
 
   componentDidUpdate(prevProps) {
-    const { loginSession, appointmentEvent } = prevProps;
+    const { loginSession, bookedEventId } = prevProps;
     const {
-      findEventByCustomerIdAction: findEventByCustomerId,
-      trackingAppointmentByIdsAction: trackingAppointmentByIds,
+      dispatchEventsByCustomerId, dispatchTrackingEvent,
     } = this.props;
     const {
-      eventListIds: cachedEventListId, appointmentEvent: cachedAppointmentEvent, loginSession: cachedLoginSession,
+      eventListIds: cachedEventListId, bookedEventId: cachedBookedEventId, loginSession: cachedLoginSession,
     } = this.state;
     const trackingLength = cachedEventListId && cachedEventListId.length;
     const cachedTrackingLength = cachedEventListId && cachedEventListId.length;
 
+    console.log('bookedEventId updated', bookedEventId);
     if (
       loginSession !== null &&
       JSON.stringify(loginSession) !== JSON.stringify(cachedLoginSession)
@@ -96,17 +109,17 @@ class MainAppBar extends React.Component {
       const id = get(cachedLoginSession, 'id');
       const authHeaders = get(cachedLoginSession, 'authHeaders');
       if (id) {
-        findEventByCustomerId(id, authHeaders);
+        dispatchEventsByCustomerId(id, authHeaders);
       }
       if (
         trackingLength !== cachedTrackingLength
         && cachedEventListId
         && cachedEventListId.length > 0
       ) {
-        trackingAppointmentByIds(cachedEventListId, authHeaders);
+        dispatchTrackingEvent(cachedEventListId, authHeaders);
       }
-      if (appointmentEvent && cachedAppointmentEvent && appointmentEvent.id !== cachedAppointmentEvent.id) {
-        findEventByCustomerId(id, authHeaders);
+      if (bookedEventId !== cachedBookedEventId) {
+        dispatchEventsByCustomerId(id, authHeaders);
       }
     }
   }
@@ -124,9 +137,9 @@ class MainAppBar extends React.Component {
   };
 
   navigatingProfile = page => () => {
-    const { goProfilePage: goProfilePageAction } = this.props;
+    const { dispatchGoToProfile } = this.props;
     const { loginSession } = this.state;
-    goProfilePageAction(page);
+    dispatchGoToProfile(page);
     navigateTo(`/profile/${loginSession.id}`)();
   };
 
@@ -273,38 +286,10 @@ class MainAppBar extends React.Component {
   }
 }
 
-MainAppBar.propTypes = {
-  classes: objectOf(any).isRequired,
-  handleAuthenticate: func.isRequired,
-  onSearch: func.isRequired,
-  loginSession: objectOf(any),
-  findEventByCustomerIdAction: func.isRequired,
-  onSearchValue: string,
-  toggleAdvancedSearch: func.isRequired,
-  maintenance: bool,
-  goProfilePage: func.isRequired,
-  trackingAppointmentByIdsAction: func.isRequired,
-};
-
-MainAppBar.defaultProps = {
-  onSearchValue: '',
-  loginSession: null,
-  maintenance: false,
-};
-
-const mapStateToProps = state => ({
-  ...state.common,
-  ...state.auth,
-  ...state.home,
-  ...state.booking,
-  ...state.customer,
-});
-
 export default compose(
-  connect(mapStateToProps, {
-    findEventByCustomerIdAction,
-    goProfilePage,
-    trackingAppointmentByIdsAction,
-  }),
+  connect(
+    appBarProps.mapStateToProps,
+    appBarProps.mapDispatchToProps
+  ),
   withStyles(styles),
 )(MainAppBar);

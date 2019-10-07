@@ -7,12 +7,15 @@ import { navigateTo } from 'utils/common';
 import { regExPattern } from 'utils/constants';
 import defaultImage from 'images/providers.jpg';
 import { redirectToInstantProps } from '../../commonProps';
+import s from './RedirectToInstant.module.scss';
 
 class RedirectToInstant extends Component {
   static propTypes = {
     match: objectOf(any).isRequired,
     dispatchWaitListsById: func.isRequired,
     dispatchSelectBookingDetail: func.isRequired,
+    dispatchGetCustomerById: func.isRequired,
+    dispatchSetLandingPage: func.isRequired,
   };
 
   static defaultProps = {
@@ -20,17 +23,24 @@ class RedirectToInstant extends Component {
 
   state = {
     waitListsById: {},
+    userDetailById: {},
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { waitListsById } = props;
-    const { waitListsById: cachedWaitListById } = state;
+    const { waitListsById, userDetailById } = props;
+    const { waitListsById: cachedWaitListById, userDetailById: cachedUserDetailById } = state;
     const updatedState = {};
     if (
       waitListsById !== null &&
       JSON.stringify(waitListsById) !== JSON.stringify(cachedWaitListById)
     ) {
       updatedState.waitListsById = waitListsById;
+    }
+    if (
+      userDetailById !== null &&
+      JSON.stringify(userDetailById) !== JSON.stringify(cachedUserDetailById)
+    ) {
+      updatedState.userDetailById = userDetailById;
     }
 
     return Object.keys(updatedState) ? updatedState : null;
@@ -41,43 +51,56 @@ class RedirectToInstant extends Component {
     dispatchWaitListsById(id);
   }
 
-  componentDidUpdate() {
-    const { dispatchSelectBookingDetail } = this.props;
-    const { waitListsById } = this.state;
-    if (waitListsById !== null) {
-      const waitListId = get(waitListsById, 'waitListId');
-      const availabilityId = get(waitListsById, 'availabilityId');
-      const tempServiceId = get(waitListsById, 'tempServiceId');
-      const sName = get(waitListsById, 'serviceName');
-      const serviceId = get(waitListsById, 'serviceId');
-      const pName = get(waitListsById, 'providerName');
-      const pEmail = get(waitListsById, 'providerEmail');
-      const pPhone = get(waitListsById, 'providerPhone');
-      const pAddress = get(waitListsById, 'fullAddress');
-      const pImage = get(waitListsById, 'imageUrl') || defaultImage;
-      const durationSec = get(waitListsById, 'duration');
-      const providerStartSec = get(waitListsById, 'sstartTime').replace(
+  componentDidUpdate(prevProps) {
+    const { dispatchSelectBookingDetail, dispatchGetCustomerById, dispatchSetLandingPage } = this.props;
+    const { waitListsById } = prevProps;
+    const { waitListsById: cachedWaitListsById, userDetailById: cachedUserDetailById } = this.state;
+    if (
+      cachedWaitListsById !== null &&
+      JSON.stringify(waitListsById) !== JSON.stringify(cachedWaitListsById)
+    ) {
+      const waitListId = get(cachedWaitListsById, 'waitListId');
+      const customerId = get(cachedWaitListsById, 'customerId');
+      const availabilityId = get(cachedWaitListsById, 'availabilityId');
+      const sName = get(cachedWaitListsById, 'serviceName');
+      const serviceId = get(cachedWaitListsById, 'serviceId');
+      const pName = get(cachedWaitListsById, 'providerName');
+      const pEmail = get(cachedWaitListsById, 'providerEmail');
+      const pPhone = get(cachedWaitListsById, 'providerPhone');
+      const pAddress = get(cachedWaitListsById, 'fullAddress');
+      const pImage = get(cachedWaitListsById, 'imageUrl') || defaultImage;
+      const durationSec = get(cachedWaitListsById, 'duration');
+      const providerStartSec = get(cachedWaitListsById, 'sstartTime').replace(
         regExPattern.ISO_TIME.pattern, regExPattern.ISO_TIME.replaceBy,
       );
-      const timezoneId = get(waitListsById, 'timezoneId');
+      const timezoneId = get(cachedWaitListsById, 'timezoneId');
       dispatchSelectBookingDetail({
         id: availabilityId, waitListId, sName, serviceId, pName, pPhone, pEmail, pImage, pAddress, durationSec,
         providerStartSec, timezoneId,
       });
-      if (tempServiceId) navigateTo('/confirm-booking')();
+      if (customerId) {
+        dispatchGetCustomerById(customerId);
+      }
+    }
+    if (cachedUserDetailById) {
+      navigateTo('/confirm-booking')();
+      dispatchSetLandingPage({ confirmWaitLists: true })
     }
   }
 
   render() {
     return (
-      <div>
+      <div className={s.container}>
         <Loading />
-        Redirect to Instant Booking
+        <div>
+          Redirect to Booking Confirmation
+        </div>
       </div>
     );
   }
 }
 
 export default connect(
-  redirectToInstantProps.mapStateToProps, redirectToInstantProps.mapDispatchToProps,
+  redirectToInstantProps.mapStateToProps,
+  redirectToInstantProps.mapDispatchToProps,
 )(RedirectToInstant);

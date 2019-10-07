@@ -5,7 +5,7 @@ import { get, isEmpty } from 'lodash';
 import moment from 'moment';
 import { logout } from 'authentication/actions/logout';
 import { postUpdatedProfile, updateProfileAction } from 'actionsReducers/profile.actions';
-import { findEventByCustomerIdAction } from 'actionsReducers/common.actions';
+import { findEventByCustomerIdApi } from 'actionsReducers/common.actions';
 import { AUTHENTICATED_KEY, SESSION } from 'utils/constants';
 import { navigateTo } from 'utils/common';
 import CustomModal from 'components/Modal/CustomModal';
@@ -51,7 +51,7 @@ class Profile extends Component {
 
   componentDidMount() {
     const {
-      findEventByCustomerIdAction: findEventByCustomerId,
+      findEventByCustomerIdApi: findEventByCustomerId,
       customerId,
       loginSession: { authHeaders },
     } = this.props;
@@ -189,7 +189,7 @@ Profile.propTypes = {
   postUpdatedProfile: func.isRequired,
   updateProfileStatus: string,
   updateProfileAction: func.isRequired,
-  findEventByCustomerIdAction: func.isRequired,
+  findEventByCustomerIdApi: func.isRequired,
   logout: func.isRequired,
   loginSession: objectOf(any).isRequired,
 };
@@ -207,6 +207,6 @@ const mapStateToProps = state => ({
 export default connect(mapStateToProps, {
   postUpdatedProfile,
   updateProfileAction,
-  findEventByCustomerIdAction,
+  findEventByCustomerIdApi,
   logout,
 })(Profile);
