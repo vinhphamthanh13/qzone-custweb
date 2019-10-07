@@ -144,7 +144,7 @@ class Provider extends Component {
                 selectSlot={this.handleSelectSlot}
               />
             </div>
-          ) : <EmptyItem message="All slots are booked!"/>}
+          ) : <EmptyItem message="All slots are booked!" size="normal" />}
         </div>
       </>
     );
