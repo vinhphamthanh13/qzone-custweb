@@ -254,7 +254,7 @@ class MainAppBar extends React.Component {
                 <SearchIcon />
               </div>
               <InputBase
-                placeholder="Services, organisations …"
+                placeholder="Services"
                 classes={{
                   root: classes.inputRoot,
                   input: classes.inputInput,
