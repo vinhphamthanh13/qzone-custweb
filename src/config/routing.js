@@ -11,14 +11,22 @@ import Profile from 'pages/Profile';
 import Maintenance from 'pages/Maintenance';
 import ViewEvent from 'pages/landing/viewEvent/ViewEvent';
 import Assessment from 'pages/Assessment';
+import RedirectOrg from 'pages/RedirectOrg';
 
 const rootRoutes = [
   {
     exact: true,
     strict: true,
-    path: '/',
+    path: '/:orgId',
     name: 'Custweb for Booking Service',
     component: Home,
+  },
+  {
+    exact: true,
+    strict: true,
+    path: '/',
+    name: 'Select Organization',
+    component: RedirectOrg,
   },
   {
     exact: true,

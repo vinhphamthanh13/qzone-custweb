@@ -1,0 +1,67 @@
+@import "styles/_settings.scss";
+
+.container {
+  display: flex;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+.orgList {
+  width: 400px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid $grayNickel;
+  padding: 1rem 0.2rem 1rem 1rem;
+  max-height: 90vh;
+  overflow: auto;
+  border-radius: 0.5rem;
+  box-shadow: 2px 2px 15px 1px $grayNickel;
+}
+
+.orgBanner {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.5rem 0.5rem 0.25rem;
+  background: $white;
+  padding: 0.2rem;
+  border-radius: 0.5rem;
+}
+
+.item:hover {
+  background: $we_peep;
+}
+
+.logo {
+  width: 64px;
+  height: 64px;
+  padding: 0 0.2rem;
+  margin-right: 0.5rem;
+  box-shadow: 1px 1px 2px 2px $grayNickel;
+  border-radius: 0.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.orgInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.orgName {
+  font-size: $subtitle;
+  font-weight: 500;
+  color: $fruitSalad;
+}

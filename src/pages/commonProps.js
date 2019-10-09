@@ -24,23 +24,23 @@ import {
   usersByIdApi,
 } from 'actionsReducers/provider.actions';
 import { setLandingPageAction } from 'actionsReducers/landing.action';
-import { setOrganizationsApi } from 'actionsReducers/organization.actions';
+import { setOrganizationsApi, servicesOptionByOrgIdApi } from 'actionsReducers/organization.actions';
 import { registerWaitListsApi, setWaitListsByIdApi } from 'actionsReducers/waitlist.actions';
 import { goProfilePage } from 'actionsReducers/profile.actions';
 import { trackingAppointmentByIdsApi } from 'actionsReducers/customer.actions';
 
 export const homeProps = {
-  mapStateToProps: ({ home, common, auth, organization }) => ({
+  mapStateToProps: ({ common, organization }) => ({
+    servicesOptionByOrgId: organization.servicesOptionByOrgId,
     servicesByServiceCategoryId: common.servicesByServiceCategoryId,
     organizations: organization.organizations,
-    ...home,
-    ...auth,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchServices: () => dispatch(setServices()),
     dispatchServiceCategory: () => dispatch(setServiceCategories()),
     dispatchTemporaryServices: () => dispatch(setTemporaryServices()),
     dispatchOrganizations: () => dispatch(setOrganizationsApi()),
+    dispatchServicesOptionByOrgId: id => dispatch(servicesOptionByOrgIdApi(id)),
   })
 };
 
@@ -202,5 +202,14 @@ export const clientInfoProps = {
   mapDispatchToProps: dispatch => ({
     dispatchSaveGuestInfo: (data, cb) => dispatch(saveGuestInfo(data, cb)),
     dispatchClearGuestError: () => dispatch(clearGuestErrorAction()),
+  }),
+};
+
+export const redirectOrgProps = {
+  mapStateToProps: ({ organization }) => ({
+    organizations: organization.organizations,
+  }),
+  mapDispatchTOProps: dispatch => ({
+    dispatchOrganizations: () => dispatch(setOrganizationsApi()),
   }),
 };
