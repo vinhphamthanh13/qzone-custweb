@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import { func, objectOf, any } from 'prop-types';
 import { connect } from 'react-redux';
-import { get } from 'lodash';
+import get from 'lodash/get';
+import flatten from 'lodash/flatten';
+import compact from 'lodash/compact';
 import Loading from 'components/Loading';
 import Error from 'components/Error';
 import { homeProps } from 'pages/commonProps';
+import { SLIDE_TYPE } from 'utils/constants';
 import Auth from './Auth';
 import AppBar from './home/appBar/AppBar';
 import Landing from './Landing';
@@ -118,11 +121,17 @@ export class Home extends Component {
   render() {
     const {
       searchText, isRegisterOpen, isLoginOpen, openAdvancedSearch, searchResult,
-      showAdvancedResult, organizations, categories, servicesByServiceCategoryId,
+      showAdvancedResult, categories, servicesByServiceCategoryId,
       landingPageFactors,
     } = this.state;
     const catName = get(landingPageFactors, 'catName');
     const enableSearch = servicesByServiceCategoryId[catName] && servicesByServiceCategoryId[catName].length > 0;
+    const serviceList = categories.length > 0 && categories.map(cat => {
+      if (servicesByServiceCategoryId[cat.name]) {
+        return [...servicesByServiceCategoryId[cat.name]]
+      }
+      return null;
+    });
 
     return (
       <div className={s.landingPage}>
@@ -141,7 +150,9 @@ export class Home extends Component {
           toggleAdvancedSearch={this.toggleAdvancedSearch}
           enableSearch={enableSearch}
         />
-        {organizations && organizations.length > 0 && (<SlideShow list={organizations} />)}
+        {serviceList && serviceList.length > 0 && (
+          <SlideShow list={compact(flatten(serviceList))} type={SLIDE_TYPE.SER} />
+        )}
         <Landing categories={categories} handleAuth={this.openAuthModal} />
         <Footer maintenance={false} />
         {searchResult.length > 0 && (

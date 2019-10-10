@@ -107,12 +107,13 @@ export const bookingProps = {
 };
 
 export const viewEventProps = {
-  mapStateToProps: ({ common, auth, provider }) => ({
+  mapStateToProps: ({ common, auth, provider, landing }) => ({
     eventById: common.eventById,
     cancelEventStatus: common.cancelEventStatus,
     userDetail: auth.userDetail,
     loginSession: auth.loginSession,
     rescheduledAvailabilitiesByTemporaryServiceId: provider.rescheduledAvailabilitiesByTemporaryServiceId,
+    landingPageFactors: landing.landingPageFactors,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchSetEventById: id => dispatch(setEventByIdApi(id)),

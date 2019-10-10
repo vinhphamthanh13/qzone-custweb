@@ -129,7 +129,7 @@ class RedirectOrg extends Component {
                   <div key={Math.random()} className={s.orgRow}>
                     {row.map(org => {
                       const logo = get(org, 'logo.fileUrl') || defaultLogo;
-                      const advPic = get(org, 'advPic') || defaultImage;
+                      const advPic = get(org, 'advPic.fileUrl') || defaultImage;
                       const name = get(org, 'name');
                       const id = get(org, 'id');
                       const telephone = get(org, 'telephone');

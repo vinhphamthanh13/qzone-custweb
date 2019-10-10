@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { get } from 'lodash';
 import { PhoneIphone, Public } from '@material-ui/icons';
 import { limitString } from 'utils/common';
-import defaultLogo from 'images/logo.png';
+import defaultImage from 'images/providers.jpg';
+import { SLIDE_TYPE } from 'utils/constants';
 import s from './Slide.module.scss';
 
 class Slide extends Component {
@@ -36,12 +37,21 @@ class Slide extends Component {
     let website;
     let phone;
     let orgIntro;
-    if (type === 'organization') {
+    let orgName;
+    if (type === SLIDE_TYPE.ORG) {
       name = get(item, 'name');
-      image = get(item, 'logo.fileUrl') || defaultLogo;
+      image = get(item, 'advPic.fileUrl') || defaultImage;
       website = get(item, 'website');
       phone = get(item, 'telephone');
       orgIntro = get(item, 'description');
+    }
+    if (type === SLIDE_TYPE.SER) {
+      name = get(item, 'name');
+      image = get(item, 'image.fileUrl') || defaultImage;
+      orgIntro = get(item, 'description');
+      orgName = get(item, 'organizationEntity.name');
+      website = get(item, 'organizationEntity.website');
+      phone = get(item, 'organizationEntity.telephone');
     }
 
     return (
@@ -51,6 +61,7 @@ class Slide extends Component {
         </div>
         <div className={s.content}>
           <div className={`${s.title} ellipsis`}>{name}</div>
+          <div className={`${s.orgName} ellipsis`}>{orgName}</div>
           <div className={s.orgContact}>
             <div className={s.item}><PhoneIphone color="secondary" className="icon-small" />{phone}</div>
             <div className={s.item}>
@@ -59,7 +70,7 @@ class Slide extends Component {
             </div>
           </div>
           <div className={s.orgIntro}>
-            {limitString(orgIntro, 350)}
+            {limitString(orgIntro, 250)}
           </div>
         </div>
       </div>

@@ -4,13 +4,14 @@ import { get } from 'lodash';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import EmptyItem from 'components/EmptyItem';
+import { SLIDE_TYPE } from 'utils/constants';
 import Slide from './Slide';
 import s from './SlideShow.module.scss';
 
 class SlideShow extends Component {
   state = {
     list: [],
-    type: 'organization',
+    type: SLIDE_TYPE.ORG,
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -44,13 +45,14 @@ class SlideShow extends Component {
       className: s.sliderControl,
     };
     const { list, type } = this.state;
+    const heading = type === SLIDE_TYPE.ORG ? 'Our Organizations' : 'Our Services';
 
     return (
       <div className={s.carousel}>
         {list.length > 0 ? (
           <>
             <div className={s.title}>
-              Our Organizations
+              {heading}
             </div>
             <div className={s.sliderWrapper}>
               <div>

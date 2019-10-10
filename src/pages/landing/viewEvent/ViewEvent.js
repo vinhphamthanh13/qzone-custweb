@@ -34,16 +34,18 @@ class ViewEvent extends Component {
     isCancelEventPopup: false,
     isRescheduleOpen: false,
     rescheduledAvailabilitiesByTemporaryServiceId: {},
+    landingPageFactors: {},
   };
 
   static getDerivedStateFromProps(props, state) {
     const {
       eventById, userDetail, loginSession, rescheduledAvailabilitiesByTemporaryServiceId, cancelEventStatus,
+      landingPageFactors,
     } = props;
     const {
       eventById: cachedEventById, userDetail: cachedUserDetail, loginSession: cachedLoginSession,
       rescheduledAvailabilitiesByTemporaryServiceId: cachedRescheduledAvailabilitiesByTemporaryServiceId,
-      cancelEventStatus: cachedCancelEventStatus,
+      cancelEventStatus: cachedCancelEventStatus, landingPageFactors: cachedLandingPageFactors,
     } = state;
     const updatedState = {};
     if (
@@ -72,6 +74,12 @@ class ViewEvent extends Component {
     }
     if (cancelEventStatus !== cachedCancelEventStatus) {
       updatedState.cancelEventStatus = cancelEventStatus;
+    }
+    if (
+      landingPageFactors !== null &&
+      JSON.stringify(landingPageFactors) !== JSON.stringify(cachedLandingPageFactors)
+    ) {
+      updatedState.landingPageFactors = landingPageFactors;
     }
 
     return Object.keys(updatedState) ? updatedState : null;
@@ -109,8 +117,10 @@ class ViewEvent extends Component {
 
   handleRedirect = () => {
     const { dispatchClearCancelStatus } = this.props;
+    const { landingPageFactors } = this.state;
+    const orgRef = get(landingPageFactors, 'orgRef');
     dispatchClearCancelStatus();
-    navigateTo('/')();
+    navigateTo(`/organization/${orgRef}`)();
   };
 
   handleViewProfile = id => () => {

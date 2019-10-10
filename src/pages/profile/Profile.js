@@ -22,12 +22,13 @@ class Profile extends Component {
     isPopupWarning: false,
     toggleSidePanel: false,
     isSessionTimeout: false,
+    landingPageFactors: {},
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { userDetail, loginSession, updateProfileStatus } = props;
+    const { userDetail, loginSession, updateProfileStatus, landingPageFactors } = props;
     const { userDetail: cachedUserDetail, loginSession: cachedLoginSession,
-      updateProfileStatus: cachedUpdateProfileStatus,
+      updateProfileStatus: cachedUpdateProfileStatus, landingPageFactors: cachedLandingPageFactors,
     } = state;
     const updatedState = {};
     if (
@@ -45,6 +46,12 @@ class Profile extends Component {
     ) {
       updatedState.loginSession = loginSession;
     }
+    if (
+      landingPageFactors !== null &&
+      JSON.stringify(landingPageFactors) !== JSON.stringify(cachedLandingPageFactors)
+    ) {
+      updatedState.landingPageFactors = landingPageFactors;
+    }
 
     return Object.keys(updatedState) ? updatedState : null;
   }
@@ -60,12 +67,13 @@ class Profile extends Component {
 
   componentDidUpdate(prevProps) {
     const { userDetail } = prevProps;
-    const { loginSession, userDetail: cachedUserDetail, isSessionTimeout } = this.state;
+    const { loginSession, userDetail: cachedUserDetail, isSessionTimeout, landingPageFactors } = this.state;
 
     const expired = get(loginSession, 'expiration');
 
     if (JSON.stringify(userDetail) !== JSON.stringify(cachedUserDetail) || isEmpty(cachedUserDetail)) {
-      navigateTo('/')();
+      const orgRef = get(landingPageFactors, 'orgRef');
+      navigateTo(`/organization/${orgRef}`)();
     }
 
     if (!isSessionTimeout && moment().isAfter(moment(expired))) {
@@ -81,10 +89,11 @@ class Profile extends Component {
 
   handleLogout = () => {
     const { logout: logoutAction } = this.props;
-    const { loginSession } = this.state;
+    const { loginSession, landingPageFactors } = this.state;
     const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
     const authProvider = get(loginSession, 'authProvider');
-    navigateTo('/')();
+    const orgRef = get(landingPageFactors, 'orgRef');
+    navigateTo(`/organization/${orgRef}`)();
     logoutAction({
       isAuthenticated,
       authProvider,
@@ -108,6 +117,12 @@ class Profile extends Component {
     this.setState(oldState => ({
       toggleSidePanel: value && !oldState.toggleSidePanel,
     }));
+  };
+
+  handleRedirectHome = () => {
+    const { landingPageFactors } = this.state;
+    const orgRef = get(landingPageFactors, 'orgRef');
+    navigateTo(`/organization/${orgRef}`)();
   };
 
   render() {
@@ -161,14 +176,14 @@ class Profile extends Component {
           <div className={`${s.profile} column`}>
             <Header
               userName={givenName}
-              onClose={navigateTo('/')}
+              onClose={this.handleRedirectHome}
               handleSidePanel={this.handleSidePanel}
             />
             <div className={`container-max auto-margin-horizontal ${s.profileContent}`}>
               <Content
                 customerId={customerId}
                 givenName={givenName}
-                onClose={navigateTo('/')}
+                onClose={this.handleRedirectHome}
                 handleAccount={this.handleAccount}
                 updateProfileStatus={updateProfileStatus}
                 handleLogout={this.handleLogout}
@@ -202,6 +217,7 @@ const mapStateToProps = state => ({
   ...state.common,
   ...state.auth,
   ...state.profile,
+  ...state.landing,
 });
 
 export default connect(mapStateToProps, {

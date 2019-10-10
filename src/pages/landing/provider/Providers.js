@@ -96,7 +96,6 @@ class Providers extends Component {
   componentDidUpdate() {
     const { serviceId } = this.state;
     if (serviceId === 'undefined') {
-      console.log('redirecting' );
       navigateTo('/')();
     }
   }
