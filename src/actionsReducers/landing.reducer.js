@@ -16,14 +16,14 @@ const initState = {
 
 const reducer = (state = initState, action) => {
   switch (action.type) {
-    case SET_LANDING_PAGE_FACTORS:
+    case SET_LANDING_PAGE_FACTORS: {
+      const landingPageFactors = Object.is(action.payload, null) ?
+        {} : { ...state.landingPageFactors, ...action.payload };
       return {
         ...state,
-        landingPageFactors: {
-          ...state.landingPageFactors,
-          ...action.payload,
-        },
+        landingPageFactors,
       };
+    }
     default:
       return state;
   }

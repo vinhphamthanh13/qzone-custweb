@@ -21,6 +21,8 @@ class RedirectOrg extends Component {
   static propTypes = {
     dispatchOrganizations: func.isRequired,
     dispatchSetLandingPage: func.isRequired,
+    dispatchClearServicesByServiceCategoryId: func.isRequired,
+    dispatchClearServiceCategoriesByOrgId: func.isRequired,
   };
 
   state = {
@@ -48,7 +50,15 @@ class RedirectOrg extends Component {
   }
 
   componentDidMount() {
-    const { dispatchOrganizations } = this.props;
+    const {
+      dispatchOrganizations,
+      dispatchClearServicesByServiceCategoryId,
+      dispatchClearServiceCategoriesByOrgId,
+      dispatchSetLandingPage,
+    } = this.props;
+    dispatchClearServicesByServiceCategoryId();
+    dispatchClearServiceCategoriesByOrgId();
+    dispatchSetLandingPage(null);
     dispatchOrganizations();
   }
 

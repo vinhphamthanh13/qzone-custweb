@@ -168,6 +168,7 @@ class MainAppBar extends React.Component {
       isShowingTrackingList,
       trackingAppointmentById,
     } = this.state;
+    console.log('enableSerach', enableSearch);
     const trackingList = [];
     if (eventList && eventList.length && trackingAppointmentById && compact(trackingAppointmentById).length) {
       eventList

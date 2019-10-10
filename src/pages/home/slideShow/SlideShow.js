@@ -45,7 +45,8 @@ class SlideShow extends Component {
       className: s.sliderControl,
     };
     const { list, type } = this.state;
-    const heading = type === SLIDE_TYPE.ORG ? 'Our Organizations' : 'Our Services';
+    const [heading, emptyMessage] = type === SLIDE_TYPE.ORG
+      ? ['Our Organizations', 'No Organization Available'] : ['Our Services', 'No Services Available'];
 
     return (
       <div className={s.carousel}>
@@ -67,7 +68,7 @@ class SlideShow extends Component {
               </div>
             </div>
           </>
-        ) : <EmptyItem size="lg" message="No organization available!" />}
+        ) : <EmptyItem size="lg" message={emptyMessage} />}
       </div>
     );
   }

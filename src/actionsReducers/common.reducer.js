@@ -117,14 +117,14 @@ const reducer = (state = initState, action) => {
         ...state,
         responsiveLayout: action.payload,
       };
-    case SERVICES_BY_SERVICE_CATEGORY_ID:
+    case SERVICES_BY_SERVICE_CATEGORY_ID: {
+      const servicesByServiceCategoryId = Object.is(action.payload, null) ?
+        {} : { ...state.servicesByServiceCategoryId, ...action.payload };
       return {
         ...state,
-        servicesByServiceCategoryId: {
-          ...state.servicesByServiceCategoryId,
-          ...action.payload,
-        }
+        servicesByServiceCategoryId,
       };
+    }
     case CANCEL_EVENT_BY_ID:
       return {
         ...state,

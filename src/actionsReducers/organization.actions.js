@@ -27,7 +27,7 @@ const setServiceProviders = payload => ({
   type: SET_SERVICE_PROVIDERS,
   payload,
 });
-const serviceCategoriesByOrgIdAction = payload => ({
+export const serviceCategoriesByOrgIdAction = payload => ({
   type: SET_SERVICE_CATEGORIES_BY_ORG_ID,
   payload,
 });

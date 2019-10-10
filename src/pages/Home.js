@@ -34,7 +34,6 @@ export class Home extends Component {
     serviceCategoriesByOrgId: [],
     servicesByServiceCategoryId: [],
     categories: [],
-    landingPageFactors: {},
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -55,6 +54,7 @@ export class Home extends Component {
       JSON.stringify(servicesByServiceCategoryId) !== JSON.stringify(cachedServicesByServiceCategoryId)
     ) {
       updatedState.servicesByServiceCategoryId = servicesByServiceCategoryId;
+      updatedState.enableSearch = Object.keys(servicesByServiceCategoryId).length > 0;
     }
 
     return Object.keys(updatedState) ? updatedState : null;
@@ -121,11 +121,10 @@ export class Home extends Component {
   render() {
     const {
       searchText, isRegisterOpen, isLoginOpen, openAdvancedSearch, searchResult,
-      showAdvancedResult, categories, servicesByServiceCategoryId,
-      landingPageFactors,
+      showAdvancedResult, categories, servicesByServiceCategoryId, enableSearch,
     } = this.state;
-    const catName = get(landingPageFactors, 'catName');
-    const enableSearch = servicesByServiceCategoryId[catName] && servicesByServiceCategoryId[catName].length > 0;
+
+    console.log('enableSearch on home', enableSearch);
     const serviceList = categories.length > 0 && categories.map(cat => {
       if (servicesByServiceCategoryId[cat.name]) {
         return [...servicesByServiceCategoryId[cat.name]]

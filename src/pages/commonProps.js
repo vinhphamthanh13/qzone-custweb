@@ -12,6 +12,7 @@ import {
   rescheduleEventApi,
   rescheduleStatusAction,
   findEventByCustomerIdApi,
+  servicesByServiceCategoryIdBulkAction,
 } from 'actionsReducers/common.actions';
 import { providersByServiceIdApi, bookEventApi, confirmWaitListsApi } from 'actionsReducers/booking.actions';
 import {
@@ -24,7 +25,11 @@ import {
   usersByIdApi,
 } from 'actionsReducers/provider.actions';
 import { setLandingPageAction } from 'actionsReducers/landing.action';
-import { setOrganizationsApi, serviceCategoriesByOrgIdApi } from 'actionsReducers/organization.actions';
+import {
+  setOrganizationsApi,
+  serviceCategoriesByOrgIdApi,
+  serviceCategoriesByOrgIdAction,
+} from 'actionsReducers/organization.actions';
 import { registerWaitListsApi, setWaitListsByIdApi } from 'actionsReducers/waitlist.actions';
 import { goProfilePage } from 'actionsReducers/profile.actions';
 import { trackingAppointmentByIdsApi } from 'actionsReducers/customer.actions';
@@ -211,5 +216,7 @@ export const redirectOrgProps = {
   mapDispatchTOProps: dispatch => ({
     dispatchOrganizations: () => dispatch(setOrganizationsApi()),
     dispatchSetLandingPage: data => dispatch(setLandingPageAction(data)),
+    dispatchClearServicesByServiceCategoryId: () => dispatch(servicesByServiceCategoryIdBulkAction(null)),
+    dispatchClearServiceCategoriesByOrgId: () => dispatch(serviceCategoriesByOrgIdAction([])),
   }),
 };
