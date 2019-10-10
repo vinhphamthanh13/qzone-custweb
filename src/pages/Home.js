@@ -16,51 +16,39 @@ import s from './Home.module.scss';
 
 export class Home extends Component {
   static propTypes = {
-    location: objectOf(any),
-    dispatchOrganizations: func.isRequired,
-  };
-
-  static defaultProps = {
-    location: {},
+    match: objectOf(any).isRequired,
+    dispatchServiceCategoriesByOrgId: func.isRequired,
   };
 
   state = {
-    servicesByServiceCategoryId: {},
     searchText: '',
     searchResult: [],
     isRegisterOpen: false,
     isLoginOpen: false,
     openAdvancedSearch: false,
     showAdvancedResult: false,
-    organizations: [],
+    serviceCategoriesByOrgId: [],
+    categories: [],
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { servicesByServiceCategoryId, organizations } = props;
-    const {
-      servicesByServiceCategoryId: cachedServicesByServiceCategoryId,
-      organizations: cachedOrganizations,
-    } = state;
+    const { serviceCategoriesByOrgId } = props;
+    const { serviceCategoriesByOrgId: cachedServiceCategoriesByOrgId } = state;
     const updatedState = {};
     if (
-      servicesByServiceCategoryId !== null &&
-      JSON.stringify(servicesByServiceCategoryId) !== JSON.stringify(cachedServicesByServiceCategoryId)
+      serviceCategoriesByOrgId !== null &&
+      JSON.stringify(serviceCategoriesByOrgId) !== JSON.stringify(cachedServiceCategoriesByOrgId)
     ) {
-      updatedState.servicesByServiceCategoryId = servicesByServiceCategoryId;
-    }
-    if (
-      organizations !== null &&
-      JSON.stringify(organizations) !== JSON.stringify(cachedOrganizations)
-    ) {
-      updatedState.organizations = organizations;
+      updatedState.serviceCategoriesByOrgId = serviceCategoriesByOrgId;
+      updatedState.categories = serviceCategoriesByOrgId.map(opt => ({ id: opt.value, name: opt.label }));
     }
 
     return Object.keys(updatedState) ? updatedState : null;
   }
 
   componentDidMount() {
-    const { dispatchOrganizations } = this.props;
-    dispatchOrganizations();
+    const { dispatchServiceCategoriesByOrgId, match: { params: { id }} } = this.props;
+    dispatchServiceCategoriesByOrgId(id);
   }
 
   handleInstantSearch = (event) => {
@@ -101,15 +89,14 @@ export class Home extends Component {
   };
 
   render() {
-    const { location } = this.props;
     const {
-      searchText, isRegisterOpen, isLoginOpen, openAdvancedSearch, searchResult, servicesByServiceCategoryId,
-      showAdvancedResult, organizations,
+      searchText, isRegisterOpen, isLoginOpen, openAdvancedSearch, searchResult,
+      showAdvancedResult, organizations, serviceCategoriesByOrgId, categories,
     } = this.state;
 
-    const servicesList = [];
-    Object.keys(servicesByServiceCategoryId).map(catName =>
-      servicesByServiceCategoryId[catName].map(service => servicesList.push(service)));
+    console.log('serviceCategoriesByOrgId', serviceCategoriesByOrgId);
+
+
     return (
       <div className={s.landingPage}>
         <Error />
@@ -127,7 +114,7 @@ export class Home extends Component {
           toggleAdvancedSearch={this.toggleAdvancedSearch}
         />
         {organizations && organizations.length > 0 && (<SlideShow list={organizations} />)}
-        <Landing location={location} handleAuth={this.openAuthModal} />
+        <Landing categories={categories} handleAuth={this.openAuthModal} />
         <Footer maintenance={false} />
         {searchResult.length > 0 && (
           <div className={s.instantSearch}>

@@ -2,7 +2,7 @@ import {
   fetchOrganization,
   serviceProviders,
   organizations,
-  servicesOptionByOrgId,
+  serviceCategoriesByOrgId,
 } from 'actionsApi/organization';
 import { handleRequest } from 'utils/apiHelpers';
 import {
@@ -13,7 +13,7 @@ import {
 export const SET_ORGANIZATION = 'ORG.SET_ORGANIZATION';
 export const SET_SERVICE_PROVIDERS = 'ORG.SET_SERVICE_PROVIDERS';
 export const SET_ORGANIZATIONS = 'ORG.SET_ORGANIZATIONS';
-export const SET_ORGANIZATION_OPTIONS = 'ORG.SET_ORGANIZATION_OPTIONS';
+export const SET_SERVICE_CATEGORIES_BY_ORG_ID = 'ORG.SET_SERVICE_CATEGORIES_BY_ORG_ID';
 
 const setOrganization = payload => ({
   type: SET_ORGANIZATION,
@@ -27,8 +27,8 @@ const setServiceProviders = payload => ({
   type: SET_SERVICE_PROVIDERS,
   payload,
 });
-const servicesOptionByOrgIdAction = payload => ({
-  type: SET_ORGANIZATION_OPTIONS,
+const serviceCategoriesByOrgIdAction = payload => ({
+  type: SET_SERVICE_CATEGORIES_BY_ORG_ID,
   payload,
 });
 export const setServiceProvidersAction = () => async (dispatch) => {
@@ -61,13 +61,13 @@ export const setOrganizationsApi = () => async dispatch => {
   }
   dispatch(setLoading(false));
 };
-export const servicesOptionByOrgIdApi = id => async dispatch => {
+export const serviceCategoriesByOrgIdApi = id => async dispatch => {
   dispatch(setLoading(true));
-  const [result, error] = await handleRequest(servicesOptionByOrgId, [id]);
+  const [result, error] = await handleRequest(serviceCategoriesByOrgId, [id]);
   if (error) {
     dispatch(setError(error));
   } else {
-    dispatch(servicesOptionByOrgIdAction(result));
+    dispatch(serviceCategoriesByOrgIdAction(result));
   }
   dispatch(setLoading(false));
 };

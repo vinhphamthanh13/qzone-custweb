@@ -99,7 +99,7 @@ class Landing extends Component {
 
   render() {
     const { dispatchSetTabOrder, handleAuth } = this.props;
-    const { activeTab, servicesByServiceCategoryId, catName, tabOrder, landingPageFactors } = this.state;
+    const { activeTab, servicesByServiceCategoryId, catName, tabOrder, landingPageFactors, categories } = this.state;
     const serviceList = servicesByServiceCategoryId[catName] || [];
     const tabsInfo = get(landingPageFactors, 'tabsInfo');
 
@@ -108,29 +108,31 @@ class Landing extends Component {
         <Loading />
         <Error />
         <Success />
-        <div className={s.landing}>
-          {!!tabsInfo && Object.keys(tabsInfo).length > 0 && (
-            <>
-              <Tabs
-                setTabOrder={dispatchSetTabOrder}
-                tabOrder={tabOrder}
-                tabsInfo={tabsInfo}
-                onSelectTab={this.handleSelectTab}
-              />
-              {serviceList.length > 0
-                ? (
-                    <Services
-                      serviceList={serviceList}
-                      catName={catName}
-                      activeTab={activeTab}
-                      handleAuth={handleAuth}
-                    />
-                  )
-                : <EmptyItem />
-              }
-            </>
-          )}
-        </div>
+        {categories.length > 0 && (
+          <div className={s.landing}>
+            {!!tabsInfo && Object.keys(tabsInfo).length > 0 && (
+              <>
+                <Tabs
+                  setTabOrder={dispatchSetTabOrder}
+                  tabOrder={tabOrder}
+                  tabsInfo={tabsInfo}
+                  onSelectTab={this.handleSelectTab}
+                />
+                {serviceList.length > 0
+                  ? (
+                      <Services
+                        serviceList={serviceList}
+                        catName={catName}
+                        activeTab={activeTab}
+                        handleAuth={handleAuth}
+                      />
+                    )
+                  : <EmptyItem />
+                }
+              </>
+            )}
+          </div>
+        )}
       </>
     )
   }

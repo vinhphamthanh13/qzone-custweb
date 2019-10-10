@@ -149,6 +149,10 @@ class MainAppBar extends React.Component {
     }));
   };
 
+  handleRedirect = () => {
+    navigateTo('/')();
+  };
+
   render() {
     const {
       classes,
@@ -248,6 +252,7 @@ class MainAppBar extends React.Component {
               }}
               alt="Quezone Logo"
               src={logo}
+              onClick={this.handleRedirect}
             />
             <div className={classes.search}>
               <div className={classes.searchIcon}>

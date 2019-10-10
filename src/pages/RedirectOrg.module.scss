@@ -2,23 +2,77 @@
 
 .container {
   display: flex;
-  position: relative;
+  flex-direction: column;
+  align-items: center;
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - 66px);
+  overflow: auto;
+  margin-top: $app-bar-height;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: $app-bar-height;
+  background: linear-gradient(to bottom, $main, $malibu);
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 0 1rem 0 1.5rem;
+  z-index: $index_highest;
+}
+
+.searchBox {
+  color: $main_04;
+  position: relative;
+  border: 1px solid $main_04;
+  padding: 0.1rem 0.2rem 0.1rem 2rem;
+  border-radius: 0.2rem;
+  background: $white;
+  display: flex;
+  align-items: center;
+}
+
+.clearSearch {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.searchBox:hover {
+  transition: all 0.3s ease-in;
+}
+
+.searchIcon {
+  position: absolute;
+  top: 50%;
+  left: 0.2rem;
+  transform: translateY(-50%);
+}
+
+.brandName {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
 }
 
 .orgList {
-  width: 400px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border: 1px solid $grayNickel;
-  padding: 1rem 0.2rem 1rem 1rem;
-  max-height: 90vh;
-  overflow: auto;
-  border-radius: 0.5rem;
-  box-shadow: 2px 2px 15px 1px $grayNickel;
+  display: flex;
+  flex-direction: column;
+}
+
+.orgListHeading {
+  font-size: $heading;
+  color: $mako;
+  width: 100%;
+  margin: 1rem;
+  padding: 0 1rem 0.5rem;
+  border-bottom: 1px solid $gallery;
+  text-transform: capitalize;
 }
 
 .orgBanner {
@@ -27,27 +81,32 @@
   align-items: center;
 }
 
+.orgRow {
+  display: flex;
+}
+
 .item {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0.5rem 0.5rem 0.25rem;
-  background: $white;
-  padding: 0.2rem;
-  border-radius: 0.5rem;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin: 0.5rem;
+  position: relative;
+  width: $max-card-width;
+  height: $max-card-width;
 }
 
 .item:hover {
   background: $we_peep;
+  cursor: pointer;
+  & .orgIntro {
+    visibility: visible;
+  }
 }
 
-.logo {
-  width: 64px;
-  height: 64px;
-  padding: 0 0.2rem;
-  margin-right: 0.5rem;
-  box-shadow: 1px 1px 2px 2px $grayNickel;
-  border-radius: 0.2rem;
+.orgImage {
+  width: $max-card-width;
+  height: 260px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -61,7 +120,45 @@
 }
 
 .orgName {
+  margin: 0.2rem 0.5rem;
   font-size: $subtitle;
-  font-weight: 500;
-  color: $fruitSalad;
+  font-weight: 400;
+  color: $main_04;
 }
+
+.orgPhone {
+  color: $grayNickel;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.orgIntro {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(255, 255, 255, 0.8);
+  visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: $index_highest;
+  padding: 0.5rem;
+  transition: all 0.1s ease-in;
+}
+
+.logo {
+  width: 64px;
+  height: 64px;
+  border: 1px solid $gallery;
+  border-radius: 0.2rem;
+  box-shadow: 1px 1px 2px 1px $gallery;
+}
+.orgDescription {
+  margin: 0.5rem 0.2rem;
+  text-indent: 1rem;
+}
+

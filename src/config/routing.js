@@ -6,7 +6,6 @@ import RedirectToInstant from 'pages/landing/waitlist/RedirectToInstant';
 import PageNotFound from 'pages/PageNotFound';
 import AccessDenied from 'pages/AccessDenied';
 import Provider from 'pages/Provider';
-import Organization from 'pages/Organization';
 import Profile from 'pages/Profile';
 import Maintenance from 'pages/Maintenance';
 import ViewEvent from 'pages/landing/viewEvent/ViewEvent';
@@ -17,16 +16,16 @@ const rootRoutes = [
   {
     exact: true,
     strict: true,
-    path: '/:orgId',
-    name: 'Custweb for Booking Service',
-    component: Home,
+    path: '/',
+    name: 'Select Organization',
+    component: RedirectOrg,
   },
   {
     exact: true,
     strict: true,
-    path: '/',
-    name: 'Select Organization',
-    component: RedirectOrg,
+    path: '/organization/:id',
+    name: 'Custweb for Booking Service',
+    component: Home,
   },
   {
     exact: true,
@@ -38,7 +37,7 @@ const rootRoutes = [
   {
     exact: true,
     strict: true,
-    path: '/confirm-booking',
+    path: '/booking/confirmation',
     name: 'Confirm Booking',
     component: Booking,
   },
@@ -83,13 +82,6 @@ const rootRoutes = [
     path: '/provider/:id',
     name: 'Provider',
     component: Provider,
-  },
-  {
-    exact: true,
-    strict: true,
-    path: '/organization/:id',
-    name: 'Organization',
-    component: Organization,
   },
   {
     exact: true,

@@ -83,7 +83,7 @@ class RedirectToInstant extends Component {
       }
     }
     if (cachedUserDetailById) {
-      navigateTo('/confirm-booking')();
+      navigateTo('/booking/confirmation')();
       dispatchSetLandingPage({ confirmWaitLists: true })
     }
   }

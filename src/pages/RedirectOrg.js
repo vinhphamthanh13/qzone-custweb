@@ -1,11 +1,20 @@
 import React, { Component } from 'react';
 import { func } from 'prop-types';
-import { get } from 'lodash';
+import windowSize from 'react-window-size';
+import get from 'lodash/get';
+import chunk from 'lodash/chunk';
+import compact from 'lodash/compact';
 import { connect } from 'react-redux';
-import { navigateTo } from 'utils/common';
+import { navigateTo, limitString } from 'utils/common';
 import { redirectOrgProps } from 'pages/commonProps';
-import { IconButton } from '@material-ui/core';
-import { ChevronRight } from '@material-ui/icons';
+import { InputBase } from '@material-ui/core';
+import { Search, PhoneIphone, Clear } from '@material-ui/icons';
+import Loading from 'components/Loading';
+import defaultImage from 'images/providers.jpg';
+import SlideShow from 'pages/home/slideShow/SlideShow';
+import qLogo from 'images/quezone-logo.png';
+import defaultLogo from 'images/logo.png';
+import { MAX_CARD_WIDTH } from 'utils/constants';
 import s from './RedirectOrg.module.scss';
 
 class RedirectOrg extends Component {
@@ -13,22 +22,25 @@ class RedirectOrg extends Component {
     dispatchOrganizations: func.isRequired,
   };
 
-  static defaultProps = {
-  };
-
   state = {
     organizations: [],
+    windowWidth: 0,
+    searchOrgList: [],
+    searchText: '',
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { organizations } = props;
-    const { organizations: cachedOrganizations } = state;
+    const { organizations, windowWidth } = props;
+    const { organizations: cachedOrganizations, windowWidth: cachedWindowWidth } = state;
     const updatedState = {};
     if (
       organizations !== null &&
       JSON.stringify(organizations) !== JSON.stringify(cachedOrganizations)
     ) {
       updatedState.organizations = organizations;
+    }
+    if (windowWidth !== cachedWindowWidth) {
+      updatedState.windowWidth = windowWidth;
     }
 
     return Object.keys(updatedState) ? updatedState : null;
@@ -40,37 +52,111 @@ class RedirectOrg extends Component {
   }
 
   handleSelectOrgById = id => () => {
-    navigateTo(`/${id}`)();
+    navigateTo(`/organization/${id}`)();
+  };
+
+  handleSearch = event => {
+    if (event) event.preventDefault();
+    const { organizations } = this.state;
+    const { value } = event.target;
+    let searchOrgList = [];
+    if (value && `${value}`.length > 1) {
+      searchOrgList = organizations.filter(org => {
+        const orgName = get(org, 'name', '').toLowerCase();
+        return orgName.includes(value.toLowerCase()) ? org.name : null;
+      });
+    } else {
+      searchOrgList = [...organizations];
+    }
+    this.setState({
+      searchText: value,
+      searchOrgList,
+    });
+  };
+
+  handleClearSearchText = () => {
+    this.setState({
+      searchText: '',
+      searchOrgList: [],
+    });
   };
 
   render() {
-    const { organizations } = this.state;
+    const { organizations, searchText, windowWidth, searchOrgList } = this.state;
+    const chunkFactor = windowWidth / MAX_CARD_WIDTH;
+    const recommendOrg = (searchText || compact(searchOrgList).length > 0) ? [...searchOrgList] : [...organizations];
+
     return (
-      <div className={s.container}>
-        <div className={s.orgList}>
-          {organizations.map(org => {
-            const logo = get(org, 'logo.fileUrl');
-            const name = get(org, 'name');
-            const id = get(org, 'id');
-            const telephone = get(org, 'telephone');
-            return (
-              <div className={s.item}>
-                <div className={s.orgBanner}>
-                  <div className={s.logo}>
-                    <img src={logo} alt={name} width="100%" />
-                  </div>
-                  <div className={s.orgInfo}>
-                    <div className={s.orgName}>&nbsp;{name}</div>
-                    <span>&nbsp;{telephone}</span>
-                  </div>
-                </div>
-                <IconButton onClick={this.handleSelectOrgById(id)}>
-                  <ChevronRight color="inherit" className="icon-big" />
-                </IconButton>
+      <>
+        <Loading />
+        <div className={s.container}>
+          <div className={s.header}>
+            <div className={s.brandName}>
+              <img src={qLogo} alt="Quezone" width="100%" />
+            </div>
+            <div className={s.searchBox}>
+              <InputBase
+                name="searchOrg"
+                value={searchText}
+                onChange={this.handleSearch}
+                placeholder="Search Organization"
+              />
+              <Search className={`main-color ${s.searchIcon}`} />
+              {`${searchText}`.length > 1 && (
+                <Clear
+                  color="secondary"
+                  className={s.clearSearch}
+                  onClick={this.handleClearSearchText}
+                />
+              )}
+            </div>
+          </div>
+          <SlideShow list={organizations} />
+          {recommendOrg.length > 0 ? (
+            <>
+              <div className={s.orgListHeading}>Recommend for you</div>
+              <div className={s.orgList}>
+                {chunk(recommendOrg, chunkFactor).map(row => (
+                  <div key={Math.random()} className={s.orgRow}>
+                    {row.map(org => {
+                      const logo = get(org, 'logo.fileUrl') || defaultLogo;
+                      const name = get(org, 'name');
+                      const id = get(org, 'id');
+                      const telephone = get(org, 'telephone');
+                      const orgDesc = get(org, 'description');
+
+                      return (
+                        // eslint-disable-next-line
+                        <div key={id} className={s.item} onClick={this.handleSelectOrgById(id)}>
+                          <div className={s.orgImage}>
+                            <img src={defaultImage} alt={name} width="100%" height="100%" />
+                          </div>
+                          <div className={s.orgInfo}>
+                            <div className={s.orgInfo}>
+                              <div className={s.orgName}>{name}</div>
+                              <div className={s.orgPhone}>
+                                <PhoneIphone className="icon-small" color="inherit" />
+                                <span>&nbsp;{telephone}</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className={s.orgIntro}>
+                            <div className={s.logo}>
+                              <img src={logo} alt={name} width="100%" />
+                            </div>
+                            <div className={s.orgDescription}>
+                              {limitString(orgDesc, 250)}
+                            </div>
+                          </div>
+                        </div>
+                      )})}
+                      </div>
+                  ))}
               </div>
-            )})}
+            </>
+          ) : null}
         </div>
-      </div>
+      </>
     );
   }
 }
@@ -78,4 +164,4 @@ class RedirectOrg extends Component {
 export default connect(
   redirectOrgProps.mapStateToProps,
   redirectOrgProps.mapDispatchTOProps,
-)(RedirectOrg);
+)(windowSize(RedirectOrg));

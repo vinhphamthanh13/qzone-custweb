@@ -80,7 +80,7 @@ class Provider extends Component {
     const { selectBookingDetail, setLandingPage } = this.props;
     selectBookingDetail(slot);
     setLandingPage({ instantBooking: false, confirmWaitLists: false });
-    navigateTo('/confirm-booking')();
+    navigateTo('/booking/confirmation')();
   };
 
   render() {

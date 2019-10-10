@@ -24,30 +24,27 @@ import {
   usersByIdApi,
 } from 'actionsReducers/provider.actions';
 import { setLandingPageAction } from 'actionsReducers/landing.action';
-import { setOrganizationsApi, servicesOptionByOrgIdApi } from 'actionsReducers/organization.actions';
+import { setOrganizationsApi, serviceCategoriesByOrgIdApi } from 'actionsReducers/organization.actions';
 import { registerWaitListsApi, setWaitListsByIdApi } from 'actionsReducers/waitlist.actions';
 import { goProfilePage } from 'actionsReducers/profile.actions';
 import { trackingAppointmentByIdsApi } from 'actionsReducers/customer.actions';
 
 export const homeProps = {
   mapStateToProps: ({ common, organization }) => ({
-    servicesOptionByOrgId: organization.servicesOptionByOrgId,
+    serviceCategoriesByOrgId: organization.serviceCategoriesByOrgId,
     servicesByServiceCategoryId: common.servicesByServiceCategoryId,
-    organizations: organization.organizations,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchServices: () => dispatch(setServices()),
     dispatchServiceCategory: () => dispatch(setServiceCategories()),
     dispatchTemporaryServices: () => dispatch(setTemporaryServices()),
-    dispatchOrganizations: () => dispatch(setOrganizationsApi()),
-    dispatchServicesOptionByOrgId: id => dispatch(servicesOptionByOrgIdApi(id)),
+    dispatchServiceCategoriesByOrgId: id => dispatch(serviceCategoriesByOrgIdApi(id)),
   })
 };
 
 export const landingProps = {
-  mapStateToProps: ({ home, landing, common, booking }) => ({
+  mapStateToProps: ({ landing, common, booking }) => ({
     providersByServiceId: booking.providersByServiceId,
-    categories: home.categories,
     servicesByServiceCategoryId: common.servicesByServiceCategoryId,
     tabOrder: common.tabOrder,
     landingPageFactors: landing.landingPageFactors,
