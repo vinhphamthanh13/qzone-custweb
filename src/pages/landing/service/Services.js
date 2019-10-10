@@ -39,7 +39,7 @@ class Services extends Component {
     const { serviceList, catName, windowWidth } = this.state;
     const chunkFactor = serviceList.length > 0 ? windowWidth / MAX_CARD_WIDTH : 1;
     return (
-      <div className={s.serviceContent}>
+      <>
         {chunk(serviceList, chunkFactor).map((serviceRow, index) => (
           // eslint-disable-next-line
           <div className={s.serviceRow} key={index}>
@@ -48,7 +48,7 @@ class Services extends Component {
             )}
           </div>
         ))}
-      </div>
+      </>
     );
   }
 }

@@ -116,17 +116,19 @@ class Landing extends Component {
                   tabsInfo={tabsInfo}
                   onSelectTab={this.handleSelectTab}
                 />
-                {serviceList.length > 0
-                  ? (
-                      <Services
-                        serviceList={serviceList}
-                        catName={catName}
-                        activeTab={activeTab}
-                        handleAuth={handleAuth}
-                      />
-                    )
-                  : <EmptyItem />
-                }
+                <div className={s.serviceContent}>
+                  {serviceList.length > 0
+                    ? (
+                        <Services
+                          serviceList={serviceList}
+                          catName={catName}
+                          activeTab={activeTab}
+                          handleAuth={handleAuth}
+                        />
+                      )
+                    : <EmptyItem />
+                  }
+                </div>
               </>
             )}
           </div>

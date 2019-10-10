@@ -68,6 +68,7 @@ class Tabs extends Component {
     const tabsInfo = get(landingPageFactors, 'tabsInfo');
     const tabInfo = get(landingPageFactors, `tabsInfo.${catName}`);
     if (tabInfo) onSelectTab(tabInfo, catName)();
+    console.log('tabsInfo', tabsInfo);
     const chunkFactor = Math.abs(windowWidth / (MAX_TAB_WIDTH + CATEGORY_NAV_WIDTH));
     const maxChunkCount = chunk(Object.keys(tabsInfo), chunkFactor).length;
     dispatchChunkFactor({ chunkFactor, maxChunkCount });

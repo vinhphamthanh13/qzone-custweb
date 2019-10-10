@@ -129,6 +129,7 @@ class RedirectOrg extends Component {
                   <div key={Math.random()} className={s.orgRow}>
                     {row.map(org => {
                       const logo = get(org, 'logo.fileUrl') || defaultLogo;
+                      const advPic = get(org, 'advPic') || defaultImage;
                       const name = get(org, 'name');
                       const id = get(org, 'id');
                       const telephone = get(org, 'telephone');
@@ -138,7 +139,7 @@ class RedirectOrg extends Component {
                         // eslint-disable-next-line
                         <div key={id} className={s.item} onClick={this.handleSelectOrgById(org)}>
                           <div className={s.orgImage}>
-                            <img src={defaultImage} alt={name} width="100%" height="100%" />
+                            <img src={advPic} alt={name} width="100%" height="100%" />
                           </div>
                           <div className={s.orgInfo}>
                             <div className={s.orgInfo}>
