@@ -94,9 +94,10 @@ class Providers extends Component {
   }
 
   componentDidUpdate() {
-    const { serviceId } = this.state;
+    const { serviceId, landingPageFactors } = this.state;
+    const orgRef = get(landingPageFactors, 'orgRef');
     if (serviceId === 'undefined') {
-      navigateTo('/')();
+      navigateTo(`/organization/${orgRef}`)();
     }
   }
 
