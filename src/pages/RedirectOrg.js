@@ -10,6 +10,7 @@ import { redirectOrgProps } from 'pages/commonProps';
 import { InputBase } from '@material-ui/core';
 import { Search, PhoneIphone, Clear } from '@material-ui/icons';
 import Loading from 'components/Loading';
+import Error from 'components/Error';
 import defaultImage from 'images/providers.jpg';
 import SlideShow from 'pages/home/slideShow/SlideShow';
 import qLogo from 'images/quezone-logo.png';
@@ -104,6 +105,7 @@ class RedirectOrg extends Component {
     return (
       <>
         <Loading />
+        <Error />
         <div className={s.container}>
           <div className={s.header}>
             <div className={s.brandNameMob}>

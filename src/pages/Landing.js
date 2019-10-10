@@ -106,7 +106,7 @@ class Landing extends Component {
         <Loading />
         <Error />
         <Success />
-        {categories.length > 0 && (
+        {categories.length > 0 ? (
           <div className={s.landing}>
             {!!tabsInfo && Object.keys(tabsInfo).length > 0 && (
               <>
@@ -132,7 +132,7 @@ class Landing extends Component {
               </>
             )}
           </div>
-        )}
+        ) : <EmptyItem message="No Service Available!" />}
       </>
     )
   }
