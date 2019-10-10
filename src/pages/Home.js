@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { objectOf, any, func } from 'prop-types';
+import { func, objectOf, any } from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
 import Loading from 'components/Loading';
@@ -16,8 +16,9 @@ import s from './Home.module.scss';
 
 export class Home extends Component {
   static propTypes = {
-    match: objectOf(any).isRequired,
     dispatchServiceCategoriesByOrgId: func.isRequired,
+    dispatchSetLandingPage: func.isRequired,
+    match: objectOf(any).isRequired,
   };
 
   state = {
@@ -28,12 +29,16 @@ export class Home extends Component {
     openAdvancedSearch: false,
     showAdvancedResult: false,
     serviceCategoriesByOrgId: [],
+    servicesByServiceCategoryId: [],
     categories: [],
+    landingPageFactors: {},
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { serviceCategoriesByOrgId } = props;
-    const { serviceCategoriesByOrgId: cachedServiceCategoriesByOrgId } = state;
+    const { serviceCategoriesByOrgId, servicesByServiceCategoryId } = props;
+    const { serviceCategoriesByOrgId: cachedServiceCategoriesByOrgId,
+      servicesByServiceCategoryId: cachedServicesByServiceCategoryId,
+    } = state;
     const updatedState = {};
     if (
       serviceCategoriesByOrgId !== null &&
@@ -42,13 +47,35 @@ export class Home extends Component {
       updatedState.serviceCategoriesByOrgId = serviceCategoriesByOrgId;
       updatedState.categories = serviceCategoriesByOrgId.map(opt => ({ id: opt.value, name: opt.label }));
     }
+    if (
+      servicesByServiceCategoryId !== null &&
+      JSON.stringify(servicesByServiceCategoryId) !== JSON.stringify(cachedServicesByServiceCategoryId)
+    ) {
+      updatedState.servicesByServiceCategoryId = servicesByServiceCategoryId;
+    }
 
     return Object.keys(updatedState) ? updatedState : null;
   }
 
   componentDidMount() {
-    const { dispatchServiceCategoriesByOrgId, match: { params: { id }} } = this.props;
-    dispatchServiceCategoriesByOrgId(id);
+    const { dispatchServiceCategoriesByOrgId, match: { params: { orgRef }}, dispatchSetLandingPage } = this.props;
+    if (orgRef) {
+      dispatchServiceCategoriesByOrgId(orgRef);
+      dispatchSetLandingPage({ orgRef });
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const { serviceCategoriesByOrgId } = prevProps;
+    const { dispatchSetLandingPage } = this.props;
+    const { serviceCategoriesByOrgId: cachedServiceCategoriesByOrgId } = this.state;
+    if (
+      cachedServiceCategoriesByOrgId !== null &&
+      JSON.stringify(cachedServiceCategoriesByOrgId) !== JSON.stringify(serviceCategoriesByOrgId)
+    ) {
+      const catName = get(cachedServiceCategoriesByOrgId, '0.label');
+      dispatchSetLandingPage({ catName });
+    }
   }
 
   handleInstantSearch = (event) => {
@@ -91,11 +118,11 @@ export class Home extends Component {
   render() {
     const {
       searchText, isRegisterOpen, isLoginOpen, openAdvancedSearch, searchResult,
-      showAdvancedResult, organizations, serviceCategoriesByOrgId, categories,
+      showAdvancedResult, organizations, categories, servicesByServiceCategoryId,
+      landingPageFactors,
     } = this.state;
-
-    console.log('serviceCategoriesByOrgId', serviceCategoriesByOrgId);
-
+    const catName = get(landingPageFactors, 'catName');
+    const enableSearch = servicesByServiceCategoryId[catName] && servicesByServiceCategoryId[catName].length > 0;
 
     return (
       <div className={s.landingPage}>
@@ -112,6 +139,7 @@ export class Home extends Component {
           onSearch={this.handleInstantSearch}
           onSearchValue={searchText}
           toggleAdvancedSearch={this.toggleAdvancedSearch}
+          enableSearch={enableSearch}
         />
         {organizations && organizations.length > 0 && (<SlideShow list={organizations} />)}
         <Landing categories={categories} handleAuth={this.openAuthModal} />

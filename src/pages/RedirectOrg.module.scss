@@ -20,7 +20,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  padding: 0 1rem 0 1.5rem;
+  padding: 0 1rem;
   z-index: $index_highest;
 }
 
@@ -54,10 +54,13 @@
 }
 
 .brandName {
+  display: none;
+}
+
+.brandNameMob {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 150px;
+  width: 48px;
+  height: 48px;
 }
 
 .orgList {
@@ -162,3 +165,17 @@
   text-indent: 1rem;
 }
 
+@include breakpoint-up(sm) {
+  .header {
+    padding: 0 1rem 0 1.8rem;
+  }
+  .brandName {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 167px;
+  }
+  .brandNameMob {
+    display: none;
+  }
+}

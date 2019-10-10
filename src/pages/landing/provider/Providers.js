@@ -102,7 +102,9 @@ class Providers extends Component {
   }
 
   handleSelectService = catName => () => {
-    navigateTo('/', { catName })();
+    const { landingPageFactors } = this.state;
+    const orgRef = get(landingPageFactors, 'orgRef', '');
+    navigateTo(`/organization/${orgRef}`, { catName })();
   };
 
   render() {

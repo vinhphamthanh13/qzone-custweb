@@ -8,11 +8,12 @@ import s from './Slide.module.scss';
 class Slide extends Component {
   state = {
     item: {},
+    type: '',
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { item } = props;
-    const { item: cachedItem } = state;
+    const { item, type } = props;
+    const { item: cachedItem, type: cachedType } = state;
     const updatedState = {};
     if (
       item !== null &&
@@ -20,17 +21,28 @@ class Slide extends Component {
     ) {
       updatedState.item = item;
     }
+    if (type !== cachedType) {
+      updatedState.type = type;
+    }
 
     return Object.keys(updatedState) ? updatedState : null;
   }
 
   render() {
-    const { item } = this.state;
-    const name = get(item, 'name');
-    const image = get(item, 'logo.fileUrl') || defaultLogo;
-    const website = get(item, 'website');
-    const phone = get(item, 'telephone');
-    const orgIntro = get(item, 'description');
+    const { item, type } = this.state;
+
+    let name;
+    let image;
+    let website;
+    let phone;
+    let orgIntro;
+    if (type === 'organization') {
+      name = get(item, 'name');
+      image = get(item, 'logo.fileUrl') || defaultLogo;
+      website = get(item, 'website');
+      phone = get(item, 'telephone');
+      orgIntro = get(item, 'description');
+    }
 
     return (
       <div className={s.wrapper}>

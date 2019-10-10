@@ -39,6 +39,7 @@ export const homeProps = {
     dispatchServiceCategory: () => dispatch(setServiceCategories()),
     dispatchTemporaryServices: () => dispatch(setTemporaryServices()),
     dispatchServiceCategoriesByOrgId: id => dispatch(serviceCategoriesByOrgIdApi(id)),
+    dispatchSetLandingPage: data => dispatch(setLandingPageAction(data)),
   })
 };
 
@@ -208,5 +209,6 @@ export const redirectOrgProps = {
   }),
   mapDispatchTOProps: dispatch => ({
     dispatchOrganizations: () => dispatch(setOrganizationsApi()),
+    dispatchSetLandingPage: data => dispatch(setLandingPageAction(data)),
   }),
 };

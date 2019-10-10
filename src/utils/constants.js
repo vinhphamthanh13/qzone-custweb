@@ -4,7 +4,11 @@ export const defaultDateFormat = 'DD MMMM YYYY';
 export const FULL_DATE = 'dddd, DD MMMM YYYY';
 export const TIME_FORMAT = 'hh:mm a';
 export const DEFAULT_TIME = '1970-01-01 T00:00:00';
-
+// Slide type
+export const SLIDE_TYPE = {
+  ORG: 'organization',
+  SER: 'service',
+};
 // Navigation
 export const CATEGORY_NAV_WIDTH = 66;
 

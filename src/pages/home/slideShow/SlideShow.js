@@ -10,17 +10,24 @@ import s from './SlideShow.module.scss';
 class SlideShow extends Component {
   state = {
     list: [],
+    type: 'organization',
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { list } = props;
-    const { list: cachedList } = state;
+    const { list, type } = props;
+    const { list: cachedList, type: cachedType } = state;
     const updatedState = {};
     if (
       list !== null &&
       JSON.stringify(list) !== JSON.stringify(cachedList)
     ) {
       updatedState.list = list;
+    }
+    if (
+      type !== null &&
+      JSON.stringify(type) !== JSON.stringify(cachedType)
+    ) {
+      updatedState.type = type;
     }
 
     return Object.keys(updatedState) ? updatedState : null;
@@ -36,7 +43,7 @@ class SlideShow extends Component {
       pauseOnHover: true,
       className: s.sliderControl,
     };
-    const { list } = this.state;
+    const { list, type } = this.state;
 
     return (
       <div className={s.carousel}>
@@ -51,7 +58,7 @@ class SlideShow extends Component {
                   {list.map((item) => {
                     const id = get(item, 'id');
                     return (
-                      <Slide key={id} item={item} />
+                      <Slide key={id} item={item} type={type} />
                     );
                   })}
                 </Slider>

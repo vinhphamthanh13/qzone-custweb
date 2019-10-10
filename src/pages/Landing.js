@@ -14,7 +14,6 @@ import s from './Landing.module.scss';
 
 class Landing extends Component {
   static propTypes = {
-    dispatchServiceCategory: func.isRequired,
     dispatchServicesByServiceCategoryId: func.isRequired,
     dispatchSetTabOrder: func.isRequired,
     dispatchSetLandingPage: func.isRequired,
@@ -44,7 +43,7 @@ class Landing extends Component {
       categories.map(cat => tabsInfo[cat.name].push(cat));
       updatedState.categories = categories;
       updatedState.tabsInfo = tabsInfo;
-      updatedState.catName = categories[0].name || catName;
+      updatedState.catName = get(categories, '0.name', catName);
     }
     if (
       servicesByServiceCategoryId !== null &&
@@ -69,8 +68,7 @@ class Landing extends Component {
   }
 
   componentDidMount() {
-    const { dispatchServiceCategory, dispatchSetLandingPage } = this.props;
-    dispatchServiceCategory();
+    const { dispatchSetLandingPage } = this.props;
     dispatchSetLandingPage({ instantBooking: false });
   }
 

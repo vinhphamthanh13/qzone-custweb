@@ -23,7 +23,7 @@ const rootRoutes = [
   {
     exact: true,
     strict: true,
-    path: '/organization/:id',
+    path: '/organization/:orgRef',
     name: 'Custweb for Booking Service',
     component: Home,
   },

@@ -17,6 +17,7 @@ import styles from './AppBarStyle';
 
 class MainAppBar extends React.Component {
   static propTypes = {
+    enableSearch: bool.isRequired,
     maintenance: bool,
     onSearchValue: string,
     classes: objectOf(any).isRequired,
@@ -130,8 +131,8 @@ class MainAppBar extends React.Component {
   };
 
   handleActionAdvancedSearch = () => {
-    const { toggleAdvancedSearch, maintenance } = this.props;
-    if (!maintenance) {
+    const { toggleAdvancedSearch, enableSearch } = this.props;
+    if (!enableSearch) {
       toggleAdvancedSearch(true)();
     }
   };
@@ -159,6 +160,7 @@ class MainAppBar extends React.Component {
       onSearch,
       onSearchValue,
       maintenance,
+      enableSearch,
     } = this.props;
     const {
       eventList,
@@ -266,7 +268,7 @@ class MainAppBar extends React.Component {
                 }}
                 onChange={onSearch}
                 value={onSearchValue}
-                disabled={maintenance}
+                disabled={!enableSearch}
               />
             </div>
             <Typography variant="subheading" className={adSearchStyle}>

@@ -14,12 +14,13 @@ import defaultImage from 'images/providers.jpg';
 import SlideShow from 'pages/home/slideShow/SlideShow';
 import qLogo from 'images/quezone-logo.png';
 import defaultLogo from 'images/logo.png';
-import { MAX_CARD_WIDTH } from 'utils/constants';
+import { MAX_CARD_WIDTH, SLIDE_TYPE } from 'utils/constants';
 import s from './RedirectOrg.module.scss';
 
 class RedirectOrg extends Component {
   static propTypes = {
     dispatchOrganizations: func.isRequired,
+    dispatchSetLandingPage: func.isRequired,
   };
 
   state = {
@@ -51,8 +52,11 @@ class RedirectOrg extends Component {
     dispatchOrganizations();
   }
 
-  handleSelectOrgById = id => () => {
-    navigateTo(`/organization/${id}`)();
+  handleSelectOrgById = org => () => {
+    const { dispatchSetLandingPage } = this.props;
+    const orgRef = get(org, 'orgRef');
+    navigateTo(`/organization/${orgRef}`)();
+    dispatchSetLandingPage({ selectedOrg: org });
   };
 
   handleSearch = event => {
@@ -85,12 +89,16 @@ class RedirectOrg extends Component {
     const { organizations, searchText, windowWidth, searchOrgList } = this.state;
     const chunkFactor = windowWidth / MAX_CARD_WIDTH;
     const recommendOrg = (searchText || compact(searchOrgList).length > 0) ? [...searchOrgList] : [...organizations];
+    const enableSearch = organizations.length > 0;
 
     return (
       <>
         <Loading />
         <div className={s.container}>
           <div className={s.header}>
+            <div className={s.brandNameMob}>
+              <img src={defaultLogo} alt="Quezone" width="100%" />
+            </div>
             <div className={s.brandName}>
               <img src={qLogo} alt="Quezone" width="100%" />
             </div>
@@ -100,6 +108,7 @@ class RedirectOrg extends Component {
                 value={searchText}
                 onChange={this.handleSearch}
                 placeholder="Search Organization"
+                disabled={!enableSearch}
               />
               <Search className={`main-color ${s.searchIcon}`} />
               {`${searchText}`.length > 1 && (
@@ -111,7 +120,7 @@ class RedirectOrg extends Component {
               )}
             </div>
           </div>
-          <SlideShow list={organizations} />
+          <SlideShow list={organizations} type={SLIDE_TYPE.ORG} />
           {recommendOrg.length > 0 ? (
             <>
               <div className={s.orgListHeading}>Recommend for you</div>
@@ -127,7 +136,7 @@ class RedirectOrg extends Component {
 
                       return (
                         // eslint-disable-next-line
-                        <div key={id} className={s.item} onClick={this.handleSelectOrgById(id)}>
+                        <div key={id} className={s.item} onClick={this.handleSelectOrgById(org)}>
                           <div className={s.orgImage}>
                             <img src={defaultImage} alt={name} width="100%" height="100%" />
                           </div>
