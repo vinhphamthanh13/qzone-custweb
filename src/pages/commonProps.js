@@ -26,9 +26,7 @@ import {
 } from 'actionsReducers/provider.actions';
 import { setLandingPageAction } from 'actionsReducers/landing.action';
 import {
-  setOrganizationsApi,
-  serviceCategoriesByOrgIdApi,
-  serviceCategoriesByOrgIdAction,
+  setOrganizationsApi, serviceCategoriesByOrgIdApi, serviceCategoriesByOrgIdAction, setOrgNotFoundAction,
 } from 'actionsReducers/organization.actions';
 import { registerWaitListsApi, setWaitListsByIdApi } from 'actionsReducers/waitlist.actions';
 import { goProfilePage } from 'actionsReducers/profile.actions';
@@ -38,6 +36,7 @@ export const homeProps = {
   mapStateToProps: ({ common, organization }) => ({
     serviceCategoriesByOrgId: organization.serviceCategoriesByOrgId,
     servicesByServiceCategoryId: common.servicesByServiceCategoryId,
+    orgNotFound: organization.orgNotFound,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchServices: () => dispatch(setServices()),
@@ -45,6 +44,7 @@ export const homeProps = {
     dispatchTemporaryServices: () => dispatch(setTemporaryServices()),
     dispatchServiceCategoriesByOrgId: id => dispatch(serviceCategoriesByOrgIdApi(id)),
     dispatchSetLandingPage: data => dispatch(setLandingPageAction(data)),
+    dispatchClearOrgNotFound: () => dispatch(setOrgNotFoundAction(false)),
   })
 };
 
@@ -220,5 +220,11 @@ export const redirectOrgProps = {
     dispatchSetLandingPage: data => dispatch(setLandingPageAction(data)),
     dispatchClearServicesByServiceCategoryId: () => dispatch(servicesByServiceCategoryIdBulkAction(null)),
     dispatchClearServiceCategoriesByOrgId: () => dispatch(serviceCategoriesByOrgIdAction([])),
+  }),
+};
+
+export const pageNotFoundProps = {
+  mapStateToProps: ({ landing }) => ({
+    landingPageFactors: landing.landingPageFactors,
   }),
 };

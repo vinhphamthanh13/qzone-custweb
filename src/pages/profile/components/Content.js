@@ -5,7 +5,7 @@ import { find, uniqBy } from 'lodash';
 import moment from 'moment';
 import { Typography } from '@material-ui/core';
 import { Event, Settings, ExitToApp, AddToQueue, Assessment } from '@material-ui/icons';
-import { PROFILE, BOOKING } from 'utils/constants';
+import { PROFILE } from 'utils/constants';
 import { contentProps } from 'pages/profile/commonProps';
 import WaitList from './WaitList';
 import Info from './Info';
@@ -26,7 +26,6 @@ class Content extends Component {
     dispatchTrackingAppointmentById: func.isRequired,
     dispatchCancelEventById: func.isRequired,
     handleLogout: func.isRequired,
-    setBookingStep: func.isRequired,
     handleSidePanel: func.isRequired,
     dispatchSetSurveys: func.isRequired,
     dispatchSetAssessments: func.isRequired,
@@ -201,11 +200,9 @@ class Content extends Component {
     const {
       onClose,
       handleLogout,
-      setBookingStep: setBookingStepAction,
     } = this.props;
     onClose();
     handleLogout();
-    setBookingStepAction(BOOKING.STEPS.SELECT_PROVIDER);
   };
 
   handleSelectSideMenu = panel => (event) => {

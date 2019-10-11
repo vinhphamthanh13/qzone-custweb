@@ -6,7 +6,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(to bottom, $main, $main_03);
+  background: linear-gradient(to bottom, $main_01, $main_02);
   margin: 0 auto;
 }
  .header {
@@ -23,7 +23,6 @@
  }
 
  .content {
-   color: $main;
    display: flex;
    flex-direction: column;
    justify-content: space-between;
@@ -59,7 +58,7 @@
  .slogan404 {
    display: flex;
    justify-content: center;
-   color: $main_04;
+   color: $main;
  }
 
  .linkHome {
@@ -69,7 +68,7 @@
    margin-top: 2rem;
    &:hover {
      cursor: pointer;
-     box-shadow: 1px 1px 2px $main_02;
+     box-shadow: 1px 1px 3px 1px $main_04;
      background: $main_02;
    }
  }

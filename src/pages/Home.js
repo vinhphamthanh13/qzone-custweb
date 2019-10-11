@@ -3,6 +3,7 @@ import { func, objectOf, any } from 'prop-types';
 import { connect } from 'react-redux';
 import get from 'lodash/get';
 import flatten from 'lodash/flatten';
+import { navigateTo } from 'utils/common';
 import compact from 'lodash/compact';
 import Loading from 'components/Loading';
 import Error from 'components/Error';
@@ -21,6 +22,7 @@ export class Home extends Component {
   static propTypes = {
     dispatchServiceCategoriesByOrgId: func.isRequired,
     dispatchSetLandingPage: func.isRequired,
+    dispatchClearOrgNotFound: func.isRequired,
     match: objectOf(any).isRequired,
   };
 
@@ -34,12 +36,14 @@ export class Home extends Component {
     serviceCategoriesByOrgId: [],
     servicesByServiceCategoryId: [],
     categories: [],
+    orgNotFound: false,
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { serviceCategoriesByOrgId, servicesByServiceCategoryId } = props;
+    const { serviceCategoriesByOrgId, servicesByServiceCategoryId, orgNotFound } = props;
     const { serviceCategoriesByOrgId: cachedServiceCategoriesByOrgId,
       servicesByServiceCategoryId: cachedServicesByServiceCategoryId,
+      orgNotFound: cachedOrgNotFound,
     } = state;
     const updatedState = {};
     if (
@@ -55,6 +59,9 @@ export class Home extends Component {
     ) {
       updatedState.servicesByServiceCategoryId = servicesByServiceCategoryId;
       updatedState.enableSearch = Object.keys(servicesByServiceCategoryId).length > 0;
+    }
+    if (orgNotFound !== cachedOrgNotFound) {
+      updatedState.orgNotFound = orgNotFound;
     }
 
     return Object.keys(updatedState) ? updatedState : null;
@@ -118,13 +125,21 @@ export class Home extends Component {
     this.setState({ openAdvancedSearch: value });
   };
 
+  handleOrgNotFound = () => {
+    const { dispatchClearOrgNotFound } = this.props;
+    const { orgNotFound } = this.state;
+    console.log('orgNotfound', orgNotFound);
+    dispatchClearOrgNotFound();
+    if (orgNotFound) navigateTo('/')();
+  };
+
   render() {
     const {
       searchText, isRegisterOpen, isLoginOpen, openAdvancedSearch, searchResult,
-      showAdvancedResult, categories, servicesByServiceCategoryId, enableSearch,
+      showAdvancedResult, categories, servicesByServiceCategoryId, enableSearch, orgNotFound,
     } = this.state;
 
-    console.log('enableSearch on home', enableSearch);
+    console.log('orgNotfound in render', orgNotFound);
     const serviceList = categories.length > 0 && categories.map(cat => {
       if (servicesByServiceCategoryId[cat.name]) {
         return [...servicesByServiceCategoryId[cat.name]]
@@ -134,7 +149,7 @@ export class Home extends Component {
 
     return (
       <div className={s.landingPage}>
-        <Error />
+        <Error resetOtherStatus={this.handleOrgNotFound} />
         <Loading />
         <Auth
           isRegisterOpen={isRegisterOpen}

@@ -19,10 +19,12 @@ const Error = (props) => {
   } = props;
 
   const resetStatus = () => {
-    resetModalStatusAction();
+    console.log('execute other now!!!!!!!');
     resetOtherStatus();
+    resetModalStatusAction();
   };
 
+  console.log('in error', resetModalStatusAction);
   return error ? (
     <CustomModal
       type="error"

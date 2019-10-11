@@ -3,6 +3,7 @@ import {
   SET_SERVICE_PROVIDERS,
   SET_ORGANIZATIONS,
   SET_SERVICE_CATEGORIES_BY_ORG_ID,
+  SET_ORG_NOT_FOUND,
 } from './organization.actions';
 
 const initState = {
@@ -10,6 +11,7 @@ const initState = {
   organization: null,
   organizations: [],
   serviceCategoriesByOrgId: [],
+  orgNotFound: false,
 };
 
 const reducer = (state = initState, action) => {
@@ -28,6 +30,11 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         organizations: action.payload,
+      };
+    case SET_ORG_NOT_FOUND:
+      return {
+        ...state,
+        orgNotFound: action.payload,
       };
     case SET_SERVICE_CATEGORIES_BY_ORG_ID:
       return {

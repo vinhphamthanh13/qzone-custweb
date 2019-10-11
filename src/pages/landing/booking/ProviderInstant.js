@@ -61,7 +61,7 @@ class ProviderInstant extends Component {
     const { selectBookingDetail } = this.props;
     const { landingPageFactors } = this.state;
     const orgRef = get(landingPageFactors, 'orgRef');
-    navigateTo(`/${orgRef}/confirm-booking`)();
+    navigateTo(`/${orgRef}/booking/confirmation`)();
     selectBookingDetail(slot);
   };
 

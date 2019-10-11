@@ -14,6 +14,7 @@ export const SET_ORGANIZATION = 'ORG.SET_ORGANIZATION';
 export const SET_SERVICE_PROVIDERS = 'ORG.SET_SERVICE_PROVIDERS';
 export const SET_ORGANIZATIONS = 'ORG.SET_ORGANIZATIONS';
 export const SET_SERVICE_CATEGORIES_BY_ORG_ID = 'ORG.SET_SERVICE_CATEGORIES_BY_ORG_ID';
+export const SET_ORG_NOT_FOUND = 'ORG.SET_ORG_NOT_FOUND';
 
 const setOrganization = payload => ({
   type: SET_ORGANIZATION,
@@ -25,6 +26,10 @@ const setOrganizationsAction = payload => ({
 });
 const setServiceProviders = payload => ({
   type: SET_SERVICE_PROVIDERS,
+  payload,
+});
+export const setOrgNotFoundAction = payload => ({
+  type: SET_ORG_NOT_FOUND,
   payload,
 });
 export const serviceCategoriesByOrgIdAction = payload => ({
@@ -66,6 +71,7 @@ export const serviceCategoriesByOrgIdApi = id => async dispatch => {
   const [result, error] = await handleRequest(serviceCategoriesByOrgId, [id]);
   if (error) {
     dispatch(setError(error));
+    dispatch(setOrgNotFoundAction(true));
   } else {
     dispatch(serviceCategoriesByOrgIdAction(result));
   }
