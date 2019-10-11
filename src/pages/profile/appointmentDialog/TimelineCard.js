@@ -22,11 +22,11 @@ class TimelineCard extends Component {
     setRatingService: func.isRequired,
   };
 
-  state = { isOpenMap: false };
+  state = { isOpenMap: false, orgRef: '' };
 
   static getDerivedStateFromProps(props, state) {
-    const { eventById } = props;
-    const { eventById: cachedEventById } = state;
+    const { eventById, orgRef } = props;
+    const { eventById: cachedEventById, orgRef: cachedOrgRef } = state;
     const updatedState = {};
     if (
       eventById !== null &&
@@ -34,9 +34,11 @@ class TimelineCard extends Component {
     ) {
       updatedState.eventById = eventById;
     }
+    if (orgRef !== cachedOrgRef) {
+      updatedState.orgRef = orgRef;
+    }
 
     return Object.keys(updatedState) ? updatedState : null;
-
   }
 
   handleCustomerRating = (customerId, serviceProviderId) => (rating) => {
@@ -55,7 +57,8 @@ class TimelineCard extends Component {
   };
 
   handleRedirectEvent = eventId => () => {
-    navigateTo(`/event/${eventId}`)();
+    const { orgRef } = this.state;
+    navigateTo(`/${orgRef}/event/${eventId}`)();
   };
 
   render() {
@@ -63,7 +66,7 @@ class TimelineCard extends Component {
     const bookingCode = get(eventById, 'bookingCode');
     const customerId = get(eventById, 'customerId');
     const duration = get(eventById, 'duration');
-    const providerStartSec = get(eventById, 'providerStartSec') || DEFAULT_TIME;
+    const providerStartSec = get(eventById, 'providerStartSec', DEFAULT_TIME);
     const providerName = get(eventById, 'providerName');
     const serviceName = get(eventById, 'serviceName');
     const timezoneId = get(eventById, 'timezoneId');

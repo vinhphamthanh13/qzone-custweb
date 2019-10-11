@@ -37,7 +37,7 @@ class Survey extends Component {
     customerId: '',
     match: null,
     history: null,
-  }
+  };
 
   static getDerivedStateFromProps(props, state) {
     const {

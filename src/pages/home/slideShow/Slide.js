@@ -30,8 +30,8 @@ class Slide extends Component {
     return Object.keys(updatedState) ? updatedState : null;
   }
 
-  handleRedirect = ref => () => {
-    navigateTo(`/organization/${ref}`)();
+  handleRedirect = orgRef => () => {
+    navigateTo(`/${orgRef}`)();
   };
 
   render() {
@@ -43,7 +43,7 @@ class Slide extends Component {
     let phone;
     let orgIntro;
     let orgName;
-    let ref;
+    let orgRef;
     let addStyle = '';
     let action = noop;
     if (type === SLIDE_TYPE.ORG) {
@@ -52,7 +52,7 @@ class Slide extends Component {
       website = get(item, 'website');
       phone = get(item, 'telephone');
       orgIntro = get(item, 'description');
-      ref = get(item, 'orgRef', '');
+      orgRef = get(item, 'orgRef', '');
       addStyle = 'hover-pointer';
       action = this.handleRedirect;
     }
@@ -67,7 +67,7 @@ class Slide extends Component {
 
     return (
       // eslint-disable-next-line
-      <div className={`${s.wrapper} ${addStyle}`} onClick={action(ref)}>
+      <div className={`${s.wrapper} ${addStyle}`} onClick={action(orgRef)}>
         <div className={s.image}>
           <img src={image} alt={name} width="100%" />
         </div>

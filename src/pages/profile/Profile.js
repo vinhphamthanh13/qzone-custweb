@@ -73,7 +73,7 @@ class Profile extends Component {
 
     if (JSON.stringify(userDetail) !== JSON.stringify(cachedUserDetail) || isEmpty(cachedUserDetail)) {
       const orgRef = get(landingPageFactors, 'orgRef');
-      navigateTo(`/organization/${orgRef}`)();
+      navigateTo(`/${orgRef}`)();
     }
 
     if (!isSessionTimeout && moment().isAfter(moment(expired))) {
@@ -93,7 +93,7 @@ class Profile extends Component {
     const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
     const authProvider = get(loginSession, 'authProvider');
     const orgRef = get(landingPageFactors, 'orgRef');
-    navigateTo(`/organization/${orgRef}`)();
+    navigateTo(`/${orgRef}`)();
     logoutAction({
       isAuthenticated,
       authProvider,
@@ -122,7 +122,7 @@ class Profile extends Component {
   handleRedirectHome = () => {
     const { landingPageFactors } = this.state;
     const orgRef = get(landingPageFactors, 'orgRef');
-    navigateTo(`/organization/${orgRef}`)();
+    navigateTo(`/${orgRef}`)();
   };
 
   render() {

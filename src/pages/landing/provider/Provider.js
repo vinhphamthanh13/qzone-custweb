@@ -24,13 +24,15 @@ class Provider extends Component {
     availabilitiesByTemporaryServiceId: {},
     isOpenMap: false,
     bookedEventId: '',
+    landingPageFactors: {},
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { provider, availabilitiesByTemporaryServiceId, bookedEventId } = props;
+    const { provider, availabilitiesByTemporaryServiceId, bookedEventId, landingPageFactors } = props;
     const {
       provider: cachedProvider, bookedEventId: cachedBookedEventId,
       availabilitiesByTemporaryServiceId: cachedAvailabilitiesByTemporaryServiceId,
+      landingPageFactors: cachedLandingPageFactors,
     } = state;
     const updatedState = {};
     if (
@@ -50,6 +52,12 @@ class Provider extends Component {
       JSON.stringify(availabilitiesByTemporaryServiceId) !== JSON.stringify(cachedAvailabilitiesByTemporaryServiceId)
     ) {
       updatedState.availabilitiesByTemporaryServiceId = availabilitiesByTemporaryServiceId;
+    }
+    if (
+      landingPageFactors !== null &&
+      JSON.stringify(landingPageFactors) !== JSON.stringify(cachedLandingPageFactors)
+    ) {
+      updatedState.landingPageFactors = landingPageFactors;
     }
 
     return Object.keys(updatedState) ? updatedState : null;
@@ -78,9 +86,11 @@ class Provider extends Component {
 
   handleSelectSlot = (slot) => () => {
     const { selectBookingDetail, setLandingPage } = this.props;
+    const { landingPageFactors } = this.state;
+    const orgRef = get(landingPageFactors, 'orgRef', '');
     selectBookingDetail(slot);
     setLandingPage({ instantBooking: false, confirmWaitLists: false });
-    navigateTo('/booking/confirmation')();
+    navigateTo(`/${orgRef}/booking/confirmation`)();
   };
 
   render() {

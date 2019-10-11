@@ -120,7 +120,7 @@ class ViewEvent extends Component {
     const { landingPageFactors } = this.state;
     const orgRef = get(landingPageFactors, 'orgRef');
     dispatchClearCancelStatus();
-    navigateTo(`/organization/${orgRef}`)();
+    navigateTo(`/${orgRef}`)();
   };
 
   handleViewProfile = id => () => {

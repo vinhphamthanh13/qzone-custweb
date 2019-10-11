@@ -109,7 +109,6 @@ export const EVENT_STATUS = {
   COMPLETED: 'COMPLETED',
   UNSPECIFIED: 'UNSPECIFIED',
 };
-
 // Slots
 export const NO_SLOTS_PER_ROW = 3;
 export const NO_ROWS_PER_DATE = 3;
@@ -120,7 +119,6 @@ export const WAIT_LIST_KEYS = {
   SELECTED_LOC_ID: 'selectedLocId',
   SELECTED_TEMP_SERVICE_ID: 'selectedTemporaryServiceId',
 };
-
 // There is dependency between TYPE attrs name and the following policies
 // E.g, PASSWORD attrs value has password in passwordPolicy
 export const POPOVER_TYPE = {

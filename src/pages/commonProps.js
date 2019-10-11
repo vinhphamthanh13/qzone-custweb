@@ -173,9 +173,10 @@ export const waitListProps = {
 };
 
 export const redirectToInstantProps = {
-  mapStateToProps: ({ waitLists, auth }) => ({
+  mapStateToProps: ({ waitLists, auth, landing }) => ({
     waitListsById: waitLists.waitListsById,
     userDetailById: auth.userDetailById,
+    landingPageFactors: landing.landingPageFactors,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchWaitListsById: (id, headers) => dispatch(setWaitListsByIdApi(id, headers)),

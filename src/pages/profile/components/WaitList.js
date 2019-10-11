@@ -24,14 +24,16 @@ class WaitList extends Component {
   state = {
     waitLists: [],
     cancelWaitLists: null,
+    landingPageFactors: {},
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { waitLists, cancelWaitLists, bookedEventDetail } = props;
+    const { waitLists, cancelWaitLists, bookedEventDetail, landingPageFactors } = props;
     const {
       waitLists: cachedWaitLists,
       cancelWaitLists: cachedCancelWaitLists,
       bookedEventDetail: cachedBookedEventDetail,
+      landingPageFactors: cachedLandingPageFactors,
     } = state;
     const updatedState = {};
     if (
@@ -52,6 +54,12 @@ class WaitList extends Component {
     ) {
       updatedState.bookedEventDetail = bookedEventDetail;
     }
+    if (
+      landingPageFactors !== null &&
+      JSON.stringify(landingPageFactors) !== JSON.stringify(cachedLandingPageFactors)
+    ) {
+      updatedState.landingPageFactors = landingPageFactors;
+    }
 
     return Object.keys(updatedState) ? updatedState : null;
   }
@@ -64,7 +72,9 @@ class WaitList extends Component {
   componentDidUpdate(prevProps) {
     const { cancelWaitLists, bookedEventDetail } = prevProps;
     const { dispatchSetWaitLists, customerId, authHeaders } = this.props;
-    const { cancelWaitLists: cachedCancelWaitLists, bookedEventDetail: cachedBookedEventDetail } = this.state;
+    const {
+      cancelWaitLists: cachedCancelWaitLists, bookedEventDetail: cachedBookedEventDetail, landingPageFactors,
+    } = this.state;
     if (cachedCancelWaitLists !== null && cancelWaitLists !== cachedCancelWaitLists) {
       dispatchSetWaitLists(customerId, authHeaders);
     }
@@ -74,7 +84,8 @@ class WaitList extends Component {
     ) {
       const bookedEventId = get(cachedBookedEventDetail, 'id');
       if (bookedEventId) {
-        navigateTo(`/event/${bookedEventId}`)();
+        const orgRef = get(landingPageFactors, 'orgRef', '');
+        navigateTo(`/${orgRef}/event/${bookedEventId}`)();
       }
     }
   }
