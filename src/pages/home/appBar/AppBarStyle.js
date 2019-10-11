@@ -12,6 +12,7 @@ const styles = theme => ({
   },
   avatar: {
     display: 'none',
+    cursor: 'pointer',
     [theme.breakpoints.up('sm')]: {
       display: 'flex',
       background: 'transparent',

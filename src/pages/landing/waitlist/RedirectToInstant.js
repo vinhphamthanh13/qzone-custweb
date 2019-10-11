@@ -24,11 +24,15 @@ class RedirectToInstant extends Component {
   state = {
     waitListsById: {},
     userDetailById: {},
+    landingPageFactors: {},
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { waitListsById, userDetailById } = props;
-    const { waitListsById: cachedWaitListById, userDetailById: cachedUserDetailById } = state;
+    const { waitListsById, userDetailById, landingPageFactors } = props;
+    const {
+      waitListsById: cachedWaitListById, userDetailById: cachedUserDetailById,
+      landingPageFactors: cachedLandingPageFactors,
+    } = state;
     const updatedState = {};
     if (
       waitListsById !== null &&
@@ -42,6 +46,12 @@ class RedirectToInstant extends Component {
     ) {
       updatedState.userDetailById = userDetailById;
     }
+    if (
+      landingPageFactors !== null &&
+      JSON.stringify(landingPageFactors) !== JSON.stringify(cachedLandingPageFactors)
+    ) {
+      updatedState.landingPageFactors = landingPageFactors;
+    }
 
     return Object.keys(updatedState) ? updatedState : null;
   }
@@ -54,7 +64,9 @@ class RedirectToInstant extends Component {
   componentDidUpdate(prevProps) {
     const { dispatchSelectBookingDetail, dispatchGetCustomerById, dispatchSetLandingPage } = this.props;
     const { waitListsById } = prevProps;
-    const { waitListsById: cachedWaitListsById, userDetailById: cachedUserDetailById } = this.state;
+    const {
+      waitListsById: cachedWaitListsById, userDetailById: cachedUserDetailById, landingPageFactors,
+    } = this.state;
     if (
       cachedWaitListsById !== null &&
       JSON.stringify(waitListsById) !== JSON.stringify(cachedWaitListsById)
@@ -83,7 +95,8 @@ class RedirectToInstant extends Component {
       }
     }
     if (cachedUserDetailById) {
-      navigateTo('/confirm-booking')();
+      const orgRef = get(landingPageFactors, 'orgRef', '');
+      navigateTo(`/${orgRef}/booking/confirmation`)();
       dispatchSetLandingPage({ confirmWaitLists: true })
     }
   }

@@ -17,6 +17,7 @@ import styles from './AppBarStyle';
 
 class MainAppBar extends React.Component {
   static propTypes = {
+    enableSearch: bool.isRequired,
     maintenance: bool,
     onSearchValue: string,
     classes: objectOf(any).isRequired,
@@ -130,8 +131,8 @@ class MainAppBar extends React.Component {
   };
 
   handleActionAdvancedSearch = () => {
-    const { toggleAdvancedSearch, maintenance } = this.props;
-    if (!maintenance) {
+    const { toggleAdvancedSearch, enableSearch } = this.props;
+    if (!enableSearch) {
       toggleAdvancedSearch(true)();
     }
   };
@@ -149,12 +150,17 @@ class MainAppBar extends React.Component {
     }));
   };
 
+  handleRedirect = () => {
+    navigateTo('/')();
+  };
+
   render() {
     const {
       classes,
       onSearch,
       onSearchValue,
       maintenance,
+      enableSearch,
     } = this.props;
     const {
       eventList,
@@ -248,20 +254,21 @@ class MainAppBar extends React.Component {
               }}
               alt="Quezone Logo"
               src={logo}
+              onClick={this.handleRedirect}
             />
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
               </div>
               <InputBase
-                placeholder="Services, organisations …"
+                placeholder="Services"
                 classes={{
                   root: classes.inputRoot,
                   input: classes.inputInput,
                 }}
                 onChange={onSearch}
                 value={onSearchValue}
-                disabled={maintenance}
+                disabled={!enableSearch}
               />
             </div>
             <Typography variant="subheading" className={adSearchStyle}>

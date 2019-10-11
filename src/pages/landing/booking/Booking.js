@@ -33,6 +33,7 @@ class Booking extends Component {
     loginSession: {},
     bookedEventDetail: {},
     selectedBookingDetail: {},
+    landingPageFactors: {},
   };
 
   recaptcha = React.createRef();
@@ -89,9 +90,10 @@ class Booking extends Component {
 
   componentDidUpdate(prevProps) {
     const { bookedEventDetail } = prevProps;
-    const { bookedEventDetail: cachedBookedEventDetail, selectedBookingDetail } = this.state;
+    const { bookedEventDetail: cachedBookedEventDetail, selectedBookingDetail, landingPageFactors } = this.state;
     if (!selectedBookingDetail || isEmpty(selectedBookingDetail)) {
-      navigateTo('/')();
+      const orgRef = get(landingPageFactors, 'orgRef', '');
+      navigateTo(`/${orgRef}`)();
     }
     if (
       bookedEventDetail !== null &&
@@ -99,19 +101,21 @@ class Booking extends Component {
     ) {
       const bookedEventId = get(cachedBookedEventDetail, 'id');
       if (bookedEventId) {
-        navigateTo(`/event/${bookedEventId}`)();
+        const orgRef = get(landingPageFactors, 'orgRef', '');
+        navigateTo(`/${orgRef}/event/${bookedEventId}`)();
       }
     }
   }
 
   handleSelectProvider = sId => () => {
     const { landingPageFactors } = this.state;
+    const orgRef = get(landingPageFactors, 'orgRef');
     const instantBooking = get(landingPageFactors, 'instantBooking');
     if (instantBooking) {
       const tId = get(landingPageFactors, 'tId');
-      navigateTo(`/booking/instant/${tId}`)();
+      navigateTo(`/${orgRef}/booking/instant/${tId}`)();
     } else {
-      navigateTo(`/provider-by-service/${sId}`)();
+      navigateTo(`/${orgRef}/provider-by-service/${sId}`)();
     }
   };
 

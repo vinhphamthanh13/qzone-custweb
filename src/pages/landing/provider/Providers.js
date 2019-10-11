@@ -94,15 +94,17 @@ class Providers extends Component {
   }
 
   componentDidUpdate() {
-    const { serviceId } = this.state;
-    if (serviceId === 'undefined') {
-      console.log('redirecting' );
-      navigateTo('/')();
+    const { serviceId, landingPageFactors } = this.state;
+    const orgRef = get(landingPageFactors, 'orgRef');
+    if (serviceId === 'undefined' || !serviceId) {
+      navigateTo(`/${orgRef}`)();
     }
   }
 
   handleSelectService = catName => () => {
-    navigateTo('/', { catName })();
+    const { landingPageFactors } = this.state;
+    const orgRef = get(landingPageFactors, 'orgRef', '');
+    navigateTo(`/${orgRef}`, { catName })();
   };
 
   render() {
@@ -176,6 +178,7 @@ class Providers extends Component {
                 selectBookingDetail={dispatchSelectBookingDetail}
                 bookedEventId={bookedEventId}
                 setLandingPage={dispatchSetLandingPage}
+                landingPageFactors={landingPageFactors}
             />))}
           </div>
         ))}

@@ -3,23 +3,32 @@ import Slider from 'react-slick';
 import { get } from 'lodash';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import EmptyItem from 'components/EmptyItem';
+import { SLIDE_TYPE } from 'utils/constants';
 import Slide from './Slide';
 import s from './SlideShow.module.scss';
 
 class SlideShow extends Component {
   state = {
     list: [],
+    type: SLIDE_TYPE.ORG,
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { list } = props;
-    const { list: cachedList } = state;
+    const { list, type } = props;
+    const { list: cachedList, type: cachedType } = state;
     const updatedState = {};
     if (
       list !== null &&
       JSON.stringify(list) !== JSON.stringify(cachedList)
     ) {
       updatedState.list = list;
+    }
+    if (
+      type !== null &&
+      JSON.stringify(type) !== JSON.stringify(cachedType)
+    ) {
+      updatedState.type = type;
     }
 
     return Object.keys(updatedState) ? updatedState : null;
@@ -35,28 +44,31 @@ class SlideShow extends Component {
       pauseOnHover: true,
       className: s.sliderControl,
     };
-    const { list } = this.state;
+    const { list, type } = this.state;
+    const [heading, emptyMessage] = type === SLIDE_TYPE.ORG
+      ? ['Our Organizations', 'No Organization Available'] : ['Our Services', 'No Services Available'];
 
     return (
       <div className={s.carousel}>
-        <div className={s.title}>
-          Our Organizations
-        </div>
-        <div className={s.sliderWrapper}>
-          <div className={s.advertisers} />
-          {list ? (
-            <div>
-              <Slider {...slideSettings}>
-                {list.map((item) => {
-                  const id = get(item, 'id');
-                  return (
-                    <Slide key={id} item={item} />
-                  );
-                })}
-              </Slider>
+        {list.length > 0 ? (
+          <>
+            <div className={s.title}>
+              {heading}
             </div>
-          ) : <div className={s.advertisers} /> }
-        </div>
+            <div className={s.sliderWrapper}>
+              <div>
+                <Slider {...slideSettings}>
+                  {list.map((item) => {
+                    const id = get(item, 'id');
+                    return (
+                      <Slide key={id} item={item} type={type} />
+                    );
+                  })}
+                </Slider>
+              </div>
+            </div>
+          </>
+        ) : <EmptyItem size="lg" message={emptyMessage} />}
       </div>
     );
   }

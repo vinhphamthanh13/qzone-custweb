@@ -3,17 +3,18 @@
 .wrapper {
   display: flex;
   align-items: center;
+  flex-direction: column;
   justify-content: space-evenly;
   box-sizing: border-box;
   overflow: hidden;
+  height: 370px;
+  width: 100%;
 }
 
 .image {
-  height: $slide-image-height;
-  width: $slide-image-height;
+  height: 180px;
   border: $gallery;
-  box-shadow: 1px 1px 2px 1px $grayNickel;
-  border-radius: 0.4rem;
+  width: 100%;
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -22,22 +23,24 @@
 }
 
 .content {
-  margin: 0.5rem;
+  padding: 0.5rem 0.5rem 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  width: 100%;
 }
 
 .title {
-  font-size: $title;
+  font-size: $subtitle;
   font-weight: 500;
   text-transform: capitalize;
   margin-bottom: unset;
-  color: $fruitSalad;
+  color: $main_04;
+  width: 100%;
 }
 
 .description {
-  margin: 0.5rem 0;
+  margin: auto;
 }
 
 .description:first-letter {
@@ -45,6 +48,29 @@
 }
 
 .item {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  margin-right: 0.25rem;
+  padding-right: 1rem;
+}
+
+.item:nth-child(odd) {
+  border-right: 2px solid $gallery;
+}
+
+.orgName {
+  color: $fruitSalad;
+  font-weight: 500;
+  width: 100%;
+}
+
+.orgIntro {
+  text-indent: 1rem;
+  margin: 1rem auto;
+}
+
+.orgContact {
   display: flex;
   align-items: center;
 }

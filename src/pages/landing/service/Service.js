@@ -19,22 +19,21 @@ class Service extends Component {
     handleAuth: func.isRequired,
   };
 
-  static defaultProps = {
-  };
-
   state = {
     service: {},
     catName: '',
     providersByServiceId: {},
     isQueuePopup: false,
+    landingPageFactors: {},
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { service, catName, providersByServiceId } = props;
+    const { service, catName, providersByServiceId, landingPageFactors } = props;
     const {
       service: cachedService,
       catName: cachedCatName,
       providersByServiceId: cachedProvidersByServiceId,
+      landingPageFactors: cachedLandingPageFactors,
     } = state;
     const updatedState = {};
     if (service.id !== cachedService.id) {
@@ -49,6 +48,12 @@ class Service extends Component {
     ) {
       updatedState.providersByServiceId = providersByServiceId;
     }
+    if (
+      landingPageFactors !== null &&
+      JSON.stringify(landingPageFactors) !== JSON.stringify(cachedLandingPageFactors)
+    ) {
+      updatedState.landingPageFactors = landingPageFactors;
+    }
 
     return Object.keys(updatedState) ? updatedState : null;
   }
@@ -62,8 +67,10 @@ class Service extends Component {
 
   handleSelectProvider = (sId, sName, catName)=> () => {
     const { dispatchSetLandingPage } = this.props;
+    const { landingPageFactors } = this.state;
+    const orgRef = get(landingPageFactors, 'orgRef', '');
     dispatchSetLandingPage({ sName, catName });
-    navigateTo(`/provider-by-service/${sId}`, { category: catName, service: sName })();
+    navigateTo(`/${orgRef}/provider-by-service/${sId}`, { category: catName, service: sName })();
   };
 
   handleSelectOrg = website => () => {
@@ -96,7 +103,7 @@ class Service extends Component {
         {isQueuePopup && <WaitList service={service} onClose={this.toggleQueueModal} handleAuth={handleAuth} />}
         <div className={s.card} key={sId}>
           <div className={s.image}>
-            <img src={imgUrl} alt={sName} width="100%" height="100%" />
+            <img src={imgUrl} alt={sName} className={s.zoomImg} width="100%" height="100%" />
             <div className={s.duration}>
               Duration: {`${sDuration}'`}
             </div>

@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  bool,
-  string,
-  func,
-} from 'prop-types';
+import { bool, string, func } from 'prop-types';
 import { connect } from 'react-redux';
 import { noop } from 'lodash';
 import findValueByKey from 'utils/findValueByKey';
@@ -11,16 +7,10 @@ import CustomModal from 'components/Modal/CustomModal';
 import { resetModalStatus } from 'actionsReducers/common.actions';
 
 const Error = (props) => {
-  const {
-    error,
-    errorMessage,
-    resetModalStatus: resetModalStatusAction,
-    resetOtherStatus,
-  } = props;
-
+  const { error, errorMessage, resetModalStatus: resetModalStatusAction, resetOtherStatus } = props;
   const resetStatus = () => {
-    resetModalStatusAction();
     resetOtherStatus();
+    resetModalStatusAction();
   };
 
   return error ? (
@@ -58,6 +48,7 @@ const mapStateToProps = (state) => {
   });
 };
 
-export default connect(mapStateToProps, {
-  resetModalStatus,
-})(Error);
+export default connect(
+  mapStateToProps,
+  { resetModalStatus },
+)(Error);

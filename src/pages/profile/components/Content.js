@@ -5,12 +5,8 @@ import { find, uniqBy } from 'lodash';
 import moment from 'moment';
 import { Typography } from '@material-ui/core';
 import { Event, Settings, ExitToApp, AddToQueue, Assessment } from '@material-ui/icons';
-import { findEventByCustomerIdApi } from 'actionsReducers/common.actions';
-import { cancelEventById } from 'actionsReducers/profile.actions';
-import { trackingAppointmentByIdsApi } from 'actionsReducers/customer.actions';
-import { setBookingStep } from 'actionsReducers/booking.actions';
-import { setSurveys, setAssessmentAction } from 'actionsReducers/surveys.action';
-import { PROFILE, BOOKING } from 'utils/constants';
+import { PROFILE } from 'utils/constants';
+import { contentProps } from 'pages/profile/commonProps';
 import WaitList from './WaitList';
 import Info from './Info';
 import Survey from './Survey';
@@ -18,11 +14,35 @@ import EventList from '../appointmentDialog/Appointment';
 import s from './Content.module.scss';
 
 class Content extends Component {
+  static propTypes = {
+    givenName: string,
+    toggleSidePanel: bool.isRequired,
+    authHeaders: objectOf(any),
+    profilePage: string.isRequired,
+    updateProfileStatus: string.isRequired,
+    onClose: func.isRequired,
+    handleAccount: func.isRequired,
+    dispatchFindEventByCustomerId: func.isRequired,
+    dispatchTrackingAppointmentById: func.isRequired,
+    dispatchCancelEventById: func.isRequired,
+    handleLogout: func.isRequired,
+    handleSidePanel: func.isRequired,
+    dispatchSetSurveys: func.isRequired,
+    dispatchSetAssessments: func.isRequired,
+  };
+
+  static defaultProps = {
+    givenName: '',
+    authHeaders: {},
+  };
+
   static getDerivedStateFromProps(props, state) {
     const {
       eventList, profilePage, cancelEventByIdStatus, waitLists, surveyList, customerAssessment, rescheduleStatus,
+      customerId, landingPageFactors,
     } = props;
     const {
+      customerId: cachedCustomerId,
       eventList: cachedEventList,
       profilePage: cachedProfilePage,
       cancelEventByIdStatus: cachedCancelEventByIdStatus,
@@ -30,8 +50,12 @@ class Content extends Component {
       surveyList: cachedSurveyList,
       customerAssessment: cachedCustomerAssessment,
       rescheduleStatus: cachedRescheduleStatus,
+      landingPageFactors: cachedLandingPageFactors,
     } = state;
     const updatedState = {};
+    if (customerId !== cachedCustomerId) {
+      updatedState.customerId = customerId;
+    }
     if (
       eventList !== null &&
       JSON.stringify(eventList) !== JSON.stringify(cachedEventList)
@@ -63,6 +87,12 @@ class Content extends Component {
     }
     if (rescheduleStatus !== cachedRescheduleStatus) {
       updatedState.rescheduleStatus = rescheduleStatus;
+    }
+    if (
+      landingPageFactors !== null &&
+      JSON.stringify(landingPageFactors) !== JSON.stringify(cachedLandingPageFactors)
+    ) {
+      updatedState.landingPageFactors = landingPageFactors;
     }
 
     return Object.keys(updatedState) ? updatedState : null;
@@ -113,40 +143,29 @@ class Content extends Component {
       eventList: [],
       waitLists: [],
       surveyList: [],
+      customerId: '',
+      customerAssessment: [],
       sidePanel: { ...this.initState },
     };
   }
 
   componentDidMount() {
-    const {
-      authHeaders,
-      profilePage,
-      setSurveys: setSurveyAction,
-    } = this.props;
-
-    setSurveyAction(authHeaders);
+    const { authHeaders, profilePage, dispatchSetSurveys } = this.props;
+    dispatchSetSurveys(authHeaders);
     this.setState({ sidePanel: { [profilePage]: true } });
   }
 
   componentDidUpdate(prevProps) {
     const {
-      authHeaders,
-      cancelEventByIdStatus,
-      rescheduleStatus,
-      setAssessmentAction: setAssessments,
-      eventList,
-      findEventByCustomerIdApi: findEventByCustomerId,
-      cancelEventById: cancelEventByIdAction,
-      customerId,
-      customerAssessment,
-      trackingAppointmentByIdsApi: trackingAppointmentByIds,
+      cancelEventByIdStatus, eventList, authHeaders, rescheduleStatus,
     } = prevProps;
     const {
-      cancelEventByIdStatus: cachedCancelEventByIdStatus,
-      eventList: cachedEventList,
-      eventListIds,
-      surveyList,
-      rescheduleStatus: cachedRescheduleStatus,
+      dispatchFindEventByCustomerId, dispatchCancelEventById, dispatchTrackingAppointmentById,
+      dispatchSetAssessments,
+    } = this.props;
+    const {
+      cancelEventByIdStatus: cachedCancelEventByIdStatus, eventList: cachedEventList, customerAssessment,
+      eventListIds, surveyList, rescheduleStatus: cachedRescheduleStatus, customerId,
     } = this.state;
 
     const trackingList = eventList && eventList.length;
@@ -158,12 +177,12 @@ class Content extends Component {
       || (rescheduleStatus !== cachedRescheduleStatus
       && cachedRescheduleStatus === 200)
     ) {
-      findEventByCustomerId(customerId, authHeaders);
-      cancelEventByIdAction(null);
+      dispatchFindEventByCustomerId(customerId, authHeaders);
+      dispatchCancelEventById(null);
     }
 
     if (trackingList !== cachedTrackingList && eventListIds && eventListIds.length > 0) {
-      trackingAppointmentByIds(eventListIds, authHeaders);
+      dispatchTrackingAppointmentById(eventListIds, authHeaders);
     }
     const surveys = [];
     // eslint-disable-next-line
@@ -173,7 +192,7 @@ class Content extends Component {
       return event;
     });
     if (surveys.length !== customerAssessment.length) {
-      setAssessments(surveys);
+      dispatchSetAssessments(surveys);
     }
   }
 
@@ -181,11 +200,9 @@ class Content extends Component {
     const {
       onClose,
       handleLogout,
-      setBookingStep: setBookingStepAction,
     } = this.props;
     onClose();
     handleLogout();
-    setBookingStepAction(BOOKING.STEPS.SELECT_PROVIDER);
   };
 
   handleSelectSideMenu = panel => (event) => {
@@ -248,21 +265,12 @@ class Content extends Component {
 
   render() {
     const {
-      handleAccount,
-      updateProfileStatus,
-      customerId,
-      toggleSidePanel,
-      handleSidePanel,
-      authHeaders,
+      handleAccount, updateProfileStatus, toggleSidePanel, handleSidePanel, authHeaders,
     } = this.props;
     const {
-      sidePanel: {
-        eventList,
-        myInfo,
-        waitList,
-        surveyList,
-      },
-      eventList: cachedEventList,
+      customerId,
+      sidePanel: { eventList, myInfo, waitList, surveyList },
+      eventList: cachedEventList, landingPageFactors,
     } = this.state;
 
     return (
@@ -285,7 +293,7 @@ class Content extends Component {
         {eventList && (
           <div className={s.profilePage}>
             <Typography variant="title" color="inherit" className="underlined">Events</Typography>
-            <EventList customerId={customerId} eventList={cachedEventList} />
+            <EventList eventList={cachedEventList} landingPageFactors={landingPageFactors} />
           </div>)
         }
         {waitList && (
@@ -311,40 +319,7 @@ class Content extends Component {
   }
 }
 
-Content.propTypes = {
-  authHeaders: objectOf(any),
-  customerId: string.isRequired,
-  onClose: func.isRequired,
-  givenName: string,
-  handleAccount: func.isRequired,
-  updateProfileStatus: string.isRequired,
-  profilePage: string.isRequired,
-  findEventByCustomerIdApi: func.isRequired,
-  cancelEventById: func.isRequired,
-  trackingAppointmentByIdsApi: func.isRequired,
-  handleLogout: func.isRequired,
-  setBookingStep: func.isRequired,
-  toggleSidePanel: bool.isRequired,
-  handleSidePanel: func.isRequired,
-};
-
-Content.defaultProps = {
-  givenName: '',
-  authHeaders: {},
-};
-
-const mapStateToProps = state => ({
-  ...state.common,
-  ...state.profile,
-  ...state.waitLists,
-  ...state.surveys,
-});
-
-export default connect(mapStateToProps, {
-  findEventByCustomerIdApi,
-  cancelEventById,
-  trackingAppointmentByIdsApi,
-  setSurveys,
-  setAssessmentAction,
-  setBookingStep,
-})(Content);
+export default connect(
+  contentProps.mapStateToProps,
+  contentProps.mapDispatchToProps,
+)(Content);

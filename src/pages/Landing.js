@@ -5,16 +5,12 @@ import { connect } from 'react-redux';
 import { get } from 'lodash';
 import { landingProps } from 'pages/commonProps';
 import EmptyItem from 'components/EmptyItem';
-import Loading from 'components/Loading';
-import Error from 'components/Error';
-import Success from 'components/Success';
 import Tabs from './landing/tabs/Tabs'
 import Services from './landing/service/Services';
 import s from './Landing.module.scss';
 
 class Landing extends Component {
   static propTypes = {
-    dispatchServiceCategory: func.isRequired,
     dispatchServicesByServiceCategoryId: func.isRequired,
     dispatchSetTabOrder: func.isRequired,
     dispatchSetLandingPage: func.isRequired,
@@ -44,7 +40,7 @@ class Landing extends Component {
       categories.map(cat => tabsInfo[cat.name].push(cat));
       updatedState.categories = categories;
       updatedState.tabsInfo = tabsInfo;
-      updatedState.catName = categories[0].name || catName;
+      updatedState.catName = get(categories, '0.name', catName);
     }
     if (
       servicesByServiceCategoryId !== null &&
@@ -69,8 +65,7 @@ class Landing extends Component {
   }
 
   componentDidMount() {
-    const { dispatchServiceCategory, dispatchSetLandingPage } = this.props;
-    dispatchServiceCategory();
+    const { dispatchSetLandingPage } = this.props;
     dispatchSetLandingPage({ instantBooking: false });
   }
 
@@ -99,24 +94,21 @@ class Landing extends Component {
 
   render() {
     const { dispatchSetTabOrder, handleAuth } = this.props;
-    const { activeTab, servicesByServiceCategoryId, catName, tabOrder, landingPageFactors } = this.state;
+    const { activeTab, servicesByServiceCategoryId, catName, tabOrder, landingPageFactors, categories } = this.state;
     const serviceList = servicesByServiceCategoryId[catName] || [];
     const tabsInfo = get(landingPageFactors, 'tabsInfo');
 
-    return (
-      <>
-        <Loading />
-        <Error />
-        <Success />
-        <div className={s.landing}>
-          {!!tabsInfo && Object.keys(tabsInfo).length > 0 && (
-            <>
-              <Tabs
-                setTabOrder={dispatchSetTabOrder}
-                tabOrder={tabOrder}
-                tabsInfo={tabsInfo}
-                onSelectTab={this.handleSelectTab}
-              />
+    return categories.length > 0 ? (
+      <div className={s.landing}>
+        {!!tabsInfo && Object.keys(tabsInfo).length > 0 && (
+          <>
+            <Tabs
+              setTabOrder={dispatchSetTabOrder}
+              tabOrder={tabOrder}
+              tabsInfo={tabsInfo}
+              onSelectTab={this.handleSelectTab}
+            />
+            <div className={s.serviceContent}>
               {serviceList.length > 0
                 ? (
                     <Services
@@ -128,13 +120,12 @@ class Landing extends Component {
                   )
                 : <EmptyItem />
               }
-            </>
-          )}
-        </div>
-      </>
-    )
+            </div>
+          </>
+        )}
+      </div>
+    ) : <EmptyItem message="No Service Available!" />;
   }
-
 }
 
 export default connect(

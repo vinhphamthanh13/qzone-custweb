@@ -6,31 +6,38 @@ import RedirectToInstant from 'pages/landing/waitlist/RedirectToInstant';
 import PageNotFound from 'pages/PageNotFound';
 import AccessDenied from 'pages/AccessDenied';
 import Provider from 'pages/Provider';
-import Organization from 'pages/Organization';
 import Profile from 'pages/Profile';
 import Maintenance from 'pages/Maintenance';
 import ViewEvent from 'pages/landing/viewEvent/ViewEvent';
 import Assessment from 'pages/Assessment';
+import RedirectOrg from 'pages/RedirectOrg';
 
 const rootRoutes = [
   {
     exact: true,
     strict: true,
     path: '/',
+    name: 'Select Organization',
+    component: RedirectOrg,
+  },
+  {
+    exact: true,
+    strict: true,
+    path: '/:orgRef',
     name: 'Custweb for Booking Service',
     component: Home,
   },
   {
     exact: true,
     strict: true,
-    path: '/provider-by-service/:sId',
+    path: '/:orgRef/provider-by-service/:sId',
     name: 'Provider By Service',
     component: Providers,
   },
   {
     exact: true,
     strict: true,
-    path: '/confirm-booking',
+    path: '/:orgRef/booking/confirmation',
     name: 'Confirm Booking',
     component: Booking,
   },
@@ -44,14 +51,14 @@ const rootRoutes = [
   {
     exact: true,
     strict: true,
-    path: '/booking/instant/:id',
+    path: '/:orgRef/booking/instant/:id',
     name: 'Instant Booking',
     component: InstantBooking,
   },
   {
     exact: true,
     strict: true,
-    path: '/booking/waitlist/:id',
+    path: '/:orgRef/booking/waitlist/:id',
     name: 'Enroll WaitLists',
     component: RedirectToInstant,
   },
@@ -79,13 +86,6 @@ const rootRoutes = [
   {
     exact: true,
     strict: true,
-    path: '/organization/:id',
-    name: 'Organization',
-    component: Organization,
-  },
-  {
-    exact: true,
-    strict: true,
     path: '/in-maintenance/:id',
     name: 'Maintenance',
     component: Maintenance,
@@ -93,7 +93,7 @@ const rootRoutes = [
   {
     exact: true,
     strict: true,
-    path: '/event/:id',
+    path: '/:orgRef/event/:id',
     name: 'View Appointment',
     component: ViewEvent,
   },

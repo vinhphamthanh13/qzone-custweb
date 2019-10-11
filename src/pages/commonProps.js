@@ -12,6 +12,7 @@ import {
   rescheduleEventApi,
   rescheduleStatusAction,
   findEventByCustomerIdApi,
+  servicesByServiceCategoryIdBulkAction,
 } from 'actionsReducers/common.actions';
 import { providersByServiceIdApi, bookEventApi, confirmWaitListsApi } from 'actionsReducers/booking.actions';
 import {
@@ -24,30 +25,32 @@ import {
   usersByIdApi,
 } from 'actionsReducers/provider.actions';
 import { setLandingPageAction } from 'actionsReducers/landing.action';
-import { setOrganizationsApi } from 'actionsReducers/organization.actions';
+import {
+  setOrganizationsApi, serviceCategoriesByOrgIdApi, serviceCategoriesByOrgIdAction, setOrgNotFoundAction,
+} from 'actionsReducers/organization.actions';
 import { registerWaitListsApi, setWaitListsByIdApi } from 'actionsReducers/waitlist.actions';
 import { goProfilePage } from 'actionsReducers/profile.actions';
 import { trackingAppointmentByIdsApi } from 'actionsReducers/customer.actions';
 
 export const homeProps = {
-  mapStateToProps: ({ home, common, auth, organization }) => ({
+  mapStateToProps: ({ common, organization }) => ({
+    serviceCategoriesByOrgId: organization.serviceCategoriesByOrgId,
     servicesByServiceCategoryId: common.servicesByServiceCategoryId,
-    organizations: organization.organizations,
-    ...home,
-    ...auth,
+    orgNotFound: organization.orgNotFound,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchServices: () => dispatch(setServices()),
     dispatchServiceCategory: () => dispatch(setServiceCategories()),
     dispatchTemporaryServices: () => dispatch(setTemporaryServices()),
-    dispatchOrganizations: () => dispatch(setOrganizationsApi()),
+    dispatchServiceCategoriesByOrgId: id => dispatch(serviceCategoriesByOrgIdApi(id)),
+    dispatchSetLandingPage: data => dispatch(setLandingPageAction(data)),
+    dispatchClearOrgNotFound: () => dispatch(setOrgNotFoundAction(false)),
   })
 };
 
 export const landingProps = {
-  mapStateToProps: ({ home, landing, common, booking }) => ({
+  mapStateToProps: ({ landing, common, booking }) => ({
     providersByServiceId: booking.providersByServiceId,
-    categories: home.categories,
     servicesByServiceCategoryId: common.servicesByServiceCategoryId,
     tabOrder: common.tabOrder,
     landingPageFactors: landing.landingPageFactors,
@@ -109,12 +112,13 @@ export const bookingProps = {
 };
 
 export const viewEventProps = {
-  mapStateToProps: ({ common, auth, provider }) => ({
+  mapStateToProps: ({ common, auth, provider, landing }) => ({
     eventById: common.eventById,
     cancelEventStatus: common.cancelEventStatus,
     userDetail: auth.userDetail,
     loginSession: auth.loginSession,
     rescheduledAvailabilitiesByTemporaryServiceId: provider.rescheduledAvailabilitiesByTemporaryServiceId,
+    landingPageFactors: landing.landingPageFactors,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchSetEventById: id => dispatch(setEventByIdApi(id)),
@@ -137,10 +141,11 @@ export const rescheduleProps = {
 };
 
 export const instantProps = {
-  mapStateToProps: ({ common, provider }) => ({
+  mapStateToProps: ({ common, provider, landing }) => ({
     instantAvailabilitiesByTemporaryServiceId: provider.instantAvailabilitiesByTemporaryServiceId,
     temporaryServicesById: common.temporaryServicesById,
     providerById: provider.providerById,
+    landingPageFactors: landing.landingPageFactors,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchInstantAvailabilitiesByTemporaryServiceId: id => dispatch(
@@ -169,9 +174,10 @@ export const waitListProps = {
 };
 
 export const redirectToInstantProps = {
-  mapStateToProps: ({ waitLists, auth }) => ({
+  mapStateToProps: ({ waitLists, auth, landing }) => ({
     waitListsById: waitLists.waitListsById,
     userDetailById: auth.userDetailById,
+    landingPageFactors: landing.landingPageFactors,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchWaitListsById: (id, headers) => dispatch(setWaitListsByIdApi(id, headers)),
@@ -202,5 +208,23 @@ export const clientInfoProps = {
   mapDispatchToProps: dispatch => ({
     dispatchSaveGuestInfo: (data, cb) => dispatch(saveGuestInfo(data, cb)),
     dispatchClearGuestError: () => dispatch(clearGuestErrorAction()),
+  }),
+};
+
+export const redirectOrgProps = {
+  mapStateToProps: ({ organization }) => ({
+    organizations: organization.organizations,
+  }),
+  mapDispatchTOProps: dispatch => ({
+    dispatchOrganizations: () => dispatch(setOrganizationsApi()),
+    dispatchSetLandingPage: data => dispatch(setLandingPageAction(data)),
+    dispatchClearServicesByServiceCategoryId: () => dispatch(servicesByServiceCategoryIdBulkAction(null)),
+    dispatchClearServiceCategoriesByOrgId: () => dispatch(serviceCategoriesByOrgIdAction([])),
+  }),
+};
+
+export const pageNotFoundProps = {
+  mapStateToProps: ({ landing }) => ({
+    landingPageFactors: landing.landingPageFactors,
   }),
 };

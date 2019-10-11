@@ -27,19 +27,21 @@ $md: 960px;
 $lmd: 1024px;
 $lg: 1280px;
 $xl: 1920px;
-
 /* Resolution */
 $min-width: $xs;
 $max-width: 1440px;
 $max-height: $max-width;
-
 /* Dimension */
 $global-radius: 3em;
 $global-padding: 2em;
 $global-margin: 2em;
-
 /* Transition */
 $global-transition-time: .5s;
+/* z-index */
+$index_highest: 100000;
+$index_higher: 10000;
+$index_high: 1000;
+
 html {
   box-sizing: border-box;
 }

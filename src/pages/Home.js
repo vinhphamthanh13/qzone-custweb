@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
-import { objectOf, any, func } from 'prop-types';
+import { func, objectOf, any } from 'prop-types';
 import { connect } from 'react-redux';
-import { get } from 'lodash';
+import get from 'lodash/get';
+import flatten from 'lodash/flatten';
+import { navigateTo } from 'utils/common';
+import compact from 'lodash/compact';
 import Loading from 'components/Loading';
+import Success from 'components/Success';
 import Error from 'components/Error';
 import { homeProps } from 'pages/commonProps';
+import { SLIDE_TYPE } from 'utils/constants';
 import Auth from './Auth';
 import AppBar from './home/appBar/AppBar';
 import Landing from './Landing';
@@ -16,51 +21,72 @@ import s from './Home.module.scss';
 
 export class Home extends Component {
   static propTypes = {
-    location: objectOf(any),
-    dispatchOrganizations: func.isRequired,
-  };
-
-  static defaultProps = {
-    location: {},
+    dispatchServiceCategoriesByOrgId: func.isRequired,
+    dispatchSetLandingPage: func.isRequired,
+    dispatchClearOrgNotFound: func.isRequired,
+    match: objectOf(any).isRequired,
   };
 
   state = {
-    servicesByServiceCategoryId: {},
     searchText: '',
     searchResult: [],
     isRegisterOpen: false,
     isLoginOpen: false,
     openAdvancedSearch: false,
     showAdvancedResult: false,
-    organizations: [],
+    serviceCategoriesByOrgId: [],
+    servicesByServiceCategoryId: [],
+    categories: [],
+    orgNotFound: false,
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { servicesByServiceCategoryId, organizations } = props;
-    const {
+    const { serviceCategoriesByOrgId, servicesByServiceCategoryId, orgNotFound } = props;
+    const { serviceCategoriesByOrgId: cachedServiceCategoriesByOrgId,
       servicesByServiceCategoryId: cachedServicesByServiceCategoryId,
-      organizations: cachedOrganizations,
+      orgNotFound: cachedOrgNotFound,
     } = state;
     const updatedState = {};
+    if (
+      serviceCategoriesByOrgId !== null &&
+      JSON.stringify(serviceCategoriesByOrgId) !== JSON.stringify(cachedServiceCategoriesByOrgId)
+    ) {
+      updatedState.serviceCategoriesByOrgId = serviceCategoriesByOrgId;
+      updatedState.categories = serviceCategoriesByOrgId.map(opt => ({ id: opt.value, name: opt.label }));
+    }
     if (
       servicesByServiceCategoryId !== null &&
       JSON.stringify(servicesByServiceCategoryId) !== JSON.stringify(cachedServicesByServiceCategoryId)
     ) {
       updatedState.servicesByServiceCategoryId = servicesByServiceCategoryId;
+      updatedState.enableSearch = Object.keys(servicesByServiceCategoryId).length > 0;
     }
-    if (
-      organizations !== null &&
-      JSON.stringify(organizations) !== JSON.stringify(cachedOrganizations)
-    ) {
-      updatedState.organizations = organizations;
+    if (orgNotFound !== cachedOrgNotFound) {
+      updatedState.orgNotFound = orgNotFound;
     }
 
     return Object.keys(updatedState) ? updatedState : null;
   }
 
   componentDidMount() {
-    const { dispatchOrganizations } = this.props;
-    dispatchOrganizations();
+    const { dispatchServiceCategoriesByOrgId, match: { params: { orgRef }}, dispatchSetLandingPage } = this.props;
+    if (orgRef) {
+      dispatchServiceCategoriesByOrgId(orgRef);
+      dispatchSetLandingPage({ orgRef });
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const { serviceCategoriesByOrgId } = prevProps;
+    const { dispatchSetLandingPage } = this.props;
+    const { serviceCategoriesByOrgId: cachedServiceCategoriesByOrgId } = this.state;
+    if (
+      cachedServiceCategoriesByOrgId !== null &&
+      JSON.stringify(cachedServiceCategoriesByOrgId) !== JSON.stringify(serviceCategoriesByOrgId)
+    ) {
+      const catName = get(cachedServiceCategoriesByOrgId, '0.label');
+      dispatchSetLandingPage({ catName });
+    }
   }
 
   handleInstantSearch = (event) => {
@@ -100,20 +126,31 @@ export class Home extends Component {
     this.setState({ openAdvancedSearch: value });
   };
 
+  handleOrgNotFound = () => {
+    const { dispatchClearOrgNotFound } = this.props;
+    const { orgNotFound } = this.state;
+    dispatchClearOrgNotFound();
+    if (orgNotFound) navigateTo('/')();
+  };
+
   render() {
-    const { location } = this.props;
     const {
-      searchText, isRegisterOpen, isLoginOpen, openAdvancedSearch, searchResult, servicesByServiceCategoryId,
-      showAdvancedResult, organizations,
+      searchText, isRegisterOpen, isLoginOpen, openAdvancedSearch, searchResult,
+      showAdvancedResult, categories, servicesByServiceCategoryId, enableSearch,
     } = this.state;
 
-    const servicesList = [];
-    Object.keys(servicesByServiceCategoryId).map(catName =>
-      servicesByServiceCategoryId[catName].map(service => servicesList.push(service)));
+    const serviceList = categories.length > 0 && categories.map(cat => {
+      if (servicesByServiceCategoryId[cat.name]) {
+        return [...servicesByServiceCategoryId[cat.name]]
+      }
+      return null;
+    });
+
     return (
       <div className={s.landingPage}>
-        <Error />
+        <Error resetOtherStatus={this.handleOrgNotFound} />
         <Loading />
+        <Success />
         <Auth
           isRegisterOpen={isRegisterOpen}
           isLoginOpen={isLoginOpen}
@@ -125,9 +162,12 @@ export class Home extends Component {
           onSearch={this.handleInstantSearch}
           onSearchValue={searchText}
           toggleAdvancedSearch={this.toggleAdvancedSearch}
+          enableSearch={enableSearch}
         />
-        {organizations && organizations.length > 0 && (<SlideShow list={organizations} />)}
-        <Landing location={location} handleAuth={this.openAuthModal} />
+        {serviceList && serviceList.length > 0 && (
+          <SlideShow list={compact(flatten(serviceList))} type={SLIDE_TYPE.SER} />
+        )}
+        <Landing categories={categories} handleAuth={this.openAuthModal} />
         <Footer maintenance={false} />
         {searchResult.length > 0 && (
           <div className={s.instantSearch}>

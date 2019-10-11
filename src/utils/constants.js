@@ -4,7 +4,11 @@ export const defaultDateFormat = 'DD MMMM YYYY';
 export const FULL_DATE = 'dddd, DD MMMM YYYY';
 export const TIME_FORMAT = 'hh:mm a';
 export const DEFAULT_TIME = '1970-01-01 T00:00:00';
-
+// Slide type
+export const SLIDE_TYPE = {
+  ORG: 'organization',
+  SER: 'service',
+};
 // Navigation
 export const CATEGORY_NAV_WIDTH = 66;
 
@@ -105,7 +109,6 @@ export const EVENT_STATUS = {
   COMPLETED: 'COMPLETED',
   UNSPECIFIED: 'UNSPECIFIED',
 };
-
 // Slots
 export const NO_SLOTS_PER_ROW = 3;
 export const NO_ROWS_PER_DATE = 3;
@@ -116,7 +119,6 @@ export const WAIT_LIST_KEYS = {
   SELECTED_LOC_ID: 'selectedLocId',
   SELECTED_TEMP_SERVICE_ID: 'selectedTemporaryServiceId',
 };
-
 // There is dependency between TYPE attrs name and the following policies
 // E.g, PASSWORD attrs value has password in passwordPolicy
 export const POPOVER_TYPE = {

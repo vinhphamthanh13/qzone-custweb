@@ -12,7 +12,6 @@ import { Formik } from 'formik';
 import {
   LOGIN_TYPES,
 } from 'utils/constants';
-import Error from 'components/Error';
 import Form from './components/Form';
 import {
   login, loginGoogle, loginFacebook,
@@ -69,28 +68,23 @@ class Login extends React.Component {
       password: '',
     };
 
-    return (
-      <>
-        <Error />
-        {isOpen && (
-          <div className="flex item-center cover-bg-black z-index-highest">
-            <Formik
-              initialValues={loginInit}
-              validationSchema={loginSchema}
-              enableReinitialize
-              onSubmit={this.handleLogin}
-              render={props => (
-                <Form
-                  {...props}
-                  onClose={this.onClose}
-                  socialActions={socialActions}
-                  handleAuthenticate={handleAuthenticate}
-                />
-              )}
+    return isOpen && (
+      <div className="flex item-center cover-bg-black z-index-highest">
+        <Formik
+          initialValues={loginInit}
+          validationSchema={loginSchema}
+          enableReinitialize
+          onSubmit={this.handleLogin}
+          render={props => (
+            <Form
+              {...props}
+              onClose={this.onClose}
+              socialActions={socialActions}
+              handleAuthenticate={handleAuthenticate}
             />
-          </div>
-        )}
-      </>
+          )}
+        />
+      </div>
     );
   }
 }

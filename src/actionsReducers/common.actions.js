@@ -41,7 +41,7 @@ export const setSucceed = payload => ({
 export const resetModalStatus = () => ({
   type: RESET_MODAL_STATUS,
 });
-const servicesByServiceCategoryIdBulkAction = payload => ({
+export const servicesByServiceCategoryIdBulkAction = payload => ({
   type: SERVICES_BY_SERVICE_CATEGORY_ID,
   payload,
 });

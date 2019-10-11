@@ -35,7 +35,7 @@ const setSurveyByIdAction = payload => ({
   payload,
 });
 
-export const setSurveys = headers => async (dispatch) => {
+export const setSurveysApi = headers => async (dispatch) => {
   dispatch(setLoading(true));
   const [result, error] = await handleRequest(surveys, [headers]);
   if (error) {
@@ -68,9 +68,9 @@ export const setAnsweredAssessmentByUser = (surveyId, userId) => async (dispatch
   dispatch(setLoading(false));
 };
 
-export const setSurveyById = data => async (dispatch) => {
+export const setSurveyById = id => async (dispatch) => {
   dispatch(setLoading(true));
-  const [result, error] = await handleRequest(getSurveyByIdApi, [data]);
+  const [result, error] = await handleRequest(getSurveyByIdApi, [id]);
   if (error) {
     dispatch(setError(error));
   } else {

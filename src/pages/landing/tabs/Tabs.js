@@ -68,6 +68,7 @@ class Tabs extends Component {
     const tabsInfo = get(landingPageFactors, 'tabsInfo');
     const tabInfo = get(landingPageFactors, `tabsInfo.${catName}`);
     if (tabInfo) onSelectTab(tabInfo, catName)();
+    console.log('tabsInfo', tabsInfo);
     const chunkFactor = Math.abs(windowWidth / (MAX_TAB_WIDTH + CATEGORY_NAV_WIDTH));
     const maxChunkCount = chunk(Object.keys(tabsInfo), chunkFactor).length;
     dispatchChunkFactor({ chunkFactor, maxChunkCount });
@@ -110,8 +111,9 @@ class Tabs extends Component {
   };
 
   createTab = tabsInfo => {
-    const {  activeChunkTabs, responsiveLayout: { chunkFactor }, landingPageFactors } = this.state;
+    const {  activeChunkTabs, landingPageFactors, windowWidth } = this.state;
     const catName = get(landingPageFactors, 'catName');
+    const chunkFactor = Math.abs(windowWidth / (MAX_TAB_WIDTH + CATEGORY_NAV_WIDTH));
     const tabChunkCount = chunk(Object.keys(tabsInfo), chunkFactor);
     // const displayTabs = [];
     // tabChunkCount.map(tabs => {

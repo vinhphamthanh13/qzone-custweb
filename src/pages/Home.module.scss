@@ -1,12 +1,15 @@
 @import "styles/_settings.scss";
 
 .landingPage {
-  margin: $app-bar-height auto 1rem !important;
+  margin: $app-bar-height auto 0!important;
   max-width: $max-width;
   height: calc(100vh - 65px);
   overflow: auto;
   position: relative;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .instantSearch {
