@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { get } from 'lodash';
+import get from 'lodash/get';
+import noop from 'lodash/noop';
 import { PhoneIphone, Public } from '@material-ui/icons';
-import { limitString } from 'utils/common';
+import { limitString, navigateTo } from 'utils/common';
 import defaultImage from 'images/providers.jpg';
 import { SLIDE_TYPE } from 'utils/constants';
 import s from './Slide.module.scss';
@@ -29,6 +30,10 @@ class Slide extends Component {
     return Object.keys(updatedState) ? updatedState : null;
   }
 
+  handleRedirect = ref => () => {
+    navigateTo(`/organization/${ref}`)();
+  };
+
   render() {
     const { item, type } = this.state;
 
@@ -38,12 +43,18 @@ class Slide extends Component {
     let phone;
     let orgIntro;
     let orgName;
+    let ref;
+    let addStyle = '';
+    let action = noop;
     if (type === SLIDE_TYPE.ORG) {
       name = get(item, 'name');
       image = get(item, 'advPic.fileUrl') || defaultImage;
       website = get(item, 'website');
       phone = get(item, 'telephone');
       orgIntro = get(item, 'description');
+      ref = get(item, 'orgRef', '');
+      addStyle = 'hover-pointer';
+      action = this.handleRedirect;
     }
     if (type === SLIDE_TYPE.SER) {
       name = get(item, 'name');
@@ -55,7 +66,8 @@ class Slide extends Component {
     }
 
     return (
-      <div className={s.wrapper}>
+      // eslint-disable-next-line
+      <div className={`${s.wrapper} ${addStyle}`} onClick={action(ref)}>
         <div className={s.image}>
           <img src={image} alt={name} width="100%" />
         </div>
