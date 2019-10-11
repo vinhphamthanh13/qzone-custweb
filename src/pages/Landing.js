@@ -5,9 +5,6 @@ import { connect } from 'react-redux';
 import { get } from 'lodash';
 import { landingProps } from 'pages/commonProps';
 import EmptyItem from 'components/EmptyItem';
-import Loading from 'components/Loading';
-import Error from 'components/Error';
-import Success from 'components/Success';
 import Tabs from './landing/tabs/Tabs'
 import Services from './landing/service/Services';
 import s from './Landing.module.scss';
@@ -101,42 +98,34 @@ class Landing extends Component {
     const serviceList = servicesByServiceCategoryId[catName] || [];
     const tabsInfo = get(landingPageFactors, 'tabsInfo');
 
-    return (
-      <>
-        <Loading />
-        <Error />
-        <Success />
-        {categories.length > 0 ? (
-          <div className={s.landing}>
-            {!!tabsInfo && Object.keys(tabsInfo).length > 0 && (
-              <>
-                <Tabs
-                  setTabOrder={dispatchSetTabOrder}
-                  tabOrder={tabOrder}
-                  tabsInfo={tabsInfo}
-                  onSelectTab={this.handleSelectTab}
-                />
-                <div className={s.serviceContent}>
-                  {serviceList.length > 0
-                    ? (
-                        <Services
-                          serviceList={serviceList}
-                          catName={catName}
-                          activeTab={activeTab}
-                          handleAuth={handleAuth}
-                        />
-                      )
-                    : <EmptyItem />
-                  }
-                </div>
-              </>
-            )}
-          </div>
-        ) : <EmptyItem message="No Service Available!" />}
-      </>
-    )
+    return categories.length > 0 ? (
+      <div className={s.landing}>
+        {!!tabsInfo && Object.keys(tabsInfo).length > 0 && (
+          <>
+            <Tabs
+              setTabOrder={dispatchSetTabOrder}
+              tabOrder={tabOrder}
+              tabsInfo={tabsInfo}
+              onSelectTab={this.handleSelectTab}
+            />
+            <div className={s.serviceContent}>
+              {serviceList.length > 0
+                ? (
+                    <Services
+                      serviceList={serviceList}
+                      catName={catName}
+                      activeTab={activeTab}
+                      handleAuth={handleAuth}
+                    />
+                  )
+                : <EmptyItem />
+              }
+            </div>
+          </>
+        )}
+      </div>
+    ) : <EmptyItem message="No Service Available!" />;
   }
-
 }
 
 export default connect(

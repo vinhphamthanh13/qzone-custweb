@@ -119,7 +119,7 @@ class Provider extends Component {
         <MapDialog isOpen={isOpenMap} serviceName={sName} toggle={this.handleMapPopup} geoLocation={geoLocation} />
         <div key={providerId} className={s.card}>
           <div className={s.image}>
-            <img src={pImage} alt={pName} width="100%" height="100%" />
+            <img src={pImage} alt={pName} className={s.imageZoom} width="100%" height="100%" />
             <div className={s.rateStar}>
               <RateStar rating={pRate} size="small" />
             </div>

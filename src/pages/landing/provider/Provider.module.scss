@@ -9,6 +9,7 @@
   border: 1px solid $main_03;
   box-shadow: 2px 2px 13px 1px $main_04;
   position: relative;
+  overflow: hidden;
 }
 
 .content {
@@ -27,8 +28,12 @@
   align-items: center;
 }
 
-.image:hover {
-  color: $danger;
+.imageZoom {
+  transition: all 0.3s ease-in;
+}
+
+.imageZoom:hover {
+  transform: scale(1.5);
 }
 
 .rateStar {

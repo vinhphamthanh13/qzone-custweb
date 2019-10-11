@@ -18,6 +18,14 @@
   position: relative;
 }
 
+.zoomImg {
+  transition: transform 0.2s;
+}
+
+.zoomImg:hover {
+  transform: scale(1.5);
+}
+
 .duration {
   color: $success;
   position: absolute;

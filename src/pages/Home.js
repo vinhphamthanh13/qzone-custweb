@@ -6,6 +6,7 @@ import flatten from 'lodash/flatten';
 import { navigateTo } from 'utils/common';
 import compact from 'lodash/compact';
 import Loading from 'components/Loading';
+import Success from 'components/Success';
 import Error from 'components/Error';
 import { homeProps } from 'pages/commonProps';
 import { SLIDE_TYPE } from 'utils/constants';
@@ -128,7 +129,6 @@ export class Home extends Component {
   handleOrgNotFound = () => {
     const { dispatchClearOrgNotFound } = this.props;
     const { orgNotFound } = this.state;
-    console.log('orgNotfound', orgNotFound);
     dispatchClearOrgNotFound();
     if (orgNotFound) navigateTo('/')();
   };
@@ -136,10 +136,9 @@ export class Home extends Component {
   render() {
     const {
       searchText, isRegisterOpen, isLoginOpen, openAdvancedSearch, searchResult,
-      showAdvancedResult, categories, servicesByServiceCategoryId, enableSearch, orgNotFound,
+      showAdvancedResult, categories, servicesByServiceCategoryId, enableSearch,
     } = this.state;
 
-    console.log('orgNotfound in render', orgNotFound);
     const serviceList = categories.length > 0 && categories.map(cat => {
       if (servicesByServiceCategoryId[cat.name]) {
         return [...servicesByServiceCategoryId[cat.name]]
@@ -151,6 +150,7 @@ export class Home extends Component {
       <div className={s.landingPage}>
         <Error resetOtherStatus={this.handleOrgNotFound} />
         <Loading />
+        <Success />
         <Auth
           isRegisterOpen={isRegisterOpen}
           isLoginOpen={isLoginOpen}

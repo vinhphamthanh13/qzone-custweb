@@ -103,7 +103,7 @@ class Service extends Component {
         {isQueuePopup && <WaitList service={service} onClose={this.toggleQueueModal} handleAuth={handleAuth} />}
         <div className={s.card} key={sId}>
           <div className={s.image}>
-            <img src={imgUrl} alt={sName} width="100%" height="100%" />
+            <img src={imgUrl} alt={sName} className={s.zoomImg} width="100%" height="100%" />
             <div className={s.duration}>
               Duration: {`${sDuration}'`}
             </div>
