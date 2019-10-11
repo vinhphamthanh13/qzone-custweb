@@ -28,15 +28,20 @@ class Instant extends Component {
     instantAvailabilitiesByTemporaryServiceId: [],
     temporaryServicesById: {},
     providerById: {},
+    landingPageFactors: {},
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { instantAvailabilitiesByTemporaryServiceId, userDetail, providerById, temporaryServicesById } = props;
+    const {
+      instantAvailabilitiesByTemporaryServiceId, userDetail, providerById, temporaryServicesById,
+      landingPageFactors,
+    } = props;
     const {
       instantAvailabilitiesByTemporaryServiceId: cachedInstantAvailabilitiesByTemporaryServiceId,
       userDetail: cachedUserDetail,
       temporaryServicesById: cachedTemporaryServicesById,
       providerById: cachedProviderById,
+      landingPageFactors: cachedLandingPageFactors,
     } = state;
     const updatedState = {};
     if (
@@ -63,6 +68,12 @@ class Instant extends Component {
       JSON.stringify(temporaryServicesById) !== JSON.stringify(cachedTemporaryServicesById)
     ) {
       updatedState.temporaryServicesById = temporaryServicesById;
+    }
+    if (
+      landingPageFactors !== null &&
+      JSON.stringify(landingPageFactors) !== JSON.stringify(cachedLandingPageFactors)
+    ) {
+      updatedState.landingPageFactors = landingPageFactors;
     }
 
     return Object.keys(updatedState) ? updatedState : null;
@@ -97,13 +108,15 @@ class Instant extends Component {
   };
 
   handleRedirect = () => {
-    navigateTo('/')();
+    const { landingPageFactors } = this.state;
+    const orgRef = get(landingPageFactors, 'orgRef', '');
+    navigateTo(`/${orgRef}`)();
   };
 
   render() {
     const { dispatchSelectBookingDetail } = this.props;
     const {
-      instantAvailabilitiesByTemporaryServiceId, userDetail, temporaryServicesById, providerById,
+      instantAvailabilitiesByTemporaryServiceId, userDetail, temporaryServicesById, providerById, landingPageFactors,
     } = this.state;
     const userId = get(userDetail, 'userSub') || get(userDetail, 'id');
     const slots = instantAvailabilitiesByTemporaryServiceId.filter(slot => slot.spotsOpen !== 0);
@@ -136,6 +149,7 @@ class Instant extends Component {
                 selectBookingDetail={dispatchSelectBookingDetail}
                 temporaryService={{ ...temporaryServicesById, ...providerById }}
                 slots={slots}
+                landingPageFactors={landingPageFactors}
               />
             )}
           </div>

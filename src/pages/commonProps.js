@@ -141,10 +141,11 @@ export const rescheduleProps = {
 };
 
 export const instantProps = {
-  mapStateToProps: ({ common, provider }) => ({
+  mapStateToProps: ({ common, provider, landing }) => ({
     instantAvailabilitiesByTemporaryServiceId: provider.instantAvailabilitiesByTemporaryServiceId,
     temporaryServicesById: common.temporaryServicesById,
     providerById: provider.providerById,
+    landingPageFactors: landing.landingPageFactors,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchInstantAvailabilitiesByTemporaryServiceId: id => dispatch(

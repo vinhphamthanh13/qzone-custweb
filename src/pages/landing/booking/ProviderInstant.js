@@ -20,11 +20,14 @@ class ProviderInstant extends Component {
     temporaryService: {},
     slots: [],
     isOpenMap: false,
+    landingPageFactors: {},
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { temporaryService, slots } = props;
-    const { temporaryService: cachedTemporaryService, slots: cachedSlots } = state;
+    const { temporaryService, slots, landingPageFactors } = props;
+    const {
+      temporaryService: cachedTemporaryService, slots: cachedSlots, landingPageFactors: cachedLandingPageFactors,
+    } = state;
     const updatedState = {};
     if (
       temporaryService !== null &&
@@ -38,6 +41,12 @@ class ProviderInstant extends Component {
     ) {
       updatedState.slots = slots;
     }
+    if (
+      landingPageFactors !== null &&
+      JSON.stringify(landingPageFactors) !== JSON.stringify(cachedLandingPageFactors)
+    ) {
+      updatedState.landingPageFactors = landingPageFactors;
+    }
 
     return Object.keys(updatedState) ? updatedState : null;
   }
@@ -50,7 +59,9 @@ class ProviderInstant extends Component {
 
   handleSelectSlot = slot => () => {
     const { selectBookingDetail } = this.props;
-    navigateTo('/confirm-booking')();
+    const { landingPageFactors } = this.state;
+    const orgRef = get(landingPageFactors, 'orgRef');
+    navigateTo(`/${orgRef}/confirm-booking`)();
     selectBookingDetail(slot);
   };
 
