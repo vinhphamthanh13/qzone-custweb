@@ -11,6 +11,7 @@ import { navigateTo } from 'utils/common';
 import { NavigateBefore } from '@material-ui/icons';
 import { providersProps } from 'pages/commonProps';
 import { MAX_CARD_WIDTH } from 'utils/constants';
+import Footer from 'pages/components/footer/Footer';
 import Provider from './Provider';
 import s from './Providers.module.scss';
 
@@ -182,6 +183,7 @@ class Providers extends Component {
             />))}
           </div>
         ))}
+        <Footer maintenance={false} />
       </div>
     );
   }

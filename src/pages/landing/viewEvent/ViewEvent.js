@@ -12,6 +12,7 @@ import { Home, AssignmentInd, Clear, Cached } from '@material-ui/icons';
 import { viewEventProps } from 'pages/commonProps';
 import CustomModal from 'components/Modal/CustomModal';
 import { EVENT_STATUS, SERVICE_MODE } from 'utils/constants';
+import Footer from 'pages/components/footer/Footer';
 import Event from './Event';
 import Reschedule from '../reschedule/Reschedule';
 import s from './ViewEvent.module.scss';
@@ -221,32 +222,35 @@ class ViewEvent extends Component {
             </div>
           </div>
           {eventId && (
-            <div className={s.content}>
+            <>
               <div className={`${s.title} ${titleStyle}`}>
                 {title}
               </div>
-              <div className={s.information}>
-                <div className={s.bookingCode}>
-                  Reservation reference code <strong>{bookingCode}</strong>
-                </div>
-                <Event appointment={eventById} viewMap={this.handleToggleMap}/>
-                {isCancellable && (
-                  <div className={s.cta}>
-                    <Button variant="outlined" color="inherit" onClick={this.toggleConfirmCancelEvent}>
-                      <Clear color="inherit" />
-                      <span>&nbsp;Cancel</span>
-                    </Button>
-                    {showReschedule && (
-                      <Button variant="outlined" color="inherit" onClick={this.toggleRescheduledSlot}>
-                        <Cached color="inherit" />
-                        <span>&nbsp;Reschedule</span>
-                      </Button>
-                    )}
+              <div className={s.content}>
+                <div className={s.information}>
+                  <div className={s.bookingCode}>
+                    Reservation reference code <strong>{bookingCode}</strong>
                   </div>
-                )}
+                  <Event appointment={eventById} viewMap={this.handleToggleMap}/>
+                  {isCancellable && (
+                    <div className={s.cta}>
+                      <Button variant="outlined" color="inherit" onClick={this.toggleConfirmCancelEvent}>
+                        <Clear color="inherit" />
+                        <span>&nbsp;Cancel</span>
+                      </Button>
+                      {showReschedule && (
+                        <Button variant="outlined" color="inherit" onClick={this.toggleRescheduledSlot}>
+                          <Cached color="inherit" />
+                          <span>&nbsp;Reschedule</span>
+                        </Button>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
+            </>
           )}
+          <Footer maintenance={false} />
         </div>
       </>
     );

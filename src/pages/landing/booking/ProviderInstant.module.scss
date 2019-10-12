@@ -1,5 +1,11 @@
 @import "styles/_settings.scss";
 
+.providerInstant {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
 .card {
   display: flex;
   flex-direction: column;
@@ -15,7 +21,7 @@
   font-size: $heading;
   color: $gray;
   padding: 1rem 1rem 0;
-  border: 2px solid $gallery;
+  border-bottom: 2px solid $gallery;
   margin-bottom: 1rem;
 }
 
