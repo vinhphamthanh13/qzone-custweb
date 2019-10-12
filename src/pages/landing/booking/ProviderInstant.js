@@ -79,7 +79,7 @@ class ProviderInstant extends Component {
     const transformedSlots = slots.map(slot => ({ ...slot, sName, pName, pEmail, pPhone, pImage, pAddress }));
 
     return (
-      <>
+      <div className={s.providerInstant}>
         <MapDialog isOpen={isOpenMap} serviceName={sName} toggle={this.handleMapPopup} geoLocation={geoLocation} />
         <div className={s.title}>
           Available Slots
@@ -123,7 +123,7 @@ class ProviderInstant extends Component {
             </div>
           ) : <EmptyItem message="All slots are booked!"/>}
         </div>
-      </>
+      </div>
     );
   }
 }

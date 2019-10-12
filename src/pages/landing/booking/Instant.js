@@ -10,6 +10,7 @@ import Logo from 'images/quezone-logo.png';
 import EmptyItem from 'components/EmptyItem';
 import Loading from 'components/Loading';
 import Error from 'components/Error';
+import Footer from 'pages/components/footer/Footer';
 import ProviderInstant from './ProviderInstant';
 import { instantProps } from '../../commonProps';
 import s from './Instant.module.scss';
@@ -153,6 +154,7 @@ class Instant extends Component {
               />
             )}
           </div>
+          <Footer maintenance={false} />
         </div>
       </>
     );

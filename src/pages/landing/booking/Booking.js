@@ -10,6 +10,7 @@ import { navigateTo } from 'utils/common';
 import Loading from 'components/Loading';
 import Error from 'components/Error';
 import CustomModal from 'components/Modal/CustomModal';
+import Footer from 'pages/components/footer/Footer';
 import ProviderInfo from './ProviderInfo';
 import ClientInfo from './ClientInfo';
 import { bookingProps } from '../../commonProps';
@@ -171,7 +172,7 @@ class Booking extends Component {
     const headTitle = waitListId ? 'WaitLists Confirmation' : 'Booking Confirmation';
     const sId = get(selectedBookingDetail, 'serviceId');
     const navigateLeftCta = waitListId ? navigateTo('/') : this.handleSelectProvider(sId);
-    const cName = get(userDetailById, 'givenName') || get(userDetailById, 'fullName')
+    const cName = get(userDetailById, 'givenName') || get(userDetailById, 'fullName');
     const cEmail = get(userDetailById, 'email');
     const cPhone = get(userDetailById, 'telephone');
 
@@ -237,6 +238,7 @@ class Booking extends Component {
               )}
             </div>
           </div>
+          <Footer maintenance={false} />
         </div>
       </>
     );
