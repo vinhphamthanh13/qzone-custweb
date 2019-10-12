@@ -6,7 +6,8 @@ import moment from 'moment';
 import { noop, get, compact } from 'lodash';
 import { withStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, IconButton, InputBase, Badge, Avatar, Typography, Button } from '@material-ui/core';
-import { Search as SearchIcon, AssignmentInd, Notifications as NotificationsIcon, Fingerprint, FindInPage, Assignment,
+import {
+  Search as SearchIcon, AssignmentInd, Notifications as NotificationsIcon, Fingerprint, FindInPage, Assignment, Clear
 } from '@material-ui/icons';
 import { AUTHENTICATED_KEY, PROFILE, EVENT_STATUS } from 'utils/constants';
 import { navigateTo } from 'utils/common';
@@ -24,6 +25,7 @@ class MainAppBar extends React.Component {
     loginSession: objectOf(any),
     handleAuthenticate: func.isRequired,
     onSearch: func.isRequired,
+    onCloseSearch: func.isRequired,
     toggleAdvancedSearch: func.isRequired,
     dispatchGoToProfile: func.isRequired,
     dispatchTrackingEvent: func.isRequired,
@@ -102,7 +104,6 @@ class MainAppBar extends React.Component {
     const trackingLength = cachedEventListId && cachedEventListId.length;
     const cachedTrackingLength = cachedEventListId && cachedEventListId.length;
 
-    console.log('bookedEventId updated', bookedEventId);
     if (
       loginSession !== null &&
       JSON.stringify(loginSession) !== JSON.stringify(cachedLoginSession)
@@ -155,19 +156,8 @@ class MainAppBar extends React.Component {
   };
 
   render() {
-    const {
-      classes,
-      onSearch,
-      onSearchValue,
-      maintenance,
-      enableSearch,
-    } = this.props;
-    const {
-      eventList,
-      loginSession,
-      isShowingTrackingList,
-      trackingAppointmentById,
-    } = this.state;
+    const { classes, onSearch, onSearchValue, maintenance, enableSearch, onCloseSearch } = this.props;
+    const { eventList, loginSession, isShowingTrackingList, trackingAppointmentById } = this.state;
     const trackingList = [];
     if (eventList && eventList.length && trackingAppointmentById && compact(trackingAppointmentById).length) {
       eventList
@@ -270,6 +260,9 @@ class MainAppBar extends React.Component {
                 value={onSearchValue}
                 disabled={!enableSearch}
               />
+              <div className={classes.clearSearch}>
+                {onSearchValue && <Clear color="secondary" onClick={onCloseSearch} />}
+              </div>
             </div>
             <Typography variant="subheading" className={adSearchStyle}>
               or

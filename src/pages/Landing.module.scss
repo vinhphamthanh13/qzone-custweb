@@ -7,6 +7,7 @@ ul {
 
 .landing {
   width: 100%;
+  max-width: $max-width;
   position: relative;
   display: flex;
   flex-direction: column;

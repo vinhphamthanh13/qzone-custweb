@@ -49,6 +49,13 @@ const styles = theme => ({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  clearSearch: {
+    position: 'absolute',
+    top: '50%',
+    right: '0.5rem',
+    transform: 'translateY(-40%)',
+    cursor: 'pointer',
+  },
   inputRoot: {
     color: 'inherit',
     width: '100%',

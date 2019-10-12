@@ -2,7 +2,6 @@
 
 .landingPage {
   margin: $app-bar-height auto 0!important;
-  max-width: $max-width;
   height: calc(100vh - 65px);
   overflow: auto;
   position: relative;
@@ -21,4 +20,10 @@
   background: $gallery;
   z-index: 2;
   overflow: auto;
+}
+
+.closeInstantSearch {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
 }
