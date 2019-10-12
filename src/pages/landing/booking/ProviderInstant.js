@@ -86,7 +86,7 @@ class ProviderInstant extends Component {
         </div>
         <div className={s.card}>
           <div className={s.image}>
-            <img src={pImage} alt="QProvider" width="100%" height="100%" />
+            <img src={pImage} alt="QProvider" width="100%" height="100%" className={s.zoomIn} />
             <div className={s.rateStar}>
               <RateStar rating={pRate} size="small" />
             </div>
