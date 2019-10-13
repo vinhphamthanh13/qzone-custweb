@@ -267,19 +267,23 @@ class MainAppBar extends React.Component {
                 {onSearchValue && <Clear color="secondary" onClick={onCloseSearch} />}
               </div>
             </div>
-            <Typography variant="subheading" className={adSearchStyle}>
-              or
-            </Typography>
-            <div className="advanced-search-app-bar">
-              <Button onClick={this.handleActionAdvancedSearch} className="simple-button">
-                <FindInPage className={adSearchStyle} />
-                <span className="advance-search-cta-label">
-                  <Typography className={adSearchStyle} variant="body1">
-                    Advanced search
-                  </Typography>
-                </span>
-              </Button>
-            </div>
+            {false && (
+              <>
+                <Typography variant="subheading" className={adSearchStyle}>
+                  or
+                </Typography>
+                <div className="advanced-search-app-bar">
+                  <Button onClick={this.handleActionAdvancedSearch} className="simple-button">
+                    <FindInPage className={adSearchStyle} />
+                    <span className="advance-search-cta-label">
+                      <Typography className={adSearchStyle} variant="body1">
+                        Advanced search
+                      </Typography>
+                    </span>
+                  </Button>
+                </div>
+              </>
+            )}
             <div className={classes.grow} />
             { customUser }
           </Toolbar>
