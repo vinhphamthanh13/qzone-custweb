@@ -22,9 +22,6 @@ class Booking extends Component {
     dispatchConfirmWaitLists: func.isRequired,
   };
 
-  static defaultProps = {
-  };
-
   state = {
     isRegisterOpen: false,
     isLoginOpen: false,

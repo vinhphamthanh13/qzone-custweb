@@ -57,8 +57,10 @@ class RedirectToInstant extends Component {
   }
 
   componentDidMount() {
-    const { match: { params: { id }}, dispatchWaitListsById } = this.props;
+    const { match: { params: { id, orgRef }}, dispatchWaitListsById, dispatchSetLandingPage } = this.props;
     dispatchWaitListsById(id);
+    dispatchSetLandingPage({ orgRef });
+
   }
 
   componentDidUpdate(prevProps) {
@@ -67,6 +69,8 @@ class RedirectToInstant extends Component {
     const {
       waitListsById: cachedWaitListsById, userDetailById: cachedUserDetailById, landingPageFactors,
     } = this.state;
+    console.log('redirect instat', prevProps);
+    console.log('redirect state', this.state);
     if (
       cachedWaitListsById !== null &&
       JSON.stringify(waitListsById) !== JSON.stringify(cachedWaitListsById)
@@ -94,7 +98,7 @@ class RedirectToInstant extends Component {
         dispatchGetCustomerById(customerId);
       }
     }
-    if (cachedUserDetailById) {
+    if (cachedUserDetailById.id || cachedUserDetailById.userSub) {
       const orgRef = get(landingPageFactors, 'orgRef', '');
       navigateTo(`/${orgRef}/booking/confirmation`)();
       dispatchSetLandingPage({ confirmWaitLists: true })
