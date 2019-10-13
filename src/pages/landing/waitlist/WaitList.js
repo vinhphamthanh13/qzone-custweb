@@ -2,12 +2,15 @@
 import React, { Component } from 'react';
 import { func } from 'prop-types';
 import { Button, InputBase, IconButton } from '@material-ui/core';
-import { ChevronRight, LocationOn, WrapText, Cancel, Fingerprint, HowToReg, Clear } from '@material-ui/icons';
+import {
+  ChevronRight, LocationOn, WrapText, Cancel, Fingerprint, HowToReg, Clear, GpsFixed, DateRange,
+} from '@material-ui/icons';
 import uuidv1 from 'uuid/v1';
 import { connect } from 'react-redux';
 import { Formik } from 'formik';
 import { get, noop, isEmpty } from 'lodash';
-import { WAIT_LIST_KEYS } from 'utils/constants';
+import moment from 'moment';
+import { FULL_DATE, WAIT_LIST_KEYS } from 'utils/constants';
 import defaultImage from 'images/providers.jpg';
 import { waitListProps } from 'pages/commonProps';
 import s from './WaitList.module.scss';
@@ -20,7 +23,7 @@ class WaitList extends Component {
     dispatchRegisterWaitLists: func.isRequired,
   };
 
-  state = {
+  initState = {
     service: {},
     queuedProviders: [],
     userDetail: {},
@@ -34,11 +37,11 @@ class WaitList extends Component {
     initProvider: {},
   };
 
+  state = { ...this.initState };
+
   static getDerivedStateFromProps(props, state) {
     const { service, userDetail, waitListTemporaryServicesByServiceId } = props;
     const {
-      selectedPId: cachedSelectedPId, selectedLocId: cachedSelectedLocId, selectedPName: cachedSelectedPName,
-      selectedTemporaryServiceId: cachedSelectedTemporaryServiceId,
       service: cachedService,
       userDetail: cachedUserDetail,
       waitListTemporaryServicesByServiceId: cachedWaitListTemporaryServicesByServiceId,
@@ -70,14 +73,16 @@ class WaitList extends Component {
         const selectedPName = get(item, 'providerName');
         const selectedLocId = get(item, 'geoLocation.id');
         const fullAddress = get(item, 'geoLocation.fullAddress');
+        const startDate = get(item, 'startDate');
+        const timezoneId = get(item, 'timezoneId');
         const selectedTemporaryServiceId = get(item, 'id');
-        if (!cachedSelectedPId) updatedState.selectedPId = selectedPId;
-        if (!cachedSelectedPName) updatedState.selectedPName = selectedPName;
-        if (!cachedSelectedLocId) updatedState.selectedLocId = selectedLocId;
-        if (!cachedSelectedTemporaryServiceId) updatedState.selectedTemporaryServiceId = selectedTemporaryServiceId;
+        updatedState.selectedPId = selectedPId;
+        updatedState.selectedPName = selectedPName;
+        updatedState.selectedLocId = selectedLocId;
+        updatedState.selectedTemporaryServiceId = selectedTemporaryServiceId;
         queuedProviders[selectedPName] = queuedProviders[selectedPName] ? queuedProviders[selectedPName] : [];
         queuedProviders[selectedPName].push(
-          {selectedPName, selectedPId, selectedLocId, selectedTemporaryServiceId, fullAddress },
+          {selectedPName, selectedPId, selectedLocId, selectedTemporaryServiceId, fullAddress, startDate, timezoneId },
         );
         queuedTemporaryServiceIds[`${selectedPId}-${selectedLocId}`] = selectedTemporaryServiceId;
         return null;
@@ -94,17 +99,23 @@ class WaitList extends Component {
     const { dispatchWaitListTemporaryServicesByServiceId } = this.props;
     const { service } = this.state;
     dispatchWaitListTemporaryServicesByServiceId(service.id);
-
   }
 
+  handleCloseWaitList = () => {
+    const { onClose } = this.props;
+    this.setState({
+      ...this.initState,
+    }, onClose);
+  };
+
   handleRegisterWaitList = () => {
-    const { dispatchRegisterWaitLists, onClose } = this.props;
+    const { dispatchRegisterWaitLists } = this.props;
     const { selectedTemporaryServiceId, userDetail } = this.state;
     const customerId = get(userDetail, 'userSub') || get(userDetail, 'id');
     dispatchRegisterWaitLists({
       customerId, tempServiceId: selectedTemporaryServiceId, startSec: 0, toSec: 0,
     });
-    onClose();
+    this.handleCloseWaitList();
   };
 
   toggleProvidersList = () => {
@@ -133,13 +144,10 @@ class WaitList extends Component {
   };
 
   handleSelectLocation = (item, setFieldValue) => () => {
-    const { queuedTemporaryServiceIds, selectedPId } = this.state;
     setFieldValue('fullAddress', item.fullAddress);
     this.setState({
       [WAIT_LIST_KEYS.SELECTED_LOC_ID]: item[WAIT_LIST_KEYS.SELECTED_LOC_ID],
-      [WAIT_LIST_KEYS.SELECTED_TEMP_SERVICE_ID]: queuedTemporaryServiceIds[
-        `${selectedPId}-${item[WAIT_LIST_KEYS.SELECTED_LOC_ID]}`
-        ] || '',
+      selectedTemporaryServiceId: item.selectedTemporaryServiceId || '',
     });
     this.toggleLocationsList();
   };
@@ -175,13 +183,27 @@ class WaitList extends Component {
           Available locations
         </div>
         <Clear className="icon-big hover-pointer" color="secondary" onClick={this.toggleLocationsList} />
-      </div>{queuedProviders[selectedPName].map(item => (
+      </div>
+      {queuedProviders[selectedPName].map(item => (
         <div
           key={uuidv1()}
           className={s.item}
           onClick={this.handleSelectLocation(item, setFieldValue)}
         >
           {item.fullAddress}
+          <div className={s.locFooter}>
+            <div className={s.locLabel}>
+              Open date:
+            </div>
+            <div className={s.queuedDate}>
+              <DateRange className="icon-small" color="secondary" />
+              <span>&nbsp;{moment(item.startDate).format(FULL_DATE)}</span>
+            </div>
+            <div className={s.locTimezone}>
+              <GpsFixed className="icon-small" color="secondary" />
+              <span>&nbsp;{item.timezoneId}</span>
+            </div>
+          </div>
         </div>
       ))
 
@@ -195,7 +217,6 @@ class WaitList extends Component {
   };
 
   render() {
-    const { onClose } = this.props;
     const {
       service, isProvidersPopup, isLocationsPopup, userDetail, queuedProviders, initProvider,
       selectedTemporaryServiceId,
@@ -212,7 +233,7 @@ class WaitList extends Component {
         <div className={s.waitListForm}>
           <div className={s.title}>
             <span>Enroll to Waitlist</span>
-            <IconButton color="secondary" onClick={onClose}>
+            <IconButton color="secondary" onClick={this.handleCloseWaitList}>
               <Cancel color="inherit" />
             </IconButton>
           </div>
@@ -226,10 +247,10 @@ class WaitList extends Component {
                 <Formik
                   onSubmit={noop}
                   enableReinitialize
-                  isInitialValid={false}
+                  isInitialValid
                   initialValues={{
-                    providerName: 'select provider',
-                    fullAddress: 'select location',
+                    providerName: initProvider.selectedPName,
+                    fullAddress: initProvider.fullAddress,
                   }}
                   render={({ values, isValid, setFieldValue }) => (
                     <form className={s.selectedInfo}>
