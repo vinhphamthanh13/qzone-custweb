@@ -294,14 +294,16 @@ class WaitList extends Component {
                       <div className={s.footerCta}>
                         {!userId && <ClientInfo userDetail={userDetail} onLogin={this.handleLogin} />}
                         {userId && (
-                          <Button
-                            variant="outlined"
-                            onClick={ctaAction}
-                            disabled={!!((!isValid && userId) || (!selectedTemporaryServiceId && userId))}
-                          >
-                            <CtaIcon color="inherit" />
-                            <span>{ctaLabel}</span>
-                          </Button>
+                          <div className={s.enrollButton}>
+                            <Button
+                              variant="outlined"
+                              onClick={ctaAction}
+                              disabled={!!((!isValid && userId) || (!selectedTemporaryServiceId && userId))}
+                            >
+                              <CtaIcon color="inherit" />
+                              <span>{ctaLabel}</span>
+                            </Button>
+                          </div>
                         )}
                       </div>
                     </form>
