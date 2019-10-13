@@ -3,7 +3,9 @@ import { objectOf, any, func, string, bool } from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import moment from 'moment';
-import { noop, get, compact } from 'lodash';
+import noop from 'lodash/noop';
+import get from 'lodash/get';
+import compact from 'lodash/compact';
 import { withStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, IconButton, InputBase, Badge, Avatar, Typography, Button } from '@material-ui/core';
 import {
@@ -176,6 +178,7 @@ class MainAppBar extends React.Component {
     const badgeStyle = eventCount > 0 ? 'text-margin-lr hover-pointer' : 'text-margin-lr';
     const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
     const [authLabel, openForm] = maintenance ? ['Sign Up', 'isRegisterOpen'] : ['Sign In', 'isLoginOpen'];
+    const userName = get(loginSession, 'userName') || get(loginSession, 'givenName');
     const customUser = isAuthenticated ? (
       <>
         {isShowingTrackingList && (
@@ -190,7 +193,7 @@ class MainAppBar extends React.Component {
           variant="subheading"
           className={`text-capitalize text-margin-lr ${classes.desktopView}`}
         >
-          Hello {loginSession.username}!
+          Hello {userName}!
         </Typography>
         <Badge
           onClick={this.toggleTrackingList}

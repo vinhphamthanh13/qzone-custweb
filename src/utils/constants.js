@@ -1,3 +1,6 @@
+// Facebook
+export const FACEBOOK_QUEZONE = 'https://www.facebook.com/qzoneapp/';
+
 export const dateFormatDash = 'DD-MM-YYYY';
 export const timeSlotFormat = 'hh:mm a';
 export const defaultDateFormat = 'DD MMMM YYYY';
