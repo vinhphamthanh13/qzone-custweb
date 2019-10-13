@@ -25,12 +25,23 @@
 .serviceImage {
   width: 100%;
   height: $provider-image-height;
-  margin: 0.5rem auto;
+  margin: 0 auto 0.5rem;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.imgZoomIn {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.imgZoomIn:hover {
+  cursor: pointer;
+  opacity: 0.8;
 }
 
 .serviceDescription {
   color: $main_03;
-  margin-top: 1rem;
 }
 
 .sName {
@@ -45,6 +56,21 @@
 .selectProvider {
   color: $main_04;
   margin: 0.5rem auto;
+}
+
+.closePopup {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  color: $white;
+  background: linear-gradient(to right, $main_04, $white);
+}
+
+.popUpTitle {
+  color: $white;
+  font-size: $title;
+  font-weight: 400;
 }
 
 .queuedProvider {
@@ -93,7 +119,6 @@
   left: 0;
   width: 100%;
   list-style-type: none;
-  padding: 0.5rem;
   overflow: auto;
   z-index: 1;
 }

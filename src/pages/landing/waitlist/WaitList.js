@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { func } from 'prop-types';
 import { Button, InputBase, IconButton } from '@material-ui/core';
-import { ChevronRight, LocationOn, WrapText, Cancel, Fingerprint, HowToReg } from '@material-ui/icons';
+import { ChevronRight, LocationOn, WrapText, Cancel, Fingerprint, HowToReg, Clear } from '@material-ui/icons';
 import uuidv1 from 'uuid/v1';
 import { connect } from 'react-redux';
 import { Formik } from 'formik';
@@ -129,6 +129,7 @@ class WaitList extends Component {
         `${item[WAIT_LIST_KEYS.SELECTED_PID]}-${selectedLocId}`
         ] || '',
     });
+    this.toggleProvidersList();
   };
 
   handleSelectLocation = (item, setFieldValue) => () => {
@@ -140,10 +141,17 @@ class WaitList extends Component {
         `${selectedPId}-${item[WAIT_LIST_KEYS.SELECTED_LOC_ID]}`
         ] || '',
     });
+    this.toggleLocationsList();
   };
 
   renderProviderList = (list, setFieldValue) => (
     <div className={s.itemList}>
+      <div className={s.closePopup}>
+        <div className={s.popUpTitle}>
+          Our providers
+        </div>
+        <Clear className="icon-big hover-pointer" color="secondary" onClick={this.toggleProvidersList} />
+      </div>
       {Object.keys(list).map((name) => (
           <div
             key={uuidv1()}
@@ -162,7 +170,12 @@ class WaitList extends Component {
   renderLocationList = setFieldValue => {
     const { queuedProviders, selectedPName } = this.state;
     return (<div className={s.itemList}>
-      {queuedProviders[selectedPName].map(item => (
+      <div className={s.closePopup}>
+        <div className={s.popUpTitle}>
+          Available locations
+        </div>
+        <Clear className="icon-big hover-pointer" color="secondary" onClick={this.toggleLocationsList} />
+      </div>{queuedProviders[selectedPName].map(item => (
         <div
           key={uuidv1()}
           className={s.item}
@@ -204,7 +217,7 @@ class WaitList extends Component {
             </IconButton>
           </div>
           <div className={s.serviceImage}>
-            <img src={serviceImg} alt={serviceName} className={s.serviceImage} />
+            <img src={serviceImg} alt={serviceName} className={s.imgZoomIn} width="100%" />
           </div>
           <div className={s.serviceDescription}>
             <div className={`${s.sName} ellipsis`}>{serviceName}</div>
@@ -233,8 +246,8 @@ class WaitList extends Component {
                             value={values.providerName} />
                         </div>
                         <ChevronRight />
-                        {isProvidersPopup && this.renderProviderList(queuedProviders, setFieldValue)}
                       </div>
+                      {isProvidersPopup && this.renderProviderList(queuedProviders, setFieldValue)}
                       <div className={s.label}>Location:</div>
                       <div className={s.dropdownList} onClick={this.toggleLocationsList}>
                         <div className={s.inputItem}>
@@ -249,8 +262,8 @@ class WaitList extends Component {
                           />
                         </div>
                         <ChevronRight />
-                        {isLocationsPopup && this.renderLocationList(setFieldValue)}
                       </div>
+                      {isLocationsPopup && this.renderLocationList(setFieldValue)}
                       {!selectedTemporaryServiceId && (
                         <div className={s.noneTempId}>
                           <strong>Tip</strong>:
