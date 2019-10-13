@@ -13,6 +13,7 @@ import moment from 'moment';
 import { FULL_DATE, WAIT_LIST_KEYS } from 'utils/constants';
 import defaultImage from 'images/providers.jpg';
 import { waitListProps } from 'pages/commonProps';
+import ClientInfo from '../booking/ClientInfo';
 import s from './WaitList.module.scss';
 
 class WaitList extends Component {
@@ -291,14 +292,17 @@ class WaitList extends Component {
                           Please select the provider first, then location. Or change to other location.
                         </div>)}
                       <div className={s.footerCta}>
-                        <Button
-                          variant="outlined"
-                          onClick={ctaAction}
-                          disabled={!!((!isValid && userId) || (!selectedTemporaryServiceId && userId))}
-                        >
-                          <CtaIcon color="inherit" />
-                          <span>{ctaLabel}</span>
-                        </Button>
+                        {!userId && <ClientInfo userDetail={userDetail} onLogin={this.handleLogin} />}
+                        {userId && (
+                          <Button
+                            variant="outlined"
+                            onClick={ctaAction}
+                            disabled={!!((!isValid && userId) || (!selectedTemporaryServiceId && userId))}
+                          >
+                            <CtaIcon color="inherit" />
+                            <span>{ctaLabel}</span>
+                          </Button>
+                        )}
                       </div>
                     </form>
                   )}
