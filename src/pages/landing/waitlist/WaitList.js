@@ -230,7 +230,7 @@ class WaitList extends Component {
     const serviceImg = get(service, 'image.fileUrl') || defaultImage;
 
     return (
-      <div className="cover-bg-black z-index-higher">
+      <div className="cover-bg-black z-index-high">
         <div className={s.waitListForm}>
           <div className={s.title}>
             <span>Enroll to Waitlist</span>
