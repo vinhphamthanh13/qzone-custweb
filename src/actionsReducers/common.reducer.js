@@ -1,4 +1,4 @@
-import storage from 'redux-persist/lib/storage';
+import storageSession from 'redux-persist/lib/storage/session';
 import { persistReducer } from 'redux-persist';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import {
@@ -20,7 +20,7 @@ import {
 
 const persistConfig = {
   key: 'common',
-  storage,
+  storage: storageSession,
   stateReconciler: autoMergeLevel2,
   blacklist: [
     'isLoading',

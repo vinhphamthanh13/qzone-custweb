@@ -1,5 +1,5 @@
 import { persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+import storageSession from 'redux-persist/lib/storage/session';
 import autoMergeLevel1 from 'redux-persist/es/stateReconciler/autoMergeLevel1';
 import {
   SET_LOADING,
@@ -27,10 +27,9 @@ import {
   SET_CUSTOMER_BY_ID,
 } from './constants';
 
-
 const persistConfig = {
   key: 'quezone_customer_authentication',
-  storage,
+  storage: storageSession,
   stateReconciler: autoMergeLevel1,
   blacklist: [
     'isForgotPassword',
@@ -48,7 +47,6 @@ const persistConfig = {
     'guestUserError',
   ],
 };
-
 
 const authInitialize = {
   userDetail: {},

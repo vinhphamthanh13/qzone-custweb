@@ -1,11 +1,11 @@
-import storage from 'redux-persist/lib/storage';
+import storageSession from 'redux-persist/lib/storage/session';
 import { persistReducer } from 'redux-persist';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 import { SET_LANDING_PAGE_FACTORS } from './landing.action';
 
 const persistConfig = {
   key: 'landing',
-  storage,
+  storage: storageSession,
   stateReconciler: autoMergeLevel2,
   blacklist: [],
 };
