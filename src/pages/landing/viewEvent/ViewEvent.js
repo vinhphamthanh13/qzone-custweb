@@ -222,7 +222,7 @@ class ViewEvent extends Component {
             </div>
           </div>
           {eventId && (
-            <>
+            <div>
               <div className={`${s.title} ${titleStyle}`}>
                 {title}
               </div>
@@ -248,7 +248,7 @@ class ViewEvent extends Component {
                   )}
                 </div>
               </div>
-            </>
+            </div>
           )}
           <Footer maintenance={false} />
         </div>
