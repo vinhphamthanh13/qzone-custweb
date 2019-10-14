@@ -2,26 +2,15 @@ import { Auth } from 'aws-amplify';
 import { get } from 'lodash';
 import moment from 'moment';
 import { FACEBOOK } from 'utils/constants';
-import {
-  GOOGLE_ID,
-  AUTH_METHOD,
-  PROVIDER,
-} from 'config/auth';
-import {
-  setError,
-  setLoading,
-} from 'actionsReducers/common.actions';
+import { GOOGLE_ID, AUTH_METHOD, PROVIDER } from 'config/auth';
+import { setError, setLoading } from 'actionsReducers/common.actions';
 import {
   getCustomerByEmail as loginApi,
   saveSocialUser,
-  fetchUserDetail,
   getCustomerById,
+  storeAwsUser,
 } from 'actionsApi/auth';
-import {
-  handleResponse,
-  handleRequest,
-  createHeaders
-} from 'utils/apiHelpers';
+import { handleResponse, handleRequest, createHeaders } from 'utils/apiHelpers';
 import {
   STORE_USER_SESSION_LOGIN,
   STORE_USER_SESSION_ERROR,
@@ -30,6 +19,8 @@ import {
   CLEAR_GUEST_ERROR,
   SET_CUSTOMER_BY_ID,
   USER_TYPE,
+  UPDATE_AWS_USER,
+  UPDATE_USER_INFO_STATUS,
 } from './constants';
 
 // Redux
@@ -49,16 +40,14 @@ const setCustomerByIdAction = payload => ({
   type: SET_CUSTOMER_BY_ID,
   payload,
 });
-export const getUserDetail = userId => async (dispatch) => {
-  dispatch(setLoading(true));
-  const [userDetail] = await handleRequest(fetchUserDetail, [userId], [{}]);
-  if (userDetail && !userDetail.success) {
-    dispatch(setError(userDetail.message));
-  } else {
-    dispatch(setUserDetails(userDetail));
-  }
-  dispatch(setLoading(false));
-};
+const updateAwsUserAction = payload => ({
+  type: UPDATE_AWS_USER,
+  payload,
+});
+export const updateUserInfoStatusAction = payload => ({
+  type: UPDATE_USER_INFO_STATUS,
+  payload,
+});
 // Google User
 export const initGapi = () => {
   // init the Google SDK client
@@ -95,6 +84,7 @@ const awsAuth = async (provider, { token, expires }, user, dispatch) => {
     dispatch(setUserDetails({
       ...result,
       givenName: user.name,
+      authProvider: provider,
     }));
     dispatch(storeUserSessionLogin({
       authProvider: provider,
@@ -110,10 +100,6 @@ const awsAuth = async (provider, { token, expires }, user, dispatch) => {
     }));
   }
   dispatch(setLoading(false));
-  // }).catch(() => {
-  //   dispatch(setError(`Login fail with ${provider}`));
-  //   dispatch(setLoading(false));
-  // });
 };
 export const loginGoogle = () => async (dispatch) => {
   dispatch(setLoading(true));
@@ -191,7 +177,7 @@ export const login = (value) => {
                     authHeaders: createHeaders(jwtToken),
                   };
                   dispatch(storeUserSessionLogin(session));
-                  dispatch(setUserDetails(userDetail));
+                  dispatch(setUserDetails({ ...userDetail, authProvider: PROVIDER.QUEZONE }));
                 }
                 dispatch(setLoading(false));
               })
@@ -237,7 +223,7 @@ export const saveGuestInfo = (data, callback) => async (dispatch) => {
       authHeaders: createHeaders(result.token),
     };
     dispatch(storeUserSessionLogin(session));
-    dispatch(setUserDetails(result));
+    dispatch(setUserDetails({ ...result, authProvider: PROVIDER.QUEZONE }));
     callback();
   }
   dispatch(setLoading(false));
@@ -249,6 +235,18 @@ export const getCustomerByIdApi = id => async dispatch => {
     dispatch(setError(error));
   } else {
     dispatch(setCustomerByIdAction(result));
+  }
+  dispatch(setLoading(false));
+};
+export const updateAwsUserApi = (data, headers) => async dispatch => {
+  dispatch(setLoading(true));
+  const [result, error] = await handleRequest(storeAwsUser, [data, headers]);
+  if (error) {
+    dispatch(setError(error));
+    dispatch(updateUserInfoStatusAction(false));
+  } else {
+    dispatch(updateAwsUserAction(result));
+    dispatch(updateUserInfoStatusAction(true));
   }
   dispatch(setLoading(false));
 };

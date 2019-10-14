@@ -90,7 +90,7 @@ export const registerPopoverPosition = {
   },
 };
 export const SESSION = {
-  TIMEOUT: 3600000, // millisecond
+  TIMEOUT: 60, // minute
   EXPIRED: {
     title: 'Session has expired',
     message: 'To maintain security, your session periodically expires.'

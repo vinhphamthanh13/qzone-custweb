@@ -12,7 +12,7 @@ import {
   Search as SearchIcon, AssignmentInd, Notifications as NotificationsIcon, Fingerprint, FindInPage, Assignment, Clear
 } from '@material-ui/icons';
 import { AUTHENTICATED_KEY, PROFILE, EVENT_STATUS } from 'utils/constants';
-import { navigateTo } from 'utils/common';
+import { navigateTo, sanitizeName } from 'utils/common';
 import logo from 'images/quezone-logo.png';
 import { appBarProps } from 'pages/commonProps';
 import TrackingEvents from './TrackingEvents';
@@ -143,8 +143,9 @@ class MainAppBar extends React.Component {
   navigatingProfile = page => () => {
     const { dispatchGoToProfile } = this.props;
     const { loginSession } = this.state;
+    const sanitizedUserName = sanitizeName(get(loginSession, 'userName', ''));
     dispatchGoToProfile(page);
-    navigateTo(`/profile/${loginSession.id}`)();
+    navigateTo(`/profile/customer/${sanitizedUserName}`)();
   };
 
   toggleTrackingList = () => {

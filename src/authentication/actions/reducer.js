@@ -1,10 +1,7 @@
 import { persistReducer } from 'redux-persist';
-import storageSession from 'redux-persist/lib/storage/session';
+import storage from 'redux-persist/lib/storage';
 import autoMergeLevel1 from 'redux-persist/es/stateReconciler/autoMergeLevel1';
-import {
-  SET_LOADING,
-  RESET_MODAL_STATUS,
-} from 'actionsReducers/common.actions';
+import { SET_LOADING, RESET_MODAL_STATUS } from 'actionsReducers/common.actions';
 import {
   STORE_USER_SESSION_LOGIN,
   STORE_USER_SESSION_ERROR,
@@ -20,16 +17,19 @@ import {
   TOGGLE_RESET_PASSWORD_DIALOG,
   RESET_PASSWORD_STATUS,
   LOAD_SESSION_TO_STATE,
-  SET_USER_DETAILS, LOGOUT_ERROR_RST,
+  SET_USER_DETAILS,
+  LOGOUT_ERROR_RST,
   AUTHENTICATED_KEY,
   SET_GUEST_ERROR,
   CLEAR_GUEST_ERROR,
   SET_CUSTOMER_BY_ID,
+  UPDATE_AWS_USER,
+  UPDATE_USER_INFO_STATUS,
 } from './constants';
 
 const persistConfig = {
   key: 'quezone_customer_authentication',
-  storage: storageSession,
+  storage,
   stateReconciler: autoMergeLevel1,
   blacklist: [
     'isForgotPassword',
@@ -184,6 +184,16 @@ const reducer = (state = authInitialize, action) => {
       return {
         ...state,
         guestUserError: false,
+      };
+    case UPDATE_AWS_USER:
+      return {
+        ...state,
+        userDetail: action.payload,
+      };
+    case UPDATE_USER_INFO_STATUS:
+      return {
+        ...state,
+        updateUserInfoStatus: action.payload,
       };
     default:
       return state;

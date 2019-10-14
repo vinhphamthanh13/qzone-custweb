@@ -1,47 +1,48 @@
 import React, { Component } from 'react';
-import {
-  objectOf, any, func, string,
-} from 'prop-types';
-import { Typography } from '@material-ui/core';
+import { func } from 'prop-types';
 import { connect } from 'react-redux';
-import { get } from 'lodash';
+import get from 'lodash/get';
+import { Typography } from '@material-ui/core';
 import Personal from './info/Personal';
 import Delivery from './info/Delivery';
+import { infoProps } from '../commonProps';
 import s from './Info.module.scss';
 
 class Info extends Component {
-  state = {
-    userInfo: null,
+  static propTypes = {
+    dispatchUpdateAwsUser: func.isRequired,
   };
 
-  componentDidMount() {
-    const { userDetail } = this.props;
-    const userInfo = {
-      email: get(userDetail, 'email'),
-      telephone: get(userDetail, 'telephone'),
-      givenName: get(userDetail, 'givenName'),
-      familyName: get(userDetail, 'familyName'),
-      address: get(userDetail, 'address'),
-      userSub: get(userDetail, 'userSub'),
-      userType: get(userDetail, 'userType'),
-      providerInformation: get(userDetail, 'userType') !== 'CUSTOMER' ? get(userDetail, 'providerInformation') : null,
-      userStatus: get(userDetail, 'userStatus'),
-    };
-    this.setState({ userInfo });
+  state = {
+    userDetail: {},
+    loginSession: {},
+  };
+
+  static getDerivedStateFromProps(props, state) {
+    const { userDetail, loginSession } = props;
+    const { userDetail: cachedUserDetail, loginSession: cachedLoginSession } = state;
+    const updatedState = {};
+    if (
+      userDetail !== null &&
+      JSON.stringify(userDetail) !== JSON.stringify(cachedUserDetail)
+    ) {
+      updatedState.userDetail = userDetail;
+    }
+    if (
+      loginSession !== null &&
+      JSON.stringify(loginSession) !== JSON.stringify(cachedLoginSession)
+    ) {
+      updatedState.loginSession = loginSession;
+    }
+
+    return Object.keys(updatedState) ? updatedState : null;
   }
 
-  handleSaveChangePersonalData = (data) => {
-    const { handleAccount } = this.props;
-    const { userInfo } = this.state;
-    handleAccount({
-      ...userInfo,
-      ...data,
-    });
-  };
-
   render() {
-    const { updateProfileStatus } = this.props;
-    const { userInfo } = this.state;
+    const { dispatchUpdateAwsUser } = this.props;
+    const { userDetail, loginSession } = this.state;
+    const userId = get(userDetail, 'userSub') || get(userDetail, 'id');
+    const authHeaders = get(loginSession, 'authHeaders');
 
     return (
       <>
@@ -58,11 +59,11 @@ class Info extends Component {
               </Typography>
             </div>
             <div className={s.formData}>
-              {userInfo && (
+              {userId && (
                 <Personal
-                  userInfo={userInfo}
-                  saveInfo={this.handleSaveChangePersonalData}
-                  updateStatus={updateProfileStatus}
+                  userDetail={userDetail}
+                  authHeaders={authHeaders}
+                  updateInfo={dispatchUpdateAwsUser}
                 />
               )}
             </div>
@@ -79,11 +80,10 @@ class Info extends Component {
               </Typography>
             </div>
             <div className={s.formData}>
-              {userInfo && (
+              {userId && (
                 <Delivery
-                  userInfo={userInfo}
-                  saveInfo={this.handleSaveChangePersonalData}
-                  updateStatus={updateProfileStatus}
+                  userDetail={userDetail}
+                  saveInfo={dispatchUpdateAwsUser}
                 />
               )}
             </div>
@@ -94,14 +94,7 @@ class Info extends Component {
   }
 }
 
-Info.propTypes = {
-  userDetail: objectOf(any).isRequired,
-  handleAccount: func.isRequired,
-  updateProfileStatus: string.isRequired,
-};
-
-const mapStateToProps = state => ({
-  userDetail: state.auth.userDetail,
-});
-
-export default connect(mapStateToProps, null)(Info);
+export default connect(
+  infoProps.mapStateToProps,
+  infoProps.mapDispatchToProps,
+)(Info);

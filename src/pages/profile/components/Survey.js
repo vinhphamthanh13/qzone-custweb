@@ -11,12 +11,7 @@ import {
   Button,
   IconButton,
 } from '@material-ui/core';
-import {
-  Edit,
-  CheckCircle,
-  ExpandMore,
-  Home,
-} from '@material-ui/icons';
+import { Edit, CheckCircle, ExpandMore, Home } from '@material-ui/icons';
 import { createAssessmentResponse, getSurveyById, setAnsweredAssessmentByUser } from 'actionsReducers/surveys.action';
 import { matchType, historyType } from 'types/global';
 import SurveyResult from './assessment/SurveyResult';

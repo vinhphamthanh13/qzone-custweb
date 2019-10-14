@@ -11,3 +11,4 @@ export const limitString = (value, length) => {
   const subString = `${value}`.substr(0, length);
   return `${value}`.length > length ? `${subString}...` : value;
 };
+export const sanitizeName = string => `${string}`.replace(/\s/g, '_');

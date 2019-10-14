@@ -64,11 +64,6 @@ class WaitList extends Component {
     return Object.keys(updatedState) ? updatedState : null;
   }
 
-  componentDidMount() {
-    const { dispatchSetWaitLists, customerId, authHeaders } = this.props;
-    dispatchSetWaitLists(customerId, authHeaders);
-  }
-
   componentDidUpdate(prevProps) {
     const { cancelWaitLists, bookedEventDetail } = prevProps;
     const { dispatchSetWaitLists, customerId, authHeaders } = this.props;

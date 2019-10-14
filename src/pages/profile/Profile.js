@@ -1,25 +1,31 @@
 import React, { Component } from 'react';
-import { func, string, objectOf, any } from 'prop-types';
+import { func, objectOf, any } from 'prop-types';
 import { connect } from 'react-redux';
-import { get, isEmpty } from 'lodash';
+import get from 'lodash/get';
 import moment from 'moment';
-import { logout } from 'authentication/actions/logout';
-import { postUpdatedProfile, updateProfileAction } from 'actionsReducers/profile.actions';
-import { findEventByCustomerIdApi } from 'actionsReducers/common.actions';
 import { AUTHENTICATED_KEY, SESSION } from 'utils/constants';
-import { navigateTo } from 'utils/common';
+import { navigateTo, sanitizeName } from 'utils/common';
 import CustomModal from 'components/Modal/CustomModal';
 import Loading from 'components/Loading';
+import Success from 'components/Success';
+import Error from 'components/Error';
+import { profileProps } from 'pages/profile/commonProps';
 import Header from './components/Header';
 import Content from './components/Content';
 import s from './Profile.module.scss';
 
 class Profile extends Component {
+  static propTypes = {
+    match: objectOf(any).isRequired,
+    dispatchFindEventByCustomerId: func.isRequired,
+    dispatchSetWaitLists: func.isRequired,
+    dispatchClearUpdateUserInfoStatus: func.isRequired,
+    dispatchLogout: func.isRequired,
+  };
 
   state = {
     userDetail: {},
     loginSession: {},
-    isPopupWarning: false,
     toggleSidePanel: false,
     isSessionTimeout: false,
     landingPageFactors: {},
@@ -27,8 +33,9 @@ class Profile extends Component {
 
   static getDerivedStateFromProps(props, state) {
     const { userDetail, loginSession, updateProfileStatus, landingPageFactors } = props;
-    const { userDetail: cachedUserDetail, loginSession: cachedLoginSession,
-      updateProfileStatus: cachedUpdateProfileStatus, landingPageFactors: cachedLandingPageFactors,
+    const {
+      userDetail: cachedUserDetail, loginSession: cachedLoginSession, updateProfileStatus: cachedUpdateProfileStatus,
+      landingPageFactors: cachedLandingPageFactors,
     } = state;
     const updatedState = {};
     if (
@@ -37,14 +44,14 @@ class Profile extends Component {
     ) {
       updatedState.userDetail = userDetail;
     }
-    if (updateProfileStatus !== cachedUpdateProfileStatus) {
-      updatedState.updateProfileStatus = updateProfileStatus;
-    }
     if (
       loginSession !== null &&
       JSON.stringify(loginSession) !== JSON.stringify(cachedLoginSession)
     ) {
       updatedState.loginSession = loginSession;
+    }
+    if (updateProfileStatus !== cachedUpdateProfileStatus) {
+      updatedState.updateProfileStatus = updateProfileStatus;
     }
     if (
       landingPageFactors !== null &&
@@ -57,27 +64,20 @@ class Profile extends Component {
   }
 
   componentDidMount() {
-    const {
-      findEventByCustomerIdApi: findEventByCustomerId,
-      customerId,
-      loginSession: { authHeaders },
-    } = this.props;
-    findEventByCustomerId(customerId, authHeaders);
-  }
-
-  componentDidUpdate(prevProps) {
-    const { userDetail } = prevProps;
-    const { loginSession, userDetail: cachedUserDetail, isSessionTimeout, landingPageFactors } = this.state;
-
-    const expired = get(loginSession, 'expiration');
-
-    if (JSON.stringify(userDetail) !== JSON.stringify(cachedUserDetail) || isEmpty(cachedUserDetail)) {
-      const orgRef = get(landingPageFactors, 'orgRef');
-      navigateTo(`/${orgRef}`)();
-    }
-
-    if (!isSessionTimeout && moment().isAfter(moment(expired))) {
+    const { dispatchFindEventByCustomerId, dispatchSetWaitLists, match } = this.props;
+    const { loginSession } = this.state;
+    const userId = get(loginSession, 'id');
+    const headers = get(loginSession, 'authHeaders');
+    const startSession = get(loginSession, 'start_session');
+    const username = get(match, 'params.username');
+    const userName = get(loginSession, 'userName');
+    if (!userId || sanitizeName(userName) !== sanitizeName(username)) {
+      navigateTo('/')();
+    } else if (moment().isSameOrAfter(moment(startSession).add(SESSION.TIMEOUT, 'minute'))) {
       this.handlePopupSessionTimeout();
+    } else {
+      dispatchFindEventByCustomerId(userId, headers);
+      dispatchSetWaitLists(userId, headers);
     }
   }
 
@@ -88,29 +88,13 @@ class Profile extends Component {
   };
 
   handleLogout = () => {
-    const { logout: logoutAction } = this.props;
+    const { dispatchLogout } = this.props;
     const { loginSession, landingPageFactors } = this.state;
     const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
     const authProvider = get(loginSession, 'authProvider');
     const orgRef = get(landingPageFactors, 'orgRef');
     navigateTo(`/${orgRef}`)();
-    logoutAction({
-      isAuthenticated,
-      authProvider,
-    });
-  };
-
-  handleAccount = (data) => {
-    const {
-      postUpdatedProfile: postUpdatedProfileAction,
-      loginSession: { authHeaders },
-    } = this.props;
-    postUpdatedProfileAction(data, authHeaders);
-  };
-
-  resetUpdateProfileStatus = () => {
-    const { updateProfileAction: updateProfileStatus } = this.props;
-    updateProfileStatus('');
+    dispatchLogout({ isAuthenticated, authProvider });
   };
 
   handleSidePanel = (value = true) => {
@@ -126,44 +110,16 @@ class Profile extends Component {
   };
 
   render() {
-    const {
-      updateProfileStatus,
-      customerId,
-      loginSession: { authHeaders },
-    } = this.props;
-    const {
-      userDetail,
-      isPopupWarning,
-      toggleSidePanel,
-      isSessionTimeout,
-    } = this.state;
-
+    const { dispatchClearUpdateUserInfoStatus } = this.props;
+    const { loginSession, userDetail, toggleSidePanel, isSessionTimeout } = this.state;
     const givenName = get(userDetail, 'givenName');
-    const updateProfileMsgError = isPopupWarning === 'error' ? (
-      <CustomModal
-        isOpen
-        type="error"
-        title="Update Profile Error"
-        message="Error occurs when updating your profile! Please try again."
-        onClose={this.resetUpdateProfileStatus}
-      />
-    ) : null;
-
-    const updateProfileMsgSuccess = isPopupWarning === 'success' ? (
-      <CustomModal
-        isOpen
-        type="info"
-        title="Update Profile Success"
-        message="Your profile is up to date"
-        onClose={this.resetUpdateProfileStatus}
-      />
-    ) : null;
+    const headers = get(loginSession, 'authHeaders');
 
     return (
       <>
-        {updateProfileMsgError}
-        {updateProfileMsgSuccess}
         <Loading />
+        <Error resetOtherStatus={dispatchClearUpdateUserInfoStatus} />
+        <Success userCallback={dispatchClearUpdateUserInfoStatus} />
         <CustomModal
           type="error"
           title={SESSION.EXPIRED.title}
@@ -181,15 +137,11 @@ class Profile extends Component {
             />
             <div className={`container-max auto-margin-horizontal ${s.profileContent}`}>
               <Content
-                customerId={customerId}
-                givenName={givenName}
                 onClose={this.handleRedirectHome}
-                handleAccount={this.handleAccount}
-                updateProfileStatus={updateProfileStatus}
                 handleLogout={this.handleLogout}
                 toggleSidePanel={toggleSidePanel}
                 handleSidePanel={this.handleSidePanel}
-                authHeaders={authHeaders}
+                authHeaders={headers}
               />
             </div>
           </div>
@@ -199,30 +151,7 @@ class Profile extends Component {
   }
 }
 
-Profile.propTypes = {
-  customerId: string.isRequired,
-  postUpdatedProfile: func.isRequired,
-  updateProfileStatus: string,
-  updateProfileAction: func.isRequired,
-  findEventByCustomerIdApi: func.isRequired,
-  logout: func.isRequired,
-  loginSession: objectOf(any).isRequired,
-};
-
-Profile.defaultProps = {
-  updateProfileStatus: false,
-};
-
-const mapStateToProps = state => ({
-  ...state.common,
-  ...state.auth,
-  ...state.profile,
-  ...state.landing,
-});
-
-export default connect(mapStateToProps, {
-  postUpdatedProfile,
-  updateProfileAction,
-  findEventByCustomerIdApi,
-  logout,
-})(Profile);
+export default connect(
+  profileProps.mapStateToProps,
+  profileProps.mapDispatchToProps,
+)(Profile);
