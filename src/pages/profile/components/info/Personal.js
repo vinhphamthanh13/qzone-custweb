@@ -17,7 +17,6 @@ class Personal extends Component {
     authHeaders: objectOf(any),
     handleChange: func.isRequired,
     handleBlur: func.isRequired,
-    handleSubmit: func.isRequired,
     updateInfo: func.isRequired,
   };
 
@@ -43,18 +42,22 @@ class Personal extends Component {
     return Object.keys(updatedState) ? updatedState : null;
   }
 
-  handleSubmit = () => {
+  handleSubmit = event => {
+    if (event) {
+      event.preventDefault();
+    }
     const { values, authHeaders, updateInfo } = this.props;
     const { userDetail } = this.state;
     const id = get(userDetail, 'userSub') || get(userDetail, 'id');
     const givenName = get(values, 'userName');
     const email = get(values, 'userEmail');
-    const telephone = get(values, 'userPhone');
-    updateInfo({ id, email, telephone, givenName }, authHeaders);
+    const telephone = get(values, 'phoneNumber');
+    const familyName = get(values, 'familyName');
+    updateInfo({ id, email, telephone, givenName, familyName }, authHeaders);
   };
 
   render () {
-    const { initialValues, values, handleBlur, handleChange, handleSubmit, isValid, touched, errors } = this.props;
+    const { initialValues, values, handleBlur, handleChange, isValid, touched, errors } = this.props;
     const PERSONAL = [
       { id: 'email', value: 'userEmail', label: 'Email' },
       { id: 'telephone', value: 'phoneNumber', label: 'Telephone' },
@@ -82,16 +85,17 @@ class Personal extends Component {
               />
             </div>
           ))}
+          <div className={s.personalCta}>
+            <Button
+              disabled={!isSubmitValid}
+              type="submit"
+              variant="outlined"
+              color="inherit"
+            ><CheckCircle color="inherit" className="icon-small" />
+            <span>&nbsp;Save</span>
+            </Button>
+          </div>
         </form>
-        <div className={s.personalCta}>
-          <Button
-            disabled={!isSubmitValid}
-            onClick={handleSubmit}
-            variant="outlined"
-          ><CheckCircle color="inherit" className="icon-small" />
-          <span>&nbsp;Save</span>
-          </Button>
-        </div>
       </>
     );
   }

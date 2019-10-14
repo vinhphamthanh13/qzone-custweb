@@ -3,6 +3,7 @@ import { func } from 'prop-types';
 import { connect } from 'react-redux';
 import get from 'lodash/get';
 import { Typography } from '@material-ui/core';
+import { PROVIDER } from 'config/auth';
 import Personal from './info/Personal';
 import Delivery from './info/Delivery';
 import { infoProps } from '../commonProps';
@@ -11,6 +12,7 @@ import s from './Info.module.scss';
 class Info extends Component {
   static propTypes = {
     dispatchUpdateAwsUser: func.isRequired,
+    dispatchUpdateSciUser: func.isRequired,
   };
 
   state = {
@@ -39,10 +41,12 @@ class Info extends Component {
   }
 
   render() {
-    const { dispatchUpdateAwsUser } = this.props;
+    const { dispatchUpdateAwsUser, dispatchUpdateSciUser } = this.props;
     const { userDetail, loginSession } = this.state;
     const userId = get(userDetail, 'userSub') || get(userDetail, 'id');
     const authHeaders = get(loginSession, 'authHeaders');
+    const authProvider = get(loginSession, 'authProvider');
+    const personalCta = authProvider === PROVIDER.QUEZONE ? dispatchUpdateAwsUser : dispatchUpdateSciUser;
 
     return (
       <>
@@ -63,7 +67,7 @@ class Info extends Component {
                 <Personal
                   userDetail={userDetail}
                   authHeaders={authHeaders}
-                  updateInfo={dispatchUpdateAwsUser}
+                  updateInfo={personalCta}
                 />
               )}
             </div>

@@ -3,12 +3,13 @@ import { get } from 'lodash';
 import moment from 'moment';
 import { FACEBOOK } from 'utils/constants';
 import { GOOGLE_ID, AUTH_METHOD, PROVIDER } from 'config/auth';
-import { setError, setLoading } from 'actionsReducers/common.actions';
+import { setError, setLoading, setSucceed } from 'actionsReducers/common.actions';
 import {
   getCustomerByEmail as loginApi,
   saveSocialUser,
   getCustomerById,
   storeAwsUser,
+  updateSocialUsers,
 } from 'actionsApi/auth';
 import { handleResponse, handleRequest, createHeaders } from 'utils/apiHelpers';
 import {
@@ -20,7 +21,7 @@ import {
   SET_CUSTOMER_BY_ID,
   USER_TYPE,
   UPDATE_AWS_USER,
-  UPDATE_USER_INFO_STATUS,
+  UPDATE_SCI_USER,
 } from './constants';
 
 // Redux
@@ -44,8 +45,8 @@ const updateAwsUserAction = payload => ({
   type: UPDATE_AWS_USER,
   payload,
 });
-export const updateUserInfoStatusAction = payload => ({
-  type: UPDATE_USER_INFO_STATUS,
+const updateSocialUsersAction = payload => ({
+  type: UPDATE_SCI_USER,
   payload,
 });
 // Google User
@@ -243,10 +244,22 @@ export const updateAwsUserApi = (data, headers) => async dispatch => {
   const [result, error] = await handleRequest(storeAwsUser, [data, headers]);
   if (error) {
     dispatch(setError(error));
-    dispatch(updateUserInfoStatusAction(false));
   } else {
     dispatch(updateAwsUserAction(result));
-    dispatch(updateUserInfoStatusAction(true));
+    dispatch(setSucceed('Personal information is updated successfully!'))
   }
   dispatch(setLoading(false));
 };
+export const updateSocialUsersApi = (data, headers) => async dispatch => {
+  dispatch(setLoading(true));
+  const [result, error] = await handleRequest(updateSocialUsers, [data, headers]);
+  if (error) {
+    dispatch(setError(error));
+  } else {
+    dispatch(updateSocialUsersAction(result));
+    dispatch(setSucceed('Personal information is updated successfully!'))
+  }
+  dispatch(setLoading(false));
+};
+
+

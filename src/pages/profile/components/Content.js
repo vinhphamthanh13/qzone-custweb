@@ -26,7 +26,6 @@ class Content extends Component {
     dispatchCancelEventById: func.isRequired,
     dispatchSetSurveys: func.isRequired,
     dispatchSetAssessments: func.isRequired,
-    dispatchUpdateAwsUser: func.isRequired,
   };
 
   static defaultProps = {

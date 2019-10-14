@@ -4,7 +4,7 @@ import { findEventByCustomerIdApi } from 'actionsReducers/common.actions';
 import { cancelEventById } from 'actionsReducers/profile.actions';
 import { trackingAppointmentByIdsApi } from 'actionsReducers/customer.actions';
 import { setAssessmentAction, setSurveysApi } from 'actionsReducers/surveys.action';
-import { updateAwsUserApi, updateUserInfoStatusAction } from 'authentication/actions/login';
+import { updateAwsUserApi, updateSocialUsersApi } from 'authentication/actions/login';
 import { logoutApi } from 'authentication/actions/logout';
 
 export const waitListsProps = {
@@ -30,7 +30,6 @@ export const profileProps = {
   mapDispatchToProps: dispatch => ({
     dispatchFindEventByCustomerId: (id, headers) => dispatch(findEventByCustomerIdApi(id, headers)),
     dispatchSetWaitLists: (uid, headers) => dispatch(setWaitListsApi(uid, headers)),
-    dispatchClearUpdateUserInfoStatus: () => dispatch(updateUserInfoStatusAction(null)),
     dispatchLogout: authentication => dispatch(logoutApi(authentication)),
   }),
 };
@@ -62,5 +61,6 @@ export const infoProps = {
   }),
   mapDispatchToProps: dispatch => ({
     dispatchUpdateAwsUser: (data, headers) => dispatch(updateAwsUserApi(data, headers)),
+    dispatchUpdateSciUser: (data, headers) => dispatch(updateSocialUsersApi(data, headers)),
   }),
 };

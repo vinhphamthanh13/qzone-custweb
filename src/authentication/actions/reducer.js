@@ -24,7 +24,7 @@ import {
   CLEAR_GUEST_ERROR,
   SET_CUSTOMER_BY_ID,
   UPDATE_AWS_USER,
-  UPDATE_USER_INFO_STATUS,
+  UPDATE_SCI_USER,
 } from './constants';
 
 const persistConfig = {
@@ -190,10 +190,10 @@ const reducer = (state = authInitialize, action) => {
         ...state,
         userDetail: action.payload,
       };
-    case UPDATE_USER_INFO_STATUS:
+    case UPDATE_SCI_USER:
       return {
         ...state,
-        updateUserInfoStatus: action.payload,
+        userDetail: action.payload,
       };
     default:
       return state;

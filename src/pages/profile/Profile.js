@@ -19,7 +19,6 @@ class Profile extends Component {
     match: objectOf(any).isRequired,
     dispatchFindEventByCustomerId: func.isRequired,
     dispatchSetWaitLists: func.isRequired,
-    dispatchClearUpdateUserInfoStatus: func.isRequired,
     dispatchLogout: func.isRequired,
   };
 
@@ -110,7 +109,6 @@ class Profile extends Component {
   };
 
   render() {
-    const { dispatchClearUpdateUserInfoStatus } = this.props;
     const { loginSession, userDetail, toggleSidePanel, isSessionTimeout } = this.state;
     const givenName = get(userDetail, 'givenName');
     const headers = get(loginSession, 'authHeaders');
@@ -118,8 +116,8 @@ class Profile extends Component {
     return (
       <>
         <Loading />
-        <Error resetOtherStatus={dispatchClearUpdateUserInfoStatus} />
-        <Success userCallback={dispatchClearUpdateUserInfoStatus} />
+        <Error />
+        <Success />
         <CustomModal
           type="error"
           title={SESSION.EXPIRED.title}
