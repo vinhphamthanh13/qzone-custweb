@@ -35,7 +35,7 @@ class Content extends Component {
   static getDerivedStateFromProps(props, state) {
     const {
       eventList, profilePage, cancelEventByIdStatus, waitLists, surveyList, customerAssessment, rescheduleStatus,
-      landingPageFactors, userDetail,
+      landingPageFactors, userDetail, loginSession,
     } = props;
     const {
       eventList: cachedEventList,
@@ -47,6 +47,7 @@ class Content extends Component {
       rescheduleStatus: cachedRescheduleStatus,
       landingPageFactors: cachedLandingPageFactors,
       userDetail: cachedUserDetail,
+      loginSession: cachedLoginSession,
     } = state;
     const updatedState = {};
 
@@ -93,6 +94,12 @@ class Content extends Component {
       JSON.stringify(userDetail) !== JSON.stringify(cachedUserDetail)
     ) {
       updatedState.userDetail = userDetail;
+    }
+    if (
+      loginSession !== null &&
+      JSON.stringify(loginSession) !== JSON.stringify(cachedLoginSession)
+    ) {
+      updatedState.loginSession = loginSession;
     }
 
     return Object.keys(updatedState) ? updatedState : null;
@@ -143,6 +150,8 @@ class Content extends Component {
       eventList: [],
       waitLists: [],
       surveyList: [],
+      userDetail: {},
+      loginSession: {},
       customerAssessment: [],
       sidePanel: { ...this.initState },
     };
@@ -259,7 +268,7 @@ class Content extends Component {
     const { toggleSidePanel, handleSidePanel, authHeaders } = this.props;
     const {
       sidePanel: { eventList, myInfo, waitList, surveyList }, eventList: cachedEventList,
-      landingPageFactors, userDetail, waitLists,
+      landingPageFactors, userDetail, waitLists, loginSession,
     } = this.state;
     const userName = get(userDetail, 'givenName');
     const customerId = get(userDetail, 'userSub') || get(userDetail, 'id');
@@ -302,7 +311,7 @@ class Content extends Component {
         {myInfo && (
           <div className={s.profilePage}>
             <Typography variant="title" color="inherit" className="underlined">Profile</Typography>
-            <Info userDetail={userDetail} />
+            <Info userDetail={userDetail} loginSession={loginSession} />
           </div>)
         }
       </div>

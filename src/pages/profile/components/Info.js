@@ -50,6 +50,6 @@ class Info extends Component {
 }
 
 export default connect(
-  infoProps.mapStateToProps,
+  null,
   infoProps.mapDispatchToProps,
 )(Info);

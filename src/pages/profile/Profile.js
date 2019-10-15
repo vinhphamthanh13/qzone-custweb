@@ -124,6 +124,7 @@ class Profile extends Component {
             handleSidePanel={this.handleSidePanel}
           />
           <Content
+            loginSession={loginSession}
             onClose={this.handleRedirectHome}
             handleLogout={this.handleLogout}
             toggleSidePanel={toggleSidePanel}

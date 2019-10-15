@@ -1,7 +1,7 @@
 import React from 'react';
 import { func } from 'prop-types';
 import { Avatar, Button } from '@material-ui/core';
-import { Home, MoreVert } from '@material-ui/icons';
+import { Home, Reorder } from '@material-ui/icons';
 import logo from 'images/quezone-logo.png';
 import s from './Header.module.scss';
 
@@ -23,11 +23,11 @@ const Header = (props) => {
             />
           </div>
           <div className={s.headerSupport}>
-            <Button variant="text" color="inherit" onClick={onClose}>
+            <Button variant="text" color="inherit" onClick={onClose} className="simple-button">
               <Home color="inherit" />
             </Button>
-            <Button variant="text" color="inherit" onClick={handleSidePanel}>
-              <MoreVert />
+            <Button variant="text" color="inherit" onClick={handleSidePanel} className="simple-button">
+              <Reorder />
             </Button>
           </div>
         </div>

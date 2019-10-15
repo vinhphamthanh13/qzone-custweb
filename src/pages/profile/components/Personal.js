@@ -69,48 +69,50 @@ class Personal extends Component {
       JSON.stringify(initialValues) !== JSON.stringify(values);
     return (
       <form className={s.userForm} onSubmit={this.handleSubmit}>
-        <div className={s.infoFrame}>
-          <div className={s.title}>
-            My data
+        <div className={s.inputFields}>
+          <div className={s.infoFrame}>
+            <div className={s.title}>
+              My data
+            </div>
+            <div className={s.formData}>
+              {PERSONAL.map(item => (
+                <div key={item.id} className={s.formControl}>
+                  <TextField
+                    fullWidth
+                    value={values[item.value]}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    name={item.value}
+                    label={item.label}
+                    error={!!errors[item.value]}
+                    helperText={errors[item.value]}
+                    margin="dense"
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-          <div className={s.formData}>
-            {PERSONAL.map(item => (
-              <div key={item.id} className={s.formControl}>
-                <TextField
-                  fullWidth
-                  value={values[item.value]}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  name={item.value}
-                  label={item.label}
-                  error={!!errors[item.value]}
-                  helperText={errors[item.value]}
-                  margin="dense"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className={s.infoFrame}>
-          <div className={s.title}>
-            Delivery info
-          </div>
-          <div className={s.formData}>
-            {DELIVERY.map(item => (
-              <div key={item.id} className={s.formControl}>
-                <TextField
-                  fullWidth
-                  value={values[item.value]}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  name={item.value}
-                  label={item.label}
-                  error={!!errors[item.value]}
-                  helperText={errors[item.value]}
-                  margin="dense"
-                />
-              </div>
-            ))}
+          <div className={s.infoFrame}>
+            <div className={s.title}>
+              Delivery info
+            </div>
+            <div className={s.formData}>
+              {DELIVERY.map(item => (
+                <div key={item.id} className={s.formControl}>
+                  <TextField
+                    fullWidth
+                    value={values[item.value]}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    name={item.value}
+                    label={item.label}
+                    error={!!errors[item.value]}
+                    helperText={errors[item.value]}
+                    margin="dense"
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
         <div className={s.personalCta}>

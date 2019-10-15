@@ -54,10 +54,6 @@ export const contentProps = {
 };
 
 export const infoProps = {
-  mapStateToProps: ({ auth }) => ({
-    userDetail: auth.userDetail,
-    loginSession: auth.loginSession,
-  }),
   mapDispatchToProps: dispatch => ({
     dispatchUpdateAwsUser: (data, headers) => dispatch(updateAwsUserApi(data, headers)),
     dispatchUpdateSciUser: (data, headers) => dispatch(updateSocialUsersApi(data, headers)),
