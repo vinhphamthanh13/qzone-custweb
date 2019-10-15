@@ -120,7 +120,7 @@ class Content extends Component {
     {
       name: PROFILE.PAGE.MY_INFO,
       icon: Settings,
-      text: 'My information',
+      text: 'My profile',
       isSelected: false,
     },
     {
@@ -261,6 +261,7 @@ class Content extends Component {
       sidePanel: { eventList, myInfo, waitList, surveyList }, eventList: cachedEventList,
       landingPageFactors, userDetail, waitLists,
     } = this.state;
+    const userName = get(userDetail, 'givenName');
     const customerId = get(userDetail, 'userSub') || get(userDetail, 'id');
 
     return (
@@ -270,8 +271,8 @@ class Content extends Component {
           <div className={s.sidebarOverlay} onClick={() => handleSidePanel(false)}>
             <div className={s.sidebar}>
               <div>
-                <Typography variant="subtitle1" color="primary" className={`${s.title} text-capitalize`}>
-                  {this.greetingText()}
+                <Typography variant="subtitle1" color="primary" className={`${s.sideBarTitle} text-capitalize`}>
+                  {this.greetingText()}&nbsp;{userName}
                 </Typography>
               </div>
               <div className={s.cta}>
@@ -300,7 +301,7 @@ class Content extends Component {
         }
         {myInfo && (
           <div className={s.profilePage}>
-            <Typography variant="title" color="inherit" className="underlined">Information</Typography>
+            <Typography variant="title" color="inherit" className="underlined">Profile</Typography>
             <Info userDetail={userDetail} />
           </div>)
         }

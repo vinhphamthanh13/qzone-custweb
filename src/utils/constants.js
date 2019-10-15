@@ -145,3 +145,18 @@ export const telephonePolicy = {
     'Example: +61412345678',
   ],
 };
+// PROFILE
+export const PERSONAL = [
+  { id: 'email', value: 'userEmail', label: 'Email' },
+  { id: 'telephone', value: 'phoneNumber', label: 'Telephone' },
+  { id: 'givenName', value: 'userName', label: 'Given Name' },
+  { id: 'familyName', value: 'familyName', label: 'Family Name' },
+];
+export const DELIVERY = [
+  { id: 'streetAddress', value: 'streetAddress', label: 'Street Address' },
+  { id: 'district', value: 'district', label: 'District' },
+  { id: 'state', value: 'state', label: 'State' },
+  { id: 'city', value: 'city', label: 'City' },
+  { id: 'postCode', value: 'postCode', label: 'Post Code' },
+  { id: 'country', value: 'country', label: 'Country' },
+];

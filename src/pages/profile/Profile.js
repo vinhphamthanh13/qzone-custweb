@@ -23,7 +23,6 @@ class Profile extends Component {
   };
 
   state = {
-    userDetail: {},
     loginSession: {},
     toggleSidePanel: false,
     isSessionTimeout: false,
@@ -31,18 +30,12 @@ class Profile extends Component {
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { userDetail, loginSession, updateProfileStatus, landingPageFactors } = props;
+    const { loginSession, updateProfileStatus, landingPageFactors } = props;
     const {
-      userDetail: cachedUserDetail, loginSession: cachedLoginSession, updateProfileStatus: cachedUpdateProfileStatus,
+      loginSession: cachedLoginSession, updateProfileStatus: cachedUpdateProfileStatus,
       landingPageFactors: cachedLandingPageFactors,
     } = state;
     const updatedState = {};
-    if (
-      userDetail !== null &&
-      JSON.stringify(userDetail) !== JSON.stringify(cachedUserDetail)
-    ) {
-      updatedState.userDetail = userDetail;
-    }
     if (
       loginSession !== null &&
       JSON.stringify(loginSession) !== JSON.stringify(cachedLoginSession)
@@ -109,8 +102,7 @@ class Profile extends Component {
   };
 
   render() {
-    const { loginSession, userDetail, toggleSidePanel, isSessionTimeout } = this.state;
-    const givenName = get(userDetail, 'givenName');
+    const { loginSession, toggleSidePanel, isSessionTimeout } = this.state;
     const headers = get(loginSession, 'authHeaders');
 
     return (
@@ -126,23 +118,18 @@ class Profile extends Component {
           okButton
           okCallBack={this.handleLogout}
         />
-        <div>
-          <div className={`${s.profile} column`}>
-            <Header
-              userName={givenName}
-              onClose={this.handleRedirectHome}
-              handleSidePanel={this.handleSidePanel}
-            />
-            <div className={`container-max auto-margin-horizontal ${s.profileContent}`}>
-              <Content
-                onClose={this.handleRedirectHome}
-                handleLogout={this.handleLogout}
-                toggleSidePanel={toggleSidePanel}
-                handleSidePanel={this.handleSidePanel}
-                authHeaders={headers}
-              />
-            </div>
-          </div>
+        <div className={s.profile}>
+          <Header
+            onClose={this.handleRedirectHome}
+            handleSidePanel={this.handleSidePanel}
+          />
+          <Content
+            onClose={this.handleRedirectHome}
+            handleLogout={this.handleLogout}
+            toggleSidePanel={toggleSidePanel}
+            handleSidePanel={this.handleSidePanel}
+            authHeaders={headers}
+          />
         </div>
       </>
     );

@@ -1,11 +1,7 @@
 @import "styles/_settings.scss";
 
 .profile {
-  overflow: hidden;
-
-}
-
-.profileContent {
   margin-top: $app-bar-height;
-  padding-top: 2.5rem;
+  display: flex;
+  flex-direction: column;
 }

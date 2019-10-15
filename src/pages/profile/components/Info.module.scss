@@ -1,33 +1,32 @@
 @import "styles/_settings.scss";
 
-.privateInfo {
-  color: $main;
-  margin-top: 1rem;
+.userForm {
   display: flex;
-  justify-content: flex-start;
-  overflow: auto;
+  height: 100vh;
+  flex-direction: column;
 }
 
-.personalInfo {
-  border-right: 1px solid $gallery;
-  min-width: 350px;
-  margin: 0 1rem 0 0.5rem;
-}
-
-.infoTitle {
+.infoFrame {
+  min-width: $max-card-width;
+  border: 1px solid $main_02;
+  border-radius: 0.5rem;
+  background: $white;
+  padding: 0.5rem 1rem;
   margin-bottom: 1rem;
 }
 
-.infoSubtitle {
-  margin: 1rem 0;
+.title {
+  color: $fruitSalad;
+  font-size: $subtitle;
+  font-weight: bold;
 }
 
 .formData {
-  margin: 1rem;
+  margin: 0.5rem auto 1rem;
 }
 
 .formControl {
-  margin: 1rem 0;
+  display: flex;
 }
 
 .personalCta {

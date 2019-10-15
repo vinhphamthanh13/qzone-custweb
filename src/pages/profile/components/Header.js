@@ -1,26 +1,12 @@
 import React from 'react';
-import {
-  func,
-  string,
-} from 'prop-types';
-import {
-  Avatar,
-  Typography,
-  Button,
-} from '@material-ui/core';
-import {
-  Home,
-  MoreVert,
-} from '@material-ui/icons';
+import { func } from 'prop-types';
+import { Avatar, Button } from '@material-ui/core';
+import { Home, MoreVert } from '@material-ui/icons';
 import logo from 'images/quezone-logo.png';
 import s from './Header.module.scss';
 
 const Header = (props) => {
-  const {
-    onClose,
-    handleSidePanel,
-    userName,
-  } = props;
+  const { onClose, handleSidePanel } = props;
 
   return (
     <div className={s.header}>
@@ -41,9 +27,6 @@ const Header = (props) => {
               <Home color="inherit" />
             </Button>
             <Button variant="text" color="inherit" onClick={handleSidePanel}>
-              <Typography variant="body1" color="inherit">
-                Hi {userName}
-              </Typography>
               <MoreVert />
             </Button>
           </div>
@@ -56,7 +39,6 @@ const Header = (props) => {
 Header.propTypes = {
   onClose: func.isRequired,
   handleSidePanel: func.isRequired,
-  userName: string.isRequired,
 };
 
 export default Header;

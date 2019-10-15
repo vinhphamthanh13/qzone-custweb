@@ -22,7 +22,6 @@ export const waitListsProps = {
 
 export const profileProps = {
   mapStateToProps: ({ auth, profile, landing }) => ({
-    userDetail: auth.userDetail,
     loginSession: auth.loginSession,
     updateProfileStatus: profile.updateProfileStatus,
     landingPageFactors: landing.landingPageFactors,
