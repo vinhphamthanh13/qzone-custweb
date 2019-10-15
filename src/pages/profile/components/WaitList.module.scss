@@ -1,16 +1,17 @@
 @import "styles/_settings.scss";
 
 .waitList {
-  max-height: calc(100% - 65px);
-  overflow: auto;
-  display: flex;
-  color: $main_04;
-}
-
-.waitSlotRow {
-  margin: 1rem 1rem 1rem 0;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 1rem 0;
+}
+
+.waitSlotCard {
+  display: flex;
+  flex-direction: column;
+  margin: auto 0.5rem;
 }
 
 .waitSlot {
@@ -22,6 +23,7 @@
   align-items: center;
   padding: 1rem 0.5rem;
   border-radius: 0.2rem;
+  background: $white;
   box-shadow: 2px 2px 4px 1px $gallery;
 }
 
@@ -91,4 +93,12 @@
   padding: 1rem 1rem 0;
   box-sizing: border-box;
   border-top: 2px solid $main_03;
+}
+
+@include breakpoint-up(smx) {
+  .waitList {
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+  }
 }
