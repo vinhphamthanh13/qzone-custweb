@@ -78,10 +78,10 @@ export const clientInfo = Yup.object().shape({
   familyName: Yup
     .string()
     .matches(regExPattern.userName, { message: 'Sure name is too short'}),
-  streetAddress: Yup.string().min(3, { message: 'Street address is too short'}),
-  district: Yup.string().min(3, { message: 'District is too short'}),
-  state: Yup.string().min(2, { message: 'State name is too short'}),
-  city: Yup.string().min(3, { message: 'City is too short'}),
-  postCode: Yup.string().min(5, { message: 'Post code is too short'}),
-  country: Yup.string().min(7, { message: 'Country name is too short'}),
+  streetAddress: Yup.string().matches(regExPattern.address, { message: 'Street address is too short'}),
+  district: Yup.string().matches(regExPattern.address, { message: 'District is too short'}),
+  state: Yup.string().matches(regExPattern.address, { message: 'State name is too short'}),
+  city: Yup.string().matches(regExPattern.address, { message: 'City is too short'}),
+  postCode: Yup.string().matches(regExPattern.address, { message: 'Post code is too short'}),
+  country: Yup.string().matches(regExPattern.address, { message: 'Country name is too short'}),
 });

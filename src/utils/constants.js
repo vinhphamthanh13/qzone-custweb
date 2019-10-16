@@ -74,6 +74,7 @@ export const regExPattern = {
     pattern: /(.*)T(.*)\..*/,
     replaceBy: '$1 $2',
   },
+  address: /[\w\s]{3,}/,
 };
 export const LOGIN_TYPES = {
   FB: 'FaceBook',

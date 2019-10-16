@@ -54,7 +54,14 @@ class Personal extends Component {
     const email = get(values, 'userEmail');
     const telephone = get(values, 'phoneNumber');
     const familyName = get(values, 'familyName') || null;
-    updateInfo({ id, email, telephone, givenName, familyName }, authHeaders);
+    const streetAddress = get(values, 'streetAddress');
+    const district = get(values, 'district');
+    const state = get(values, 'state');
+    const city = get(values, 'city');
+    const postCode = get(values, 'postCode');
+    const country = get(values, 'country');
+    const address = { streetAddress, district, state, city, postCode, country };
+    updateInfo({ id, email, telephone, givenName, familyName, address }, authHeaders);
   };
 
   render () {
