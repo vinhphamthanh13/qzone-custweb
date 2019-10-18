@@ -162,7 +162,7 @@ class WaitList extends Component {
         <div className={s.popUpTitle}>
           Our providers
         </div>
-        <Clear className="icon-big hover-pointer" color="secondary" onClick={this.toggleProvidersList} />
+        <Clear className="hover-pointer" color="secondary" onClick={this.toggleProvidersList} />
       </div>
       {Object.keys(list).map((name) => (
           <div
@@ -186,7 +186,7 @@ class WaitList extends Component {
         <div className={s.popUpTitle}>
           Available locations
         </div>
-        <Clear className="icon-big hover-pointer" color="secondary" onClick={this.toggleLocationsList} />
+        <Clear className="hover-pointer" color="secondary" onClick={this.toggleLocationsList} />
       </div>
       {queuedProviders[selectedPName].map(item => (
         <div
@@ -307,7 +307,7 @@ class WaitList extends Component {
                           </div>
                         )}
                         <div className={s.label}>Open date:</div>
-                        <div className={`${s.dropdownList} gallery-bg border-none`}>
+                        <div className={`${s.dropdownList} gallery-bg border-none hover-none`}>
                           <div className={s.inputItem}>
                             <DateRange className="icon-small" color="secondary" />
                             <span>&nbsp;{moment(values.startDate).format(FULL_DATE)}</span>

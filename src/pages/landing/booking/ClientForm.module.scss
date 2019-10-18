@@ -115,7 +115,7 @@
   margin: 0.5rem auto;
 }
 
-@include breakpoint-up(md) {
+@include breakpoint-up(lmd) {
   .userRegistration {
     flex-direction: row;
   }

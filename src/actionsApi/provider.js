@@ -18,3 +18,4 @@ export const availabilitiesByTemporaryServiceIdBulk = list =>
   axios.all(list.map(id => availabilitiesByTemporaryServiceId(id)))
     .then(axios.spread((...responses) => [responses, null]))
     .catch(error => [null, JSON.stringify(error)]);
+// export const queryProvider = (orgId, orgName) => axios.post();

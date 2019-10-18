@@ -82,6 +82,12 @@
   }
 }
 
+.hover-none {
+  &:hover {
+    cursor: unset;
+  }
+}
+
 .button-text-center {
   -webkit-user-select: none;
   -moz-user-select: none;

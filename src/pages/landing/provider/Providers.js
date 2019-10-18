@@ -6,9 +6,9 @@ import windowSize from 'react-window-size';
 import { find, uniqBy, chunk, flatten } from 'lodash';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import { IconButton } from '@material-ui/core';
+import { IconButton, InputBase } from '@material-ui/core';
 import { navigateTo } from 'utils/common';
-import { NavigateBefore } from '@material-ui/icons';
+import { NavigateBefore, Search, Clear } from '@material-ui/icons';
 import { providersProps } from 'pages/commonProps';
 import { MAX_CARD_WIDTH } from 'utils/constants';
 import Footer from 'pages/components/footer/Footer';
@@ -30,6 +30,8 @@ class Providers extends Component {
     landingPageFactors: {},
     serviceId: '',
     bookedEventId: '',
+    searchText: '',
+    searchResults: null,
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -108,11 +110,26 @@ class Providers extends Component {
     navigateTo(`/${orgRef}`, { catName })();
   };
 
+  handleSearch = event => {
+    if (event) event.preventDefault();
+    const { value } = event.target;
+    this.setState({
+      searchText: value,
+    });
+  };
+
+  handleClearSearch = () => {
+    this.setState({
+      searchText: '',
+      searchResults: null,
+    });
+  };
+
   render() {
     const { dispatchAvailabilities, dispatchSelectBookingDetail, dispatchSetLandingPage } = this.props;
     const {
-      providersByServiceId, temporaryServiceByServiceIds, landingPageFactors,
-      serviceId, availabilitiesByTemporaryServiceId, windowWidth, bookedEventId,
+      providersByServiceId, temporaryServiceByServiceIds, landingPageFactors, searchText,
+      serviceId, availabilitiesByTemporaryServiceId, windowWidth, bookedEventId, searchResults,
     } = this.state;
     const catName = get(landingPageFactors, 'catName');
     const sName = get(landingPageFactors, 'sName');
@@ -153,36 +170,44 @@ class Providers extends Component {
     const providerList = Object.keys(providerByLocation).map(locId =>
       uniqBy(providerByLocation[locId], 'userSub').map(provider => provider));
     const providerFlatten = flatten(providerList);
+    const resolveProviders = searchResults !== null ? searchResults : providerFlatten;
 
     return Object.keys(providerByLocation).length > 0 && (
       <div className={s.container}>
-        <div className={s.headline}>
-          <div className={s.navigation}>
-            <IconButton color="inherit" onClick={this.handleSelectService(catName)}>
-              <NavigateBefore color="inherit" />
-            </IconButton>
+        <div className={s.topSection}>
+          <div className={s.headline}>
+            <div className={s.navigation}>
+              <IconButton color="inherit" onClick={this.handleSelectService(catName)}>
+                <NavigateBefore color="inherit" />
+              </IconButton>
+              <div className={`${s.title} ellipsis`}>{sName}</div>
+            </div>
+            <div className={s.searchProvider}>
+              <Search className="main-color" />&nbsp;
+              <InputBase fullWidth placeholder="Provider name" value={searchText} onChange={this.handleSearch} />
+              {searchText.length > 2 && <Clear className="danger-color" onClick={this.handleClearSearch} />}
+            </div>
           </div>
-          <div className={`${s.title} ellipsis`}>{sName}</div>
+          {chunk(resolveProviders, chunkFactor).map((providerRow, ind) => (
+            <div className={s.providerRow} key={ind}>
+              {providerRow.map((provider, index) => (
+                <Provider
+                  key={`${provider.userSub}-${index}`}
+                  provider={{
+                    ...provider,
+                    temporaryServiceId: temporaryServiceByProvider[provider.userSub],
+                    catName,
+                  }}
+                  dispatchAvailabilities={dispatchAvailabilities}
+                  availabilitiesByTemporaryServiceId={availabilitiesByTemporaryServiceId}
+                  selectBookingDetail={dispatchSelectBookingDetail}
+                  bookedEventId={bookedEventId}
+                  setLandingPage={dispatchSetLandingPage}
+                  landingPageFactors={landingPageFactors}
+              />))}
+            </div>
+          ))}
         </div>
-        {chunk(providerFlatten, chunkFactor).map((providerRow, ind) => (
-          <div className={s.providerRow} key={ind}>
-            {providerRow.map((provider, index) => (
-              <Provider
-                key={`${provider.userSub}-${index}`}
-                provider={{
-                  ...provider,
-                  temporaryServiceId: temporaryServiceByProvider[provider.userSub],
-                  catName,
-                }}
-                dispatchAvailabilities={dispatchAvailabilities}
-                availabilitiesByTemporaryServiceId={availabilitiesByTemporaryServiceId}
-                selectBookingDetail={dispatchSelectBookingDetail}
-                bookedEventId={bookedEventId}
-                setLandingPage={dispatchSetLandingPage}
-                landingPageFactors={landingPageFactors}
-            />))}
-          </div>
-        ))}
         <Footer maintenance={false} />
       </div>
     );
