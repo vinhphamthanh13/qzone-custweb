@@ -94,9 +94,10 @@ class TemporaryService extends Component {
             </div>
             {(dateSelected[date] || isDefaultExpand) && (
               <div className={s.chunkSlots}>
-                {transformedSlot[date][chunkIndex[`${date}-index`] || 0] &&
-                  transformedSlot[date][chunkIndex[`${date}-index`] || 0].map(chunkRow => {
-                  return (
+                <div className={s.slotHolder}>
+                  {transformedSlot[date][chunkIndex[`${date}-index`] || 0] &&
+                    transformedSlot[date][chunkIndex[`${date}-index`] || 0].map(chunkRow => {
+                    return (
                       <div className={s.row} key={uuidv1()}>
                         {chunkRow.map(slot => (
                           /* eslint-disable-next-line */
@@ -105,12 +106,13 @@ class TemporaryService extends Component {
                           </div>
                         ))}
                       </div>
-                  )
-                })}
+                    )})
+                  }
+                </div>
                 <div className={s.showMoreSlot}>
                   <div className={s.extraCta}>
                     <IconButton
-                      className="simple-button"
+                      className="simple-button button-sm"
                       color="inherit"
                       disabled={!chunkIndex[`${date}-index`] || chunkIndex[`${date}-index`] === 0}
                       onClick={this.handleChunkIndexLess(
@@ -121,7 +123,7 @@ class TemporaryService extends Component {
                       <span>&nbsp;prev</span>
                     </IconButton>
                     <IconButton
-                      className="simple-button"
+                      className="simple-button button-sm"
                       color="inherit"
                       onClick={this.handleChunkIndexMore(
                         date, transformedSlot[`${date}-max`],

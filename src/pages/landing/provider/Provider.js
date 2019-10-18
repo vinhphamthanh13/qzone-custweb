@@ -6,7 +6,8 @@ import { Email, PhoneIphone, Place, GpsFixed } from '@material-ui/icons';
 import EmptyItem from 'components/EmptyItem';
 import MapDialog from 'components/Map/MapDialog';
 import RateStar from 'components/Rating/RateStar';
-import { navigateTo } from 'utils/common';
+import { limitString, navigateTo } from 'utils/common';
+import { ADDRESS_LENGTH } from 'utils/constants';
 import TemporaryService from './TemporaryService';
 import s from './Provider.module.scss';
 
@@ -139,7 +140,7 @@ class Provider extends Component {
             <div className={s.place}>
               <div className={s.item}>
                 <Place className="icon-small hover-pointer" color="secondary" onClick={this.handleMapPopup} />
-                <span>&nbsp;{pAddress}</span>
+                <span>&nbsp;{limitString(pAddress, ADDRESS_LENGTH)}</span>
               </div>
             </div>
             <div className={s.item}>
