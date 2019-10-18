@@ -92,7 +92,7 @@ export const availabilitiesByTemporaryServiceIdApi = (list, sId, pId, locId) => 
     dispatch(setError(get(JSON.parse(errorBulk), 'response.data.message')));
   } else {
     const responseBulk = [];
-    resultBulk.map(item => responseBulk.push(...item.data.objects));
+    resultBulk.map(item => item.data.objects && responseBulk.push(...item.data.objects));
     dispatch(availabilitiesByTemporaryServiceIdAction({ [`${sId}-${pId}-${locId}`]: responseBulk }));
   }
   dispatch(setLoading(false));
