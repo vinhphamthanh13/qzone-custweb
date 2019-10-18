@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import noop from 'lodash/noop';
 import { clientInfo } from 'authentication/components/schemas';
 import get from 'lodash/get';
-import { Book, PersonAdd, ChevronRight } from '@material-ui/icons';
+import { CheckCircle, PersonAdd, ChevronRight } from '@material-ui/icons';
 import { Button, Input, InputLabel, Checkbox } from '@material-ui/core';
 import PolicyPopover from 'authentication/components/PolicyPopover';
 import { POPOVER_TYPE, TERMS_AND_CONDITIONS } from 'utils/constants';
@@ -118,19 +118,8 @@ class ClientInfo extends Component {
                   const phoneNumber = get(userDetail, 'telephone') || get(values, 'phoneNumber');
                   const termAndCond = get(values, 'termAndCondition') || false;
                   const agreeRegistration = get(values, 'agreeRegistration') || false;
-                  const isAuthUser = userId && isValid;
                   const disableField = userId || captchaVerified;
-                  const bookingValid = isAuthUser || captchaVerified;
-                  const loginValid = !(isAuthUser && captchaVerified);
-                  const ctaIcon = bookingValid
-                    ? <Book color="inherit" className="icon-small" />
-                    : <PersonAdd color="inherit" className="icon-small" />;
-                  const ctaLabel = bookingValid ? 'book now!' : 'proceed as guess';
-                  const ctaAction = !bookingValid && loginValid
-                    ? onLogin
-                    : onConfirmCta;
-                  console.log('value in formik', values);
-                  console.log('isValid in formik', isValid);
+
                   return (
                     <form className={s.formData}>
                       <div className={s.formControl}>
@@ -228,13 +217,13 @@ class ClientInfo extends Component {
                       )}
                       <div className={s.bookingCta}>
                         <Button
-                          disabled={!bookingValid && !loginValid}
+                          disabled={!captchaVerified}
                           className="simple-button"
                           variant="outlined"
-                          onClick={ctaAction}
                           color="inherit"
                         >
-                          {ctaIcon}{ctaLabel}
+                          <PersonAdd color="inherit" className="icon-small" />
+                          <span>&nbsp;Proceed as guest</span>
                         </Button>
                       </div>
                     </form>
@@ -260,6 +249,9 @@ class ClientInfo extends Component {
           <div className={s.userInfo}>
             <div className={s.clientTitle}>
               Your booking information
+            </div>
+            <div className={`${s.infoGuide} success-color`}>
+              Booking schedule will be confirmed via below information. Could you check your email for details?
             </div>
             <Formik
               onSubmit={noop}
@@ -305,7 +297,7 @@ class ClientInfo extends Component {
                     </div>
                     <div className={s.bookingCta}>
                       <Button className="simple-button" variant="outlined" onClick={onConfirmCta} color="inherit">
-                        <Book color="inherit" className="icon-small" />
+                        <CheckCircle color="inherit" className="icon-small" />
                         <span>&nbsp;Book now</span>
                       </Button>
                     </div>

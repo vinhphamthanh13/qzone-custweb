@@ -12,13 +12,17 @@
 }
 
 .rightInfo {
-  margin-left: 2rem;
   font-size: $caption;
+  border-top: 1px solid $main_03;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 }
 
 .userRegistration {
   color: $main_04;
   display: flex;
+  flex-direction: column;
 }
 
 .existingUser {
@@ -31,6 +35,10 @@
 
 .existingUser:hover {
   text-decoration: underline;
+}
+
+.guestRegistration {
+  margin: auto auto 1rem;
 }
 
 .userInfo {
@@ -106,4 +114,17 @@
   display: flex;
   justify-content: center;
   margin: 0.5rem auto;
+}
+
+@include breakpoint-up(md) {
+  .userRegistration {
+    flex-direction: row;
+  }
+
+  .rightInfo {
+    margin-left: 2rem;
+    border-top: unset;
+    margin-top: unset;
+    padding-top: unset;
+  }
 }
