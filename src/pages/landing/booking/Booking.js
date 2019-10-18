@@ -12,7 +12,7 @@ import Error from 'components/Error';
 import CustomModal from 'components/Modal/CustomModal';
 import Footer from 'pages/components/footer/Footer';
 import ProviderInfo from './ProviderInfo';
-import ClientInfo from './ClientInfo';
+import ClientForm from './ClientForm';
 import { bookingProps } from '../../commonProps';
 import s from './Booking.module.scss';
 
@@ -206,7 +206,7 @@ class Booking extends Component {
             <ProviderInfo provider={selectedBookingDetail} />
             <div className={s.clientInfo}>
               {!waitListId && (
-                <ClientInfo
+                <ClientForm
                   userDetail={userDetail}
                   onLogin={this.handleOpenLogin}
                   onConfirmCta={this.toggleConfirmBooking}
