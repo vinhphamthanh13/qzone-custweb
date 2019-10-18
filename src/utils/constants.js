@@ -1,6 +1,9 @@
 // Facebook
 export const FACEBOOK_QUEZONE = 'https://www.facebook.com/qzoneapp/';
 
+// Terms and Conditions
+export const TERMS_AND_CONDITIONS = 'https://info.quezone.co/eula/';
+
 export const dateFormatDash = 'DD-MM-YYYY';
 export const timeSlotFormat = 'hh:mm a';
 export const defaultDateFormat = 'DD MMMM YYYY';
