@@ -9,7 +9,7 @@ import { lightGrayColor } from './material-dashboard-pro-react';
 const Loading = (props) => {
   const { loading } = props;
   return loading ? (
-    <div className="cover-bg-black">
+    <div className="cover-bg-black z-index-highest">
       <BeatLoader color={lightGrayColor} size={20} margin="3px" />
     </div>
   ) : null;

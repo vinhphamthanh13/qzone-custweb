@@ -10,9 +10,10 @@ import { connect } from 'react-redux';
 import { Formik } from 'formik';
 import { get, noop, isEmpty } from 'lodash';
 import moment from 'moment';
-import { FULL_DATE, WAIT_LIST_KEYS } from 'utils/constants';
+import { ADDRESS_LENGTH, FULL_DATE, WAIT_LIST_KEYS } from 'utils/constants';
 import defaultImage from 'images/providers.jpg';
 import { waitListProps } from 'pages/commonProps';
+import { limitString } from 'utils/common';
 import ClientForm from '../booking/ClientForm';
 import s from './WaitList.module.scss';
 
@@ -146,6 +147,8 @@ class WaitList extends Component {
 
   handleSelectLocation = (item, setFieldValue) => () => {
     setFieldValue('fullAddress', item.fullAddress);
+    setFieldValue('startDate', item.startDate);
+    setFieldValue('timezoneId', item.timezoneId);
     this.setState({
       [WAIT_LIST_KEYS.SELECTED_LOC_ID]: item[WAIT_LIST_KEYS.SELECTED_LOC_ID],
       selectedTemporaryServiceId: item.selectedTemporaryServiceId || '',
@@ -226,6 +229,7 @@ class WaitList extends Component {
     const serviceName = get(service, 'name');
     const serviceImg = get(service, 'image.fileUrl') || defaultImage;
 
+    console.log('initProvider', initProvider);
     return (
       <div className="cover-bg-black z-index-high">
         <div className={s.waitListForm}>
@@ -254,6 +258,8 @@ class WaitList extends Component {
                     initialValues={{
                       providerName: initProvider.selectedPName,
                       fullAddress: initProvider.fullAddress,
+                      startDate: initProvider.startDate,
+                      timezoneId: initProvider.timezoneId,
                     }}
                     render={({ values, isValid, setFieldValue }) => (
                       <form className={s.selectedInfo}>
@@ -275,15 +281,22 @@ class WaitList extends Component {
                         <div className={s.label}>Location:</div>
                         <div className={s.dropdownList} onClick={this.toggleLocationsList}>
                           <div className={s.inputItem}>
-                            <LocationOn className="icon-small" color="secondary" />
                             <InputBase
-                              fullWidth
+                              type="hidden"
                               name="fullAddress"
-                              inputProps={{
-                                className: 'capitalize ellipsis',
-                              }}
                               value={values.fullAddress}
+                              margin="dense"
                             />
+                            <div className={s.providerLocation}>
+                              <div className={s.inputItem}>
+                                <LocationOn className="icon-small" color="secondary" />
+                                <span>&nbsp;{limitString(values.fullAddress, ADDRESS_LENGTH)}</span>
+                              </div>
+                              <div className={s.inputItem}>
+                                <GpsFixed className="icon-small" color="secondary" />
+                                <span>&nbsp;{values.timezoneId}</span>
+                              </div>
+                            </div>
                           </div>
                           <ChevronRight />
                         </div>
@@ -294,6 +307,13 @@ class WaitList extends Component {
                             Please select the provider first, then location. Or change to other location.
                           </div>
                         )}
+                        <div className={s.label}>Open date:</div>
+                        <div className={`${s.dropdownList} gallery-bg border-none`}>
+                          <div className={s.inputItem}>
+                            <DateRange className="icon-small" color="secondary" />
+                            <span>&nbsp;{moment(values.startDate).format(FULL_DATE)}</span>
+                          </div>
+                        </div>
                         <div className={s.footerCta}>
                           <Button
                             variant="outlined"

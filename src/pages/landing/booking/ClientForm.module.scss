@@ -10,11 +10,6 @@
   width: $max-card-width;
 }
 
-.leftInfo {
-  border-top: 1px solid $main_03;
-  padding-top: 1rem;
-}
-
 .rightInfo {
   font-size: $caption;
   border-top: 1px solid $main_03;
@@ -123,11 +118,6 @@
 @include breakpoint-up(md) {
   .userRegistration {
     flex-direction: row;
-  }
-
-  .leftInfo {
-    border-top: unset;
-    padding-top: unset;
   }
 
   .rightInfo {
