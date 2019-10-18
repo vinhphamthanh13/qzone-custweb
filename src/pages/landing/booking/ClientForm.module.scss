@@ -2,13 +2,17 @@
 
 .container {
   display: flex;
-  width: 100%;
 }
 
 .leftInfo, .rightInfo {
   display: flex;
   flex-direction: column;
   width: $max-card-width;
+}
+
+.leftInfo {
+  border-top: 1px solid $main_03;
+  padding-top: 1rem;
 }
 
 .rightInfo {
@@ -47,7 +51,7 @@
 
 .infoGuide {
   font-size: 0.8rem;
-  margin: auto auto 1rem;
+  margin-bottom: 1rem;
 }
 
 .termAndCondition {
@@ -119,6 +123,11 @@
 @include breakpoint-up(md) {
   .userRegistration {
     flex-direction: row;
+  }
+
+  .leftInfo {
+    border-top: unset;
+    padding-top: unset;
   }
 
   .rightInfo {

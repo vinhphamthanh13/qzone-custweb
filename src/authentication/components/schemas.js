@@ -84,6 +84,6 @@ export const clientInfo = Yup.object().shape({
   city: Yup.string().matches(regExPattern.address, { message: 'City is too short'}),
   postCode: Yup.string().matches(regExPattern.address, { message: 'Post code is too short'}),
   country: Yup.string().matches(regExPattern.address, { message: 'Country name is too short'}),
-  termAndCondition: Yup.boolean().required(),
-  agreeRegistration: Yup.boolean().required(),
+  termAndCondition: Yup.boolean().oneOf([true]).required(),
+  agreeRegistration: Yup.boolean().oneOf([true]).required(),
 });

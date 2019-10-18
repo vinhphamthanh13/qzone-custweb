@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { func } from 'prop-types';
 import { Button, InputBase, IconButton } from '@material-ui/core';
 import {
-  ChevronRight, LocationOn, WrapText, Cancel, Fingerprint, HowToReg, Clear, GpsFixed, DateRange,
+  ChevronRight, LocationOn, WrapText, Cancel, Clear, HowToReg, GpsFixed, DateRange,
 } from '@material-ui/icons';
 import uuidv1 from 'uuid/v1';
 import { connect } from 'react-redux';
@@ -13,7 +13,7 @@ import moment from 'moment';
 import { FULL_DATE, WAIT_LIST_KEYS } from 'utils/constants';
 import defaultImage from 'images/providers.jpg';
 import { waitListProps } from 'pages/commonProps';
-import ClientInfo from '../booking/ClientInfo';
+import ClientForm from '../booking/ClientForm';
 import s from './WaitList.module.scss';
 
 class WaitList extends Component {
@@ -223,95 +223,109 @@ class WaitList extends Component {
       selectedTemporaryServiceId,
     } = this.state;
     const userId = get(userDetail,'userSub') || get(userDetail, 'id');
-    const [CtaIcon, ctaLabel, ctaAction] = userId
-      ? [WrapText, 'Enroll', this.handleRegisterWaitList]
-      : [Fingerprint, 'Login', this.handleLogin];
     const serviceName = get(service, 'name');
     const serviceImg = get(service, 'image.fileUrl') || defaultImage;
 
     return (
       <div className="cover-bg-black z-index-high">
         <div className={s.waitListForm}>
-          <div className={s.title}>
-            <span>Enroll to Waitlist</span>
-            <IconButton color="secondary" onClick={this.handleCloseWaitList}>
-              <Cancel color="inherit" />
-            </IconButton>
-          </div>
-          <div className={s.serviceImage}>
-            <img src={serviceImg} alt={serviceName} className={s.imgZoomIn} width="100%" />
-          </div>
-          <div className={s.serviceDescription}>
-            <div className={`${s.sName} ellipsis`}>{serviceName}</div>
-            <div className={s.selectProvider}>
-              {initProvider && (
-                <Formik
-                  onSubmit={noop}
-                  enableReinitialize
-                  isInitialValid
-                  initialValues={{
-                    providerName: initProvider.selectedPName,
-                    fullAddress: initProvider.fullAddress,
-                  }}
-                  render={({ values, isValid, setFieldValue }) => (
-                    <form className={s.selectedInfo}>
-                      <div className={s.label}>Appointment with:</div>
-                      <div className={s.dropdownList} onClick={this.toggleProvidersList}>
-                        <div className={s.inputItem}>
-                          <HowToReg className="icon-small" color="secondary" />
-                          <InputBase
-                            fullWidth
-                            name="providerName"
-                            inputProps={{
-                              className: 'capitalize ellipsis',
-                            }}
-                            value={values.providerName} />
+          <div className={s.waitListInfo}>
+            <div className={s.title}>
+              <span>Enroll to Waitlist</span>
+              <IconButton
+                className={`${s.closePopupXs} simple-button`}
+                color="secondary"
+                onClick={this.handleCloseWaitList}
+              >
+                <Clear color="inherit" />
+              </IconButton>
+            </div>
+            <div className={s.serviceImage}>
+              <img src={serviceImg} alt={serviceName} className={s.imgZoomIn} width="100%" />
+            </div>
+            <div className={s.serviceDescription}>
+              <div className={`${s.sName} ellipsis`}>{serviceName}</div>
+              <div className={s.selectProvider}>
+                {initProvider && (
+                  <Formik
+                    onSubmit={noop}
+                    enableReinitialize
+                    isInitialValid
+                    initialValues={{
+                      providerName: initProvider.selectedPName,
+                      fullAddress: initProvider.fullAddress,
+                    }}
+                    render={({ values, isValid, setFieldValue }) => (
+                      <form className={s.selectedInfo}>
+                        <div className={s.label}>Appointment with:</div>
+                        <div className={s.dropdownList} onClick={this.toggleProvidersList}>
+                          <div className={s.inputItem}>
+                            <HowToReg className="icon-small" color="secondary" />
+                            <InputBase
+                              fullWidth
+                              name="providerName"
+                              inputProps={{
+                                className: 'capitalize ellipsis',
+                              }}
+                              value={values.providerName} />
+                          </div>
+                          <ChevronRight />
                         </div>
-                        <ChevronRight />
-                      </div>
-                      {isProvidersPopup && this.renderProviderList(queuedProviders, setFieldValue)}
-                      <div className={s.label}>Location:</div>
-                      <div className={s.dropdownList} onClick={this.toggleLocationsList}>
-                        <div className={s.inputItem}>
-                          <LocationOn className="icon-small" color="secondary" />
-                          <InputBase
-                            fullWidth
-                            name="fullAddress"
-                            inputProps={{
-                              className: 'capitalize ellipsis',
-                            }}
-                            value={values.fullAddress}
-                          />
+                        {isProvidersPopup && this.renderProviderList(queuedProviders, setFieldValue)}
+                        <div className={s.label}>Location:</div>
+                        <div className={s.dropdownList} onClick={this.toggleLocationsList}>
+                          <div className={s.inputItem}>
+                            <LocationOn className="icon-small" color="secondary" />
+                            <InputBase
+                              fullWidth
+                              name="fullAddress"
+                              inputProps={{
+                                className: 'capitalize ellipsis',
+                              }}
+                              value={values.fullAddress}
+                            />
+                          </div>
+                          <ChevronRight />
                         </div>
-                        <ChevronRight />
-                      </div>
-                      {isLocationsPopup && this.renderLocationList(setFieldValue)}
-                      {!selectedTemporaryServiceId && (
-                        <div className={s.noneTempId}>
-                          <strong>Tip</strong>:
-                          Please select the provider first, then location. Or change to other location.
-                        </div>)}
-                      <div className={s.footerCta}>
-                        {!userId && <ClientInfo userDetail={userDetail} onLogin={this.handleLogin} />}
-                        {userId && (
-                          <div className={s.enrollButton}>
-                            <Button
-                              variant="outlined"
-                              onClick={ctaAction}
-                              disabled={!!((!isValid && userId) || (!selectedTemporaryServiceId && userId))}
-                            >
-                              <CtaIcon color="inherit" />
-                              <span>{ctaLabel}</span>
-                            </Button>
+                        {isLocationsPopup && this.renderLocationList(setFieldValue)}
+                        {!selectedTemporaryServiceId && (
+                          <div className={s.noneTempId}>
+                            <strong>Tip</strong>:
+                            Please select the provider first, then location. Or change to other location.
                           </div>
                         )}
-                      </div>
-                    </form>
-                  )}
-                />
-              )}
+                        <div className={s.footerCta}>
+                          <Button
+                            variant="outlined"
+                            className={s.closePopupMd}
+                            onClick={this.handleCloseWaitList}
+                          >
+                            <Cancel color="inherit" />
+                            <span>&nbsp;Cancel</span>
+                          </Button>
+                          {userId && (
+                            <Button
+                              variant="outlined"
+                              onClick={this.handleRegisterWaitList}
+                              disabled={!!((!isValid && userId) || (!selectedTemporaryServiceId && userId))}
+                            >
+                              <WrapText color="inherit" className="icon-small" />
+                              <span>&nbsp;Enroll</span>
+                            </Button>
+                          )}
+                        </div>
+                      </form>
+                    )}
+                  />
+                )}
+              </div>
             </div>
           </div>
+          {!userId && (
+            <div className={s.userRegistration}>
+              <ClientForm userDetail={userDetail} onLogin={this.handleLogin} />
+            </div>
+          )}
         </div>
       </div>
     );

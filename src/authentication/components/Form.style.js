@@ -7,8 +7,7 @@ const style = theme => ({
   ...checkBox,
   mainLinear,
   authCard: {
-    maxWidth: theme.spacing.unit * 46,
-    minWidth: theme.spacing.unit * 41,
+    width: theme.spacing.unit * 42,
   },
   marginLoose: {
     margin: `${theme.spacing.unit * 1.25}px auto 0px`,

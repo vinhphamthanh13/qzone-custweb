@@ -1,25 +1,41 @@
 @import "styles/_settings.scss";
 
 .waitListForm {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
   border-radius: 0.2rem;
   color: $main_04;
   background: $main_01;
-  padding: 0 0.5rem;
-  min-width: 400px;
-  max-width: 410px;
-  max-height: calc(100vh - 10px);
-  min-height: 510px;
+  padding: 0 1rem;
+  min-width: $max-card-width;
+  height: calc(100vh - 66px);
   position: relative;
   overflow: auto;
 }
 
 .title {
-  border-bottom: 2px solid $main_03;
   font-size: $title;
   font-weight: 500;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.closePopupXs {
+  display: block;
+}
+
+.closePopupMd {
+  display: none;
+}
+
+.waitListInfo {
+  width: $max-card-width;
+}
+
+.userRegistration {
+  margin-left: unset;
 }
 
 .serviceImage {
@@ -191,11 +207,28 @@
 
 .footerCta {
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   color: $main_04;
-  margin: 0.5rem auto 0;
+  margin: 1.5rem;
 }
 
-.enrollButton {
-  margin-top: 1rem;
+@include breakpoint-up(smx) {
+  .waitListForm {
+    flex-direction: row;
+    padding: 0.5rem 1rem;
+  }
+  .userRegistration {
+    margin-left: 2rem;
+  }
+  .title {
+    margin-bottom: 0.5rem;
+  }
+  .closePopupXs {
+    display: none;
+  }
+  .closePopupMd {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
