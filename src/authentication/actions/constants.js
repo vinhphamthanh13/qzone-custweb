@@ -18,3 +18,8 @@ export const AUTHENTICATED_KEY = 'qz_token';
 export const SET_GUEST_ERROR = 'AUTH.SET_GUEST_ERROR';
 export const CLEAR_GUEST_ERROR = 'AUTH.CLEAR_AUTH_ERROR';
 export const SET_CUSTOMER_BY_ID = 'AUTH.SET_CUSTOMER_BY_ID';
+export const UPDATE_AWS_USER = 'AUTH.UPDATE_AWS_USER';
+export const UPDATE_SCI_USER = 'AUTH.UPDATE_SCI_USER';
+export const USER_TYPE = {
+  CUSTOMER: 'CUSTOMER',
+};

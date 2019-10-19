@@ -46,17 +46,17 @@ class PolicyPopover extends Component {
     };
 
     return (
-      <>
+      <div className="z-index-highest">
         <Button
           className={`${s.hint} simple-button circle-button`}
-          aria-owns={openPopover ? 'mouse-over-password-hint' : undefined}
+          aria-owns={openPopover ? 'telephone-format-hint' : undefined}
           aria-haspopup="true"
           onClick={this.handlePopoverOpen}
         >
           <ContactSupportRounded />
         </Button>
         <Popover
-          id="mouse-over-password-hint"
+          id="telephone-format-hint"
           open={openPopover}
           anchorEl={anchorEl}
           onClose={this.handlePopoverClose}
@@ -66,7 +66,7 @@ class PolicyPopover extends Component {
         >
           {renderContent()}
         </Popover>
-      </>
+      </div>
     );
   }
 }

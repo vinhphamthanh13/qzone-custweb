@@ -26,7 +26,7 @@ const ProviderInfo = ({ provider }) => {
         <div className={s.sName}>{sName}</div>
         <div className={s.content}>
           <div className={s.pImage}>
-            <img src={pImage} alt="Q Provider" width="100%" height="100%" />
+            <img src={pImage} alt="Q Provider" className={s.blurImage} width="100%" height="100%" />
             <div className={s.duration}>
               Duration: {`${durationSec}'`}
             </div>

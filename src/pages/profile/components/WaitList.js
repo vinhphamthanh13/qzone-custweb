@@ -64,11 +64,6 @@ class WaitList extends Component {
     return Object.keys(updatedState) ? updatedState : null;
   }
 
-  componentDidMount() {
-    const { dispatchSetWaitLists, customerId, authHeaders } = this.props;
-    dispatchSetWaitLists(customerId, authHeaders);
-  }
-
   componentDidUpdate(prevProps) {
     const { cancelWaitLists, bookedEventDetail } = prevProps;
     const { dispatchSetWaitLists, customerId, authHeaders } = this.props;
@@ -117,7 +112,7 @@ class WaitList extends Component {
         {waitLists && waitLists.length > 0
           ? chunk(waitLists.sort((a, b) => a.startSec - b.startSec),
             Math.ceil(waitLists.length / 3)).map(row => (
-              <div key={uuidv1()} className={s.waitSlotRow}>
+              <div key={uuidv1()} className={s.waitSlotCard}>
                 {row.map((item) => {
                   const startTime = get(item, 'sstartTime').replace(
                     regExPattern.ISO_TIME.pattern, regExPattern.ISO_TIME.replaceBy,

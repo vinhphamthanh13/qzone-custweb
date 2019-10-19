@@ -1,22 +1,16 @@
 /* eslint-disable no-undef */
-
 import { Auth } from 'aws-amplify';
 import { setLoading } from 'actionsReducers/common.actions';
 import { AUTH_METHOD, PROVIDER } from 'config/auth';
-import {
-  createGoogleScript,
-  setUserDetails,
-  storeUserSessionLogin,
-} from './login';
+import { createGoogleScript, setUserDetails, storeUserSessionLogin } from './login';
 
-export const logout = authenticator => (dispatch) => {
+export const logoutApi = authenticator => (dispatch) => {
   const { isAuthenticated, authProvider } = authenticator;
 
   if (isAuthenticated) {
     dispatch(setLoading(true));
     dispatch(setUserDetails({}));
     dispatch(storeUserSessionLogin({
-      authProvider: '',
       id: null,
       start_session: null,
       username: null,

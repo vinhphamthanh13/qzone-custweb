@@ -20,7 +20,7 @@
 }
 
 .button-sm {
-  padding: 0;
+  padding: 0.5rem 0;
 }
 
 .button-lg {
@@ -56,6 +56,10 @@
     color: $main_01;
     border: 1px solid $main_03;
   }
+}
+
+.q-checkbox {
+  padding: 0.2rem 0.5rem;
 }
 
 .secondary-button {

@@ -7,7 +7,7 @@ import Register from 'authentication/Register';
 import Login from 'authentication/Login';
 import VerificationCode from 'authentication/components/VerificationCode';
 import CustomModal from 'components/Modal/CustomModal';
-import { logout } from 'authentication/actions/logout';
+import { logoutApi } from 'authentication/actions/logout';
 import {
   reEnterVerificationCode, closeRegisterSuccessModal, resetResendVerificationCodeModal, clearResetPasswordStatus,
 } from 'authentication/actions/register';
@@ -250,7 +250,7 @@ export default connect(
     closeRegisterSuccessModalAction: closeRegisterSuccessModal,
     closeResendStatusModal: resetResendVerificationCodeModal,
     clearResetPasswordStatusAction: clearResetPasswordStatus,
-    logoutAction: logout,
+    logoutAction: logoutApi,
     autoLoginAction: autoLogin,
   },
 )(Auth);

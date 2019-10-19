@@ -1,0 +1,129 @@
+@import "styles/_settings.scss";
+
+.container {
+  display: flex;
+}
+
+.leftInfo, .rightInfo {
+  display: flex;
+  flex-direction: column;
+  width: $max-card-width;
+}
+
+.rightInfo {
+  font-size: $caption;
+  border-top: 1px solid $main_03;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.userRegistration {
+  color: $main_04;
+  display: flex;
+  flex-direction: column;
+}
+
+.existingUser {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  color: $fruitSalad;
+  cursor: pointer;
+}
+
+.existingUser:hover {
+  text-decoration: underline;
+}
+
+.guestRegistration {
+  margin: auto auto 1rem;
+}
+
+.userInfo {
+  max-width: $max-card-width;
+}
+
+.infoGuide {
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.termAndCondition {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.tncLabel {
+  font-size: $caption;
+}
+
+.clientTitle {
+  font-size: $title;
+  font-weight: 500;
+  border-bottom: 1px solid $we_peep;
+  color: $main_04;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.formData {
+  width: $max-card-width;
+}
+
+.formControl {
+  display: flex;
+  flex-direction: column;
+  margin: 0.2rem auto;
+  padding-bottom: 1rem;
+  position: relative;
+  color: $success;
+}
+
+.label {
+  color: $main;
+  font-size: $caption;
+}
+
+.errorMessage {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  color: $danger;
+  font-size: $caption;
+  font-style: italic;
+}
+
+.popOver {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+.recaptcha {
+  margin: 1rem auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bookingCta {
+  display: flex;
+  justify-content: center;
+  margin: 0.5rem auto;
+}
+
+@include breakpoint-up(md) {
+  .userRegistration {
+    flex-direction: row;
+  }
+
+  .rightInfo {
+    margin-left: 2rem;
+    border-top: unset;
+    margin-top: unset;
+    padding-top: unset;
+  }
+}

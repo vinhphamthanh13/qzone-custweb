@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { string, func, bool, any, objectOf } from 'prop-types';
+import { func, bool, any, objectOf } from 'prop-types';
 import { connect } from 'react-redux';
-import { find, uniqBy } from 'lodash';
+import find from 'lodash/find';
+import uniqBy from 'lodash/uniqBy';
+import get from 'lodash/get';
 import moment from 'moment';
 import { Typography } from '@material-ui/core';
 import { Event, Settings, ExitToApp, AddToQueue, Assessment } from '@material-ui/icons';
@@ -15,34 +17,27 @@ import s from './Content.module.scss';
 
 class Content extends Component {
   static propTypes = {
-    givenName: string,
-    toggleSidePanel: bool.isRequired,
     authHeaders: objectOf(any),
-    profilePage: string.isRequired,
-    updateProfileStatus: string.isRequired,
+    toggleSidePanel: bool.isRequired,
     onClose: func.isRequired,
-    handleAccount: func.isRequired,
-    dispatchFindEventByCustomerId: func.isRequired,
-    dispatchTrackingAppointmentById: func.isRequired,
-    dispatchCancelEventById: func.isRequired,
     handleLogout: func.isRequired,
     handleSidePanel: func.isRequired,
+    dispatchTrackingAppointmentById: func.isRequired,
+    dispatchCancelEventById: func.isRequired,
     dispatchSetSurveys: func.isRequired,
     dispatchSetAssessments: func.isRequired,
   };
 
   static defaultProps = {
-    givenName: '',
     authHeaders: {},
   };
 
   static getDerivedStateFromProps(props, state) {
     const {
       eventList, profilePage, cancelEventByIdStatus, waitLists, surveyList, customerAssessment, rescheduleStatus,
-      customerId, landingPageFactors,
+      landingPageFactors, userDetail, loginSession,
     } = props;
     const {
-      customerId: cachedCustomerId,
       eventList: cachedEventList,
       profilePage: cachedProfilePage,
       cancelEventByIdStatus: cachedCancelEventByIdStatus,
@@ -51,11 +46,11 @@ class Content extends Component {
       customerAssessment: cachedCustomerAssessment,
       rescheduleStatus: cachedRescheduleStatus,
       landingPageFactors: cachedLandingPageFactors,
+      userDetail: cachedUserDetail,
+      loginSession: cachedLoginSession,
     } = state;
     const updatedState = {};
-    if (customerId !== cachedCustomerId) {
-      updatedState.customerId = customerId;
-    }
+
     if (
       eventList !== null &&
       JSON.stringify(eventList) !== JSON.stringify(cachedEventList)
@@ -94,6 +89,18 @@ class Content extends Component {
     ) {
       updatedState.landingPageFactors = landingPageFactors;
     }
+    if (
+      userDetail !== null &&
+      JSON.stringify(userDetail) !== JSON.stringify(cachedUserDetail)
+    ) {
+      updatedState.userDetail = userDetail;
+    }
+    if (
+      loginSession !== null &&
+      JSON.stringify(loginSession) !== JSON.stringify(cachedLoginSession)
+    ) {
+      updatedState.loginSession = loginSession;
+    }
 
     return Object.keys(updatedState) ? updatedState : null;
   }
@@ -120,7 +127,7 @@ class Content extends Component {
     {
       name: PROFILE.PAGE.MY_INFO,
       icon: Settings,
-      text: 'My information',
+      text: 'My profile',
       isSelected: false,
     },
     {
@@ -143,7 +150,8 @@ class Content extends Component {
       eventList: [],
       waitLists: [],
       surveyList: [],
-      customerId: '',
+      userDetail: {},
+      loginSession: {},
       customerAssessment: [],
       sidePanel: { ...this.initState },
     };
@@ -156,16 +164,13 @@ class Content extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    const { cancelEventByIdStatus, eventList, authHeaders, rescheduleStatus } = prevProps;
     const {
-      cancelEventByIdStatus, eventList, authHeaders, rescheduleStatus,
-    } = prevProps;
-    const {
-      dispatchFindEventByCustomerId, dispatchCancelEventById, dispatchTrackingAppointmentById,
-      dispatchSetAssessments,
+      dispatchCancelEventById, dispatchTrackingAppointmentById, dispatchSetAssessments,
     } = this.props;
     const {
       cancelEventByIdStatus: cachedCancelEventByIdStatus, eventList: cachedEventList, customerAssessment,
-      eventListIds, surveyList, rescheduleStatus: cachedRescheduleStatus, customerId,
+      eventListIds, surveyList, rescheduleStatus: cachedRescheduleStatus,
     } = this.state;
 
     const trackingList = eventList && eventList.length;
@@ -177,7 +182,6 @@ class Content extends Component {
       || (rescheduleStatus !== cachedRescheduleStatus
       && cachedRescheduleStatus === 200)
     ) {
-      dispatchFindEventByCustomerId(customerId, authHeaders);
       dispatchCancelEventById(null);
     }
 
@@ -197,10 +201,7 @@ class Content extends Component {
   }
 
   handleSignOut = () => {
-    const {
-      onClose,
-      handleLogout,
-    } = this.props;
+    const { onClose, handleLogout } = this.props;
     onClose();
     handleLogout();
   };
@@ -264,14 +265,13 @@ class Content extends Component {
   };
 
   render() {
+    const { toggleSidePanel, handleSidePanel, authHeaders } = this.props;
     const {
-      handleAccount, updateProfileStatus, toggleSidePanel, handleSidePanel, authHeaders,
-    } = this.props;
-    const {
-      customerId,
-      sidePanel: { eventList, myInfo, waitList, surveyList },
-      eventList: cachedEventList, landingPageFactors,
+      sidePanel: { eventList, myInfo, waitList, surveyList }, eventList: cachedEventList,
+      landingPageFactors, userDetail, waitLists, loginSession,
     } = this.state;
+    const userName = get(userDetail, 'givenName');
+    const customerId = get(userDetail, 'userSub') || get(userDetail, 'id');
 
     return (
       <div className={s.content}>
@@ -280,8 +280,8 @@ class Content extends Component {
           <div className={s.sidebarOverlay} onClick={() => handleSidePanel(false)}>
             <div className={s.sidebar}>
               <div>
-                <Typography variant="subtitle1" color="primary" className={`${s.title} text-capitalize`}>
-                  {this.greetingText()}
+                <Typography variant="subtitle1" color="primary" className={`${s.sideBarTitle} text-capitalize`}>
+                  {this.greetingText()}&nbsp;{userName}
                 </Typography>
               </div>
               <div className={s.cta}>
@@ -296,22 +296,22 @@ class Content extends Component {
             <EventList eventList={cachedEventList} landingPageFactors={landingPageFactors} />
           </div>)
         }
-        {waitList && (
-          <div className={s.profilePage}>
-            <Typography variant="title" color="inherit" className="underlined">Enroll Queues</Typography>
-            <WaitList customerId={customerId} authHeaders={authHeaders} />
-          </div>)
-        }
-        {myInfo && (
-          <div className={s.profilePage}>
-            <Typography variant="title" color="inherit" className="underlined">Information</Typography>
-            <Info handleAccount={handleAccount} updateProfileStatus={updateProfileStatus} />
-          </div>)
-        }
         {surveyList && (
           <div className={s.profilePage}>
             <Typography variant="title" color="inherit" className="underlined">Assessments</Typography>
             <Survey customerId={customerId} eventList={cachedEventList} />
+          </div>)
+        }
+        {waitList && (
+          <div className={s.profilePage}>
+            <Typography variant="title" color="inherit" className="underlined">Enroll Queues</Typography>
+            <WaitList customerId={customerId} authHeaders={authHeaders} waitLists={waitLists} />
+          </div>)
+        }
+        {myInfo && (
+          <div className={s.profilePage}>
+            <Typography variant="title" color="inherit" className="underlined">Profile</Typography>
+            <Info userDetail={userDetail} loginSession={loginSession} />
           </div>)
         }
       </div>

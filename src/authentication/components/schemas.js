@@ -66,13 +66,24 @@ export const clientInfo = Yup.object().shape({
   userName: Yup
     .string()
     .matches(regExPattern.userName, { message: 'Name is too short'})
-    .required('User name cannot be blank'),
+    .required('User name is required'),
   userEmail: Yup
     .string()
     .matches(regExPattern.email, { message: 'Email address is invalid' })
-    .required('Email cannot be blank'),
+    .required('Email is required'),
   phoneNumber: Yup
     .string()
     .matches(regExPattern.phoneNumber, { message: 'Phone number is invalid' })
-    .required('Phone number cannot be blank'),
+    .required('Phone number is required'),
+  familyName: Yup
+    .string()
+    .matches(regExPattern.userName, { message: 'Sure name is too short'}),
+  streetAddress: Yup.string().matches(regExPattern.address, { message: 'Street address is too short'}),
+  district: Yup.string().matches(regExPattern.address, { message: 'District is too short'}),
+  state: Yup.string().matches(regExPattern.address, { message: 'State name is too short'}),
+  city: Yup.string().matches(regExPattern.address, { message: 'City is too short'}),
+  postCode: Yup.string().matches(regExPattern.address, { message: 'Post code is too short'}),
+  country: Yup.string().matches(regExPattern.address, { message: 'Country name is too short'}),
+  termAndCondition: Yup.boolean().oneOf([true]).required(),
+  agreeRegistration: Yup.boolean().oneOf([true]).required(),
 });

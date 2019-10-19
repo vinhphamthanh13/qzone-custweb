@@ -82,11 +82,11 @@ class Instant extends Component {
 
   componentDidMount() {
     const {
-      match: { params: { id }}, dispatchInstantAvailabilitiesByTemporaryServiceId,
+      match: { params: { id, orgRef }}, dispatchInstantAvailabilitiesByTemporaryServiceId,
       dispatchTemporaryServicesById, dispatchSetLandingPage
     } = this.props;
 
-    dispatchSetLandingPage({ instantBooking: true, tId: id });
+    dispatchSetLandingPage({ instantBooking: true, tId: id, orgRef });
     dispatchInstantAvailabilitiesByTemporaryServiceId(id);
     dispatchTemporaryServicesById(id);
   }

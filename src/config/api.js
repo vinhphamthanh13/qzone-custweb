@@ -2,7 +2,8 @@ import axios from 'axios';
 
 const BASE_URL = process.env.NODE_ENV === 'production'
   ? 'https://api.quezone.com.au'
-  : 'http://54.252.134.87:8080';
+  : 'https://api.quezone.com.au';
+  // : 'http://54.252.134.87:8080';
 export const SURVEY_URL = `${BASE_URL}/api/surveys`;
 export const ANSWER_SURVEY_URL = `${BASE_URL}/api/survey-answers`;
 

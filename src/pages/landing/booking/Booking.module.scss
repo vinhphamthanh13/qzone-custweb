@@ -56,7 +56,7 @@
   margin: 1rem 0;
 }
 
-@include breakpoint-up(sm) {
+@include breakpoint-up(smx) {
   .confirmInfo {
     flex-direction: row;
   }

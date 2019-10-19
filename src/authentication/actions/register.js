@@ -1,6 +1,6 @@
 import { Auth } from 'aws-amplify';
 import { setLoading } from 'actionsReducers/common.actions';
-import { catchAwsUser } from 'actionsApi/auth';
+import { storeAwsUser } from 'actionsApi/auth';
 import {
   REGISTER_AWS_SUCCESS, REGISTER_AWS_ERROR, CONFIRM_SIGN_UP_SUCCESS, CONFIRM_SIGN_UP_ERROR,
   HANDLE_VERIFICATION_MODAL, CLOSE_REGISTER_SUCCESS_MODAL, RESEND_VERIFICATION_CODE_STATUS,
@@ -79,7 +79,7 @@ export const confirmSignUp = ({ userDetail, code }) => (dispatch) => {
         userStatus: 'CONFIRMED',
         userType: 'CUSTOMER',
       };
-      catchAwsUser(trackedInfo).then(
+      storeAwsUser(trackedInfo).then(
         () => {
           dispatch(confirmSignUpSuccess(data));
           dispatch(setLoading(false));

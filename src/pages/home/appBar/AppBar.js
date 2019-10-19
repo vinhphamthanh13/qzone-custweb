@@ -3,13 +3,16 @@ import { objectOf, any, func, string, bool } from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import moment from 'moment';
-import { noop, get, compact } from 'lodash';
+import noop from 'lodash/noop';
+import get from 'lodash/get';
+import compact from 'lodash/compact';
 import { withStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, IconButton, InputBase, Badge, Avatar, Typography, Button } from '@material-ui/core';
-import { Search as SearchIcon, AssignmentInd, Notifications as NotificationsIcon, Fingerprint, FindInPage, Assignment,
+import {
+  Search as SearchIcon, AssignmentInd, Notifications as NotificationsIcon, Fingerprint, FindInPage, Assignment, Clear
 } from '@material-ui/icons';
 import { AUTHENTICATED_KEY, PROFILE, EVENT_STATUS } from 'utils/constants';
-import { navigateTo } from 'utils/common';
+import { navigateTo, sanitizeName } from 'utils/common';
 import logo from 'images/quezone-logo.png';
 import { appBarProps } from 'pages/commonProps';
 import TrackingEvents from './TrackingEvents';
@@ -24,6 +27,7 @@ class MainAppBar extends React.Component {
     loginSession: objectOf(any),
     handleAuthenticate: func.isRequired,
     onSearch: func.isRequired,
+    onCloseSearch: func.isRequired,
     toggleAdvancedSearch: func.isRequired,
     dispatchGoToProfile: func.isRequired,
     dispatchTrackingEvent: func.isRequired,
@@ -102,7 +106,6 @@ class MainAppBar extends React.Component {
     const trackingLength = cachedEventListId && cachedEventListId.length;
     const cachedTrackingLength = cachedEventListId && cachedEventListId.length;
 
-    console.log('bookedEventId updated', bookedEventId);
     if (
       loginSession !== null &&
       JSON.stringify(loginSession) !== JSON.stringify(cachedLoginSession)
@@ -140,8 +143,9 @@ class MainAppBar extends React.Component {
   navigatingProfile = page => () => {
     const { dispatchGoToProfile } = this.props;
     const { loginSession } = this.state;
+    const sanitizedUserName = sanitizeName(get(loginSession, 'userName', ''));
     dispatchGoToProfile(page);
-    navigateTo(`/profile/${loginSession.id}`)();
+    navigateTo(`/profile/customer/${sanitizedUserName}`)();
   };
 
   toggleTrackingList = () => {
@@ -155,19 +159,8 @@ class MainAppBar extends React.Component {
   };
 
   render() {
-    const {
-      classes,
-      onSearch,
-      onSearchValue,
-      maintenance,
-      enableSearch,
-    } = this.props;
-    const {
-      eventList,
-      loginSession,
-      isShowingTrackingList,
-      trackingAppointmentById,
-    } = this.state;
+    const { classes, onSearch, onSearchValue, maintenance, enableSearch, onCloseSearch } = this.props;
+    const { eventList, loginSession, isShowingTrackingList, trackingAppointmentById } = this.state;
     const trackingList = [];
     if (eventList && eventList.length && trackingAppointmentById && compact(trackingAppointmentById).length) {
       eventList
@@ -186,6 +179,7 @@ class MainAppBar extends React.Component {
     const badgeStyle = eventCount > 0 ? 'text-margin-lr hover-pointer' : 'text-margin-lr';
     const isAuthenticated = get(loginSession, AUTHENTICATED_KEY);
     const [authLabel, openForm] = maintenance ? ['Sign Up', 'isRegisterOpen'] : ['Sign In', 'isLoginOpen'];
+    const userName = get(loginSession, 'userName') || get(loginSession, 'givenName');
     const customUser = isAuthenticated ? (
       <>
         {isShowingTrackingList && (
@@ -200,7 +194,7 @@ class MainAppBar extends React.Component {
           variant="subheading"
           className={`text-capitalize text-margin-lr ${classes.desktopView}`}
         >
-          Hello {loginSession.username}!
+          Hello {userName}!
         </Typography>
         <Badge
           onClick={this.toggleTrackingList}
@@ -270,20 +264,27 @@ class MainAppBar extends React.Component {
                 value={onSearchValue}
                 disabled={!enableSearch}
               />
+              <div className={classes.clearSearch}>
+                {onSearchValue && <Clear color="secondary" onClick={onCloseSearch} />}
+              </div>
             </div>
-            <Typography variant="subheading" className={adSearchStyle}>
-              or
-            </Typography>
-            <div className="advanced-search-app-bar">
-              <Button onClick={this.handleActionAdvancedSearch} className="simple-button">
-                <FindInPage className={adSearchStyle} />
-                <span className="advance-search-cta-label">
-                  <Typography className={adSearchStyle} variant="body1">
-                    Advanced search
-                  </Typography>
-                </span>
-              </Button>
-            </div>
+            {false && (
+              <>
+                <Typography variant="subheading" className={adSearchStyle}>
+                  or
+                </Typography>
+                <div className="advanced-search-app-bar">
+                  <Button onClick={this.handleActionAdvancedSearch} className="simple-button">
+                    <FindInPage className={adSearchStyle} />
+                    <span className="advance-search-cta-label">
+                      <Typography className={adSearchStyle} variant="body1">
+                        Advanced search
+                      </Typography>
+                    </span>
+                  </Button>
+                </div>
+              </>
+            )}
             <div className={classes.grow} />
             { customUser }
           </Toolbar>

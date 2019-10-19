@@ -65,14 +65,14 @@ const rootRoutes = [
   {
     exact: true,
     strict: true,
-    path: '/access-denied',
-    name: 'AccessDenied',
-    component: AccessDenied,
+    path: '/:orgRef/event/:id',
+    name: 'View Appointment',
+    component: ViewEvent,
   },
   {
     exact: true,
     strict: true,
-    path: '/profile/:id',
+    path: '/profile/customer/:username',
     name: 'Profile',
     component: Profile,
   },
@@ -93,9 +93,9 @@ const rootRoutes = [
   {
     exact: true,
     strict: true,
-    path: '/:orgRef/event/:id',
-    name: 'View Appointment',
-    component: ViewEvent,
+    path: '/access-denied',
+    name: 'AccessDenied',
+    component: AccessDenied,
   },
   {
     exact: true,

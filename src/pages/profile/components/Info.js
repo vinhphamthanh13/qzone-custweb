@@ -1,107 +1,55 @@
 import React, { Component } from 'react';
-import {
-  objectOf, any, func, string,
-} from 'prop-types';
-import { Typography } from '@material-ui/core';
+import { func } from 'prop-types';
 import { connect } from 'react-redux';
-import { get } from 'lodash';
-import Personal from './info/Personal';
-import Delivery from './info/Delivery';
-import s from './Info.module.scss';
+import get from 'lodash/get';
+import { PROVIDER } from 'config/auth';
+import Personal from './Personal';
+import { infoProps } from '../commonProps';
 
 class Info extends Component {
-  state = {
-    userInfo: null,
+  static propTypes = {
+    dispatchUpdateAwsUser: func.isRequired,
+    dispatchUpdateSciUser: func.isRequired,
   };
 
-  componentDidMount() {
-    const { userDetail } = this.props;
-    const userInfo = {
-      email: get(userDetail, 'email'),
-      telephone: get(userDetail, 'telephone'),
-      givenName: get(userDetail, 'givenName'),
-      familyName: get(userDetail, 'familyName'),
-      address: get(userDetail, 'address'),
-      userSub: get(userDetail, 'userSub'),
-      userType: get(userDetail, 'userType'),
-      providerInformation: get(userDetail, 'userType') !== 'CUSTOMER' ? get(userDetail, 'providerInformation') : null,
-      userStatus: get(userDetail, 'userStatus'),
-    };
-    this.setState({ userInfo });
+  state = {
+    userDetail: {},
+    loginSession: {},
+  };
+
+  static getDerivedStateFromProps(props, state) {
+    const { userDetail, loginSession } = props;
+    const { userDetail: cachedUserDetail, loginSession: cachedLoginSession } = state;
+    const updatedState = {};
+    if (
+      userDetail !== null &&
+      JSON.stringify(userDetail) !== JSON.stringify(cachedUserDetail)
+    ) {
+      updatedState.userDetail = userDetail;
+    }
+    if (
+      loginSession !== null &&
+      JSON.stringify(loginSession) !== JSON.stringify(cachedLoginSession)
+    ) {
+      updatedState.loginSession = loginSession;
+    }
+
+    return Object.keys(updatedState) ? updatedState : null;
   }
 
-  handleSaveChangePersonalData = (data) => {
-    const { handleAccount } = this.props;
-    const { userInfo } = this.state;
-    handleAccount({
-      ...userInfo,
-      ...data,
-    });
-  };
-
   render() {
-    const { updateProfileStatus } = this.props;
-    const { userInfo } = this.state;
+    const { dispatchUpdateAwsUser, dispatchUpdateSciUser } = this.props;
+    const { userDetail, loginSession } = this.state;
+    const userId = get(userDetail, 'userSub') || get(userDetail, 'id');
+    const authHeaders = get(loginSession, 'authHeaders');
+    const authProvider = get(loginSession, 'authProvider');
+    const personalCta = authProvider === PROVIDER.QUEZONE ? dispatchUpdateAwsUser : dispatchUpdateSciUser;
 
-    return (
-      <>
-        <div className={s.privateInfo}>
-          <div className={s.personalInfo}>
-            <div className={s.infoTitle}>
-              <Typography variant="title" color="inherit" className="text-bold">
-                My data
-              </Typography>
-            </div>
-            <div className={s.infoSubtitle}>
-              <Typography variant="subheading" color="inherit" className="text-bold">
-                Personal data
-              </Typography>
-            </div>
-            <div className={s.formData}>
-              {userInfo && (
-                <Personal
-                  userInfo={userInfo}
-                  saveInfo={this.handleSaveChangePersonalData}
-                  updateStatus={updateProfileStatus}
-                />
-              )}
-            </div>
-          </div>
-          <div className={s.personalInfo}>
-            <div className={s.infoTitle}>
-              <Typography variant="title" color="inherit" className="text-bold">
-                Address
-              </Typography>
-            </div>
-            <div className={s.infoSubtitle}>
-              <Typography variant="subheading" color="inherit" className="text-bold">
-                Delivery address
-              </Typography>
-            </div>
-            <div className={s.formData}>
-              {userInfo && (
-                <Delivery
-                  userInfo={userInfo}
-                  saveInfo={this.handleSaveChangePersonalData}
-                  updateStatus={updateProfileStatus}
-                />
-              )}
-            </div>
-          </div>
-        </div>
-      </>
-    );
+    return userId && <Personal userDetail={userDetail} authHeaders={authHeaders} updateInfo={personalCta} />;
   }
 }
 
-Info.propTypes = {
-  userDetail: objectOf(any).isRequired,
-  handleAccount: func.isRequired,
-  updateProfileStatus: string.isRequired,
-};
-
-const mapStateToProps = state => ({
-  userDetail: state.auth.userDetail,
-});
-
-export default connect(mapStateToProps, null)(Info);
+export default connect(
+  null,
+  infoProps.mapDispatchToProps,
+)(Info);

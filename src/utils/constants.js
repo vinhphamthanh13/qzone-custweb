@@ -1,3 +1,9 @@
+// Facebook
+export const FACEBOOK_QUEZONE = 'https://www.facebook.com/qzoneapp/';
+
+// Terms and Conditions
+export const TERMS_AND_CONDITIONS = 'https://info.quezone.co/eula/';
+
 export const dateFormatDash = 'DD-MM-YYYY';
 export const timeSlotFormat = 'hh:mm a';
 export const defaultDateFormat = 'DD MMMM YYYY';
@@ -16,7 +22,7 @@ export const CATEGORY_NAV_WIDTH = 66;
 export const DEVICE_MIN_WIDTH = 375;
 export const MAX_TAB_WIDTH = 166;
 export const MAX_CARD_WIDTH = 320;
-export const ADDRESS_LENGTH = 85;
+export const ADDRESS_LENGTH = 100;
 
 // Auth
 export const AUTHENTICATED_KEY = 'isAuthenticated';
@@ -71,6 +77,7 @@ export const regExPattern = {
     pattern: /(.*)T(.*)\..*/,
     replaceBy: '$1 $2',
   },
+  address: /[\w\s]{3,}/,
 };
 export const LOGIN_TYPES = {
   FB: 'FaceBook',
@@ -87,7 +94,7 @@ export const registerPopoverPosition = {
   },
 };
 export const SESSION = {
-  TIMEOUT: 3600000, // millisecond
+  TIMEOUT: 60, // minute
   EXPIRED: {
     title: 'Session has expired',
     message: 'To maintain security, your session periodically expires.'
@@ -142,3 +149,18 @@ export const telephonePolicy = {
     'Example: +61412345678',
   ],
 };
+// PROFILE
+export const PERSONAL = [
+  { id: 'email', value: 'userEmail', label: 'Email' },
+  { id: 'telephone', value: 'phoneNumber', label: 'Telephone' },
+  { id: 'givenName', value: 'userName', label: 'Given Name' },
+  { id: 'familyName', value: 'familyName', label: 'Family Name' },
+];
+export const DELIVERY = [
+  { id: 'streetAddress', value: 'streetAddress', label: 'Street Address' },
+  { id: 'district', value: 'district', label: 'District' },
+  { id: 'state', value: 'state', label: 'State' },
+  { id: 'city', value: 'city', label: 'City' },
+  { id: 'postCode', value: 'postCode', label: 'Post Code' },
+  { id: 'country', value: 'country', label: 'Country' },
+];

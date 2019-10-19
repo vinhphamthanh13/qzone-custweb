@@ -7,6 +7,7 @@ import { navigateTo } from 'utils/common';
 import compact from 'lodash/compact';
 import Loading from 'components/Loading';
 import Success from 'components/Success';
+import EmptyItem from 'components/EmptyItem';
 import Error from 'components/Error';
 import { homeProps } from 'pages/commonProps';
 import { SLIDE_TYPE } from 'utils/constants';
@@ -29,7 +30,7 @@ export class Home extends Component {
 
   state = {
     searchText: '',
-    searchResult: [],
+    searchResult: null,
     isRegisterOpen: false,
     isLoginOpen: false,
     openAdvancedSearch: false,
@@ -107,7 +108,17 @@ export class Home extends Component {
         );
       });
     }
-    this.setState({ searchResult, searchText: value });
+    this.setState({
+      searchResult: searchResult.length ? searchResult : null,
+      searchText: value
+    });
+  };
+
+  handleCloseInstantSearch = () => {
+    this.setState({
+      searchText: '',
+      searchResult: null,
+    });
   };
 
   openAuthModal = (key) => {
@@ -148,6 +159,24 @@ export class Home extends Component {
 
     return (
       <div className={s.landingPage}>
+        {searchText.length > 2 && (
+          <div className={s.instantSearch}>
+            {searchResult !== null ? (
+              <>
+                <Services serviceList={searchResult} />
+              </>
+            ) : <EmptyItem message="No Service found!" />}
+          </div>
+        )}
+        {openAdvancedSearch && (
+          <div className="flex auto-margin-horizontal cover-bg-black">
+            <AdvancedSearch
+              handleResult={this.handleAdvancedResult}
+              onClose={this.toggleAdvancedSearch}
+            />
+          </div>)
+        }
+        {showAdvancedResult && <div />} { /* TODO: Advanced search display */ }
         <Error resetOtherStatus={this.handleOrgNotFound} />
         <Loading />
         <Success />
@@ -160,6 +189,7 @@ export class Home extends Component {
         <AppBar
           handleAuthenticate={this.openAuthModal}
           onSearch={this.handleInstantSearch}
+          onCloseSearch={this.handleCloseInstantSearch}
           onSearchValue={searchText}
           toggleAdvancedSearch={this.toggleAdvancedSearch}
           enableSearch={enableSearch}
@@ -169,22 +199,8 @@ export class Home extends Component {
         )}
         <Landing categories={categories} handleAuth={this.openAuthModal} />
         <Footer maintenance={false} />
-        {searchResult.length > 0 && (
-          <div className={s.instantSearch}>
-            <Services serviceList={searchResult} />
-          </div>
-        )}
-        {openAdvancedSearch && (
-          <div className="flex auto-margin-horizontal cover-bg-black">
-            <AdvancedSearch
-              handleResult={this.handleAdvancedResult}
-              onClose={this.toggleAdvancedSearch}
-            />
-          </div>)
-        }
-        {showAdvancedResult && <div />}
       </div>
-    );
+  );
   }
 }
 

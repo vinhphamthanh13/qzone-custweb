@@ -45,6 +45,14 @@
   color: $danger;
 }
 
+.zoomIn {
+  transition: transform 0.3s ease-in;
+}
+
+.zoomIn:hover {
+  transform: scale(1.5);
+}
+
 .rateStar {
   position: absolute;
   bottom: 0;

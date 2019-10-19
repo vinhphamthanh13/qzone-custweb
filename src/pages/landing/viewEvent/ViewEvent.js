@@ -6,7 +6,7 @@ import { IconButton, Button } from '@material-ui/core';
 import Loading from 'components/Loading';
 import MapDialog from 'components/Map/MapDialog';
 import Error from 'components/Error';
-import { navigateTo } from 'utils/common';
+import { navigateTo, sanitizeName } from 'utils/common';
 import Logo from 'images/quezone-logo.png';
 import { Home, AssignmentInd, Clear, Cached } from '@material-ui/icons';
 import { viewEventProps } from 'pages/commonProps';
@@ -98,7 +98,9 @@ class ViewEvent extends Component {
   componentDidUpdate(prevProps) {
     const { eventById, cancelEventStatus } = prevProps;
     const { dispatchRescheduledAvailabilities, dispatchClearCancelStatus } = this.props;
-    const { eventById: cachedEventById, cancelEventStatus: cachedCancelEventStatus, userDetail } = this.state;
+    const {
+      eventById: cachedEventById, cancelEventStatus: cachedCancelEventStatus, loginSession,
+    } = this.state;
     if (
       eventById !== null &&
       JSON.stringify(eventById) !== JSON.stringify(cachedEventById)
@@ -110,9 +112,9 @@ class ViewEvent extends Component {
       dispatchRescheduledAvailabilities(tempServiceId, serviceId, providerId, locationId);
     }
     if (cancelEventStatus !== cachedCancelEventStatus && cachedCancelEventStatus === 200) {
-      const userId = get(userDetail, 'userSub') || get(userDetail, 'id');
+      const sanitizedUserName = sanitizeName(get(loginSession, 'userName', ''));
       dispatchClearCancelStatus();
-      navigateTo(`/profile/${userId}`)();
+      navigateTo(`/profile/customer/${sanitizedUserName}`)();
     }
   }
 
@@ -124,8 +126,10 @@ class ViewEvent extends Component {
     navigateTo(`/${orgRef}`)();
   };
 
-  handleViewProfile = id => () => {
-    navigateTo(`/profile/${id}`)();
+  handleViewProfile = () => {
+    const { loginSession } = this.state;
+    const sanitizedUserName = sanitizeName(get(loginSession, 'userName', ''));
+    navigateTo(`/profile/customer/${sanitizedUserName}`)();
   };
 
   handleToggleMap = () => {
@@ -215,14 +219,14 @@ class ViewEvent extends Component {
                 <Home color="inherit" />
               </IconButton>
               {userId && (
-                <IconButton className="simple-button white-color" onClick={this.handleViewProfile(userId)}>
+                <IconButton className="simple-button white-color" onClick={this.handleViewProfile}>
                   <AssignmentInd color="inherit" />
                 </IconButton>
               )}
             </div>
           </div>
           {eventId && (
-            <>
+            <div>
               <div className={`${s.title} ${titleStyle}`}>
                 {title}
               </div>
@@ -248,7 +252,7 @@ class ViewEvent extends Component {
                   )}
                 </div>
               </div>
-            </>
+            </div>
           )}
           <Footer maintenance={false} />
         </div>

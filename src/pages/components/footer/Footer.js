@@ -2,6 +2,7 @@ import React from 'react';
 import { bool } from 'prop-types';
 import { Typography, Icon } from '@material-ui/core';
 import logo from 'images/quezone-logo.png';
+import { FACEBOOK_QUEZONE } from 'utils/constants';
 import s from './Footer.module.scss';
 
 const needHelp = [
@@ -61,7 +62,9 @@ const Footer = props => (
           <div key={item.name} className="flex v-center">
             <Icon className={`fab fa-${item.icon} icon-main`} />
             <Typography variant="body1" color="textSecondary" classes={{ body1: s.items }}>
-              {item.name}
+              <a className="text-no-underline" href={FACEBOOK_QUEZONE} target="_blank" rel="noopener noreferrer">
+                {item.name}
+              </a>
             </Typography>
           </div>
         ))}

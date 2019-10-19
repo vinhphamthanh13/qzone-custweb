@@ -12,6 +12,10 @@
   position: relative;
 }
 
+.slotHolder {
+  height: 11.5rem;
+}
+
 .row {
   display: flex;
   justify-content: flex-start;
@@ -41,7 +45,7 @@
 
 .slot {
   width: 30%;
-  border: 1px solid $main_03;
+  border: 1px solid $main_02;
   padding: 0.8rem 0;
   margin: auto 0.5rem auto 0.2rem;
   text-align: center;
@@ -52,8 +56,9 @@
 }
 
 .slot:hover {
-  background: $main;
+  background: $main_04;
   font-weight: 500;
+  border: 1px solid $main_04;
   color: $main_01;
 }
 
@@ -62,13 +67,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  //position: absolute;
-  //bottom: 0;
 }
 
 .extraCta {
+  width: 100%;
   display: flex;
   justify-content: space-between;
+  color: $fruitSalad;
+  opacity: 0.8;
 }
 
 .extraCta span {

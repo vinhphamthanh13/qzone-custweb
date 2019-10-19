@@ -1,9 +1,8 @@
 @import "styles/_settings.scss";
 
 .content {
-  margin: 1rem 0.5rem 0;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   position: relative;
 }
 
@@ -14,15 +13,33 @@
   color: $main_01;
   background: linear-gradient(to top, $main, $main_02);
   transition: opacity 0.3ms;
-  //z-index: 2;
 }
 
-.title {
-  font-size: 1.5rem;
+.sidebarOverlay {
+  position: fixed;
+  top: $app-bar-height;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+.profilePage {
+  height: calc(100vh - 66px);
+  overflow: auto;
+  width: 100%;
+  color: $main_03;
+  padding: 0.5rem;
+}
+
+.sideBarTitle {
+  font-size: $subtitle;
   text-align: center;
   font-weight: bold;
   border-bottom: 2px solid rgba($main, 0.5);
   padding: 1em;
+  background: linear-gradient(to top right, $main_03, $white);
 }
 
 .cta {
@@ -53,30 +70,12 @@
   color: $main_04;
 }
 
-.profilePage {
-  height: 100vh;
-  overflow: auto;
-  width: 100%;
-  margin: 1rem;
-  color: $main_03;
-}
-
 .eventList {
   color: $main;
 }
 
 .customerInfo {
   color: $main;
-}
-
-.sidebarOverlay {
-  position: fixed;
-  top: $app-bar-height;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 1;
 }
 
 @include breakpoint-up(sm) {

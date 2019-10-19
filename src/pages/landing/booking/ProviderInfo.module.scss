@@ -33,6 +33,11 @@
   overflow: hidden;
   padding: 0.2rem 0;
   position: relative;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.blurImage:hover {
+  opacity: 0.8;
 }
 
 .duration {

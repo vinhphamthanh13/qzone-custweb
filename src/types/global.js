@@ -24,18 +24,6 @@ export const serviceType = shape({
   }),
 });
 
-export const providerType = shape({
-  id: string.isRequired,
-  familyName: string,
-  givenName: string,
-  providerInformation: shape({
-    organizationId: string,
-    timeZoneId: string,
-    description: string,
-    businessId: string,
-  }),
-});
-
 export const socialLoginType = shape({
   twitter: func,
   facebook: func,

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { get } from 'lodash';
 import Loading from 'components/Loading';
 import { navigateTo } from 'utils/common';
-import { regExPattern } from 'utils/constants';
+import { DEFAULT_TIME, regExPattern } from 'utils/constants';
 import defaultImage from 'images/providers.jpg';
 import { redirectToInstantProps } from '../../commonProps';
 import s from './RedirectToInstant.module.scss';
@@ -57,8 +57,10 @@ class RedirectToInstant extends Component {
   }
 
   componentDidMount() {
-    const { match: { params: { id }}, dispatchWaitListsById } = this.props;
+    const { match: { params: { id, orgRef }}, dispatchWaitListsById, dispatchSetLandingPage } = this.props;
     dispatchWaitListsById(id);
+    dispatchSetLandingPage({ orgRef });
+
   }
 
   componentDidUpdate(prevProps) {
@@ -82,7 +84,7 @@ class RedirectToInstant extends Component {
       const pAddress = get(cachedWaitListsById, 'fullAddress');
       const pImage = get(cachedWaitListsById, 'imageUrl') || defaultImage;
       const durationSec = get(cachedWaitListsById, 'duration');
-      const providerStartSec = get(cachedWaitListsById, 'sstartTime').replace(
+      const providerStartSec = get(cachedWaitListsById, 'sstartTime', DEFAULT_TIME).replace(
         regExPattern.ISO_TIME.pattern, regExPattern.ISO_TIME.replaceBy,
       );
       const timezoneId = get(cachedWaitListsById, 'timezoneId');
@@ -94,7 +96,7 @@ class RedirectToInstant extends Component {
         dispatchGetCustomerById(customerId);
       }
     }
-    if (cachedUserDetailById) {
+    if (cachedUserDetailById.id || cachedUserDetailById.userSub) {
       const orgRef = get(landingPageFactors, 'orgRef', '');
       navigateTo(`/${orgRef}/booking/confirmation`)();
       dispatchSetLandingPage({ confirmWaitLists: true })
