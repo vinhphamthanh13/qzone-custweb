@@ -10,7 +10,7 @@ import { Button, Input, InputLabel, Checkbox } from '@material-ui/core';
 import PolicyPopover from 'authentication/components/PolicyPopover';
 import { POPOVER_TYPE, TERMS_AND_CONDITIONS } from 'utils/constants';
 import Recaptcha from 'react-recaptcha';
-import { clientInfoProps } from 'pages/commonProps';
+import { clientFormProps } from 'pages/commonProps';
 import { GOOGLE_CAPTCHA_SITE_KEY } from 'config/auth';
 import s from './ClientForm.module.scss';
 
@@ -313,6 +313,6 @@ class ClientInfo extends Component {
 }
 
 export default connect(
-  clientInfoProps.mapStateToProps,
-  clientInfoProps.mapDispatchToProps,
+  clientFormProps.mapStateToProps,
+  clientFormProps.mapDispatchToProps,
 )(ClientInfo);

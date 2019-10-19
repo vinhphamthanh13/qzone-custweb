@@ -1,7 +1,5 @@
 import { saveGuestInfo, clearGuestErrorAction, getCustomerByIdApi } from 'authentication/actions/login';
-import { setServiceCategories, setServices } from 'actionsReducers/home.actions';
 import {
-  setTemporaryServices,
   servicesByServiceCategoryIdBulkApi,
   setTabOrder,
   setChunkFactorAction,
@@ -40,9 +38,6 @@ export const homeProps = {
     orgNotFound: organization.orgNotFound,
   }),
   mapDispatchToProps: dispatch => ({
-    dispatchServices: () => dispatch(setServices()),
-    dispatchServiceCategory: () => dispatch(setServiceCategories()),
-    dispatchTemporaryServices: () => dispatch(setTemporaryServices()),
     dispatchServiceCategoriesByOrgId: id => dispatch(serviceCategoriesByOrgIdApi(id)),
     dispatchSetLandingPage: data => dispatch(setLandingPageAction(data)),
     dispatchClearOrgNotFound: () => dispatch(setOrgNotFoundAction(false)),
@@ -52,20 +47,26 @@ export const homeProps = {
 export const landingProps = {
   mapStateToProps: ({ landing, common, booking }) => ({
     providersByServiceId: booking.providersByServiceId,
+    landingPageFactors: landing.landingPageFactors,
     servicesByServiceCategoryId: common.servicesByServiceCategoryId,
     tabOrder: common.tabOrder,
-    landingPageFactors: landing.landingPageFactors,
   }),
   mapDispatchToProps: dispatch => ({
-    dispatchServiceCategory: () => dispatch(setServiceCategories()),
     dispatchServicesByServiceCategoryId: (list, catName) => dispatch(servicesByServiceCategoryIdBulkApi(list, catName)),
-    dispatchProvidersByServiceId: (sId, sName, catName) => dispatch(providersByServiceIdApi(sId, sName, catName)),
-    dispatchServices: () => dispatch(setServices()),
-    dispatchTemporaryServices: () => dispatch(setTemporaryServices()),
-    dispatchTemporaryServicesByServiceId: list => dispatch(temporaryServicesByServiceIdApi(list)),
     dispatchSetTabOrder: order => dispatch(setTabOrder(order)),
     dispatchSetLandingPage: data => dispatch(setLandingPageAction(data)),
   })
+};
+
+export const serviceProps = {
+  mapStateToProps: ({ booking, landing }) => ({
+    providersByServiceId: booking.providersByServiceId,
+    landingPageFactors: landing.landingPageFactors,
+  }),
+  mapDispatchToProps: dispatch => ({
+    dispatchProvidersByServiceId: (sId, sName, catName) => dispatch(providersByServiceIdApi(sId, sName, catName)),
+    dispatchSetLandingPage: data => dispatch(setLandingPageAction(data)),
+  }),
 };
 
 export const tabProps = {
@@ -204,7 +205,7 @@ export const appBarProps = {
   }),
 };
 
-export const clientInfoProps = {
+export const clientFormProps = {
   mapStateToProps: ({ auth }) => ({
     guestUserError: auth.guestUserError,
   }),
