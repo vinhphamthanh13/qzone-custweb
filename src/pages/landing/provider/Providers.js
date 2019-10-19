@@ -21,6 +21,7 @@ class Providers extends Component {
     dispatchAvailabilities: func.isRequired,
     dispatchSelectBookingDetail: func.isRequired,
     dispatchSetLandingPage: func.isRequired,
+    dispatchQueryProvider: func.isRequired,
   };
 
   state = {
@@ -31,13 +32,13 @@ class Providers extends Component {
     serviceId: '',
     bookedEventId: '',
     searchText: '',
-    searchResults: null,
+    queriedProvider: null,
   };
 
   static getDerivedStateFromProps(props, state) {
     const {
       providersByServiceId, temporaryServiceByServiceIds, match: { params: { sId } }, landingPageFactors,
-      availabilitiesByTemporaryServiceId, bookedEventId, windowWidth,
+      availabilitiesByTemporaryServiceId, bookedEventId, windowWidth, queriedProvider,
     } = props;
     const {
       providersByServiceId: cachedProvidersByServiceId,
@@ -47,6 +48,7 @@ class Providers extends Component {
       windowWidth: cachedWindowWidth,
       bookedEventId: cachedBookedEventId,
       landingPageFactors: cachedLandingPageFactors,
+      queriedProvider: cachedQueriedProvider,
     } = state;
     const updatedState = {};
 
@@ -86,6 +88,9 @@ class Providers extends Component {
     ) {
       updatedState.landingPageFactors = landingPageFactors;
     }
+    if (JSON.stringify(queriedProvider) !== JSON.stringify(cachedQueriedProvider)) {
+      updatedState.queriedProvider = queriedProvider;
+    }
 
     return Object.keys(updatedState) ? updatedState : null;
   }
@@ -121,15 +126,23 @@ class Providers extends Component {
   handleClearSearch = () => {
     this.setState({
       searchText: '',
-      searchResults: null,
     });
+  };
+
+  handleSubmitSearch = event => {
+    if (event) event.preventDefault();
+    const { dispatchQueryProvider } = this.props;
+    const { searchText, landingPageFactors } = this.state;
+    const orgId = get(landingPageFactors, 'selectedOrg.id');
+    dispatchQueryProvider({ name: searchText, orgId});
   };
 
   render() {
     const { dispatchAvailabilities, dispatchSelectBookingDetail, dispatchSetLandingPage } = this.props;
     const {
       providersByServiceId, temporaryServiceByServiceIds, landingPageFactors, searchText,
-      serviceId, availabilitiesByTemporaryServiceId, windowWidth, bookedEventId, searchResults,
+      serviceId, availabilitiesByTemporaryServiceId, windowWidth, bookedEventId,
+      queriedProvider,
     } = this.state;
     const catName = get(landingPageFactors, 'catName');
     const sName = get(landingPageFactors, 'sName');
@@ -170,10 +183,12 @@ class Providers extends Component {
     const providerList = Object.keys(providerByLocation).map(locId =>
       uniqBy(providerByLocation[locId], 'userSub').map(provider => provider));
     const providerFlatten = flatten(providerList);
-    const resolveProviders = searchResults !== null ? searchResults : providerFlatten;
+    const showingSearchProvider = queriedProvider && queriedProvider.length > 0;
 
-    return Object.keys(providerByLocation).length > 0 && (
+    console.log('queriedProviders', queriedProvider);
+    return Object.keys(providerFlatten).length > 0 && (
       <div className={s.container}>
+        {showingSearchProvider && <div />}
         <div className={s.topSection}>
           <div className={s.headline}>
             <div className={s.navigation}>
@@ -182,13 +197,13 @@ class Providers extends Component {
               </IconButton>
               <div className={`${s.title} ellipsis`}>{sName}</div>
             </div>
-            <div className={s.searchProvider}>
+            <form onSubmit={this.handleSubmitSearch} className={s.searchProvider}>
               <Search className="main-color" />&nbsp;
               <InputBase fullWidth placeholder="Provider name" value={searchText} onChange={this.handleSearch} />
               {searchText.length > 2 && <Clear className="danger-color" onClick={this.handleClearSearch} />}
-            </div>
+            </form>
           </div>
-          {chunk(resolveProviders, chunkFactor).map((providerRow, ind) => (
+          {chunk(providerFlatten, chunkFactor).map((providerRow, ind) => (
             <div className={s.providerRow} key={ind}>
               {providerRow.map((provider, index) => (
                 <Provider

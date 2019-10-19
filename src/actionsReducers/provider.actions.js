@@ -10,6 +10,7 @@ import {
   temporaryServicesByServiceId,
   availabilitiesByTemporaryServiceIdBulk,
   availabilitiesByTemporaryServiceId,
+  queryProvider,
 } from 'actionsApi/provider';
 
 export const SET_PROVIDER_DETAIL = 'PROVIDER.SET_PROVIDER_DETAIL';
@@ -22,6 +23,7 @@ export const RESCHEDULE_AVAILABILITIES_BY_TMP_SERVICE_ID =
 export const INSTANT_AVAILABILITIES_BY_TMP_SERVICE_ID = 'APPOINTMENT_RESOURCE.INSTANT_AVAILABILITIES_BY_TMP_SERVICE_ID';
 export const SELECT_BOOKING_DETAIL = 'BOOKING.SELECT_BOOKING_DETAIL';
 export const WAIT_LIST_TEMPORARY_SERVICES_BY_SERVICE_ID = 'PROVIDER.WAIT_LIST_TEMPORARY_SERVICES_BY_SERVICE_ID';
+export const QUERY_PROVIDER = 'PROVIDER.QUERY_PROVIDER';
 const setProviderDetail = payload => ({
   type: SET_PROVIDER_DETAIL,
   payload,
@@ -52,6 +54,10 @@ const instantAvailabilitiesByTemporaryServiceIdAction = payload => ({
 });
 const usersByIdAction = payload => ({
   type: USERS_BY_ID,
+  payload,
+});
+const queryProviderAction = payload => ({
+  type: QUERY_PROVIDER,
   payload,
 });
 export const setProviderDetailAction = id => async (dispatch) => {
@@ -139,6 +145,16 @@ export const waitListTemporaryServicesByServiceIdApi = id => async dispatch => {
     dispatch(setError(error));
   } else {
     dispatch(waitListTemporaryServicesByServiceIdAction(result));
+  }
+  dispatch(setLoading(false));
+};
+export const queryProviderApi = data => async dispatch => {
+  dispatch(setLoading(true));
+  const [result, error] = await handleRequest(queryProvider, [data]);
+  if (error) {
+    dispatch(queryProviderAction([])); // in case of failed or no result return
+  } else {
+    dispatch(queryProviderAction(result));
   }
   dispatch(setLoading(false));
 };

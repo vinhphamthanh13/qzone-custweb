@@ -23,6 +23,7 @@ import {
   rescheduledAvailabilitiesByTemporaryServiceIdApi,
   selectBookingDetail,
   usersByIdApi,
+  queryProviderApi,
 } from 'actionsReducers/provider.actions';
 import { setLandingPageAction } from 'actionsReducers/landing.action';
 import {
@@ -86,6 +87,7 @@ export const providersProps = {
     availabilitiesByTemporaryServiceId: provider.availabilitiesByTemporaryServiceId,
     tabOrder: common.tabOrder,
     landingPageFactors: landing.landingPageFactors,
+    queriedProvider: provider.queriedProvider,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchTemporaryServicesByServiceId: list => dispatch(temporaryServicesByServiceIdApi(list)),
@@ -93,6 +95,7 @@ export const providersProps = {
       dispatch(availabilitiesByTemporaryServiceIdApi(list, sId, pId, locId)),
     dispatchSelectBookingDetail: slot => dispatch(selectBookingDetail(slot)),
     dispatchSetLandingPage: data => dispatch(setLandingPageAction(data)),
+    dispatchQueryProvider: data => dispatch(queryProviderApi(data)),
   }),
 };
 

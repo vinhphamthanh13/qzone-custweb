@@ -3,6 +3,7 @@
 .container {
   margin: 0.2rem;
   padding-bottom: 1rem;
+  width: 100%;
 }
 
 .address {
@@ -22,7 +23,7 @@
 
 .bookingInfo {
   margin: auto 1rem;
-  max-width: 500px;
+  max-width: $max-width;
 }
 
 .serviceName {

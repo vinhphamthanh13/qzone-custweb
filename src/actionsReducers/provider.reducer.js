@@ -11,6 +11,7 @@ import {
   SELECT_BOOKING_DETAIL,
   USERS_BY_ID,
   WAIT_LIST_TEMPORARY_SERVICES_BY_SERVICE_ID,
+  QUERY_PROVIDER,
 } from 'actionsReducers/provider.actions';
 
 const initState = {
@@ -23,6 +24,7 @@ const initState = {
   selectedBookingDetail: {},
   providerById: {},
   waitListTemporaryServicesByServiceId: [],
+  queriedProvider: null,
 };
 const persistConfig = {
   key: 'provider',
@@ -81,6 +83,11 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         selectedBookingDetail: action.payload,
+      };
+    case QUERY_PROVIDER:
+      return {
+        ...state,
+        queriedProvider: action.payload,
       };
     case WAIT_LIST_TEMPORARY_SERVICES_BY_SERVICE_ID:
       return {
