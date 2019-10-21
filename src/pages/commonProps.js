@@ -22,6 +22,7 @@ import {
   selectBookingDetail,
   usersByIdApi,
   queryProviderApi,
+  clearQueriedProviderAction,
 } from 'actionsReducers/provider.actions';
 import { setLandingPageAction } from 'actionsReducers/landing.action';
 import {
@@ -97,6 +98,7 @@ export const providersProps = {
     dispatchSelectBookingDetail: slot => dispatch(selectBookingDetail(slot)),
     dispatchSetLandingPage: data => dispatch(setLandingPageAction(data)),
     dispatchQueryProvider: data => dispatch(queryProviderApi(data)),
+    dispatchClearQueriedProvider: () => dispatch(clearQueriedProviderAction()),
   }),
 };
 

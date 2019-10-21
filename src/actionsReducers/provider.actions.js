@@ -24,6 +24,7 @@ export const INSTANT_AVAILABILITIES_BY_TMP_SERVICE_ID = 'APPOINTMENT_RESOURCE.IN
 export const SELECT_BOOKING_DETAIL = 'BOOKING.SELECT_BOOKING_DETAIL';
 export const WAIT_LIST_TEMPORARY_SERVICES_BY_SERVICE_ID = 'PROVIDER.WAIT_LIST_TEMPORARY_SERVICES_BY_SERVICE_ID';
 export const QUERY_PROVIDER = 'PROVIDER.QUERY_PROVIDER';
+export const CLEAR_QUERIED_PROVIDER = 'PROVIDER.CLEAR_QUERIED_PROVIDER';
 const setProviderDetail = payload => ({
   type: SET_PROVIDER_DETAIL,
   payload,
@@ -59,6 +60,9 @@ const usersByIdAction = payload => ({
 const queryProviderAction = payload => ({
   type: QUERY_PROVIDER,
   payload,
+});
+export const clearQueriedProviderAction = () => ({
+  type: CLEAR_QUERIED_PROVIDER,
 });
 export const setProviderDetailAction = id => async (dispatch) => {
   dispatch(setLoading(true));

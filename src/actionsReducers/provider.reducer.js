@@ -12,6 +12,7 @@ import {
   USERS_BY_ID,
   WAIT_LIST_TEMPORARY_SERVICES_BY_SERVICE_ID,
   QUERY_PROVIDER,
+  CLEAR_QUERIED_PROVIDER,
 } from 'actionsReducers/provider.actions';
 
 const initState = {
@@ -88,6 +89,11 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         queriedProvider: action.payload,
+      };
+    case CLEAR_QUERIED_PROVIDER:
+      return {
+        ...state,
+        queriedProvider: null,
       };
     case WAIT_LIST_TEMPORARY_SERVICES_BY_SERVICE_ID:
       return {

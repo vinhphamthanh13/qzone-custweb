@@ -22,6 +22,7 @@ class Providers extends Component {
     dispatchSelectBookingDetail: func.isRequired,
     dispatchSetLandingPage: func.isRequired,
     dispatchQueryProvider: func.isRequired,
+    dispatchClearQueriedProvider: func.isRequired,
   };
 
   state = {
@@ -96,9 +97,10 @@ class Providers extends Component {
   }
 
   componentDidMount() {
-    const { dispatchTemporaryServicesByServiceId } = this.props;
+    const { dispatchTemporaryServicesByServiceId, dispatchClearQueriedProvider } = this.props;
     const { serviceId } = this.state;
     dispatchTemporaryServicesByServiceId(serviceId);
+    dispatchClearQueriedProvider();
   }
 
   componentDidUpdate() {
@@ -124,6 +126,8 @@ class Providers extends Component {
   };
 
   handleClearSearch = () => {
+    const { dispatchClearQueriedProvider } = this.props;
+    dispatchClearQueriedProvider();
     this.setState({
       searchText: '',
     });
@@ -146,7 +150,8 @@ class Providers extends Component {
     } = this.state;
     const catName = get(landingPageFactors, 'catName');
     const sName = get(landingPageFactors, 'sName');
-    const providers = get(providersByServiceId, `${catName}.${sName}`, []);
+    const providers = (searchText && queriedProvider !== null && [...queriedProvider]) ||
+      get(providersByServiceId, `${catName}.${sName}`, []);
     const providerByLocation = {};
     if (
       !isEmpty(temporaryServiceByServiceIds) &&
@@ -158,13 +163,16 @@ class Providers extends Component {
         const locationId = get(item, 'geoLocation.id');
         const providerId = get(item, 'providerId');
         const providerDetail = find(providers, ['userSub', providerId]);
-        providerByLocation[locationId] = providerByLocation[locationId] ? [...providerByLocation[locationId]] : [];
-        providerByLocation[locationId].push({
-          temporaryServiceId: item.id,
-          ...providerDetail,
-          ...item,
-        });
-        return providerByLocation;
+        if (providerDetail) {
+          providerByLocation[locationId] = providerByLocation[locationId] ? [...providerByLocation[locationId]] : [];
+          providerByLocation[locationId].push({
+            temporaryServiceId: item.id,
+            ...providerDetail,
+            ...item,
+          });
+          return providerByLocation;
+        }
+        return null;
       });
     }
     const temporaryServiceByProvider = {};
@@ -183,12 +191,9 @@ class Providers extends Component {
     const providerList = Object.keys(providerByLocation).map(locId =>
       uniqBy(providerByLocation[locId], 'userSub').map(provider => provider));
     const providerFlatten = flatten(providerList);
-    const showingSearchProvider = queriedProvider && queriedProvider.length > 0;
 
-    console.log('queriedProviders', queriedProvider);
     return Object.keys(providerFlatten).length > 0 && (
       <div className={s.container}>
-        {showingSearchProvider && <div />}
         <div className={s.topSection}>
           <div className={s.headline}>
             <div className={s.navigation}>
