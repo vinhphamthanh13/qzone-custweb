@@ -22,6 +22,7 @@ export const RESCHEDULE_AVAILABILITIES_BY_TMP_SERVICE_ID =
   'APPOINTMENT_RESOURCE.RESCHEDULE_AVAILABILITIES_BY_TMP_SERVICE_ID';
 export const INSTANT_AVAILABILITIES_BY_TMP_SERVICE_ID = 'APPOINTMENT_RESOURCE.INSTANT_AVAILABILITIES_BY_TMP_SERVICE_ID';
 export const SELECT_BOOKING_DETAIL = 'BOOKING.SELECT_BOOKING_DETAIL';
+export const CLEAR_SELECT_BOOKING_DETAIL = 'BOOKING.CLEAR_SELECT_BOOKING_DETAIL';
 export const WAIT_LIST_TEMPORARY_SERVICES_BY_SERVICE_ID = 'PROVIDER.WAIT_LIST_TEMPORARY_SERVICES_BY_SERVICE_ID';
 export const QUERY_PROVIDER = 'PROVIDER.QUERY_PROVIDER';
 export const CLEAR_QUERIED_PROVIDER = 'PROVIDER.CLEAR_QUERIED_PROVIDER';
@@ -127,11 +128,14 @@ export const setProviderServiceAction = id => async (dispatch) => {
   }
   dispatch(setLoading(false));
 };
+// Decoupling
 export const selectBookingDetail = payload => ({
   type: SELECT_BOOKING_DETAIL,
   payload,
 });
-// Decoupling
+export const clearSelectedBookingDetail = () => ({
+  type: CLEAR_SELECT_BOOKING_DETAIL,
+});
 export const usersByIdApi = id => async dispatch => {
   dispatch(setLoading(true));
   const [result, error] = await handleRequest(users, [id]);

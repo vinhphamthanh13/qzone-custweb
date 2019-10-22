@@ -20,6 +20,7 @@ class Booking extends Component {
   static propTypes = {
     dispatchBookEvent: func.isRequired,
     dispatchConfirmWaitLists: func.isRequired,
+    dispatchClearSelectedBookingDetail: func.isRequired,
   };
 
   state = {
@@ -150,12 +151,13 @@ class Booking extends Component {
   };
 
   handleConfirmWaitLists = () => {
-    const { dispatchConfirmWaitLists } = this.props;
+    const { dispatchConfirmWaitLists, dispatchClearSelectedBookingDetail } = this.props;
     const { selectedBookingDetail, userDetailById } = this.state;
     const customerId = get(userDetailById, 'userSub') || get(userDetailById, 'id');
     const duration = get(selectedBookingDetail, 'durationSec');
     const availabilityId = get(selectedBookingDetail, 'id');
     const startSec = get(selectedBookingDetail, 'providerStartSec');
+    dispatchClearSelectedBookingDetail();
     dispatchConfirmWaitLists({
       customerId, duration, availabilityId, startSec, status: 'UNSPECIFIED', type: 'APPOINTMENT',
     });
@@ -214,7 +216,10 @@ class Booking extends Component {
               )}
               {waitListId && (
                 <div className={s.waitList}>
-                  <div className={s.waitListTitle}>Client Information</div>
+                  <div className={s.waitListTitle}>Your booking information</div>
+                  <div className={s.clientGuideLine}>
+                    Booking schedule will be confirmed via below information. Could you check your email for details?
+                  </div>
                   <div className={s.item}>
                     <AccountCircle color="inherit" className="icon-small" />
                     <span>&nbsp;{cName}</span>

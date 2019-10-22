@@ -23,6 +23,7 @@ import {
   usersByIdApi,
   queryProviderApi,
   clearQueriedProviderAction,
+  clearSelectedBookingDetail,
 } from 'actionsReducers/provider.actions';
 import { setLandingPageAction } from 'actionsReducers/landing.action';
 import {
@@ -114,6 +115,7 @@ export const bookingProps = {
   mapDispatchToProps: dispatch => ({
     dispatchBookEvent: (data, headers) => dispatch(bookEventApi(data, headers)),
     dispatchConfirmWaitLists: data => dispatch(confirmWaitListsApi(data)),
+    dispatchClearSelectedBookingDetail: () => dispatch(clearSelectedBookingDetail()),
   }),
 };
 
@@ -180,10 +182,11 @@ export const waitListProps = {
 };
 
 export const redirectToInstantProps = {
-  mapStateToProps: ({ waitLists, auth, landing }) => ({
+  mapStateToProps: ({ waitLists, auth, landing, provider }) => ({
     waitListsById: waitLists.waitListsById,
     userDetailById: auth.userDetailById,
     landingPageFactors: landing.landingPageFactors,
+    selectedBookingDetail: provider.selectedBookingDetail,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchWaitListsById: (id, headers) => dispatch(setWaitListsByIdApi(id, headers)),
