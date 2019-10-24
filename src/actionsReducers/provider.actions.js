@@ -1,8 +1,5 @@
-import {
-  setLoading,
-  setError,
-} from 'actionsReducers/common.actions';
-import { get } from 'lodash';
+import { setLoading, setError } from 'actionsReducers/common.actions';
+import get from 'lodash/get';
 import { handleRequest } from 'utils/apiHelpers';
 import {
   users,

@@ -60,7 +60,7 @@ class App extends Component {
     const { windowWidth } = this.state;
     return (
       <JssProvider jss={jss} generateClassName={generateClassName}>
-        <React.Fragment>
+        <>
           <Provider store={store.store}>
             <PersistGate loading={null} persistor={store.persistor}>
               <Router history={history}>
@@ -73,7 +73,7 @@ class App extends Component {
             </PersistGate>
           </Provider>
           <CssBaseline />
-        </React.Fragment>
+        </>
       </JssProvider>
     );
   }

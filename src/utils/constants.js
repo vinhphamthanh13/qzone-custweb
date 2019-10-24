@@ -8,7 +8,8 @@ export const dateFormatDash = 'DD-MM-YYYY';
 export const timeSlotFormat = 'hh:mm a';
 export const defaultDateFormat = 'DD MMMM YYYY';
 export const FULL_DATE = 'dddd, DD MMMM YYYY';
-export const TIME_FORMAT = 'hh:mm a';
+export const DATE_LABEL = 'ddd, DD MMM YYYY';
+export const TIME_FORMAT = 'hh:mma';
 export const DEFAULT_TIME = '1970-01-01 T00:00:00';
 // Slide type
 export const SLIDE_TYPE = {

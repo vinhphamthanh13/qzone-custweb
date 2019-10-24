@@ -77,3 +77,28 @@
 .availabilities {
   color: inherit;
 }
+
+.searchDate {
+  display: flex;
+  justify-content: space-between;
+  color: $main;
+  margin: 0.2rem;
+  border-radius: 0.2rem;
+  border: 2px solid $white;
+  background: rgba($success, 0.2);
+  box-sizing: border-box;
+}
+
+.iconSearchDate {
+  color: $fruitSalad;
+}
+
+.findDate {
+  font-size: 1rem;
+  border-radius: unset !important;
+}
+
+.bookNow {
+  font-size: 1rem;
+  border-radius: unset !important;
+}

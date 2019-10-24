@@ -34,13 +34,21 @@
   padding-left: 1rem;
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 400;
   background: whitesmoke;
   color: $main;
-  border-top: 1.5px solid $grayNickel;
+  border-top: 1px solid rgba($grayNickel, 0.3);
+}
+
+.expandMore {
+  transform: rotate(0);
+}
+
+.expandLess {
+  transform: rotate(180deg);
 }
 
 .slot {

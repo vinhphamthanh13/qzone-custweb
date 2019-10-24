@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { func } from 'prop-types';
 import { get } from 'lodash';
+import { IconButton } from '@material-ui/core';
 import defaultPImage from 'images/providers.jpg';
-import { Email, PhoneIphone, Place, GpsFixed } from '@material-ui/icons';
+import { Email, PhoneIphone, Place, GpsFixed, DateRange, CheckCircle } from '@material-ui/icons';
 import EmptyItem from 'components/EmptyItem';
 import MapDialog from 'components/Map/MapDialog';
 import RateStar from 'components/Rating/RateStar';
@@ -147,6 +148,16 @@ class Provider extends Component {
               <GpsFixed className="icon-small" color="inherit" />
               <span>&nbsp;{timeZoneId}</span>
             </div>
+          </div>
+          <div className={s.searchDate}>
+            <IconButton className={`${s.bookNow} simple-button`}>
+              <CheckCircle className={`${s.iconSearchDate} border-round-white`} />
+              <span>&nbsp;Book now!</span>
+            </IconButton>
+            <IconButton className={`${s.findDate} simple-button`}>
+              <DateRange className={s.iconSearchDate} />
+              <span>&nbsp;At a later date</span>
+            </IconButton>
           </div>
           {transformedSlot.length > 0 ? (
             <div className={s.availabilities}>
