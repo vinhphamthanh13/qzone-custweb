@@ -55,6 +55,7 @@
 .providerRow {
   display: flex;
   margin-bottom: 1rem;
+  justify-content: center;
 }
 
 @include breakpoint-up(sm) {
@@ -71,4 +72,9 @@
     width: $max-card-width;
     box-sizing: border-box;
   }
+
+  .providerRow {
+    justify-content: flex-start;
+  }
+
 }
