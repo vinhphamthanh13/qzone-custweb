@@ -38,10 +38,6 @@ const setProviderService = payload => ({
   type: SET_PROVIDER_SERVICE,
   payload,
 });
-const temporaryServicesByServiceIdAction = payload => ({
-  type: TEMPORARY_SERVICES_BY_SERVICE_ID,
-  payload,
-});
 const waitListTemporaryServicesByServiceIdAction = payload => ({
   type: WAIT_LIST_TEMPORARY_SERVICES_BY_SERVICE_ID,
   payload,
@@ -83,16 +79,6 @@ export const setProviderDetailAction = id => async (dispatch) => {
     dispatch(setError(error));
   } else {
     dispatch(setProviderDetail(userDetail));
-  }
-  dispatch(setLoading(false));
-};
-export const temporaryServicesByServiceIdApi = id => async (dispatch) => {
-  dispatch(setLoading(true));
-  const [result, error] = await handleRequest(temporaryServicesByServiceId, [id]);
-  if (error) {
-    dispatch(setError(error));
-  } else {
-    dispatch(temporaryServicesByServiceIdAction({ [id]: result}));
   }
   dispatch(setLoading(false));
 };

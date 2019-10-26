@@ -23,9 +23,6 @@ class Providers extends Component {
   };
 
   state = {
-    providersByServiceId: {},
-    temporaryServiceByServiceIds: {},
-    availabilitiesByTemporaryServiceId: {},
     landingPageFactors: {},
     serviceId: '',
     bookedEventId: '',
@@ -36,15 +33,11 @@ class Providers extends Component {
 
   static getDerivedStateFromProps(props, state) {
     const {
-      providersByServiceId, temporaryServiceByServiceIds, match: { params: { sId } }, landingPageFactors,
-      availabilitiesByTemporaryServiceId, bookedEventId, windowWidth, queriedProvider,
+      match: { params: { sId } }, landingPageFactors, bookedEventId, windowWidth, queriedProvider,
       serviceDateProviders,
     } = props;
     const {
-      providersByServiceId: cachedProvidersByServiceId,
-      temporaryServiceByServiceIds: cachedTemporaryServiceByServiceIds,
       serviceId,
-      availabilitiesByTemporaryServiceId: cachedAvailabilitiesByTemporaryServiceId,
       windowWidth: cachedWindowWidth,
       bookedEventId: cachedBookedEventId,
       landingPageFactors: cachedLandingPageFactors,
@@ -55,24 +48,6 @@ class Providers extends Component {
 
     if (sId !== serviceId) {
       updatedState.serviceId = sId;
-    }
-    if (
-      providersByServiceId !== null &&
-      JSON.stringify(providersByServiceId) !== JSON.stringify(cachedProvidersByServiceId)
-    ) {
-      updatedState.providersByServiceId = providersByServiceId;
-    }
-    if (
-      temporaryServiceByServiceIds !== null &&
-      JSON.stringify(temporaryServiceByServiceIds) !== JSON.stringify(cachedTemporaryServiceByServiceIds)
-    ) {
-      updatedState.temporaryServiceByServiceIds = temporaryServiceByServiceIds;
-    }
-    if (
-      availabilitiesByTemporaryServiceId !== null &&
-      JSON.stringify(availabilitiesByTemporaryServiceId) !== JSON.stringify(cachedAvailabilitiesByTemporaryServiceId)
-    ) {
-      updatedState.availabilitiesByTemporaryServiceId = availabilitiesByTemporaryServiceId;
     }
     if (windowWidth !== cachedWindowWidth) {
       updatedState.windowWidth = windowWidth;
@@ -148,16 +123,13 @@ class Providers extends Component {
   render() {
     const { dispatchSelectBookingDetail, dispatchSetLandingPage } = this.props;
     const {
-      providersByServiceId, temporaryServiceByServiceIds, landingPageFactors, searchText,
-      serviceId, availabilitiesByTemporaryServiceId, windowWidth, bookedEventId,
-      queriedProvider, serviceDateProviders,
+      landingPageFactors, searchText, serviceId, windowWidth, bookedEventId, queriedProvider,
+      serviceDateProviders,
     } = this.state;
     const catName = get(landingPageFactors, 'catName');
     const sName = get(landingPageFactors, 'sName');
-    const providers = (searchText && queriedProvider !== null && [...queriedProvider]) ||
-      get(providersByServiceId, `${catName}.${sName}`, []);
-    console.debug(temporaryServiceByServiceIds, serviceId, providers);
     const chunkFactor = Math.abs(windowWidth / MAX_CARD_WIDTH);
+    console.log('queriedProvider', queriedProvider);
 
     return serviceDateProviders.length > 0 && (
       <div className={s.container}>
@@ -186,7 +158,6 @@ class Providers extends Component {
                     sName,
                     catName,
                   }}
-                  availabilitiesByTemporaryServiceId={availabilitiesByTemporaryServiceId}
                   selectBookingDetail={dispatchSelectBookingDetail}
                   bookedEventId={bookedEventId}
                   setLandingPage={dispatchSetLandingPage}

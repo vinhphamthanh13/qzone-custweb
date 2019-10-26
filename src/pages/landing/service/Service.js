@@ -13,7 +13,6 @@ import s from './Service.module.scss';
 
 class Service extends Component {
   static propTypes = {
-    dispatchProvidersByServiceId: func.isRequired,
     dispatchSetLandingPage: func.isRequired,
     dispatchTempServiceDateProvider: func.isRequired,
     dispatchSetServiceDateProviders: func.isRequired,
@@ -56,13 +55,9 @@ class Service extends Component {
   }
 
   componentDidMount() {
-    const {
-      dispatchProvidersByServiceId, dispatchTempServiceDateProvider, dispatchSetProvidersByServiceId,
-    } = this.props;
-    const { service, landingPageFactors } = this.state;
-    const catName = get(landingPageFactors, 'catName');
+    const { dispatchTempServiceDateProvider, dispatchSetProvidersByServiceId } = this.props;
+    const { service } = this.state;
     const sId = get(service, 'id');
-    dispatchProvidersByServiceId(sId, service.name, catName);
     dispatchTempServiceDateProvider(sId);
     dispatchSetProvidersByServiceId(sId);
   }

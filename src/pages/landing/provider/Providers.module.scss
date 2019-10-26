@@ -58,7 +58,7 @@
   justify-content: center;
 }
 
-@include breakpoint-up(sm) {
+@include breakpoint-up(md) {
   .headline {
     flex-direction: row;
     padding-bottom: unset;

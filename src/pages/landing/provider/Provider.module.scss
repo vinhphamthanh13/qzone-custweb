@@ -15,7 +15,6 @@
 .content {
   display: flex;
   flex-direction: column;
-  position: relative;
 }
 
 .popUpLocationWrapper {
@@ -69,6 +68,7 @@
 .locationItem:hover {
   background: rgba($fruitSalad, 0.1);
   border: 1px solid $fruitSalad;
+  cursor: pointer;
 }
 
 .image {
@@ -126,7 +126,8 @@
   background: rgba($gallery, 0.7);
   padding: 0.2rem 0.2rem 0.2rem 0.1rem;
   margin: auto 0.2rem;
-  transition: border 0.5s ease-in;
+  font-weight: 400;
+  transition: all 0.5s ease-in;
 }
 
 .place:hover {
@@ -165,4 +166,8 @@
 .bookNow {
   font-size: 1rem;
   border-radius: unset !important;
+}
+
+.slotUIs {
+  color: red;
 }

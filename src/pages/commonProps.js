@@ -12,7 +12,7 @@ import {
   findEventByCustomerIdApi,
   servicesByServiceCategoryIdBulkAction,
 } from 'actionsReducers/common.actions';
-import { providersByServiceIdApi, bookEventApi, confirmWaitListsApi } from 'actionsReducers/booking.actions';
+import { bookEventApi, confirmWaitListsApi } from 'actionsReducers/booking.actions';
 import {
   waitListTemporaryServicesByServiceIdApi,
   availabilitiesByTemporaryServiceIdBulkApi,
@@ -73,7 +73,6 @@ export const serviceProps = {
     tempServiceDateProvider: provider.tempServiceDateProvider,
   }),
   mapDispatchToProps: dispatch => ({
-    dispatchProvidersByServiceId: (sId, sName, catName) => dispatch(providersByServiceIdApi(sId, sName, catName)),
     dispatchSetLandingPage: data => dispatch(setLandingPageAction(data)),
     dispatchTempServiceDateProvider: sId => dispatch(tempServiceDateProviderByServiceIdApi(sId)),
     dispatchSetServiceDateProviders: data => dispatch(setServiceDateProviders(data)),
@@ -96,16 +95,11 @@ export const providersProps = {
     providersByServiceId: booking.providersByServiceId,
     bookedEventIdList: booking.bookedEventIdList,
     servicesByServiceCategoryId: common.servicesByServiceCategoryId,
-    temporaryServiceByServiceIds: provider.temporaryServiceByServiceIds,
-    availabilitiesByTemporaryServiceId: provider.availabilitiesByTemporaryServiceId,
-    tabOrder: common.tabOrder,
     landingPageFactors: landing.landingPageFactors,
     queriedProvider: provider.queriedProvider,
     serviceDateProviders: provider.serviceDateProviders,
   }),
   mapDispatchToProps: dispatch => ({
-    dispatchAvailabilities: (list, sId, pId, locId) =>
-      dispatch(availabilitiesByTemporaryServiceIdBulkApi(list, sId, pId, locId)),
     dispatchSelectBookingDetail: slot => dispatch(selectBookingDetail(slot)),
     dispatchSetLandingPage: data => dispatch(setLandingPageAction(data)),
     dispatchQueryProvider: data => dispatch(queryProviderApi(data)),
@@ -116,10 +110,11 @@ export const providersProps = {
 export const providerProps = {
   mapStateToProps: ({ provider }) => ({
     providersByServiceId: provider.providersByServiceId,
+    availabilitiesByTemporaryServiceId: provider.availabilitiesByTemporaryServiceId,
   }),
   mapDispatchToProps: dispatch => ({
-    dispatchDateAvailabilitiesByTempServiceId: (tId, pId, locId, sId) =>
-      dispatch(availabilitiesByTemporaryServiceIdApi(tId, pId, locId, sId)),
+    dispatchAvailabilities: (list, sId, pId, locId) =>
+      dispatch(availabilitiesByTemporaryServiceIdBulkApi(list, sId, pId, locId)),
   })
 };
 

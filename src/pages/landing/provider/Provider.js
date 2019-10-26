@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
 import { func } from 'prop-types';
-import { get } from 'lodash';
-import { IconButton } from '@material-ui/core';
+import { connect } from 'react-redux';
+import get from 'lodash/get';
+import noop from 'lodash/noop';
+import find from 'lodash/find';
+import { Formik } from 'formik';
+import { IconButton, InputBase } from '@material-ui/core';
 import defaultPImage from 'images/providers.jpg';
-import { Email, PhoneIphone, Place, GpsFixed, DateRange, CheckCircle } from '@material-ui/icons';
+import { Email, PhoneIphone, Place, GpsFixed, DateRange, CheckCircle, ChevronRight, Clear } from '@material-ui/icons';
 import EmptyItem from 'components/EmptyItem';
 import MapDialog from 'components/Map/MapDialog';
 import RateStar from 'components/Rating/RateStar';
 import { limitString, navigateTo } from 'utils/common';
 import { ADDRESS_LENGTH } from 'utils/constants';
+import { providerProps} from 'pages/commonProps';
 import TemporaryService from './TemporaryService';
 import s from './Provider.module.scss';
 
@@ -27,14 +32,23 @@ class Provider extends Component {
     isOpenMap: false,
     bookedEventId: '',
     landingPageFactors: {},
+    providersByServiceId: {},
+    providerLocationDates: [],
+    dateTmpServices: {},
+    initLocation: {},
+    popUpLocation: false,
+    initTempServiceIdList: [],
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { provider, availabilitiesByTemporaryServiceId, bookedEventId, landingPageFactors } = props;
+    const {
+      provider, availabilitiesByTemporaryServiceId, bookedEventId, landingPageFactors, providersByServiceId,
+    } = props;
     const {
       provider: cachedProvider, bookedEventId: cachedBookedEventId,
       availabilitiesByTemporaryServiceId: cachedAvailabilitiesByTemporaryServiceId,
       landingPageFactors: cachedLandingPageFactors,
+      providersByServiceId: cachedProvidersByServiceId,
     } = state;
     const updatedState = {};
     if (
@@ -42,6 +56,18 @@ class Provider extends Component {
       JSON.stringify(provider) !== JSON.stringify(cachedProvider)
     ) {
       updatedState.provider = provider;
+      const dateTmpServices = get(provider, 'dateTmpServices');
+      const initLocation = dateTmpServices[Object.keys(dateTmpServices)[0]];
+      const locationId = Object.keys(dateTmpServices)[0];
+      updatedState.dateTmpServices = dateTmpServices;
+      updatedState.serviceId = get(provider, 'serviceId');
+      const providerLocationDates = dateTmpServices[locationId] || [];
+      updatedState.providerLocationDates = providerLocationDates;
+      updatedState.initTempServiceIdList = providerLocationDates.length > 0 &&
+        providerLocationDates.map(item => item.tmpServiceId);
+      updatedState.providerId = get(provider, 'providerId');
+      updatedState.initLocation = initLocation;
+      updatedState.locationId = locationId;
     }
     if (
       bookedEventId !== null &&
@@ -61,29 +87,42 @@ class Provider extends Component {
     ) {
       updatedState.landingPageFactors = landingPageFactors;
     }
+    if (
+      providersByServiceId !== null &&
+      JSON.stringify(providersByServiceId) !== JSON.stringify(cachedProvidersByServiceId)
+    ) {
+      updatedState.providersByServiceId = providersByServiceId;
+    }
 
     return Object.keys(updatedState) ? updatedState : null;
   }
 
   componentDidMount() {
     const { dispatchAvailabilities } = this.props;
-    const { provider } = this.state;
-    const temporaryServiceIds = get(provider, 'temporaryServiceId');
-    const providerId = get(provider, 'providerId');
-    const serviceId = get(provider, 'serviceId');
-    const locationId = get(provider, 'geoLocation.id');
-    this.setState({
-      serviceId,
-      providerId,
-      locationId,
-    });
-    dispatchAvailabilities(temporaryServiceIds, serviceId, providerId, locationId);
+    const { initTempServiceIdList, serviceId, providerId, locationId } = this.state;
+    if (initTempServiceIdList.length) {
+      dispatchAvailabilities(initTempServiceIdList, serviceId, providerId, locationId);
+    }
   }
 
   handleMapPopup = () => {
     this.setState(oldState => ({
       isOpenMap: !oldState.isOpenMap,
     }));
+  };
+
+  handleChangeLocation = (locationId, setFieldValue) => () => {
+    const { dispatchAvailabilities } = this.props;
+    const { provider, providerId, serviceId } = this.state;
+    const dateTmpServices = get(provider, 'dateTmpServices');
+    const providerLocationDates = dateTmpServices[locationId];
+    const tempServiceIdList = providerLocationDates.map(item => item.tmpServiceId);
+    dispatchAvailabilities(tempServiceIdList, serviceId, providerId, locationId);
+    setFieldValue('providerLocation', get(providerLocationDates, '0.locationDetail.fullAddress'));
+    this.setState({
+      providerLocationDates,
+      locationId,
+    }, this.togglePopUpLocation);
   };
 
   handleSelectSlot = (slot) => () => {
@@ -95,26 +134,51 @@ class Provider extends Component {
     navigateTo(`/${orgRef}/booking/confirmation`)();
   };
 
+  createLocationList = (setFieldValue) => {
+    const { dateTmpServices } = this.state;
+    return Object.keys(dateTmpServices).map(item => {
+      const location = get(dateTmpServices, item);
+      const fullAddress = get(location, '0.locationDetail.fullAddress');
+      return (
+        // eslint-disable-next-line
+        <div key={item} className={s.locationItem} onClick={this.handleChangeLocation(item, setFieldValue)}>
+          {fullAddress}
+        </div>
+      )
+
+
+    })
+  };
+
+  togglePopUpLocation = () => {
+    this.setState(oldState => ({
+      popUpLocation: !oldState.popUpLocation,
+    }));
+  };
+
   render() {
     const {
-      provider, serviceId, providerId, locationId, availabilitiesByTemporaryServiceId, isOpenMap,
-      bookedEventId,
+      provider, serviceId, providerId, locationId, availabilitiesByTemporaryServiceId, isOpenMap, dateTmpServices,
+      bookedEventId, providersByServiceId, providerLocationDates, initLocation, popUpLocation,
     } = this.state;
-    const sName = get(provider, 'serviceName');
-    const pName = get(provider, 'givenName');
-    const pEmail = get(provider, 'email');
-    const pPhone = get(provider, 'telephone');
-    const pImage = get(provider, 'providerInformation.image.fileUrl', defaultPImage);
-    const pRate = get(provider, 'rating');
-    const geoLocation = get(provider, 'geoLocation');
+    const providerListByServiceId = get(providersByServiceId, serviceId) || [];
+    const providerDetail = find(providerListByServiceId, item => item && item.id === providerId);
+    const sName = get(provider, 'sName');
+    const pName = get(providerDetail, 'givenName');
+    const pEmail = get(providerDetail, 'email');
+    const pPhone = get(providerDetail, 'telephone');
+    const pImage = get(providerDetail, 'providerInformation.image.fileUrl', defaultPImage);
+    const pRate = get(providerDetail, 'rating');
+    const timeZoneId = get(providerDetail, 'providerInformation.timeZoneId');
+    const geoLocation = get(providerLocationDates, '0.locationDetail');
     const pAddress = get(geoLocation, 'fullAddress');
-    const timeZoneId = get(provider, 'providerInformation.timeZoneId');
     const timeSlots = get(availabilitiesByTemporaryServiceId,`${serviceId}-${providerId}-${locationId}`,  []);
     const slots = timeSlots.length > 0 && timeSlots.filter(slot =>
       slot.serviceId === serviceId && slot.providerId === providerId && slot.locationId === locationId) || [];
     const transformedSlot = slots.filter(item => item.id !== bookedEventId && item.spotsOpen === 1).map(slot => ({
       ...slot, sName, pName, pEmail, pPhone, pImage, pAddress,
     }));
+    const showLocationSelection = dateTmpServices && Object.keys(dateTmpServices).length > 1;
 
     return (
       <>
@@ -141,7 +205,47 @@ class Provider extends Component {
             <div className={s.place}>
               <div className={s.item}>
                 <Place className="icon-small hover-pointer" color="secondary" onClick={this.handleMapPopup} />
-                <span>&nbsp;{limitString(pAddress, ADDRESS_LENGTH)}</span>
+                <Formik
+                  onSubmit={noop}
+                  initialValues={{
+                    providerLocation: get(providerLocationDates, '0.locationDetail.fullAddress') ||
+                      get(initLocation, '0.locationDetail.fullAddress'),
+                  }}
+                  render={({ values, setFieldValue }) => (
+                    <>
+                      <form>
+                        <InputBase
+                          type="hidden"
+                          name="providerLocation"
+                          value={values.providerLocation}
+                        />
+                      </form>
+                      <div className={s.providerLocation}>
+                        {limitString(values.providerLocation, ADDRESS_LENGTH)}
+                      </div>
+                      {showLocationSelection && (
+                        <ChevronRight
+                          className="icon-shake hover-pointer"
+                          color="secondary"
+                          onClick={this.togglePopUpLocation}
+                        />
+                      )}
+                      {popUpLocation && (
+                        <div className={s.popUpLocationWrapper}>
+                          <div className={s.popUpLocation}>
+                            <div className={s.popUpLocationHeader}>
+                              <span>Our Locations</span>
+                              <Clear color="secondary" className="hover-pointer" onClick={this.togglePopUpLocation}/>
+                            </div>
+                            <div className={s.popUpLocationBody}>
+                              {this.createLocationList(setFieldValue)}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  )}
+                />
               </div>
             </div>
             <div className={s.item}>
@@ -173,4 +277,7 @@ class Provider extends Component {
   }
 }
 
-export default Provider;
+export default connect(
+  providerProps.mapStateToProps,
+  providerProps.mapDispatchToProps,
+)(Provider);
