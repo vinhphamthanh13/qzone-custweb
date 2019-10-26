@@ -85,17 +85,18 @@ class TemporaryService extends Component {
       <div className={s.container}>
         {Object.keys(transformedSlot).map(date => {
           const expandIconStyle = !dateSelected[date] ? s.expandMore : `${s.expandMore} ${s.expandLess}`;
+          let dateStyle = s.date;
+          dateStyle = (dateSelected[date] || isDefaultExpand) ? `${s.date} ${s.dateActive}` : dateStyle;
           return moment(date).isValid() && (
             <div className={s.dateChunk} key={uuidv1()}>
-              <div className={s.date}>
+              <div className={dateStyle}>
                 <span>{moment(date).format(DATE_LABEL)}</span>
                 <IconButton
-                  color="secondary"
-                  className="simple-button"
+                  color="inherit"
                   onClick={this.handleSelectedDate(date)}
                   disabled={isDefaultExpand}
                 >
-                  <ExpandMore className={expandIconStyle} color="inherit" />
+                  <ExpandMore className={`icon-normal ${expandIconStyle}`} color="inherit" />
                 </IconButton>
               </div>
               {(dateSelected[date] || isDefaultExpand) && (
