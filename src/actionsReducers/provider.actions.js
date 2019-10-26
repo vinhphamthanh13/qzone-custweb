@@ -30,6 +30,8 @@ export const CLEAR_TEMP_SERVICE_DATE_PROVIDER_BY_SERVICE_ID = 'PROVIDER.CLEAR_TE
 export const SET_SERVICE_DATE_PROVIDERS = 'PROVIDER.SET_SERVICE_DATE_PROVIDERS';
 export const SET_PROVIDERS_BY_SERVICE_ID = 'PROVIDER.SET_PROVIDERS_BY_SERVICE_ID';
 export const CLEAR_PROVIDERS_BY_SERVICE_ID = 'PROVIDER.CLEAR_PROVIDERS_BY_SERVICE_ID';
+export const SET_BOOK_NOW = 'PROVIDER.SET_BOOK_NOW';
+export const CLEAR_BOOK_NOW = 'PROVIDER.CLEAR_BOOK_NOW';
 const setProviderDetail = payload => ({
   type: SET_PROVIDER_DETAIL,
   payload,
@@ -72,6 +74,15 @@ export const clearProvidersByServiceId = () => ({
 export const clearQueriedProviderAction = () => ({
   type: CLEAR_QUERIED_PROVIDER,
 });
+export const setBookNowAction = payload => ({
+  type: SET_BOOK_NOW,
+  payload,
+});
+export const clearBookNowAction = () => ({
+  type: CLEAR_BOOK_NOW,
+});
+
+// Async
 export const setProviderDetailAction = id => async (dispatch) => {
   dispatch(setLoading(true));
   const [userDetail, error] = await handleRequest(users, [id]);

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { func } from 'prop-types';
 import chunk from 'lodash/chunk';
+import get from 'lodash/get';
 import uuidv1 from 'uuid/v1';
 import moment from 'moment';
 import { IconButton } from '@material-ui/core';
@@ -11,6 +12,7 @@ import s from './TemporaryService.module.scss';
 class TemporaryService extends Component {
   static propTypes = {
     selectSlot: func.isRequired,
+    onBookNow: func.isRequired,
   };
 
   state = {
@@ -25,9 +27,19 @@ class TemporaryService extends Component {
 
     if (timeSlots.length > 0) {
       updatedState.timeSlots = timeSlots;
+      updatedState.bookNowSlot = get(timeSlots, '0');
     }
 
     return Object.keys(updatedState) ? updatedState : null;
+  }
+
+  componentDidMount() {
+    const { onBookNow } = this.props;
+    const { bookNowSlot } = this.state;
+    const serviceId = get(bookNowSlot, 'serviceId');
+    const providerId = get(bookNowSlot, 'providerId');
+    const locationId = get(bookNowSlot, 'locationId');
+    onBookNow({ [`${serviceId}-${providerId}-${locationId}`]: bookNowSlot });
   }
 
   handleChunkIndexMore = (date, max)  => () => {
@@ -89,14 +101,14 @@ class TemporaryService extends Component {
           dateStyle = (dateSelected[date] || isDefaultExpand) ? `${s.date} ${s.dateActive}` : dateStyle;
           return moment(date).isValid() && (
             <div className={s.dateChunk} key={uuidv1()}>
-              <div className={dateStyle}>
+              { /* eslint-disable-next-line */ }
+              <div className={dateStyle} onClick={this.handleSelectedDate(date)}>
                 <span>{moment(date).format(DATE_LABEL)}</span>
                 <IconButton
                   color="inherit"
-                  onClick={this.handleSelectedDate(date)}
                   disabled={isDefaultExpand}
                 >
-                  <ExpandMore className={`icon-normal ${expandIconStyle}`} color="inherit" />
+                  <ExpandMore className={`icon-small simple-button ${expandIconStyle}`} color="inherit" />
                 </IconButton>
               </div>
               {(dateSelected[date] || isDefaultExpand) && (

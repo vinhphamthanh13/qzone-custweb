@@ -27,6 +27,7 @@ export class Home extends Component {
     dispatchSetLandingPage: func.isRequired,
     dispatchClearProvidersByServiceId: func.isRequired,
     dispatchClearOrgNotFound: func.isRequired,
+    dispatchClearBookNowList: func.isRequired,
     match: objectOf(any).isRequired,
   };
 
@@ -78,12 +79,14 @@ export class Home extends Component {
       dispatchSetLandingPage,
       dispatchClearTempServiceDateProviderByServiceId,
       dispatchClearProvidersByServiceId,
+      dispatchClearBookNowList,
     } = this.props;
     if (orgRef) {
       dispatchServiceCategoriesByOrgId(orgRef);
       dispatchSetLandingPage({ orgRef });
       dispatchClearTempServiceDateProviderByServiceId();
       dispatchClearProvidersByServiceId();
+      dispatchClearBookNowList();
     }
   }
 

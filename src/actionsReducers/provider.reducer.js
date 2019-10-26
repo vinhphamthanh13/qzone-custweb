@@ -19,6 +19,8 @@ import {
   SET_PROVIDERS_BY_SERVICE_ID,
   CLEAR_TEMP_SERVICE_DATE_PROVIDER_BY_SERVICE_ID,
   CLEAR_PROVIDERS_BY_SERVICE_ID,
+  SET_BOOK_NOW,
+  CLEAR_BOOK_NOW,
 } from 'actionsReducers/provider.actions';
 
 const initState = {
@@ -35,6 +37,7 @@ const initState = {
   tempServiceDateProvider: {},
   serviceDateProviders: [],
   providersByServiceId: {},
+  bookNowList: {},
 };
 const persistConfig = {
   key: 'provider',
@@ -86,6 +89,19 @@ const reducer = (state = initState, action) => {
         tempServiceDateProvider: {},
       };
     }
+    case SET_BOOK_NOW:
+      return {
+        ...state,
+        bookNowList: {
+          ...state.bookNowList,
+          ...action.payload,
+        },
+      };
+    case CLEAR_BOOK_NOW:
+      return {
+        ...state,
+        bookNowList: {},
+      };
     case SET_SERVICE_DATE_PROVIDERS:
       return {
         ...state,

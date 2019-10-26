@@ -28,6 +28,8 @@ import {
   clearTempServiceDateProviderByServiceIdAction,
   setProvidersByServiceIdApi,
   clearProvidersByServiceId,
+  setBookNowAction,
+  clearBookNowAction,
 } from 'actionsReducers/provider.actions';
 import { setLandingPageAction } from 'actionsReducers/landing.action';
 import {
@@ -49,6 +51,7 @@ export const homeProps = {
     dispatchClearOrgNotFound: () => dispatch(setOrgNotFoundAction(false)),
     dispatchClearTempServiceDateProviderByServiceId: () => dispatch(clearTempServiceDateProviderByServiceIdAction({})),
     dispatchClearProvidersByServiceId: () => dispatch(clearProvidersByServiceId()),
+    dispatchClearBookNowList: () => dispatch(clearBookNowAction()),
   })
 };
 
@@ -111,11 +114,13 @@ export const providerProps = {
   mapStateToProps: ({ provider }) => ({
     providersByServiceId: provider.providersByServiceId,
     availabilitiesByTemporaryServiceId: provider.availabilitiesByTemporaryServiceId,
+    bookNowList: provider.bookNowList,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchAvailabilities: (list, sId, pId, locId) =>
       dispatch(availabilitiesByTemporaryServiceIdBulkApi(list, sId, pId, locId)),
-  })
+    dispatchSetBookNowList: data => dispatch(setBookNowAction(data)),
+  }),
 };
 
 export const bookingProps = {

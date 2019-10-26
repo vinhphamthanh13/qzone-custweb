@@ -22,6 +22,7 @@ class Provider extends Component {
     dispatchAvailabilities: func.isRequired,
     selectBookingDetail: func.isRequired,
     setLandingPage: func.isRequired,
+    dispatchSetBookNowList: func.isRequired,
   };
 
   state = {
@@ -38,17 +39,20 @@ class Provider extends Component {
     initLocation: {},
     popUpLocation: false,
     initTempServiceIdList: [],
+    bookNowList: {},
   };
 
   static getDerivedStateFromProps(props, state) {
     const {
       provider, availabilitiesByTemporaryServiceId, bookedEventId, landingPageFactors, providersByServiceId,
+      bookNowList,
     } = props;
     const {
       provider: cachedProvider, bookedEventId: cachedBookedEventId,
       availabilitiesByTemporaryServiceId: cachedAvailabilitiesByTemporaryServiceId,
       landingPageFactors: cachedLandingPageFactors,
       providersByServiceId: cachedProvidersByServiceId,
+      bookNowList: cachedBookNowList,
     } = state;
     const updatedState = {};
     if (
@@ -94,6 +98,13 @@ class Provider extends Component {
       updatedState.providersByServiceId = providersByServiceId;
     }
 
+    if (
+      bookNowList !== null &&
+      JSON.stringify(bookNowList) !== JSON.stringify(cachedBookNowList)
+    ) {
+      updatedState.bookNowList = bookNowList;
+    }
+
     return Object.keys(updatedState) ? updatedState : null;
   }
 
@@ -104,6 +115,12 @@ class Provider extends Component {
       dispatchAvailabilities(initTempServiceIdList, serviceId, providerId, locationId);
     }
   }
+
+  handleBookNow = () => {
+    const { serviceId, providerId, locationId, bookNowList } = this.state;
+    const bookNowSlot = get(bookNowList, `${serviceId}-${providerId}-${locationId}`);
+    this.handleSelectSlot(bookNowSlot)();
+  };
 
   handleMapPopup = () => {
     this.setState(oldState => ({
@@ -157,6 +174,7 @@ class Provider extends Component {
   };
 
   render() {
+    const { dispatchSetBookNowList } = this.props;
     const {
       provider, serviceId, providerId, locationId, availabilitiesByTemporaryServiceId, isOpenMap, dateTmpServices,
       bookedEventId, providersByServiceId, providerLocationDates, initLocation, popUpLocation,
@@ -254,7 +272,7 @@ class Provider extends Component {
             </div>
           </div>
           <div className={s.searchDate}>
-            <IconButton className={`${s.bookNow} simple-button`}>
+            <IconButton className={`${s.bookNow} simple-button`} onClick={this.handleBookNow}>
               <CheckCircle className={`${s.iconSearchDate} border-round-white`} />
               <span>&nbsp;Book now!</span>
             </IconButton>
@@ -266,6 +284,7 @@ class Provider extends Component {
           {transformedSlot.length > 0 ? (
             <div className={s.availabilities}>
               <TemporaryService
+                onBookNow={dispatchSetBookNowList}
                 timeSlots={transformedSlot}
                 selectSlot={this.handleSelectSlot}
               />
