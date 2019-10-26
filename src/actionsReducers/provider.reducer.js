@@ -14,6 +14,11 @@ import {
   QUERY_PROVIDER,
   CLEAR_QUERIED_PROVIDER,
   CLEAR_SELECT_BOOKING_DETAIL,
+  TEMP_SERVICE_DATE_PROVIDER_BY_SERVICE_ID,
+  SET_SERVICE_DATE_PROVIDERS,
+  SET_PROVIDERS_BY_SERVICE_ID,
+  CLEAR_TEMP_SERVICE_DATE_PROVIDER_BY_SERVICE_ID,
+  CLEAR_PROVIDERS_BY_SERVICE_ID,
 } from 'actionsReducers/provider.actions';
 
 const initState = {
@@ -27,6 +32,9 @@ const initState = {
   providerById: {},
   waitListTemporaryServicesByServiceId: [],
   queriedProvider: null,
+  tempServiceDateProvider: {},
+  serviceDateProviders: [],
+  providersByServiceId: {},
 };
 const persistConfig = {
   key: 'provider',
@@ -62,6 +70,39 @@ const reducer = (state = initState, action) => {
           ...state.temporaryServiceByServiceIds,
           ...action.payload,
         },
+      };
+    case TEMP_SERVICE_DATE_PROVIDER_BY_SERVICE_ID: {
+      return {
+        ...state,
+        tempServiceDateProvider: {
+            ...state.tempServiceDateProvider,
+          ...action.payload,
+        },
+      };
+    }
+    case CLEAR_TEMP_SERVICE_DATE_PROVIDER_BY_SERVICE_ID: {
+      return {
+        ...state,
+        tempServiceDateProvider: {},
+      };
+    }
+    case SET_SERVICE_DATE_PROVIDERS:
+      return {
+        ...state,
+        serviceDateProviders: [...action.payload ],
+      };
+    case SET_PROVIDERS_BY_SERVICE_ID:
+      return {
+        ...state,
+        providersByServiceId: {
+          ...state.providersByServiceId,
+          ...action.payload,
+        },
+      };
+    case CLEAR_PROVIDERS_BY_SERVICE_ID:
+      return {
+        ...state,
+        providersByServiceId: {},
       };
     case AVAILABILITIES_BY_TMP_SERVICE_ID:
       return {

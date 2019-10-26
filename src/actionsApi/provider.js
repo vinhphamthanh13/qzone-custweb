@@ -1,9 +1,8 @@
 import axios from 'axios';
 
 // ********** user-controller *********** //
-// users/{id}
 export const users = id => axios.get(`/users/${id}`);
-
+export const providersByServiceId = id => axios.get(`/providers-by-service-id/${id}`);
 // *********** service-controller ********** //
 export const serviceByProviderId = id => axios.get(`/services-by-provider-id/${id}`);
 
@@ -18,3 +17,4 @@ export const availabilitiesByTemporaryServiceIdBulk = list =>
     .then(axios.spread((...responses) => [responses, null]))
     .catch(error => [null, JSON.stringify(error)]);
 export const queryProvider = data => axios.post('/users/provider/query', data);
+export const tempServiceDateProviderByServiceId = sId => axios.get(`/temp-services/date/provider/${sId}`);

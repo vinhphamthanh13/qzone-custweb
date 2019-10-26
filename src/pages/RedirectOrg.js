@@ -24,6 +24,7 @@ class RedirectOrg extends Component {
     dispatchSetLandingPage: func.isRequired,
     dispatchClearServicesByServiceCategoryId: func.isRequired,
     dispatchClearServiceCategoriesByOrgId: func.isRequired,
+    dispatchClearTempServiceDateProviderByServiceId: func.isRequired,
   };
 
   state = {
@@ -56,11 +57,13 @@ class RedirectOrg extends Component {
       dispatchClearServicesByServiceCategoryId,
       dispatchClearServiceCategoriesByOrgId,
       dispatchSetLandingPage,
+      dispatchClearTempServiceDateProviderByServiceId,
     } = this.props;
     dispatchClearServicesByServiceCategoryId();
     dispatchClearServiceCategoriesByOrgId();
     dispatchSetLandingPage(null);
     dispatchOrganizations();
+    dispatchClearTempServiceDateProviderByServiceId();
   }
 
   handleSelectOrgById = org => () => {
@@ -185,5 +188,5 @@ class RedirectOrg extends Component {
 
 export default connect(
   redirectOrgProps.mapStateToProps,
-  redirectOrgProps.mapDispatchTOProps,
+  redirectOrgProps.mapDispatchToProps,
 )(windowSize(RedirectOrg));

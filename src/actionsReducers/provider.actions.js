@@ -8,6 +8,8 @@ import {
   availabilitiesByTemporaryServiceIdBulk,
   availabilitiesByTemporaryServiceId,
   queryProvider,
+  tempServiceDateProviderByServiceId,
+  providersByServiceId,
 } from 'actionsApi/provider';
 
 export const SET_PROVIDER_DETAIL = 'PROVIDER.SET_PROVIDER_DETAIL';
@@ -23,6 +25,11 @@ export const CLEAR_SELECT_BOOKING_DETAIL = 'BOOKING.CLEAR_SELECT_BOOKING_DETAIL'
 export const WAIT_LIST_TEMPORARY_SERVICES_BY_SERVICE_ID = 'PROVIDER.WAIT_LIST_TEMPORARY_SERVICES_BY_SERVICE_ID';
 export const QUERY_PROVIDER = 'PROVIDER.QUERY_PROVIDER';
 export const CLEAR_QUERIED_PROVIDER = 'PROVIDER.CLEAR_QUERIED_PROVIDER';
+export const TEMP_SERVICE_DATE_PROVIDER_BY_SERVICE_ID = 'PROVIDER.TEMP_SERVICE_DATE_PROVIDER_BY_SERVICE_ID';
+export const CLEAR_TEMP_SERVICE_DATE_PROVIDER_BY_SERVICE_ID = 'PROVIDER.CLEAR_TEMP_SERVICE_DATE_PROVIDER_BY_SERVICE_ID';
+export const SET_SERVICE_DATE_PROVIDERS = 'PROVIDER.SET_SERVICE_DATE_PROVIDERS';
+export const SET_PROVIDERS_BY_SERVICE_ID = 'PROVIDER.SET_PROVIDERS_BY_SERVICE_ID';
+export const CLEAR_PROVIDERS_BY_SERVICE_ID = 'PROVIDER.CLEAR_PROVIDERS_BY_SERVICE_ID';
 const setProviderDetail = payload => ({
   type: SET_PROVIDER_DETAIL,
   payload,
@@ -59,6 +66,13 @@ const queryProviderAction = payload => ({
   type: QUERY_PROVIDER,
   payload,
 });
+const setProvidersByServiceIdAction = payload => ({
+  type: SET_PROVIDERS_BY_SERVICE_ID,
+  payload,
+});
+export const clearProvidersByServiceId = () => ({
+  type: CLEAR_PROVIDERS_BY_SERVICE_ID,
+});
 export const clearQueriedProviderAction = () => ({
   type: CLEAR_QUERIED_PROVIDER,
 });
@@ -82,7 +96,7 @@ export const temporaryServicesByServiceIdApi = id => async (dispatch) => {
   }
   dispatch(setLoading(false));
 };
-export const rescheduledAvailabilitiesByTemporaryServiceIdApi = (tId, sId, pId, locId) => async dispatch => {
+export const availabilitiesByTemporaryServiceIdApi = (tId, sId, pId, locId) => async dispatch => {
   dispatch(setLoading(true));
   const [result, error] = await handleRequest(availabilitiesByTemporaryServiceId, [tId]);
   if (error) {
@@ -92,8 +106,14 @@ export const rescheduledAvailabilitiesByTemporaryServiceIdApi = (tId, sId, pId, 
   }
   dispatch(setLoading(false));
 };
-
-export const availabilitiesByTemporaryServiceIdApi = (list, sId, pId, locId) => async dispatch => {
+const tempServiceDateProviderByServiceIdAction = payload => ({
+  type: TEMP_SERVICE_DATE_PROVIDER_BY_SERVICE_ID,
+  payload,
+});
+export const clearTempServiceDateProviderByServiceIdAction = () => ({
+  type: CLEAR_TEMP_SERVICE_DATE_PROVIDER_BY_SERVICE_ID,
+});
+export const availabilitiesByTemporaryServiceIdBulkApi = (list, sId, pId, locId) => async dispatch => {
   dispatch(setLoading(true));
   const [resultBulk, errorBulk] = await availabilitiesByTemporaryServiceIdBulk(list);
   if (errorBulk) {
@@ -133,6 +153,10 @@ export const selectBookingDetail = payload => ({
 export const clearSelectedBookingDetail = () => ({
   type: CLEAR_SELECT_BOOKING_DETAIL,
 });
+export const setServiceDateProviders = payload => ({
+  type: SET_SERVICE_DATE_PROVIDERS,
+  payload,
+});
 export const usersByIdApi = id => async dispatch => {
   dispatch(setLoading(true));
   const [result, error] = await handleRequest(users, [id]);
@@ -160,6 +184,26 @@ export const queryProviderApi = data => async dispatch => {
     dispatch(queryProviderAction([])); // in case of failed or no result return
   } else {
     dispatch(queryProviderAction(result));
+  }
+  dispatch(setLoading(false));
+};
+export const tempServiceDateProviderByServiceIdApi = sId => async dispatch => {
+  dispatch(setLoading(true));
+  const [result, error] = await handleRequest(tempServiceDateProviderByServiceId, [sId]);
+  if (error) {
+    dispatch(setError(error));
+  } else {
+    dispatch(tempServiceDateProviderByServiceIdAction({ [sId]: result }));
+  }
+  dispatch(setLoading(false));
+};
+export const setProvidersByServiceIdApi = id => async dispatch => {
+  dispatch(setLoading(true));
+  const [result, error] = await handleRequest(providersByServiceId, [id]);
+  if (error) {
+    dispatch(setError(error));
+  } else {
+    dispatch(setProvidersByServiceIdAction({ [id]: result }));
   }
   dispatch(setLoading(false));
 };

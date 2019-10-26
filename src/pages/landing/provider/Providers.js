@@ -3,9 +3,8 @@ import React, { Component } from 'react';
 import { func } from 'prop-types';
 import { connect } from 'react-redux';
 import windowSize from 'react-window-size';
-import { find, uniqBy, chunk, flatten } from 'lodash';
 import get from 'lodash/get';
-import isEmpty from 'lodash/isEmpty';
+import chunk from 'lodash/chunk';
 import { IconButton, InputBase } from '@material-ui/core';
 import { navigateTo } from 'utils/common';
 import { NavigateBefore, Search, Clear } from '@material-ui/icons';
@@ -17,8 +16,6 @@ import s from './Providers.module.scss';
 
 class Providers extends Component {
   static propTypes = {
-    dispatchTemporaryServicesByServiceId: func.isRequired,
-    dispatchAvailabilities: func.isRequired,
     dispatchSelectBookingDetail: func.isRequired,
     dispatchSetLandingPage: func.isRequired,
     dispatchQueryProvider: func.isRequired,
@@ -34,12 +31,14 @@ class Providers extends Component {
     bookedEventId: '',
     searchText: '',
     queriedProvider: null,
+    serviceDateProviders: [],
   };
 
   static getDerivedStateFromProps(props, state) {
     const {
       providersByServiceId, temporaryServiceByServiceIds, match: { params: { sId } }, landingPageFactors,
       availabilitiesByTemporaryServiceId, bookedEventId, windowWidth, queriedProvider,
+      serviceDateProviders,
     } = props;
     const {
       providersByServiceId: cachedProvidersByServiceId,
@@ -50,6 +49,7 @@ class Providers extends Component {
       bookedEventId: cachedBookedEventId,
       landingPageFactors: cachedLandingPageFactors,
       queriedProvider: cachedQueriedProvider,
+      serviceDateProviders: cachedServiceDateProviders,
     } = state;
     const updatedState = {};
 
@@ -89,6 +89,12 @@ class Providers extends Component {
     ) {
       updatedState.landingPageFactors = landingPageFactors;
     }
+    if (
+      serviceDateProviders !== null &&
+      JSON.stringify(serviceDateProviders) !== JSON.stringify(cachedServiceDateProviders)
+    ) {
+      updatedState.serviceDateProviders = serviceDateProviders;
+    }
     if (JSON.stringify(queriedProvider) !== JSON.stringify(cachedQueriedProvider)) {
       updatedState.queriedProvider = queriedProvider;
     }
@@ -97,9 +103,7 @@ class Providers extends Component {
   }
 
   componentDidMount() {
-    const { dispatchTemporaryServicesByServiceId, dispatchClearQueriedProvider } = this.props;
-    const { serviceId } = this.state;
-    dispatchTemporaryServicesByServiceId(serviceId);
+    const { dispatchClearQueriedProvider } = this.props;
     dispatchClearQueriedProvider();
   }
 
@@ -142,57 +146,20 @@ class Providers extends Component {
   };
 
   render() {
-    const { dispatchAvailabilities, dispatchSelectBookingDetail, dispatchSetLandingPage } = this.props;
+    const { dispatchSelectBookingDetail, dispatchSetLandingPage } = this.props;
     const {
       providersByServiceId, temporaryServiceByServiceIds, landingPageFactors, searchText,
       serviceId, availabilitiesByTemporaryServiceId, windowWidth, bookedEventId,
-      queriedProvider,
+      queriedProvider, serviceDateProviders,
     } = this.state;
     const catName = get(landingPageFactors, 'catName');
     const sName = get(landingPageFactors, 'sName');
     const providers = (searchText && queriedProvider !== null && [...queriedProvider]) ||
       get(providersByServiceId, `${catName}.${sName}`, []);
-    const providerByLocation = {};
-    if (
-      !isEmpty(temporaryServiceByServiceIds) &&
-      Object.keys(temporaryServiceByServiceIds).length > 0 &&
-      temporaryServiceByServiceIds[serviceId] &&
-      temporaryServiceByServiceIds[serviceId].length
-    ) {
-      temporaryServiceByServiceIds[serviceId].map(item => {
-        const locationId = get(item, 'geoLocation.id');
-        const providerId = get(item, 'providerId');
-        const providerDetail = find(providers, ['userSub', providerId]);
-        if (providerDetail) {
-          providerByLocation[locationId] = providerByLocation[locationId] ? [...providerByLocation[locationId]] : [];
-          providerByLocation[locationId].push({
-            temporaryServiceId: item.id,
-            ...providerDetail,
-            ...item,
-          });
-          return providerByLocation;
-        }
-        return null;
-      });
-    }
-    const temporaryServiceByProvider = {};
-    if (Object.keys(providerByLocation).length) {
-      Object.keys(providerByLocation).map(locationId => providerByLocation[locationId].map(
-        provider => {
-          const providerId = get(provider, 'userSub');
-          temporaryServiceByProvider[providerId] = temporaryServiceByProvider[providerId]
-            ? temporaryServiceByProvider[providerId] : [];
-          temporaryServiceByProvider[providerId].push(provider.temporaryServiceId);
-          return temporaryServiceByProvider;
-        })
-      );
-    }
+    console.debug(temporaryServiceByServiceIds, serviceId, providers);
     const chunkFactor = Math.abs(windowWidth / MAX_CARD_WIDTH);
-    const providerList = Object.keys(providerByLocation).map(locId =>
-      uniqBy(providerByLocation[locId], 'userSub').map(provider => provider));
-    const providerFlatten = flatten(providerList);
 
-    return Object.keys(providerFlatten).length > 0 && (
+    return serviceDateProviders.length > 0 && (
       <div className={s.container}>
         <div className={s.topSection}>
           <div className={s.headline}>
@@ -208,17 +175,17 @@ class Providers extends Component {
               {searchText.length > 2 && <Clear className="danger-color" onClick={this.handleClearSearch} />}
             </form>
           </div>
-          {chunk(providerFlatten, chunkFactor).map((providerRow, ind) => (
+          {chunk(serviceDateProviders, chunkFactor).map((providerRow, ind) => (
             <div className={s.providerRow} key={ind}>
               {providerRow.map((provider, index) => (
                 <Provider
                   key={`${provider.userSub}-${index}`}
                   provider={{
                     ...provider,
-                    temporaryServiceId: temporaryServiceByProvider[provider.userSub],
+                    serviceId,
+                    sName,
                     catName,
                   }}
-                  dispatchAvailabilities={dispatchAvailabilities}
                   availabilitiesByTemporaryServiceId={availabilitiesByTemporaryServiceId}
                   selectBookingDetail={dispatchSelectBookingDetail}
                   bookedEventId={bookedEventId}

@@ -23,7 +23,7 @@ export const CATEGORY_NAV_WIDTH = 66;
 export const DEVICE_MIN_WIDTH = 375;
 export const MAX_TAB_WIDTH = 166;
 export const MAX_CARD_WIDTH = 320;
-export const ADDRESS_LENGTH = 100;
+export const ADDRESS_LENGTH = 89;
 
 // Auth
 export const AUTHENTICATED_KEY = 'isAuthenticated';

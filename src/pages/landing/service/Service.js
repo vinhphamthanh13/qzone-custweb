@@ -15,32 +15,29 @@ class Service extends Component {
   static propTypes = {
     dispatchProvidersByServiceId: func.isRequired,
     dispatchSetLandingPage: func.isRequired,
+    dispatchTempServiceDateProvider: func.isRequired,
+    dispatchSetServiceDateProviders: func.isRequired,
+    dispatchSetProvidersByServiceId: func.isRequired,
     handleAuth: func.isRequired,
   };
 
   state = {
     service: {},
-    providersByServiceId: {},
     isQueuePopup: false,
     landingPageFactors: {},
+    tempServiceDateProvider: {},
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { service, providersByServiceId, landingPageFactors } = props;
+    const { service, landingPageFactors, tempServiceDateProvider } = props;
     const {
       service: cachedService,
-      providersByServiceId: cachedProvidersByServiceId,
       landingPageFactors: cachedLandingPageFactors,
+      tempServiceDateProvider: cachedTempServiceDateProvider,
     } = state;
     const updatedState = {};
     if (service.id !== cachedService.id) {
       updatedState.service = service;
-    }
-    if (
-      providersByServiceId !== null &&
-      JSON.stringify(providersByServiceId) !== JSON.stringify(cachedProvidersByServiceId)
-    ) {
-      updatedState.providersByServiceId = providersByServiceId;
     }
     if (
       landingPageFactors !== null &&
@@ -48,22 +45,35 @@ class Service extends Component {
     ) {
       updatedState.landingPageFactors = landingPageFactors;
     }
+    if (
+      tempServiceDateProvider !== null &&
+      JSON.stringify(tempServiceDateProvider) !== JSON.stringify(cachedTempServiceDateProvider)
+    ) {
+      updatedState.tempServiceDateProvider = tempServiceDateProvider;
+    }
 
     return Object.keys(updatedState) ? updatedState : null;
   }
 
   componentDidMount() {
-    const { dispatchProvidersByServiceId } = this.props;
+    const {
+      dispatchProvidersByServiceId, dispatchTempServiceDateProvider, dispatchSetProvidersByServiceId,
+    } = this.props;
     const { service, landingPageFactors } = this.state;
     const catName = get(landingPageFactors, 'catName');
-    dispatchProvidersByServiceId(service.id, service.name, catName);
+    const sId = get(service, 'id');
+    dispatchProvidersByServiceId(sId, service.name, catName);
+    dispatchTempServiceDateProvider(sId);
+    dispatchSetProvidersByServiceId(sId);
   }
 
   handleSelectProvider = (sId, sName, catName)=> () => {
-    const { dispatchSetLandingPage } = this.props;
-    const { landingPageFactors } = this.state;
+    const { dispatchSetLandingPage, dispatchSetServiceDateProviders } = this.props;
+    const { landingPageFactors, tempServiceDateProvider } = this.state;
     const orgRef = get(landingPageFactors, 'orgRef', '');
     dispatchSetLandingPage({ sName, catName });
+    const serviceDateProviders = get(tempServiceDateProvider[sId], 'serviceDateProviders');
+    dispatchSetServiceDateProviders(serviceDateProviders);
     navigateTo(`/${orgRef}/provider-by-service/${sId}`, { category: catName, service: sName })();
   };
 
@@ -79,7 +89,7 @@ class Service extends Component {
 
   render() {
     const { handleAuth } = this.props;
-    const { providersByServiceId, landingPageFactors, service, isQueuePopup } = this.state;
+    const { landingPageFactors, service, isQueuePopup, tempServiceDateProvider } = this.state;
     const catName = get(landingPageFactors, 'catName');
     const sDescription = get(service, 'description');
     const sDuration = get(service, 'duration');
@@ -88,8 +98,8 @@ class Service extends Component {
     const sName = get(service, 'name');
     const orgName = get(service, 'organizationEntity.name');
     const website = get(service, 'organizationEntity.website');
-    const serviceProviders = get(providersByServiceId, `${catName}.${sName}`, []);
-    const isProviderSelectable = serviceProviders.length > 0;
+    const serviceDateProviders = get(tempServiceDateProvider, `${sId}.serviceDateProviders`);
+    const isProviderSelectable = serviceDateProviders && serviceDateProviders.length > 0;
     const mode = get(service, 'mode', '');
     const isQueuedMode = mode.toLowerCase() === SERVICE_MODE.QUEUE;
 

@@ -23,7 +23,9 @@ import s from './Home.module.scss';
 export class Home extends Component {
   static propTypes = {
     dispatchServiceCategoriesByOrgId: func.isRequired,
+    dispatchClearTempServiceDateProviderByServiceId: func.isRequired,
     dispatchSetLandingPage: func.isRequired,
+    dispatchClearProvidersByServiceId: func.isRequired,
     dispatchClearOrgNotFound: func.isRequired,
     match: objectOf(any).isRequired,
   };
@@ -70,10 +72,18 @@ export class Home extends Component {
   }
 
   componentDidMount() {
-    const { dispatchServiceCategoriesByOrgId, match: { params: { orgRef }}, dispatchSetLandingPage } = this.props;
+    const {
+      dispatchServiceCategoriesByOrgId,
+      match: { params: { orgRef }},
+      dispatchSetLandingPage,
+      dispatchClearTempServiceDateProviderByServiceId,
+      dispatchClearProvidersByServiceId,
+    } = this.props;
     if (orgRef) {
       dispatchServiceCategoriesByOrgId(orgRef);
       dispatchSetLandingPage({ orgRef });
+      dispatchClearTempServiceDateProviderByServiceId();
+      dispatchClearProvidersByServiceId();
     }
   }
 
