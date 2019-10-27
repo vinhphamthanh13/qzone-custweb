@@ -5,13 +5,14 @@ import get from 'lodash/get';
 import noop from 'lodash/noop';
 import find from 'lodash/find';
 import { Formik } from 'formik';
-import { IconButton, InputBase } from '@material-ui/core';
+import { IconButton, InputBase, Typography } from '@material-ui/core';
 import defaultPImage from 'images/providers.jpg';
 import { Email, PhoneIphone, Place, GpsFixed, DateRange, CheckCircle, ChevronRight, Clear } from '@material-ui/icons';
 import EmptyItem from 'components/EmptyItem';
 import MapDialog from 'components/Map/MapDialog';
 import RateStar from 'components/Rating/RateStar';
 import { limitString, navigateTo } from 'utils/common';
+import DatePicker from 'components/Calendar/DatePicker';
 import { ADDRESS_LENGTH } from 'utils/constants';
 import { providerProps} from 'pages/commonProps';
 import TemporaryService from './TemporaryService';
@@ -40,6 +41,7 @@ class Provider extends Component {
     popUpLocation: false,
     initTempServiceIdList: [],
     bookNowList: {},
+    showDatePicker: false,
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -173,11 +175,17 @@ class Provider extends Component {
     }));
   };
 
+  handleToggleDatePicker = () => {
+    this.setState(oldState => ({
+      showDatePicker: !oldState.showDatePicker,
+    }));
+  };
+
   render() {
     const { dispatchSetBookNowList } = this.props;
     const {
       provider, serviceId, providerId, locationId, availabilitiesByTemporaryServiceId, isOpenMap, dateTmpServices,
-      bookedEventId, providersByServiceId, providerLocationDates, initLocation, popUpLocation,
+      bookedEventId, providersByServiceId, providerLocationDates, initLocation, popUpLocation, showDatePicker,
     } = this.state;
     const providerListByServiceId = get(providersByServiceId, serviceId) || [];
     const providerDetail = find(providerListByServiceId, item => item &&
@@ -194,7 +202,9 @@ class Provider extends Component {
     const timeSlots = get(availabilitiesByTemporaryServiceId,`${serviceId}-${providerId}-${locationId}`,  []);
     const slots = timeSlots.length > 0 && timeSlots.filter(slot =>
       slot.serviceId === serviceId && slot.providerId === providerId && slot.locationId === locationId) || [];
-    const transformedSlot = slots.filter(item => item.id !== bookedEventId && item.spotsOpen === 1).map(slot => ({
+    const transformedSlot = slots
+      .filter(item => item.id !== bookedEventId && item.spotsOpen === 1)
+      .map(slot => ({
       ...slot, sName, pName, pEmail, pPhone, pImage, pAddress,
     }));
     const showLocationSelection = dateTmpServices && Object.keys(dateTmpServices).length > 1;
@@ -254,7 +264,10 @@ class Provider extends Component {
                           <div className={s.popUpLocation}>
                             <div className={s.popUpLocationHeader}>
                               <span>Our Locations</span>
-                              <Clear color="secondary" className="hover-pointer" onClick={this.togglePopUpLocation}/>
+                              <Clear
+                                className="hover-pointer border-round-white white-color"
+                                onClick={this.togglePopUpLocation}
+                              />
                             </div>
                             <div className={s.popUpLocationBody}>
                               {this.createLocationList(setFieldValue)}
@@ -273,14 +286,33 @@ class Provider extends Component {
             </div>
           </div>
           <div className={s.searchDate}>
-            <IconButton className={`${s.bookNow} simple-button`} onClick={this.handleBookNow}>
-              <CheckCircle className={`${s.iconSearchDate} border-round-white`} />
-              <span>&nbsp;Book now!</span>
+            <IconButton className={`${s.bookNow} hover-success`} onClick={this.handleBookNow}>
+              <CheckCircle className={`${s.iconSearchDate} icon-small border-round-white`} />
+              <Typography color="secondary" variant="subtitle2">
+                <span className="hover-success">Book now!</span>
+              </Typography>
             </IconButton>
-            <IconButton className={`${s.findDate} simple-button`}>
-              <DateRange className={s.iconSearchDate} />
-              <span>&nbsp;At a later date</span>
-            </IconButton>
+            <div className={`${s.findDate} hover-success`}>
+              <DateRange className={`${s.iconSearchDate} icon-small`} onClick={this.handleToggleDatePicker}/>
+              {!showDatePicker && (
+                <Typography color="secondary" variant="subtitle2" onClick={this.handleToggleDatePicker}>
+                  <span className="hover-success">At a later date</span>
+                </Typography>
+              )}
+              {showDatePicker && (
+                <DatePicker
+                  type="date"
+                  openCalendarOnInitial
+                  onCancelDatePicker={this.handleToggleDatePicker}
+                  onChange={noop}
+                  enableCalendar
+                  selectDate={noop}
+                />
+              )}
+              {showDatePicker && (
+                <Clear className="icon-small" color="secondary" onClick={this.handleToggleDatePicker}/>
+              )}
+            </div>
           </div>
           {transformedSlot.length > 0 ? (
             <div className={s.availabilities}>

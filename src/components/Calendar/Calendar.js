@@ -6,7 +6,8 @@ import {
 } from 'prop-types';
 import { Button, Typography, IconButton } from '@material-ui/core';
 import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons';
-import { chunk, noop } from 'lodash';
+import chunk from 'lodash/chunk';
+import noop from 'lodash/noop';
 import moment from 'moment';
 import uuidv1 from 'uuid/v1';
 import calendar, {
@@ -174,7 +175,7 @@ class Calendar extends Component {
         className={`${s.dateOfMonth} ${dateStyles} ${formatSameDay}`}
         {...props}
       >
-        <Typography variant="subtitle1" color="inherit">{zeroPad($date.date(), 2)}</Typography>
+        <Typography variant="body1" color="inherit">{zeroPad($date.date(), 2)}</Typography>
       </div>
     );
   };

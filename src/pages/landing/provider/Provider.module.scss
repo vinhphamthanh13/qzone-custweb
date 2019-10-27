@@ -160,6 +160,11 @@
 .findDate {
   font-size: 1rem;
   border-radius: unset !important;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-right: 1rem;
+  cursor: pointer;
 }
 
 .bookNow {

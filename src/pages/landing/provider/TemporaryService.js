@@ -165,7 +165,8 @@ class TemporaryService extends Component {
             || transformedSlot[`${date}-max`] === 0;
           const minSlotChunkCtaStyle = disableMinSlotChunkCta ? `${s.controlDate} ${s.disabledCta}` : s.controlDate;
           const maxSlotChunkCtaStyle = disableMaxSlotChunkCta ? `${s.controlDate} ${s.disabledCta}` : s.controlDate;
-          const expandIconStyle = !dateSelected[date] ? s.expandMore : `${s.expandMore} ${s.expandLess}`;
+          const expandIconStyle = !dateSelected[date] && !isDefaultExpand ?
+            s.expandMore : `${s.expandMore} ${s.expandLess}`;
           const dateStyle = (dateSelected[date] || isDefaultExpand) ? `${s.date} ${s.dateActive}` : s.date;
           return moment(date).isValid() && (
             <div className={s.dateChunk} key={uuidv1()}>

@@ -1,17 +1,34 @@
 import React, { Component } from 'react';
-import {
-  func,
-  bool,
-  string,
-} from 'prop-types';
+import { func, bool, string } from 'prop-types';
 import moment from 'moment';
 import { Typography } from '@material-ui/core';
-import { DateRange } from '@material-ui/icons';
+import { DateRange, Clear } from '@material-ui/icons';
 import { DATE_FORMAT, INITIAL_TIME } from './constants';
 import Calendar from './Calendar';
 import s from './DatePicker.module.scss';
 
 class DatePicker extends Component {
+  static propTypes = {
+    onChange: func.isRequired,
+    selectDate: func.isRequired,
+    enableCalendar: bool.isRequired,
+    type: string, // theme, date
+    isIcon: bool,
+    iconClassName: string,
+    dateFormat: string,
+    openCalendarOnInitial: bool,
+    onCancelDatePicker: func,
+  };
+
+  static defaultProps = {
+    openCalendarOnInitial: false,
+    onCancelDatePicker: null,
+    type: 'theme',
+    isIcon: false,
+    iconClassName: '',
+    dateFormat: 'DD/MM/YYYY',
+  };
+
   static getDerivedStateFromProps(props, state) {
     const { date } = props;
     const { selectedDate } = state;
@@ -27,7 +44,7 @@ class DatePicker extends Component {
     super(props);
     this.state = {
       selectedDate: moment(),
-      isOpenCalendar: false,
+      isOpenCalendar: props.openCalendarOnInitial,
     };
   }
 
@@ -55,27 +72,24 @@ class DatePicker extends Component {
   };
 
   render() {
-    const {
-      selectedDate,
-      isOpenCalendar,
-    } = this.state;
-    const {
-      enableCalendar,
-      type,
-      isIcon,
-      iconClassName,
-      dateFormat,
-    } = this.props;
+    const { selectedDate, isOpenCalendar } = this.state;
+    const { enableCalendar, type, isIcon, iconClassName, dateFormat, onCancelDatePicker } = this.props;
     const datePickerHover = enableCalendar ? 'hover-pointer' : '';
+    const isCancelDatePicker = typeof onCancelDatePicker === 'function';
     const renderCalendar = isOpenCalendar && enableCalendar ? (
       <div className="cover-bg-black">
-        <Calendar
-          minDate={moment(`${moment().format(DATE_FORMAT)}${INITIAL_TIME}`)}
-          maxDate={moment(`${moment().add(11, 'y').format(DATE_FORMAT)}${INITIAL_TIME}`)}
-          date={selectedDate}
-          onDateChanged={this.handleChangeDate}
-          onClose={this.handleCloseCalendar}
-        />
+        <div className={s.datePickerCalendar}>
+          {isCancelDatePicker && (
+            <Clear className={s.cancelDatePicker} color="secondary" onClick={onCancelDatePicker} />
+          )}
+          <Calendar
+            minDate={moment(`${moment().format(DATE_FORMAT)}${INITIAL_TIME}`)}
+            maxDate={moment(`${moment().add(11, 'y').format(DATE_FORMAT)}${INITIAL_TIME}`)}
+            date={selectedDate}
+            onDateChanged={this.handleChangeDate}
+            onClose={this.handleCloseCalendar}
+          />
+        </div>
       </div>
     ) : null;
     const tabStyle = type === 'theme' ? s.calendarTab : s.normalDatePicker;
@@ -123,22 +137,5 @@ class DatePicker extends Component {
     );
   }
 }
-
-DatePicker.propTypes = {
-  onChange: func.isRequired,
-  selectDate: func.isRequired,
-  enableCalendar: bool.isRequired,
-  type: string, // theme, date
-  isIcon: bool,
-  iconClassName: string,
-  dateFormat: string,
-};
-
-DatePicker.defaultProps = {
-  type: 'theme',
-  isIcon: false,
-  iconClassName: '',
-  dateFormat: 'DD/MM/YYYY',
-};
 
 export default DatePicker;
