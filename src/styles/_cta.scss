@@ -82,6 +82,15 @@
   }
 }
 
+.hover-success {
+  transition: all 0.2s ease-in;
+  &:hover {
+    color: $success !important;
+    font-weight: bold !important;
+    background: transparent !important;
+  }
+}
+
 .hover-none {
   &:hover {
     cursor: unset;

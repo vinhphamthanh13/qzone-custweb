@@ -180,7 +180,8 @@ class Provider extends Component {
       bookedEventId, providersByServiceId, providerLocationDates, initLocation, popUpLocation,
     } = this.state;
     const providerListByServiceId = get(providersByServiceId, serviceId) || [];
-    const providerDetail = find(providerListByServiceId, item => item && item.id === providerId);
+    const providerDetail = find(providerListByServiceId, item => item &&
+      (item.userSub === providerId || item.id === providerId));
     const sName = get(provider, 'sName');
     const pName = get(providerDetail, 'givenName');
     const pEmail = get(providerDetail, 'email');

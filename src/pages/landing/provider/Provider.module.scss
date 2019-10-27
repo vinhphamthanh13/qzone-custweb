@@ -4,9 +4,9 @@
   display: flex;
   flex-direction: column;
   width: $max-card-width;
-  margin: 0.5rem;
+  margin: 0.5rem 0.5rem 0.25rem 1rem;
   border: 1px solid $main_03;
-  box-shadow: 2px 2px 13px 1px $main_04;
+  box-shadow: 2px 2px 13px 1px $grayNickel;
   position: relative;
   overflow: hidden;
 }
@@ -139,6 +139,7 @@
 }
 
 .availabilities {
+  height: 25rem;
   color: inherit;
 }
 

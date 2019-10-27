@@ -2,23 +2,32 @@ import React, { Component } from 'react';
 import { func } from 'prop-types';
 import chunk from 'lodash/chunk';
 import get from 'lodash/get';
+import noop from 'lodash/noop';
 import uuidv1 from 'uuid/v1';
 import moment from 'moment';
 import { IconButton } from '@material-ui/core';
-import { ChevronRight, ChevronLeft, ExpandMore } from '@material-ui/icons';
+import { ExpandMore } from '@material-ui/icons';
 import { DATE_LABEL, TIME_FORMAT, NO_ROWS_PER_DATE, NO_SLOTS_PER_ROW } from 'utils/constants';
 import s from './TemporaryService.module.scss';
 
 class TemporaryService extends Component {
   static propTypes = {
     selectSlot: func.isRequired,
-    onBookNow: func.isRequired,
+    onBookNow: func,
+  };
+
+  static defaultProps = {
+    onBookNow: noop,
   };
 
   state = {
     timeSlots: [],
     chunkIndex: {},
     dateSelected: {},
+    slotsByDate: {},
+    transformedSlot: {},
+    chunkTransformedIndex: 0,
+    chunkedTransformedSlot: [],
   };
 
   static getDerivedStateFromProps(props) {
@@ -35,11 +44,35 @@ class TemporaryService extends Component {
 
   componentDidMount() {
     const { onBookNow } = this.props;
-    const { bookNowSlot } = this.state;
+    const { bookNowSlot, timeSlots } = this.state;
     const serviceId = get(bookNowSlot, 'serviceId');
     const providerId = get(bookNowSlot, 'providerId');
     const locationId = get(bookNowSlot, 'locationId');
     onBookNow({ [`${serviceId}-${providerId}-${locationId}`]: bookNowSlot });
+    const slotsByDate = {};
+    timeSlots.map(slot => {
+      const date = slot.providerStartSec.replace(/\s.*/, '');
+      slotsByDate[date] = slotsByDate[date] ? slotsByDate[date] : [];
+      slotsByDate[date].push(slot);
+      return null;
+    });
+    const transformedSlot = {};
+    Object.keys(slotsByDate).map(date => {
+      const chunkSlots = chunk(slotsByDate[date], NO_SLOTS_PER_ROW);
+      transformedSlot[date] = chunk(chunkSlots, NO_ROWS_PER_DATE);
+      transformedSlot[`${date}-max`] = transformedSlot[date].length - 1;
+      return null;
+    });
+    const chunkedTransformedSlot = chunk(Object.keys(transformedSlot), 4) || [];
+    this.setState({
+      dateSelected: {
+        [chunkedTransformedSlot[0][0]]: true,
+      },
+      slotsByDate,
+      transformedSlot,
+      chunkedTransformedSlot,
+      maxDateChunk: chunkedTransformedSlot.length - 1,
+    })
   }
 
   handleChunkIndexMore = (date, max)  => () => {
@@ -68,37 +101,72 @@ class TemporaryService extends Component {
   handleSelectedDate = date => () => {
     this.setState(oldState => ({
       dateSelected: {
-        ...oldState.dateSelected,
         [date]: !oldState.dateSelected[date],
       },
     }));
   };
 
+  handleMoreChunkDate = () => {
+    const { chunkedTransformedSlot } = this.state;
+    const maxChunk = chunkedTransformedSlot.length - 1;
+    this.setState(oldState => ({
+      dateSelected: {
+        [chunkedTransformedSlot[oldState.chunkTransformedIndex + 1][0]]: true,
+      },
+      chunkTransformedIndex: oldState.chunkTransformedIndex === maxChunk ?
+        maxChunk : oldState.chunkTransformedIndex + 1,
+    }));
+  };
+
+  handleLessChunkDate = () => {
+    const { chunkedTransformedSlot } = this.state;
+    this.setState(oldState => ({
+      dateSelected: {
+        [chunkedTransformedSlot[oldState.chunkTransformedIndex - 1][0]]: true,
+      },
+      chunkTransformedIndex: oldState.chunkTransformedIndex === 0 ?
+        0 : oldState.chunkTransformedIndex - 1,
+    }));
+  };
+
   render() {
     const { selectSlot } = this.props;
-    const { timeSlots, chunkIndex, dateSelected } = this.state;
-    const slotsByDate = {};
-    timeSlots.map(slot => {
-      const date = slot.providerStartSec.replace(/\s.*/, '');
-      slotsByDate[date] = slotsByDate[date] ? slotsByDate[date] : [];
-      slotsByDate[date].push(slot);
-      return null;
-    });
-    const transformedSlot = {};
-    Object.keys(slotsByDate).map(date => {
-      const chunkSlots = chunk(slotsByDate[date], NO_SLOTS_PER_ROW);
-      transformedSlot[date] = chunk(chunkSlots, NO_ROWS_PER_DATE);
-      transformedSlot[`${date}-max`] = transformedSlot[date].length - 1;
-      return null;
-    });
+    const {
+      slotsByDate, transformedSlot, chunkIndex, dateSelected, chunkedTransformedSlot, chunkTransformedIndex,
+      maxDateChunk,
+    } = this.state;
     const isDefaultExpand = Object.keys(slotsByDate).length === 1;
+    const disableMinDateChunkCta = chunkTransformedIndex === 0;
+    const disableMaxDateChunkCta = chunkTransformedIndex === maxDateChunk;
+    const minDateChunkCtaStyle = disableMinDateChunkCta ? `${s.controlDate} ${s.disabledCta}` : s.controlDate;
+    const maxDateChunkCtaStyle = disableMaxDateChunkCta ? `${s.controlDate} ${s.disabledCta}` : s.controlDate;
 
     return (
       <div className={s.container}>
-        {Object.keys(transformedSlot).map(date => {
+        <div className={s.moreDateCta}>
+          <IconButton
+            className={`${minDateChunkCtaStyle} hover-success`}
+            onClick={this.handleLessChunkDate}
+            disabled={disableMinDateChunkCta}
+          >
+            previous date...
+          </IconButton>
+          <IconButton
+            className={`${maxDateChunkCtaStyle} hover-success`}
+            onClick={this.handleMoreChunkDate}
+            disabled={disableMaxDateChunkCta}
+          >
+            more date...
+          </IconButton>
+        </div>
+        {chunkedTransformedSlot.length > 0 && chunkedTransformedSlot[chunkTransformedIndex].map(date => {
+          const disableMinSlotChunkCta = !chunkIndex[`${date}-index`] || chunkIndex[`${date}-index`] === 0;
+          const disableMaxSlotChunkCta = chunkIndex[`${date}-index`] === transformedSlot[`${date}-max`]
+            || transformedSlot[`${date}-max`] === 0;
+          const minSlotChunkCtaStyle = disableMinSlotChunkCta ? `${s.controlDate} ${s.disabledCta}` : s.controlDate;
+          const maxSlotChunkCtaStyle = disableMaxSlotChunkCta ? `${s.controlDate} ${s.disabledCta}` : s.controlDate;
           const expandIconStyle = !dateSelected[date] ? s.expandMore : `${s.expandMore} ${s.expandLess}`;
-          let dateStyle = s.date;
-          dateStyle = (dateSelected[date] || isDefaultExpand) ? `${s.date} ${s.dateActive}` : dateStyle;
+          const dateStyle = (dateSelected[date] || isDefaultExpand) ? `${s.date} ${s.dateActive}` : s.date;
           return moment(date).isValid() && (
             <div className={s.dateChunk} key={uuidv1()}>
               { /* eslint-disable-next-line */ }
@@ -128,32 +196,25 @@ class TemporaryService extends Component {
                       )})
                     }
                   </div>
-                  <div className={s.showMoreSlot}>
-                    <div className={s.extraCta}>
-                      <IconButton
-                        className="simple-button button-sm"
-                        color="inherit"
-                        disabled={!chunkIndex[`${date}-index`] || chunkIndex[`${date}-index`] === 0}
-                        onClick={this.handleChunkIndexLess(
-                          date
-                        )}
-                      >
-                        <ChevronLeft />
-                        <span>&nbsp;less</span>
-                      </IconButton>
-                      <IconButton
-                        className="simple-button button-sm"
-                        color="inherit"
-                        onClick={this.handleChunkIndexMore(
-                          date, transformedSlot[`${date}-max`],
-                        )}
-                        disabled={chunkIndex[`${date}-index`] === transformedSlot[`${date}-max`]
-                        || transformedSlot[`${date}-max`] === 0}
-                      >
-                        <span>more&nbsp;</span>
-                        <ChevronRight />
-                      </IconButton>
-                    </div>
+                  <div className={s.moreSlotCta}>
+                    <IconButton
+                      className={`${minSlotChunkCtaStyle} hover-success`}
+                      disabled={disableMinSlotChunkCta}
+                      onClick={this.handleChunkIndexLess(
+                        date
+                      )}
+                    >
+                      previous slot...
+                    </IconButton>
+                    <IconButton
+                      className={`${maxSlotChunkCtaStyle} hover-success`}
+                      onClick={this.handleChunkIndexMore(
+                        date, transformedSlot[`${date}-max`],
+                      )}
+                      disabled={disableMaxSlotChunkCta}
+                    >
+                      more slot...
+                    </IconButton>
                   </div>
                 </div>
               )}
