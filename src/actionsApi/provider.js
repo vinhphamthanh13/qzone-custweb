@@ -18,3 +18,4 @@ export const availabilitiesByTemporaryServiceIdBulk = list =>
     .catch(error => [null, JSON.stringify(error)]);
 export const queryProvider = data => axios.post('/users/provider/query', data);
 export const tempServiceDateProviderByServiceId = sId => axios.get(`/temp-services/date/provider/${sId}`);
+export const availabilitiesProviderServiceDate = data => axios.post('/availabilities/provider/service/date', data);

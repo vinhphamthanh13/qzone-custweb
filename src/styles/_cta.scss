@@ -86,7 +86,7 @@
   transition: all 0.2s ease-in;
   &:hover {
     color: $success !important;
-    font-weight: bold !important;
+    font-weight: bold;
     background: transparent !important;
   }
 }

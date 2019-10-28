@@ -10,6 +10,7 @@ import {
   queryProvider,
   tempServiceDateProviderByServiceId,
   providersByServiceId,
+  availabilitiesProviderServiceDate,
 } from 'actionsApi/provider';
 
 export const SET_PROVIDER_DETAIL = 'PROVIDER.SET_PROVIDER_DETAIL';
@@ -32,6 +33,7 @@ export const SET_PROVIDERS_BY_SERVICE_ID = 'PROVIDER.SET_PROVIDERS_BY_SERVICE_ID
 export const CLEAR_PROVIDERS_BY_SERVICE_ID = 'PROVIDER.CLEAR_PROVIDERS_BY_SERVICE_ID';
 export const SET_BOOK_NOW = 'PROVIDER.SET_BOOK_NOW';
 export const CLEAR_BOOK_NOW = 'PROVIDER.CLEAR_BOOK_NOW';
+export const QUERY_AVAILABILITIES_BY_DATE = 'PROVIDER.QUERY_AVAILABILITIES_BY_DATE';
 const setProviderDetail = payload => ({
   type: SET_PROVIDER_DETAIL,
   payload,
@@ -81,7 +83,10 @@ export const setBookNowAction = payload => ({
 export const clearBookNowAction = () => ({
   type: CLEAR_BOOK_NOW,
 });
-
+const queryAvailabilitiesByDateAction = payload => ({
+  type: QUERY_AVAILABILITIES_BY_DATE,
+  payload,
+});
 // Async
 export const setProviderDetailAction = id => async (dispatch) => {
   dispatch(setLoading(true));
@@ -201,6 +206,16 @@ export const setProvidersByServiceIdApi = id => async dispatch => {
     dispatch(setError(error));
   } else {
     dispatch(setProvidersByServiceIdAction({ [id]: result }));
+  }
+  dispatch(setLoading(false));
+};
+export const queryAvailabilitiesByDateApi = data => async dispatch => {
+  dispatch(setLoading(true));
+  const [result, error] = await handleRequest(availabilitiesProviderServiceDate, [data]);
+  if (error) {
+    dispatch(setError(error));
+  } else {
+    dispatch(queryAvailabilitiesByDateAction(result));
   }
   dispatch(setLoading(false));
 };

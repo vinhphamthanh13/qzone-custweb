@@ -7,6 +7,8 @@ import get from 'lodash/get';
 import chunk from 'lodash/chunk';
 import { IconButton, InputBase } from '@material-ui/core';
 import { navigateTo } from 'utils/common';
+import Loading from 'components/Loading';
+import Error from 'components/Error';
 import { NavigateBefore, Search, Clear } from '@material-ui/icons';
 import { providersProps } from 'pages/commonProps';
 import { MAX_CARD_WIDTH } from 'utils/constants';
@@ -132,42 +134,46 @@ class Providers extends Component {
     console.log('queriedProvider', queriedProvider);
 
     return serviceDateProviders.length > 0 && (
-      <div className={s.container}>
-        <div className={s.topSection}>
-          <div className={s.headline}>
-            <div className={s.navigation}>
-              <IconButton color="inherit" onClick={this.handleSelectService(catName)}>
-                <NavigateBefore color="inherit" />
-              </IconButton>
-              <div className={`${s.title} ellipsis`}>{sName}</div>
+      <>
+        <Loading />
+        <Error />
+        <div className={s.container}>
+          <div className={s.topSection}>
+            <div className={s.headline}>
+              <div className={s.navigation}>
+                <IconButton color="inherit" onClick={this.handleSelectService(catName)}>
+                  <NavigateBefore color="inherit" />
+                </IconButton>
+                <div className={`${s.title} ellipsis`}>{sName}</div>
+              </div>
+              <form onSubmit={this.handleSubmitSearch} className={s.searchProvider}>
+                <Search className="main-color" />&nbsp;
+                <InputBase fullWidth placeholder="Provider name" value={searchText} onChange={this.handleSearch} />
+                {searchText.length > 2 && <Clear className="danger-color" onClick={this.handleClearSearch} />}
+              </form>
             </div>
-            <form onSubmit={this.handleSubmitSearch} className={s.searchProvider}>
-              <Search className="main-color" />&nbsp;
-              <InputBase fullWidth placeholder="Provider name" value={searchText} onChange={this.handleSearch} />
-              {searchText.length > 2 && <Clear className="danger-color" onClick={this.handleClearSearch} />}
-            </form>
+            {chunk(serviceDateProviders, chunkFactor).map((providerRow, ind) => (
+              <div className={s.providerRow} key={ind}>
+                {providerRow.map((provider, index) => (
+                  <Provider
+                    key={`${provider.userSub}-${index}`}
+                    provider={{
+                      ...provider,
+                      serviceId,
+                      sName,
+                      catName,
+                    }}
+                    selectBookingDetail={dispatchSelectBookingDetail}
+                    bookedEventId={bookedEventId}
+                    setLandingPage={dispatchSetLandingPage}
+                    landingPageFactors={landingPageFactors}
+                />))}
+              </div>
+            ))}
           </div>
-          {chunk(serviceDateProviders, chunkFactor).map((providerRow, ind) => (
-            <div className={s.providerRow} key={ind}>
-              {providerRow.map((provider, index) => (
-                <Provider
-                  key={`${provider.userSub}-${index}`}
-                  provider={{
-                    ...provider,
-                    serviceId,
-                    sName,
-                    catName,
-                  }}
-                  selectBookingDetail={dispatchSelectBookingDetail}
-                  bookedEventId={bookedEventId}
-                  setLandingPage={dispatchSetLandingPage}
-                  landingPageFactors={landingPageFactors}
-              />))}
-            </div>
-          ))}
+          <Footer maintenance={false} />
         </div>
-        <Footer maintenance={false} />
-      </div>
+      </>
     );
   }
 }

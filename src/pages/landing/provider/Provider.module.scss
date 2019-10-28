@@ -148,8 +148,9 @@
   justify-content: space-between;
   color: $main;
   border-radius: 0.2rem;
-  border: 2px solid $white;
-  background: rgba($success, 0.2);
+  //border: 2px solid $white;
+  //background: rgba($success, 0.2);
+  background: linear-gradient(to top, $white, rgba($success, 0.4), $white);
   box-sizing: border-box;
 }
 

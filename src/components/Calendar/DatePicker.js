@@ -3,6 +3,7 @@ import { func, bool, string } from 'prop-types';
 import moment from 'moment';
 import { Typography } from '@material-ui/core';
 import { DateRange, Clear } from '@material-ui/icons';
+import { CALENDAR_DATE } from 'utils/constants';
 import { DATE_FORMAT, INITIAL_TIME } from './constants';
 import Calendar from './Calendar';
 import s from './DatePicker.module.scss';
@@ -48,12 +49,6 @@ class DatePicker extends Component {
     };
   }
 
-  componentDidMount() {
-    const { selectDate } = this.props;
-    const { selectedDate } = this.state;
-    selectDate(selectedDate);
-  }
-
   handleChangeDate = (date) => {
     const { onChange } = this.props;
     onChange(date);
@@ -80,7 +75,7 @@ class DatePicker extends Component {
       <div className="cover-bg-black">
         <div className={s.datePickerCalendar}>
           {isCancelDatePicker && (
-            <Clear className={s.cancelDatePicker} color="secondary" onClick={onCancelDatePicker} />
+            <Clear className={`${s.cancelDatePicker} white-color`} onClick={onCancelDatePicker} />
           )}
           <Calendar
             minDate={moment(`${moment().format(DATE_FORMAT)}${INITIAL_TIME}`)}
@@ -110,22 +105,8 @@ class DatePicker extends Component {
             <>
               <div className={`${tabStyle} ${datePickerHover}`}>
                 <div className={s.calendarText}>
-                  <Typography variant="body1" color="inherit" className={fontStyle}>
-                    {selectedDate.format('DD')}
-                  </Typography>
-                </div>
-              </div>
-              <div className={tabStyle}>
-                <div className={s.calendarText}>
-                  <Typography variant="body1" color="inherit" className={fontStyle}>
-                    {selectedDate.format('MMMM')}
-                  </Typography>
-                </div>
-              </div>
-              <div className={tabStyle}>
-                <div className={s.calendarText}>
-                  <Typography variant="body1" color="inherit" className={fontStyle}>
-                    {selectedDate.format('YYYY')}
+                  <Typography variant="body1" color="inherit" className={`${fontStyle} hover-success`}>
+                    {selectedDate.format(CALENDAR_DATE)}
                   </Typography>
                 </div>
               </div>

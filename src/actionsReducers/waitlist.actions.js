@@ -12,10 +12,7 @@ import {
   cancelWaitLists,
   waitListsById,
 } from 'actionsApi/waitlist';
-import {
-  defaultDateFormat,
-  regExPattern, timeSlotFormat,
-} from 'utils/constants';
+import { CALENDAR_DATE, regExPattern, timeSlotFormat } from 'utils/constants';
 
 export const REGISTER_WAIT_LISTS = 'BOOKING.REGISTER_WAIT_LISTS';
 export const SET_WAIT_LISTS = 'PROFILE.SET_WAIT_LISTS';
@@ -46,7 +43,7 @@ export const registerWaitListsApi = (data, headers) => async (dispatch) => {
       );
     dispatch(setSucceed(
       // eslint-disable-next-line max-len
-      `You have been enrolled the event on ${moment(enrolledDate).format(defaultDateFormat)} at ${moment(enrolledDate).format(timeSlotFormat)}! (${timezoneId})`,
+      `You have been enrolled the event on ${moment(enrolledDate).format(CALENDAR_DATE)} at ${moment(enrolledDate).format(timeSlotFormat)}! (${timezoneId})`,
     ));
     dispatch(setLoading(false));
   }

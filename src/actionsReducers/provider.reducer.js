@@ -21,6 +21,7 @@ import {
   CLEAR_PROVIDERS_BY_SERVICE_ID,
   SET_BOOK_NOW,
   CLEAR_BOOK_NOW,
+  QUERY_AVAILABILITIES_BY_DATE,
 } from 'actionsReducers/provider.actions';
 
 const initState = {
@@ -28,6 +29,7 @@ const initState = {
   providerServices: null,
   temporaryServiceByServiceIds: {},
   availabilitiesByTemporaryServiceId: {},
+  queryAvailabilitiesByTemporaryServiceId: {},
   instantAvailabilitiesByTemporaryServiceId: [],
   rescheduledAvailabilitiesByTemporaryServiceId: [],
   selectedBookingDetail: {},
@@ -124,6 +126,14 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         availabilitiesByTemporaryServiceId: {
+          ...state.availabilitiesByTemporaryServiceId,
+          ...action.payload,
+        },
+      };
+    case QUERY_AVAILABILITIES_BY_DATE:
+      return {
+        ...state,
+        queryAvailabilitiesByTemporaryServiceId: {
           ...state.availabilitiesByTemporaryServiceId,
           ...action.payload,
         },

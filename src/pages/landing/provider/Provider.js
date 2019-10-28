@@ -5,6 +5,7 @@ import get from 'lodash/get';
 import noop from 'lodash/noop';
 import find from 'lodash/find';
 import { Formik } from 'formik';
+import momentz from 'moment-timezone';
 import { IconButton, InputBase, Typography } from '@material-ui/core';
 import defaultPImage from 'images/providers.jpg';
 import { Email, PhoneIphone, Place, GpsFixed, DateRange, CheckCircle, ChevronRight, Clear } from '@material-ui/icons';
@@ -24,6 +25,7 @@ class Provider extends Component {
     selectBookingDetail: func.isRequired,
     setLandingPage: func.isRequired,
     dispatchSetBookNowList: func.isRequired,
+    dispatchQueryAvailabilitiesByDate: func.isRequired,
   };
 
   state = {
@@ -181,6 +183,15 @@ class Provider extends Component {
     }));
   };
 
+  handleQueryAvailabilitiesByDate = date => {
+    const { dispatchQueryAvailabilitiesByDate } = this.props;
+    const { serviceId, providerId } = this.state;
+    const unixDate = momentz(date, 'Australia/Sydney').unix();
+    dispatchQueryAvailabilitiesByDate({
+      date: unixDate, serviceId, providerId,
+    })
+  };
+
   render() {
     const { dispatchSetBookNowList } = this.props;
     const {
@@ -289,14 +300,14 @@ class Provider extends Component {
             <IconButton className={`${s.bookNow} hover-success`} onClick={this.handleBookNow}>
               <CheckCircle className={`${s.iconSearchDate} icon-small border-round-white`} />
               <Typography color="secondary" variant="subtitle2">
-                <span className="hover-success">Book now!</span>
+                <span className="hover-success text-shadow-bright">Book now!</span>
               </Typography>
             </IconButton>
             <div className={`${s.findDate} hover-success`}>
               <DateRange className={`${s.iconSearchDate} icon-small`} onClick={this.handleToggleDatePicker}/>
               {!showDatePicker && (
                 <Typography color="secondary" variant="subtitle2" onClick={this.handleToggleDatePicker}>
-                  <span className="hover-success">At a later date</span>
+                  <span className="hover-success text-shadow-bright">At a later date</span>
                 </Typography>
               )}
               {showDatePicker && (
@@ -306,7 +317,7 @@ class Provider extends Component {
                   onCancelDatePicker={this.handleToggleDatePicker}
                   onChange={noop}
                   enableCalendar
-                  selectDate={noop}
+                  selectDate={this.handleQueryAvailabilitiesByDate}
                 />
               )}
               {showDatePicker && (

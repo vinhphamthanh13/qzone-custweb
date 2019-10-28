@@ -72,7 +72,7 @@
   user-select: none;
   cursor: pointer;
   text-align: center;
-  color: $gray;
+  color: $grayNickel;
   width: 48px;
   box-sizing: border-box;
   padding: 8px;
@@ -80,7 +80,7 @@
 }
 
 .month {
-  color: $main;
+  color: $triad_04;
   &:hover {
     background: rgba($triad_04, 0.5);
     color: $main_01;
@@ -93,26 +93,11 @@
   cursor: unset !important;
 }
 
-.buttonOk {
-  user-select: none;
-  background: $main;
-  color: $gallery;
-  border: none;
-  border-radius: unset;
-  height: 36px;
-  font-weight: bold;
-  transition: all 0.2s ease;
-  &:hover {
-    background: $triad_03;
-  }
-}
-
 .monthList {
   display: flex;
   flex-direction: column;
   background: $gallery;
   overflow: auto;
-  height: 340px;
   width: 308px;
 }
 
@@ -127,7 +112,7 @@
   width: 105px;
   user-select: none;
   box-sizing: border-box;
-  padding: 1.83rem 1rem;
+  padding: 1.37rem 1rem;
   text-align: center;
   border: 1px solid $white;
   transition: background 0.25s ease, color 0.3s ease-in;
@@ -156,7 +141,6 @@
   list-style-type: none;
   background: $gallery;
   overflow: auto;
-  height: 340px;
   width: 310px;
   display: flex;
   flex-direction: column;
@@ -172,16 +156,16 @@
 }
 
 .yearCell {
-  padding: 1.8rem 1.6rem;
-  color: $main;
+  padding: 1.37rem 1.6rem;
+  color: $main_04;
   box-sizing: border-box;
   border: 1px solid $white;
   transition: all 0.3s ease;
 
   &:hover {
     cursor: pointer;
-    background: $triad_04;
-    color: $alto;
+    background: rgba($triad_04, 0.7);
+    color: $white;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
    }
@@ -189,8 +173,8 @@
 
 .currentMonthYear {
   cursor: pointer;
-  color: $triad_02;
-  background: rgba($triad_04, 0.7);
+  color: $main_01;
+  background: $triad_04;
   border-radius: 5px;
 }
 
@@ -216,5 +200,19 @@
   color: $triad_03;
   &:hover {
     background: rgba($triad_04, 0.1);
+  }
+}
+
+.buttonOk {
+  user-select: none;
+  background: $main;
+  color: $gallery;
+  border: none;
+  border-radius: unset;
+  height: 36px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  &:hover {
+    background: $triad_04;
   }
 }

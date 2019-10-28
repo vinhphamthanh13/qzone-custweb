@@ -30,6 +30,7 @@ import {
   clearProvidersByServiceId,
   setBookNowAction,
   clearBookNowAction,
+  queryAvailabilitiesByDateApi,
 } from 'actionsReducers/provider.actions';
 import { setLandingPageAction } from 'actionsReducers/landing.action';
 import {
@@ -120,6 +121,7 @@ export const providerProps = {
     dispatchAvailabilities: (list, sId, pId, locId) =>
       dispatch(availabilitiesByTemporaryServiceIdBulkApi(list, sId, pId, locId)),
     dispatchSetBookNowList: data => dispatch(setBookNowAction(data)),
+    dispatchQueryAvailabilitiesByDate: data => dispatch(queryAvailabilitiesByDateApi(data)),
   }),
 };
 
