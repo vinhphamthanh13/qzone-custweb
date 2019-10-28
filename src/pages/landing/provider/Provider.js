@@ -14,7 +14,7 @@ import MapDialog from 'components/Map/MapDialog';
 import RateStar from 'components/Rating/RateStar';
 import { limitString, navigateTo } from 'utils/common';
 import DatePicker from 'components/Calendar/DatePicker';
-import { ADDRESS_LENGTH } from 'utils/constants';
+import { ADDRESS_LENGTH, regExPattern } from 'utils/constants';
 import { providerProps} from 'pages/commonProps';
 import TemporaryService from './TemporaryService';
 import s from './Provider.module.scss';
@@ -213,12 +213,20 @@ class Provider extends Component {
     const timeSlots = get(availabilitiesByTemporaryServiceId,`${serviceId}-${providerId}-${locationId}`,  []);
     const slots = timeSlots.length > 0 && timeSlots.filter(slot =>
       slot.serviceId === serviceId && slot.providerId === providerId && slot.locationId === locationId) || [];
+    const slotUIs = {};
     const transformedSlot = slots
       .filter(item => item.id !== bookedEventId && item.spotsOpen === 1)
-      .map(slot => ({
-      ...slot, sName, pName, pEmail, pPhone, pImage, pAddress,
-    }));
+      .map(slot => {
+        slotUIs[
+          slot.providerStartSec.replace(regExPattern.ISO_TIME.patternRemoveTime, regExPattern.ISO_TIME.removeTime)
+          ] = true;
+        return ({
+          ...slot, sName, pName, pEmail, pPhone, pImage, pAddress,
+        })
+      });
     const showLocationSelection = dateTmpServices && Object.keys(dateTmpServices).length > 1;
+    const showLateDate = Object.keys(slotUIs).length > 5;
+    const showBookNow = transformedSlot.length > 0;
 
     return (
       <>
@@ -296,35 +304,39 @@ class Provider extends Component {
               <span>&nbsp;{timeZoneId}</span>
             </div>
           </div>
-          <div className={s.searchDate}>
-            <IconButton className={`${s.bookNow} hover-success`} onClick={this.handleBookNow}>
-              <CheckCircle className={`${s.iconSearchDate} icon-small border-round-white`} />
-              <Typography color="secondary" variant="subtitle2">
-                <span className="hover-success text-shadow-bright">Book now!</span>
-              </Typography>
-            </IconButton>
-            <div className={`${s.findDate} hover-success`}>
-              <DateRange className={`${s.iconSearchDate} icon-small`} onClick={this.handleToggleDatePicker}/>
-              {!showDatePicker && (
-                <Typography color="secondary" variant="subtitle2" onClick={this.handleToggleDatePicker}>
-                  <span className="hover-success text-shadow-bright">At a later date</span>
+          {showBookNow && (
+            <div className={s.searchDate}>
+              <IconButton className={`${s.bookNow} hover-success`} onClick={this.handleBookNow}>
+                <CheckCircle className={`${s.iconSearchDate} icon-small border-round-white`} />
+                <Typography color="secondary" variant="subtitle2">
+                  <span className="hover-success text-shadow-bright">Book now!</span>
                 </Typography>
-              )}
-              {showDatePicker && (
-                <DatePicker
-                  type="date"
-                  openCalendarOnInitial
-                  onCancelDatePicker={this.handleToggleDatePicker}
-                  onChange={noop}
-                  enableCalendar
-                  selectDate={this.handleQueryAvailabilitiesByDate}
-                />
-              )}
-              {showDatePicker && (
-                <Clear className="icon-small" color="secondary" onClick={this.handleToggleDatePicker}/>
+              </IconButton>
+              {showLateDate && (
+                <div className={`${s.findDate} hover-success`}>
+                  <DateRange className={`${s.iconSearchDate} icon-small`} onClick={this.handleToggleDatePicker}/>
+                  {!showDatePicker && (
+                    <Typography color="secondary" variant="subtitle2" onClick={this.handleToggleDatePicker}>
+                      <span className="hover-success text-shadow-bright">At a later date</span>
+                    </Typography>
+                  )}
+                  {showDatePicker && (
+                    <DatePicker
+                      type="date"
+                      openCalendarOnInitial
+                      onCancelDatePicker={this.handleToggleDatePicker}
+                      onChange={noop}
+                      enableCalendar
+                      selectDate={this.handleQueryAvailabilitiesByDate}
+                    />
+                  )}
+                  {showDatePicker && (
+                    <Clear className="icon-small" color="secondary" onClick={this.handleToggleDatePicker}/>
+                  )}
+                </div>
               )}
             </div>
-          </div>
+          )}
           {transformedSlot.length > 0 ? (
             <div className={s.availabilities}>
               <TemporaryService
@@ -333,7 +345,7 @@ class Provider extends Component {
                 selectSlot={this.handleSelectSlot}
               />
             </div>
-          ) : <EmptyItem message="All slots are booked!" size="normal" />}
+          ) : <EmptyItem message="All slots are booked!" size="lg" />}
         </div>
       </>
     );

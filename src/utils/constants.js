@@ -75,8 +75,10 @@ export const regExPattern = {
   registerVerificationCode: /^\d{6}$/,
   connectError: /Cannot connect to services/,
   ISO_TIME: {
-    pattern: /(.*)T(.*)\..*/,
+    pattern: /(.*)[T](.*)\..*/,
     replaceBy: '$1 $2',
+    patternRemoveTime: /(.*)\s(.*)/,
+    removeTime: '$1',
   },
   address: /[\w\s]{3,}/,
 };
