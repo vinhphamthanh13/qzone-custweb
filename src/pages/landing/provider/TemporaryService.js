@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { func } from 'prop-types';
+import { func, bool } from 'prop-types';
 import chunk from 'lodash/chunk';
 import get from 'lodash/get';
 import noop from 'lodash/noop';
@@ -14,65 +14,68 @@ class TemporaryService extends Component {
   static propTypes = {
     selectSlot: func.isRequired,
     onBookNow: func,
+    searchable: bool,
   };
 
   static defaultProps = {
     onBookNow: noop,
+    searchable: false,
   };
 
   state = {
-    timeSlots: [],
     chunkIndex: {},
     dateSelected: {},
     slotsByDate: {},
     transformedSlot: {},
     chunkTransformedIndex: 0,
     chunkedTransformedSlot: [],
+    bookNowSlot: {},
+    bookNowId: '',
   };
 
-  static getDerivedStateFromProps(props) {
-    const { timeSlots } = props;
+  static getDerivedStateFromProps(props, state) {
+    const { timeSlots, onBookNow } = props;
+    const { timeSlots: cachedTimeSlots } = state;
     const updatedState = {};
 
-    if (timeSlots.length > 0) {
+    if (
+      timeSlots.length &&
+      JSON.stringify(timeSlots) !== JSON.stringify(cachedTimeSlots))
+    {
       updatedState.timeSlots = timeSlots;
-      updatedState.bookNowSlot = get(timeSlots, '0');
+      const bookNowSlot = get(timeSlots, '0');
+      updatedState.bookNowSlot = bookNowSlot;
+      const serviceId = get(bookNowSlot, 'serviceId');
+      const providerId = get(bookNowSlot, 'providerId');
+      const locationId = get(bookNowSlot, 'locationId');
+      const bookNowId = `${serviceId}-${providerId}-${locationId}`;
+      updatedState.bookNowId = bookNowId;
+      const slotsByDate = {};
+      timeSlots.map(slot => {
+        const date = slot.providerStartSec.replace(/\s.*/, '');
+        slotsByDate[date] = slotsByDate[date] ? slotsByDate[date] : [];
+        slotsByDate[date].push(slot);
+        return null;
+      });
+      const transformedSlot = {};
+      Object.keys(slotsByDate).map(date => {
+        const chunkSlots = chunk(slotsByDate[date], NO_SLOTS_PER_ROW);
+        transformedSlot[date] = chunk(chunkSlots, NO_ROWS_PER_DATE);
+        transformedSlot[`${date}-max`] = transformedSlot[date].length - 1;
+        return null;
+      });
+      const chunkedTransformedSlot = chunk(Object.keys(transformedSlot), 4) || [];
+      updatedState.dateSelected = {
+        [chunkedTransformedSlot[0][0]]: true,
+      };
+      updatedState.slotsByDate = slotsByDate;
+      updatedState.transformedSlot = transformedSlot;
+      updatedState.chunkedTransformedSlot = chunkedTransformedSlot;
+      updatedState.maxDateChunk = chunkedTransformedSlot.length - 1;
+      onBookNow({ [bookNowId]: bookNowSlot });
     }
 
     return Object.keys(updatedState) ? updatedState : null;
-  }
-
-  componentDidMount() {
-    const { onBookNow } = this.props;
-    const { bookNowSlot, timeSlots } = this.state;
-    const serviceId = get(bookNowSlot, 'serviceId');
-    const providerId = get(bookNowSlot, 'providerId');
-    const locationId = get(bookNowSlot, 'locationId');
-    onBookNow({ [`${serviceId}-${providerId}-${locationId}`]: bookNowSlot });
-    const slotsByDate = {};
-    timeSlots.map(slot => {
-      const date = slot.providerStartSec.replace(/\s.*/, '');
-      slotsByDate[date] = slotsByDate[date] ? slotsByDate[date] : [];
-      slotsByDate[date].push(slot);
-      return null;
-    });
-    const transformedSlot = {};
-    Object.keys(slotsByDate).map(date => {
-      const chunkSlots = chunk(slotsByDate[date], NO_SLOTS_PER_ROW);
-      transformedSlot[date] = chunk(chunkSlots, NO_ROWS_PER_DATE);
-      transformedSlot[`${date}-max`] = transformedSlot[date].length - 1;
-      return null;
-    });
-    const chunkedTransformedSlot = chunk(Object.keys(transformedSlot), 4) || [];
-    this.setState({
-      dateSelected: {
-        [chunkedTransformedSlot[0][0]]: true,
-      },
-      slotsByDate,
-      transformedSlot,
-      chunkedTransformedSlot,
-      maxDateChunk: chunkedTransformedSlot.length - 1,
-    })
   }
 
   handleChunkIndexMore = (date, max)  => () => {
@@ -130,14 +133,14 @@ class TemporaryService extends Component {
   };
 
   render() {
-    const { selectSlot } = this.props;
+    const { selectSlot, searchable } = this.props;
     const {
       slotsByDate, transformedSlot, chunkIndex, dateSelected, chunkedTransformedSlot, chunkTransformedIndex,
       maxDateChunk,
     } = this.state;
     const isDefaultExpand = Object.keys(slotsByDate).length === 1;
     const disableMinDateChunkCta = chunkTransformedIndex === 0;
-    const disableMaxDateChunkCta = chunkTransformedIndex === maxDateChunk;
+    const disableMaxDateChunkCta = chunkTransformedIndex === maxDateChunk || searchable;
     const minDateChunkCtaStyle = disableMinDateChunkCta ? `${s.controlDate} ${s.disabledCta}` : s.controlDate;
     const maxDateChunkCtaStyle = disableMaxDateChunkCta ? `${s.controlDate} ${s.disabledCta}` : s.controlDate;
 
@@ -159,7 +162,8 @@ class TemporaryService extends Component {
             more date...
           </IconButton>
         </div>
-        {chunkedTransformedSlot.length > 0 && chunkedTransformedSlot[chunkTransformedIndex].map(date => {
+        {chunkedTransformedSlot.length > 0 && chunkedTransformedSlot[!searchable ? chunkTransformedIndex : 0]
+          .map(date => {
           const disableMinSlotChunkCta = !chunkIndex[`${date}-index`] || chunkIndex[`${date}-index`] === 0;
           const disableMaxSlotChunkCta = chunkIndex[`${date}-index`] === transformedSlot[`${date}-max`]
             || transformedSlot[`${date}-max`] === 0;

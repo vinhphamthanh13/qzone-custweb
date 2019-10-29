@@ -116,12 +116,13 @@ export const providerProps = {
     providersByServiceId: provider.providersByServiceId,
     availabilitiesByTemporaryServiceId: provider.availabilitiesByTemporaryServiceId,
     bookNowList: provider.bookNowList,
+    queryAvailabilitiesByTemporaryServiceId: provider.queryAvailabilitiesByTemporaryServiceId,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchAvailabilities: (list, sId, pId, locId) =>
       dispatch(availabilitiesByTemporaryServiceIdBulkApi(list, sId, pId, locId)),
     dispatchSetBookNowList: data => dispatch(setBookNowAction(data)),
-    dispatchQueryAvailabilitiesByDate: data => dispatch(queryAvailabilitiesByDateApi(data)),
+    dispatchQueryAvailabilitiesByDate: (data, key) => dispatch(queryAvailabilitiesByDateApi(data, key)),
   }),
 };
 

@@ -11,7 +11,8 @@ import Loading from 'components/Loading';
 import Error from 'components/Error';
 import { NavigateBefore, Search, Clear } from '@material-ui/icons';
 import { providersProps } from 'pages/commonProps';
-import { MAX_CARD_WIDTH } from 'utils/constants';
+import EmptyItem from 'components/EmptyItem';
+import { MAX_CARD_WIDTH, SEARCH_LENGTH } from 'utils/constants';
 import Footer from 'pages/components/footer/Footer';
 import Provider from './Provider';
 import s from './Providers.module.scss';
@@ -125,15 +126,15 @@ class Providers extends Component {
   render() {
     const { dispatchSelectBookingDetail, dispatchSetLandingPage } = this.props;
     const {
-      landingPageFactors, searchText, serviceId, windowWidth, bookedEventId, queriedProvider,
-      serviceDateProviders,
+      landingPageFactors, searchText, serviceId, windowWidth, bookedEventId, queriedProvider, serviceDateProviders,
     } = this.state;
     const catName = get(landingPageFactors, 'catName');
     const sName = get(landingPageFactors, 'sName');
     const chunkFactor = Math.abs(windowWidth / MAX_CARD_WIDTH);
-    console.log('queriedProvider', queriedProvider);
+    const showingSearch = searchText.length > SEARCH_LENGTH && queriedProvider && queriedProvider.length > 0;
+    const resolvedProvider = showingSearch ?  queriedProvider : serviceDateProviders;
 
-    return serviceDateProviders.length > 0 && (
+    return (
       <>
         <Loading />
         <Error />
@@ -149,27 +150,37 @@ class Providers extends Component {
               <form onSubmit={this.handleSubmitSearch} className={s.searchProvider}>
                 <Search className="main-color" />&nbsp;
                 <InputBase fullWidth placeholder="Provider name" value={searchText} onChange={this.handleSearch} />
-                {searchText.length > 2 && <Clear className="danger-color" onClick={this.handleClearSearch} />}
+                {searchText.length > SEARCH_LENGTH && (
+                  <Clear className="danger-color" onClick={this.handleClearSearch} />
+                )}
               </form>
             </div>
-            {chunk(serviceDateProviders, chunkFactor).map((providerRow, ind) => (
-              <div className={s.providerRow} key={ind}>
-                {providerRow.map((provider, index) => (
-                  <Provider
-                    key={`${provider.userSub}-${index}`}
-                    provider={{
-                      ...provider,
-                      serviceId,
-                      sName,
-                      catName,
-                    }}
-                    selectBookingDetail={dispatchSelectBookingDetail}
-                    bookedEventId={bookedEventId}
-                    setLandingPage={dispatchSetLandingPage}
-                    landingPageFactors={landingPageFactors}
-                />))}
+          </div>
+          <div className={s.bodySection}>
+            {resolvedProvider.length > 0 &&
+              chunk(resolvedProvider, chunkFactor).map((providerRow, ind) => (
+                <div className={s.providerRow} key={ind}>
+                  {providerRow.map((provider, index) => (
+                    <Provider
+                      key={`${provider.userSub}-${index}`}
+                      provider={{
+                        ...provider,
+                        serviceId,
+                        sName,
+                        catName,
+                      }}
+                      selectBookingDetail={dispatchSelectBookingDetail}
+                      bookedEventId={bookedEventId}
+                      setLandingPage={dispatchSetLandingPage}
+                      landingPageFactors={landingPageFactors}
+                  />))}
+                </div>
+              ))}
+            {searchText.length > SEARCH_LENGTH && queriedProvider && queriedProvider.length === 0 && (
+              <div className={s.noResultsFound}>
+                <EmptyItem message="No results found for this search" className="white-color" size="lg" />
               </div>
-            ))}
+            )}
           </div>
           <Footer maintenance={false} />
         </div>

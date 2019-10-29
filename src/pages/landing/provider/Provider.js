@@ -9,7 +9,7 @@ import momentz from 'moment-timezone';
 import { IconButton, InputBase, Typography } from '@material-ui/core';
 import defaultPImage from 'images/providers.jpg';
 import { Email, PhoneIphone, Place, GpsFixed, DateRange, CheckCircle, ChevronRight, Clear } from '@material-ui/icons';
-import EmptyItem from 'components/EmptyItem';
+// import EmptyItem from 'components/EmptyItem';
 import MapDialog from 'components/Map/MapDialog';
 import RateStar from 'components/Rating/RateStar';
 import { limitString, navigateTo } from 'utils/common';
@@ -33,6 +33,7 @@ class Provider extends Component {
     providerId: '',
     locationId: '',
     availabilitiesByTemporaryServiceId: {},
+    queryAvailabilitiesByTemporaryServiceId: {},
     isOpenMap: false,
     bookedEventId: '',
     landingPageFactors: {},
@@ -49,7 +50,7 @@ class Provider extends Component {
   static getDerivedStateFromProps(props, state) {
     const {
       provider, availabilitiesByTemporaryServiceId, bookedEventId, landingPageFactors, providersByServiceId,
-      bookNowList,
+      bookNowList, queryAvailabilitiesByTemporaryServiceId,
     } = props;
     const {
       provider: cachedProvider, bookedEventId: cachedBookedEventId,
@@ -57,6 +58,7 @@ class Provider extends Component {
       landingPageFactors: cachedLandingPageFactors,
       providersByServiceId: cachedProvidersByServiceId,
       bookNowList: cachedBookNowList,
+      queryAvailabilitiesByTemporaryServiceId: cachedQueryAvailabilitiesByTemporaryServiceId,
     } = state;
     const updatedState = {};
     if (
@@ -101,12 +103,18 @@ class Provider extends Component {
     ) {
       updatedState.providersByServiceId = providersByServiceId;
     }
-
     if (
       bookNowList !== null &&
       JSON.stringify(bookNowList) !== JSON.stringify(cachedBookNowList)
     ) {
       updatedState.bookNowList = bookNowList;
+    }
+    if (
+      queryAvailabilitiesByTemporaryServiceId !== null &&
+      JSON.stringify(queryAvailabilitiesByTemporaryServiceId) !==
+      JSON.stringify(cachedQueryAvailabilitiesByTemporaryServiceId)
+    ) {
+      updatedState.queryAvailabilitiesByTemporaryServiceId = queryAvailabilitiesByTemporaryServiceId;
     }
 
     return Object.keys(updatedState) ? updatedState : null;
@@ -121,9 +129,13 @@ class Provider extends Component {
   }
 
   handleBookNow = () => {
-    const { serviceId, providerId, locationId, bookNowList } = this.state;
+    const { setLandingPage } = this.props;
+    const { serviceId, providerId, locationId, bookNowList, landingPageFactors } = this.state;
+    const orgRef = get(landingPageFactors, 'orgRef', '');
     const bookNowSlot = get(bookNowList, `${serviceId}-${providerId}-${locationId}`);
     this.handleSelectSlot(bookNowSlot)();
+    setLandingPage({ instantBooking: false, confirmWaitLists: false });
+    navigateTo(`/${orgRef}/booking/confirmation`)();
   };
 
   handleMapPopup = () => {
@@ -185,11 +197,12 @@ class Provider extends Component {
 
   handleQueryAvailabilitiesByDate = date => {
     const { dispatchQueryAvailabilitiesByDate } = this.props;
-    const { serviceId, providerId } = this.state;
+    const { serviceId, providerId, locationId } = this.state;
     const unixDate = momentz(date, 'Australia/Sydney').unix();
+    const queriedKey = `${serviceId}-${providerId}-${locationId}`;
     dispatchQueryAvailabilitiesByDate({
       date: unixDate, serviceId, providerId,
-    })
+    }, queriedKey)
   };
 
   render() {
@@ -197,6 +210,7 @@ class Provider extends Component {
     const {
       provider, serviceId, providerId, locationId, availabilitiesByTemporaryServiceId, isOpenMap, dateTmpServices,
       bookedEventId, providersByServiceId, providerLocationDates, initLocation, popUpLocation, showDatePicker,
+      queryAvailabilitiesByTemporaryServiceId,
     } = this.state;
     const providerListByServiceId = get(providersByServiceId, serviceId) || [];
     const providerDetail = find(providerListByServiceId, item => item &&
@@ -213,8 +227,13 @@ class Provider extends Component {
     const timeSlots = get(availabilitiesByTemporaryServiceId,`${serviceId}-${providerId}-${locationId}`,  []);
     const slots = timeSlots.length > 0 && timeSlots.filter(slot =>
       slot.serviceId === serviceId && slot.providerId === providerId && slot.locationId === locationId) || [];
+    const queriedKey = `${serviceId}-${providerId}-${locationId}`;
+    const showingQueriedAvailabilities = showDatePicker && queryAvailabilitiesByTemporaryServiceId[queriedKey]  &&
+      queryAvailabilitiesByTemporaryServiceId[queriedKey].length > 0;
+    const resolvedAvailabilities = showingQueriedAvailabilities ?
+      queryAvailabilitiesByTemporaryServiceId[queriedKey] : slots;
     const slotUIs = {};
-    const transformedSlot = slots
+    const transformedSlot = resolvedAvailabilities
       .filter(item => item.id !== bookedEventId && item.spotsOpen === 1)
       .map(slot => {
         slotUIs[
@@ -225,7 +244,7 @@ class Provider extends Component {
         })
       });
     const showLocationSelection = dateTmpServices && Object.keys(dateTmpServices).length > 1;
-    const showLateDate = Object.keys(slotUIs).length > 5;
+    const showLateDate = Object.keys(slotUIs).length > 5 || queryAvailabilitiesByTemporaryServiceId[queriedKey];
     const showBookNow = transformedSlot.length > 0;
 
     return (
@@ -337,15 +356,16 @@ class Provider extends Component {
               )}
             </div>
           )}
-          {transformedSlot.length > 0 ? (
+          {transformedSlot.length > 0 && (
             <div className={s.availabilities}>
               <TemporaryService
                 onBookNow={dispatchSetBookNowList}
                 timeSlots={transformedSlot}
                 selectSlot={this.handleSelectSlot}
+                searchable={showingQueriedAvailabilities}
               />
             </div>
-          ) : <EmptyItem message="All slots are booked!" size="lg" />}
+          )}
         </div>
       </>
     );

@@ -133,10 +133,7 @@ const reducer = (state = initState, action) => {
     case QUERY_AVAILABILITIES_BY_DATE:
       return {
         ...state,
-        queryAvailabilitiesByTemporaryServiceId: {
-          ...state.availabilitiesByTemporaryServiceId,
-          ...action.payload,
-        },
+        queryAvailabilitiesByTemporaryServiceId: action.payload,
       };
     case INSTANT_AVAILABILITIES_BY_TMP_SERVICE_ID:
       return {

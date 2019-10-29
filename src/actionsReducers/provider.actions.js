@@ -1,5 +1,6 @@
 import { setLoading, setError } from 'actionsReducers/common.actions';
 import get from 'lodash/get';
+import moment from 'moment';
 import { handleRequest } from 'utils/apiHelpers';
 import {
   users,
@@ -12,6 +13,7 @@ import {
   providersByServiceId,
   availabilitiesProviderServiceDate,
 } from 'actionsApi/provider';
+import { FULL_DATE } from 'utils/constants';
 
 export const SET_PROVIDER_DETAIL = 'PROVIDER.SET_PROVIDER_DETAIL';
 export const USERS_BY_ID = 'PROVIDER.USERS_BY_ID';
@@ -209,13 +211,18 @@ export const setProvidersByServiceIdApi = id => async dispatch => {
   }
   dispatch(setLoading(false));
 };
-export const queryAvailabilitiesByDateApi = data => async dispatch => {
+export const queryAvailabilitiesByDateApi = (data, queriedKey) => async dispatch => {
   dispatch(setLoading(true));
+  const date = get(data, 'date');
   const [result, error] = await handleRequest(availabilitiesProviderServiceDate, [data]);
   if (error) {
-    dispatch(setError(error));
+    const message = `No results found on this date ${moment(date * 1000).format(FULL_DATE)}`;
+    dispatch(setError(message));
+    dispatch(queryAvailabilitiesByDateAction({ [queriedKey]: {}, message }));
   } else {
-    dispatch(queryAvailabilitiesByDateAction(result));
+    const numOfAvailabilities = result.length;
+    const message = numOfAvailabilities === 0 ? 'No results found on this date.' : '';
+    dispatch(queryAvailabilitiesByDateAction({ [queriedKey]: result, message }));
   }
   dispatch(setLoading(false));
 };

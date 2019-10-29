@@ -22,7 +22,7 @@ export const CATEGORY_NAV_WIDTH = 66;
 // layout
 export const DEVICE_MIN_WIDTH = 375;
 export const MAX_TAB_WIDTH = 166;
-export const MAX_CARD_WIDTH = 320;
+export const MAX_CARD_WIDTH = 350;
 export const ADDRESS_LENGTH = 89;
 
 // Auth
@@ -167,3 +167,5 @@ export const DELIVERY = [
   { id: 'postCode', value: 'postCode', label: 'Post Code' },
   { id: 'country', value: 'country', label: 'Country' },
 ];
+// SEARCHING
+export const SEARCH_LENGTH = 2;
