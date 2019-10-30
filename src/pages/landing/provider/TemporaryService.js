@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-prop-types */
 import React, { Component } from 'react';
 import { func, bool } from 'prop-types';
 import chunk from 'lodash/chunk';
@@ -29,8 +30,6 @@ class TemporaryService extends Component {
     transformedSlot: {},
     chunkTransformedIndex: 0,
     chunkedTransformedSlot: [],
-    bookNowSlot: {},
-    bookNowId: '',
   };
 
   static getDerivedStateFromProps(props, state) {

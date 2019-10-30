@@ -217,7 +217,8 @@ export const queryAvailabilitiesByDateApi = (data, queriedKey) => async dispatch
   const [result, error] = await handleRequest(availabilitiesProviderServiceDate, [data]);
   if (error) {
     const message = `No results found on this date ${moment(date * 1000).format(FULL_DATE)}`;
-    dispatch(setError(message));
+    const title = 'Availability by date';
+    dispatch(setError({ message, title }));
     dispatch(queryAvailabilitiesByDateAction({ [queriedKey]: {}, message }));
   } else {
     const numOfAvailabilities = result.length;
