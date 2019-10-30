@@ -10,8 +10,8 @@ import {
   availabilitiesByTemporaryServiceId,
   queryProvider,
   tempServiceDateProviderByServiceId,
-  providersByServiceId,
   availabilitiesProviderServiceDate,
+  providersByOrgRef,
 } from 'actionsApi/provider';
 import { FULL_DATE } from 'utils/constants';
 
@@ -31,8 +31,8 @@ export const CLEAR_QUERIED_PROVIDER = 'PROVIDER.CLEAR_QUERIED_PROVIDER';
 export const TEMP_SERVICE_DATE_PROVIDER_BY_SERVICE_ID = 'PROVIDER.TEMP_SERVICE_DATE_PROVIDER_BY_SERVICE_ID';
 export const CLEAR_TEMP_SERVICE_DATE_PROVIDER_BY_SERVICE_ID = 'PROVIDER.CLEAR_TEMP_SERVICE_DATE_PROVIDER_BY_SERVICE_ID';
 export const SET_SERVICE_DATE_PROVIDERS = 'PROVIDER.SET_SERVICE_DATE_PROVIDERS';
-export const SET_PROVIDERS_BY_SERVICE_ID = 'PROVIDER.SET_PROVIDERS_BY_SERVICE_ID';
-export const CLEAR_PROVIDERS_BY_SERVICE_ID = 'PROVIDER.CLEAR_PROVIDERS_BY_SERVICE_ID';
+export const SET_PROVIDERS_BY_ORG_REF = 'PROVIDER.SET_PROVIDERS_BY_ORG_REF';
+export const CLEAR_PROVIDERS_BY_ORG_REF = 'PROVIDER.CLEAR_PROVIDERS_BY_ORG_REF';
 export const SET_BOOK_NOW = 'PROVIDER.SET_BOOK_NOW';
 export const CLEAR_BOOK_NOW = 'PROVIDER.CLEAR_BOOK_NOW';
 export const QUERY_AVAILABILITIES_BY_DATE = 'PROVIDER.QUERY_AVAILABILITIES_BY_DATE';
@@ -68,12 +68,12 @@ const queryProviderAction = payload => ({
   type: QUERY_PROVIDER,
   payload,
 });
-const setProvidersByServiceIdAction = payload => ({
-  type: SET_PROVIDERS_BY_SERVICE_ID,
+const setProvidersByOrgRefAction = payload => ({
+  type: SET_PROVIDERS_BY_ORG_REF,
   payload,
 });
-export const clearProvidersByServiceId = () => ({
-  type: CLEAR_PROVIDERS_BY_SERVICE_ID,
+export const clearProvidersByOrgRefAction = () => ({
+  type: CLEAR_PROVIDERS_BY_ORG_REF,
 });
 export const clearQueriedProviderAction = () => ({
   type: CLEAR_QUERIED_PROVIDER,
@@ -201,16 +201,6 @@ export const tempServiceDateProviderByServiceIdApi = sId => async dispatch => {
   }
   dispatch(setLoading(false));
 };
-export const setProvidersByServiceIdApi = id => async dispatch => {
-  dispatch(setLoading(true));
-  const [result, error] = await handleRequest(providersByServiceId, [id]);
-  if (error) {
-    dispatch(setError(error));
-  } else {
-    dispatch(setProvidersByServiceIdAction({ [id]: result }));
-  }
-  dispatch(setLoading(false));
-};
 export const queryAvailabilitiesByDateApi = (data, queriedKey) => async dispatch => {
   dispatch(setLoading(true));
   const date = get(data, 'date');
@@ -224,6 +214,16 @@ export const queryAvailabilitiesByDateApi = (data, queriedKey) => async dispatch
     const numOfAvailabilities = result.length;
     const message = numOfAvailabilities === 0 ? 'No results found on this date.' : '';
     dispatch(queryAvailabilitiesByDateAction({ [queriedKey]: result, message }));
+  }
+  dispatch(setLoading(false));
+};
+export const setProvidersByOrgRefApi = orgRef => async dispatch => {
+  dispatch(setLoading(true));
+  const [result, error] = await handleRequest(providersByOrgRef, [orgRef]);
+  if (error) {
+    dispatch(setError(error));
+  } else {
+    dispatch(setProvidersByOrgRefAction({ [orgRef]: result }));
   }
   dispatch(setLoading(false));
 };

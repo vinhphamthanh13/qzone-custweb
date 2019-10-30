@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import windowSize from 'react-window-size';
 import get from 'lodash/get';
 import chunk from 'lodash/chunk';
+import findIndex from 'lodash/findIndex';
 import { IconButton, InputBase } from '@material-ui/core';
 import { navigateTo } from 'utils/common';
 import Loading from 'components/Loading';
@@ -32,12 +33,13 @@ class Providers extends Component {
     searchText: '',
     queriedProvider: null,
     serviceDateProviders: [],
+    providersList: [],
   };
 
   static getDerivedStateFromProps(props, state) {
     const {
       match: { params: { sId } }, landingPageFactors, bookedEventId, windowWidth, queriedProvider,
-      serviceDateProviders,
+      serviceDateProviders, providersByOrgRef,
     } = props;
     const {
       serviceId,
@@ -46,6 +48,7 @@ class Providers extends Component {
       landingPageFactors: cachedLandingPageFactors,
       queriedProvider: cachedQueriedProvider,
       serviceDateProviders: cachedServiceDateProviders,
+      providersByOrgRef: cachedProvidersByOrgRef,
     } = state;
     const updatedState = {};
 
@@ -66,12 +69,22 @@ class Providers extends Component {
       JSON.stringify(landingPageFactors) !== JSON.stringify(cachedLandingPageFactors)
     ) {
       updatedState.landingPageFactors = landingPageFactors;
+      updatedState.sName = get(landingPageFactors, 'sName', '');
+      updatedState.orgRef = get(landingPageFactors, 'orgRef', '');
+      updatedState.catName = get(landingPageFactors, 'catName', '');
     }
     if (
       serviceDateProviders !== null &&
       JSON.stringify(serviceDateProviders) !== JSON.stringify(cachedServiceDateProviders)
     ) {
       updatedState.serviceDateProviders = serviceDateProviders;
+    }
+    if (
+      providersByOrgRef !== null &&
+      JSON.stringify(providersByOrgRef) !== JSON.stringify(cachedProvidersByOrgRef)
+    ) {
+      updatedState.providersByOrgRef = providersByOrgRef;
+      updatedState.providersList = providersByOrgRef[Object.keys(providersByOrgRef)[0]] || [];
     }
     if (JSON.stringify(queriedProvider) !== JSON.stringify(cachedQueriedProvider)) {
       updatedState.queriedProvider = queriedProvider;
@@ -86,16 +99,14 @@ class Providers extends Component {
   }
 
   componentDidUpdate() {
-    const { serviceId, landingPageFactors } = this.state;
-    const orgRef = get(landingPageFactors, 'orgRef');
+    const { serviceId, orgRef } = this.state;
     if (serviceId === 'undefined' || !serviceId) {
       navigateTo(`/${orgRef}`)();
     }
   }
 
   handleSelectService = catName => () => {
-    const { landingPageFactors } = this.state;
-    const orgRef = get(landingPageFactors, 'orgRef', '');
+    const { orgRef } = this.state;
     navigateTo(`/${orgRef}`, { catName })();
   };
 
@@ -126,10 +137,9 @@ class Providers extends Component {
   render() {
     const { dispatchSelectBookingDetail, dispatchSetLandingPage } = this.props;
     const {
-      landingPageFactors, searchText, serviceId, windowWidth, bookedEventId, queriedProvider, serviceDateProviders,
+      searchText, serviceId, windowWidth, bookedEventId, queriedProvider, serviceDateProviders, catName, sName,
+      providersList,
     } = this.state;
-    const catName = get(landingPageFactors, 'catName');
-    const sName = get(landingPageFactors, 'sName');
     const chunkFactor = Math.abs(windowWidth / MAX_CARD_WIDTH);
     const showingSearch = searchText.length > SEARCH_LENGTH && queriedProvider && queriedProvider.length > 0;
     const resolvedProvider = showingSearch ?  queriedProvider : serviceDateProviders;
@@ -160,20 +170,26 @@ class Providers extends Component {
             {resolvedProvider.length > 0 &&
               chunk(resolvedProvider, chunkFactor).map((providerRow, ind) => (
                 <div className={s.providerRow} key={ind}>
-                  {providerRow.map((provider, index) => (
-                    <Provider
-                      key={`${provider.userSub}-${index}`}
-                      provider={{
-                        ...provider,
-                        serviceId,
-                        sName,
-                        catName,
-                      }}
-                      selectBookingDetail={dispatchSelectBookingDetail}
-                      bookedEventId={bookedEventId}
-                      setLandingPage={dispatchSetLandingPage}
-                      landingPageFactors={landingPageFactors}
-                  />))}
+                  {providerRow.map((provider, index) => {
+                    const providerId = get(provider, 'providerId');
+                    const providerIndex = findIndex(providersList, item =>
+                      item.id === providerId || item.userSub === providerId,
+                    );
+                    return (
+                      <Provider
+                        key={`${provider.userSub}-${index}`}
+                        provider={{
+                          ...provider,
+                          serviceId,
+                          sName,
+                          catName,
+                          ...providersList[providerIndex],
+                        }}
+                        selectBookingDetail={dispatchSelectBookingDetail}
+                        bookedEventId={bookedEventId}
+                        setLandingPage={dispatchSetLandingPage}
+                      />);
+                  })}
                 </div>
               ))}
             {searchText.length > SEARCH_LENGTH && queriedProvider && queriedProvider.length === 0 && (

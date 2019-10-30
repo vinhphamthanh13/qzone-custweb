@@ -3,7 +3,6 @@ import { func } from 'prop-types';
 import { connect } from 'react-redux';
 import get from 'lodash/get';
 import noop from 'lodash/noop';
-import find from 'lodash/find';
 import { Formik } from 'formik';
 import momentz from 'moment-timezone';
 import { IconButton, InputBase, Typography } from '@material-ui/core';
@@ -37,7 +36,6 @@ class Provider extends Component {
     isOpenMap: false,
     bookedEventId: '',
     landingPageFactors: {},
-    providersByServiceId: {},
     providerLocationDates: [],
     dateTmpServices: {},
     initLocation: {},
@@ -49,14 +47,13 @@ class Provider extends Component {
 
   static getDerivedStateFromProps(props, state) {
     const {
-      provider, availabilitiesByTemporaryServiceId, bookedEventId, landingPageFactors, providersByServiceId,
+      provider, availabilitiesByTemporaryServiceId, bookedEventId, landingPageFactors,
       bookNowList, queryAvailabilitiesByTemporaryServiceId,
     } = props;
     const {
       provider: cachedProvider, bookedEventId: cachedBookedEventId,
       availabilitiesByTemporaryServiceId: cachedAvailabilitiesByTemporaryServiceId,
       landingPageFactors: cachedLandingPageFactors,
-      providersByServiceId: cachedProvidersByServiceId,
       bookNowList: cachedBookNowList,
       queryAvailabilitiesByTemporaryServiceId: cachedQueryAvailabilitiesByTemporaryServiceId,
     } = state;
@@ -75,7 +72,7 @@ class Provider extends Component {
       updatedState.providerLocationDates = providerLocationDates;
       updatedState.initTempServiceIdList = providerLocationDates.length > 0 &&
         providerLocationDates.map(item => item.tmpServiceId);
-      updatedState.providerId = get(provider, 'providerId');
+      updatedState.providerId = get(provider, 'id') || get(provider, 'userSub');
       updatedState.initLocation = initLocation;
       updatedState.locationId = locationId;
     }
@@ -96,12 +93,6 @@ class Provider extends Component {
       JSON.stringify(landingPageFactors) !== JSON.stringify(cachedLandingPageFactors)
     ) {
       updatedState.landingPageFactors = landingPageFactors;
-    }
-    if (
-      providersByServiceId !== null &&
-      JSON.stringify(providersByServiceId) !== JSON.stringify(cachedProvidersByServiceId)
-    ) {
-      updatedState.providersByServiceId = providersByServiceId;
     }
     if (
       bookNowList !== null &&
@@ -209,19 +200,16 @@ class Provider extends Component {
     const { dispatchSetBookNowList } = this.props;
     const {
       provider, serviceId, providerId, locationId, availabilitiesByTemporaryServiceId, isOpenMap, dateTmpServices,
-      bookedEventId, providersByServiceId, providerLocationDates, initLocation, popUpLocation, showDatePicker,
+      bookedEventId, providerLocationDates, initLocation, popUpLocation, showDatePicker,
       queryAvailabilitiesByTemporaryServiceId,
     } = this.state;
-    const providerListByServiceId = get(providersByServiceId, serviceId) || [];
-    const providerDetail = find(providerListByServiceId, item => item &&
-      (item.userSub === providerId || item.id === providerId));
     const sName = get(provider, 'sName');
-    const pName = get(providerDetail, 'givenName');
-    const pEmail = get(providerDetail, 'email');
-    const pPhone = get(providerDetail, 'telephone');
-    const pImage = get(providerDetail, 'providerInformation.image.fileUrl', defaultPImage);
-    const pRate = get(providerDetail, 'rating');
-    const timeZoneId = get(providerDetail, 'providerInformation.timeZoneId');
+    const pName = get(provider, 'givenName');
+    const pEmail = get(provider, 'email');
+    const pPhone = get(provider, 'telephone');
+    const pImage = get(provider, 'providerInformation.image.fileUrl', defaultPImage);
+    const pRate = get(provider, 'rating');
+    const timeZoneId = get(provider, 'providerInformation.timeZoneId');
     const geoLocation = get(providerLocationDates, '0.locationDetail');
     const pAddress = get(geoLocation, 'fullAddress');
     const timeSlots = get(availabilitiesByTemporaryServiceId,`${serviceId}-${providerId}-${locationId}`,  []);

@@ -26,11 +26,11 @@ import {
   tempServiceDateProviderByServiceIdApi,
   setServiceDateProviders,
   clearTempServiceDateProviderByServiceIdAction,
-  setProvidersByServiceIdApi,
-  clearProvidersByServiceId,
   setBookNowAction,
   clearBookNowAction,
   queryAvailabilitiesByDateApi,
+  setProvidersByOrgRefApi,
+  clearProvidersByOrgRefAction,
 } from 'actionsReducers/provider.actions';
 import { setLandingPageAction } from 'actionsReducers/landing.action';
 import {
@@ -51,8 +51,8 @@ export const homeProps = {
     dispatchSetLandingPage: data => dispatch(setLandingPageAction(data)),
     dispatchClearOrgNotFound: () => dispatch(setOrgNotFoundAction(false)),
     dispatchClearTempServiceDateProviderByServiceId: () => dispatch(clearTempServiceDateProviderByServiceIdAction({})),
-    dispatchClearProvidersByServiceId: () => dispatch(clearProvidersByServiceId()),
     dispatchClearBookNowList: () => dispatch(clearBookNowAction()),
+    dispatchSetProvidersByOrgRef: orgRef => dispatch(setProvidersByOrgRefApi(orgRef)),
   })
 };
 
@@ -80,7 +80,6 @@ export const serviceProps = {
     dispatchSetLandingPage: data => dispatch(setLandingPageAction(data)),
     dispatchTempServiceDateProvider: sId => dispatch(tempServiceDateProviderByServiceIdApi(sId)),
     dispatchSetServiceDateProviders: data => dispatch(setServiceDateProviders(data)),
-    dispatchSetProvidersByServiceId: sId => dispatch(setProvidersByServiceIdApi(sId)),
   }),
 };
 
@@ -102,6 +101,7 @@ export const providersProps = {
     landingPageFactors: landing.landingPageFactors,
     queriedProvider: provider.queriedProvider,
     serviceDateProviders: provider.serviceDateProviders,
+    providersByOrgRef: provider.providersByOrgRef,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchSelectBookingDetail: slot => dispatch(selectBookingDetail(slot)),
@@ -112,11 +112,12 @@ export const providersProps = {
 };
 
 export const providerProps = {
-  mapStateToProps: ({ provider }) => ({
+  mapStateToProps: ({ provider, landing }) => ({
     providersByServiceId: provider.providersByServiceId,
     availabilitiesByTemporaryServiceId: provider.availabilitiesByTemporaryServiceId,
     bookNowList: provider.bookNowList,
     queryAvailabilitiesByTemporaryServiceId: provider.queryAvailabilitiesByTemporaryServiceId,
+    landingPageFactors: landing.landingPageFactors,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchAvailabilities: (list, sId, pId, locId) =>
@@ -253,6 +254,7 @@ export const redirectOrgProps = {
     dispatchClearServicesByServiceCategoryId: () => dispatch(servicesByServiceCategoryIdBulkAction(null)),
     dispatchClearServiceCategoriesByOrgId: () => dispatch(serviceCategoriesByOrgIdAction([])),
     dispatchClearTempServiceDateProviderByServiceId: () => dispatch(clearTempServiceDateProviderByServiceIdAction({})),
+    dispatchClearProvidersByOrgRef: () => dispatch(clearProvidersByOrgRefAction()),
   }),
 };
 

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // ********** user-controller *********** //
 export const users = id => axios.get(`/users/${id}`);
-export const providersByServiceId = id => axios.get(`/providers-by-service-id/${id}`);
+export const providersByOrgRef = orgRef => axios.get(`/providers/org/ref/${orgRef}`);
 // *********** service-controller ********** //
 export const serviceByProviderId = id => axios.get(`/services-by-provider-id/${id}`);
 

@@ -16,7 +16,6 @@ class Service extends Component {
     dispatchSetLandingPage: func.isRequired,
     dispatchTempServiceDateProvider: func.isRequired,
     dispatchSetServiceDateProviders: func.isRequired,
-    dispatchSetProvidersByServiceId: func.isRequired,
     handleAuth: func.isRequired,
   };
 
@@ -55,11 +54,10 @@ class Service extends Component {
   }
 
   componentDidMount() {
-    const { dispatchTempServiceDateProvider, dispatchSetProvidersByServiceId } = this.props;
+    const { dispatchTempServiceDateProvider } = this.props;
     const { service } = this.state;
     const sId = get(service, 'id');
     dispatchTempServiceDateProvider(sId);
-    dispatchSetProvidersByServiceId(sId);
   }
 
   handleSelectProvider = (sId, sName, catName)=> () => {
