@@ -99,8 +99,8 @@ class Providers extends Component {
   }
 
   componentDidUpdate() {
-    const { serviceId, orgRef } = this.state;
-    if (serviceId === 'undefined' || !serviceId) {
+    const { serviceId, orgRef, serviceDateProviders } = this.state;
+    if (serviceId === 'undefined' || !serviceId || !serviceDateProviders.length) {
       navigateTo(`/${orgRef}`)();
     }
   }
@@ -129,9 +129,9 @@ class Providers extends Component {
   handleSubmitSearch = event => {
     if (event) event.preventDefault();
     const { dispatchQueryProvider } = this.props;
-    const { searchText, landingPageFactors } = this.state;
-    const orgId = get(landingPageFactors, 'selectedOrg.id');
-    dispatchQueryProvider({ name: searchText, orgId});
+    const { searchText, landingPageFactors, serviceId } = this.state;
+    const orgRef = get(landingPageFactors, 'orgRef');
+    dispatchQueryProvider({ name: searchText, orgRef, serviceId });
   };
 
   render() {

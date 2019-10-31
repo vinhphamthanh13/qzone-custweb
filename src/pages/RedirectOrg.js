@@ -72,8 +72,9 @@ class RedirectOrg extends Component {
   handleSelectOrgById = org => () => {
     const { dispatchSetLandingPage } = this.props;
     const orgRef = get(org, 'orgRef');
+    const orgId = get(org, 'id');
     navigateTo(`/${orgRef}`)();
-    dispatchSetLandingPage({ selectedOrg: org });
+    dispatchSetLandingPage({ selectedOrg: org, orgId });
   };
 
   handleSearch = event => {

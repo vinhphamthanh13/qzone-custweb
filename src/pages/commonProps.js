@@ -41,10 +41,11 @@ import { goProfilePage } from 'actionsReducers/profile.actions';
 import { trackingAppointmentByIdsApi } from 'actionsReducers/customer.actions';
 
 export const homeProps = {
-  mapStateToProps: ({ common, organization }) => ({
+  mapStateToProps: ({ common, organization, landing }) => ({
     serviceCategoriesByOrgId: organization.serviceCategoriesByOrgId,
     servicesByServiceCategoryId: common.servicesByServiceCategoryId,
     orgNotFound: organization.orgNotFound,
+    landingPageFactors: landing.landingPageFactors,
   }),
   mapDispatchToProps: dispatch => ({
     dispatchServiceCategoriesByOrgId: id => dispatch(serviceCategoriesByOrgIdApi(id)),

@@ -40,15 +40,17 @@ export class Home extends Component {
     showAdvancedResult: false,
     serviceCategoriesByOrgId: [],
     servicesByServiceCategoryId: [],
+    landingPageFactors: {},
     categories: [],
     orgNotFound: false,
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { serviceCategoriesByOrgId, servicesByServiceCategoryId, orgNotFound } = props;
+    const { serviceCategoriesByOrgId, servicesByServiceCategoryId, orgNotFound, landingPageFactors } = props;
     const { serviceCategoriesByOrgId: cachedServiceCategoriesByOrgId,
       servicesByServiceCategoryId: cachedServicesByServiceCategoryId,
       orgNotFound: cachedOrgNotFound,
+      landingPageFactors: cachedLandingPageFactors,
     } = state;
     const updatedState = {};
     if (
@@ -67,6 +69,13 @@ export class Home extends Component {
     }
     if (orgNotFound !== cachedOrgNotFound) {
       updatedState.orgNotFound = orgNotFound;
+    }
+
+    if (
+      landingPageFactors !== null &&
+      JSON.stringify(landingPageFactors) !== JSON.stringify(cachedLandingPageFactors)
+    ) {
+      updatedState.landingPageFactors = landingPageFactors;
     }
 
     return Object.keys(updatedState) ? updatedState : null;
@@ -93,13 +102,21 @@ export class Home extends Component {
   componentDidUpdate(prevProps) {
     const { serviceCategoriesByOrgId } = prevProps;
     const { dispatchSetLandingPage } = this.props;
-    const { serviceCategoriesByOrgId: cachedServiceCategoriesByOrgId } = this.state;
+    const {
+      serviceCategoriesByOrgId: cachedServiceCategoriesByOrgId, landingPageFactors: cachedLandingPageFactors,
+    } = this.state;
     if (
       cachedServiceCategoriesByOrgId !== null &&
       JSON.stringify(cachedServiceCategoriesByOrgId) !== JSON.stringify(serviceCategoriesByOrgId)
     ) {
       const catName = get(cachedServiceCategoriesByOrgId, '0.label');
       dispatchSetLandingPage({ catName });
+    }
+    if (Object.keys(cachedLandingPageFactors)) {
+      const orgRef = get(cachedLandingPageFactors, 'orgRef');
+      if (!orgRef || orgRef === 'undefined') {
+        navigateTo('/')();
+      }
     }
   }
 

@@ -159,7 +159,7 @@ const reducer = (state = initState, action) => {
     case QUERY_PROVIDER:
       return {
         ...state,
-        queriedProvider: action.payload,
+        queriedProvider: action.payload.serviceDateProviders,
       };
     case CLEAR_QUERIED_PROVIDER:
       return {
