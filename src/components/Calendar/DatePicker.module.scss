@@ -5,6 +5,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
 }
 
 .datePickerIcon {
@@ -46,5 +47,23 @@
   padding-right: 0.2rem;
   &:hover {
     cursor: pointer;
+  }
+}
+
+.datePickerCalendar {
+  position: relative;
+}
+
+.cancelDatePicker {
+  position: absolute;
+  top: 0.1rem;
+  right: 0.1rem;
+  border-radius: 0.2rem;
+  background: rgba($white, 0.4);
+  transition: all 0.3s ease-in;
+  &:hover {
+    box-shadow: 1px 1px 31px -1px $main_01;
+    opacity: 0.7;
+    transform: scale(1.2);
   }
 }

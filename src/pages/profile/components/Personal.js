@@ -4,7 +4,7 @@ import get from 'lodash/get';
 import { TextField, Button } from '@material-ui/core';
 import { CheckCircle } from '@material-ui/icons';
 import { withFormik } from 'formik';
-import { clientInfo } from 'authentication/components/schemas';
+import { personalSchema } from 'authentication/components/schemas';
 import { PERSONAL, DELIVERY } from 'utils/constants';
 import s from './Info.module.scss';
 
@@ -153,7 +153,7 @@ export default withFormik({
   },
   isInitialValid: true,
   enableReinitialize: true,
-  validationSchema: clientInfo,
+  validationSchema: personalSchema,
   validateOnChange: true,
   validateOnBlur: true,
 })(Personal);

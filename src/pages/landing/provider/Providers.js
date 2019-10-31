@@ -3,71 +3,57 @@ import React, { Component } from 'react';
 import { func } from 'prop-types';
 import { connect } from 'react-redux';
 import windowSize from 'react-window-size';
-import { find, uniqBy, chunk, flatten } from 'lodash';
 import get from 'lodash/get';
-import isEmpty from 'lodash/isEmpty';
-import { IconButton } from '@material-ui/core';
+import chunk from 'lodash/chunk';
+import findIndex from 'lodash/findIndex';
+import { IconButton, InputBase } from '@material-ui/core';
 import { navigateTo } from 'utils/common';
-import { NavigateBefore } from '@material-ui/icons';
+import Loading from 'components/Loading';
+import Error from 'components/Error';
+import { NavigateBefore, Search, Clear } from '@material-ui/icons';
 import { providersProps } from 'pages/commonProps';
-import { MAX_CARD_WIDTH } from 'utils/constants';
+import EmptyItem from 'components/EmptyItem';
+import { MAX_CARD_WIDTH, SEARCH_LENGTH } from 'utils/constants';
 import Footer from 'pages/components/footer/Footer';
 import Provider from './Provider';
 import s from './Providers.module.scss';
 
 class Providers extends Component {
   static propTypes = {
-    dispatchTemporaryServicesByServiceId: func.isRequired,
-    dispatchAvailabilities: func.isRequired,
     dispatchSelectBookingDetail: func.isRequired,
     dispatchSetLandingPage: func.isRequired,
+    dispatchQueryProvider: func.isRequired,
+    dispatchClearQueriedProvider: func.isRequired,
   };
 
   state = {
-    providersByServiceId: {},
-    temporaryServiceByServiceIds: {},
-    availabilitiesByTemporaryServiceId: {},
     landingPageFactors: {},
     serviceId: '',
     bookedEventId: '',
+    searchText: '',
+    queriedProvider: null,
+    serviceDateProviders: [],
+    providersList: [],
   };
 
   static getDerivedStateFromProps(props, state) {
     const {
-      providersByServiceId, temporaryServiceByServiceIds, match: { params: { sId } }, landingPageFactors,
-      availabilitiesByTemporaryServiceId, bookedEventId, windowWidth,
+      match: { params: { sId } }, landingPageFactors, bookedEventId, windowWidth, queriedProvider,
+      serviceDateProviders, providersByOrgRef,
     } = props;
     const {
-      providersByServiceId: cachedProvidersByServiceId,
-      temporaryServiceByServiceIds: cachedTemporaryServiceByServiceIds,
       serviceId,
-      availabilitiesByTemporaryServiceId: cachedAvailabilitiesByTemporaryServiceId,
       windowWidth: cachedWindowWidth,
       bookedEventId: cachedBookedEventId,
       landingPageFactors: cachedLandingPageFactors,
+      queriedProvider: cachedQueriedProvider,
+      serviceDateProviders: cachedServiceDateProviders,
+      providersByOrgRef: cachedProvidersByOrgRef,
     } = state;
     const updatedState = {};
 
     if (sId !== serviceId) {
       updatedState.serviceId = sId;
-    }
-    if (
-      providersByServiceId !== null &&
-      JSON.stringify(providersByServiceId) !== JSON.stringify(cachedProvidersByServiceId)
-    ) {
-      updatedState.providersByServiceId = providersByServiceId;
-    }
-    if (
-      temporaryServiceByServiceIds !== null &&
-      JSON.stringify(temporaryServiceByServiceIds) !== JSON.stringify(cachedTemporaryServiceByServiceIds)
-    ) {
-      updatedState.temporaryServiceByServiceIds = temporaryServiceByServiceIds;
-    }
-    if (
-      availabilitiesByTemporaryServiceId !== null &&
-      JSON.stringify(availabilitiesByTemporaryServiceId) !== JSON.stringify(cachedAvailabilitiesByTemporaryServiceId)
-    ) {
-      updatedState.availabilitiesByTemporaryServiceId = availabilitiesByTemporaryServiceId;
     }
     if (windowWidth !== cachedWindowWidth) {
       updatedState.windowWidth = windowWidth;
@@ -83,108 +69,138 @@ class Providers extends Component {
       JSON.stringify(landingPageFactors) !== JSON.stringify(cachedLandingPageFactors)
     ) {
       updatedState.landingPageFactors = landingPageFactors;
+      updatedState.sName = get(landingPageFactors, 'sName', '');
+      updatedState.orgRef = get(landingPageFactors, 'orgRef', '');
+      updatedState.catName = get(landingPageFactors, 'catName', '');
+    }
+    if (
+      serviceDateProviders !== null &&
+      JSON.stringify(serviceDateProviders) !== JSON.stringify(cachedServiceDateProviders)
+    ) {
+      updatedState.serviceDateProviders = serviceDateProviders;
+    }
+    if (
+      providersByOrgRef !== null &&
+      JSON.stringify(providersByOrgRef) !== JSON.stringify(cachedProvidersByOrgRef)
+    ) {
+      updatedState.providersByOrgRef = providersByOrgRef;
+      updatedState.providersList = providersByOrgRef[Object.keys(providersByOrgRef)[0]] || [];
+    }
+    if (JSON.stringify(queriedProvider) !== JSON.stringify(cachedQueriedProvider)) {
+      updatedState.queriedProvider = queriedProvider;
     }
 
     return Object.keys(updatedState) ? updatedState : null;
   }
 
   componentDidMount() {
-    const { dispatchTemporaryServicesByServiceId } = this.props;
-    const { serviceId } = this.state;
-    dispatchTemporaryServicesByServiceId(serviceId);
+    const { dispatchClearQueriedProvider } = this.props;
+    dispatchClearQueriedProvider();
   }
 
   componentDidUpdate() {
-    const { serviceId, landingPageFactors } = this.state;
-    const orgRef = get(landingPageFactors, 'orgRef');
-    if (serviceId === 'undefined' || !serviceId) {
+    const { serviceId, orgRef, serviceDateProviders } = this.state;
+    if (serviceId === 'undefined' || !serviceId || !serviceDateProviders.length) {
       navigateTo(`/${orgRef}`)();
     }
   }
 
   handleSelectService = catName => () => {
-    const { landingPageFactors } = this.state;
-    const orgRef = get(landingPageFactors, 'orgRef', '');
+    const { orgRef } = this.state;
     navigateTo(`/${orgRef}`, { catName })();
   };
 
-  render() {
-    const { dispatchAvailabilities, dispatchSelectBookingDetail, dispatchSetLandingPage } = this.props;
-    const {
-      providersByServiceId, temporaryServiceByServiceIds, landingPageFactors,
-      serviceId, availabilitiesByTemporaryServiceId, windowWidth, bookedEventId,
-    } = this.state;
-    const catName = get(landingPageFactors, 'catName');
-    const sName = get(landingPageFactors, 'sName');
-    const providers = get(providersByServiceId, `${catName}.${sName}`, []);
-    const providerByLocation = {};
-    if (
-      !isEmpty(temporaryServiceByServiceIds) &&
-      Object.keys(temporaryServiceByServiceIds).length > 0 &&
-      temporaryServiceByServiceIds[serviceId] &&
-      temporaryServiceByServiceIds[serviceId].length
-    ) {
-      temporaryServiceByServiceIds[serviceId].map(item => {
-        const locationId = get(item, 'geoLocation.id');
-        const providerId = get(item, 'providerId');
-        const providerDetail = find(providers, ['userSub', providerId]);
-        providerByLocation[locationId] = providerByLocation[locationId] ? [...providerByLocation[locationId]] : [];
-        providerByLocation[locationId].push({
-          temporaryServiceId: item.id,
-          ...providerDetail,
-          ...item,
-        });
-        return providerByLocation;
-      });
-    }
-    const temporaryServiceByProvider = {};
-    if (Object.keys(providerByLocation).length) {
-      Object.keys(providerByLocation).map(locationId => providerByLocation[locationId].map(
-        provider => {
-          const providerId = get(provider, 'userSub');
-          temporaryServiceByProvider[providerId] = temporaryServiceByProvider[providerId]
-            ? temporaryServiceByProvider[providerId] : [];
-          temporaryServiceByProvider[providerId].push(provider.temporaryServiceId);
-          return temporaryServiceByProvider;
-        })
-      );
-    }
-    const chunkFactor = Math.abs(windowWidth / MAX_CARD_WIDTH);
-    const providerList = Object.keys(providerByLocation).map(locId =>
-      uniqBy(providerByLocation[locId], 'userSub').map(provider => provider));
-    const providerFlatten = flatten(providerList);
+  handleSearch = event => {
+    if (event) event.preventDefault();
+    const { value } = event.target;
+    this.setState({
+      searchText: value,
+    });
+  };
 
-    return Object.keys(providerByLocation).length > 0 && (
-      <div className={s.container}>
-        <div className={s.headline}>
-          <div className={s.navigation}>
-            <IconButton color="inherit" onClick={this.handleSelectService(catName)}>
-              <NavigateBefore color="inherit" />
-            </IconButton>
+  handleClearSearch = () => {
+    const { dispatchClearQueriedProvider } = this.props;
+    dispatchClearQueriedProvider();
+    this.setState({
+      searchText: '',
+    });
+  };
+
+  handleSubmitSearch = event => {
+    if (event) event.preventDefault();
+    const { dispatchQueryProvider } = this.props;
+    const { searchText, landingPageFactors, serviceId } = this.state;
+    const orgRef = get(landingPageFactors, 'orgRef');
+    dispatchQueryProvider({ name: searchText, orgRef, serviceId });
+  };
+
+  render() {
+    const { dispatchSelectBookingDetail, dispatchSetLandingPage } = this.props;
+    const {
+      searchText, serviceId, windowWidth, bookedEventId, queriedProvider, serviceDateProviders, catName, sName,
+      providersList,
+    } = this.state;
+    const chunkFactor = Math.abs(windowWidth / MAX_CARD_WIDTH);
+    const showingSearch = searchText.length > SEARCH_LENGTH && queriedProvider && queriedProvider.length > 0;
+    const resolvedProvider = showingSearch ?  queriedProvider : serviceDateProviders;
+
+    return (
+      <>
+        <Loading />
+        <Error />
+        <div className={s.container}>
+          <div className={s.topSection}>
+            <div className={s.headline}>
+              <div className={s.navigation}>
+                <IconButton color="inherit" onClick={this.handleSelectService(catName)}>
+                  <NavigateBefore color="inherit" />
+                </IconButton>
+                <div className={`${s.title} ellipsis`}>{sName}</div>
+              </div>
+              <form onSubmit={this.handleSubmitSearch} className={s.searchProvider}>
+                <Search className="main-color" />&nbsp;
+                <InputBase fullWidth placeholder="Provider name" value={searchText} onChange={this.handleSearch} />
+                {searchText.length > SEARCH_LENGTH && (
+                  <Clear className="danger-color hover-pointer" onClick={this.handleClearSearch} />
+                )}
+              </form>
+            </div>
           </div>
-          <div className={`${s.title} ellipsis`}>{sName}</div>
+          <div className={s.bodySection}>
+            {resolvedProvider.length > 0 &&
+              chunk(resolvedProvider, chunkFactor).map((providerRow, ind) => (
+                <div className={s.providerRow} key={ind}>
+                  {providerRow.map((provider, index) => {
+                    const providerId = get(provider, 'providerId');
+                    const providerIndex = findIndex(providersList, item =>
+                      item.id === providerId || item.userSub === providerId,
+                    );
+                    return (
+                      <Provider
+                        key={`${provider.userSub}-${index}`}
+                        provider={{
+                          ...provider,
+                          serviceId,
+                          sName,
+                          catName,
+                          ...providersList[providerIndex],
+                        }}
+                        selectBookingDetail={dispatchSelectBookingDetail}
+                        bookedEventId={bookedEventId}
+                        setLandingPage={dispatchSetLandingPage}
+                      />);
+                  })}
+                </div>
+              ))}
+            {searchText.length > SEARCH_LENGTH && queriedProvider && queriedProvider.length === 0 && (
+              <div className={s.noResultsFound}>
+                <EmptyItem message="No results found for this search" className="white-color" size="lg" />
+              </div>
+            )}
+          </div>
+          <Footer maintenance={false} />
         </div>
-        {chunk(providerFlatten, chunkFactor).map((providerRow, ind) => (
-          <div className={s.providerRow} key={ind}>
-            {providerRow.map((provider, index) => (
-              <Provider
-                key={`${provider.userSub}-${index}`}
-                provider={{
-                  ...provider,
-                  temporaryServiceId: temporaryServiceByProvider[provider.userSub],
-                  catName,
-                }}
-                dispatchAvailabilities={dispatchAvailabilities}
-                availabilitiesByTemporaryServiceId={availabilitiesByTemporaryServiceId}
-                selectBookingDetail={dispatchSelectBookingDetail}
-                bookedEventId={bookedEventId}
-                setLandingPage={dispatchSetLandingPage}
-                landingPageFactors={landingPageFactors}
-            />))}
-          </div>
-        ))}
-        <Footer maintenance={false} />
-      </div>
+      </>
     );
   }
 }

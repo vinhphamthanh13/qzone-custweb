@@ -82,6 +82,21 @@
   }
 }
 
+.hover-success {
+  transition: all 0.3s ease-in;
+  &:hover {
+    color: $success !important;
+    font-weight: bold;
+    background: transparent !important;
+  }
+}
+
+.hover-none {
+  &:hover {
+    cursor: unset;
+  }
+}
+
 .button-text-center {
   -webkit-user-select: none;
   -moz-user-select: none;

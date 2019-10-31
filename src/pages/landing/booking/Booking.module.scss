@@ -42,12 +42,19 @@
 }
 
 .waitListTitle {
-  color: $main_03;
+  color: $main_04;
   font-size: $title;
   font-weight: 500;
   padding: 0.8rem 0 1rem;
+  margin-bottom: 1rem;
   border-bottom: 2px solid $we_peep;
 }
+
+.clientGuideLine {
+  font-size: $caption;
+  color: $main_04;
+}
+
 
 .item {
   display: flex;

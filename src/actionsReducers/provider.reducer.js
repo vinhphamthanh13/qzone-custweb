@@ -11,6 +11,17 @@ import {
   SELECT_BOOKING_DETAIL,
   USERS_BY_ID,
   WAIT_LIST_TEMPORARY_SERVICES_BY_SERVICE_ID,
+  QUERY_PROVIDER,
+  CLEAR_QUERIED_PROVIDER,
+  CLEAR_SELECT_BOOKING_DETAIL,
+  TEMP_SERVICE_DATE_PROVIDER_BY_SERVICE_ID,
+  SET_SERVICE_DATE_PROVIDERS,
+  SET_PROVIDERS_BY_ORG_REF,
+  CLEAR_PROVIDERS_BY_ORG_REF,
+  CLEAR_TEMP_SERVICE_DATE_PROVIDER_BY_SERVICE_ID,
+  SET_BOOK_NOW,
+  CLEAR_BOOK_NOW,
+  QUERY_AVAILABILITIES_BY_DATE,
 } from 'actionsReducers/provider.actions';
 
 const initState = {
@@ -18,11 +29,18 @@ const initState = {
   providerServices: null,
   temporaryServiceByServiceIds: {},
   availabilitiesByTemporaryServiceId: {},
+  queryAvailabilitiesByTemporaryServiceId: {},
   instantAvailabilitiesByTemporaryServiceId: [],
   rescheduledAvailabilitiesByTemporaryServiceId: [],
   selectedBookingDetail: {},
   providerById: {},
   waitListTemporaryServicesByServiceId: [],
+  queriedProvider: null,
+  tempServiceDateProvider: {},
+  serviceDateProviders: [],
+  providersByServiceId: {},
+  providersByOrgRef: {},
+  bookNowList: {},
 };
 const persistConfig = {
   key: 'provider',
@@ -59,6 +77,52 @@ const reducer = (state = initState, action) => {
           ...action.payload,
         },
       };
+    case TEMP_SERVICE_DATE_PROVIDER_BY_SERVICE_ID: {
+      return {
+        ...state,
+        tempServiceDateProvider: {
+            ...state.tempServiceDateProvider,
+          ...action.payload,
+        },
+      };
+    }
+    case CLEAR_TEMP_SERVICE_DATE_PROVIDER_BY_SERVICE_ID: {
+      return {
+        ...state,
+        tempServiceDateProvider: {},
+      };
+    }
+    case SET_BOOK_NOW:
+      return {
+        ...state,
+        bookNowList: {
+          ...state.bookNowList,
+          ...action.payload,
+        },
+      };
+    case CLEAR_BOOK_NOW:
+      return {
+        ...state,
+        bookNowList: {},
+      };
+    case SET_SERVICE_DATE_PROVIDERS:
+      return {
+        ...state,
+        serviceDateProviders: [...action.payload ],
+      };
+    case SET_PROVIDERS_BY_ORG_REF:
+      return {
+        ...state,
+        providersByOrgRef: {
+          ...state.providersByOrgRef,
+          ...action.payload,
+        },
+      };
+    case CLEAR_PROVIDERS_BY_ORG_REF:
+      return {
+        ...state,
+        providersByOrgRef: {},
+      };
     case AVAILABILITIES_BY_TMP_SERVICE_ID:
       return {
         ...state,
@@ -66,6 +130,11 @@ const reducer = (state = initState, action) => {
           ...state.availabilitiesByTemporaryServiceId,
           ...action.payload,
         },
+      };
+    case QUERY_AVAILABILITIES_BY_DATE:
+      return {
+        ...state,
+        queryAvailabilitiesByTemporaryServiceId: action.payload,
       };
     case INSTANT_AVAILABILITIES_BY_TMP_SERVICE_ID:
       return {
@@ -81,6 +150,21 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         selectedBookingDetail: action.payload,
+      };
+    case CLEAR_SELECT_BOOKING_DETAIL:
+      return {
+        ...state,
+        selectedBookingDetail: {},
+      };
+    case QUERY_PROVIDER:
+      return {
+        ...state,
+        queriedProvider: action.payload.serviceDateProviders,
+      };
+    case CLEAR_QUERIED_PROVIDER:
+      return {
+        ...state,
+        queriedProvider: null,
       };
     case WAIT_LIST_TEMPORARY_SERVICES_BY_SERVICE_ID:
       return {

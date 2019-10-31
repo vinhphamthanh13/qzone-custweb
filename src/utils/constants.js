@@ -6,10 +6,11 @@ export const TERMS_AND_CONDITIONS = 'https://info.quezone.co/eula/';
 
 export const dateFormatDash = 'DD-MM-YYYY';
 export const timeSlotFormat = 'hh:mm a';
-export const defaultDateFormat = 'DD MMMM YYYY';
 export const FULL_DATE = 'dddd, DD MMMM YYYY';
-export const TIME_FORMAT = 'hh:mm a';
+export const DATE_LABEL = 'ddd, DD MMM YYYY';
+export const TIME_FORMAT = 'h:mm a';
 export const DEFAULT_TIME = '1970-01-01 T00:00:00';
+export const CALENDAR_DATE = 'DD MMMM YYYY';
 // Slide type
 export const SLIDE_TYPE = {
   ORG: 'organization',
@@ -21,8 +22,8 @@ export const CATEGORY_NAV_WIDTH = 66;
 // layout
 export const DEVICE_MIN_WIDTH = 375;
 export const MAX_TAB_WIDTH = 166;
-export const MAX_CARD_WIDTH = 320;
-export const ADDRESS_LENGTH = 100;
+export const MAX_CARD_WIDTH = 350;
+export const ADDRESS_LENGTH = 89;
 
 // Auth
 export const AUTHENTICATED_KEY = 'isAuthenticated';
@@ -74,8 +75,10 @@ export const regExPattern = {
   registerVerificationCode: /^\d{6}$/,
   connectError: /Cannot connect to services/,
   ISO_TIME: {
-    pattern: /(.*)T(.*)\..*/,
+    pattern: /(.*)[T](.*)\..*/,
     replaceBy: '$1 $2',
+    patternRemoveTime: /(.*)\s(.*)/,
+    removeTime: '$1',
   },
   address: /[\w\s]{3,}/,
 };
@@ -164,3 +167,5 @@ export const DELIVERY = [
   { id: 'postCode', value: 'postCode', label: 'Post Code' },
   { id: 'country', value: 'country', label: 'Country' },
 ];
+// SEARCHING
+export const SEARCH_LENGTH = 2;

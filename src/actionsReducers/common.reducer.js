@@ -39,6 +39,7 @@ const initState = {
   isError: false,
   isSucceed: false,
   errorMessage: '',
+  errorTitle: '',
   succeedMessage: '',
   eventList: null,
   serviceProviders: null,
@@ -66,7 +67,8 @@ const reducer = (state = initState, action) => {
       return {
         ...state,
         isError: true,
-        errorMessage: action.payload,
+        errorMessage: action.payload.message || action.payload,
+        errorTitle: action.payload.title || 'Error Occurs',
       };
     case SET_SUCCEED:
       return {

@@ -91,6 +91,11 @@
   border-radius: 50%;
 }
 
+.border-round-white {
+  border: 2px solid $white;
+  border-radius: 50%;
+}
+
 .bg-mako:hover {
   transition: color 0.2s, background 0.2s;
   transition-timing-function: ease-in;

@@ -5,7 +5,7 @@ import { Button } from '@material-ui/core';
 import { get } from 'lodash';
 import { limitString, navigateTo } from 'utils/common';
 import { Domain, NavigateNext, NotificationImportant, WrapText } from '@material-ui/icons';
-import { landingProps } from 'pages/commonProps';
+import { serviceProps } from 'pages/commonProps';
 import { SERVICE_MODE } from 'utils/constants';
 import defaultImage from 'images/providers.jpg';
 import WaitList from '../waitlist/WaitList';
@@ -13,40 +13,29 @@ import s from './Service.module.scss';
 
 class Service extends Component {
   static propTypes = {
-    dispatchProvidersByServiceId: func.isRequired,
-    dispatchTemporaryServicesByServiceId: func.isRequired,
     dispatchSetLandingPage: func.isRequired,
+    dispatchTempServiceDateProvider: func.isRequired,
+    dispatchSetServiceDateProviders: func.isRequired,
     handleAuth: func.isRequired,
   };
 
   state = {
     service: {},
-    catName: '',
-    providersByServiceId: {},
     isQueuePopup: false,
     landingPageFactors: {},
+    tempServiceDateProvider: {},
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { service, catName, providersByServiceId, landingPageFactors } = props;
+    const { service, landingPageFactors, tempServiceDateProvider } = props;
     const {
       service: cachedService,
-      catName: cachedCatName,
-      providersByServiceId: cachedProvidersByServiceId,
       landingPageFactors: cachedLandingPageFactors,
+      tempServiceDateProvider: cachedTempServiceDateProvider,
     } = state;
     const updatedState = {};
     if (service.id !== cachedService.id) {
       updatedState.service = service;
-    }
-    if (catName !== cachedCatName) {
-      updatedState.catName = catName;
-    }
-    if (
-      providersByServiceId !== null &&
-      JSON.stringify(providersByServiceId) !== JSON.stringify(cachedProvidersByServiceId)
-    ) {
-      updatedState.providersByServiceId = providersByServiceId;
     }
     if (
       landingPageFactors !== null &&
@@ -54,22 +43,30 @@ class Service extends Component {
     ) {
       updatedState.landingPageFactors = landingPageFactors;
     }
+    if (
+      tempServiceDateProvider !== null &&
+      JSON.stringify(tempServiceDateProvider) !== JSON.stringify(cachedTempServiceDateProvider)
+    ) {
+      updatedState.tempServiceDateProvider = tempServiceDateProvider;
+    }
 
     return Object.keys(updatedState) ? updatedState : null;
   }
 
   componentDidMount() {
-    const { dispatchProvidersByServiceId, dispatchTemporaryServicesByServiceId } = this.props;
-        const { service, catName } = this.state;
-    dispatchProvidersByServiceId(service.id, service.name, catName);
-    dispatchTemporaryServicesByServiceId(service.id);
+    const { dispatchTempServiceDateProvider } = this.props;
+    const { service } = this.state;
+    const sId = get(service, 'id');
+    dispatchTempServiceDateProvider(sId);
   }
 
   handleSelectProvider = (sId, sName, catName)=> () => {
-    const { dispatchSetLandingPage } = this.props;
-    const { landingPageFactors } = this.state;
+    const { dispatchSetLandingPage, dispatchSetServiceDateProviders } = this.props;
+    const { landingPageFactors, tempServiceDateProvider } = this.state;
     const orgRef = get(landingPageFactors, 'orgRef', '');
     dispatchSetLandingPage({ sName, catName });
+    const serviceDateProviders = get(tempServiceDateProvider[sId], 'serviceDateProviders');
+    dispatchSetServiceDateProviders(serviceDateProviders);
     navigateTo(`/${orgRef}/provider-by-service/${sId}`, { category: catName, service: sName })();
   };
 
@@ -79,13 +76,14 @@ class Service extends Component {
 
   toggleQueueModal = () => {
     this.setState(oldState => ({
-    isQueuePopup:   !oldState.isQueuePopup,
+    isQueuePopup: !oldState.isQueuePopup,
     }));
   };
 
   render() {
     const { handleAuth } = this.props;
-    const { providersByServiceId, catName, service, isQueuePopup } = this.state;
+    const { landingPageFactors, service, isQueuePopup, tempServiceDateProvider } = this.state;
+    const catName = get(landingPageFactors, 'catName');
     const sDescription = get(service, 'description');
     const sDuration = get(service, 'duration');
     const sId = get(service, 'id');
@@ -93,8 +91,8 @@ class Service extends Component {
     const sName = get(service, 'name');
     const orgName = get(service, 'organizationEntity.name');
     const website = get(service, 'organizationEntity.website');
-    const serviceProviders = get(providersByServiceId, `${catName}.${sName}`, []);
-    const isProviderSelectable = serviceProviders.length > 0;
+    const serviceDateProviders = get(tempServiceDateProvider, `${sId}.serviceDateProviders`);
+    const isProviderSelectable = serviceDateProviders && serviceDateProviders.length > 0;
     const mode = get(service, 'mode', '');
     const isQueuedMode = mode.toLowerCase() === SERVICE_MODE.QUEUE;
 
@@ -159,6 +157,6 @@ class Service extends Component {
 }
 
 export default connect(
-  landingProps.mapStateToProps,
-  landingProps.mapDispatchToProps,
+  serviceProps.mapStateToProps,
+  serviceProps.mapDispatchToProps,
 )(Service);

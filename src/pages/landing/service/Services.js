@@ -12,20 +12,16 @@ class Services extends Component {
   };
 
   state = {
-    catName: '',
     serviceList: [],
     windowWidth: 1,
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { serviceList, catName, windowWidth } = props;
-    const { catName: cachedCatName, windowWidth: cachedWindowWidth } = state;
+    const { serviceList, windowWidth } = props;
+    const { windowWidth: cachedWindowWidth } = state;
     const updatedState = {};
     if (serviceList.length) {
       updatedState.serviceList = serviceList;
-    }
-    if (catName !== cachedCatName) {
-      updatedState.catName = catName;
     }
     if (windowWidth !== cachedWindowWidth) {
       updatedState.windowWidth = windowWidth;
@@ -36,7 +32,7 @@ class Services extends Component {
 
   render() {
     const { handleAuth } = this.props;
-    const { serviceList, catName, windowWidth } = this.state;
+    const { serviceList, windowWidth } = this.state;
     const chunkFactor = serviceList.length > 0 ? windowWidth / MAX_CARD_WIDTH : 1;
     return (
       <>
@@ -44,7 +40,12 @@ class Services extends Component {
           // eslint-disable-next-line
           <div className={s.serviceRow} key={index}>
             {serviceRow.map(service => (
-              <Service key={service.id} service={service} catName={catName} handleAuth={handleAuth}/>)
+              <Service
+                key={service.id}
+                service={service}
+                handleAuth={handleAuth}
+              />
+            )
             )}
           </div>
         ))}

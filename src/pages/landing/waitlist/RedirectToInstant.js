@@ -25,13 +25,14 @@ class RedirectToInstant extends Component {
     waitListsById: {},
     userDetailById: {},
     landingPageFactors: {},
+    selectedBookingDetail: {},
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { waitListsById, userDetailById, landingPageFactors } = props;
+    const { waitListsById, userDetailById, landingPageFactors, selectedBookingDetail } = props;
     const {
       waitListsById: cachedWaitListById, userDetailById: cachedUserDetailById,
-      landingPageFactors: cachedLandingPageFactors,
+      landingPageFactors: cachedLandingPageFactors, selectedBookingDetail: cachedSelectedBookingDetail,
     } = state;
     const updatedState = {};
     if (
@@ -52,6 +53,12 @@ class RedirectToInstant extends Component {
     ) {
       updatedState.landingPageFactors = landingPageFactors;
     }
+    if (
+      selectedBookingDetail !== null &&
+      JSON.stringify(selectedBookingDetail) !== JSON.stringify(cachedSelectedBookingDetail)
+    ) {
+      updatedState.selectedBookingDetail = selectedBookingDetail;
+    }
 
     return Object.keys(updatedState) ? updatedState : null;
   }
@@ -64,10 +71,13 @@ class RedirectToInstant extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { dispatchSelectBookingDetail, dispatchGetCustomerById, dispatchSetLandingPage } = this.props;
+    const {
+      dispatchSelectBookingDetail, dispatchGetCustomerById, dispatchSetLandingPage,
+    } = this.props;
     const { waitListsById } = prevProps;
     const {
       waitListsById: cachedWaitListsById, userDetailById: cachedUserDetailById, landingPageFactors,
+      selectedBookingDetail: cachedSelectedBookingDetail,
     } = this.state;
     if (
       cachedWaitListsById !== null &&
@@ -96,7 +106,10 @@ class RedirectToInstant extends Component {
         dispatchGetCustomerById(customerId);
       }
     }
-    if (cachedUserDetailById.id || cachedUserDetailById.userSub) {
+    if (
+      (cachedUserDetailById.id || cachedUserDetailById.userSub) &&
+      cachedSelectedBookingDetail.id
+    ) {
       const orgRef = get(landingPageFactors, 'orgRef', '');
       navigateTo(`/${orgRef}/booking/confirmation`)();
       dispatchSetLandingPage({ confirmWaitLists: true })

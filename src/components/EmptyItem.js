@@ -4,13 +4,13 @@ import { Typography } from '@material-ui/core';
 import { LocalFlorist } from '@material-ui/icons';
 import s from './EmptyItem.module.scss';
 
-export default function EmptyItem({ message, size }) {
+export default function EmptyItem({ message, size, className }) {
   return (
-    <div className={s.column}>
+    <div className={`${s.column} ${className}`}>
       <div>
         <LocalFlorist className={`main-color icon-${size}`} />
       </div>
-      <Typography variant="h6" color="textSecondary">{message}</Typography>
+      <Typography variant="h6" color="inherit">{message}</Typography>
     </div>
   );
 }
@@ -18,9 +18,11 @@ export default function EmptyItem({ message, size }) {
 EmptyItem.propTypes = {
   message: string,
   size: string,
+  className: string,
 };
 
 EmptyItem.defaultProps = {
   message: 'No Item Found',
   size: 'big', // normal, big, lg, huge
+  className: '',
 };

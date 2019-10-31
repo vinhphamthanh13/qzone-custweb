@@ -80,3 +80,9 @@
   text-overflow: ellipsis;
   overflow: hidden;
 }
+
+.text-shadow-bright {
+  &:hover {
+    text-shadow: 1px 2px $white;
+  }
+}

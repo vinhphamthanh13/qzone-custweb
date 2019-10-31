@@ -23,8 +23,11 @@ import s from './Home.module.scss';
 export class Home extends Component {
   static propTypes = {
     dispatchServiceCategoriesByOrgId: func.isRequired,
+    dispatchClearTempServiceDateProviderByServiceId: func.isRequired,
     dispatchSetLandingPage: func.isRequired,
     dispatchClearOrgNotFound: func.isRequired,
+    dispatchClearBookNowList: func.isRequired,
+    dispatchSetProvidersByOrgRef: func.isRequired,
     match: objectOf(any).isRequired,
   };
 
@@ -37,15 +40,17 @@ export class Home extends Component {
     showAdvancedResult: false,
     serviceCategoriesByOrgId: [],
     servicesByServiceCategoryId: [],
+    landingPageFactors: {},
     categories: [],
     orgNotFound: false,
   };
 
   static getDerivedStateFromProps(props, state) {
-    const { serviceCategoriesByOrgId, servicesByServiceCategoryId, orgNotFound } = props;
+    const { serviceCategoriesByOrgId, servicesByServiceCategoryId, orgNotFound, landingPageFactors } = props;
     const { serviceCategoriesByOrgId: cachedServiceCategoriesByOrgId,
       servicesByServiceCategoryId: cachedServicesByServiceCategoryId,
       orgNotFound: cachedOrgNotFound,
+      landingPageFactors: cachedLandingPageFactors,
     } = state;
     const updatedState = {};
     if (
@@ -66,27 +71,52 @@ export class Home extends Component {
       updatedState.orgNotFound = orgNotFound;
     }
 
+    if (
+      landingPageFactors !== null &&
+      JSON.stringify(landingPageFactors) !== JSON.stringify(cachedLandingPageFactors)
+    ) {
+      updatedState.landingPageFactors = landingPageFactors;
+    }
+
     return Object.keys(updatedState) ? updatedState : null;
   }
 
   componentDidMount() {
-    const { dispatchServiceCategoriesByOrgId, match: { params: { orgRef }}, dispatchSetLandingPage } = this.props;
+    const {
+      dispatchServiceCategoriesByOrgId,
+      match: { params: { orgRef }},
+      dispatchSetLandingPage,
+      dispatchClearBookNowList,
+      dispatchSetProvidersByOrgRef,
+      dispatchClearTempServiceDateProviderByServiceId,
+    } = this.props;
     if (orgRef) {
-      dispatchServiceCategoriesByOrgId(orgRef);
+      dispatchClearBookNowList();
       dispatchSetLandingPage({ orgRef });
+      dispatchServiceCategoriesByOrgId(orgRef);
+      dispatchSetProvidersByOrgRef(orgRef);
+      dispatchClearTempServiceDateProviderByServiceId();
     }
   }
 
   componentDidUpdate(prevProps) {
     const { serviceCategoriesByOrgId } = prevProps;
     const { dispatchSetLandingPage } = this.props;
-    const { serviceCategoriesByOrgId: cachedServiceCategoriesByOrgId } = this.state;
+    const {
+      serviceCategoriesByOrgId: cachedServiceCategoriesByOrgId, landingPageFactors: cachedLandingPageFactors,
+    } = this.state;
     if (
       cachedServiceCategoriesByOrgId !== null &&
       JSON.stringify(cachedServiceCategoriesByOrgId) !== JSON.stringify(serviceCategoriesByOrgId)
     ) {
       const catName = get(cachedServiceCategoriesByOrgId, '0.label');
       dispatchSetLandingPage({ catName });
+    }
+    if (Object.keys(cachedLandingPageFactors)) {
+      const orgRef = get(cachedLandingPageFactors, 'orgRef');
+      if (!orgRef || orgRef === 'undefined') {
+        navigateTo('/')();
+      }
     }
   }
 

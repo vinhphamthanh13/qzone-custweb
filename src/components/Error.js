@@ -7,7 +7,7 @@ import CustomModal from 'components/Modal/CustomModal';
 import { resetModalStatus } from 'actionsReducers/common.actions';
 
 const Error = (props) => {
-  const { error, errorMessage, resetModalStatus: resetModalStatusAction, resetOtherStatus } = props;
+  const { errorTitle, error, errorMessage, resetModalStatus: resetModalStatusAction, resetOtherStatus } = props;
   const resetStatus = () => {
     resetOtherStatus();
     resetModalStatusAction();
@@ -16,7 +16,7 @@ const Error = (props) => {
   return error ? (
     <CustomModal
       type="error"
-      title="Error occurs!"
+      title={errorTitle}
       message={errorMessage}
       isOpen
       className="z-index-highest"
@@ -31,6 +31,7 @@ Error.propTypes = {
   errorMessage: string.isRequired,
   resetModalStatus: func.isRequired,
   resetOtherStatus: func,
+  errorTitle: string.isRequired,
 };
 
 Error.defaultProps = {
@@ -45,6 +46,7 @@ const mapStateToProps = (state) => {
   return ({
     error: error.reduce((final, current) => (final || current), false),
     errorMessage: errorMessage.reduce((final, current) => (final || current), ''),
+    errorTitle: state.common.errorTitle,
   });
 };
 

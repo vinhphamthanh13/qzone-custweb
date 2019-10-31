@@ -3,11 +3,10 @@
 .card {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: $max-card-width;
-  margin: 0.5rem;
+  width: $max-card-width;
+  margin: 0.5rem 0.5rem 0.25rem 1rem;
   border: 1px solid $main_03;
-  box-shadow: 2px 2px 13px 1px $main_04;
+  box-shadow: 2px 2px 13px 1px $grayNickel;
   position: relative;
   overflow: hidden;
 }
@@ -15,6 +14,60 @@
 .content {
   display: flex;
   flex-direction: column;
+}
+
+.popUpLocationWrapper {
+  position: absolute;
+  padding: 0.2rem;
+  display: flex;
+  align-items: center;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: $index_high;
+}
+
+.popUpLocation {
+  background: $white;
+  height: 50%;
+  overflow: auto;
+  border-radius: 0.4rem;
+}
+
+.popUpLocationHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: $subtitle;
+  font-weight: 500;
+  padding: 0.5rem 0.5rem;
+  background: rgba($fruitSalad, 0.8);
+  color: $main_01;
+}
+
+.popUpLocationBody {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0.2rem;
+}
+
+.locationItem {
+  color: $main_04;
+  padding: 0.3rem 0.2rem;
+  border: 1px solid $main_03;
+  border-radius: 0.3rem;
+  margin: 0.1rem auto;
+  transition: border 0.5s ease-in;
+}
+
+.locationItem:hover {
+  background: rgba($fruitSalad, 0.1);
+  border: 1px solid $fruitSalad;
+  cursor: pointer;
 }
 
 .image {
@@ -66,14 +119,63 @@
 .place {
   height: $full-address-height;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-direction: column;
   border: 1px solid $main_03;
   border-radius: 0.4rem;
-  background: $gallery;
+  background: rgba($gallery, 0.7);
   padding: 0.2rem 0.2rem 0.2rem 0.1rem;
   margin: auto 0.2rem;
+  font-weight: 400;
+  transition: all 0.5s ease-in;
+}
+
+.place:hover {
+  background: rgba($fruitSalad, 0.1);
+  border: 1px solid $fruitSalad;
+  box-shadow: 1px 1px 2px 3px rgba($gallery, 0.6);
+}
+
+.providerLocation {
+  color: inherit;
 }
 
 .availabilities {
+  height: 25rem;
   color: inherit;
+}
+
+.searchDate {
+  display: flex;
+  justify-content: space-between;
+  color: $main;
+  border-radius: 0.2rem;
+  //border: 2px solid $white;
+  //background: rgba($success, 0.2);
+  background: linear-gradient(to top, $white, rgba($success, 0.4), $white);
+  box-sizing: border-box;
+}
+
+.iconSearchDate {
+  color: $fruitSalad;
+}
+
+.findDate {
+  font-size: 1rem;
+  border-radius: unset !important;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-right: 1rem;
+  cursor: pointer;
+}
+
+.bookNow {
+  font-size: 1rem;
+  border-radius: unset !important;
+}
+
+.slotUIs {
+  color: red;
 }
