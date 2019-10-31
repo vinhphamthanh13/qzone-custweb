@@ -1,8 +1,5 @@
 import axios from 'axios';
 
-// service-category-controller
-export const serviceCategories = () => axios.get('/service-categories');
-
 // service-controller
 export const services = () => axios.get('/services');
 

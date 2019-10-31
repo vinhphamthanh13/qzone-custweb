@@ -1,29 +1,10 @@
-import {
-  events,
-  waitlistConfirm,
-} from 'actionsApi/booking';
-import {
-  setLoading,
-  setError,
-} from 'actionsReducers/common.actions';
+import { events, waitlistConfirm } from 'actionsApi/booking';
+import { setLoading, setError } from 'actionsReducers/common.actions';
 import { handleRequest } from 'utils/apiHelpers';
 
-export const SET_PROVIDERS_BY_SERVICE_ID = 'BOOKING.SET_PROVIDERS_BY_SERVICE_ID';
-export const SET_BOOKING_DETAIL = 'BOOKING.SET_BOOKING_DETAIL';
-export const SET_BOOKING_STEP = 'BOOKING.SET_BOOKING_STEP';
-export const RESET_BOOKING = 'BOOKING.RESET_BOOKING';
 // Decoupling
 export const SET_BOOKED_EVENT_ID = 'BOOKING.SET_BOOKED_EVENT_ID';
 export const SET_BOOKED_EVENT_DETAIL = 'BOOKING.SET_BOOKED_EVENT_DETAIL';
-export const setBookingDetail = payload => ({
-  type: SET_BOOKING_DETAIL,
-  payload,
-});
-export const setBookingStep = payload => ({
-  type: SET_BOOKING_STEP,
-  payload,
-});
-// Decoupling
 const bookEventAction = payload => ({
   type: SET_BOOKED_EVENT_DETAIL,
   payload,

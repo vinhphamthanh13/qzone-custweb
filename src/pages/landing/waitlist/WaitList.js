@@ -8,7 +8,9 @@ import {
 import uuidv1 from 'uuid/v1';
 import { connect } from 'react-redux';
 import { Formik } from 'formik';
-import { get, noop, isEmpty } from 'lodash';
+import get from 'lodash/get';
+import noop from 'lodash/noop';
+import isEmpty from 'lodash/isEmpty';
 import moment from 'moment';
 import { ADDRESS_LENGTH, FULL_DATE, WAIT_LIST_KEYS } from 'utils/constants';
 import defaultImage from 'images/providers.jpg';
@@ -223,7 +225,7 @@ class WaitList extends Component {
   render() {
     const {
       service, isProvidersPopup, isLocationsPopup, userDetail, queuedProviders, initProvider,
-      selectedTemporaryServiceId,
+      selectedTemporaryServiceId, selectedPName,
     } = this.state;
     const userId = get(userDetail,'userSub') || get(userDetail, 'id');
     const serviceName = get(service, 'name');
@@ -260,81 +262,91 @@ class WaitList extends Component {
                       startDate: initProvider.startDate,
                       timezoneId: initProvider.timezoneId,
                     }}
-                    render={({ values, isValid, setFieldValue }) => (
-                      <form className={s.selectedInfo}>
-                        <div className={s.label}>Appointment with:</div>
-                        <div className={s.dropdownList} onClick={this.toggleProvidersList}>
-                          <div className={s.inputItem}>
-                            <HowToReg className="icon-small" color="secondary" />
-                            <InputBase
-                              fullWidth
-                              name="providerName"
-                              inputProps={{
-                                className: 'capitalize ellipsis',
-                              }}
-                              value={values.providerName} />
+                    render={({ values, isValid, setFieldValue }) => {
+                      const showProvidersList = queuedProviders.length > 1;
+                      const selectProviderCta = showProvidersList ? this.toggleProvidersList : noop;
+                      const showLocationsList = queuedProviders[selectedPName] &&
+                          queuedProviders[selectedPName].length > 1;
+                      const selectLocationCta = showLocationsList ? this.toggleLocationsList : noop;
+                      return (
+                        <form className={s.selectedInfo}>
+                          <div className={s.label}>Appointment with:</div>
+                          <div className={s.dropdownList} onClick={selectProviderCta}>
+                            <div className={s.inputItem}>
+                              <HowToReg className="icon-small" color="secondary" />
+                              <InputBase
+                                fullWidth
+                                name="providerName"
+                                inputProps={{
+                                  className: 'capitalize ellipsis',
+                                }}
+                                value={values.providerName}
+                                disabled={!showProvidersList}
+                              />
+                            </div>
+                            {showProvidersList && <ChevronRight />}
                           </div>
-                          <ChevronRight />
-                        </div>
-                        {isProvidersPopup && this.renderProviderList(queuedProviders, setFieldValue)}
-                        <div className={s.label}>Location:</div>
-                        <div className={s.dropdownList} onClick={this.toggleLocationsList}>
-                          <div className={s.inputItem}>
-                            <InputBase
-                              type="hidden"
-                              name="fullAddress"
-                              value={values.fullAddress}
-                              margin="dense"
-                            />
-                            <div className={s.providerLocation}>
-                              <div className={s.inputItem}>
-                                <LocationOn className="icon-small" color="secondary" />
-                                <span>&nbsp;{limitString(values.fullAddress, ADDRESS_LENGTH)}</span>
-                              </div>
-                              <div className={s.inputItem}>
-                                <GpsFixed className="icon-small" color="secondary" />
-                                <span>&nbsp;{values.timezoneId}</span>
+                          {isProvidersPopup && this.renderProviderList(queuedProviders, setFieldValue)}
+                          <div className={s.label}>Location:</div>
+                          <div className={s.dropdownList} onClick={selectLocationCta}>
+                            <div className={s.inputItem}>
+                              <InputBase
+                                type="hidden"
+                                name="fullAddress"
+                                value={values.fullAddress}
+                                margin="dense"
+                                disabled={!showLocationsList}
+                              />
+                              <div className={s.providerLocation}>
+                                <div className={s.inputItem}>
+                                  <LocationOn className="icon-small" color="secondary" />
+                                  <span>&nbsp;{limitString(values.fullAddress, ADDRESS_LENGTH)}</span>
+                                </div>
+                                <div className={s.inputItem}>
+                                  <GpsFixed className="icon-small" color="secondary" />
+                                  <span>&nbsp;{values.timezoneId}</span>
+                                </div>
                               </div>
                             </div>
+                            {showLocationsList && <ChevronRight />}
                           </div>
-                          <ChevronRight />
-                        </div>
-                        {isLocationsPopup && this.renderLocationList(setFieldValue)}
-                        {!selectedTemporaryServiceId && (
-                          <div className={s.noneTempId}>
-                            <strong>Tip</strong>:
-                            Please select the provider first, then location. Or change to other location.
+                          {isLocationsPopup && this.renderLocationList(setFieldValue)}
+                          {!selectedTemporaryServiceId && (
+                            <div className={s.noneTempId}>
+                              <strong>Tip</strong>:
+                              Please select the provider first, then location. Or change to other location.
+                            </div>
+                          )}
+                          <div className={s.label}>Open date:</div>
+                          <div className={`${s.dropdownList} gallery-bg border-none hover-none`}>
+                            <div className={s.inputItem}>
+                              <DateRange className="icon-small" color="secondary" />
+                              <span>&nbsp;{moment(values.startDate).format(FULL_DATE)}</span>
+                            </div>
                           </div>
-                        )}
-                        <div className={s.label}>Open date:</div>
-                        <div className={`${s.dropdownList} gallery-bg border-none hover-none`}>
-                          <div className={s.inputItem}>
-                            <DateRange className="icon-small" color="secondary" />
-                            <span>&nbsp;{moment(values.startDate).format(FULL_DATE)}</span>
-                          </div>
-                        </div>
-                        <div className={s.footerCta}>
-                          <Button
-                            variant="outlined"
-                            className={s.closePopupMd}
-                            onClick={this.handleCloseWaitList}
-                          >
-                            <Cancel color="inherit" />
-                            <span>&nbsp;Cancel</span>
-                          </Button>
-                          {userId && (
+                          <div className={s.footerCta}>
                             <Button
                               variant="outlined"
-                              onClick={this.handleRegisterWaitList}
-                              disabled={!!((!isValid && userId) || (!selectedTemporaryServiceId && userId))}
+                              className={s.closePopupMd}
+                              onClick={this.handleCloseWaitList}
                             >
-                              <WrapText color="inherit" className="icon-small" />
-                              <span>&nbsp;Enroll</span>
+                              <Cancel color="inherit" />
+                              <span>&nbsp;Cancel</span>
                             </Button>
-                          )}
-                        </div>
-                      </form>
-                    )}
+                            {userId && (
+                              <Button
+                                variant="outlined"
+                                onClick={this.handleRegisterWaitList}
+                                disabled={!!((!isValid && userId) || (!selectedTemporaryServiceId && userId))}
+                              >
+                                <WrapText color="inherit" className="icon-small" />
+                                <span>&nbsp;Enroll</span>
+                              </Button>
+                            )}
+                          </div>
+                        </form>
+                      );
+                    }}
                   />
                 )}
               </div>

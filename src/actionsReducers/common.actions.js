@@ -1,4 +1,5 @@
-import { flattenDeep, get } from 'lodash';
+import flattenDeep from 'lodash/flattenDeep';
+import get from 'lodash/get';
 import { handleRequest } from 'utils/apiHelpers';
 import {
   findEventByCustomerId,
@@ -91,20 +92,6 @@ const setEventByIdAction = payload => ({
   type: SET_EVENT_BY_ID,
   payload,
 });
-export const setTemporaryServices = () => async (dispatch) => {
-  dispatch(setLoading(true));
-  const [result, error] = await handleRequest(temporaryServices, []);
-  const tempList = get(result, 'temporaryServices');
-  if (error) {
-    dispatch(setError(error));
-  }
-  if (tempList && Object.keys(tempList).length > 0) {
-    const serviceProvider = Object.keys(tempList).map(locationId => tempList[locationId]);
-    dispatch(setTemporaryServiceByLocationAction(tempList));
-    dispatch(setServiceProviders(flattenDeep(serviceProvider)));
-  }
-  dispatch(setLoading(false));
-};
 export const setServiceProvidersAction = () => async (dispatch) => {
   dispatch(setLoading(true));
   const [result, error] = await handleRequest(temporaryServices, []);

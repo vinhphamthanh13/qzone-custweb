@@ -161,7 +161,7 @@ class Providers extends Component {
                 <Search className="main-color" />&nbsp;
                 <InputBase fullWidth placeholder="Provider name" value={searchText} onChange={this.handleSearch} />
                 {searchText.length > SEARCH_LENGTH && (
-                  <Clear className="danger-color" onClick={this.handleClearSearch} />
+                  <Clear className="danger-color hover-pointer" onClick={this.handleClearSearch} />
                 )}
               </form>
             </div>

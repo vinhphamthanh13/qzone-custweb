@@ -33,8 +33,7 @@ export default function MapDialog({
           <div className={s.mapTitle}>
             <Typography
               variant="title"
-              color="inherit"
-              className="text-bold full-width"
+              className="text-bold full-width fruit-color"
               noWrap
             >{serviceName}
             </Typography>

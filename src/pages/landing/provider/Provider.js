@@ -8,7 +8,6 @@ import momentz from 'moment-timezone';
 import { IconButton, InputBase, Typography } from '@material-ui/core';
 import defaultPImage from 'images/providers.jpg';
 import { Email, PhoneIphone, Place, GpsFixed, DateRange, CheckCircle, ChevronRight, Clear } from '@material-ui/icons';
-// import EmptyItem from 'components/EmptyItem';
 import MapDialog from 'components/Map/MapDialog';
 import RateStar from 'components/Rating/RateStar';
 import { limitString, navigateTo } from 'utils/common';
@@ -64,7 +63,6 @@ class Provider extends Component {
     ) {
       updatedState.provider = provider;
       const dateTmpServices = get(provider, 'dateTmpServices');
-      const initLocation = dateTmpServices[Object.keys(dateTmpServices)[0]];
       const locationId = Object.keys(dateTmpServices)[0];
       updatedState.dateTmpServices = dateTmpServices;
       updatedState.serviceId = get(provider, 'serviceId');
@@ -73,7 +71,7 @@ class Provider extends Component {
       updatedState.initTempServiceIdList = providerLocationDates.length > 0 &&
         providerLocationDates.map(item => item.tmpServiceId);
       updatedState.providerId = get(provider, 'id') || get(provider, 'userSub');
-      updatedState.initLocation = initLocation;
+      updatedState.initLocation = dateTmpServices[Object.keys(dateTmpServices)[0]];
       updatedState.locationId = locationId;
     }
     if (
@@ -163,10 +161,12 @@ class Provider extends Component {
     return Object.keys(dateTmpServices).map(item => {
       const location = get(dateTmpServices, item);
       const fullAddress = get(location, '0.locationDetail.fullAddress');
+      const timezoneId = get(location, '0.locationDetail.timezoneId');
       return (
         // eslint-disable-next-line
         <div key={item} className={s.locationItem} onClick={this.handleChangeLocation(item, setFieldValue)}>
-          {fullAddress}
+          <span>{fullAddress}</span><br />
+          <span>{timezoneId}</span>
         </div>
       )
 
@@ -305,10 +305,10 @@ class Provider extends Component {
                   )}
                 />
               </div>
-            </div>
-            <div className={s.item}>
-              <GpsFixed className="icon-small" color="inherit" />
-              <span>&nbsp;{timeZoneId}</span>
+              <div className={s.item}>
+                <GpsFixed className="icon-small" color="inherit" />
+                <span>&nbsp;{timeZoneId}</span>
+              </div>
             </div>
           </div>
           {showBookNow && (
