@@ -71,8 +71,10 @@ class Provider extends Component {
       updatedState.initTempServiceIdList = providerLocationDates.length > 0 &&
         providerLocationDates.map(item => item.tmpServiceId);
       updatedState.providerId = get(provider, 'id') || get(provider, 'userSub');
-      updatedState.initLocation = dateTmpServices[Object.keys(dateTmpServices)[0]];
+      const initLocation = dateTmpServices[Object.keys(dateTmpServices)[0]];
+      updatedState.initLocation = initLocation;
       updatedState.locationId = locationId;
+      updatedState.selectedTimezoneId = get(initLocation, '0.timezoneId');
     }
     if (
       bookedEventId !== null &&
@@ -139,11 +141,13 @@ class Provider extends Component {
     const dateTmpServices = get(provider, 'dateTmpServices');
     const providerLocationDates = dateTmpServices[locationId];
     const tempServiceIdList = providerLocationDates.map(item => item.tmpServiceId);
+    const selectedTimezoneId = get(providerLocationDates, '0.timezoneId');
     dispatchAvailabilities(tempServiceIdList, serviceId, providerId, locationId);
     setFieldValue('providerLocation', get(providerLocationDates, '0.locationDetail.fullAddress'));
     this.setState({
       providerLocationDates,
       locationId,
+      selectedTimezoneId,
     }, this.togglePopUpLocation);
   };
 
@@ -161,12 +165,18 @@ class Provider extends Component {
     return Object.keys(dateTmpServices).map(item => {
       const location = get(dateTmpServices, item);
       const fullAddress = get(location, '0.locationDetail.fullAddress');
-      const timezoneId = get(location, '0.locationDetail.timezoneId');
+      const timezoneId = get(location, '0.timezoneId');
       return (
         // eslint-disable-next-line
         <div key={item} className={s.locationItem} onClick={this.handleChangeLocation(item, setFieldValue)}>
-          <span>{fullAddress}</span><br />
-          <span>{timezoneId}</span>
+          <div className={s.item}>
+            <Place color="inherit" className="icon-small" />
+            <span>{fullAddress}</span>
+          </div>
+          <div className={s.item}>
+            <GpsFixed color="inherit" className="icon-small" />
+            <span>{timezoneId}</span>
+          </div>
         </div>
       )
 
@@ -188,11 +198,11 @@ class Provider extends Component {
 
   handleQueryAvailabilitiesByDate = date => {
     const { dispatchQueryAvailabilitiesByDate } = this.props;
-    const { serviceId, providerId, locationId } = this.state;
+    const { serviceId, providerId, locationId, selectedTimezoneId } = this.state;
     const unixDate = momentz(date, 'Australia/Sydney').unix();
     const queriedKey = `${serviceId}-${providerId}-${locationId}`;
     dispatchQueryAvailabilitiesByDate({
-      date: unixDate, serviceId, providerId,
+      date: unixDate, serviceId, providerId, timezoneId: selectedTimezoneId,
     }, queriedKey)
   };
 
