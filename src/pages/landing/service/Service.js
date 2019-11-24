@@ -124,7 +124,7 @@ class Service extends Component {
                   <div className={s.queueMode}>
                     <Button variant="outlined" color="inherit" onClick={this.toggleQueueModal}>
                       <WrapText colo="inherit" />
-                      <span>&nbsp;Join Queue</span>
+                      <span>&nbsp;Join WaitList</span>
                     </Button>
                   </div>
                 ) : (
